@@ -1,6 +1,6 @@
 ﻿//
 // Created by Michal Přikryl on 02.03.2026.
-// Copyright (c) 2025 slynxcz. All rights reserved.
+// Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
 
@@ -127,7 +127,7 @@ inline constexpr bool schema_writable_v =
 			uintptr_t pThisClass = ((uintptr_t)this - m_offset);                                                             \
 																															 \
 			NetworkStateChanged();                                                                                           \
-			std::memcpy(                                                                                                     \
+			memcpy(                                                                                                          \
 			reinterpret_cast<void*>(pThisClass + m_key.offset + extra_offset),												 \
 			&val,																											 \
 			sizeof(type)																									 \

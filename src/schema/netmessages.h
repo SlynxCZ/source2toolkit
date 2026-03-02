@@ -1,6 +1,6 @@
 //
 // Created by Michal Přikryl on 02.03.2026.
-// Copyright (c) 2025 slynxcz. All rights reserved.
+// Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
 
