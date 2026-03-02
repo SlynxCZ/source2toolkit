@@ -190,7 +190,7 @@ int32_t schema::GetServerOffset(const char* pszClassName, const char* pszPropNam
     return -1;
 }
 
-int32 schema::GetClassSize(const char* className) {
+int32_t schema::GetClassSize(const char* className) {
     CSchemaSystemTypeScope *pType = g_pSchemaSystem->FindTypeScopeForModule(
         MODULE_PREFIX "server" MODULE_EXT);
 
@@ -198,6 +198,28 @@ int32 schema::GetClassSize(const char* className) {
     if (!pClassInfo) return -1;
 
     return pClassInfo->m_nSize;
+}
+
+void schema::SetStateChanged(CEntityInstance *entity, const char *className, const char *propName) {
+    if (!entity || !className || !propName)
+        return;
+
+    const uint32_t classHash = hash_32_fnv1a_const(className);
+    const uint32_t propHash = hash_32_fnv1a_const(propName);
+
+    SchemaKey key = GetOffset(className, classHash, propName, propHash);
+
+    if (!key.networked || key.offset == 0)
+        return;
+
+    const int16_t chainOffset = FindChainOffset(className, classHash);
+
+    auto pEntity = reinterpret_cast<uintptr_t>(entity);
+
+    if (chainOffset != 0)
+        ChainNetworkStateChanged(pEntity + chainOffset, key.offset);
+    else
+        EntityNetworkStateChanged(pEntity, key.offset);
 }
 
 void NetworkVarStateChanged(uintptr_t pNetworkVar, uint32_t nOffset, uint32 nNetworkStateChangedOffset)

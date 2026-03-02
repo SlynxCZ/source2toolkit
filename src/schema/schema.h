@@ -55,6 +55,7 @@ namespace schema
     SchemaKey GetOffset(const char* className, uint32_t classKey, const char* memberName, uint32_t memberKey);
     int32_t GetServerOffset(const char* pszClassName, const char* pszPropName);
     int32_t GetClassSize(const char* className);
+	void SetStateChanged(CEntityInstance* entity, const char* className, const char* propName);
 } // namespace schema
 
 constexpr uint32_t val_32_const = 0x811c9dc5;
