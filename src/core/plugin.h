@@ -1,0 +1,29 @@
+﻿//
+// Created by Michal Přikryl on 02.03.2026.
+// Copyright (c) 2026 slynxcz. All rights reserved.
+//
+#ifndef _INCLUDE_METAMOD_SOURCE_STUB_PLUGIN_H_
+#define _INCLUDE_METAMOD_SOURCE_STUB_PLUGIN_H_
+
+#include <ISmmPlugin.h>
+
+class IPlugin : public ISmmPlugin, public IMetamodListener
+{
+public:
+    bool Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late) override;
+    bool Unload(char *error, size_t maxlen) override;
+    const char *GetAuthor() override;
+    const char *GetName() override;
+    const char *GetDescription() override;
+    const char *GetURL() override;
+    const char *GetLicense() override;
+    const char *GetVersion() override;
+    const char *GetDate() override;
+    const char *GetLogTag() override;
+};
+
+extern IPlugin g_iPlugin;
+
+#endif //_INCLUDE_METAMOD_SOURCE_STUB_PLUGIN_H_
+
+PLUGIN_GLOBALVARS();

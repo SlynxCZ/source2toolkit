@@ -2,6 +2,8 @@
 // Created by Michal Přikryl on 02.03.2026.
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
+#include "core/Shared.h"
+
 #include "schema.h"
 #include "platform.h"
 #include "edict.h"
@@ -120,7 +122,7 @@ int16_t schema::FindChainOffset(const char* className, uint32_t classNameHash)
 
 int16_t schema::FindChainOffset(const char* className)
 {
-    CSchemaSystemTypeScope* pType = g_pSchemaSystem->FindTypeScopeForModule(MODULE_PREFIX "server" MODULE_EXT);
+    CSchemaSystemTypeScope* pType = shared::g_pSchemaSystem->FindTypeScopeForModule(MODULE_PREFIX "server" MODULE_EXT);
 
     if (!pType)
         return false;
@@ -173,7 +175,7 @@ SchemaKey schema::GetOffset(const char* className, uint32_t classKey, const char
 
 int32_t schema::GetServerOffset(const char* pszClassName, const char* pszPropName)
 {
-    SchemaClassInfoData_t* pClassInfo = g_pSchemaSystem->FindTypeScopeForModule(MODULE_PREFIX "server" MODULE_EXT)->FindDeclaredClass(pszClassName).Get();
+    SchemaClassInfoData_t* pClassInfo = shared::g_pSchemaSystem->FindTypeScopeForModule(MODULE_PREFIX "server" MODULE_EXT)->FindDeclaredClass(pszClassName).Get();
     if (pClassInfo)
     {
         for (int i = 0; i < pClassInfo->m_nFieldCount; i++)

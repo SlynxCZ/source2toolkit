@@ -58,8 +58,7 @@ target_compile_definitions(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/core
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/schema
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 find_package(Git QUIET)
