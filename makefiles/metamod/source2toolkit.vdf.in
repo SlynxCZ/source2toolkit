@@ -1,5 +1,5 @@
 "Metamod Plugin"
 {
-	"alias"	"RayTrace"
-	"file"	"addons/RayTrace/bin/${PROJECT_VDF_PLATFORM}/RayTrace"
+	"alias"	"source2toolkit"
+	"file"	"addons/source2toolkit/bin/${PROJECT_VDF_PLATFORM}/source2toolkit"
 }
