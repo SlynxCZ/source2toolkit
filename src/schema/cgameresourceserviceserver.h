@@ -18,7 +18,7 @@
  */
 
 #pragma once
-#include "core/plugin.h"
+#include "core/gameconfig.h"
 #include <cstdint>
 
 class CGameEntitySystem;
@@ -28,11 +28,6 @@ class CGameResourceService
 public:
     CGameEntitySystem* GetGameEntitySystem()
     {
-#ifdef WIN32
-        static int offset = 88;
-#else
-        static int offset = 80;
-#endif
-        return *reinterpret_cast<CGameEntitySystem**>(reinterpret_cast<uintptr_t>(g_pGameResourceServiceServer) + offset);
+        return *reinterpret_cast<CGameEntitySystem**>((uintptr_t)(this) + shared::g_pGameConfig->GetOffset("GameEntitySystem"));
     }
 };

@@ -1,3 +1,8 @@
 ﻿{
-
+  "GameEntitySystem": {
+    "offsets": {
+      "windows": 88,
+      "linux": 80
+    }
+  }
 }

@@ -5,9 +5,10 @@
 #include "listeners.h"
 
 #include "shared.h"
-#include "utils/tasks.h"
+#include "utils/scheduler.h"
 #include "dynlibutils/module.h"
 #include "iserver.h"
+#include "schema/cgameresourceserviceserver.h"
 
 class GameSessionConfiguration_t
 {
@@ -15,6 +16,7 @@ class GameSessionConfiguration_t
 
 namespace listeners {
     SourceHooks sourceHooks;
+    CEntityListener entityListener;
 
     SH_DECL_HOOK3_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
     SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
@@ -37,7 +39,12 @@ namespace listeners {
 
     void SourceHooks::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
     {
-        tasks::Tick(simulating);
+        scheduler::Tick(simulating);
+
+        if (!shared::getGlobalVars())
+            return;
+
+        has_ticked = true;
     }
 
     void SourceHooks::Hook_StartupServer(const GameSessionConfiguration_t& config,
@@ -45,9 +52,15 @@ namespace listeners {
     {
         if (!shared::g_bDetoursLoaded)
         {
-            shared::g_pEntitySystem = GameEntitySystem();
+            shared::g_pEntitySystem = shared::g_pGameResourceServiceServer->GetGameEntitySystem();
+            shared::g_pEntitySystem->AddListenerEntity(&entityListener);
             shared::g_bDetoursLoaded = true;
         }
+        if (has_ticked)
+        {
+            scheduler::RemoveMapChangeTimers();
+        }
+        has_ticked = false;
     }
 
     int SourceHooks::Hook_LoadEventsFromFile(const char* filename, bool bSearchAll)

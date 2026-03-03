@@ -2,12 +2,13 @@
 // Created by Michal Přikryl on 02.03.2026.
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
-#include "tasks.h"
+#include "scheduler.h"
 #include <algorithm>
 #include <chrono>
 #include <mutex>
 #include <queue>
 
+bool has_ticked = false;
 double universal_time = 0.0;
 double last_tick_time = 0.0;
 double timer_next_think = 0.0;
@@ -18,7 +19,7 @@ namespace {
     std::mutex nextFrameMutex;
     std::queue<std::function<void()> > nextFrameQueue;
 }
-void tasks::NextFrame(std::function<void()> &&task) {
+void scheduler::NextFrame(std::function<void()> &&task) {
     std::lock_guard lock(nextFrameMutex);
     nextFrameQueue.emplace(std::move(task));
 }
@@ -27,13 +28,13 @@ Timer::Timer(float interval, double execTime, TimerCallback callback, int flags)
     : Interval(interval), ExecTime(execTime), Callback(std::move(callback)), Flags(flags) {
 }
 
-void tasks::Init() {
+void scheduler::Init() {
     universal_time = 0.0;
     last_tick_time = 0.0;
     timer_next_think = 0.0;
 }
 
-void tasks::Shutdown() {
+void scheduler::Shutdown() {
     for (auto *timer: once_off_timers)
         delete timer;
     for (auto *timer: repeat_timers)
@@ -45,7 +46,7 @@ void tasks::Shutdown() {
     std::swap(nextFrameQueue, empty);
 }
 
-void tasks::Tick(bool simulating) {
+void scheduler::Tick(bool simulating) {
     std::queue<std::function<void()>> localQueue;
     {
         std::lock_guard lock(nextFrameMutex);
@@ -109,7 +110,7 @@ void tasks::Tick(bool simulating) {
     timer_next_think = universal_time + 0.1;
 }
 
-Timer *tasks::AddTimer(float interval, TimerCallback callback, int flags) {
+Timer *scheduler::AddTimer(float interval, TimerCallback callback, int flags) {
     Timer *timer = new Timer(interval, universal_time + interval, std::move(callback), flags);
 
     if (flags & TIMER_FLAG_REPEAT)
@@ -120,7 +121,7 @@ Timer *tasks::AddTimer(float interval, TimerCallback callback, int flags) {
     return timer;
 }
 
-void tasks::KillTimer(Timer *timer) {
+void scheduler::KillTimer(Timer *timer) {
     if (!timer) return;
 
     auto killFrom = [](std::vector<Timer *> &list, Timer *target) {
@@ -142,7 +143,7 @@ void tasks::KillTimer(Timer *timer) {
         killFrom(once_off_timers, timer);
 }
 
-void tasks::RemoveMapChangeTimers() {
+void scheduler::RemoveMapChangeTimers() {
     auto removeFrom = [](std::vector<Timer*>& list) {
         for (int i = static_cast<int>(list.size()) - 1; i >= 0; --i) {
             Timer* t = list[i];
