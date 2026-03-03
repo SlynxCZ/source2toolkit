@@ -27,6 +27,12 @@ public record SchemaFieldType
             this.Name = "CTransform";
         }
 
+        // First member is pointing to m_pEntity
+        else if (this.Name == "CNetworkVarChainer")
+        {
+            this.Name = "CEntityInstance*";
+        }
+
         if (this.Name == "GameTime_t" || this.Name == "CNetworkedQuantizedFloat")
         {
             this.Category = SchemaTypeCategory.Builtin;
