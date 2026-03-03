@@ -4,9 +4,6 @@
 //
 #include "listeners.h"
 
-#include <khook.hpp>
-#include <khook/asm.hpp>
-
 #include "commands.h"
 #include "events.h"
 #include "shared.h"
@@ -14,6 +11,8 @@
 #include "dynlibutils/module.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
+
+#include "KHook.hpp"
 
 class GameSessionConfiguration_t
 {

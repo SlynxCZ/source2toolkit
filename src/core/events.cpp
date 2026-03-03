@@ -7,11 +7,13 @@
 #include "shared.h"
 #include "utils/log.h"
 
-#include "khook.hpp"
+#include "KHook.hpp"
 
 namespace events {
     static std::unordered_map<std::string, std::vector<EventEntry> > gameEvents;
     static EventManager eventManager;
+
+    void EventManager::FireGameEvent(IGameEvent* pEvent) {}
 
     void InitEvents()
     {

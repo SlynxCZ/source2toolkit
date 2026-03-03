@@ -7,7 +7,7 @@
 #include "shared.h"
 #include "utils/log.h"
 
-#include "khook.hpp"
+#include "KHook.hpp"
 
 namespace commands {
     static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
