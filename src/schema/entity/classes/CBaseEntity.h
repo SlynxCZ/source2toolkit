@@ -1,5 +1,7 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -8,8 +10,6 @@
 #include "CNetworkTransmitComponent.h"
 #include "CNetworkVelocityVector.h"
 #include "../enums/EntityPlatformTypes_t.h"
-#include "../enums/MoveCollide_t.h"
-#include "../enums/MoveType_t.h"
 #include "ResponseContext_t.h"
 #include "../enums/TakeDamageFlags_t.h"
 #include "thinkfunc_t.h"

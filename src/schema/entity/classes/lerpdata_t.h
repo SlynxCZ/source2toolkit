@@ -1,10 +1,11 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
-#include "../enums/MoveType_t.h"
 #include "ParticleIndex_t.h"
 
 class CBaseEntity;

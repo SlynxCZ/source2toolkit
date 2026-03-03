@@ -156,4 +156,9 @@ namespace listeners {
 
         RETURN_META_VALUE(MRES_IGNORED, true);
     }
+
+    void CEntityListener::OnEntityCreated(CEntityInstance* pEntity) {}
+    void CEntityListener::OnEntitySpawned(CEntityInstance* pEntity) {}
+    void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity) {}
+    void CEntityListener::OnEntityParentChanged(CEntityInstance* pEntity, CEntityInstance* pNewParent) {}
 }

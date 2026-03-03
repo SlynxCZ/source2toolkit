@@ -1,5 +1,7 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -33,6 +35,4 @@ public:
     SCHEMA_FIELD(bool, m_bEndPointValid);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hStartPoint);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndPoint);
-    SCHEMA_FIELD(AttachmentHandle_t, m_iStartAttachment);
-    SCHEMA_FIELD(AttachmentHandle_t, m_iEndAttachment);
 };

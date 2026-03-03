@@ -1,5 +1,7 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -15,7 +17,6 @@ public:
 
     SCHEMA_FIELD(bool, m_bBuiltRightHanded);
     SCHEMA_FIELD(bool, m_bAllowFlipping);
-    SCHEMA_FIELD(CAttachmentNameSymbolWithStorage, m_sMuzzleAttachment);
     SCHEMA_FIELD(CUtlString, m_szMuzzleFlashParticleConfig);
     SCHEMA_FIELD(uint8_t, m_nMuzzleSmokeShotThreshold);
     SCHEMA_FIELD(float, m_flMuzzleSmokeTimeout);

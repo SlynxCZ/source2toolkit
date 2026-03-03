@@ -1,5 +1,7 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -16,7 +18,6 @@ public:
     SCHEMA_FIELD(CGameSceneNode*, m_pParent);
     SCHEMA_FIELD(CGameSceneNode*, m_pChild);
     SCHEMA_FIELD(CGameSceneNode*, m_pNextSibling);
-    SCHEMA_FIELD(CGameSceneNodeHandle, m_hParent);
     SCHEMA_FIELD(CNetworkOriginCellCoordQuantizedVector, m_vecOrigin);
     SCHEMA_FIELD(QAngle, m_angRotation);
     SCHEMA_FIELD(float, m_flScale);

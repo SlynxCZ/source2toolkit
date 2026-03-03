@@ -1,11 +1,13 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/CFuncRotator::Rotate_t.h"
+#include "../enums/CFuncRotatorRotate_t.h"
 #include "RotatorHistoryEntry_t.h"
 #include "RotatorQueueEntry_t.h"
 #include "../enums/RotatorTargetSpace_t.h"

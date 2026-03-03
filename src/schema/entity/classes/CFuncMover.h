@@ -1,15 +1,17 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/CFuncMover::FollowConstraint_t.h"
-#include "../enums/CFuncMover::FollowEntityDirection_t.h"
-#include "../enums/CFuncMover::Move_t.h"
-#include "../enums/CFuncMover::OrientationUpdate_t.h"
-#include "../enums/CFuncMover::TransitionToPathNodeAction_t.h"
+#include "../enums/CFuncMoverFollowConstraint_t.h"
+#include "../enums/CFuncMoverFollowEntityDirection_t.h"
+#include "../enums/CFuncMoverMove_t.h"
+#include "../enums/CFuncMoverOrientationUpdate_t.h"
+#include "../enums/CFuncMoverTransitionToPathNodeAction_t.h"
 #include "../enums/SolidType_t.h"
 
 class CBaseEntity;

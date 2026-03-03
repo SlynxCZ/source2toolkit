@@ -192,7 +192,9 @@ internal static partial class Program
     {
         "CEntityIOOutput",
         "CEntityIdentity",
-        "CEntityInstance"
+        "CEntityInstance",
+        "MoveCollide_t",
+        "MoveType_t"
     };
 
     public static void Main(string[] args)
@@ -217,6 +219,9 @@ internal static partial class Program
 
             foreach (var (enumName, schemaEnum) in enums)
             {
+                if (IgnoreClasses.Contains(enumName))
+                    continue;
+
                 allEnums[enumName] = schemaEnum;
             }
 
@@ -437,6 +442,9 @@ internal static partial class Program
                 IgnoreClassWildcards.Any(y => field.Type.Name.Contains(y)))
                 continue;
 
+            if (IgnoreClasses.Contains(field.Type.Name))
+                continue;
+
             CollectReferencedTypes(
                 field.Type,
                 includes,
@@ -451,6 +459,8 @@ internal static partial class Program
 
         builder.AppendLine("#pragma once");
         builder.AppendLine("#include \"ehandle.h\"");
+        builder.AppendLine("#include \"entityhandle.h\"");
+        builder.AppendLine("#include \"utlsymbollarge.h\"");
         builder.AppendLine("#include \"schema/entityio.h\"");
         builder.AppendLine("#include \"schema/schema.h\"");
         builder.AppendLine("#include <cstdint>");
@@ -461,11 +471,11 @@ internal static partial class Program
         {
             if (allEnums.ContainsKey(inc))
             {
-                builder.AppendLine($"#include \"../enums/{inc}.h\"");
+                builder.AppendLine($"#include \"../enums/{SanitiseTypeName(inc)}.h\"");
             }
             else if (allClasses.ContainsKey(inc))
             {
-                builder.AppendLine($"#include \"{inc}.h\"");
+                builder.AppendLine($"#include \"{SanitiseTypeName(inc)}.h\"");
             }
         }
 
@@ -492,6 +502,9 @@ internal static partial class Program
         {
             if (field.Type.Category == SchemaTypeCategory.Bitfield ||
                 IgnoreClassWildcards.Any(y => field.Type.Name.Contains(y)))
+                continue;
+
+            if (IgnoreClasses.Contains(field.Type.Name))
                 continue;
 
             if (field.Type.Category == SchemaTypeCategory.FixedArray)

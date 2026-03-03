@@ -100,7 +100,7 @@ namespace commands {
         RegConListener("!" + name, nativeHandler, KHook::Mode::Pre);
     }
 
-    void RegConListener(const std::string &name, CommandHandler handler, KHook::Mode mode) {
+    void RegConListener(const std::string &name, CommandHandler &handler, KHook::Mode mode) {
         consoleListeners[name].push_back({handler, mode});
     }
 }

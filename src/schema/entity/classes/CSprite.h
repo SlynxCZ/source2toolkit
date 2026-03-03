@@ -1,5 +1,7 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -16,7 +18,6 @@ public:
 
     SCHEMA_FIELD(CStrongHandle< InfoForResourceTypeIMaterial2 >, m_hSpriteMaterial);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hAttachedToEntity);
-    SCHEMA_FIELD(AttachmentHandle_t, m_nAttachment);
     SCHEMA_FIELD(float, m_flSpriteFramerate);
     SCHEMA_FIELD(float, m_flFrame);
     SCHEMA_FIELD(float, m_flDieTime);

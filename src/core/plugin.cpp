@@ -73,7 +73,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
 
     if (late)
     {
-        shared::g_pEntitySystem = GameEntitySystem();
+        shared::g_pEntitySystem = shared::g_pGameResourceServiceServer->GetGameEntitySystem();
         shared::g_pEntitySystem->AddListenerEntity(&listeners::entityListener);
         shared::g_bDetoursLoaded = true;
     }

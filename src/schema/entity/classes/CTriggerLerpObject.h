@@ -1,5 +1,7 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -17,7 +19,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszLerpTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLerpTarget);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszLerpTargetAttachment);
-    SCHEMA_FIELD(AttachmentHandle_t, m_hLerpTargetAttachment);
     SCHEMA_FIELD(float, m_flLerpDuration);
     SCHEMA_FIELD(bool, m_bAttachedEntityWasParented);
     SCHEMA_FIELD(bool, m_bLerpRestoreMoveType);

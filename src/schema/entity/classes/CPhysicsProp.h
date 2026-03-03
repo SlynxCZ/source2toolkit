@@ -1,11 +1,13 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
 #include "CBreakableProp.h"
-#include "../enums/CPhysicsProp::CrateType_t.h"
+#include "../enums/CPhysicsPropCrateType_t.h"
 #include "../enums/DynamicContinuousContactBehavior_t.h"
 
 class CPhysicsProp : public CBreakableProp

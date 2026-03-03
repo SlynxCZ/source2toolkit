@@ -1,11 +1,12 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
 #include "CItem.h"
-#include "../enums/MoveType_t.h"
 
 class CScriptItem : public CItem
 {

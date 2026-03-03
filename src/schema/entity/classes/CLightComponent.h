@@ -1,11 +1,12 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
 #include "CEntityComponent.h"
-#include "CNetworkVarChainer.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
 class CLightComponent : public CEntityComponent
@@ -13,7 +14,7 @@ class CLightComponent : public CEntityComponent
 public:
     DECLARE_SCHEMA_CLASS(CLightComponent);
 
-    SCHEMA_FIELD(CNetworkVarChainer, __m_pChainEntity);
+    SCHEMA_FIELD(CEntityInstance*, __m_pChainEntity);
     SCHEMA_FIELD(Color, m_Color);
     SCHEMA_FIELD(Color, m_SecondaryColor);
     SCHEMA_FIELD(float, m_flBrightness);

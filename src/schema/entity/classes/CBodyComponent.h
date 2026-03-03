@@ -1,11 +1,12 @@
 #pragma once
 #include "ehandle.h"
+#include "entityhandle.h"
+#include "utlsymbollarge.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
 
 #include "CEntityComponent.h"
-#include "CNetworkVarChainer.h"
 
 class CGameSceneNode;
 
@@ -15,5 +16,5 @@ public:
     DECLARE_SCHEMA_CLASS(CBodyComponent);
 
     SCHEMA_FIELD(CGameSceneNode*, m_pSceneNode);
-    SCHEMA_FIELD(CNetworkVarChainer, __m_pChainEntity);
+    SCHEMA_FIELD(CEntityInstance*, __m_pChainEntity);
 };
