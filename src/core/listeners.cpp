@@ -118,6 +118,7 @@ namespace listeners {
     int SourceHooks::Hook_LoadEventsFromFile(const char*, bool)
     {
         ExecuteOnce(shared::g_pGameEventManager = META_IFACEPTR(IGameEventManager2));
+        events::InitEvents();
         RETURN_META_VALUE(MRES_IGNORED, 0);
     }
 

@@ -32,6 +32,11 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
 {
     PLUGIN_SAVEVARS();
 
+    if (late)
+    {
+        META_CONPRINTF("Plugin can't be loaded manually.\n");
+    }
+
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pEngine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
@@ -65,18 +70,10 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     g_SMAPI->AddListener(this, this);
 
     commands::InitCommands();
-    events::InitEvents();
     listeners::InitListeners();
 
     g_pCVar = shared::g_pCVar;
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
-
-    if (late)
-    {
-        shared::g_pEntitySystem = shared::g_pGameResourceServiceServer->GetGameEntitySystem();
-        shared::g_pEntitySystem->AddListenerEntity(&listeners::entityListener);
-        shared::g_bDetoursLoaded = true;
-    }
 
     FP_INFO("Load() success!");
     return true;

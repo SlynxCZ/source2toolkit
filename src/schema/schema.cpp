@@ -92,7 +92,7 @@ static void InitSchemaKeyValueMap(SchemaClassInfoData_t* pClassInfo, SchemaKeyVa
 
 static bool InitSchemaFieldsForClass(SchemaTableMap_t& tableMap, const char* className, uint32_t classKey)
 {
-    CSchemaSystemTypeScope* pType = g_pSchemaSystem->FindTypeScopeForModule(MODULE_PREFIX "server" MODULE_EXT);
+    CSchemaSystemTypeScope* pType = shared::g_pSchemaSystem->FindTypeScopeForModule(MODULE_PREFIX "server" MODULE_EXT);
 
     if (!pType)
         return false;
@@ -193,7 +193,7 @@ int32_t schema::GetServerOffset(const char* pszClassName, const char* pszPropNam
 }
 
 int32_t schema::GetClassSize(const char* className) {
-    CSchemaSystemTypeScope *pType = g_pSchemaSystem->FindTypeScopeForModule(
+    CSchemaSystemTypeScope *pType = shared::g_pSchemaSystem->FindTypeScopeForModule(
         MODULE_PREFIX "server" MODULE_EXT);
 
     SchemaClassInfoData_t *pClassInfo = pType->FindDeclaredClass(className).Get();
