@@ -1,0 +1,18 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CRulePointEntity.h"
+
+class CGameMoney : public CRulePointEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CGameMoney);
+
+    SCHEMA_FIELD(CEntityIOOutput, m_OnMoneySpent);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnMoneySpentFail);
+    SCHEMA_FIELD(int32_t, m_nMoney);
+    SCHEMA_FIELD(CUtlString, m_strAwardText);
+};

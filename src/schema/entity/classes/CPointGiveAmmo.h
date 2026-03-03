@@ -1,0 +1,17 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CPointEntity.h"
+
+class CBaseEntity;
+
+class CPointGiveAmmo : public CPointEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CPointGiveAmmo);
+
+    SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
+};

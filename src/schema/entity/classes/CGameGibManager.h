@@ -1,0 +1,18 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CBaseEntity.h"
+
+class CGameGibManager : public CBaseEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CGameGibManager);
+
+    SCHEMA_FIELD(bool, m_bAllowNewGibs);
+    SCHEMA_FIELD(int32_t, m_iCurrentMaxPieces);
+    SCHEMA_FIELD(int32_t, m_iMaxPieces);
+    SCHEMA_FIELD(int32_t, m_iLastFrame);
+};

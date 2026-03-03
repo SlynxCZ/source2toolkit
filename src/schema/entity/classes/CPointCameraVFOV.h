@@ -1,0 +1,15 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CPointCamera.h"
+
+class CPointCameraVFOV : public CPointCamera
+{
+public:
+    DECLARE_SCHEMA_CLASS(CPointCameraVFOV);
+
+    SCHEMA_FIELD(float, m_flVerticalFOV);
+};

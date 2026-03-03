@@ -1,0 +1,14 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+class WeaponPurchaseCount_t
+{
+public:
+    DECLARE_SCHEMA_CLASS(WeaponPurchaseCount_t);
+
+    SCHEMA_FIELD(uint16_t, m_nItemDefIndex);
+    SCHEMA_FIELD(uint16_t, m_nCount);
+};

@@ -1,0 +1,17 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CItem.h"
+#include "EntitySpottedState_t.h"
+
+class CItemDefuser : public CItem
+{
+public:
+    DECLARE_SCHEMA_CLASS(CItemDefuser);
+
+    SCHEMA_FIELD(EntitySpottedState_t, m_entitySpottedState);
+    SCHEMA_FIELD(int32_t, m_nSpotRules);
+};

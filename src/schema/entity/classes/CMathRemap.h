@@ -1,0 +1,24 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CLogicalEntity.h"
+
+class CMathRemap : public CLogicalEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CMathRemap);
+
+    SCHEMA_FIELD(float, m_flInMin);
+    SCHEMA_FIELD(float, m_flInMax);
+    SCHEMA_FIELD(float, m_flOut1);
+    SCHEMA_FIELD(float, m_flOut2);
+    SCHEMA_FIELD(float, m_flOldInValue);
+    SCHEMA_FIELD(bool, m_bEnabled);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnRoseAboveMin);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnRoseAboveMax);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMin);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMax);
+};
