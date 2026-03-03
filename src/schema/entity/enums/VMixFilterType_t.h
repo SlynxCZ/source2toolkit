@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class VMixFilterType_t : uint16_t
+enum class VMixFilterType_t : int16_t
 {
     FILTER_UNKNOWN = -1,
     FILTER_LOWPASS = 0,

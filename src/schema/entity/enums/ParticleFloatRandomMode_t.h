@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleFloatRandomMode_t : uint32_t
+enum class ParticleFloatRandomMode_t : int32_t
 {
     PF_RANDOM_MODE_INVALID = -1,
     PF_RANDOM_MODE_CONSTANT = 0,

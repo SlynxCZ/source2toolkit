@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ChoreoLookAtMode_t : uint32_t
+enum class ChoreoLookAtMode_t : int32_t
 {
     eInvalid = -1,
     eChest = 0,

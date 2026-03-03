@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class AmmoPosition_t : uint32_t
+enum class AmmoPosition_t : int32_t
 {
     AMMO_POSITION_INVALID = -1,
     AMMO_POSITION_PRIMARY = 0,

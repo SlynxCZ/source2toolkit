@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleAttachment_t : uint32_t
+enum class ParticleAttachment_t : int32_t
 {
     PATTACH_INVALID = -1,
     PATTACH_ABSORIGIN = 0,

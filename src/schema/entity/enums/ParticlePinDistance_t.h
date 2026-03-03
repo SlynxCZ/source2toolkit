@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticlePinDistance_t : uint32_t
+enum class ParticlePinDistance_t : int32_t
 {
     PARTICLE_PIN_DISTANCE_NONE = -1,
     PARTICLE_PIN_DISTANCE_NEIGHBOR = 0,

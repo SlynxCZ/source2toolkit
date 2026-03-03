@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class InputBitMask_t : uint64_t
+enum class InputBitMask_t : int64_t
 {
     IN_NONE = 0,
     IN_ALL = -1,

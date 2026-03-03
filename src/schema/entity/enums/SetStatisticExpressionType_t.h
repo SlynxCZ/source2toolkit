@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class SetStatisticExpressionType_t : uint32_t
+enum class SetStatisticExpressionType_t : int32_t
 {
     SET_EXPRESSION_UNINITIALIZED = -1,
     SET_EXPRESSION_SUM = 0,

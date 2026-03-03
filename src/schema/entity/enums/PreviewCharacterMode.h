@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class PreviewCharacterMode : uint32_t
+enum class PreviewCharacterMode : int32_t
 {
     INVALID = -1,
     DIORAMA = 0,

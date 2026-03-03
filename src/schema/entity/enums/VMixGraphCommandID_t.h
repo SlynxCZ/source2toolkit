@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class VMixGraphCommandID_t : uint32_t
+enum class VMixGraphCommandID_t : int32_t
 {
     CMD_INVALID = -1,
     CMD_CONTROL_INPUT_STORE = 1,

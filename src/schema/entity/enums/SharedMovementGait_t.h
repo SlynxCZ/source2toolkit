@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class SharedMovementGait_t : uint8_t
+enum class SharedMovementGait_t : int8_t
 {
     eInvalid = -1,
     eSlow = 0,

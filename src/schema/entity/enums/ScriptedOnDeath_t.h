@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ScriptedOnDeath_t : uint32_t
+enum class ScriptedOnDeath_t : int32_t
 {
     SS_ONDEATH_NOT_APPLICABLE = -1,
     SS_ONDEATH_UNDEFINED = 0,

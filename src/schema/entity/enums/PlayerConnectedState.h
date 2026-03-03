@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class PlayerConnectedState : uint32_t
+enum class PlayerConnectedState : int32_t
 {
     PlayerNeverConnected = -1,
     PlayerConnected = 0,

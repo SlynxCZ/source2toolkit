@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class AnimationAlgorithm_t : uint8_t
+enum class AnimationAlgorithm_t : int8_t
 {
     eInvalid = -1,
     eNone = 0,

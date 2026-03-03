@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleLightingQuality_t : uint32_t
+enum class ParticleLightingQuality_t : int32_t
 {
     PARTICLE_LIGHTING_PER_PARTICLE = 0,
     PARTICLE_LIGHTING_PER_VERTEX = 1,

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class StanceType_t : uint32_t
+enum class StanceType_t : int32_t
 {
     STANCE_CURRENT = -1,
     STANCE_DEFAULT = 0,

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class gear_slot_t : uint32_t
+enum class gear_slot_t : int32_t
 {
     GEAR_SLOT_INVALID = -1,
     GEAR_SLOT_RIFLE = 0,

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleCollisionMask_t : uint64_t
+enum class ParticleCollisionMask_t : int64_t
 {
     PARTICLE_MASK_ALL = -1,
     PARTICLE_MASK_SOLID = 798721,

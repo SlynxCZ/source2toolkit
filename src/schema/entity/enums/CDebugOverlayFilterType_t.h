@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class CDebugOverlayFilterType_t : uint32_t
+enum class CDebugOverlayFilterType_t : int32_t
 {
     NONE = 0,
     TEXT = 1,

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class RumbleEffect_t : uint32_t
+enum class RumbleEffect_t : int32_t
 {
     RUMBLE_INVALID = -1,
     RUMBLE_STOP_ALL = 0,

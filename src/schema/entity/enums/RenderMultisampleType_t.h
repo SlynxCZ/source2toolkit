@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class RenderMultisampleType_t : uint8_t
+enum class RenderMultisampleType_t : int8_t
 {
     RENDER_MULTISAMPLE_INVALID = -1,
     RENDER_MULTISAMPLE_NONE = 0,

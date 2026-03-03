@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class BloodType : uint32_t
+enum class BloodType : int32_t
 {
     None = -1,
     ColorRed = 0,

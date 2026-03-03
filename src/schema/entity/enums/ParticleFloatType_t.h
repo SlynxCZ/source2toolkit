@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleFloatType_t : uint32_t
+enum class ParticleFloatType_t : int32_t
 {
     PF_TYPE_INVALID = -1,
     PF_TYPE_LITERAL = 0,

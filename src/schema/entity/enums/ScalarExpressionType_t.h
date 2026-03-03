@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ScalarExpressionType_t : uint32_t
+enum class ScalarExpressionType_t : int32_t
 {
     SCALAR_EXPRESSION_UNINITIALIZED = -1,
     SCALAR_EXPRESSION_ADD = 0,

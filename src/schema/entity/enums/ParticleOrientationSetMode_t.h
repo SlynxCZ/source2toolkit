@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleOrientationSetMode_t : uint32_t
+enum class ParticleOrientationSetMode_t : int32_t
 {
     PARTICLE_ORIENTATION_SET_NONE = -1,
     PARTICLE_ORIENTATION_SET_FROM_VELOCITY = 0,

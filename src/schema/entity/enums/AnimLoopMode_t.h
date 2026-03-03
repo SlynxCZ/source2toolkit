@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class AnimLoopMode_t : uint32_t
+enum class AnimLoopMode_t : int32_t
 {
     ANIM_LOOP_MODE_INVALID = -1,
     ANIM_LOOP_MODE_NOT_LOOPING = 0,

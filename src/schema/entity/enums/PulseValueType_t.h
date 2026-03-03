@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class PulseValueType_t : uint32_t
+enum class PulseValueType_t : int32_t
 {
     PVAL_VOID = -1,
     PVAL_BOOL = 0,

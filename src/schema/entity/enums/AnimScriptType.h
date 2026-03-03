@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class AnimScriptType : uint16_t
+enum class AnimScriptType : int16_t
 {
     ANIMSCRIPT_TYPE_INVALID = -1,
     ANIMSCRIPT_FUSE_GENERAL = 0,

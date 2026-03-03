@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class MissingParentInheritBehavior_t : uint32_t
+enum class MissingParentInheritBehavior_t : int32_t
 {
     MISSING_PARENT_DO_NOTHING = -1,
     MISSING_PARENT_KILL = 0,

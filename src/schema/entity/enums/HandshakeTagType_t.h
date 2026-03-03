@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class HandshakeTagType_t : uint32_t
+enum class HandshakeTagType_t : int32_t
 {
     eInvalid = -1,
     eTask = 0,

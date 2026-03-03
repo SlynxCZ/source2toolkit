@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleFloatRoundType_t : uint32_t
+enum class ParticleFloatRoundType_t : int32_t
 {
     PF_ROUND_TYPE_INVALID = -1,
     PF_ROUND_TYPE_NEAREST = 0,

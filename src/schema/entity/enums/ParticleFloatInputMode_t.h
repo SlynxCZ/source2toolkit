@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleFloatInputMode_t : uint32_t
+enum class ParticleFloatInputMode_t : int32_t
 {
     PF_INPUT_MODE_INVALID = -1,
     PF_INPUT_MODE_CLAMPED = 0,

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleFloatBiasType_t : uint32_t
+enum class ParticleFloatBiasType_t : int32_t
 {
     PF_BIAS_TYPE_INVALID = -1,
     PF_BIAS_TYPE_STANDARD = 0,

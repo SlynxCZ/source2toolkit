@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ChoreoLookAtSpeed_t : uint32_t
+enum class ChoreoLookAtSpeed_t : int32_t
 {
     eInvalid = -1,
     eSlow = 0,

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class loadout_slot_t : uint32_t
+enum class loadout_slot_t : int32_t
 {
     LOADOUT_SLOT_PROMOTED = -2,
     LOADOUT_SLOT_INVALID = -1,

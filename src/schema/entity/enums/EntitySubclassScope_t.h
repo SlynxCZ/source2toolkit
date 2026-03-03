@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class EntitySubclassScope_t : uint32_t
+enum class EntitySubclassScope_t : int32_t
 {
     SUBCLASS_SCOPE_NONE = -1,
     SUBCLASS_SCOPE_PRECIPITATION = 0,

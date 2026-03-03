@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class VectorExpressionType_t : uint32_t
+enum class VectorExpressionType_t : int32_t
 {
     VECTOR_EXPRESSION_UNINITIALIZED = -1,
     VECTOR_EXPRESSION_ADD = 0,

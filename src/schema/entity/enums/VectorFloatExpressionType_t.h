@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class VectorFloatExpressionType_t : uint32_t
+enum class VectorFloatExpressionType_t : int32_t
 {
     VECTOR_FLOAT_EXPRESSION_UNINITIALIZED = -1,
     VECTOR_FLOAT_EXPRESSION_DOTPRODUCT = 0,

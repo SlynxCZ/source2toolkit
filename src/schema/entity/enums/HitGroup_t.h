@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class HitGroup_t : uint32_t
+enum class HitGroup_t : int32_t
 {
     HITGROUP_INVALID = -1,
     HITGROUP_GENERIC = 0,

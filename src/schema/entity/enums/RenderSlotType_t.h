@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class RenderSlotType_t : uint8_t
+enum class RenderSlotType_t : int8_t
 {
     RENDER_SLOT_INVALID = -1,
     RENDER_SLOT_PER_VERTEX = 0,

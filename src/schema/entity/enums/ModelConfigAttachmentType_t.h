@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ModelConfigAttachmentType_t : uint32_t
+enum class ModelConfigAttachmentType_t : int32_t
 {
     MODEL_CONFIG_ATTACHMENT_INVALID = -1,
     MODEL_CONFIG_ATTACHMENT_BONE_OR_ATTACHMENT = 0,

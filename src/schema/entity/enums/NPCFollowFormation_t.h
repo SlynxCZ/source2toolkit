@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class NPCFollowFormation_t : uint32_t
+enum class NPCFollowFormation_t : int32_t
 {
     Default = -1,
     CloseCircle = 0,

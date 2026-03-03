@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class PreviewEOMCelebration : uint32_t
+enum class PreviewEOMCelebration : int32_t
 {
     INVALID = -1,
     WALKUP = 0,

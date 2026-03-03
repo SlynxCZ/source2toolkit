@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class Detail2Combo_t : uint32_t
+enum class Detail2Combo_t : int32_t
 {
     DETAIL_2_COMBO_UNINITIALIZED = -1,
     DETAIL_2_COMBO_OFF = 0,

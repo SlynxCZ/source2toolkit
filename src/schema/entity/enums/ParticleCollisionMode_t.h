@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleCollisionMode_t : uint32_t
+enum class ParticleCollisionMode_t : int32_t
 {
     COLLISION_MODE_PER_PARTICLE_TRACE = 3,
     COLLISION_MODE_USE_NEAREST_TRACE = 2,

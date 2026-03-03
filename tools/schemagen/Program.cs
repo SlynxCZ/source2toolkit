@@ -522,21 +522,30 @@ internal static partial class Program
         builder.AppendLine("};");
     }
 
-    private static string EnumTypeCpp(int align) => align switch
+    private static string EnumTypeCpp(int align, IReadOnlyList<SchemaEnumItem> items)
     {
-        1 => "uint8_t",
-        2 => "uint16_t",
-        4 => "uint32_t",
-        8 => "uint64_t",
-        _ => "uint32_t"
-    };
+        bool isSigned = items.Any(x => x.Value < 0);
+
+        return (align, isSigned) switch
+        {
+            (1, true) => "int8_t",
+            (1, false) => "uint8_t",
+            (2, true) => "int16_t",
+            (2, false) => "uint16_t",
+            (4, true) => "int32_t",
+            (4, false) => "uint32_t",
+            (8, true) => "int64_t",
+            (8, false) => "uint64_t",
+            _ => "int32_t"
+        };
+    }
 
     private static void WriteEnum(
         StringBuilder builder,
         string enumName,
         SchemaEnum schemaEnum)
     {
-        builder.AppendLine($"enum class {enumName} : {EnumTypeCpp(schemaEnum.Align)}");
+        builder.AppendLine($"enum class {enumName} : {EnumTypeCpp(schemaEnum.Align, schemaEnum.Items)}");
         builder.AppendLine("{");
 
         foreach (var item in schemaEnum.Items)

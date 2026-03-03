@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-enum class ParticleVecType_t : uint32_t
+enum class ParticleVecType_t : int32_t
 {
     PVEC_TYPE_INVALID = -1,
     PVEC_TYPE_LITERAL = 0,
