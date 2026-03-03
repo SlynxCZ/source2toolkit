@@ -19,5 +19,4 @@ public:
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(float, m_flDotProductMax);
     SCHEMA_FIELD(bool, m_bPlaying);
-    SCHEMA_FIELD(CUtlVector<SoundeventPathCornerPairNetworked_t>, m_vecCornerPairsNetworked);
 };

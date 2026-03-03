@@ -6,7 +6,6 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-#include "CEntityComponent.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
 class CLightComponent : public CEntityComponent

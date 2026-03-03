@@ -28,7 +28,6 @@ public:
     SCHEMA_FIELD(BeamType_t, m_nBeamType);
     SCHEMA_FIELD(uint32_t, m_nBeamFlags);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hAttachEntity);
-    SCHEMA_FIELD_POINTER(AttachmentHandle_t, m_nAttachIndex);
     SCHEMA_FIELD(float, m_fWidth);
     SCHEMA_FIELD(float, m_fEndWidth);
     SCHEMA_FIELD(float, m_fFadeLength);

@@ -20,5 +20,4 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOuter);
     SCHEMA_FIELD(bool, m_bPreventLoopback);
     SCHEMA_FIELD(attributeprovidertypes_t, m_ProviderType);
-    SCHEMA_FIELD(CUtlVector<CAttributeManager::cached_attribute_float_t>, m_CachedResults);
 };

@@ -14,5 +14,4 @@ public:
     DECLARE_SCHEMA_CLASS(CMoodVData);
 
     SCHEMA_FIELD(MoodType_t, m_nMoodType);
-    SCHEMA_FIELD(CUtlVector<MoodAnimationLayer_t>, m_animationLayers);
 };

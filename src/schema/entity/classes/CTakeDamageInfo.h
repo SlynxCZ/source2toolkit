@@ -8,7 +8,6 @@
 
 #include "../enums/DamageTypes_t.h"
 #include "DestructibleHitGroupToDestroy_t.h"
-#include "../enums/HitGroup_t.h"
 #include "../enums/TakeDamageFlags_t.h"
 
 class CBaseEntity;

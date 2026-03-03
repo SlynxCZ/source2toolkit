@@ -6,8 +6,6 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-#include "../enums/HitGroup_t.h"
-
 class CTakeDamageInfo;
 
 class CTakeDamageResult

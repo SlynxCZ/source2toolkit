@@ -6,8 +6,6 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-#include "CEntityComponent.h"
-
 class CHitboxComponent : public CEntityComponent
 {
 public:

@@ -11,10 +11,7 @@
 #include "CGlowProperty.h"
 #include "CNetworkViewOffsetVector.h"
 #include "EntityRenderAttribute_t.h"
-#include "../enums/HitGroup_t.h"
 #include "CHitboxComponent.h"
-#include "../enums/RenderFx_t.h"
-#include "../enums/RenderMode_t.h"
 
 class CDestructiblePartsComponent;
 class CRenderComponent;

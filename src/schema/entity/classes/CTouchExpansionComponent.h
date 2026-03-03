@@ -6,8 +6,6 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-#include "CEntityComponent.h"
-
 class CTouchExpansionComponent : public CEntityComponent
 {
 public:

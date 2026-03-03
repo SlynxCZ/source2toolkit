@@ -12,7 +12,6 @@
 #include "../enums/CFuncMoverMove_t.h"
 #include "../enums/CFuncMoverOrientationUpdate_t.h"
 #include "../enums/CFuncMoverTransitionToPathNodeAction_t.h"
-#include "../enums/SolidType_t.h"
 
 class CBaseEntity;
 class CMoverPathNode;

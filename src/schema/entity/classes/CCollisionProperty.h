@@ -6,7 +6,6 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-#include "../enums/SolidType_t.h"
 #include "../enums/SurroundingBoundsType_t.h"
 #include "VPhysicsCollisionAttribute_t.h"
 

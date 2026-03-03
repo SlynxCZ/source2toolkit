@@ -49,10 +49,39 @@ internal static partial class Program
         "CSmartPtr"
     };
 
+    private static readonly HashSet<string> HardSkipClasses = new()
+    {
+        "CEntityComponent",
+        "CEntityIOOutput",
+        "CEntityIdentity",
+        "CEntityInstance"
+    };
+
+    private static readonly HashSet<string> HardSkipEnums = new()
+    {
+        "HitGroup_t",
+        "MoveCollide_t",
+        "MoveType_t",
+        "RenderFx_t",
+        "RenderMode_t",
+        "SolidType_t"
+    };
+
     public static string SanitiseTypeName(string typeName) =>
         typeName.Replace(":", "")
             .Replace("< ", "<")
             .Replace(" >", ">");
+
+    private static bool ContainsIgnoredType(SchemaFieldType type)
+    {
+        if (IgnoreClasses.Contains(type.Name))
+            return true;
+
+        if (type.Inner != null)
+            return ContainsIgnoredType(type.Inner);
+
+        return false;
+    }
 
     private static (Dictionary<string, SchemaEnum>, Dictionary<string, SchemaClass>) ConvertNewSchemaToOld(
         NewSchemaModule newSchema)
@@ -188,15 +217,6 @@ internal static partial class Program
         );
     }
 
-    private static readonly HashSet<string> HardSkipClasses = new()
-    {
-        "CEntityIOOutput",
-        "CEntityIdentity",
-        "CEntityInstance",
-        "MoveCollide_t",
-        "MoveType_t"
-    };
-
     public static void Main(string[] args)
     {
         var outputPath = args.FirstOrDefault() ?? "../../../../../src/schema/entity";
@@ -316,6 +336,9 @@ internal static partial class Program
 
         foreach (var (enumName, schemaEnum) in allEnums)
         {
+            if (HardSkipEnums.Contains(enumName))
+                continue;
+
             var builder = new StringBuilder();
             builder.AppendLine("#pragma once");
             builder.AppendLine("#include <cstdint>");
@@ -389,6 +412,12 @@ internal static partial class Program
         HashSet<string> forwards,
         bool isPointerContext)
     {
+        if (type.Category == SchemaTypeCategory.DeclaredEnum &&
+            HardSkipEnums.Contains(type.Name))
+        {
+            return;
+        }
+
         bool isHandleTemplate =
             type.Atomic == SchemaAtomicCategory.T;
 
@@ -442,7 +471,7 @@ internal static partial class Program
                 IgnoreClassWildcards.Any(y => field.Type.Name.Contains(y)))
                 continue;
 
-            if (IgnoreClasses.Contains(field.Type.Name))
+            if (ContainsIgnoredType(field.Type))
                 continue;
 
             CollectReferencedTypes(
@@ -469,7 +498,7 @@ internal static partial class Program
         // Includes
         foreach (var inc in includes.OrderBy(x => x))
         {
-            if (allEnums.ContainsKey(inc))
+            if (allEnums.ContainsKey(inc) && !HardSkipEnums.Contains(inc))
             {
                 builder.AppendLine($"#include \"../enums/{SanitiseTypeName(inc)}.h\"");
             }
@@ -504,7 +533,7 @@ internal static partial class Program
                 IgnoreClassWildcards.Any(y => field.Type.Name.Contains(y)))
                 continue;
 
-            if (IgnoreClasses.Contains(field.Type.Name))
+            if (ContainsIgnoredType(field.Type))
                 continue;
 
             if (field.Type.Category == SchemaTypeCategory.FixedArray)

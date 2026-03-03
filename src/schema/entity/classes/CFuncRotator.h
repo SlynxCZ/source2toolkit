@@ -11,7 +11,6 @@
 #include "RotatorHistoryEntry_t.h"
 #include "RotatorQueueEntry_t.h"
 #include "../enums/RotatorTargetSpace_t.h"
-#include "../enums/SolidType_t.h"
 
 class CBaseEntity;
 class CFuncMover;
