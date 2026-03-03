@@ -1,0 +1,10 @@
+#pragma once
+#include <cstdint>
+
+enum class CLogicBranchList::LogicBranchListenerLastState_t : uint32_t
+{
+    LOGIC_BRANCH_LISTENER_NOT_INIT = 0,
+    LOGIC_BRANCH_LISTENER_ALL_TRUE = 1,
+    LOGIC_BRANCH_LISTENER_ALL_FALSE = 2,
+    LOGIC_BRANCH_LISTENER_MIXED = 3,
+};

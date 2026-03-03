@@ -1,0 +1,13 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+class CSkillInt
+{
+public:
+    DECLARE_SCHEMA_CLASS(CSkillInt);
+
+    SCHEMA_FIELD_POINTER(int32_t, m_pValue);
+};

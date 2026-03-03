@@ -1,0 +1,24 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CPointEntity.h"
+
+class CBaseEntity;
+class CFuncTrackTrain;
+
+class CTankTrainAI : public CPointEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CTankTrainAI);
+
+    SCHEMA_FIELD(CHandle<CFuncTrackTrain>, m_hTrain);
+    SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEntity);
+    SCHEMA_FIELD(int32_t, m_soundPlaying);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_startSoundName);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_engineSoundName);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_movementSoundName);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_targetEntityName);
+};

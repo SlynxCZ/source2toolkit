@@ -1,0 +1,22 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "InfoForResourceTypeCModel.h"
+
+class CModelState
+{
+public:
+    DECLARE_SCHEMA_CLASS(CModelState);
+
+    SCHEMA_FIELD(CStrongHandle< InfoForResourceTypeCModel >, m_hModel);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_ModelName);
+    SCHEMA_FIELD(bool, m_bClientClothCreationSuppressed);
+    SCHEMA_FIELD(uint64_t, m_MeshGroupMask);
+    SCHEMA_FIELD(CUtlVector<int32_t>, m_nBodyGroupChoices);
+    SCHEMA_FIELD(int8_t, m_nIdealMotionType);
+    SCHEMA_FIELD(int8_t, m_nForceLOD);
+    SCHEMA_FIELD(int8_t, m_nClothUpdateFlags);
+};

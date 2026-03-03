@@ -1,0 +1,18 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CBaseCSGrenadeProjectile.h"
+#include "IntervalTimer.h"
+
+class CMolotovProjectile : public CBaseCSGrenadeProjectile
+{
+public:
+    DECLARE_SCHEMA_CLASS(CMolotovProjectile);
+
+    SCHEMA_FIELD(bool, m_bIsIncGrenade);
+    SCHEMA_FIELD(bool, m_bDetonated);
+    SCHEMA_FIELD(IntervalTimer, m_stillTimer);
+};

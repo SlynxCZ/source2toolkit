@@ -1,0 +1,33 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CBaseTrigger.h"
+#include "lerpdata_t.h"
+
+class CBaseEntity;
+
+class CTriggerLerpObject : public CBaseTrigger
+{
+public:
+    DECLARE_SCHEMA_CLASS(CTriggerLerpObject);
+
+    SCHEMA_FIELD(CUtlSymbolLarge, m_iszLerpTarget);
+    SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLerpTarget);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_iszLerpTargetAttachment);
+    SCHEMA_FIELD(AttachmentHandle_t, m_hLerpTargetAttachment);
+    SCHEMA_FIELD(float, m_flLerpDuration);
+    SCHEMA_FIELD(bool, m_bAttachedEntityWasParented);
+    SCHEMA_FIELD(bool, m_bLerpRestoreMoveType);
+    SCHEMA_FIELD(bool, m_bSingleLerpObject);
+    SCHEMA_FIELD(CUtlVector<lerpdata_t>, m_vecLerpingObjects);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_iszLerpEffect);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_iszLerpSound);
+    SCHEMA_FIELD(bool, m_bAttachTouchingObject);
+    SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEntityToWaitForDisconnect);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnLerpStarted);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnLerpFinished);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnDetached);
+};

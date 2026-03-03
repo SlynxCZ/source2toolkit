@@ -1,0 +1,16 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+class constraint_axislimit_t
+{
+public:
+    DECLARE_SCHEMA_CLASS(constraint_axislimit_t);
+
+    SCHEMA_FIELD(float, flMinRotation);
+    SCHEMA_FIELD(float, flMaxRotation);
+    SCHEMA_FIELD(float, flMotorTargetAngSpeed);
+    SCHEMA_FIELD(float, flMotorMaxTorque);
+};

@@ -1,0 +1,18 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CBaseModelEntity.h"
+
+class CSpotlightEnd : public CBaseModelEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CSpotlightEnd);
+
+    SCHEMA_FIELD(float, m_flLightScale);
+    SCHEMA_FIELD(float, m_Radius);
+    SCHEMA_FIELD(Vector, m_vSpotlightDir);
+    SCHEMA_FIELD(Vector, m_vSpotlightOrg);
+};

@@ -1,0 +1,20 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "ragdollelement_t.h"
+#include "ragdollhierarchyjoint_t.h"
+
+class ragdoll_t
+{
+public:
+    DECLARE_SCHEMA_CLASS(ragdoll_t);
+
+    SCHEMA_FIELD(CUtlVector<ragdollelement_t>, list);
+    SCHEMA_FIELD(CUtlVector<ragdollhierarchyjoint_t>, hierarchyJoints);
+    SCHEMA_FIELD(CUtlVector<int32_t>, boneIndex);
+    SCHEMA_FIELD(bool, allowStretch);
+    SCHEMA_FIELD(bool, unused);
+};

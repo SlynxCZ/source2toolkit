@@ -1,0 +1,16 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CPlayerPawnComponent.h"
+#include "SellbackPurchaseEntry_t.h"
+
+class CCSPlayer_BuyServices : public CPlayerPawnComponent
+{
+public:
+    DECLARE_SCHEMA_CLASS(CCSPlayer_BuyServices);
+
+    SCHEMA_FIELD(CUtlVector<SellbackPurchaseEntry_t>, m_vecSellbackPurchaseEntries);
+};

@@ -1,0 +1,33 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CBaseEntity.h"
+#include "InfoForResourceTypeCTextureBase.h"
+
+class CEnvCubemap : public CBaseEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CEnvCubemap);
+
+    SCHEMA_FIELD(CStrongHandle< InfoForResourceTypeCTextureBase >, m_Entity_hCubemapTexture);
+    SCHEMA_FIELD(bool, m_Entity_bCustomCubemapTexture);
+    SCHEMA_FIELD(float, m_Entity_flInfluenceRadius);
+    SCHEMA_FIELD(Vector, m_Entity_vBoxProjectMins);
+    SCHEMA_FIELD(Vector, m_Entity_vBoxProjectMaxs);
+    SCHEMA_FIELD(bool, m_Entity_bMoveable);
+    SCHEMA_FIELD(int32_t, m_Entity_nHandshake);
+    SCHEMA_FIELD(int32_t, m_Entity_nEnvCubeMapArrayIndex);
+    SCHEMA_FIELD(int32_t, m_Entity_nPriority);
+    SCHEMA_FIELD(float, m_Entity_flEdgeFadeDist);
+    SCHEMA_FIELD(Vector, m_Entity_vEdgeFadeDists);
+    SCHEMA_FIELD(float, m_Entity_flDiffuseScale);
+    SCHEMA_FIELD(bool, m_Entity_bStartDisabled);
+    SCHEMA_FIELD(bool, m_Entity_bDefaultEnvMap);
+    SCHEMA_FIELD(bool, m_Entity_bDefaultSpecEnvMap);
+    SCHEMA_FIELD(bool, m_Entity_bIndoorCubeMap);
+    SCHEMA_FIELD(bool, m_Entity_bCopyDiffuseFromDefaultCubemap);
+    SCHEMA_FIELD(bool, m_Entity_bEnabled);
+};

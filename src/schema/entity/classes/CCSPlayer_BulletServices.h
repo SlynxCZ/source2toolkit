@@ -1,0 +1,15 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CPlayerPawnComponent.h"
+
+class CCSPlayer_BulletServices : public CPlayerPawnComponent
+{
+public:
+    DECLARE_SCHEMA_CLASS(CCSPlayer_BulletServices);
+
+    SCHEMA_FIELD(int32_t, m_totalHitsOnServer);
+};

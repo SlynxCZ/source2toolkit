@@ -1,0 +1,18 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CSoundOpvarSetPointEntity.h"
+
+class CSoundOpvarSetPathCornerEntity : public CSoundOpvarSetPointEntity
+{
+public:
+    DECLARE_SCHEMA_CLASS(CSoundOpvarSetPathCornerEntity);
+
+    SCHEMA_FIELD(bool, m_bUseParentedPath);
+    SCHEMA_FIELD(float, m_flDistMinSqr);
+    SCHEMA_FIELD(float, m_flDistMaxSqr);
+    SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathCornerEntityName);
+};

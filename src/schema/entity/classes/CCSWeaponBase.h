@@ -1,0 +1,70 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+#include "CBasePlayerWeapon.h"
+#include "CIronSightController.h"
+#include "../enums/CSWeaponMode.h"
+#include "../enums/WeaponGameplayAnimState.h"
+
+class CCSPlayerPawn;
+
+class CCSWeaponBase : public CBasePlayerWeapon
+{
+public:
+    DECLARE_SCHEMA_CLASS(CCSWeaponBase);
+
+    SCHEMA_FIELD(bool, m_bRemoveable);
+    SCHEMA_FIELD(bool, m_bPlayerAmmoStockOnPickup);
+    SCHEMA_FIELD(bool, m_bRequireUseToTouch);
+    SCHEMA_FIELD(WeaponGameplayAnimState, m_iWeaponGameplayAnimState);
+    SCHEMA_FIELD(float, m_flWeaponGameplayAnimStateTimestamp);
+    SCHEMA_FIELD(float, m_flInspectCancelCompleteTime);
+    SCHEMA_FIELD(bool, m_bInspectPending);
+    SCHEMA_FIELD(bool, m_bInspectShouldLoop);
+    SCHEMA_FIELD(int32_t, m_nLastEmptySoundCmdNum);
+    SCHEMA_FIELD(bool, m_bFireOnEmpty);
+    SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerPickup);
+    SCHEMA_FIELD(CSWeaponMode, m_weaponMode);
+    SCHEMA_FIELD(float, m_flTurningInaccuracyDelta);
+    SCHEMA_FIELD(Vector, m_vecTurningInaccuracyEyeDirLast);
+    SCHEMA_FIELD(float, m_flTurningInaccuracy);
+    SCHEMA_FIELD(float, m_fAccuracyPenalty);
+    SCHEMA_FIELD(float, m_flLastAccuracyUpdateTime);
+    SCHEMA_FIELD(float, m_fAccuracySmoothedForZoom);
+    SCHEMA_FIELD(int32_t, m_iRecoilIndex);
+    SCHEMA_FIELD(float, m_flRecoilIndex);
+    SCHEMA_FIELD(bool, m_bBurstMode);
+    SCHEMA_FIELD(int32_t, m_nPostponeFireReadyTicks);
+    SCHEMA_FIELD(float, m_flPostponeFireReadyFrac);
+    SCHEMA_FIELD(bool, m_bInReload);
+    SCHEMA_FIELD(float, m_flDroppedAtTime);
+    SCHEMA_FIELD(bool, m_bIsHauledBack);
+    SCHEMA_FIELD(bool, m_bSilencerOn);
+    SCHEMA_FIELD(float, m_flTimeSilencerSwitchComplete);
+    SCHEMA_FIELD(float, m_flWeaponActionPlaybackRate);
+    SCHEMA_FIELD(int32_t, m_iOriginalTeamNumber);
+    SCHEMA_FIELD(int32_t, m_iMostRecentTeamNumber);
+    SCHEMA_FIELD(bool, m_bDroppedNearBuyZone);
+    SCHEMA_FIELD(float, m_flNextAttackRenderTimeOffset);
+    SCHEMA_FIELD(bool, m_bCanBePickedUp);
+    SCHEMA_FIELD(bool, m_bUseCanOverrideNextOwnerTouchTime);
+    SCHEMA_FIELD(float, m_nextOwnerTouchTime);
+    SCHEMA_FIELD(float, m_nextPrevOwnerTouchTime);
+    SCHEMA_FIELD(float, m_nextPrevOwnerUseTime);
+    SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_hPrevOwner);
+    SCHEMA_FIELD(int32_t, m_nDropTick);
+    SCHEMA_FIELD(bool, m_bWasActiveWeaponWhenDropped);
+    SCHEMA_FIELD(bool, m_donated);
+    SCHEMA_FIELD(float, m_fLastShotTime);
+    SCHEMA_FIELD(bool, m_bWasOwnedByCT);
+    SCHEMA_FIELD(bool, m_bWasOwnedByTerrorist);
+    SCHEMA_FIELD(int32_t, m_numRemoveUnownedWeaponThink);
+    SCHEMA_FIELD(CIronSightController, m_IronSightController);
+    SCHEMA_FIELD(int32_t, m_iIronSightMode);
+    SCHEMA_FIELD(float, m_flLastLOSTraceFailureTime);
+    SCHEMA_FIELD(float, m_flWatTickOffset);
+    SCHEMA_FIELD(float, m_flLastShakeTime);
+};

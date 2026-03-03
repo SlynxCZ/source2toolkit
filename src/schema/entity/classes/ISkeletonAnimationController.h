@@ -1,0 +1,12 @@
+#pragma once
+#include "ehandle.h"
+#include "schema/entityio.h"
+#include "schema/schema.h"
+#include <cstdint>
+
+class ISkeletonAnimationController
+{
+public:
+    DECLARE_SCHEMA_CLASS(ISkeletonAnimationController);
+
+};
