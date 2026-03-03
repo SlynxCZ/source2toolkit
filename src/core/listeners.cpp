@@ -8,6 +8,7 @@
 #include <khook/asm.hpp>
 
 #include "commands.h"
+#include "events.h"
 #include "shared.h"
 #include "utils/scheduler.h"
 #include "dynlibutils/module.h"
@@ -26,20 +27,29 @@ namespace listeners {
     SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
     SH_DECL_HOOK3_void(ICvar, DispatchConCommand, SH_NOATTRIB, 0, ConCommandRef, const CCommandContext&, const CCommand&);
     SH_DECL_HOOK2(IGameEventManager2, LoadEventsFromFile, SH_NOATTRIB, 0, int, const char*, bool);
+    SH_DECL_HOOK2(IGameEventManager2, FireEvent, SH_NOATTRIB, 0, bool, IGameEvent*, bool);
 
     int g_iLoadEventsFromFileId = -1;
+    int g_iFireEvent = -1;
+    int g_iFireEventPost = -1;
+
+    static std::vector<IGameEvent *> eventStack;
 
     void InitListeners() {
         SH_ADD_HOOK(IServerGameDLL, GameFrame, shared::g_pServer, SH_MEMBER(&sourceHooks,&SourceHooks::Hook_GameFrame), false);
         SH_ADD_HOOK(INetworkServerService, StartupServer, shared::g_pNetworkServerService, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_StartupServer), true);
         auto pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
         g_iLoadEventsFromFileId = SH_ADD_DVPHOOK(IGameEventManager2, LoadEventsFromFile, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_LoadEventsFromFile), false);
+        g_iFireEvent = SH_ADD_DVPHOOK(IGameEventManager2, FireEvent, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_FireEvent), false);
+        g_iFireEventPost = SH_ADD_DVPHOOK(IGameEventManager2, FireEvent, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_FireEventPost), true);
     }
 
     void DestructListeners() {
         SH_REMOVE_HOOK(IServerGameDLL, GameFrame, shared::g_pServer, SH_MEMBER(&sourceHooks,&SourceHooks::Hook_GameFrame), false);
         SH_REMOVE_HOOK(INetworkServerService, StartupServer, shared::g_pNetworkServerService, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_StartupServer), true);
         SH_REMOVE_HOOK_ID(g_iLoadEventsFromFileId);
+        SH_REMOVE_HOOK_ID(g_iFireEvent);
+        SH_REMOVE_HOOK_ID(g_iFireEventPost);
     }
 
     void SourceHooks::Hook_GameFrame(bool simulating, bool, bool)
@@ -110,5 +120,41 @@ namespace listeners {
     {
         ExecuteOnce(shared::g_pGameEventManager = META_IFACEPTR(IGameEventManager2));
         RETURN_META_VALUE(MRES_IGNORED, 0);
+    }
+
+    bool SourceHooks::Hook_FireEvent(IGameEvent* event, bool bDontBroadcast)
+    {
+        if (!event)
+            RETURN_META_VALUE(MRES_IGNORED, false);
+
+        bool localDontBroadcast = bDontBroadcast;
+        if (!events::DispatchGameEvent(event, KHook::Mode::Pre, localDontBroadcast))
+            RETURN_META_VALUE(MRES_SUPERCEDE, false);
+
+        if (IGameEvent *copy = shared::g_pGameEventManager->DuplicateEvent(event))
+            eventStack.push_back(copy);
+
+        if (localDontBroadcast != bDontBroadcast)
+            RETURN_META_VALUE_NEWPARAMS(MRES_IGNORED, true, &IGameEventManager2::FireEvent,
+                                    (event, localDontBroadcast));
+
+        RETURN_META_VALUE(MRES_IGNORED, true);
+    }
+
+    bool SourceHooks::Hook_FireEventPost(IGameEvent* event, bool bDontBroadcast)
+    {
+        if (!event)
+            RETURN_META_VALUE(MRES_IGNORED, false);
+
+        if (!eventStack.empty()) {
+            IGameEvent *copy = eventStack.back();
+            eventStack.pop_back();
+
+            bool dummy = bDontBroadcast;
+            events::DispatchGameEvent(copy, KHook::Mode::Post, dummy);
+            shared::g_pGameEventManager->FreeEvent(copy);
+        }
+
+        RETURN_META_VALUE(MRES_IGNORED, true);
     }
 }

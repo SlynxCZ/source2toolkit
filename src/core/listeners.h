@@ -3,6 +3,7 @@
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
+#include "igameevents.h"
 #include "eiface.h"
 #include "entitysystem.h"
 
@@ -16,6 +17,8 @@ namespace listeners {
         void Hook_StartupServer(const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
         void Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
         int Hook_LoadEventsFromFile(const char*, bool);
+        bool Hook_FireEvent(IGameEvent *event, bool bDontBroadcast);
+        bool Hook_FireEventPost(IGameEvent *event, bool bDontBroadcast);
     };
 
     class CEntityListener: public IEntityListener {

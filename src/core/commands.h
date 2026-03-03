@@ -3,7 +3,8 @@
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
-#include "KHook/src/detour.hpp"
+#include "KHook.hpp"
+#include <functional>
 
 class CCommand;
 class CCommandContext;
@@ -27,6 +28,7 @@ namespace commands {
         };
     }
 
+    void InitCommands();
     void DestructCommands();
 
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);

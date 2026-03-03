@@ -14,6 +14,7 @@
 #include "utils/scheduler.h"
 
 #include "entitysystem.h"
+#include "events.h"
 #include "schema/cgameresourceserviceserver.h"
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
@@ -63,6 +64,8 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
 
     g_SMAPI->AddListener(this, this);
 
+    commands::InitCommands();
+    events::InitEvents();
     listeners::InitListeners();
 
     g_pCVar = shared::g_pCVar;
@@ -82,6 +85,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
 bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
 {
     commands::DestructCommands();
+    events::DestructEvents();
     listeners::DestructListeners();
     scheduler::Shutdown();
 

@@ -15,6 +15,11 @@ namespace commands {
     static std::unordered_set<std::string> registeredNames;
     static std::unordered_map<std::string, CommandHandler> commandCallbacks;
 
+    void InitCommands()
+    {
+        // Todo: shared API vtable
+    }
+
     void DestructCommands()
     {
         registeredCommands.clear();
