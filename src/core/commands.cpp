@@ -15,6 +15,14 @@ namespace commands {
     static std::unordered_set<std::string> registeredNames;
     static std::unordered_map<std::string, CommandHandler> commandCallbacks;
 
+    void DestructCommands()
+    {
+        registeredCommands.clear();
+        consoleListeners.clear();
+        registeredNames.clear();
+        commandCallbacks.clear();
+    }
+
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args) {
         if (args.ArgC() < 1)
             return;
@@ -27,22 +35,52 @@ namespace commands {
         (void) it->second(ctx, args, KHook::Mode::Post);
     }
 
-    void RegisterChatListener(const std::string &name, ChatHandler &handler) {
-        CommandHandler nativeHandler = WrapVoidHandler(handler);
+    KHook::Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, KHook::Mode mode) {
+        std::string name = args.Arg(0);
+        std::transform(name.begin(), name.end(), name.begin(),
+                       [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
 
-        RegisterConsoleListener(name, nativeHandler, KHook::Mode::Pre);
-        RegisterConsoleListener("/" + name, nativeHandler, KHook::Mode::Pre);
-        RegisterConsoleListener("!" + name, nativeHandler, KHook::Mode::Pre);
+        auto it = consoleListeners.find(name);
+        if (it == consoleListeners.end())
+            return KHook::Action::Ignore;
+
+        KHook::Action result = KHook::Action::Ignore;
+
+        for (const auto &entry: it->second) {
+            if (entry.mode != mode)
+                continue;
+
+            KHook::Action thisResult = entry.handler(ctx, args, mode);
+
+            if (thisResult == KHook::Action::Supersede)
+                return KHook::Action::Supersede;
+
+            if (thisResult == KHook::Action::Override && mode == KHook::Mode::Pre)
+                return KHook::Action::Override;
+
+            if (static_cast<int>(thisResult) > static_cast<int>(result))
+                result = thisResult;
+        }
+
+        return result;
     }
 
-    void RegisterConsoleCommand(const std::string &name, ChatHandler &handler) {
+    void RegChatListener(const std::string &name, ChatHandler &handler) {
+        CommandHandler nativeHandler = WrapVoidHandler(handler);
+
+        RegConListener(name, nativeHandler, KHook::Mode::Pre);
+        RegConListener("/" + name, nativeHandler, KHook::Mode::Pre);
+        RegConListener("!" + name, nativeHandler, KHook::Mode::Pre);
+    }
+
+    void RegConCommand(const std::string &name, ChatHandler &handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
         if (shared::g_pCVar && shared::g_pCVar->FindConCommand(name.c_str()).IsValidRef()) {
             FP_WARN("Command '{}' exists in engine, registering chat-only alias", name);
-            RegisterConsoleListener(name, nativeHandler, KHook::Mode::Pre);
-            RegisterConsoleListener("/" + name, nativeHandler, KHook::Mode::Pre);
-            RegisterConsoleListener("!" + name, nativeHandler, KHook::Mode::Pre);
+            RegConListener(name, nativeHandler, KHook::Mode::Pre);
+            RegConListener("/" + name, nativeHandler, KHook::Mode::Pre);
+            RegConListener("!" + name, nativeHandler, KHook::Mode::Pre);
             return;
         }
 
@@ -52,12 +90,12 @@ namespace commands {
             registeredNames.insert(name);
         }
 
-        RegisterConsoleListener(name, nativeHandler, KHook::Mode::Pre);
-        RegisterConsoleListener("/" + name, nativeHandler, KHook::Mode::Pre);
-        RegisterConsoleListener("!" + name, nativeHandler, KHook::Mode::Pre);
+        RegConListener(name, nativeHandler, KHook::Mode::Pre);
+        RegConListener("/" + name, nativeHandler, KHook::Mode::Pre);
+        RegConListener("!" + name, nativeHandler, KHook::Mode::Pre);
     }
 
-    void RegisterConsoleListener(const std::string &name, CommandHandler handler, KHook::Mode mode) {
+    void RegConListener(const std::string &name, CommandHandler handler, KHook::Mode mode) {
         consoleListeners[name].push_back({handler, mode});
     }
 }

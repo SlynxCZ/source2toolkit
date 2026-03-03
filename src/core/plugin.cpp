@@ -4,6 +4,7 @@
 //
 #include "plugin.h"
 
+#include "commands.h"
 #include "gameconfig.h"
 #include "listeners.h"
 #include "shared.h"
@@ -61,6 +62,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     }
 
     g_SMAPI->AddListener(this, this);
+
     listeners::InitListeners();
 
     g_pCVar = shared::g_pCVar;
@@ -79,6 +81,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
 
 bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
 {
+    commands::DestructCommands();
     listeners::DestructListeners();
     scheduler::Shutdown();
 

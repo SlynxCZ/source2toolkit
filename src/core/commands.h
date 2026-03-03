@@ -27,9 +27,12 @@ namespace commands {
         };
     }
 
-    void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);
+    void DestructCommands();
 
-    void RegisterChatListener(const std::string &name, ChatHandler &handler);
-    void RegisterConsoleCommand(const std::string &name, ChatHandler &handler);
-    void RegisterConsoleListener(const std::string &name, CommandHandler &handler, KHook::Mode mode);
+    void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);
+    KHook::Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, KHook::Mode mode);
+
+    void RegChatListener(const std::string &name, ChatHandler &handler);
+    void RegConCommand(const std::string &name, ChatHandler &handler);
+    void RegConListener(const std::string &name, CommandHandler &handler, KHook::Mode mode);
 }

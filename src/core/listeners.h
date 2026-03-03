@@ -8,14 +8,14 @@
 
 namespace listeners {
     void InitListeners();
-
     void DestructListeners();
 
     class SourceHooks {
     public:
-        void Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick);
-        void Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession*, const char*);
-        int Hook_LoadEventsFromFile(const char* filename, bool bSearchAll);
+        void Hook_GameFrame(bool simulating, bool, bool);
+        void Hook_StartupServer(const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
+        void Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
+        int Hook_LoadEventsFromFile(const char*, bool);
     };
 
     class CEntityListener: public IEntityListener {
@@ -28,5 +28,4 @@ namespace listeners {
 
     extern SourceHooks sourceHooks;
     extern CEntityListener entityListener;
-
 }

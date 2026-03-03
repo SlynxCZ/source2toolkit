@@ -4,6 +4,10 @@
 //
 #include "listeners.h"
 
+#include <khook.hpp>
+#include <khook/asm.hpp>
+
+#include "commands.h"
 #include "shared.h"
 #include "utils/scheduler.h"
 #include "dynlibutils/module.h"
@@ -20,6 +24,7 @@ namespace listeners {
 
     SH_DECL_HOOK3_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
     SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
+    SH_DECL_HOOK3_void(ICvar, DispatchConCommand, SH_NOATTRIB, 0, ConCommandRef, const CCommandContext&, const CCommand&);
     SH_DECL_HOOK2(IGameEventManager2, LoadEventsFromFile, SH_NOATTRIB, 0, int, const char*, bool);
 
     int g_iLoadEventsFromFileId = -1;
@@ -37,7 +42,7 @@ namespace listeners {
         SH_REMOVE_HOOK_ID(g_iLoadEventsFromFileId);
     }
 
-    void SourceHooks::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
+    void SourceHooks::Hook_GameFrame(bool simulating, bool, bool)
     {
         scheduler::Tick(simulating);
 
@@ -47,8 +52,7 @@ namespace listeners {
         has_ticked = true;
     }
 
-    void SourceHooks::Hook_StartupServer(const GameSessionConfiguration_t& config,
-                                            ISource2WorldSession*, const char*)
+    void SourceHooks::Hook_StartupServer(const GameSessionConfiguration_t&, ISource2WorldSession*, const char*)
     {
         if (!shared::g_bDetoursLoaded)
         {
@@ -63,7 +67,46 @@ namespace listeners {
         has_ticked = false;
     }
 
-    int SourceHooks::Hook_LoadEventsFromFile(const char* filename, bool bSearchAll)
+    void SourceHooks::Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext &ctx, const CCommand &args) {
+        if (args.ArgC() >= 2) {
+            const char *cmd = args.Arg(0);
+            const char *msg = args.Arg(1);
+
+            if (V_strcmp(cmd, "say") == 0 || V_strcmp(cmd, "say_team") == 0) {
+                std::string message = msg;
+
+                if (message.size() >= 2 && message.front() == '"' && message.back() == '"')
+                    message = message.substr(1, message.size() - 2);
+
+                if (!message.empty() && (message[0] == '!' || message[0] == '/')) {
+                    std::string cleaned = message.substr(1);
+
+                    CCommand parsed;
+                    parsed.Tokenize(cleaned.c_str());
+
+                    if (parsed.ArgC() > 0) {
+                        KHook::Action r = commands::DispatchConsoleListener(ctx, parsed, KHook::Mode::Pre);
+                        if (r != KHook::Action::Supersede)
+                            commands::DispatchConsoleListener(ctx, parsed, KHook::Mode::Post);
+                    }
+
+                    RETURN_META(MRES_SUPERCEDE);
+                }
+            }
+        }
+
+        KHook::Action result = commands::DispatchConsoleListener(ctx, args, KHook::Mode::Pre);
+
+        if (result == KHook::Action::Supersede)
+            RETURN_META(MRES_SUPERCEDE);
+
+        if (result == KHook::Action::Override)
+            RETURN_META(MRES_OVERRIDE);
+
+        commands::DispatchConsoleListener(ctx, args, KHook::Mode::Post);
+    }
+
+    int SourceHooks::Hook_LoadEventsFromFile(const char*, bool)
     {
         ExecuteOnce(shared::g_pGameEventManager = META_IFACEPTR(IGameEventManager2));
         RETURN_META_VALUE(MRES_IGNORED, 0);
