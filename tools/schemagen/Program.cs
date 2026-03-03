@@ -207,7 +207,7 @@ internal static partial class Program
 
         foreach (var schemaFile in schemaFiles)
         {
-            var schemaPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, schemaFile);
+            var schemaPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../../", schemaFile);
 
             var newSchema = JsonSerializer.Deserialize<NewSchemaModule>(
                 File.ReadAllText(schemaPath),
