@@ -70,7 +70,7 @@ namespace commands {
         return result;
     }
 
-    void RegChatListener(const std::string &name, ChatHandler &handler) {
+    void RegChatListener(const std::string &name, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
         RegConListener(name, nativeHandler, KHook::Mode::Pre);
@@ -78,7 +78,7 @@ namespace commands {
         RegConListener("!" + name, nativeHandler, KHook::Mode::Pre);
     }
 
-    void RegConCommand(const std::string &name, ChatHandler &handler) {
+    void RegConCommand(const std::string &name, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
         if (shared::g_pCVar && shared::g_pCVar->FindConCommand(name.c_str()).IsValidRef()) {
@@ -100,7 +100,7 @@ namespace commands {
         RegConListener("!" + name, nativeHandler, KHook::Mode::Pre);
     }
 
-    void RegConListener(const std::string &name, CommandHandler &handler, KHook::Mode mode) {
+    void RegConListener(const std::string &name, CommandHandler handler, KHook::Mode mode) {
         consoleListeners[name].push_back({handler, mode});
     }
 }

@@ -37,6 +37,7 @@ namespace listeners {
     void InitListeners() {
         SH_ADD_HOOK(IServerGameDLL, GameFrame, shared::g_pServer, SH_MEMBER(&sourceHooks,&SourceHooks::Hook_GameFrame), false);
         SH_ADD_HOOK(INetworkServerService, StartupServer, shared::g_pNetworkServerService, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_StartupServer), true);
+        SH_ADD_HOOK(ICvar, DispatchConCommand, shared::g_pCVar, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_DispatchConCommand), false);
         auto pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
         g_iLoadEventsFromFileId = SH_ADD_DVPHOOK(IGameEventManager2, LoadEventsFromFile, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_LoadEventsFromFile), false);
         g_iFireEvent = SH_ADD_DVPHOOK(IGameEventManager2, FireEvent, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_FireEvent), false);
@@ -46,6 +47,7 @@ namespace listeners {
     void DestructListeners() {
         SH_REMOVE_HOOK(IServerGameDLL, GameFrame, shared::g_pServer, SH_MEMBER(&sourceHooks,&SourceHooks::Hook_GameFrame), false);
         SH_REMOVE_HOOK(INetworkServerService, StartupServer, shared::g_pNetworkServerService, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_StartupServer), true);
+        SH_REMOVE_HOOK(ICvar, DispatchConCommand, shared::g_pCVar, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_DispatchConCommand), false);
         SH_REMOVE_HOOK_ID(g_iLoadEventsFromFileId);
         SH_REMOVE_HOOK_ID(g_iFireEvent);
         SH_REMOVE_HOOK_ID(g_iFireEventPost);
