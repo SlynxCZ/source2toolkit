@@ -16,6 +16,7 @@ public static class CustomMethods
             "void SetAbsVelocity(Vector vecVelocity);",
             "void SetBaseVelocity(Vector vecVelocity);",
             "CEntitySubclassVDataBase* GetVData();",
+            "void DispatchSpawn(CEntityKeyValues* pEntityKeyValues = nullptr);",
             "void Teleport(const Vector* position, const QAngle* angles, const Vector* velocity);",
             "void SetMoveType(MoveType_t nMoveType);",
             "uint8 GetCollisionGroup();",

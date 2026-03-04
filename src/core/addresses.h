@@ -24,6 +24,8 @@
     FP_DEBUG("Found '{}' at {}", name, fmt::ptr(variable));           \
 }
 
+class CEntityKeyValues;
+class CBaseEntity;
 class CBasePlayerWeapon;
 class CBaseModelEntity;
 class CBasePlayerPawn;
@@ -33,6 +35,7 @@ namespace addresses
 {
     bool Initialize();
 
+    inline void(FASTCALL* CBaseEntity_DispatchSpawn)(CBaseEntity* pEntity, CEntityKeyValues* pEntityKeyValues);
     inline void(FASTCALL* CBaseModelEntity_SetModel)(CBaseModelEntity* pModel, const char* szModel);
     inline void(FASTCALL* CBasePlayerController_SetPawn)(CBasePlayerController* pController, CBasePlayerPawn* pPawn, bool a3, bool a4, bool a5, bool a6);
     inline void(FASTCALL* CBasePlayerPawn_RemovePlayerItem)(CBasePlayerPawn* pPawn, CBasePlayerWeapon* pWeapon);
