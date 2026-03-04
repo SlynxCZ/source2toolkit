@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -13,6 +17,7 @@
 
 class CAI_Expresser;
 class CBasePlayerController;
+class CBasePlayerWeapon;
 class CPlayer_AutoaimServices;
 class CPlayer_CameraServices;
 class CPlayer_FlashlightServices;
@@ -53,4 +58,8 @@ public:
     SCHEMA_FIELD(float, m_fHltvReplayEnd);
     SCHEMA_FIELD(CEntityIndex, m_iHltvReplayEntity);
     SCHEMA_FIELD(CUtlVector<sndopvarlatchdata_t>, m_sndOpvarLatchData);
+
+public:
+    void CommitSuicide(bool bExplode, bool bForce);
+    void RemovePlayerItem(CBasePlayerWeapon* pWeapon);
 };

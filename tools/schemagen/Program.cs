@@ -324,10 +324,12 @@ internal static partial class Program
         // Clear output directory
         if (Directory.Exists(outputPath))
         {
-            string[] files = Directory.GetFiles(outputPath, "*", SearchOption.AllDirectories);
-            foreach (string file in files)
+            foreach (var file in Directory.EnumerateFiles(outputPath, "*", SearchOption.AllDirectories))
             {
-                File.Delete(file);
+                if (Path.GetExtension(file) == ".h")
+                {
+                    File.Delete(file);
+                }
             }
         }
 
@@ -448,6 +450,34 @@ internal static partial class Program
         }
     }
 
+    private static void CollectTypesFromMethods(
+        IEnumerable<string> methods,
+        IReadOnlyDictionary<string, SchemaEnum> allEnums,
+        IReadOnlyDictionary<string, SchemaClass> allClasses,
+        HashSet<string> includes,
+        HashSet<string> forwards)
+    {
+        foreach (var method in methods)
+        {
+            foreach (var clazz in allClasses.Keys)
+            {
+                if (method.Contains(clazz))
+                {
+                    if (!includes.Contains(clazz))
+                        forwards.Add(clazz);
+                }
+            }
+
+            foreach (var enm in allEnums.Keys)
+            {
+                if (method.Contains(enm))
+                {
+                    includes.Add(enm);
+                }
+            }
+        }
+    }
+
     private static void WriteClass(
         StringBuilder builder,
         string className,
@@ -481,6 +511,11 @@ internal static partial class Program
                 field.Type.Category == SchemaTypeCategory.Ptr);
         }
 
+        if (CustomMethods.ManualMethods.TryGetValue(className, out var methods))
+        {
+            CollectTypesFromMethods(methods, allEnums, allClasses, includes, forwards);
+        }
+
         includes.Remove(className);
         forwards.Remove(className);
 
@@ -489,7 +524,11 @@ internal static partial class Program
         builder.AppendLine("#pragma once");
         builder.AppendLine("#include \"ehandle.h\"");
         builder.AppendLine("#include \"entityhandle.h\"");
+        builder.AppendLine("#include \"vector.h\"");
+        builder.AppendLine("#include \"utlsymbol.h\"");
         builder.AppendLine("#include \"utlsymbollarge.h\"");
+        builder.AppendLine("#include \"utlstring.h\"");
+        builder.AppendLine("#include \"utlstringtoken.h\"");
         builder.AppendLine("#include \"schema/entityio.h\"");
         builder.AppendLine("#include \"schema/schema.h\"");
         builder.AppendLine("#include <cstdint>");
@@ -536,15 +575,27 @@ internal static partial class Program
             if (ContainsIgnoredType(field.Type))
                 continue;
 
-            if (field.Type.Category == SchemaTypeCategory.FixedArray)
+            if (field.Type.Category == SchemaTypeCategory.FixedArray ||
+                field.Type.Name == "CUtlStringToken")
             {
                 builder.AppendLine(
-                    $"    SCHEMA_FIELD_POINTER({field.Type.Inner!.CppTypeName}, {field.Name});");
+                    $"    SCHEMA_FIELD_POINTER({field.Type.CppTypeName}, {field.Name});");
             }
             else
             {
                 builder.AppendLine(
                     $"    SCHEMA_FIELD({field.Type.CppTypeName}, {field.Name});");
+            }
+        }
+
+        if (CustomMethods.ManualMethods.TryGetValue(className, out methods))
+        {
+            builder.AppendLine();
+            builder.AppendLine("public:");
+
+            foreach (var method in methods)
+            {
+                builder.AppendLine($"    {method}");
             }
         }
 

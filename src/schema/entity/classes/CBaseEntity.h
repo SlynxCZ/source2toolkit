@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -17,6 +21,7 @@
 class CBaseFilter;
 class CBodyComponent;
 class CCollisionProperty;
+class CEntitySubclassVDataBase;
 class CPulseGraphInstance_ServerEntity;
 
 class CBaseEntity : public CEntityInstance
@@ -51,7 +56,7 @@ public:
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hDamageFilter);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszDamageFilterName);
     SCHEMA_FIELD(float, m_flMoveDoneTime);
-    SCHEMA_FIELD(CUtlStringToken, m_nSubclassID);
+    SCHEMA_FIELD_POINTER(CUtlStringToken, m_nSubclassID);
     SCHEMA_FIELD(float, m_flAnimTime);
     SCHEMA_FIELD(float, m_flSimulationTime);
     SCHEMA_FIELD(float, m_flCreateTime);
@@ -104,4 +109,23 @@ public:
     SCHEMA_FIELD(float, m_flVPhysicsUpdateLocalTime);
     SCHEMA_FIELD(BloodType, m_nBloodType);
     SCHEMA_FIELD(CPulseGraphInstance_ServerEntity*, m_pPulseGraphInstance);
+
+public:
+    Vector GetAbsOrigin();
+    QAngle GetAngRotation();
+    QAngle GetAbsRotation();
+    Vector GetAbsVelocity();
+    void SetAbsOrigin(Vector vecOrigin);
+    void SetAbsRotation(QAngle angAbsRotation);
+    void SetAngRotation(QAngle angRotation);
+    void SetAbsVelocity(Vector vecVelocity);
+    void SetBaseVelocity(Vector vecVelocity);
+    CEntitySubclassVDataBase* GetVData();
+    void Teleport(const Vector* position, const QAngle* angles, const Vector* velocity);
+    void SetMoveType(MoveType_t nMoveType);
+    uint8 GetCollisionGroup();
+    void SetCollisionGroup(uint8 nCollisionGroup);
+    void CollisionRulesChanged();
+    CHandle<CBaseEntity> GetHandle();
+    const char* GetName() const;
 };

@@ -4,6 +4,7 @@
 //
 #include "plugin.h"
 
+#include "addresses.h"
 #include "commands.h"
 #include "gameconfig.h"
 #include "listeners.h"
@@ -64,6 +65,12 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     if (!shared::g_pGameConfig->Init(conf_error, sizeof(conf_error)))
     {
         FP_ERROR("Could not read '{}'. Error: {}", gamedata_path, conf_error);
+        return false;
+    }
+
+    if (!addresses::Initialize())
+    {
+        FP_ERROR("Could not initialize addresses.");
         return false;
     }
 

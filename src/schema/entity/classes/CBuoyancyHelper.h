@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -11,7 +15,7 @@ class CBuoyancyHelper
 public:
     DECLARE_SCHEMA_CLASS(CBuoyancyHelper);
 
-    SCHEMA_FIELD(CUtlStringToken, m_nFluidType);
+    SCHEMA_FIELD_POINTER(CUtlStringToken, m_nFluidType);
     SCHEMA_FIELD(float, m_flFluidDensity);
     SCHEMA_FIELD(float, m_flNeutrallyBuoyantGravity);
     SCHEMA_FIELD(float, m_flNeutrallyBuoyantLinearDamping);

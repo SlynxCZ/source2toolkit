@@ -1,4 +1,43 @@
 ﻿{
+  "CBaseModelEntity_SetModel": {
+    "signatures": {
+      "library": "server",
+      "windows": "40 53 48 83 EC ? 48 8B D9 4C 8B C2 48 8B 0D ? ? ? ? 48 8D 54 24 ? 48 8B 01 FF 50 ? 48 8B 44 24 ? 48 8D 54 24 ? 48 8B CB 48 89 44 24 ? E8 ? ? ? ? 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24",
+      "linux": "55 48 89 F2 48 89 E5 53 48 89 FB 48 8D 7D ? 48 83 EC ? 48 8D 05 ? ? ? ? 48 8B 30 48 8B 06 FF 50 ? 48 8B 45 ? 48 8D 75 ? 48 89 DF 48 89 45 ? E8 ? ? ? ? 48 8B 5D ? C9 C3 CC CC CC 55"
+    }
+  },
+  "CBasePlayerController_SetPawn": {
+    "signatures": {
+      "library": "server",
+      "windows": "44 88 4C 24 ? 53 57",
+      "linux": "55 48 8D 87 ? ? ? ? 48 89 E5 41 57 41 89 CF"
+    }
+  },
+  "CBasePlayerPawn_RemovePlayerItem": {
+    "signatures": {
+      "library": "server",
+      "windows": "48 ? ? 0F 84 ? ? ? ? 48 89 5C 24 ? 57 48 ? ? ? 48 ? ? 48 ? ? E8",
+      "linux": "55 48 89 E5 41 54 49 89 FC 53 48 89 F3 E8 ? ? ? ? 48 39 C3 74 ? 4C 89 E7 E8 ? ? ? ? 48 39 C3 74 ? 4C 89 E7 48 89 DE E8 ? ? ? ? 48 89 DF 5B 41 5C 5D E9 ? ? ? ? 0F 1F 44 00 00"
+    }
+  },
+  "CBaseEntity_CollisionRulesChanged": {
+    "offsets": {
+      "windows": 185,
+      "linux": 184
+    }
+  },
+  "CBaseEntity_Teleport": {
+    "offsets": {
+      "windows": 162,
+      "linux": 161
+    }
+  },
+  "CBasePlayerPawn_CommitSuicide": {
+    "offsets": {
+      "windows": 400,
+      "linux": 400
+    }
+  },
   "GameEntitySystem": {
     "offsets": {
       "windows": 88,

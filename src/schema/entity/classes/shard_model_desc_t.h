@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -26,5 +30,5 @@ public:
     SCHEMA_FIELD(float, m_flGlassHalfThickness);
     SCHEMA_FIELD(bool, m_bHasParent);
     SCHEMA_FIELD(bool, m_bParentFrozen);
-    SCHEMA_FIELD(CUtlStringToken, m_SurfacePropStringToken);
+    SCHEMA_FIELD_POINTER(CUtlStringToken, m_SurfacePropStringToken);
 };

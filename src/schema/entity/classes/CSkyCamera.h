@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -15,7 +19,7 @@ public:
     DECLARE_SCHEMA_CLASS(CSkyCamera);
 
     SCHEMA_FIELD(sky3dparams_t, m_skyboxData);
-    SCHEMA_FIELD(CUtlStringToken, m_skyboxSlotToken);
+    SCHEMA_FIELD_POINTER(CUtlStringToken, m_skyboxSlotToken);
     SCHEMA_FIELD(bool, m_bUseAngles);
     SCHEMA_FIELD(CSkyCamera*, m_pNext);
 };

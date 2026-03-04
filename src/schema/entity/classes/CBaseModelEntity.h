@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -53,4 +57,9 @@ public:
     SCHEMA_FIELD(uint8_t, m_nObjectCulling);
     SCHEMA_FIELD(CNetworkViewOffsetVector, m_vecViewOffset);
     SCHEMA_FIELD_POINTER(uint32_t, m_bvDisabledHitGroups);
+
+public:
+    CUtlSymbolLarge GetModelName();
+    Vector GetEyePosition();
+    void SetModel(const char* pszModel);
 };

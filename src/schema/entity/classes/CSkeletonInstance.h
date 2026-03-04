@@ -1,7 +1,11 @@
 #pragma once
 #include "ehandle.h"
 #include "entityhandle.h"
+#include "vector.h"
+#include "utlsymbol.h"
 #include "utlsymbollarge.h"
+#include "utlstring.h"
+#include "utlstringtoken.h"
 #include "schema/entityio.h"
 #include "schema/schema.h"
 #include <cstdint>
@@ -18,7 +22,7 @@ public:
     SCHEMA_FIELD(bool, m_bIsAnimationEnabled);
     SCHEMA_FIELD(bool, m_bUseParentRenderBounds);
     SCHEMA_FIELD(bool, m_bDisableSolidCollisionsForHierarchy);
-    SCHEMA_FIELD(CUtlStringToken, m_materialGroup);
+    SCHEMA_FIELD_POINTER(CUtlStringToken, m_materialGroup);
     SCHEMA_FIELD(uint8_t, m_nHitboxSet);
     SCHEMA_FIELD(bool, m_bForceServerConstraintsEnabled);
 };
