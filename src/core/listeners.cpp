@@ -58,9 +58,10 @@ namespace listeners {
         scheduler::Tick(simulating);
 
         if (!shared::getGlobalVars())
-            return;
+            RETURN_META(MRES_IGNORED);
 
         has_ticked = true;
+        RETURN_META(MRES_IGNORED);
     }
 
     void SourceHooks::Hook_StartupServer(const GameSessionConfiguration_t&, ISource2WorldSession*, const char*)
@@ -76,6 +77,7 @@ namespace listeners {
             scheduler::RemoveMapChangeTimers();
         }
         has_ticked = false;
+        RETURN_META(MRES_IGNORED);
     }
 
     void SourceHooks::Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext &ctx, const CCommand &args) {
@@ -115,6 +117,7 @@ namespace listeners {
             RETURN_META(MRES_OVERRIDE);
 
         commands::DispatchConsoleListener(ctx, args, KHook::Mode::Post);
+        RETURN_META(MRES_IGNORED);
     }
 
     int SourceHooks::Hook_LoadEventsFromFile(const char*, bool)
