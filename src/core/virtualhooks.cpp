@@ -2,7 +2,7 @@
 // Created by Michal Přikryl on 02.03.2026.
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
-#include "listeners.h"
+#include "virtualhooks.h"
 
 #include "commands.h"
 #include "events.h"
@@ -18,13 +18,14 @@ class GameSessionConfiguration_t
 {
 };
 
-namespace listeners {
+namespace virtualhooks {
     SourceHooks sourceHooks;
     CEntityListener entityListener;
 
     SH_DECL_HOOK3_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
     SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
     SH_DECL_HOOK3_void(ICvar, DispatchConCommand, SH_NOATTRIB, 0, ConCommandRef, const CCommandContext&, const CCommand&);
+    SH_DECL_HOOK2_void(IServerGameClients, ClientCommand, SH_NOATTRIB, 0, CPlayerSlot, const CCommand&);
     SH_DECL_HOOK2(IGameEventManager2, LoadEventsFromFile, SH_NOATTRIB, 0, int, const char*, bool);
     SH_DECL_HOOK2(IGameEventManager2, FireEvent, SH_NOATTRIB, 0, bool, IGameEvent*, bool);
 
@@ -38,6 +39,7 @@ namespace listeners {
         SH_ADD_HOOK(IServerGameDLL, GameFrame, shared::g_pServer, SH_MEMBER(&sourceHooks,&SourceHooks::Hook_GameFrame), false);
         SH_ADD_HOOK(INetworkServerService, StartupServer, shared::g_pNetworkServerService, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_StartupServer), true);
         SH_ADD_HOOK(ICvar, DispatchConCommand, shared::g_pCVar, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_DispatchConCommand), false);
+        SH_ADD_HOOK(IServerGameClients, ClientCommand, shared::g_pGameClients, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_ClientCommand), false);
         auto pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
         g_iLoadEventsFromFileId = SH_ADD_DVPHOOK(IGameEventManager2, LoadEventsFromFile, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_LoadEventsFromFile), false);
         g_iFireEvent = SH_ADD_DVPHOOK(IGameEventManager2, FireEvent, pCGameEventManagerVTable, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_FireEvent), false);
@@ -48,12 +50,13 @@ namespace listeners {
         SH_REMOVE_HOOK(IServerGameDLL, GameFrame, shared::g_pServer, SH_MEMBER(&sourceHooks,&SourceHooks::Hook_GameFrame), false);
         SH_REMOVE_HOOK(INetworkServerService, StartupServer, shared::g_pNetworkServerService, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_StartupServer), true);
         SH_REMOVE_HOOK(ICvar, DispatchConCommand, shared::g_pCVar, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_DispatchConCommand), false);
+        SH_REMOVE_HOOK(IServerGameClients, ClientCommand, shared::g_pGameClients, SH_MEMBER(&sourceHooks, &SourceHooks::Hook_ClientCommand), false);
         SH_REMOVE_HOOK_ID(g_iLoadEventsFromFileId);
         SH_REMOVE_HOOK_ID(g_iFireEvent);
         SH_REMOVE_HOOK_ID(g_iFireEventPost);
     }
 
-    void SourceHooks::Hook_GameFrame(bool simulating, bool, bool)
+    void SourceHooks::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
     {
         scheduler::Tick(simulating);
 
@@ -64,7 +67,7 @@ namespace listeners {
         RETURN_META(MRES_IGNORED);
     }
 
-    void SourceHooks::Hook_StartupServer(const GameSessionConfiguration_t&, ISource2WorldSession*, const char*)
+    void SourceHooks::Hook_StartupServer(const GameSessionConfiguration_t &config, ISource2WorldSession *pWorldSession, const char *)
     {
         if (!shared::g_bDetoursLoaded)
         {
@@ -120,7 +123,23 @@ namespace listeners {
         RETURN_META(MRES_IGNORED);
     }
 
-    int SourceHooks::Hook_LoadEventsFromFile(const char*, bool)
+    void SourceHooks::Hook_ClientCommand(CPlayerSlot slot, const CCommand& args)
+    {
+        if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
+        {
+            CCommandContext ctx(CT_NO_TARGET, slot);
+            KHook::Action result = commands::DispatchConsoleListener(ctx, args, KHook::Mode::Pre);
+
+            if (result == KHook::Action::Supersede)
+                RETURN_META(MRES_SUPERCEDE);
+
+            commands::DispatchConsoleListener(ctx, args, KHook::Mode::Pre);
+        }
+
+        RETURN_META(MRES_IGNORED);
+    }
+
+    int SourceHooks::Hook_LoadEventsFromFile(const char *filename, bool bSearchAll)
     {
         ExecuteOnce(shared::g_pGameEventManager = META_IFACEPTR(IGameEventManager2));
         events::InitEvents();

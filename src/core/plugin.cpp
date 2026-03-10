@@ -7,7 +7,7 @@
 #include "addresses.h"
 #include "commands.h"
 #include "gameconfig.h"
-#include "listeners.h"
+#include "virtualhooks.h"
 #include "shared.h"
 
 #include "utils/log.h"
@@ -77,7 +77,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     g_SMAPI->AddListener(this, this);
 
     commands::InitCommands();
-    listeners::InitListeners();
+    virtualhooks::InitListeners();
 
     g_pCVar = shared::g_pCVar;
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
@@ -90,10 +90,10 @@ bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
 {
     commands::DestructCommands();
     events::DestructEvents();
-    listeners::DestructListeners();
+    virtualhooks::DestructListeners();
     scheduler::Shutdown();
 
-    shared::g_pEntitySystem->RemoveListenerEntity(&listeners::entityListener);
+    shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);
     shared::g_bDetoursLoaded = false;
 
     FP_INFO("Unload() success!");
