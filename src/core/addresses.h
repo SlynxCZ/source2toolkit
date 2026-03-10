@@ -6,6 +6,7 @@
 
 #include "utils/log.h"
 
+#include "platform.h"
 #include "dynlibutils/module.h"
 #include "dynlibutils/memaddr.h"
 

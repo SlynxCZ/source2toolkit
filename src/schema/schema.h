@@ -44,6 +44,39 @@ private:
     uint8 pad_0024[4];
 };
 
+template<typename T>
+class CStrongHandle
+{
+private:
+	T* m_pValue;
+
+public:
+	T* Get() const
+	{
+		return m_pValue;
+	}
+
+	void Set(void* pPtr)
+	{
+		m_pValue = pPtr;
+	}
+
+	bool IsValid() const
+	{
+		return m_pValue != nullptr;
+	}
+
+	T* operator->() const
+	{
+		return m_pValue;
+	}
+
+	operator T*() const
+	{
+		return m_pValue;
+	}
+};
+
 void EntityNetworkStateChanged(uintptr_t pEntity, uint nOffset);
 void ChainNetworkStateChanged(uintptr_t pNetworkVarChainer, uint nOffset);
 void NetworkVarStateChanged(uintptr_t pNetworkVar, uint32_t nOffset, uint32 nNetworkStateChangedOffset);

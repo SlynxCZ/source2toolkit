@@ -19,7 +19,7 @@ CUtlSymbolLarge CBaseModelEntity::GetModelName()
 
 Vector CBaseModelEntity::GetEyePosition()
 {
-    Vector x = m_vecViewOffset;
+    Vector x = Vector(m_vecViewOffset().m_vecX, m_vecViewOffset().m_vecY, m_vecViewOffset().m_vecZ);
     Vector m_vecOrigin = GetAbsOrigin();
     return {
         m_vecOrigin.x + x.x,
