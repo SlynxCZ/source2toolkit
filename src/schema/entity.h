@@ -42,9 +42,9 @@ CBaseEntity* UTIL_FindEntityByName(CEntityInstance* pStartEntity, const char* sz
                                    CEntityInstance* pCaller = nullptr, IEntityFindFilter* pFilter = nullptr);
 
 template <typename T = CBaseEntity>
-T* UTIL_CreateEntityByName(const char* className)
+T* UTIL_CreateEntityByName(const char* pszClassName)
 {
-    return reinterpret_cast<T*>(addresses::CBaseEntity_CreateEntityByName(className, -1));
+    return reinterpret_cast<T*>(addresses::CBaseEntity_CreateEntityByName(pszClassName, -1));
 }
 
 // Add an entity IO event to the event queue, just like a map would

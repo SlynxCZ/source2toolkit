@@ -6,6 +6,8 @@ public static class CustomMethods
     {
         ["CBaseEntity"] = new()
         {
+            "static CBaseEntity* CreateEntityByName(const char* pszClassName);",
+            "template<typename T>\n    static T* New(const char* className)\n    {    \n        return reinterpret_cast<T*>(\n             CreateEntityByName(className)\n        );\n    }",
             "Vector GetAbsOrigin();",
             "QAngle GetAngRotation();",
             "QAngle GetAbsRotation();",

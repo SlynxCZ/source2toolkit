@@ -29,6 +29,7 @@
 #include "entitysystem.h"
 #include "platform.h"
 #include "core/Shared.h"
+#include "entity/classes/CBasePlayerWeapon.h"
 
 #include "tier0/memdbgon.h"
 

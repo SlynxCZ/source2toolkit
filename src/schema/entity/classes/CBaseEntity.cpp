@@ -12,6 +12,13 @@
 #include "core/addresses.h"
 #include "core/shared.h"
 
+#include "schema/entity.h"
+
+CBaseEntity* CBaseEntity::CreateEntityByName(const char* pszClassName)
+{
+    return UTIL_CreateEntityByName(pszClassName);
+}
+
 Vector CBaseEntity::GetAbsOrigin()
 {
     return m_CBodyComponent->m_pSceneNode->m_vecAbsOrigin;
