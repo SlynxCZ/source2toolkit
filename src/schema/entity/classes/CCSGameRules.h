@@ -14,7 +14,9 @@
 #include "CTeamplayRules.h"
 
 class CBaseEntity;
+class CBasePlayerController;
 class CCSGameModeRules;
+class CCSPlayerController;
 class SpawnPoint;
 
 class CCSGameRules : public CTeamplayRules
@@ -210,4 +212,9 @@ public:
     SCHEMA_FIELD(int32_t, m_iRoundStartRoundNumber);
     SCHEMA_FIELD(uint8_t, m_nRoundStartCount);
     SCHEMA_FIELD(double, m_flLastPerfSampleTime);
+
+public:
+    void TerminateRound(float flDelay, int32_t eRoundEndReason);
+    CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer);
+    CCSPlayerController* GetClientAimTarget(CCSPlayerController* pPlayer);
 };

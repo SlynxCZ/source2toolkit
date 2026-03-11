@@ -67,9 +67,9 @@ void CBaseEntity::DispatchSpawn(CEntityKeyValues* pEntityKeyValues)
     addresses::CBaseEntity_DispatchSpawn(this, pEntityKeyValues);
 }
 
-void CBaseEntity::Teleport(const Vector* position, const QAngle* angles, const Vector* velocity)
+void CBaseEntity::Teleport(const Vector* pPosition, const QAngle* pAngles, const Vector* pVelocity)
 {
-    CALL_VIRTUAL(void, shared::g_pGameConfig->GetOffset("CBaseEntity_Teleport"), this, position, angles, velocity);
+    CALL_VIRTUAL(void, shared::g_pGameConfig->GetOffset("CBaseEntity_Teleport"), this, pPosition, pAngles, pVelocity);
 }
 
 void CBaseEntity::SetMoveType(MoveType_t nMoveType)

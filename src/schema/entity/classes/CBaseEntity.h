@@ -122,7 +122,7 @@ public:
     void SetBaseVelocity(Vector vecVelocity);
     CEntitySubclassVDataBase* GetVData();
     void DispatchSpawn(CEntityKeyValues* pEntityKeyValues = nullptr);
-    void Teleport(const Vector* position, const QAngle* angles, const Vector* velocity);
+    void Teleport(const Vector* pPosition, const QAngle* pAngles, const Vector* pVelocity);
     void SetMoveType(MoveType_t nMoveType);
     uint8 GetCollisionGroup();
     void SetCollisionGroup(uint8 nCollisionGroup);

@@ -20,9 +20,10 @@ namespace shared
     INetworkServerService* g_pNetworkServerService = nullptr;
     CGameEntitySystem* g_pEntitySystem = nullptr;
     IServerGameClients* g_pGameClients = nullptr;
-    CGlobalVars *g_pGlobalVars = nullptr;
-    CGameResourceService *g_pGameResourceServiceServer = nullptr;
-    CGameConfig *g_pGameConfig = nullptr;
+    CGlobalVars* g_pGlobalVars = nullptr;
+    CGameResourceService* g_pGameResourceServiceServer = nullptr;
+    CGameConfig* g_pGameConfig = nullptr;
+    CCSGameRules* g_pGameRules = nullptr;
 
     CGlobalVars *getGlobalVars() {
         INetworkGameServer *server = g_pNetworkServerService->GetIGameServer();

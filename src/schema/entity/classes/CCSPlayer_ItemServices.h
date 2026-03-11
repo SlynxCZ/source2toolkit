@@ -12,6 +12,8 @@
 
 #include "CPlayer_ItemServices.h"
 
+class CBasePlayerWeapon;
+
 class CCSPlayer_ItemServices : public CPlayer_ItemServices
 {
 public:
@@ -19,4 +21,9 @@ public:
 
     SCHEMA_FIELD(bool, m_bHasDefuser);
     SCHEMA_FIELD(bool, m_bHasHelmet);
+
+public:
+    void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon);
+    void RemoveWeapons();
+    CBasePlayerWeapon* GiveNamedItem(const char* pszItem);
 };

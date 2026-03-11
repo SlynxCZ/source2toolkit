@@ -17,7 +17,7 @@ public static class CustomMethods
             "void SetBaseVelocity(Vector vecVelocity);",
             "CEntitySubclassVDataBase* GetVData();",
             "void DispatchSpawn(CEntityKeyValues* pEntityKeyValues = nullptr);",
-            "void Teleport(const Vector* position, const QAngle* angles, const Vector* velocity);",
+            "void Teleport(const Vector* pPosition, const QAngle* pAngles, const Vector* pVelocity);",
             "void SetMoveType(MoveType_t nMoveType);",
             "uint8 GetCollisionGroup();",
             "void SetCollisionGroup(uint8 nCollisionGroup);",
@@ -44,6 +44,18 @@ public static class CustomMethods
         {
             "CCSWeaponBaseVData* GetWeaponVData();",
             "const char* GetWeaponClassname();"
-        }
+        },
+        ["CCSGameRules"] = new()
+        {
+            "void TerminateRound(float flDelay, int32_t eRoundEndReason);",
+            "CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer);",
+            "CCSPlayerController* GetClientAimTarget(CCSPlayerController* pPlayer);",
+        },
+        ["CCSPlayer_ItemServices"] = new()
+        {
+            "void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon);",
+            "void RemoveWeapons();",
+            "CBasePlayerWeapon* GiveNamedItem(const char* pszItem);"
+        },
     };
 }

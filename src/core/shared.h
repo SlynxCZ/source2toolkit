@@ -13,6 +13,7 @@
 #include "igameeventsystem.h"
 #include <memory>
 
+class CCSGameRules;
 class CGameResourceService;
 
 namespace shared
@@ -29,8 +30,9 @@ namespace shared
     extern CGameEntitySystem* g_pEntitySystem;
     extern IServerGameClients* g_pGameClients;
     extern CGlobalVars* g_pGlobalVars;
-    extern CGameResourceService *g_pGameResourceServiceServer;
-    extern CGameConfig *g_pGameConfig;
+    extern CGameResourceService* g_pGameResourceServiceServer;
+    extern CGameConfig* g_pGameConfig;
+    extern CCSGameRules* g_pGameRules;
 
     CGlobalVars* getGlobalVars();
 
