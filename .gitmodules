@@ -1,3 +1,7 @@
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "vendor/metamod-source"]
+	path = vendor/metamod-source
+	url = https://github.com/FUNPLAY-pro-CS2/metamod-source
+	branch = khook
