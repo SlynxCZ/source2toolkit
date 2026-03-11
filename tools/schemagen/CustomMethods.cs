@@ -39,6 +39,11 @@ public static class CustomMethods
         {
             "void CommitSuicide(bool bExplode, bool bForce);",
             "void RemovePlayerItem(CBasePlayerWeapon* pWeapon);"
+        },
+        ["CBasePlayerWeapon"] = new()
+        {
+            "CCSWeaponBaseVData* GetWeaponVData();",
+            "const char* GetWeaponClassname();"
         }
     };
 }

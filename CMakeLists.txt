@@ -10,11 +10,12 @@ else()
     message(FATAL_ERROR "Environment variable HL2SDKCS2 is not set!")
 endif()
 
-if(DEFINED ENV{MMSOURCE_DEV})
-    set(METAMOD_DIR $ENV{MMSOURCE_DEV})
-else()
-    message(FATAL_ERROR "Environment variable MMSOURCE_DEV is not set!")
-endif()
+# if(DEFINED ENV{MMSOURCE_DEV})
+#     set(METAMOD_DIR $ENV{MMSOURCE_DEV})
+# else()
+#     message(FATAL_ERROR "Environment variable MMSOURCE_DEV is not set!")
+# endif()
+set(METAMOD_DIR vendor/metamod-source)
 
 if(DEFINED ENV{CSGO_PROTO})
     set(CSGO_PROTO_DIR $ENV{CSGO_PROTO})
@@ -26,7 +27,6 @@ include(makefiles/shared.cmake)
 include(makefiles/protobuf.cmake)
 
 add_subdirectory(vendor/spdlog)
-add_subdirectory(vendor/khook)
 
 file(GLOB_RECURSE SOURCE_FILES
         src/*.cpp
@@ -42,11 +42,6 @@ list(APPEND SOURCE_FILES
         ${SOURCESDK_DIR}/entity2/entityidentity.cpp
         ${SOURCESDK_DIR}/entity2/entitysystem.cpp
         ${SOURCESDK_DIR}/entity2/entitykeyvalues.cpp
-        ${METAMOD_DIR}/core/sourcehook/sourcehook.cpp
-        ${METAMOD_DIR}/core/sourcehook/sourcehook_impl_chookidman.cpp
-        ${METAMOD_DIR}/core/sourcehook/sourcehook_impl_chookmaninfo.cpp
-        ${METAMOD_DIR}/core/sourcehook/sourcehook_impl_cvfnptr.cpp
-        ${METAMOD_DIR}/core/sourcehook/sourcehook_impl_cproto.cpp
         vendor/dynlibutils/module.cpp
         vendor/dynlibutils/module.h
 )

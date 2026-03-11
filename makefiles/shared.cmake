@@ -59,8 +59,7 @@ include_directories(
     ${SOURCESDK}/public/game/server
     ${SOURCESDK}/public/schemasystem
     ${METAMOD_DIR}/core
-    ${METAMOD_DIR}/core/sourcehook
-    vendor/khook/include
+    ${METAMOD_DIR}/third_party/khook/include
     vendor/spdlog/include
     vendor
 )

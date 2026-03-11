@@ -3,20 +3,20 @@
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
-#include "igameevents.h"
+#include "virtualhooks.h"
 
-#include "KHook.hpp"
+#include "igameevents.h"
 #include <functional>
 
 class IGameEvent;
 
 namespace events {
-    using GameEventHandler = std::function<KHook::Action(IGameEvent* event, KHook::Mode mode, bool& dontBroadcast)>;
+    using GameEventHandler = std::function<KHook::Action(IGameEvent* event, virtualhooks::Mode mode, bool& dontBroadcast)>;
 
     struct EventEntry
     {
         GameEventHandler handler;
-        KHook::Mode mode;
+        virtualhooks::Mode mode;
     };
 
     class EventManager : public IGameEventListener2
@@ -27,7 +27,7 @@ namespace events {
     void InitEvents();
     void DestructEvents();
 
-    bool DispatchGameEvent(IGameEvent *event, KHook::Mode mode, bool &dontBroadcast);
+    bool DispatchGameEvent(IGameEvent *event, virtualhooks::Mode mode, bool &dontBroadcast);
 
-    void RegGameEvent(const std::string &name, GameEventHandler handler, KHook::Mode mode);
+    void RegGameEvent(const std::string &name, GameEventHandler handler, virtualhooks::Mode mode);
 }

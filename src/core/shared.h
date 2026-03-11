@@ -11,7 +11,6 @@
 #include "vector"
 #include "gameconfig.h"
 #include "igameeventsystem.h"
-#include "sourcehook/sourcehook.h"
 #include <memory>
 
 class CGameResourceService;
@@ -33,15 +32,7 @@ namespace shared
     extern CGameResourceService *g_pGameResourceServiceServer;
     extern CGameConfig *g_pGameConfig;
 
-    extern SourceHook::ISourceHook *source_hook;
-    extern int source_hook_pluginid;
-
     CGlobalVars* getGlobalVars();
 
     extern bool g_bDetoursLoaded;
 }
-
-#undef SH_GLOB_SHPTR
-#define SH_GLOB_SHPTR shared::source_hook
-#undef SH_GLOB_PLUGPTR
-#define SH_GLOB_PLUGPTR shared::source_hook_pluginid

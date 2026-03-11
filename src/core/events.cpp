@@ -2,12 +2,10 @@
 // Created by Michal Přikryl on 03.03.2026.
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
+#include "virtualhooks.h"
 #include "events.h"
-
 #include "shared.h"
 #include "utils/log.h"
-
-#include "KHook.hpp"
 
 namespace events {
     static std::unordered_map<std::string, std::vector<EventEntry> > gameEvents;
@@ -26,7 +24,7 @@ namespace events {
         gameEvents.clear();
     }
 
-    bool DispatchGameEvent(IGameEvent *event, KHook::Mode mode, bool &dontBroadcast) {
+    bool DispatchGameEvent(IGameEvent *event, virtualhooks::Mode mode, bool &dontBroadcast) {
         const char *name = event->GetName();
         auto it = gameEvents.find(name);
         if (it == gameEvents.end())
@@ -45,7 +43,7 @@ namespace events {
         return true;
     }
 
-    void RegGameEvent(const std::string &name, GameEventHandler handler, KHook::Mode mode) {
+    void RegGameEvent(const std::string &name, GameEventHandler handler, virtualhooks::Mode mode) {
         gameEvents[name].push_back({handler, mode});
         if (!shared::g_pGameEventManager->FindListener(&eventManager, name.c_str()))
         {

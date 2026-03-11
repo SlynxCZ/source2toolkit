@@ -12,6 +12,9 @@
 
 #include "CEconEntity.h"
 
+class CCSWeaponBase;
+class CCSWeaponBaseVData;
+
 class CBasePlayerWeapon : public CEconEntity
 {
 public:
@@ -25,4 +28,8 @@ public:
     SCHEMA_FIELD(int32_t, m_iClip2);
     SCHEMA_FIELD_POINTER(int32_t, m_pReserveAmmo);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerUse);
+
+public:
+    CCSWeaponBaseVData* GetWeaponVData();
+    const char* GetWeaponClassname();
 };

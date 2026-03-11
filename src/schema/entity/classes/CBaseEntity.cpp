@@ -67,7 +67,7 @@ void CBaseEntity::DispatchSpawn(CEntityKeyValues* pEntityKeyValues)
     addresses::CBaseEntity_DispatchSpawn(this, pEntityKeyValues);
 }
 
-void CBaseEntity::Teleport(const Vector *position, const QAngle *angles, const Vector *velocity)
+void CBaseEntity::Teleport(const Vector* position, const QAngle* angles, const Vector* velocity)
 {
     CALL_VIRTUAL(void, shared::g_pGameConfig->GetOffset("CBaseEntity_Teleport"), this, position, angles, velocity);
 }
@@ -92,7 +92,7 @@ void CBaseEntity::SetCollisionGroup(uint8 nCollisionGroup = COLLISION_GROUP_DEBR
         return;
 
     m_pCollision->m_collisionAttribute().m_nCollisionGroup = nCollisionGroup;
-    m_pCollision->m_CollisionGroup = nCollisionGroup;
+    m_pCollision->m_CollisionGroup() = nCollisionGroup;
     CollisionRulesChanged();
 }
 
