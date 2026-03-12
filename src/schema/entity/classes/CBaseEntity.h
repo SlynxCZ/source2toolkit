@@ -21,6 +21,7 @@
 class CBaseFilter;
 class CBodyComponent;
 class CCollisionProperty;
+class CEntityInstance;
 class CEntitySubclassVDataBase;
 class CPulseGraphInstance_ServerEntity;
 
@@ -125,6 +126,8 @@ public:
     {    
         return reinterpret_cast<T*>(CreateEntityByName(className));
     }
+    void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "");
+    void AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f);
     Vector GetAbsOrigin();
     QAngle GetAngRotation();
     QAngle GetAbsRotation();

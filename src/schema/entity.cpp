@@ -61,8 +61,15 @@ CBaseEntity* UTIL_FindEntityByName(CEntityInstance* pStartEntity, const char* sz
                                                          pSearchingEntity, pActivator, pCaller, pFilter);
 }
 
+void UTIL_AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator,
+                      CEntityInstance* pCaller, const char* pszValue)
+{
+    addresses::CEntityInstance_AcceptInput(pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), 0, nullptr);
+}
+
 void UTIL_AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator,
                            CEntityInstance* pCaller, const char* pszValue, float flDelay)
 {
-    addresses::CEntitySystem_AddEntityIOEvent(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, 0, nullptr, nullptr);
+    addresses::CEntitySystem_AddEntityIOEvent(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller,
+                                              variant_t(pszValue), flDelay, 0, nullptr, nullptr);
 }

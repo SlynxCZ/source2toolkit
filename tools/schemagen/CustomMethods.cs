@@ -9,6 +9,8 @@ public static class CustomMethods
             "static CBaseEntity* CreateEntityByName(const char* pszClassName);",
             "template<typename T>\n    struct Factory\n    {\n        static T* New(const char* className)\n        {\n            return reinterpret_cast<T*>(CBaseEntity::CreateEntityByName(className));\n        }\n    };",
             "template<typename T>\n    static T* New(const char* className)\n    {    \n        return reinterpret_cast<T*>(CreateEntityByName(className));\n    }",
+            "void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = \"\");",
+            "void AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = \"\", float flDelay = 0.0f);",
             "Vector GetAbsOrigin();",
             "QAngle GetAngRotation();",
             "QAngle GetAbsRotation();",

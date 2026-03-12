@@ -47,6 +47,9 @@ T* UTIL_CreateEntityByName(const char* pszClassName)
     return reinterpret_cast<T*>(addresses::CBaseEntity_CreateEntityByName(pszClassName, -1));
 }
 
+void UTIL_AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator,
+                      CEntityInstance* pCaller, const char* pszValue = "");
+
 // Add an entity IO event to the event queue, just like a map would
 // The queue is processed after all entities are simulated every frame
 void UTIL_AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput,

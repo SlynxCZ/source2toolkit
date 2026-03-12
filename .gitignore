@@ -511,6 +511,7 @@ ClientBin/
 *~
 *.dbmdl
 *.[Pp]ublish.xml
+*.vdf
 
 *.publishsettings
 

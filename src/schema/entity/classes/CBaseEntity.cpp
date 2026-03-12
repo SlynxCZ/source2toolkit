@@ -19,6 +19,16 @@ CBaseEntity* CBaseEntity::CreateEntityByName(const char* pszClassName)
     return UTIL_CreateEntityByName(pszClassName);
 }
 
+void CBaseEntity::AcceptInput(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
+{
+    UTIL_AcceptInput(this, pszInput, pActivator, pCaller, pszValue);
+}
+
+void CBaseEntity::AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
+{
+    UTIL_AddEntityIOEvent(this, pszInput, pActivator, pCaller, pszValue, flDelay);
+}
+
 Vector CBaseEntity::GetAbsOrigin()
 {
     return m_CBodyComponent->m_pSceneNode->m_vecAbsOrigin;
