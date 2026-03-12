@@ -13,7 +13,7 @@
 #include "../enums/BrushSolidities_e.h"
 #include "CBaseModelEntity.h"
 
-class CFuncBrush : public CBaseModelEntity
+class CFuncBrush : public CBaseModelEntity, public CBaseEntity::Factory<CFuncBrush>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncBrush);

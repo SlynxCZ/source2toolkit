@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncRotating : public CBaseModelEntity
+class CFuncRotating : public CBaseModelEntity, public CBaseEntity::Factory<CFuncRotating>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncRotating);

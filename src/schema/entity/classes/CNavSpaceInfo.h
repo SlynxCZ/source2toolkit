@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CNavSpaceInfo : public CPointEntity
+class CNavSpaceInfo : public CPointEntity, public CBaseEntity::Factory<CNavSpaceInfo>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavSpaceInfo);

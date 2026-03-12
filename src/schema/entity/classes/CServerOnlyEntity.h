@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CServerOnlyEntity : public CBaseEntity
+class CServerOnlyEntity : public CBaseEntity, public CBaseEntity::Factory<CServerOnlyEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerOnlyEntity);

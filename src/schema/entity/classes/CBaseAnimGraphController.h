@@ -22,7 +22,7 @@
 
 class CBaseAnimGraph;
 
-class CBaseAnimGraphController : public CSkeletonAnimationController
+class CBaseAnimGraphController : public CSkeletonAnimationController, public CBaseEntity::Factory<CBaseAnimGraphController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraphController);

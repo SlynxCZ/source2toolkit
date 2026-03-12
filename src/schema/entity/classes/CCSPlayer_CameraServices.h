@@ -12,7 +12,7 @@
 
 #include "CCSPlayerBase_CameraServices.h"
 
-class CCSPlayer_CameraServices : public CCSPlayerBase_CameraServices
+class CCSPlayer_CameraServices : public CCSPlayerBase_CameraServices, public CBaseEntity::Factory<CCSPlayer_CameraServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_CameraServices);

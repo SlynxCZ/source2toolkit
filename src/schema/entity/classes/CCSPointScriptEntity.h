@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CCSPointScriptEntity : public CBaseEntity
+class CCSPointScriptEntity : public CBaseEntity, public CBaseEntity::Factory<CCSPointScriptEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPointScriptEntity);

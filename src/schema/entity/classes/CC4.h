@@ -13,7 +13,7 @@
 #include "CCSWeaponBase.h"
 #include "EntitySpottedState_t.h"
 
-class CC4 : public CCSWeaponBase
+class CC4 : public CCSWeaponBase, public CBaseEntity::Factory<CC4>
 {
 public:
     DECLARE_SCHEMA_CLASS(CC4);

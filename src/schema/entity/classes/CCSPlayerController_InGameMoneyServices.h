@@ -12,7 +12,7 @@
 
 #include "CPlayerControllerComponent.h"
 
-class CCSPlayerController_InGameMoneyServices : public CPlayerControllerComponent
+class CCSPlayerController_InGameMoneyServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_InGameMoneyServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_InGameMoneyServices);

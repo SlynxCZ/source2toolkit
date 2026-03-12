@@ -12,7 +12,7 @@
 
 #include "CExampleSchemaVData_PolymorphicBase.h"
 
-class CExampleSchemaVData_PolymorphicDerivedA : public CExampleSchemaVData_PolymorphicBase
+class CExampleSchemaVData_PolymorphicDerivedA : public CExampleSchemaVData_PolymorphicBase, public CBaseEntity::Factory<CExampleSchemaVData_PolymorphicDerivedA>
 {
 public:
     DECLARE_SCHEMA_CLASS(CExampleSchemaVData_PolymorphicDerivedA);

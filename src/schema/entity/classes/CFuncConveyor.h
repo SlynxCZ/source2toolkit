@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CFuncConveyor : public CBaseModelEntity
+class CFuncConveyor : public CBaseModelEntity, public CBaseEntity::Factory<CFuncConveyor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncConveyor);

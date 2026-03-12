@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CCredits : public CPointEntity
+class CCredits : public CPointEntity, public CBaseEntity::Factory<CCredits>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCredits);

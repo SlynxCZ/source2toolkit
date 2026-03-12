@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class RotatorHistoryEntry_t
+class RotatorHistoryEntry_t : public CBaseEntity::Factory<RotatorHistoryEntry_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(RotatorHistoryEntry_t);

@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CServerRagdollTrigger : public CBaseTrigger
+class CServerRagdollTrigger : public CBaseTrigger, public CBaseEntity::Factory<CServerRagdollTrigger>
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerRagdollTrigger);

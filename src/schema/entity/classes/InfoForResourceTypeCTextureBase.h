@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeCTextureBase
+class InfoForResourceTypeCTextureBase : public CBaseEntity::Factory<InfoForResourceTypeCTextureBase>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCTextureBase);

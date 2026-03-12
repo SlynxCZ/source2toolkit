@@ -13,7 +13,7 @@
 #include "ragdollelement_t.h"
 #include "ragdollhierarchyjoint_t.h"
 
-class ragdoll_t
+class ragdoll_t : public CBaseEntity::Factory<ragdoll_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ragdoll_t);

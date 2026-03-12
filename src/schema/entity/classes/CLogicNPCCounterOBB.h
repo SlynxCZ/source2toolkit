@@ -12,7 +12,7 @@
 
 #include "CLogicNPCCounterAABB.h"
 
-class CLogicNPCCounterOBB : public CLogicNPCCounterAABB
+class CLogicNPCCounterOBB : public CLogicNPCCounterAABB, public CBaseEntity::Factory<CLogicNPCCounterOBB>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicNPCCounterOBB);

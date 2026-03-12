@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeIParticleSystemDefinition
+class InfoForResourceTypeIParticleSystemDefinition : public CBaseEntity::Factory<InfoForResourceTypeIParticleSystemDefinition>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeIParticleSystemDefinition);

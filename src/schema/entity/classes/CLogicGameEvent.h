@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicGameEvent : public CLogicalEntity
+class CLogicGameEvent : public CLogicalEntity, public CBaseEntity::Factory<CLogicGameEvent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicGameEvent);

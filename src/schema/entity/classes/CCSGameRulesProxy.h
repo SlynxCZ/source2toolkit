@@ -14,7 +14,7 @@
 
 class CCSGameRules;
 
-class CCSGameRulesProxy : public CGameRulesProxy
+class CCSGameRulesProxy : public CGameRulesProxy, public CBaseEntity::Factory<CCSGameRulesProxy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameRulesProxy);

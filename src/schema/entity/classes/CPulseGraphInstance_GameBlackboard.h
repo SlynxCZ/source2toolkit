@@ -12,7 +12,7 @@
 
 #include "CPulseGraphInstance_ServerEntity.h"
 
-class CPulseGraphInstance_GameBlackboard : public CPulseGraphInstance_ServerEntity
+class CPulseGraphInstance_GameBlackboard : public CPulseGraphInstance_ServerEntity, public CBaseEntity::Factory<CPulseGraphInstance_GameBlackboard>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPulseGraphInstance_GameBlackboard);

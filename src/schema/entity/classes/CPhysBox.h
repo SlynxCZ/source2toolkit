@@ -15,7 +15,7 @@
 
 class CBasePlayerPawn;
 
-class CPhysBox : public CBreakable
+class CPhysBox : public CBreakable, public CBaseEntity::Factory<CPhysBox>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysBox);

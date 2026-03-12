@@ -12,7 +12,7 @@
 
 #include "CMultiplayRules.h"
 
-class CTeamplayRules : public CMultiplayRules
+class CTeamplayRules : public CMultiplayRules, public CBaseEntity::Factory<CTeamplayRules>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTeamplayRules);

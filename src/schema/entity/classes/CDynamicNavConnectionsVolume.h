@@ -13,7 +13,7 @@
 #include "CTriggerMultiple.h"
 #include "DynamicVolumeDef_t.h"
 
-class CDynamicNavConnectionsVolume : public CTriggerMultiple
+class CDynamicNavConnectionsVolume : public CTriggerMultiple, public CBaseEntity::Factory<CDynamicNavConnectionsVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicNavConnectionsVolume);

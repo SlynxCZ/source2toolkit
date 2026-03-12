@@ -20,7 +20,7 @@ class CCSPlayerController_InGameMoneyServices;
 class CCSPlayerController_InventoryServices;
 class CCSPlayerPawn;
 
-class CCSPlayerController : public CBasePlayerController
+class CCSPlayerController : public CBasePlayerController, public CBaseEntity::Factory<CCSPlayerController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController);

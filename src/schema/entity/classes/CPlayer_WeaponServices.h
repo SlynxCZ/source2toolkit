@@ -14,7 +14,7 @@
 
 class CBasePlayerWeapon;
 
-class CPlayer_WeaponServices : public CPlayerPawnComponent
+class CPlayer_WeaponServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_WeaponServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_WeaponServices);

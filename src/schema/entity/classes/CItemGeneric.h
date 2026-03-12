@@ -16,7 +16,7 @@
 class CBaseFilter;
 class CItemGenericTriggerHelper;
 
-class CItemGeneric : public CItem
+class CItemGeneric : public CItem, public CBaseEntity::Factory<CItemGeneric>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemGeneric);

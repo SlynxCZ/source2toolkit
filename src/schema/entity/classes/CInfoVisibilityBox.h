@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CInfoVisibilityBox : public CBaseEntity
+class CInfoVisibilityBox : public CBaseEntity, public CBaseEntity::Factory<CInfoVisibilityBox>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoVisibilityBox);

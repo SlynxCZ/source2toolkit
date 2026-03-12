@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "../enums/EntityDisolveType_t.h"
 
-class CEntityDissolve : public CBaseModelEntity
+class CEntityDissolve : public CBaseModelEntity, public CBaseEntity::Factory<CEntityDissolve>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityDissolve);

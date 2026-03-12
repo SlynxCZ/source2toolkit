@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CDebugHistory : public CBaseEntity
+class CDebugHistory : public CBaseEntity, public CBaseEntity::Factory<CDebugHistory>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDebugHistory);

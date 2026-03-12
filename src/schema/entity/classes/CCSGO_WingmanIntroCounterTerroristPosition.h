@@ -12,7 +12,7 @@
 
 #include "CCSGO_WingmanIntroCharacterPosition.h"
 
-class CCSGO_WingmanIntroCounterTerroristPosition : public CCSGO_WingmanIntroCharacterPosition
+class CCSGO_WingmanIntroCounterTerroristPosition : public CCSGO_WingmanIntroCharacterPosition, public CBaseEntity::Factory<CCSGO_WingmanIntroCounterTerroristPosition>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_WingmanIntroCounterTerroristPosition);

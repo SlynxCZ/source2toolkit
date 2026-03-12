@@ -14,7 +14,7 @@
 
 class CPathMover;
 
-class CPathMoverEntitySpawner : public CLogicalEntity
+class CPathMoverEntitySpawner : public CLogicalEntity, public CBaseEntity::Factory<CPathMoverEntitySpawner>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathMoverEntitySpawner);

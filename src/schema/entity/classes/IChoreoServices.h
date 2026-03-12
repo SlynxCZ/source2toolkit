@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class IChoreoServices
+class IChoreoServices : public CBaseEntity::Factory<IChoreoServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(IChoreoServices);

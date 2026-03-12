@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CCSPlayerResource : public CBaseEntity
+class CCSPlayerResource : public CBaseEntity, public CBaseEntity::Factory<CCSPlayerResource>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerResource);

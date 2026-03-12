@@ -28,7 +28,7 @@ class CPlayer_UseServices;
 class CPlayer_WaterServices;
 class CPlayer_WeaponServices;
 
-class CBasePlayerPawn : public CBaseCombatCharacter
+class CBasePlayerPawn : public CBaseCombatCharacter, public CBaseEntity::Factory<CBasePlayerPawn>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerPawn);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CConstantForceController
+class CConstantForceController : public CBaseEntity::Factory<CConstantForceController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CConstantForceController);

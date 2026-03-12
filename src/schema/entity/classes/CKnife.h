@@ -12,7 +12,7 @@
 
 #include "CCSWeaponBase.h"
 
-class CKnife : public CCSWeaponBase
+class CKnife : public CCSWeaponBase, public CBaseEntity::Factory<CKnife>
 {
 public:
     DECLARE_SCHEMA_CLASS(CKnife);

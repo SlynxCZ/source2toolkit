@@ -12,7 +12,7 @@
 
 #include "CPhysConstraint.h"
 
-class CPhysBallSocket : public CPhysConstraint
+class CPhysBallSocket : public CPhysConstraint, public CBaseEntity::Factory<CPhysBallSocket>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysBallSocket);

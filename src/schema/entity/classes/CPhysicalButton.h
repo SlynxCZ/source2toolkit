@@ -12,7 +12,7 @@
 
 #include "CBaseButton.h"
 
-class CPhysicalButton : public CBaseButton
+class CPhysicalButton : public CBaseButton, public CBaseEntity::Factory<CPhysicalButton>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicalButton);

@@ -559,8 +559,22 @@ internal static partial class Program
         if (forwards.Count > 0)
             builder.AppendLine();
 
-        builder.AppendLine($"class {className}" +
-                           (schemaClass.Parent != null ? $" : public {schemaClass.Parent}" : ""));
+        if (className == "CBaseEntity")
+        {
+            builder.AppendLine($"class {className}" +
+                               (schemaClass.Parent != null ? $" : public {schemaClass.Parent}" : ""));
+        }
+        else if (schemaClass.Parent != null)
+        {
+            builder.AppendLine(
+                $"class {className} : public {schemaClass.Parent}, public CBaseEntity::Factory<{className}>");
+        }
+        else
+        {
+            builder.AppendLine(
+                $"class {className} : public CBaseEntity::Factory<{className}>");
+        }
+
         builder.AppendLine("{");
         builder.AppendLine("public:");
         builder.AppendLine($"    DECLARE_SCHEMA_CLASS({className});");

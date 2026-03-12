@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerCallback : public CBaseTrigger
+class CTriggerCallback : public CBaseTrigger, public CBaseEntity::Factory<CTriggerCallback>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerCallback);

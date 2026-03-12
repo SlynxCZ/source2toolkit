@@ -14,7 +14,7 @@
 
 class CCSPlayerPawn;
 
-class CPlayerPing : public CBaseEntity
+class CPlayerPing : public CBaseEntity, public CBaseEntity::Factory<CPlayerPing>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerPing);

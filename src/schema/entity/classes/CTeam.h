@@ -15,7 +15,7 @@
 class CBasePlayerController;
 class CBasePlayerPawn;
 
-class CTeam : public CBaseEntity
+class CTeam : public CBaseEntity, public CBaseEntity::Factory<CTeam>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTeam);

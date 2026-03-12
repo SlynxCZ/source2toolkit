@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvVolumetricFogController : public CBaseEntity
+class CEnvVolumetricFogController : public CBaseEntity, public CBaseEntity::Factory<CEnvVolumetricFogController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvVolumetricFogController);

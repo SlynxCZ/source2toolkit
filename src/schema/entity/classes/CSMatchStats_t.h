@@ -12,7 +12,7 @@
 
 #include "CSPerRoundStats_t.h"
 
-class CSMatchStats_t : public CSPerRoundStats_t
+class CSMatchStats_t : public CSPerRoundStats_t, public CBaseEntity::Factory<CSMatchStats_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSMatchStats_t);

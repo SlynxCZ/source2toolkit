@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class RelationshipOverride_t : public Relationship_t
+class RelationshipOverride_t : public Relationship_t, public CBaseEntity::Factory<RelationshipOverride_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(RelationshipOverride_t);

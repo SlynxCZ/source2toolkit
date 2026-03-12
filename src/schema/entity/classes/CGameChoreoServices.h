@@ -15,7 +15,7 @@
 class CBaseAnimGraph;
 class CScriptedSequence;
 
-class CGameChoreoServices : public IChoreoServices
+class CGameChoreoServices : public IChoreoServices, public CBaseEntity::Factory<CGameChoreoServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameChoreoServices);

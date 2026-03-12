@@ -17,7 +17,7 @@
 
 class CEconWearable;
 
-class CBaseCombatCharacter : public CBaseFlex
+class CBaseCombatCharacter : public CBaseFlex, public CBaseEntity::Factory<CBaseCombatCharacter>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseCombatCharacter);

@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CLogicNPCCounter : public CBaseEntity
+class CLogicNPCCounter : public CBaseEntity, public CBaseEntity::Factory<CLogicNPCCounter>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicNPCCounter);

@@ -12,7 +12,7 @@
 
 #include "CSoundEventEntity.h"
 
-class CSoundEventPathCornerEntity : public CSoundEventEntity
+class CSoundEventPathCornerEntity : public CSoundEventEntity, public CBaseEntity::Factory<CSoundEventPathCornerEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventPathCornerEntity);

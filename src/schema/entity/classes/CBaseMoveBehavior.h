@@ -12,7 +12,7 @@
 
 #include "CPathKeyFrame.h"
 
-class CBaseMoveBehavior : public CPathKeyFrame
+class CBaseMoveBehavior : public CPathKeyFrame, public CBaseEntity::Factory<CBaseMoveBehavior>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseMoveBehavior);

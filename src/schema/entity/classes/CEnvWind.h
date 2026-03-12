@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "CEnvWindShared.h"
 
-class CEnvWind : public CBaseEntity
+class CEnvWind : public CBaseEntity, public CBaseEntity::Factory<CEnvWind>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWind);

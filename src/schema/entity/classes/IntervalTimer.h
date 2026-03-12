@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class IntervalTimer
+class IntervalTimer : public CBaseEntity::Factory<IntervalTimer>
 {
 public:
     DECLARE_SCHEMA_CLASS(IntervalTimer);

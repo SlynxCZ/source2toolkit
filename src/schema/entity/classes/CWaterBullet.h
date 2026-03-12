@@ -12,7 +12,7 @@
 
 #include "CBaseAnimGraph.h"
 
-class CWaterBullet : public CBaseAnimGraph
+class CWaterBullet : public CBaseAnimGraph, public CBaseEntity::Factory<CWaterBullet>
 {
 public:
     DECLARE_SCHEMA_CLASS(CWaterBullet);

@@ -12,7 +12,7 @@
 
 #include "CSoundAreaEntityBase.h"
 
-class CSoundAreaEntityOrientedBox : public CSoundAreaEntityBase
+class CSoundAreaEntityOrientedBox : public CSoundAreaEntityBase, public CBaseEntity::Factory<CSoundAreaEntityOrientedBox>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundAreaEntityOrientedBox);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CGlowProperty
+class CGlowProperty : public CBaseEntity::Factory<CGlowProperty>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGlowProperty);

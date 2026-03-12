@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CTimerEntity : public CLogicalEntity
+class CTimerEntity : public CLogicalEntity, public CBaseEntity::Factory<CTimerEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTimerEntity);

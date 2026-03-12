@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvWindVolume : public CBaseEntity
+class CEnvWindVolume : public CBaseEntity, public CBaseEntity::Factory<CEnvWindVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWindVolume);

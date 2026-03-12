@@ -13,7 +13,7 @@
 #include "CParticleSystem.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvParticleGlow : public CParticleSystem
+class CEnvParticleGlow : public CParticleSystem, public CBaseEntity::Factory<CEnvParticleGlow>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvParticleGlow);

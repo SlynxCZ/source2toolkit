@@ -15,7 +15,7 @@
 class CBaseEntity;
 class CFuncTrackTrain;
 
-class CTankTrainAI : public CPointEntity
+class CTankTrainAI : public CPointEntity, public CBaseEntity::Factory<CTankTrainAI>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTankTrainAI);

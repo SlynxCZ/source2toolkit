@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CPlayerVisibility : public CBaseEntity
+class CPlayerVisibility : public CBaseEntity, public CBaseEntity::Factory<CPlayerVisibility>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerVisibility);

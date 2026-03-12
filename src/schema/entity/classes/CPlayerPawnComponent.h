@@ -11,7 +11,7 @@
 #include <cstdint>
 
 
-class CPlayerPawnComponent
+class CPlayerPawnComponent : public CBaseEntity::Factory<CPlayerPawnComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerPawnComponent);

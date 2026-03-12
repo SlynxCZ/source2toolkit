@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class EntitySpottedState_t
+class EntitySpottedState_t : public CBaseEntity::Factory<EntitySpottedState_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(EntitySpottedState_t);

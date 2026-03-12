@@ -13,7 +13,7 @@
 #include "CEntitySubclassVDataBase.h"
 #include "CSkillFloat.h"
 
-class CBasePlayerVData : public CEntitySubclassVDataBase
+class CBasePlayerVData : public CEntitySubclassVDataBase, public CBaseEntity::Factory<CBasePlayerVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerVData);

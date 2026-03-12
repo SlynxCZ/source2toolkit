@@ -12,7 +12,7 @@
 
 #include "CItem.h"
 
-class CScriptItem : public CItem
+class CScriptItem : public CItem, public CBaseEntity::Factory<CScriptItem>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptItem);

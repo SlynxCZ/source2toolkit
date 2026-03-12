@@ -13,7 +13,7 @@
 #include "CBaseAnimGraph.h"
 #include "magnetted_objects_t.h"
 
-class CPhysMagnet : public CBaseAnimGraph
+class CPhysMagnet : public CBaseAnimGraph, public CBaseEntity::Factory<CPhysMagnet>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysMagnet);

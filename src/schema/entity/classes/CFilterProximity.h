@@ -12,7 +12,7 @@
 
 #include "CBaseFilter.h"
 
-class CFilterProximity : public CBaseFilter
+class CFilterProximity : public CBaseFilter, public CBaseEntity::Factory<CFilterProximity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterProximity);

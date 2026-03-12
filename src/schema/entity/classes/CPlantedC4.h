@@ -16,7 +16,7 @@
 
 class CCSPlayerPawn;
 
-class CPlantedC4 : public CBaseAnimGraph
+class CPlantedC4 : public CBaseAnimGraph, public CBaseEntity::Factory<CPlantedC4>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlantedC4);

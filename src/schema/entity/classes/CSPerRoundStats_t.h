@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CSPerRoundStats_t
+class CSPerRoundStats_t : public CBaseEntity::Factory<CSPerRoundStats_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSPerRoundStats_t);

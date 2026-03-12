@@ -13,7 +13,7 @@
 #include "CPhysicsShake.h"
 #include "CPointEntity.h"
 
-class CEnvShake : public CPointEntity
+class CEnvShake : public CPointEntity, public CBaseEntity::Factory<CEnvShake>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvShake);

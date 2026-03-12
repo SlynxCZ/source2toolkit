@@ -13,7 +13,7 @@
 class CCSPlayerController;
 class CCSPlayerPawn;
 
-class CBot
+class CBot : public CBaseEntity::Factory<CBot>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBot);

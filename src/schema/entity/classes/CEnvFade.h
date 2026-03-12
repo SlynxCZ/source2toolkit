@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CEnvFade : public CLogicalEntity
+class CEnvFade : public CLogicalEntity, public CBaseEntity::Factory<CEnvFade>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvFade);

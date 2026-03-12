@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CPrecipitationBlocker : public CBaseModelEntity
+class CPrecipitationBlocker : public CBaseModelEntity, public CBaseEntity::Factory<CPrecipitationBlocker>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitationBlocker);

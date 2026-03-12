@@ -113,11 +113,17 @@ public:
 public:
     static CBaseEntity* CreateEntityByName(const char* pszClassName);
     template<typename T>
+    struct Factory
+    {
+        static T* New(const char* className)
+        {
+            return reinterpret_cast<T*>(CBaseEntity::CreateEntityByName(className));
+        }
+    };
+    template<typename T>
     static T* New(const char* className)
     {    
-        return reinterpret_cast<T*>(
-             CreateEntityByName(className)
-        );
+        return reinterpret_cast<T*>(CreateEntityByName(className));
     }
     Vector GetAbsOrigin();
     QAngle GetAngRotation();

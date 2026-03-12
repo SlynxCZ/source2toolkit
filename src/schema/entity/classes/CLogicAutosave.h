@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicAutosave : public CLogicalEntity
+class CLogicAutosave : public CLogicalEntity, public CBaseEntity::Factory<CLogicAutosave>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicAutosave);

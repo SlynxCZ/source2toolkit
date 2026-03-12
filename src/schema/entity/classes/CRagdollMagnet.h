@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CRagdollMagnet : public CPointEntity
+class CRagdollMagnet : public CPointEntity, public CBaseEntity::Factory<CRagdollMagnet>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollMagnet);

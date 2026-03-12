@@ -12,7 +12,7 @@
 
 #include "CBarnLight.h"
 
-class COmniLight : public CBarnLight
+class COmniLight : public CBarnLight, public CBaseEntity::Factory<COmniLight>
 {
 public:
     DECLARE_SCHEMA_CLASS(COmniLight);

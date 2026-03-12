@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class audioparams_t
+class audioparams_t : public CBaseEntity::Factory<audioparams_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(audioparams_t);

@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CCSPlayer_HostageServices : public CPlayerPawnComponent
+class CCSPlayer_HostageServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_HostageServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_HostageServices);

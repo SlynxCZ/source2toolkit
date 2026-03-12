@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class IAnimationGraphInstance
+class IAnimationGraphInstance : public CBaseEntity::Factory<IAnimationGraphInstance>
 {
 public:
     DECLARE_SCHEMA_CLASS(IAnimationGraphInstance);

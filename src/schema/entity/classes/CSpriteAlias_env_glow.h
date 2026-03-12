@@ -12,7 +12,7 @@
 
 #include "CSprite.h"
 
-class CSpriteAlias_env_glow : public CSprite
+class CSpriteAlias_env_glow : public CSprite, public CBaseEntity::Factory<CSpriteAlias_env_glow>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpriteAlias_env_glow);

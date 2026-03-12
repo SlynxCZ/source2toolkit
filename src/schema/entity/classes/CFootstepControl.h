@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CFootstepControl : public CBaseTrigger
+class CFootstepControl : public CBaseTrigger, public CBaseEntity::Factory<CFootstepControl>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFootstepControl);

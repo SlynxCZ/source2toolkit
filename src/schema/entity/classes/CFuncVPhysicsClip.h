@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncVPhysicsClip : public CBaseModelEntity
+class CFuncVPhysicsClip : public CBaseModelEntity, public CBaseEntity::Factory<CFuncVPhysicsClip>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncVPhysicsClip);

@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPointAngleSensor : public CPointEntity
+class CPointAngleSensor : public CPointEntity, public CBaseEntity::Factory<CPointAngleSensor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointAngleSensor);

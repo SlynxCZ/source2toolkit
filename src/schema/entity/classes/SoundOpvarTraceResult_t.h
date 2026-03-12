@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class SoundOpvarTraceResult_t
+class SoundOpvarTraceResult_t : public CBaseEntity::Factory<SoundOpvarTraceResult_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(SoundOpvarTraceResult_t);

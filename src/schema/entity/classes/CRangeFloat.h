@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CRangeFloat
+class CRangeFloat : public CBaseEntity::Factory<CRangeFloat>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRangeFloat);

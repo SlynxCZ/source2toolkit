@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CPhysForce : public CPointEntity
+class CPhysForce : public CPointEntity, public CBaseEntity::Factory<CPhysForce>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysForce);

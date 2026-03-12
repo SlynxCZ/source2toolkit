@@ -13,7 +13,7 @@
 #include "../enums/SurroundingBoundsType_t.h"
 #include "VPhysicsCollisionAttribute_t.h"
 
-class CCollisionProperty
+class CCollisionProperty : public CBaseEntity::Factory<CCollisionProperty>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCollisionProperty);

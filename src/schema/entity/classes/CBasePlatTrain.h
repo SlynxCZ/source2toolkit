@@ -12,7 +12,7 @@
 
 #include "CBaseToggle.h"
 
-class CBasePlatTrain : public CBaseToggle
+class CBasePlatTrain : public CBaseToggle, public CBaseEntity::Factory<CBasePlatTrain>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlatTrain);

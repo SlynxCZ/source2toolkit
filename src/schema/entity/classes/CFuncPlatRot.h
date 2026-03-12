@@ -12,7 +12,7 @@
 
 #include "CFuncPlat.h"
 
-class CFuncPlatRot : public CFuncPlat
+class CFuncPlatRot : public CFuncPlat, public CBaseEntity::Factory<CFuncPlatRot>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPlatRot);

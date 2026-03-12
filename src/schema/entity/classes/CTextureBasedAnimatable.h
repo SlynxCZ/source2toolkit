@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CTextureBasedAnimatable : public CBaseModelEntity
+class CTextureBasedAnimatable : public CBaseModelEntity, public CBaseEntity::Factory<CTextureBasedAnimatable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTextureBasedAnimatable);

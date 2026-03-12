@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoGameEventProxy : public CPointEntity
+class CInfoGameEventProxy : public CPointEntity, public CBaseEntity::Factory<CInfoGameEventProxy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoGameEventProxy);

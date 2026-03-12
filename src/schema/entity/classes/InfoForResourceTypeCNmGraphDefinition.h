@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeCNmGraphDefinition
+class InfoForResourceTypeCNmGraphDefinition : public CBaseEntity::Factory<InfoForResourceTypeCNmGraphDefinition>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCNmGraphDefinition);

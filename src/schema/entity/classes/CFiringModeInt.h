@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CFiringModeInt
+class CFiringModeInt : public CBaseEntity::Factory<CFiringModeInt>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFiringModeInt);

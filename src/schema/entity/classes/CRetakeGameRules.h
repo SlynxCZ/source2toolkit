@@ -12,7 +12,7 @@
 
 class CCSPlayerPawn;
 
-class CRetakeGameRules
+class CRetakeGameRules : public CBaseEntity::Factory<CRetakeGameRules>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRetakeGameRules);

@@ -13,7 +13,7 @@
 #include "CBodyComponent.h"
 #include "CSkeletonInstance.h"
 
-class CBodyComponentSkeletonInstance : public CBodyComponent
+class CBodyComponentSkeletonInstance : public CBodyComponent, public CBaseEntity::Factory<CBodyComponentSkeletonInstance>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentSkeletonInstance);

@@ -13,7 +13,7 @@
 #include "CPointEntity.h"
 #include "../enums/RotatorTargetSpace_t.h"
 
-class CRotatorTarget : public CPointEntity
+class CRotatorTarget : public CPointEntity, public CBaseEntity::Factory<CRotatorTarget>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotatorTarget);

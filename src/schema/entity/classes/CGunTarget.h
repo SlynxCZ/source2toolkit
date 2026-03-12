@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CGunTarget : public CBaseToggle
+class CGunTarget : public CBaseToggle, public CBaseEntity::Factory<CGunTarget>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGunTarget);

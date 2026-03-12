@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CTonemapController2 : public CBaseEntity
+class CTonemapController2 : public CBaseEntity, public CBaseEntity::Factory<CTonemapController2>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTonemapController2);

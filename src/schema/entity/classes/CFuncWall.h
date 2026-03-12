@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncWall : public CBaseModelEntity
+class CFuncWall : public CBaseModelEntity, public CBaseEntity::Factory<CFuncWall>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWall);

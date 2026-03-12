@@ -12,7 +12,7 @@
 
 #include "CRuleEntity.h"
 
-class CRuleBrushEntity : public CRuleEntity
+class CRuleBrushEntity : public CRuleEntity, public CBaseEntity::Factory<CRuleBrushEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRuleBrushEntity);

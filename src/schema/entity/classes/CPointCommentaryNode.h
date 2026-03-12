@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPointCommentaryNode : public CBaseAnimGraph
+class CPointCommentaryNode : public CBaseAnimGraph, public CBaseEntity::Factory<CPointCommentaryNode>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCommentaryNode);

@@ -13,7 +13,7 @@
 #include "CItem.h"
 #include "EntitySpottedState_t.h"
 
-class CItemDefuser : public CItem
+class CItemDefuser : public CItem, public CBaseEntity::Factory<CItemDefuser>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDefuser);

@@ -15,7 +15,7 @@
 
 class CBasePlayerWeapon;
 
-class CCSPlayer_ActionTrackingServices : public CPlayerPawnComponent
+class CCSPlayer_ActionTrackingServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_ActionTrackingServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_ActionTrackingServices);

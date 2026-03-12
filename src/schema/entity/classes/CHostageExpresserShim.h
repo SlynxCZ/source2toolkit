@@ -14,7 +14,7 @@
 
 class CAI_Expresser;
 
-class CHostageExpresserShim : public CBaseCombatCharacter
+class CHostageExpresserShim : public CBaseCombatCharacter, public CBaseEntity::Factory<CHostageExpresserShim>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageExpresserShim);

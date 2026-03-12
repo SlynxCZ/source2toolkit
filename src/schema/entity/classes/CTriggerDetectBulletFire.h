@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerDetectBulletFire : public CBaseTrigger
+class CTriggerDetectBulletFire : public CBaseTrigger, public CBaseEntity::Factory<CTriggerDetectBulletFire>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerDetectBulletFire);

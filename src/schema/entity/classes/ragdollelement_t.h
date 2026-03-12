@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ragdollelement_t
+class ragdollelement_t : public CBaseEntity::Factory<ragdollelement_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ragdollelement_t);

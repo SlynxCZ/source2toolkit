@@ -14,7 +14,7 @@
 
 class CBaseModelEntity;
 
-class CInfoOffscreenPanoramaTexture : public CPointEntity
+class CInfoOffscreenPanoramaTexture : public CPointEntity, public CBaseEntity::Factory<CInfoOffscreenPanoramaTexture>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoOffscreenPanoramaTexture);

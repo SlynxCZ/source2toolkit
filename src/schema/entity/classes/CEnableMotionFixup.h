@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnableMotionFixup : public CBaseEntity
+class CEnableMotionFixup : public CBaseEntity, public CBaseEntity::Factory<CEnableMotionFixup>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnableMotionFixup);

@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CKeepUpright : public CPointEntity
+class CKeepUpright : public CPointEntity, public CBaseEntity::Factory<CKeepUpright>
 {
 public:
     DECLARE_SCHEMA_CLASS(CKeepUpright);

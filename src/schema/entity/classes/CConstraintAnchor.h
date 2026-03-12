@@ -12,7 +12,7 @@
 
 #include "CBaseAnimGraph.h"
 
-class CConstraintAnchor : public CBaseAnimGraph
+class CConstraintAnchor : public CBaseAnimGraph, public CBaseEntity::Factory<CConstraintAnchor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CConstraintAnchor);

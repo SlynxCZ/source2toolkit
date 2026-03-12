@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CTriggerSndSosOpvar : public CBaseTrigger
+class CTriggerSndSosOpvar : public CBaseTrigger, public CBaseEntity::Factory<CTriggerSndSosOpvar>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerSndSosOpvar);

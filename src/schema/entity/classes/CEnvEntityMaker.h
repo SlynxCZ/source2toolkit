@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CEnvEntityMaker : public CPointEntity
+class CEnvEntityMaker : public CPointEntity, public CBaseEntity::Factory<CEnvEntityMaker>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvEntityMaker);

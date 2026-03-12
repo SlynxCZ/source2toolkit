@@ -13,7 +13,7 @@
 #include "SimpleConstraintSoundProfile.h"
 #include "VelocitySampler.h"
 
-class ConstraintSoundInfo
+class ConstraintSoundInfo : public CBaseEntity::Factory<ConstraintSoundInfo>
 {
 public:
     DECLARE_SCHEMA_CLASS(ConstraintSoundInfo);

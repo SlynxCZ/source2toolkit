@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CCitadelSoundOpvarSetOBB : public CBaseEntity
+class CCitadelSoundOpvarSetOBB : public CBaseEntity, public CBaseEntity::Factory<CCitadelSoundOpvarSetOBB>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCitadelSoundOpvarSetOBB);

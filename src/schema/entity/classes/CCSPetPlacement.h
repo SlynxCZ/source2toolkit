@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CCSPetPlacement : public CBaseEntity
+class CCSPetPlacement : public CBaseEntity, public CBaseEntity::Factory<CCSPetPlacement>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPetPlacement);

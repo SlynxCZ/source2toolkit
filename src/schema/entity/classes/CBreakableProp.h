@@ -19,7 +19,7 @@
 class CBaseEntity;
 class CBasePlayerPawn;
 
-class CBreakableProp : public CBaseProp
+class CBreakableProp : public CBaseProp, public CBaseEntity::Factory<CBreakableProp>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBreakableProp);

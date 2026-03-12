@@ -13,7 +13,7 @@
 #include "CMarkupVolumeTagged.h"
 #include "../enums/NavScopeFlags_t.h"
 
-class CMarkupVolumeTagged_Nav : public CMarkupVolumeTagged
+class CMarkupVolumeTagged_Nav : public CMarkupVolumeTagged, public CBaseEntity::Factory<CMarkupVolumeTagged_Nav>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeTagged_Nav);

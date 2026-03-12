@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CTakeDamageInfo
+class CTakeDamageInfo : public CBaseEntity::Factory<CTakeDamageInfo>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTakeDamageInfo);

@@ -12,7 +12,7 @@
 
 #include "CRagdollProp.h"
 
-class CRagdollPropAlias_physics_prop_ragdoll : public CRagdollProp
+class CRagdollPropAlias_physics_prop_ragdoll : public CRagdollProp, public CBaseEntity::Factory<CRagdollPropAlias_physics_prop_ragdoll>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollPropAlias_physics_prop_ragdoll);

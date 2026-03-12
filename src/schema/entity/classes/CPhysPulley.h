@@ -12,7 +12,7 @@
 
 #include "CPhysConstraint.h"
 
-class CPhysPulley : public CPhysConstraint
+class CPhysPulley : public CPhysConstraint, public CBaseEntity::Factory<CPhysPulley>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysPulley);

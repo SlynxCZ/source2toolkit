@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CPointCamera : public CBaseEntity
+class CPointCamera : public CBaseEntity, public CBaseEntity::Factory<CPointCamera>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCamera);

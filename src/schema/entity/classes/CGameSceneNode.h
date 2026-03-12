@@ -12,7 +12,7 @@
 
 #include "CNetworkOriginCellCoordQuantizedVector.h"
 
-class CGameSceneNode
+class CGameSceneNode : public CBaseEntity::Factory<CGameSceneNode>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameSceneNode);

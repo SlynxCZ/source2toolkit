@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CExampleSchemaVData_Monomorphic
+class CExampleSchemaVData_Monomorphic : public CBaseEntity::Factory<CExampleSchemaVData_Monomorphic>
 {
 public:
     DECLARE_SCHEMA_CLASS(CExampleSchemaVData_Monomorphic);

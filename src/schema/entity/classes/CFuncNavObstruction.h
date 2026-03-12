@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncNavObstruction : public CBaseModelEntity
+class CFuncNavObstruction : public CBaseModelEntity, public CBaseEntity::Factory<CFuncNavObstruction>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncNavObstruction);

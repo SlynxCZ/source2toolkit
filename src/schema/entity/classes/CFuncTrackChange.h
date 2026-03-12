@@ -16,7 +16,7 @@
 class CFuncTrackTrain;
 class CPathTrack;
 
-class CFuncTrackChange : public CFuncPlatRot
+class CFuncTrackChange : public CFuncPlatRot, public CBaseEntity::Factory<CFuncTrackChange>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrackChange);

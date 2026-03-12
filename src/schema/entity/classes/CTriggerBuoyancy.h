@@ -13,7 +13,7 @@
 #include "CBaseTrigger.h"
 #include "CBuoyancyHelper.h"
 
-class CTriggerBuoyancy : public CBaseTrigger
+class CTriggerBuoyancy : public CBaseTrigger, public CBaseEntity::Factory<CTriggerBuoyancy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBuoyancy);

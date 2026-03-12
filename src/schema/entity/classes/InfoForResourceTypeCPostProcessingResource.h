@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeCPostProcessingResource
+class InfoForResourceTypeCPostProcessingResource : public CBaseEntity::Factory<InfoForResourceTypeCPostProcessingResource>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCPostProcessingResource);

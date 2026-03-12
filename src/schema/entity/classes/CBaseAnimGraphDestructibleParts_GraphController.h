@@ -12,7 +12,7 @@
 
 #include "CAnimGraphControllerBase.h"
 
-class CBaseAnimGraphDestructibleParts_GraphController : public CAnimGraphControllerBase
+class CBaseAnimGraphDestructibleParts_GraphController : public CAnimGraphControllerBase, public CBaseEntity::Factory<CBaseAnimGraphDestructibleParts_GraphController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraphDestructibleParts_GraphController);

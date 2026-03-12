@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CInButtonState
+class CInButtonState : public CBaseEntity::Factory<CInButtonState>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInButtonState);

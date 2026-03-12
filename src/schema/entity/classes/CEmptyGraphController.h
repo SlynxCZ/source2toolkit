@@ -12,7 +12,7 @@
 
 #include "CAnimGraphControllerBase.h"
 
-class CEmptyGraphController : public CAnimGraphControllerBase
+class CEmptyGraphController : public CAnimGraphControllerBase, public CBaseEntity::Factory<CEmptyGraphController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEmptyGraphController);

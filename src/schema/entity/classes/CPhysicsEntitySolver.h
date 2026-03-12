@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPhysicsEntitySolver : public CLogicalEntity
+class CPhysicsEntitySolver : public CLogicalEntity, public CBaseEntity::Factory<CPhysicsEntitySolver>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsEntitySolver);

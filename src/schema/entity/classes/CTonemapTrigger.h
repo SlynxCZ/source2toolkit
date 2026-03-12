@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTonemapTrigger : public CBaseTrigger
+class CTonemapTrigger : public CBaseTrigger, public CBaseEntity::Factory<CTonemapTrigger>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTonemapTrigger);

@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CFilterMultiple : public CBaseFilter
+class CFilterMultiple : public CBaseFilter, public CBaseEntity::Factory<CFilterMultiple>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterMultiple);

@@ -12,7 +12,7 @@
 
 class CBaseEntity;
 
-class CEnvWindShared
+class CEnvWindShared : public CBaseEntity::Factory<CEnvWindShared>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWindShared);

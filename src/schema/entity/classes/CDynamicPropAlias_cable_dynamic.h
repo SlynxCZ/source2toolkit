@@ -12,7 +12,7 @@
 
 #include "CDynamicProp.h"
 
-class CDynamicPropAlias_cable_dynamic : public CDynamicProp
+class CDynamicPropAlias_cable_dynamic : public CDynamicProp, public CBaseEntity::Factory<CDynamicPropAlias_cable_dynamic>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_cable_dynamic);

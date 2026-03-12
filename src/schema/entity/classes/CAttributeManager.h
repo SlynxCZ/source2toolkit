@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CAttributeManager
+class CAttributeManager : public CBaseEntity::Factory<CAttributeManager>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAttributeManager);

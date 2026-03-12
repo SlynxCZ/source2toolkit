@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class DestructibleHitGroupToDestroy_t
+class DestructibleHitGroupToDestroy_t : public CBaseEntity::Factory<DestructibleHitGroupToDestroy_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(DestructibleHitGroupToDestroy_t);

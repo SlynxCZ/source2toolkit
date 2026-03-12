@@ -14,7 +14,7 @@
 
 class CBaseFilter;
 
-class CPointPush : public CPointEntity
+class CPointPush : public CPointEntity, public CBaseEntity::Factory<CPointPush>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointPush);

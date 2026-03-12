@@ -12,7 +12,7 @@
 
 #include "CPointCamera.h"
 
-class CPointCameraVFOV : public CPointCamera
+class CPointCameraVFOV : public CPointCamera, public CBaseEntity::Factory<CPointCameraVFOV>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCameraVFOV);

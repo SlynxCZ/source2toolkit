@@ -12,7 +12,7 @@
 
 #include "CRagdollProp.h"
 
-class CRagdollPropAttached : public CRagdollProp
+class CRagdollPropAttached : public CRagdollProp, public CBaseEntity::Factory<CRagdollPropAttached>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollPropAttached);

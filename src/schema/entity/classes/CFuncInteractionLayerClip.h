@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncInteractionLayerClip : public CBaseModelEntity
+class CFuncInteractionLayerClip : public CBaseModelEntity, public CBaseEntity::Factory<CFuncInteractionLayerClip>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncInteractionLayerClip);

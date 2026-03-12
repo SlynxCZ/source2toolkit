@@ -14,7 +14,7 @@
 
 class CCSPlayerPawn;
 
-class CItemDogtags : public CItem
+class CItemDogtags : public CItem, public CBaseEntity::Factory<CItemDogtags>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDogtags);

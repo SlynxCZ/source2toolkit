@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvHudHint : public CPointEntity
+class CEnvHudHint : public CPointEntity, public CBaseEntity::Factory<CEnvHudHint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvHudHint);

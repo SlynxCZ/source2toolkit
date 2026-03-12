@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPulseGraphInstance_ServerEntity : public CBasePulseGraphInstance
+class CPulseGraphInstance_ServerEntity : public CBasePulseGraphInstance, public CBaseEntity::Factory<CPulseGraphInstance_ServerEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPulseGraphInstance_ServerEntity);

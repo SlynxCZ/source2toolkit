@@ -12,7 +12,7 @@
 
 #include "CTonemapController2.h"
 
-class CTonemapController2Alias_env_tonemap_controller2 : public CTonemapController2
+class CTonemapController2Alias_env_tonemap_controller2 : public CTonemapController2, public CBaseEntity::Factory<CTonemapController2Alias_env_tonemap_controller2>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTonemapController2Alias_env_tonemap_controller2);

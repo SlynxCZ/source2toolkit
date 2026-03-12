@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CountdownTimer
+class CountdownTimer : public CBaseEntity::Factory<CountdownTimer>
 {
 public:
     DECLARE_SCHEMA_CLASS(CountdownTimer);

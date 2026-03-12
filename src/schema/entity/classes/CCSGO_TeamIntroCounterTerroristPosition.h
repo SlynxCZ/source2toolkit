@@ -12,7 +12,7 @@
 
 #include "CCSGO_TeamIntroCharacterPosition.h"
 
-class CCSGO_TeamIntroCounterTerroristPosition : public CCSGO_TeamIntroCharacterPosition
+class CCSGO_TeamIntroCounterTerroristPosition : public CCSGO_TeamIntroCharacterPosition, public CBaseEntity::Factory<CCSGO_TeamIntroCounterTerroristPosition>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamIntroCounterTerroristPosition);

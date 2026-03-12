@@ -13,7 +13,7 @@
 
 class CBaseModelEntity;
 
-class CDestructiblePartsComponent
+class CDestructiblePartsComponent : public CBaseEntity::Factory<CDestructiblePartsComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDestructiblePartsComponent);

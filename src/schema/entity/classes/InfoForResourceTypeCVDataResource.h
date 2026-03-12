@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeCVDataResource
+class InfoForResourceTypeCVDataResource : public CBaseEntity::Factory<InfoForResourceTypeCVDataResource>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCVDataResource);

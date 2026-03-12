@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoPlayerStart : public CPointEntity
+class CInfoPlayerStart : public CPointEntity, public CBaseEntity::Factory<CInfoPlayerStart>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoPlayerStart);

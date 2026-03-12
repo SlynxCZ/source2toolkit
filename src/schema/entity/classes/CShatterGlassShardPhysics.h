@@ -13,7 +13,7 @@
 #include "CPhysicsProp.h"
 #include "shard_model_desc_t.h"
 
-class CShatterGlassShardPhysics : public CPhysicsProp
+class CShatterGlassShardPhysics : public CPhysicsProp, public CBaseEntity::Factory<CShatterGlassShardPhysics>
 {
 public:
     DECLARE_SCHEMA_CLASS(CShatterGlassShardPhysics);

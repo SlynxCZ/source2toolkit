@@ -12,7 +12,7 @@
 
 #include "CServerOnlyModelEntity.h"
 
-class CCSPlace : public CServerOnlyModelEntity
+class CCSPlace : public CServerOnlyModelEntity, public CBaseEntity::Factory<CCSPlace>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlace);

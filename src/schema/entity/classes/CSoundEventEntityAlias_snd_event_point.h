@@ -12,7 +12,7 @@
 
 #include "CSoundEventEntity.h"
 
-class CSoundEventEntityAlias_snd_event_point : public CSoundEventEntity
+class CSoundEventEntityAlias_snd_event_point : public CSoundEventEntity, public CBaseEntity::Factory<CSoundEventEntityAlias_snd_event_point>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventEntityAlias_snd_event_point);

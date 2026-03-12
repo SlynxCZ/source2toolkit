@@ -12,7 +12,7 @@
 
 #include "CBaseCSGrenade.h"
 
-class CDecoyGrenade : public CBaseCSGrenade
+class CDecoyGrenade : public CBaseCSGrenade, public CBaseEntity::Factory<CDecoyGrenade>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDecoyGrenade);

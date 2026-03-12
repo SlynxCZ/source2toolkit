@@ -12,7 +12,7 @@
 
 #include "InfoForResourceTypeCModel.h"
 
-class CModelState
+class CModelState : public CBaseEntity::Factory<CModelState>
 {
 public:
     DECLARE_SCHEMA_CLASS(CModelState);

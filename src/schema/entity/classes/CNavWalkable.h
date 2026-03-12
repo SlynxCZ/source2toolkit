@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CNavWalkable : public CPointEntity
+class CNavWalkable : public CPointEntity, public CBaseEntity::Factory<CNavWalkable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavWalkable);

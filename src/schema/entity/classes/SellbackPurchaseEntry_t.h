@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class SellbackPurchaseEntry_t
+class SellbackPurchaseEntry_t : public CBaseEntity::Factory<SellbackPurchaseEntry_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(SellbackPurchaseEntry_t);

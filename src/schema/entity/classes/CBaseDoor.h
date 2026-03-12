@@ -14,7 +14,7 @@
 #include "../enums/FuncDoorSpawnPos_t.h"
 #include "locksound_t.h"
 
-class CBaseDoor : public CBaseToggle
+class CBaseDoor : public CBaseToggle, public CBaseEntity::Factory<CBaseDoor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseDoor);

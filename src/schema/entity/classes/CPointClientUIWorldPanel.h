@@ -12,7 +12,7 @@
 
 #include "CBaseClientUIEntity.h"
 
-class CPointClientUIWorldPanel : public CBaseClientUIEntity
+class CPointClientUIWorldPanel : public CBaseClientUIEntity, public CBaseEntity::Factory<CPointClientUIWorldPanel>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointClientUIWorldPanel);

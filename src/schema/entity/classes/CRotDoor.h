@@ -12,7 +12,7 @@
 
 #include "CBaseDoor.h"
 
-class CRotDoor : public CBaseDoor
+class CRotDoor : public CBaseDoor, public CBaseEntity::Factory<CRotDoor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotDoor);

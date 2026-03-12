@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CChoreoInfoTarget : public CPointEntity
+class CChoreoInfoTarget : public CPointEntity, public CBaseEntity::Factory<CChoreoInfoTarget>
 {
 public:
     DECLARE_SCHEMA_CLASS(CChoreoInfoTarget);

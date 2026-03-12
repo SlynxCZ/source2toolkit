@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvInstructorVRHint : public CPointEntity
+class CEnvInstructorVRHint : public CPointEntity, public CBaseEntity::Factory<CEnvInstructorVRHint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvInstructorVRHint);

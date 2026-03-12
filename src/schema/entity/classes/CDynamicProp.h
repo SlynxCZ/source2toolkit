@@ -13,7 +13,7 @@
 #include "../enums/AnimLoopMode_t.h"
 #include "CBreakableProp.h"
 
-class CDynamicProp : public CBreakableProp
+class CDynamicProp : public CBreakableProp, public CBaseEntity::Factory<CDynamicProp>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicProp);

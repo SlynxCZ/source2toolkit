@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CPointServerCommand : public CPointEntity
+class CPointServerCommand : public CPointEntity, public CBaseEntity::Factory<CPointServerCommand>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointServerCommand);

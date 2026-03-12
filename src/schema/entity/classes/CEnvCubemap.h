@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvCubemap : public CBaseEntity
+class CEnvCubemap : public CBaseEntity, public CBaseEntity::Factory<CEnvCubemap>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemap);

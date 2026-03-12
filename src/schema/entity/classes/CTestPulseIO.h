@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CTestPulseIO : public CLogicalEntity
+class CTestPulseIO : public CLogicalEntity, public CBaseEntity::Factory<CTestPulseIO>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTestPulseIO);

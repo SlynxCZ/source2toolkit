@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CBasePropDoor : public CDynamicProp
+class CBasePropDoor : public CDynamicProp, public CBaseEntity::Factory<CBasePropDoor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePropDoor);

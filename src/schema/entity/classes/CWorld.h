@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CWorld : public CBaseModelEntity
+class CWorld : public CBaseModelEntity, public CBaseEntity::Factory<CWorld>
 {
 public:
     DECLARE_SCHEMA_CLASS(CWorld);

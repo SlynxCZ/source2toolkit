@@ -12,7 +12,7 @@
 
 #include "CBaseButton.h"
 
-class CRotButton : public CBaseButton
+class CRotButton : public CBaseButton, public CBaseEntity::Factory<CRotButton>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotButton);

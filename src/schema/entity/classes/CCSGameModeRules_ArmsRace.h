@@ -12,7 +12,7 @@
 
 #include "CCSGameModeRules.h"
 
-class CCSGameModeRules_ArmsRace : public CCSGameModeRules
+class CCSGameModeRules_ArmsRace : public CCSGameModeRules, public CBaseEntity::Factory<CCSGameModeRules_ArmsRace>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules_ArmsRace);

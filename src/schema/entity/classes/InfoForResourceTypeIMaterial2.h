@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeIMaterial2
+class InfoForResourceTypeIMaterial2 : public CBaseEntity::Factory<InfoForResourceTypeIMaterial2>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeIMaterial2);

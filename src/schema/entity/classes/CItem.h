@@ -12,7 +12,7 @@
 
 #include "CBaseAnimGraph.h"
 
-class CItem : public CBaseAnimGraph
+class CItem : public CBaseAnimGraph, public CBaseEntity::Factory<CItem>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItem);

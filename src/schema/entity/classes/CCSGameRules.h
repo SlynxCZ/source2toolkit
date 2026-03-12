@@ -19,7 +19,7 @@ class CCSGameModeRules;
 class CCSPlayerController;
 class SpawnPoint;
 
-class CCSGameRules : public CTeamplayRules
+class CCSGameRules : public CTeamplayRules, public CBaseEntity::Factory<CCSGameRules>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameRules);

@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvEntityIgniter : public CBaseEntity
+class CEnvEntityIgniter : public CBaseEntity, public CBaseEntity::Factory<CEnvEntityIgniter>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvEntityIgniter);

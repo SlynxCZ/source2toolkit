@@ -14,7 +14,7 @@
 
 class CInfoLadderDismount;
 
-class CFuncLadder : public CBaseModelEntity
+class CFuncLadder : public CBaseModelEntity, public CBaseEntity::Factory<CFuncLadder>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncLadder);

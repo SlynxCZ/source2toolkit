@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CBaseFilter : public CLogicalEntity
+class CBaseFilter : public CLogicalEntity, public CBaseEntity::Factory<CBaseFilter>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseFilter);

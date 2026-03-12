@@ -20,7 +20,7 @@
 class CDestructiblePartsComponent;
 class CRenderComponent;
 
-class CBaseModelEntity : public CBaseEntity
+class CBaseModelEntity : public CBaseEntity, public CBaseEntity::Factory<CBaseModelEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseModelEntity);

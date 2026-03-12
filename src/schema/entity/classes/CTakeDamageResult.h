@@ -12,7 +12,7 @@
 
 class CTakeDamageInfo;
 
-class CTakeDamageResult
+class CTakeDamageResult : public CBaseEntity::Factory<CTakeDamageResult>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTakeDamageResult);

@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CPhysMotor : public CLogicalEntity
+class CPhysMotor : public CLogicalEntity, public CBaseEntity::Factory<CPhysMotor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysMotor);

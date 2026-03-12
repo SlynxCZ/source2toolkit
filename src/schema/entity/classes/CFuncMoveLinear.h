@@ -13,7 +13,7 @@
 #include "CBaseToggle.h"
 #include "../enums/MoveLinearAuthoredPos_t.h"
 
-class CFuncMoveLinear : public CBaseToggle
+class CFuncMoveLinear : public CBaseToggle, public CBaseEntity::Factory<CFuncMoveLinear>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMoveLinear);

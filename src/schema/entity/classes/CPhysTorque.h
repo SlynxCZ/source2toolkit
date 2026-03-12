@@ -12,7 +12,7 @@
 
 #include "CPhysForce.h"
 
-class CPhysTorque : public CPhysForce
+class CPhysTorque : public CPhysForce, public CBaseEntity::Factory<CPhysTorque>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysTorque);

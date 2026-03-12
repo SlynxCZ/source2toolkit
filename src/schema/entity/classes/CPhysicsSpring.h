@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CPhysicsSpring : public CBaseEntity
+class CPhysicsSpring : public CBaseEntity, public CBaseEntity::Factory<CPhysicsSpring>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsSpring);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CFiringModeFloat
+class CFiringModeFloat : public CBaseEntity::Factory<CFiringModeFloat>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFiringModeFloat);

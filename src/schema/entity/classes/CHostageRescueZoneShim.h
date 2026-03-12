@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CHostageRescueZoneShim : public CBaseTrigger
+class CHostageRescueZoneShim : public CBaseTrigger, public CBaseEntity::Factory<CHostageRescueZoneShim>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageRescueZoneShim);

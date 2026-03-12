@@ -11,7 +11,7 @@
 #include <cstdint>
 
 
-class CPlayerControllerComponent
+class CPlayerControllerComponent : public CBaseEntity::Factory<CPlayerControllerComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerControllerComponent);

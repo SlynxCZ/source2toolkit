@@ -12,7 +12,7 @@
 
 #include "DecalGroupOption_t.h"
 
-class CDecalGroupVData
+class CDecalGroupVData : public CBaseEntity::Factory<CDecalGroupVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDecalGroupVData);

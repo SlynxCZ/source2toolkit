@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CMapInfo : public CPointEntity
+class CMapInfo : public CPointEntity, public CBaseEntity::Factory<CMapInfo>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapInfo);

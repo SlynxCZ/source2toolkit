@@ -12,7 +12,7 @@
 
 #include "CGameRules.h"
 
-class CMultiplayRules : public CGameRules
+class CMultiplayRules : public CGameRules, public CBaseEntity::Factory<CMultiplayRules>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiplayRules);

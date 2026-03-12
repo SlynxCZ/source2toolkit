@@ -11,7 +11,7 @@
 #include <cstdint>
 
 
-class CRenderComponent : public CEntityComponent
+class CRenderComponent : public CEntityComponent, public CBaseEntity::Factory<CRenderComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRenderComponent);

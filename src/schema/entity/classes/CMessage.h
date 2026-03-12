@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CMessage : public CPointEntity
+class CMessage : public CPointEntity, public CBaseEntity::Factory<CMessage>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMessage);

@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicEventListener : public CLogicalEntity
+class CLogicEventListener : public CLogicalEntity, public CBaseEntity::Factory<CLogicEventListener>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicEventListener);

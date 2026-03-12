@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CInstancedSceneEntity : public CSceneEntity
+class CInstancedSceneEntity : public CSceneEntity, public CBaseEntity::Factory<CInstancedSceneEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInstancedSceneEntity);

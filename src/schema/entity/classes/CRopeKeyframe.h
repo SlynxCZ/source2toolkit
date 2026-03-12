@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CRopeKeyframe : public CBaseModelEntity
+class CRopeKeyframe : public CBaseModelEntity, public CBaseEntity::Factory<CRopeKeyframe>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRopeKeyframe);

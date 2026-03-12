@@ -12,7 +12,7 @@
 
 #include "CFuncWall.h"
 
-class CFuncWallToggle : public CFuncWall
+class CFuncWallToggle : public CFuncWall, public CBaseEntity::Factory<CFuncWallToggle>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWallToggle);

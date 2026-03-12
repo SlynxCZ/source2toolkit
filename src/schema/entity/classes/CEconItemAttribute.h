@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CEconItemAttribute
+class CEconItemAttribute : public CBaseEntity::Factory<CEconItemAttribute>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEconItemAttribute);

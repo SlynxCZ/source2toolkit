@@ -21,7 +21,7 @@ class CBaseEntity;
 class CMoverPathNode;
 class CPathMover;
 
-class CFuncMover : public CBaseModelEntity
+class CFuncMover : public CBaseModelEntity, public CBaseEntity::Factory<CFuncMover>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMover);

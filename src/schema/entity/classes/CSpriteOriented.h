@@ -12,7 +12,7 @@
 
 #include "CSprite.h"
 
-class CSpriteOriented : public CSprite
+class CSpriteOriented : public CSprite, public CBaseEntity::Factory<CSpriteOriented>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpriteOriented);

@@ -13,7 +13,7 @@
 #include "../enums/BloodType.h"
 #include "CPointEntity.h"
 
-class CBlood : public CPointEntity
+class CBlood : public CPointEntity, public CBaseEntity::Factory<CBlood>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBlood);

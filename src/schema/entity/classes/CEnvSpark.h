@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvSpark : public CPointEntity
+class CEnvSpark : public CPointEntity, public CBaseEntity::Factory<CEnvSpark>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSpark);

@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CPathKeyFrame : public CLogicalEntity
+class CPathKeyFrame : public CLogicalEntity, public CBaseEntity::Factory<CPathKeyFrame>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathKeyFrame);

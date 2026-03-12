@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CAnimGraphNetworkedVariables
+class CAnimGraphNetworkedVariables : public CBaseEntity::Factory<CAnimGraphNetworkedVariables>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAnimGraphNetworkedVariables);

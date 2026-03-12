@@ -14,7 +14,7 @@
 
 class CPathNode;
 
-class CPathWithDynamicNodes : public CPathSimple
+class CPathWithDynamicNodes : public CPathSimple, public CBaseEntity::Factory<CPathWithDynamicNodes>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathWithDynamicNodes);

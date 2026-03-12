@@ -13,7 +13,7 @@
 #include "CBaseAnimGraphController.h"
 #include "CBodyComponentSkeletonInstance.h"
 
-class CBodyComponentBaseAnimGraph : public CBodyComponentSkeletonInstance
+class CBodyComponentBaseAnimGraph : public CBodyComponentSkeletonInstance, public CBaseEntity::Factory<CBodyComponentBaseAnimGraph>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentBaseAnimGraph);

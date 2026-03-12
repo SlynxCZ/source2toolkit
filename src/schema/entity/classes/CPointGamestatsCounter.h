@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CPointGamestatsCounter : public CPointEntity
+class CPointGamestatsCounter : public CPointEntity, public CBaseEntity::Factory<CPointGamestatsCounter>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointGamestatsCounter);

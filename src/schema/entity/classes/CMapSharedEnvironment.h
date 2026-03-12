@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMapSharedEnvironment : public CLogicalEntity
+class CMapSharedEnvironment : public CLogicalEntity, public CBaseEntity::Factory<CMapSharedEnvironment>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapSharedEnvironment);

@@ -12,7 +12,7 @@
 
 #include "SpawnPoint.h"
 
-class CInfoDeathmatchSpawn : public SpawnPoint
+class CInfoDeathmatchSpawn : public SpawnPoint, public CBaseEntity::Factory<CInfoDeathmatchSpawn>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoDeathmatchSpawn);

@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CAI_ChangeHintGroup : public CBaseEntity
+class CAI_ChangeHintGroup : public CBaseEntity, public CBaseEntity::Factory<CAI_ChangeHintGroup>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAI_ChangeHintGroup);

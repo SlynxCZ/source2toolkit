@@ -17,7 +17,7 @@ class CBaseEntity;
 class CBaseFlex;
 class CSceneListManager;
 
-class CSceneEntity : public CPointEntity
+class CSceneEntity : public CPointEntity, public CBaseEntity::Factory<CSceneEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneEntity);

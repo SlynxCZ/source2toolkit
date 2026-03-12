@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CChangeLevel : public CBaseTrigger
+class CChangeLevel : public CBaseTrigger, public CBaseEntity::Factory<CChangeLevel>
 {
 public:
     DECLARE_SCHEMA_CLASS(CChangeLevel);

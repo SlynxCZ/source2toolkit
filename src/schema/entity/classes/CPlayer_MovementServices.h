@@ -13,7 +13,7 @@
 #include "CInButtonState.h"
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_MovementServices : public CPlayerPawnComponent
+class CPlayer_MovementServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_MovementServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_MovementServices);

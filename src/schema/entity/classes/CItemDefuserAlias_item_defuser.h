@@ -12,7 +12,7 @@
 
 #include "CItemDefuser.h"
 
-class CItemDefuserAlias_item_defuser : public CItemDefuser
+class CItemDefuserAlias_item_defuser : public CItemDefuser, public CBaseEntity::Factory<CItemDefuserAlias_item_defuser>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDefuserAlias_item_defuser);

@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CPulseGameBlackboard : public CBaseEntity
+class CPulseGameBlackboard : public CBaseEntity, public CBaseEntity::Factory<CPulseGameBlackboard>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPulseGameBlackboard);

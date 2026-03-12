@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CIronSightController
+class CIronSightController : public CBaseEntity::Factory<CIronSightController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CIronSightController);

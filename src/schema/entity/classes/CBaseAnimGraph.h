@@ -17,7 +17,7 @@
 class CAnimGraphControllerBase;
 class IChoreoServices;
 
-class CBaseAnimGraph : public CBaseModelEntity
+class CBaseAnimGraph : public CBaseModelEntity, public CBaseEntity::Factory<CBaseAnimGraph>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraph);

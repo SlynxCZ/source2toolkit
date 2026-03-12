@@ -14,7 +14,7 @@
 #include "InfoForResourceTypeCTextureBase.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CEnvCubemapFog : public CBaseEntity
+class CEnvCubemapFog : public CBaseEntity, public CBaseEntity::Factory<CEnvCubemapFog>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemapFog);

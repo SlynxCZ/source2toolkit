@@ -13,7 +13,7 @@
 #include "CPointEntity.h"
 #include "../enums/TrackOrientationType_t.h"
 
-class CPathTrack : public CPointEntity
+class CPathTrack : public CPointEntity, public CBaseEntity::Factory<CPathTrack>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathTrack);

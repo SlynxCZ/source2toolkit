@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CFuncShatterglass : public CBaseModelEntity
+class CFuncShatterglass : public CBaseModelEntity, public CBaseEntity::Factory<CFuncShatterglass>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncShatterglass);

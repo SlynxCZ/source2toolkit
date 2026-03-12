@@ -12,7 +12,7 @@
 
 #include "CEnvCubemap.h"
 
-class CEnvCubemapBox : public CEnvCubemap
+class CEnvCubemapBox : public CEnvCubemap, public CBaseEntity::Factory<CEnvCubemapBox>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemapBox);

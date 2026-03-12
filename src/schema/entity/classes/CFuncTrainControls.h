@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncTrainControls : public CBaseModelEntity
+class CFuncTrainControls : public CBaseModelEntity, public CBaseEntity::Factory<CFuncTrainControls>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrainControls);

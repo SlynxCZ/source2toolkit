@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CFuncTimescale : public CBaseEntity
+class CFuncTimescale : public CBaseEntity, public CBaseEntity::Factory<CFuncTimescale>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTimescale);

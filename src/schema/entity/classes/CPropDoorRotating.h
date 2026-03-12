@@ -17,7 +17,7 @@
 
 class CEntityBlocker;
 
-class CPropDoorRotating : public CBasePropDoor
+class CPropDoorRotating : public CBasePropDoor, public CBaseEntity::Factory<CPropDoorRotating>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPropDoorRotating);

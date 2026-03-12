@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CEntityAttributeTable
+class CEntityAttributeTable : public CBaseEntity::Factory<CEntityAttributeTable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityAttributeTable);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ResourceId_t
+class ResourceId_t : public CBaseEntity::Factory<ResourceId_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ResourceId_t);

@@ -14,7 +14,7 @@
 
 class CSkyCamera;
 
-class CSkyboxReference : public CBaseEntity
+class CSkyboxReference : public CBaseEntity, public CBaseEntity::Factory<CSkyboxReference>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkyboxReference);

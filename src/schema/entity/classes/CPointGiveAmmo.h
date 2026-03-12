@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPointGiveAmmo : public CPointEntity
+class CPointGiveAmmo : public CPointEntity, public CBaseEntity::Factory<CPointGiveAmmo>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointGiveAmmo);

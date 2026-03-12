@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CSceneListManager : public CLogicalEntity
+class CSceneListManager : public CLogicalEntity, public CBaseEntity::Factory<CSceneListManager>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneListManager);

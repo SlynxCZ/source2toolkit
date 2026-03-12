@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CInfoLadderDismount : public CBaseEntity
+class CInfoLadderDismount : public CBaseEntity, public CBaseEntity::Factory<CInfoLadderDismount>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoLadderDismount);

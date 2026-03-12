@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CCSPlayer_UseServices : public CPlayer_UseServices
+class CCSPlayer_UseServices : public CPlayer_UseServices, public CBaseEntity::Factory<CCSPlayer_UseServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_UseServices);

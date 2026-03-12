@@ -12,7 +12,7 @@
 
 #include "CEnvSoundscape.h"
 
-class CEnvSoundscapeProxy : public CEnvSoundscape
+class CEnvSoundscapeProxy : public CEnvSoundscape, public CBaseEntity::Factory<CEnvSoundscapeProxy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeProxy);

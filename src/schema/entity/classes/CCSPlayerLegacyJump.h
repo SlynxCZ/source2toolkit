@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CCSPlayerLegacyJump
+class CCSPlayerLegacyJump : public CBaseEntity::Factory<CCSPlayerLegacyJump>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerLegacyJump);

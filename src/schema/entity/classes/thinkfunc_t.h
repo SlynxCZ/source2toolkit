@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class thinkfunc_t
+class thinkfunc_t : public CBaseEntity::Factory<thinkfunc_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(thinkfunc_t);

@@ -12,7 +12,7 @@
 
 #include "CCSGameModeRules.h"
 
-class CCSGameModeRules_Noop : public CCSGameModeRules
+class CCSGameModeRules_Noop : public CCSGameModeRules, public CBaseEntity::Factory<CCSGameModeRules_Noop>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules_Noop);

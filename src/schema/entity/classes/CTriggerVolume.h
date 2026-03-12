@@ -14,7 +14,7 @@
 
 class CBaseFilter;
 
-class CTriggerVolume : public CBaseModelEntity
+class CTriggerVolume : public CBaseModelEntity, public CBaseEntity::Factory<CTriggerVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerVolume);

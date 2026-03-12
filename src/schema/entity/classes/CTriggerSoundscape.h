@@ -15,7 +15,7 @@
 class CBasePlayerPawn;
 class CEnvSoundscapeTriggerable;
 
-class CTriggerSoundscape : public CBaseTrigger
+class CTriggerSoundscape : public CBaseTrigger, public CBaseEntity::Factory<CTriggerSoundscape>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerSoundscape);

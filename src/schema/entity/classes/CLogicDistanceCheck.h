@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicDistanceCheck : public CLogicalEntity
+class CLogicDistanceCheck : public CLogicalEntity, public CBaseEntity::Factory<CLogicDistanceCheck>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicDistanceCheck);

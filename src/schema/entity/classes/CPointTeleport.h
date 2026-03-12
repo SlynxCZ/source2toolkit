@@ -12,7 +12,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class CPointTeleport : public CServerOnlyPointEntity
+class CPointTeleport : public CServerOnlyPointEntity, public CBaseEntity::Factory<CPointTeleport>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointTeleport);

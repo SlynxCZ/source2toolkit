@@ -13,7 +13,7 @@
 #include "CBaseAnimGraph.h"
 #include "SceneEventId_t.h"
 
-class CBaseFlex : public CBaseAnimGraph
+class CBaseFlex : public CBaseAnimGraph, public CBaseEntity::Factory<CBaseFlex>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseFlex);

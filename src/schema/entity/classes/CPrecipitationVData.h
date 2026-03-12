@@ -13,7 +13,7 @@
 #include "CEntitySubclassVDataBase.h"
 #include "../enums/ParticleAttachment_t.h"
 
-class CPrecipitationVData : public CEntitySubclassVDataBase
+class CPrecipitationVData : public CEntitySubclassVDataBase, public CBaseEntity::Factory<CPrecipitationVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitationVData);

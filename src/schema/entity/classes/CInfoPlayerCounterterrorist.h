@@ -12,7 +12,7 @@
 
 #include "SpawnPoint.h"
 
-class CInfoPlayerCounterterrorist : public SpawnPoint
+class CInfoPlayerCounterterrorist : public SpawnPoint, public CBaseEntity::Factory<CInfoPlayerCounterterrorist>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoPlayerCounterterrorist);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class SimpleConstraintSoundProfile
+class SimpleConstraintSoundProfile : public CBaseEntity::Factory<SimpleConstraintSoundProfile>
 {
 public:
     DECLARE_SCHEMA_CLASS(SimpleConstraintSoundProfile);

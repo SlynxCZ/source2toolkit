@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CHitboxComponent : public CEntityComponent
+class CHitboxComponent : public CEntityComponent, public CBaseEntity::Factory<CHitboxComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHitboxComponent);

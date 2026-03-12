@@ -12,7 +12,7 @@
 
 #include "CRulePointEntity.h"
 
-class CGameEnd : public CRulePointEntity
+class CGameEnd : public CRulePointEntity, public CBaseEntity::Factory<CGameEnd>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameEnd);

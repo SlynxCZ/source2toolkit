@@ -15,7 +15,7 @@
 #include "../enums/PointWorldTextJustifyVertical_t.h"
 #include "../enums/PointWorldTextReorientMode_t.h"
 
-class CPointWorldText : public CModelPointEntity
+class CPointWorldText : public CModelPointEntity, public CBaseEntity::Factory<CPointWorldText>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointWorldText);

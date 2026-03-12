@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicAchievement : public CLogicalEntity
+class CLogicAchievement : public CLogicalEntity, public CBaseEntity::Factory<CLogicAchievement>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicAchievement);

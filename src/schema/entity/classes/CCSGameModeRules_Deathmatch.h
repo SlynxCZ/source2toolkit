@@ -12,7 +12,7 @@
 
 #include "CCSGameModeRules.h"
 
-class CCSGameModeRules_Deathmatch : public CCSGameModeRules
+class CCSGameModeRules_Deathmatch : public CCSGameModeRules, public CBaseEntity::Factory<CCSGameModeRules_Deathmatch>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules_Deathmatch);

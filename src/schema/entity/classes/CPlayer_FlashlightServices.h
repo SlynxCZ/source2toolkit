@@ -12,7 +12,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_FlashlightServices : public CPlayerPawnComponent
+class CPlayer_FlashlightServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_FlashlightServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_FlashlightServices);

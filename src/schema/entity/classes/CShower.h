@@ -12,7 +12,7 @@
 
 #include "CModelPointEntity.h"
 
-class CShower : public CModelPointEntity
+class CShower : public CModelPointEntity, public CBaseEntity::Factory<CShower>
 {
 public:
     DECLARE_SCHEMA_CLASS(CShower);

@@ -12,7 +12,7 @@
 
 #include "CPathParticleRope.h"
 
-class CPathParticleRopeAlias_path_particle_rope_clientside : public CPathParticleRope
+class CPathParticleRopeAlias_path_particle_rope_clientside : public CPathParticleRope, public CBaseEntity::Factory<CPathParticleRopeAlias_path_particle_rope_clientside>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathParticleRopeAlias_path_particle_rope_clientside);

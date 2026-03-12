@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerToggleSave : public CBaseTrigger
+class CTriggerToggleSave : public CBaseTrigger, public CBaseEntity::Factory<CTriggerToggleSave>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerToggleSave);

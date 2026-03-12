@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CColorCorrection : public CBaseEntity
+class CColorCorrection : public CBaseEntity, public CBaseEntity::Factory<CColorCorrection>
 {
 public:
     DECLARE_SCHEMA_CLASS(CColorCorrection);

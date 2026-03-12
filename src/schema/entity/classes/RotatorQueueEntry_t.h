@@ -12,7 +12,7 @@
 
 #include "../enums/RotatorTargetSpace_t.h"
 
-class RotatorQueueEntry_t
+class RotatorQueueEntry_t : public CBaseEntity::Factory<RotatorQueueEntry_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(RotatorQueueEntry_t);

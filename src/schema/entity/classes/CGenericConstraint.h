@@ -13,7 +13,7 @@
 #include "CPhysConstraint.h"
 #include "../enums/JointMotion_t.h"
 
-class CGenericConstraint : public CPhysConstraint
+class CGenericConstraint : public CPhysConstraint, public CBaseEntity::Factory<CGenericConstraint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGenericConstraint);

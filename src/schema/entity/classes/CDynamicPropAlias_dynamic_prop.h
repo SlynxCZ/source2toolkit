@@ -12,7 +12,7 @@
 
 #include "CDynamicProp.h"
 
-class CDynamicPropAlias_dynamic_prop : public CDynamicProp
+class CDynamicPropAlias_dynamic_prop : public CDynamicProp, public CBaseEntity::Factory<CDynamicPropAlias_dynamic_prop>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_dynamic_prop);

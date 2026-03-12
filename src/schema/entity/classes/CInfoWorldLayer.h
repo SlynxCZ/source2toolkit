@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CInfoWorldLayer : public CBaseEntity
+class CInfoWorldLayer : public CBaseEntity, public CBaseEntity::Factory<CInfoWorldLayer>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoWorldLayer);

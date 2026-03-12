@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CTouchExpansionComponent : public CEntityComponent
+class CTouchExpansionComponent : public CEntityComponent, public CBaseEntity::Factory<CTouchExpansionComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTouchExpansionComponent);

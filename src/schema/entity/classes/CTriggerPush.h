@@ -14,7 +14,7 @@
 
 class CPathSimple;
 
-class CTriggerPush : public CBaseTrigger
+class CTriggerPush : public CBaseTrigger, public CBaseEntity::Factory<CTriggerPush>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerPush);

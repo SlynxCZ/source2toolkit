@@ -15,7 +15,7 @@
 
 class CFishPool;
 
-class CFish : public CBaseAnimGraph
+class CFish : public CBaseAnimGraph, public CBaseEntity::Factory<CFish>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFish);

@@ -12,7 +12,7 @@
 
 #include "../enums/Disposition_t.h"
 
-class Relationship_t
+class Relationship_t : public CBaseEntity::Factory<Relationship_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(Relationship_t);

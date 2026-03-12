@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CSkillInt
+class CSkillInt : public CBaseEntity::Factory<CSkillInt>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkillInt);

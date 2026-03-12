@@ -13,7 +13,7 @@
 #include "CBaseTrigger.h"
 #include "fogparams_t.h"
 
-class CFogTrigger : public CBaseTrigger
+class CFogTrigger : public CBaseTrigger, public CBaseEntity::Factory<CFogTrigger>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFogTrigger);

@@ -12,7 +12,7 @@
 
 #include "CPathNode.h"
 
-class CMoverPathNode : public CPathNode
+class CMoverPathNode : public CPathNode, public CBaseEntity::Factory<CMoverPathNode>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMoverPathNode);

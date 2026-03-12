@@ -12,7 +12,7 @@
 
 #include "CTriggerPush.h"
 
-class CScriptTriggerPush : public CTriggerPush
+class CScriptTriggerPush : public CTriggerPush, public CBaseEntity::Factory<CScriptTriggerPush>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerPush);

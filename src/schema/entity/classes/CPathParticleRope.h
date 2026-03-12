@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeIParticleSystemDefinition.h"
 
-class CPathParticleRope : public CBaseEntity
+class CPathParticleRope : public CBaseEntity, public CBaseEntity::Factory<CPathParticleRope>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathParticleRope);

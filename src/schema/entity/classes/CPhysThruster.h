@@ -12,7 +12,7 @@
 
 #include "CPhysForce.h"
 
-class CPhysThruster : public CPhysForce
+class CPhysThruster : public CPhysForce, public CBaseEntity::Factory<CPhysThruster>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysThruster);

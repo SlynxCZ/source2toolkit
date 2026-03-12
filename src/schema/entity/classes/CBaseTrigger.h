@@ -15,7 +15,7 @@
 class CBaseEntity;
 class CBaseFilter;
 
-class CBaseTrigger : public CBaseToggle
+class CBaseTrigger : public CBaseToggle, public CBaseEntity::Factory<CBaseTrigger>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseTrigger);

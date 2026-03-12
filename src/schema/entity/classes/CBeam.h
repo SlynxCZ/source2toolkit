@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CBeam : public CBaseModelEntity
+class CBeam : public CBaseModelEntity, public CBaseEntity::Factory<CBeam>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBeam);

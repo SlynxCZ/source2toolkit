@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPointProximitySensor : public CPointEntity
+class CPointProximitySensor : public CPointEntity, public CBaseEntity::Factory<CPointProximitySensor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointProximitySensor);

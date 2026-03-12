@@ -18,7 +18,7 @@
 class CBaseEntity;
 class CCSPlayerPawn;
 
-class CChicken : public CDynamicProp
+class CChicken : public CDynamicProp, public CBaseEntity::Factory<CChicken>
 {
 public:
     DECLARE_SCHEMA_CLASS(CChicken);

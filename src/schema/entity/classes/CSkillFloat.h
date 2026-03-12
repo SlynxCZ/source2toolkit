@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CSkillFloat
+class CSkillFloat : public CBaseEntity::Factory<CSkillFloat>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkillFloat);

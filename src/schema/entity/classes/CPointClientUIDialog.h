@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPointClientUIDialog : public CBaseClientUIEntity
+class CPointClientUIDialog : public CBaseClientUIEntity, public CBaseEntity::Factory<CPointClientUIDialog>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointClientUIDialog);

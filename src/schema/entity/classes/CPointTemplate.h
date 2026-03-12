@@ -14,7 +14,7 @@
 #include "../enums/PointTemplateClientOnlyEntityBehavior_t.h"
 #include "../enums/PointTemplateOwnerSpawnGroupType_t.h"
 
-class CPointTemplate : public CLogicalEntity
+class CPointTemplate : public CLogicalEntity, public CBaseEntity::Factory<CPointTemplate>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointTemplate);

@@ -19,7 +19,7 @@
 
 class CBasePlayerPawn;
 
-class CPointValueRemapper : public CBaseEntity
+class CPointValueRemapper : public CBaseEntity, public CBaseEntity::Factory<CPointValueRemapper>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointValueRemapper);

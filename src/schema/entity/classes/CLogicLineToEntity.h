@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CLogicLineToEntity : public CLogicalEntity
+class CLogicLineToEntity : public CLogicalEntity, public CBaseEntity::Factory<CLogicLineToEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicLineToEntity);

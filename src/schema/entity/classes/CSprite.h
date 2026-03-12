@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CSprite : public CBaseModelEntity
+class CSprite : public CBaseModelEntity, public CBaseEntity::Factory<CSprite>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSprite);

@@ -12,7 +12,7 @@
 
 #include "CAI_Expresser.h"
 
-class CAI_ExpresserWithFollowup : public CAI_Expresser
+class CAI_ExpresserWithFollowup : public CAI_Expresser, public CBaseEntity::Factory<CAI_ExpresserWithFollowup>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAI_ExpresserWithFollowup);

@@ -12,7 +12,7 @@
 
 class CBaseFlex;
 
-class CAI_Expresser
+class CAI_Expresser : public CBaseEntity::Factory<CAI_Expresser>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAI_Expresser);

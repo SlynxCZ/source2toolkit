@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CBaseDMStart : public CPointEntity
+class CBaseDMStart : public CPointEntity, public CBaseEntity::Factory<CBaseDMStart>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseDMStart);

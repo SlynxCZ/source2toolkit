@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CPathCorner : public CPointEntity
+class CPathCorner : public CPointEntity, public CBaseEntity::Factory<CPathCorner>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathCorner);

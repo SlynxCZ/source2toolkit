@@ -14,7 +14,7 @@
 #include "../enums/MedalRank_t.h"
 #include "ServerAuthoritativeWeaponSlot_t.h"
 
-class CCSPlayerController_InventoryServices : public CPlayerControllerComponent
+class CCSPlayerController_InventoryServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_InventoryServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_InventoryServices);

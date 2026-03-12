@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicCollisionPair : public CLogicalEntity
+class CLogicCollisionPair : public CLogicalEntity, public CBaseEntity::Factory<CLogicCollisionPair>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicCollisionPair);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CNetworkTransmitComponent
+class CNetworkTransmitComponent : public CBaseEntity::Factory<CNetworkTransmitComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNetworkTransmitComponent);

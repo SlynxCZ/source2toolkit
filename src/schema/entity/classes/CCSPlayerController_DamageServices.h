@@ -13,7 +13,7 @@
 #include "CDamageRecord.h"
 #include "CPlayerControllerComponent.h"
 
-class CCSPlayerController_DamageServices : public CPlayerControllerComponent
+class CCSPlayerController_DamageServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_DamageServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_DamageServices);

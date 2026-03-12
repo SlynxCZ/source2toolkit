@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerHostageReset : public CBaseTrigger
+class CTriggerHostageReset : public CBaseTrigger, public CBaseEntity::Factory<CTriggerHostageReset>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerHostageReset);

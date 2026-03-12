@@ -12,7 +12,7 @@
 
 #include "CRuleEntity.h"
 
-class CRulePointEntity : public CRuleEntity
+class CRulePointEntity : public CRuleEntity, public CBaseEntity::Factory<CRulePointEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRulePointEntity);

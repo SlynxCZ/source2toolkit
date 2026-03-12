@@ -12,7 +12,7 @@
 
 #include "CBreakable.h"
 
-class CPushable : public CBreakable
+class CPushable : public CBreakable, public CBaseEntity::Factory<CPushable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPushable);

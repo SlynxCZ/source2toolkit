@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CPointChildModifier : public CPointEntity
+class CPointChildModifier : public CPointEntity, public CBaseEntity::Factory<CPointChildModifier>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointChildModifier);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CBasePulseGraphInstance
+class CBasePulseGraphInstance : public CBaseEntity::Factory<CBasePulseGraphInstance>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePulseGraphInstance);

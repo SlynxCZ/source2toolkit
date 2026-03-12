@@ -13,7 +13,7 @@
 #include "InfoForResourceTypeIMaterial2.h"
 #include "../enums/ShardSolid_t.h"
 
-class shard_model_desc_t
+class shard_model_desc_t : public CBaseEntity::Factory<shard_model_desc_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(shard_model_desc_t);

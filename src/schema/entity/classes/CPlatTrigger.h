@@ -14,7 +14,7 @@
 
 class CFuncPlat;
 
-class CPlatTrigger : public CBaseModelEntity
+class CPlatTrigger : public CBaseModelEntity, public CBaseEntity::Factory<CPlatTrigger>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlatTrigger);

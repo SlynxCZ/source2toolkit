@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ExternalAnimGraphHandle_t
+class ExternalAnimGraphHandle_t : public CBaseEntity::Factory<ExternalAnimGraphHandle_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ExternalAnimGraphHandle_t);

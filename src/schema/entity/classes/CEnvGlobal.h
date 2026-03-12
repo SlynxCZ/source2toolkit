@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CEnvGlobal : public CLogicalEntity
+class CEnvGlobal : public CLogicalEntity, public CBaseEntity::Factory<CEnvGlobal>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvGlobal);

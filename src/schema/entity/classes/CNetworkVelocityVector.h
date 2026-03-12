@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CNetworkVelocityVector
+class CNetworkVelocityVector : public CBaseEntity::Factory<CNetworkVelocityVector>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNetworkVelocityVector);

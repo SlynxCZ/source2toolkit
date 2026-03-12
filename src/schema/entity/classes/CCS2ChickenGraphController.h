@@ -12,7 +12,7 @@
 
 #include "CAnimGraphControllerBase.h"
 
-class CCS2ChickenGraphController : public CAnimGraphControllerBase
+class CCS2ChickenGraphController : public CAnimGraphControllerBase, public CBaseEntity::Factory<CCS2ChickenGraphController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCS2ChickenGraphController);

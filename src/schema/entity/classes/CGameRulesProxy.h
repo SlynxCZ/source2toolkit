@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CGameRulesProxy : public CBaseEntity
+class CGameRulesProxy : public CBaseEntity, public CBaseEntity::Factory<CGameRulesProxy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameRulesProxy);

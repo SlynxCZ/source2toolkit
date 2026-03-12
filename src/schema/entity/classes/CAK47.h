@@ -12,7 +12,7 @@
 
 #include "CCSWeaponBaseGun.h"
 
-class CAK47 : public CCSWeaponBaseGun
+class CAK47 : public CCSWeaponBaseGun, public CBaseEntity::Factory<CAK47>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAK47);

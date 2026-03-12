@@ -12,7 +12,7 @@
 
 #include "CBasePlatTrain.h"
 
-class CFuncPlat : public CBasePlatTrain
+class CFuncPlat : public CBasePlatTrain, public CBaseEntity::Factory<CFuncPlat>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPlat);

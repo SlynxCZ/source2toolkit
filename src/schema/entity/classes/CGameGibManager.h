@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CGameGibManager : public CBaseEntity
+class CGameGibManager : public CBaseEntity, public CBaseEntity::Factory<CGameGibManager>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameGibManager);

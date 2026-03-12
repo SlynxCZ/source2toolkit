@@ -12,7 +12,7 @@
 
 #include "CCSWeaponBaseGun.h"
 
-class CWeaponM4A1Silencer : public CCSWeaponBaseGun
+class CWeaponM4A1Silencer : public CCSWeaponBaseGun, public CBaseEntity::Factory<CWeaponM4A1Silencer>
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponM4A1Silencer);

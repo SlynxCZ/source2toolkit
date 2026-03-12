@@ -12,7 +12,7 @@
 
 #include "CMarkupVolume.h"
 
-class CMarkupVolumeTagged : public CMarkupVolume
+class CMarkupVolumeTagged : public CMarkupVolume, public CBaseEntity::Factory<CMarkupVolumeTagged>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeTagged);

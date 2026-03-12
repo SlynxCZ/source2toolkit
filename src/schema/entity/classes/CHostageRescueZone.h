@@ -12,7 +12,7 @@
 
 #include "CHostageRescueZoneShim.h"
 
-class CHostageRescueZone : public CHostageRescueZoneShim
+class CHostageRescueZone : public CHostageRescueZoneShim, public CBaseEntity::Factory<CHostageRescueZone>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageRescueZone);

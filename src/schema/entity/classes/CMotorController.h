@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CMotorController
+class CMotorController : public CBaseEntity::Factory<CMotorController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMotorController);

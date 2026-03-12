@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CCSPlayerModernJump
+class CCSPlayerModernJump : public CBaseEntity::Factory<CCSPlayerModernJump>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerModernJump);

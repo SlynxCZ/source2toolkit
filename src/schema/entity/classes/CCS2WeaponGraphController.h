@@ -12,7 +12,7 @@
 
 #include "CAnimGraphControllerBase.h"
 
-class CCS2WeaponGraphController : public CAnimGraphControllerBase
+class CCS2WeaponGraphController : public CAnimGraphControllerBase, public CBaseEntity::Factory<CCS2WeaponGraphController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCS2WeaponGraphController);

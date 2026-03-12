@@ -12,7 +12,7 @@
 
 #include "CFuncTrackTrain.h"
 
-class CFuncTankTrain : public CFuncTrackTrain
+class CFuncTankTrain : public CFuncTrackTrain, public CBaseEntity::Factory<CFuncTankTrain>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTankTrain);

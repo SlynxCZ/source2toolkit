@@ -14,7 +14,7 @@
 #include "../enums/CPhysicsPropCrateType_t.h"
 #include "../enums/DynamicContinuousContactBehavior_t.h"
 
-class CPhysicsProp : public CBreakableProp
+class CPhysicsProp : public CBreakableProp, public CBaseEntity::Factory<CPhysicsProp>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsProp);

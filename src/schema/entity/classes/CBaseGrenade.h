@@ -14,7 +14,7 @@
 
 class CCSPlayerPawn;
 
-class CBaseGrenade : public CBaseFlex
+class CBaseGrenade : public CBaseFlex, public CBaseEntity::Factory<CBaseGrenade>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseGrenade);

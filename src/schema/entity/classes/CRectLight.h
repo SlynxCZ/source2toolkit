@@ -12,7 +12,7 @@
 
 #include "CBarnLight.h"
 
-class CRectLight : public CBarnLight
+class CRectLight : public CBarnLight, public CBaseEntity::Factory<CRectLight>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRectLight);

@@ -12,7 +12,7 @@
 
 #include "CBaseAnimGraph.h"
 
-class CHostageCarriableProp : public CBaseAnimGraph
+class CHostageCarriableProp : public CBaseAnimGraph, public CBaseEntity::Factory<CHostageCarriableProp>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageCarriableProp);

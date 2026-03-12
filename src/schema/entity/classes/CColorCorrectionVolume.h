@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CColorCorrectionVolume : public CBaseTrigger
+class CColorCorrectionVolume : public CBaseTrigger, public CBaseEntity::Factory<CColorCorrectionVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CColorCorrectionVolume);

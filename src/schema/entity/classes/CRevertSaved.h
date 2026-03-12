@@ -12,7 +12,7 @@
 
 #include "CModelPointEntity.h"
 
-class CRevertSaved : public CModelPointEntity
+class CRevertSaved : public CModelPointEntity, public CBaseEntity::Factory<CRevertSaved>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRevertSaved);

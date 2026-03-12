@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "CBuoyancyHelper.h"
 
-class CFuncWater : public CBaseModelEntity
+class CFuncWater : public CBaseModelEntity, public CBaseEntity::Factory<CFuncWater>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWater);

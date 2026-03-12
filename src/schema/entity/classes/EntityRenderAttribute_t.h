@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class EntityRenderAttribute_t
+class EntityRenderAttribute_t : public CBaseEntity::Factory<EntityRenderAttribute_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(EntityRenderAttribute_t);

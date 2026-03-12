@@ -18,7 +18,7 @@ class CBaseEntity;
 class CCSPlayerPawn;
 class CCSPlayerPawnBase;
 
-class CHostage : public CHostageExpresserShim
+class CHostage : public CHostageExpresserShim, public CBaseEntity::Factory<CHostage>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostage);

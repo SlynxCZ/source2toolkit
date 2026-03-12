@@ -12,7 +12,7 @@
 
 #include "CAI_ExpresserWithFollowup.h"
 
-class CMultiplayer_Expresser : public CAI_ExpresserWithFollowup
+class CMultiplayer_Expresser : public CAI_ExpresserWithFollowup, public CBaseEntity::Factory<CMultiplayer_Expresser>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiplayer_Expresser);

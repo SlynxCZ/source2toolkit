@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class VPhysicsCollisionAttribute_t
+class VPhysicsCollisionAttribute_t : public CBaseEntity::Factory<VPhysicsCollisionAttribute_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(VPhysicsCollisionAttribute_t);

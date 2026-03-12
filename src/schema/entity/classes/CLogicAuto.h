@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CLogicAuto : public CBaseEntity
+class CLogicAuto : public CBaseEntity, public CBaseEntity::Factory<CLogicAuto>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicAuto);

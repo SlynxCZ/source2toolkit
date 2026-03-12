@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ChangeAccessorFieldPathIndex_t
+class ChangeAccessorFieldPathIndex_t : public CBaseEntity::Factory<ChangeAccessorFieldPathIndex_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ChangeAccessorFieldPathIndex_t);

@@ -12,7 +12,7 @@
 
 class CVoteController;
 
-class CBaseIssue
+class CBaseIssue : public CBaseEntity::Factory<CBaseIssue>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseIssue);

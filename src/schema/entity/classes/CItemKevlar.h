@@ -12,7 +12,7 @@
 
 #include "CItem.h"
 
-class CItemKevlar : public CItem
+class CItemKevlar : public CItem, public CBaseEntity::Factory<CItemKevlar>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemKevlar);

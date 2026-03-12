@@ -12,7 +12,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_AutoaimServices : public CPlayerPawnComponent
+class CPlayer_AutoaimServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_AutoaimServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_AutoaimServices);

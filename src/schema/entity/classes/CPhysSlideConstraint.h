@@ -13,7 +13,7 @@
 #include "ConstraintSoundInfo.h"
 #include "CPhysConstraint.h"
 
-class CPhysSlideConstraint : public CPhysConstraint
+class CPhysSlideConstraint : public CPhysConstraint, public CBaseEntity::Factory<CPhysSlideConstraint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysSlideConstraint);

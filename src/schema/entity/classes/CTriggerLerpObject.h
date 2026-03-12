@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CTriggerLerpObject : public CBaseTrigger
+class CTriggerLerpObject : public CBaseTrigger, public CBaseEntity::Factory<CTriggerLerpObject>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerLerpObject);

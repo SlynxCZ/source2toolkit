@@ -12,7 +12,7 @@
 
 #include "fogparams_t.h"
 
-class sky3dparams_t
+class sky3dparams_t : public CBaseEntity::Factory<sky3dparams_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(sky3dparams_t);

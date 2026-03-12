@@ -14,7 +14,7 @@
 
 class CBeam;
 
-class CTestEffect : public CBaseEntity
+class CTestEffect : public CBaseEntity, public CBaseEntity::Factory<CTestEffect>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTestEffect);

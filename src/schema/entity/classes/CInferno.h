@@ -15,7 +15,7 @@
 #include "Extent.h"
 #include "IntervalTimer.h"
 
-class CInferno : public CBaseModelEntity
+class CInferno : public CBaseModelEntity, public CBaseEntity::Factory<CInferno>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInferno);

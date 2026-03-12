@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMathRemap : public CLogicalEntity
+class CMathRemap : public CLogicalEntity, public CBaseEntity::Factory<CMathRemap>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMathRemap);

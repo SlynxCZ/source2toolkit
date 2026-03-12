@@ -12,7 +12,7 @@
 
 #include "CInfoDynamicShadowHint.h"
 
-class CInfoDynamicShadowHintBox : public CInfoDynamicShadowHint
+class CInfoDynamicShadowHintBox : public CInfoDynamicShadowHint, public CBaseEntity::Factory<CInfoDynamicShadowHintBox>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoDynamicShadowHintBox);

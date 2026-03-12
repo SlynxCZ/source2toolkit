@@ -13,7 +13,7 @@
 #include "CRulePointEntity.h"
 #include "hudtextparms_t.h"
 
-class CGameText : public CRulePointEntity
+class CGameText : public CRulePointEntity, public CBaseEntity::Factory<CGameText>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameText);

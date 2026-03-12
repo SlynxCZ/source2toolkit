@@ -12,7 +12,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CCSPlayer_RadioServices : public CPlayerPawnComponent
+class CCSPlayer_RadioServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_RadioServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_RadioServices);

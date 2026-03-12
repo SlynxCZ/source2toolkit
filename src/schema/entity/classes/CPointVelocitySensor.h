@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPointVelocitySensor : public CPointEntity
+class CPointVelocitySensor : public CPointEntity, public CBaseEntity::Factory<CPointVelocitySensor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointVelocitySensor);

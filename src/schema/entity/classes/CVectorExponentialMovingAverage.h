@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CVectorExponentialMovingAverage
+class CVectorExponentialMovingAverage : public CBaseEntity::Factory<CVectorExponentialMovingAverage>
 {
 public:
     DECLARE_SCHEMA_CLASS(CVectorExponentialMovingAverage);

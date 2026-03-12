@@ -12,7 +12,7 @@
 
 #include "CDynamicProp.h"
 
-class CFuncRetakeBarrier : public CDynamicProp
+class CFuncRetakeBarrier : public CDynamicProp, public CBaseEntity::Factory<CFuncRetakeBarrier>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncRetakeBarrier);

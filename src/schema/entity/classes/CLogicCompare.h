@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicCompare : public CLogicalEntity
+class CLogicCompare : public CLogicalEntity, public CBaseEntity::Factory<CLogicCompare>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicCompare);

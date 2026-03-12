@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class PredictedDamageTag_t
+class PredictedDamageTag_t : public CBaseEntity::Factory<PredictedDamageTag_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(PredictedDamageTag_t);

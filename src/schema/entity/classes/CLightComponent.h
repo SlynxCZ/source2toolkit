@@ -12,7 +12,7 @@
 
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CLightComponent : public CEntityComponent
+class CLightComponent : public CEntityComponent, public CBaseEntity::Factory<CLightComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightComponent);

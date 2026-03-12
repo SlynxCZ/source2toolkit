@@ -12,7 +12,7 @@
 
 #include "CWeaponBaseItem.h"
 
-class CItem_Healthshot : public CWeaponBaseItem
+class CItem_Healthshot : public CWeaponBaseItem, public CBaseEntity::Factory<CItem_Healthshot>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItem_Healthshot);

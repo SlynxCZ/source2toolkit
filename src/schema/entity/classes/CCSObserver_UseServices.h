@@ -12,7 +12,7 @@
 
 #include "CPlayer_UseServices.h"
 
-class CCSObserver_UseServices : public CPlayer_UseServices
+class CCSObserver_UseServices : public CPlayer_UseServices, public CBaseEntity::Factory<CCSObserver_UseServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserver_UseServices);

@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CEnvBeam : public CBeam
+class CEnvBeam : public CBeam, public CBaseEntity::Factory<CEnvBeam>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvBeam);

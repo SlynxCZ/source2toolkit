@@ -14,7 +14,7 @@
 #include "../enums/ItemFlagTypes_t.h"
 #include "../enums/RumbleEffect_t.h"
 
-class CBasePlayerWeaponVData : public CEntitySubclassVDataBase
+class CBasePlayerWeaponVData : public CEntitySubclassVDataBase, public CBaseEntity::Factory<CBasePlayerWeaponVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerWeaponVData);

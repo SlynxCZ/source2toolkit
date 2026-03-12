@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class dynpitchvol_base_t
+class dynpitchvol_base_t : public CBaseEntity::Factory<dynpitchvol_base_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(dynpitchvol_base_t);

@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoLandmark : public CPointEntity
+class CInfoLandmark : public CPointEntity, public CBaseEntity::Factory<CInfoLandmark>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoLandmark);

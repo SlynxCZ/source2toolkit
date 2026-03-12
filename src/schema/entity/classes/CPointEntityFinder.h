@@ -15,7 +15,7 @@
 
 class CBaseFilter;
 
-class CPointEntityFinder : public CBaseEntity
+class CPointEntityFinder : public CBaseEntity, public CBaseEntity::Factory<CPointEntityFinder>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointEntityFinder);

@@ -11,7 +11,7 @@
 #include <cstdint>
 
 
-class CGameRules
+class CGameRules : public CBaseEntity::Factory<CGameRules>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameRules);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class fogparams_t
+class fogparams_t : public CBaseEntity::Factory<fogparams_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(fogparams_t);

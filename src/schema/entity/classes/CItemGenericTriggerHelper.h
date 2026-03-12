@@ -14,7 +14,7 @@
 
 class CItemGeneric;
 
-class CItemGenericTriggerHelper : public CBaseModelEntity
+class CItemGenericTriggerHelper : public CBaseModelEntity, public CBaseEntity::Factory<CItemGenericTriggerHelper>
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemGenericTriggerHelper);

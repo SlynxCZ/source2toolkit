@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CSpotlightEnd : public CBaseModelEntity
+class CSpotlightEnd : public CBaseModelEntity, public CBaseEntity::Factory<CSpotlightEnd>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpotlightEnd);

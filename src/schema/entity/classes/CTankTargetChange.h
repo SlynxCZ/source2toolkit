@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CTankTargetChange : public CPointEntity
+class CTankTargetChange : public CPointEntity, public CBaseEntity::Factory<CTankTargetChange>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTankTargetChange);

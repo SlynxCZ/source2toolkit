@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvCombinedLightProbeVolume : public CBaseEntity
+class CEnvCombinedLightProbeVolume : public CBaseEntity, public CBaseEntity::Factory<CEnvCombinedLightProbeVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCombinedLightProbeVolume);

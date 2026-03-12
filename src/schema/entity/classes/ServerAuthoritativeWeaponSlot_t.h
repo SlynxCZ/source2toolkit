@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ServerAuthoritativeWeaponSlot_t
+class ServerAuthoritativeWeaponSlot_t : public CBaseEntity::Factory<ServerAuthoritativeWeaponSlot_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ServerAuthoritativeWeaponSlot_t);

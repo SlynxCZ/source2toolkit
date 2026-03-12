@@ -12,7 +12,7 @@
 
 #include "../enums/MoodType_t.h"
 
-class CMoodVData
+class CMoodVData : public CBaseEntity::Factory<CMoodVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMoodVData);

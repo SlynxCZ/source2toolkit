@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CPhysExplosion : public CPointEntity
+class CPhysExplosion : public CPointEntity, public CBaseEntity::Factory<CPhysExplosion>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysExplosion);

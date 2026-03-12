@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CBarnLight : public CBaseModelEntity
+class CBarnLight : public CBaseModelEntity, public CBaseEntity::Factory<CBarnLight>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBarnLight);

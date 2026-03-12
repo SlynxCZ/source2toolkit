@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CLogicScript : public CPointEntity
+class CLogicScript : public CPointEntity, public CBaseEntity::Factory<CLogicScript>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicScript);

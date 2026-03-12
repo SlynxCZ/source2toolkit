@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerGameEvent : public CBaseTrigger
+class CTriggerGameEvent : public CBaseTrigger, public CBaseEntity::Factory<CTriggerGameEvent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerGameEvent);

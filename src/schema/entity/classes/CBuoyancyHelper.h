@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CBuoyancyHelper
+class CBuoyancyHelper : public CBaseEntity::Factory<CBuoyancyHelper>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBuoyancyHelper);

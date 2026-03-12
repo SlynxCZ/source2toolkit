@@ -19,7 +19,7 @@
 class CBaseEntity;
 class CFuncMover;
 
-class CFuncRotator : public CBaseModelEntity
+class CFuncRotator : public CBaseModelEntity, public CBaseEntity::Factory<CFuncRotator>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncRotator);

@@ -12,7 +12,7 @@
 
 #include "CPropDoorRotating.h"
 
-class CPropDoorRotatingBreakable : public CPropDoorRotating
+class CPropDoorRotatingBreakable : public CPropDoorRotating, public CBaseEntity::Factory<CPropDoorRotatingBreakable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPropDoorRotatingBreakable);

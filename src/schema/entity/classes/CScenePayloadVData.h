@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CScenePayloadVData
+class CScenePayloadVData : public CBaseEntity::Factory<CScenePayloadVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScenePayloadVData);

@@ -13,7 +13,7 @@
 #include "CAttributeList.h"
 #include "IEconItemInterface.h"
 
-class CEconItemView : public IEconItemInterface
+class CEconItemView : public IEconItemInterface, public CBaseEntity::Factory<CEconItemView>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEconItemView);

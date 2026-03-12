@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CCSMinimapBoundary : public CBaseEntity
+class CCSMinimapBoundary : public CBaseEntity, public CBaseEntity::Factory<CCSMinimapBoundary>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSMinimapBoundary);

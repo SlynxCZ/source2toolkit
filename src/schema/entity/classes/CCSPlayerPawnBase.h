@@ -17,7 +17,7 @@
 class CCSPlayer_PingServices;
 class CCSPlayerController;
 
-class CCSPlayerPawnBase : public CBasePlayerPawn
+class CCSPlayerPawnBase : public CBasePlayerPawn, public CBaseEntity::Factory<CCSPlayerPawnBase>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerPawnBase);

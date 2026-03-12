@@ -12,7 +12,7 @@
 
 class CAnimGraphControllerBase;
 
-class CAnimGraphControllerManager
+class CAnimGraphControllerManager : public CBaseEntity::Factory<CAnimGraphControllerManager>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAnimGraphControllerManager);

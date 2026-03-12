@@ -12,7 +12,7 @@
 
 #include "CEnvSoundscape.h"
 
-class CEnvSoundscapeTriggerable : public CEnvSoundscape
+class CEnvSoundscapeTriggerable : public CEnvSoundscape, public CBaseEntity::Factory<CEnvSoundscapeTriggerable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeTriggerable);

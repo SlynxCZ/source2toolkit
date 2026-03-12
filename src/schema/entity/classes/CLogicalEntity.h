@@ -12,7 +12,7 @@
 
 #include "CServerOnlyEntity.h"
 
-class CLogicalEntity : public CServerOnlyEntity
+class CLogicalEntity : public CServerOnlyEntity, public CBaseEntity::Factory<CLogicalEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicalEntity);

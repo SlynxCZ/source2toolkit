@@ -12,7 +12,7 @@
 
 #include "CLightEntity.h"
 
-class CLightSpotEntity : public CLightEntity
+class CLightSpotEntity : public CLightEntity, public CBaseEntity::Factory<CLightSpotEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightSpotEntity);

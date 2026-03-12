@@ -12,7 +12,7 @@
 
 #include "CPathCorner.h"
 
-class CPathCornerCrash : public CPathCorner
+class CPathCornerCrash : public CPathCorner, public CBaseEntity::Factory<CPathCornerCrash>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathCornerCrash);

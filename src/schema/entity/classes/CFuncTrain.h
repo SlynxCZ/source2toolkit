@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CFuncTrain : public CBasePlatTrain
+class CFuncTrain : public CBasePlatTrain, public CBaseEntity::Factory<CFuncTrain>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrain);

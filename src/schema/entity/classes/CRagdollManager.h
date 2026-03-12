@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CRagdollManager : public CBaseEntity
+class CRagdollManager : public CBaseEntity, public CBaseEntity::Factory<CRagdollManager>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollManager);

@@ -12,7 +12,7 @@
 
 #include "CServerOnlyEntity.h"
 
-class CInfoData : public CServerOnlyEntity
+class CInfoData : public CServerOnlyEntity, public CBaseEntity::Factory<CInfoData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoData);

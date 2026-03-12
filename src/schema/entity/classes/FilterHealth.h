@@ -12,7 +12,7 @@
 
 #include "CBaseFilter.h"
 
-class FilterHealth : public CBaseFilter
+class FilterHealth : public CBaseFilter, public CBaseEntity::Factory<FilterHealth>
 {
 public:
     DECLARE_SCHEMA_CLASS(FilterHealth);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CScriptComponent : public CEntityComponent
+class CScriptComponent : public CEntityComponent, public CBaseEntity::Factory<CScriptComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptComponent);

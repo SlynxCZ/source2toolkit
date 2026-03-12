@@ -12,7 +12,7 @@
 
 #include "CFuncTrackChange.h"
 
-class CFuncTrackAuto : public CFuncTrackChange
+class CFuncTrackAuto : public CFuncTrackChange, public CBaseEntity::Factory<CFuncTrackAuto>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrackAuto);

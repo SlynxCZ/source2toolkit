@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CNavHullPresetVData
+class CNavHullPresetVData : public CBaseEntity::Factory<CNavHullPresetVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavHullPresetVData);

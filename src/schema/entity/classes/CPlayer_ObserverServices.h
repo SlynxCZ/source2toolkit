@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CPlayer_ObserverServices : public CPlayerPawnComponent
+class CPlayer_ObserverServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_ObserverServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_ObserverServices);

@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CEconEntity : public CBaseFlex
+class CEconEntity : public CBaseFlex, public CBaseEntity::Factory<CEconEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEconEntity);

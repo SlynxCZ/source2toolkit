@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicCase : public CLogicalEntity
+class CLogicCase : public CLogicalEntity, public CBaseEntity::Factory<CLogicCase>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicCase);

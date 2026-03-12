@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoInstructorHintTarget : public CPointEntity
+class CInfoInstructorHintTarget : public CPointEntity, public CBaseEntity::Factory<CInfoInstructorHintTarget>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintTarget);

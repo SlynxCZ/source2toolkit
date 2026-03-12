@@ -14,7 +14,7 @@
 
 class CLightComponent;
 
-class CLightEntity : public CBaseModelEntity
+class CLightEntity : public CBaseModelEntity, public CBaseEntity::Factory<CLightEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightEntity);

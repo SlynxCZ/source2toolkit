@@ -12,7 +12,7 @@
 
 #include "CEconEntity.h"
 
-class CEconWearable : public CEconEntity
+class CEconWearable : public CEconEntity, public CBaseEntity::Factory<CEconWearable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEconWearable);

@@ -17,7 +17,7 @@
 class CBaseEntity;
 class CCSPlayerPawn;
 
-class CCSBot : public CBot
+class CCSBot : public CBot, public CBaseEntity::Factory<CCSBot>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSBot);

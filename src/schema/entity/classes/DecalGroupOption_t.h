@@ -12,7 +12,7 @@
 
 #include "InfoForResourceTypeIMaterial2.h"
 
-class DecalGroupOption_t
+class DecalGroupOption_t : public CBaseEntity::Factory<DecalGroupOption_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(DecalGroupOption_t);

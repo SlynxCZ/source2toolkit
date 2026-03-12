@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CEnvSky : public CBaseModelEntity
+class CEnvSky : public CBaseModelEntity, public CBaseEntity::Factory<CEnvSky>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSky);

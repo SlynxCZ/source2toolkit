@@ -14,7 +14,7 @@
 
 class CBasePlayerWeapon;
 
-class CCSPlayer_WeaponServices : public CPlayer_WeaponServices
+class CCSPlayer_WeaponServices : public CPlayer_WeaponServices, public CBaseEntity::Factory<CCSPlayer_WeaponServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_WeaponServices);

@@ -12,7 +12,7 @@
 
 #include "CSprite.h"
 
-class CCSSprite : public CSprite
+class CCSSprite : public CSprite, public CBaseEntity::Factory<CCSSprite>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSSprite);

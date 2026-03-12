@@ -13,7 +13,7 @@
 #include "CAttributeManager.h"
 #include "CEconItemView.h"
 
-class CAttributeContainer : public CAttributeManager
+class CAttributeContainer : public CAttributeManager, public CBaseEntity::Factory<CAttributeContainer>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAttributeContainer);

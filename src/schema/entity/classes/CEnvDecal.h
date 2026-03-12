@@ -13,7 +13,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CEnvDecal : public CBaseModelEntity
+class CEnvDecal : public CBaseModelEntity, public CBaseEntity::Factory<CEnvDecal>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvDecal);

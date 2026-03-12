@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CFuncPropRespawnZone : public CBaseEntity
+class CFuncPropRespawnZone : public CBaseEntity, public CBaseEntity::Factory<CFuncPropRespawnZone>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPropRespawnZone);

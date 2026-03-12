@@ -13,7 +13,7 @@
 #include "CBaseGrenade.h"
 #include "InfoForResourceTypeIParticleSystemDefinition.h"
 
-class CBaseCSGrenadeProjectile : public CBaseGrenade
+class CBaseCSGrenadeProjectile : public CBaseGrenade, public CBaseEntity::Factory<CBaseCSGrenadeProjectile>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseCSGrenadeProjectile);

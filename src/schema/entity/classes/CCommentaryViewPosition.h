@@ -12,7 +12,7 @@
 
 #include "CSprite.h"
 
-class CCommentaryViewPosition : public CSprite
+class CCommentaryViewPosition : public CSprite, public CBaseEntity::Factory<CCommentaryViewPosition>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCommentaryViewPosition);

@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CBuyZone : public CBaseTrigger
+class CBuyZone : public CBaseTrigger, public CBaseEntity::Factory<CBuyZone>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBuyZone);

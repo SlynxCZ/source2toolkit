@@ -12,7 +12,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class CPointPrefab : public CServerOnlyPointEntity
+class CPointPrefab : public CServerOnlyPointEntity, public CBaseEntity::Factory<CPointPrefab>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointPrefab);

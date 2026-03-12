@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CPrecipitation : public CBaseTrigger
+class CPrecipitation : public CBaseTrigger, public CBaseEntity::Factory<CPrecipitation>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitation);

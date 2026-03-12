@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CFuncMonitor : public CFuncBrush
+class CFuncMonitor : public CFuncBrush, public CBaseEntity::Factory<CFuncMonitor>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMonitor);

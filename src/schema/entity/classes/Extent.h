@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class Extent
+class Extent : public CBaseEntity::Factory<Extent>
 {
 public:
     DECLARE_SCHEMA_CLASS(Extent);

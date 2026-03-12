@@ -12,7 +12,7 @@
 
 #include "CPhysicsProp.h"
 
-class CPhysicsPropRespawnable : public CPhysicsProp
+class CPhysicsPropRespawnable : public CPhysicsProp, public CBaseEntity::Factory<CPhysicsPropRespawnable>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropRespawnable);

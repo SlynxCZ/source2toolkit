@@ -14,7 +14,7 @@
 
 class CSprite;
 
-class CEnvLaser : public CBeam
+class CEnvLaser : public CBeam, public CBaseEntity::Factory<CEnvLaser>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvLaser);

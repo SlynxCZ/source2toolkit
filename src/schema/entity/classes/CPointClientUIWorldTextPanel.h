@@ -12,7 +12,7 @@
 
 #include "CPointClientUIWorldPanel.h"
 
-class CPointClientUIWorldTextPanel : public CPointClientUIWorldPanel
+class CPointClientUIWorldTextPanel : public CPointClientUIWorldPanel, public CBaseEntity::Factory<CPointClientUIWorldTextPanel>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointClientUIWorldTextPanel);

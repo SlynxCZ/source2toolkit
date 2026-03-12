@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CDynamicLight : public CBaseModelEntity
+class CDynamicLight : public CBaseModelEntity, public CBaseEntity::Factory<CDynamicLight>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicLight);

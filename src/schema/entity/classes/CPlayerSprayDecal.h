@@ -12,7 +12,7 @@
 
 #include "CModelPointEntity.h"
 
-class CPlayerSprayDecal : public CModelPointEntity
+class CPlayerSprayDecal : public CModelPointEntity, public CBaseEntity::Factory<CPlayerSprayDecal>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerSprayDecal);

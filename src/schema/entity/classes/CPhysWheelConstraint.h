@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CPhysWheelConstraint : public CPhysConstraint
+class CPhysWheelConstraint : public CPhysConstraint, public CBaseEntity::Factory<CPhysWheelConstraint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysWheelConstraint);

@@ -14,7 +14,7 @@
 
 class CBasePlayerPawn;
 
-class CInstructorEventEntity : public CPointEntity
+class CInstructorEventEntity : public CPointEntity, public CBaseEntity::Factory<CInstructorEventEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInstructorEventEntity);

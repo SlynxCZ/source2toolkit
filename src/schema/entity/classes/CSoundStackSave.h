@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CSoundStackSave : public CLogicalEntity
+class CSoundStackSave : public CLogicalEntity, public CBaseEntity::Factory<CSoundStackSave>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundStackSave);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class VelocitySampler
+class VelocitySampler : public CBaseEntity::Factory<VelocitySampler>
 {
 public:
     DECLARE_SCHEMA_CLASS(VelocitySampler);

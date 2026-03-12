@@ -12,7 +12,7 @@
 
 #include "CVectorExponentialMovingAverage.h"
 
-class CMovementStatsProperty
+class CMovementStatsProperty : public CBaseEntity::Factory<CMovementStatsProperty>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMovementStatsProperty);

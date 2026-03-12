@@ -12,7 +12,7 @@
 
 #include "ExternalAnimGraphHandle_t.h"
 
-class CAnimGraphControllerBase
+class CAnimGraphControllerBase : public CBaseEntity::Factory<CAnimGraphControllerBase>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAnimGraphControllerBase);

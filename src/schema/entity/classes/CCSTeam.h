@@ -12,7 +12,7 @@
 
 #include "CTeam.h"
 
-class CCSTeam : public CTeam
+class CCSTeam : public CTeam, public CBaseEntity::Factory<CCSTeam>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSTeam);

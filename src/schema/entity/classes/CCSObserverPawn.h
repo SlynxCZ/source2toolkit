@@ -12,7 +12,7 @@
 
 #include "CCSPlayerPawnBase.h"
 
-class CCSObserverPawn : public CCSPlayerPawnBase
+class CCSObserverPawn : public CCSPlayerPawnBase, public CBaseEntity::Factory<CCSObserverPawn>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserverPawn);

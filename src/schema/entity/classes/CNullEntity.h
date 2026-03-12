@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CNullEntity : public CBaseEntity
+class CNullEntity : public CBaseEntity, public CBaseEntity::Factory<CNullEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNullEntity);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class sndopvarlatchdata_t
+class sndopvarlatchdata_t : public CBaseEntity::Factory<sndopvarlatchdata_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(sndopvarlatchdata_t);

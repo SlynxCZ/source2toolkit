@@ -14,7 +14,7 @@
 #include "CCSPlayerModernJump.h"
 #include "CPlayer_MovementServices_Humanoid.h"
 
-class CCSPlayer_MovementServices : public CPlayer_MovementServices_Humanoid
+class CCSPlayer_MovementServices : public CPlayer_MovementServices_Humanoid, public CBaseEntity::Factory<CCSPlayer_MovementServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_MovementServices);

@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CHandleDummy : public CBaseEntity
+class CHandleDummy : public CBaseEntity, public CBaseEntity::Factory<CHandleDummy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHandleDummy);

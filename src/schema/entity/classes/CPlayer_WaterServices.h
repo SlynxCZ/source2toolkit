@@ -12,7 +12,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_WaterServices : public CPlayerPawnComponent
+class CPlayer_WaterServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_WaterServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_WaterServices);

@@ -12,7 +12,7 @@
 
 #include "CServerOnlyModelEntity.h"
 
-class CFogVolume : public CServerOnlyModelEntity
+class CFogVolume : public CServerOnlyModelEntity, public CBaseEntity::Factory<CFogVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFogVolume);

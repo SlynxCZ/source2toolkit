@@ -13,7 +13,7 @@
 #include "CBaseTrigger.h"
 #include "InfoForResourceTypeCPostProcessingResource.h"
 
-class CPostProcessingVolume : public CBaseTrigger
+class CPostProcessingVolume : public CBaseTrigger, public CBaseEntity::Factory<CPostProcessingVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPostProcessingVolume);

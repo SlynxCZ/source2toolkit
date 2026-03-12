@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CBaseToggle : public CBaseModelEntity
+class CBaseToggle : public CBaseModelEntity, public CBaseEntity::Factory<CBaseToggle>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseToggle);

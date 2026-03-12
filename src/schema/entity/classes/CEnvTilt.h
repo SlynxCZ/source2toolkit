@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvTilt : public CPointEntity
+class CEnvTilt : public CPointEntity, public CBaseEntity::Factory<CEnvTilt>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvTilt);

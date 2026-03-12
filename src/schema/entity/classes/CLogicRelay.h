@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicRelay : public CLogicalEntity
+class CLogicRelay : public CLogicalEntity, public CBaseEntity::Factory<CLogicRelay>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicRelay);

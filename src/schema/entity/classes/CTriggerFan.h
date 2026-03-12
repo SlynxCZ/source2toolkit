@@ -15,7 +15,7 @@
 
 class CInfoFan;
 
-class CTriggerFan : public CBaseTrigger
+class CTriggerFan : public CBaseTrigger, public CBaseEntity::Factory<CTriggerFan>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerFan);

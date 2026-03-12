@@ -26,7 +26,7 @@ class CCSPlayer_DamageReactServices;
 class CCSPlayer_HostageServices;
 class CCSPlayer_RadioServices;
 
-class CCSPlayerPawn : public CCSPlayerPawnBase
+class CCSPlayerPawn : public CCSPlayerPawnBase, public CBaseEntity::Factory<CCSPlayerPawn>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerPawn);

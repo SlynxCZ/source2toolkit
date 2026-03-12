@@ -12,7 +12,7 @@
 
 #include "CBaseFlex.h"
 
-class CBaseFlexAlias_funCBaseFlex : public CBaseFlex
+class CBaseFlexAlias_funCBaseFlex : public CBaseFlex, public CBaseEntity::Factory<CBaseFlexAlias_funCBaseFlex>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseFlexAlias_funCBaseFlex);

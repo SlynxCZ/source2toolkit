@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoInteraction : public CPointEntity
+class CInfoInteraction : public CPointEntity, public CBaseEntity::Factory<CInfoInteraction>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInteraction);

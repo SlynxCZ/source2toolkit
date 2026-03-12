@@ -12,7 +12,7 @@
 
 #include "CTriggerOnce.h"
 
-class CScriptTriggerOnce : public CTriggerOnce
+class CScriptTriggerOnce : public CTriggerOnce, public CBaseEntity::Factory<CScriptTriggerOnce>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerOnce);

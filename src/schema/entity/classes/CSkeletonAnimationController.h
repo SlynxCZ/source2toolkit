@@ -14,7 +14,7 @@
 
 class CSkeletonInstance;
 
-class CSkeletonAnimationController : public ISkeletonAnimationController
+class CSkeletonAnimationController : public ISkeletonAnimationController, public CBaseEntity::Factory<CSkeletonAnimationController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkeletonAnimationController);

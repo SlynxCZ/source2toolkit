@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "CEconItemView.h"
 
-class CCSGO_TeamPreviewCharacterPosition : public CBaseEntity
+class CCSGO_TeamPreviewCharacterPosition : public CBaseEntity, public CBaseEntity::Factory<CCSGO_TeamPreviewCharacterPosition>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamPreviewCharacterPosition);

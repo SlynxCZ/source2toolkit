@@ -12,7 +12,7 @@
 
 #include "CPhysConstraint.h"
 
-class CRagdollConstraint : public CPhysConstraint
+class CRagdollConstraint : public CPhysConstraint, public CBaseEntity::Factory<CRagdollConstraint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollConstraint);

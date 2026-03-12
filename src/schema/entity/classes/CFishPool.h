@@ -15,7 +15,7 @@
 
 class CFish;
 
-class CFishPool : public CBaseEntity
+class CFishPool : public CBaseEntity, public CBaseEntity::Factory<CFishPool>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFishPool);

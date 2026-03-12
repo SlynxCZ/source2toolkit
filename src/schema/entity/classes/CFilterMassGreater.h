@@ -12,7 +12,7 @@
 
 #include "CBaseFilter.h"
 
-class CFilterMassGreater : public CBaseFilter
+class CFilterMassGreater : public CBaseFilter, public CBaseEntity::Factory<CFilterMassGreater>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterMassGreater);

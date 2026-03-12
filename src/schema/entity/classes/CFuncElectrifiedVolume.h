@@ -12,7 +12,7 @@
 
 #include "CFuncBrush.h"
 
-class CFuncElectrifiedVolume : public CFuncBrush
+class CFuncElectrifiedVolume : public CFuncBrush, public CBaseEntity::Factory<CFuncElectrifiedVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncElectrifiedVolume);

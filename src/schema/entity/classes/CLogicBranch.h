@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CLogicBranch : public CLogicalEntity
+class CLogicBranch : public CLogicalEntity, public CBaseEntity::Factory<CLogicBranch>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicBranch);

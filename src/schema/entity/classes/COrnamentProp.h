@@ -12,7 +12,7 @@
 
 #include "CDynamicProp.h"
 
-class COrnamentProp : public CDynamicProp
+class COrnamentProp : public CDynamicProp, public CBaseEntity::Factory<COrnamentProp>
 {
 public:
     DECLARE_SCHEMA_CLASS(COrnamentProp);

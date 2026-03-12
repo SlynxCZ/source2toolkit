@@ -12,7 +12,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class SpawnPoint : public CServerOnlyPointEntity
+class SpawnPoint : public CServerOnlyPointEntity, public CBaseEntity::Factory<SpawnPoint>
 {
 public:
     DECLARE_SCHEMA_CLASS(SpawnPoint);

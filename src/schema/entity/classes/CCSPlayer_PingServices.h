@@ -14,7 +14,7 @@
 
 class CPlayerPing;
 
-class CCSPlayer_PingServices : public CPlayerPawnComponent
+class CCSPlayer_PingServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_PingServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_PingServices);

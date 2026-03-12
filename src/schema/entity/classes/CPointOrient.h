@@ -14,7 +14,7 @@
 #include "../enums/PointOrientConstraint_t.h"
 #include "../enums/PointOrientGoalDirectionType_t.h"
 
-class CPointOrient : public CBaseEntity
+class CPointOrient : public CBaseEntity, public CBaseEntity::Factory<CPointOrient>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointOrient);

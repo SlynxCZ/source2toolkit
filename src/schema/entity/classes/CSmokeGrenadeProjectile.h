@@ -12,7 +12,7 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
-class CSmokeGrenadeProjectile : public CBaseCSGrenadeProjectile
+class CSmokeGrenadeProjectile : public CBaseCSGrenadeProjectile, public CBaseEntity::Factory<CSmokeGrenadeProjectile>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSmokeGrenadeProjectile);

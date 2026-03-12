@@ -12,7 +12,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class CInfoTargetServerOnly : public CServerOnlyPointEntity
+class CInfoTargetServerOnly : public CServerOnlyPointEntity, public CBaseEntity::Factory<CInfoTargetServerOnly>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoTargetServerOnly);

@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEntityFlame : public CBaseEntity
+class CEntityFlame : public CBaseEntity, public CBaseEntity::Factory<CEntityFlame>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityFlame);

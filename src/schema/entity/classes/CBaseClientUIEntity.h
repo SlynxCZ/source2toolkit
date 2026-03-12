@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CBaseClientUIEntity : public CBaseModelEntity
+class CBaseClientUIEntity : public CBaseModelEntity, public CBaseEntity::Factory<CBaseClientUIEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseClientUIEntity);

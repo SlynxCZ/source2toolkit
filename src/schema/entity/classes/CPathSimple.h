@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "CPathQueryComponent.h"
 
-class CPathSimple : public CBaseEntity
+class CPathSimple : public CBaseEntity, public CBaseEntity::Factory<CPathSimple>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathSimple);

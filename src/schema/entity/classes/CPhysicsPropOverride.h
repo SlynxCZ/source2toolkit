@@ -12,7 +12,7 @@
 
 #include "CPhysicsProp.h"
 
-class CPhysicsPropOverride : public CPhysicsProp
+class CPhysicsPropOverride : public CPhysicsProp, public CBaseEntity::Factory<CPhysicsPropOverride>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropOverride);

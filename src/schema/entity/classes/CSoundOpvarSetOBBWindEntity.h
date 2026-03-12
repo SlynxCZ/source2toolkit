@@ -12,7 +12,7 @@
 
 #include "CSoundOpvarSetPointBase.h"
 
-class CSoundOpvarSetOBBWindEntity : public CSoundOpvarSetPointBase
+class CSoundOpvarSetOBBWindEntity : public CSoundOpvarSetPointBase, public CBaseEntity::Factory<CSoundOpvarSetOBBWindEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetOBBWindEntity);

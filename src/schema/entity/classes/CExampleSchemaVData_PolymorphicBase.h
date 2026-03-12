@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CExampleSchemaVData_PolymorphicBase
+class CExampleSchemaVData_PolymorphicBase : public CBaseEntity::Factory<CExampleSchemaVData_PolymorphicBase>
 {
 public:
     DECLARE_SCHEMA_CLASS(CExampleSchemaVData_PolymorphicBase);

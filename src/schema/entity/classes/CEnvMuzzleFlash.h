@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvMuzzleFlash : public CPointEntity
+class CEnvMuzzleFlash : public CPointEntity, public CBaseEntity::Factory<CEnvMuzzleFlash>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvMuzzleFlash);

@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CParticleSystem : public CBaseModelEntity
+class CParticleSystem : public CBaseModelEntity, public CBaseEntity::Factory<CParticleSystem>
 {
 public:
     DECLARE_SCHEMA_CLASS(CParticleSystem);

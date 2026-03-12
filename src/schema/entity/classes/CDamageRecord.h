@@ -15,7 +15,7 @@
 class CCSPlayerController;
 class CCSPlayerPawn;
 
-class CDamageRecord
+class CDamageRecord : public CBaseEntity::Factory<CDamageRecord>
 {
 public:
     DECLARE_SCHEMA_CLASS(CDamageRecord);

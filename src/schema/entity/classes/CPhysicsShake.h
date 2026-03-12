@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CPhysicsShake
+class CPhysicsShake : public CBaseEntity::Factory<CPhysicsShake>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsShake);

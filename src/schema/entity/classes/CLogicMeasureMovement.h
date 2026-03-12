@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CLogicMeasureMovement : public CLogicalEntity
+class CLogicMeasureMovement : public CLogicalEntity, public CBaseEntity::Factory<CLogicMeasureMovement>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicMeasureMovement);

@@ -12,7 +12,7 @@
 
 #include "CBaseFilter.h"
 
-class CFilterModel : public CBaseFilter
+class CFilterModel : public CBaseFilter, public CBaseEntity::Factory<CFilterModel>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterModel);

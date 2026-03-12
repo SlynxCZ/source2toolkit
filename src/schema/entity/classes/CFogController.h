@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "fogparams_t.h"
 
-class CFogController : public CBaseEntity
+class CFogController : public CBaseEntity, public CBaseEntity::Factory<CFogController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFogController);

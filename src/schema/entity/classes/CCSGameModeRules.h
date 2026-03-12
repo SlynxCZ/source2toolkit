@@ -11,7 +11,7 @@
 #include <cstdint>
 
 
-class CCSGameModeRules
+class CCSGameModeRules : public CBaseEntity::Factory<CCSGameModeRules>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules);

@@ -19,7 +19,7 @@
 #include "../enums/gear_slot_t.h"
 #include "../enums/loadout_slot_t.h"
 
-class CCSWeaponBaseVData : public CBasePlayerWeaponVData
+class CCSWeaponBaseVData : public CBasePlayerWeaponVData, public CBaseEntity::Factory<CCSWeaponBaseVData>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSWeaponBaseVData);

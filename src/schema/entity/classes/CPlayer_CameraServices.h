@@ -20,7 +20,7 @@ class CEnvSoundscapeTriggerable;
 class CPostProcessingVolume;
 class CTonemapController2;
 
-class CPlayer_CameraServices : public CPlayerPawnComponent
+class CPlayer_CameraServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_CameraServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_CameraServices);

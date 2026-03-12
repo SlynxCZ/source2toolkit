@@ -15,7 +15,7 @@
 
 class CBaseEntity;
 
-class CTriggerHurt : public CBaseTrigger
+class CTriggerHurt : public CBaseTrigger, public CBaseEntity::Factory<CTriggerHurt>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerHurt);

@@ -12,7 +12,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CCSPlayer_DamageReactServices : public CPlayerPawnComponent
+class CCSPlayer_DamageReactServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_DamageReactServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_DamageReactServices);

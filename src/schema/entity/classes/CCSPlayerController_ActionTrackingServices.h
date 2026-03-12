@@ -14,7 +14,7 @@
 #include "CSMatchStats_t.h"
 #include "CSPerRoundStats_t.h"
 
-class CCSPlayerController_ActionTrackingServices : public CPlayerControllerComponent
+class CCSPlayerController_ActionTrackingServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_ActionTrackingServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_ActionTrackingServices);

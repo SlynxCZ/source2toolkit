@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CNetworkViewOffsetVector
+class CNetworkViewOffsetVector : public CBaseEntity::Factory<CNetworkViewOffsetVector>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNetworkViewOffsetVector);

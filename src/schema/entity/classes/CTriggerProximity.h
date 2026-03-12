@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CTriggerProximity : public CBaseTrigger
+class CTriggerProximity : public CBaseTrigger, public CBaseEntity::Factory<CTriggerProximity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerProximity);

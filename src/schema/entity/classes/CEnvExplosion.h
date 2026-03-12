@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CEnvExplosion : public CModelPointEntity
+class CEnvExplosion : public CModelPointEntity, public CBaseEntity::Factory<CEnvExplosion>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvExplosion);

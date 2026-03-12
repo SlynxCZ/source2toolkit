@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvDetailController : public CBaseEntity
+class CEnvDetailController : public CBaseEntity, public CBaseEntity::Factory<CEnvDetailController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvDetailController);

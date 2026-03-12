@@ -13,7 +13,7 @@
 
 class CGameSceneNode;
 
-class CBodyComponent : public CEntityComponent
+class CBodyComponent : public CEntityComponent, public CBaseEntity::Factory<CBodyComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponent);

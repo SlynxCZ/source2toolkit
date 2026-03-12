@@ -12,7 +12,7 @@
 
 #include "CSceneEntity.h"
 
-class CSceneEntityAlias_logic_choreographed_scene : public CSceneEntity
+class CSceneEntityAlias_logic_choreographed_scene : public CSceneEntity, public CBaseEntity::Factory<CSceneEntityAlias_logic_choreographed_scene>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneEntityAlias_logic_choreographed_scene);

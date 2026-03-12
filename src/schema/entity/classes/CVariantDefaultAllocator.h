@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CVariantDefaultAllocator
+class CVariantDefaultAllocator : public CBaseEntity::Factory<CVariantDefaultAllocator>
 {
 public:
     DECLARE_SCHEMA_CLASS(CVariantDefaultAllocator);

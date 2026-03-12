@@ -12,7 +12,7 @@
 
 #include "dynpitchvol_base_t.h"
 
-class dynpitchvol_t : public dynpitchvol_base_t
+class dynpitchvol_t : public dynpitchvol_base_t, public CBaseEntity::Factory<dynpitchvol_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(dynpitchvol_t);

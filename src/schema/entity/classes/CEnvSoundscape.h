@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvSoundscape : public CBaseEntity
+class CEnvSoundscape : public CBaseEntity, public CBaseEntity::Factory<CEnvSoundscape>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscape);

@@ -14,7 +14,7 @@
 
 class CLightEntity;
 
-class CMultiLightProxy : public CLogicalEntity
+class CMultiLightProxy : public CLogicalEntity, public CBaseEntity::Factory<CMultiLightProxy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiLightProxy);

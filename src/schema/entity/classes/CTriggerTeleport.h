@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerTeleport : public CBaseTrigger
+class CTriggerTeleport : public CBaseTrigger, public CBaseEntity::Factory<CTriggerTeleport>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerTeleport);

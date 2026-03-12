@@ -16,7 +16,7 @@
 
 class CBasePlayerPawn;
 
-class CBasePlayerController : public CBaseEntity
+class CBasePlayerController : public CBaseEntity, public CBaseEntity::Factory<CBasePlayerController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerController);

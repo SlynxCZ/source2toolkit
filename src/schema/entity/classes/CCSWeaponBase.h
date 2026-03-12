@@ -17,7 +17,7 @@
 
 class CCSPlayerPawn;
 
-class CCSWeaponBase : public CBasePlayerWeapon
+class CCSWeaponBase : public CBasePlayerWeapon, public CBaseEntity::Factory<CCSWeaponBase>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSWeaponBase);

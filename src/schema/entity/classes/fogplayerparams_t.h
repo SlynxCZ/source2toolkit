@@ -12,7 +12,7 @@
 
 class CFogController;
 
-class fogplayerparams_t
+class fogplayerparams_t : public CBaseEntity::Factory<fogplayerparams_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(fogplayerparams_t);

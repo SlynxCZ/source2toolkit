@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncVehicleClip : public CBaseModelEntity
+class CFuncVehicleClip : public CBaseModelEntity, public CBaseEntity::Factory<CFuncVehicleClip>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncVehicleClip);

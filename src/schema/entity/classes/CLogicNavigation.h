@@ -13,7 +13,7 @@
 #include "CLogicalEntity.h"
 #include "../enums/navproperties_t.h"
 
-class CLogicNavigation : public CLogicalEntity
+class CLogicNavigation : public CLogicalEntity, public CBaseEntity::Factory<CLogicNavigation>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicNavigation);

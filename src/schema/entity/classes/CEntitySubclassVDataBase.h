@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CEntitySubclassVDataBase
+class CEntitySubclassVDataBase : public CBaseEntity::Factory<CEntitySubclassVDataBase>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntitySubclassVDataBase);

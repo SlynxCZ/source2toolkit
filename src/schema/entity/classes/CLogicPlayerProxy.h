@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CLogicPlayerProxy : public CLogicalEntity
+class CLogicPlayerProxy : public CLogicalEntity, public CBaseEntity::Factory<CLogicPlayerProxy>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicPlayerProxy);

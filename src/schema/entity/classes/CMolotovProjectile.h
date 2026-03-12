@@ -13,7 +13,7 @@
 #include "CBaseCSGrenadeProjectile.h"
 #include "IntervalTimer.h"
 
-class CMolotovProjectile : public CBaseCSGrenadeProjectile
+class CMolotovProjectile : public CBaseCSGrenadeProjectile, public CBaseEntity::Factory<CMolotovProjectile>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMolotovProjectile);

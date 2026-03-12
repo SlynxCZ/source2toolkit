@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CAmbientGeneric : public CPointEntity
+class CAmbientGeneric : public CPointEntity, public CBaseEntity::Factory<CAmbientGeneric>
 {
 public:
     DECLARE_SCHEMA_CLASS(CAmbientGeneric);

@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CTriggerLook : public CTriggerOnce
+class CTriggerLook : public CTriggerOnce, public CBaseEntity::Factory<CTriggerLook>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerLook);

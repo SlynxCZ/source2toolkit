@@ -12,7 +12,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerDetectExplosion : public CBaseTrigger
+class CTriggerDetectExplosion : public CBaseTrigger, public CBaseEntity::Factory<CTriggerDetectExplosion>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerDetectExplosion);

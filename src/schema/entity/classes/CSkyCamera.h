@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "sky3dparams_t.h"
 
-class CSkyCamera : public CBaseEntity
+class CSkyCamera : public CBaseEntity, public CBaseEntity::Factory<CSkyCamera>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkyCamera);

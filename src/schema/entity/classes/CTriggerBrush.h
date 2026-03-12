@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CTriggerBrush : public CBaseModelEntity
+class CTriggerBrush : public CBaseModelEntity, public CBaseEntity::Factory<CTriggerBrush>
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBrush);

@@ -13,7 +13,7 @@
 #include "CBodyComponent.h"
 #include "CGameSceneNode.h"
 
-class CBodyComponentPoint : public CBodyComponent
+class CBodyComponentPoint : public CBodyComponent, public CBaseEntity::Factory<CBodyComponentPoint>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentPoint);

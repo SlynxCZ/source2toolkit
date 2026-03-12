@@ -15,7 +15,7 @@
 class CCSWeaponBase;
 class CCSWeaponBaseVData;
 
-class CBasePlayerWeapon : public CEconEntity
+class CBasePlayerWeapon : public CEconEntity, public CBaseEntity::Factory<CBasePlayerWeapon>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerWeapon);

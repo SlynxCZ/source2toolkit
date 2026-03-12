@@ -13,7 +13,7 @@
 #include "CPlayerPawnComponent.h"
 #include "SellbackPurchaseEntry_t.h"
 
-class CCSPlayer_BuyServices : public CPlayerPawnComponent
+class CCSPlayer_BuyServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_BuyServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_BuyServices);

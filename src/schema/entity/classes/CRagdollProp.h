@@ -16,7 +16,7 @@
 class CBaseEntity;
 class CBasePlayerPawn;
 
-class CRagdollProp : public CBaseAnimGraph
+class CRagdollProp : public CBaseAnimGraph, public CBaseEntity::Factory<CRagdollProp>
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollProp);

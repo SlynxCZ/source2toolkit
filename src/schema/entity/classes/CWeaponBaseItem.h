@@ -12,7 +12,7 @@
 
 #include "CCSWeaponBase.h"
 
-class CWeaponBaseItem : public CCSWeaponBase
+class CWeaponBaseItem : public CCSWeaponBase, public CBaseEntity::Factory<CWeaponBaseItem>
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponBaseItem);

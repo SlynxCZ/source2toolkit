@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CInfoSpawnGroupLoadUnload : public CLogicalEntity
+class CInfoSpawnGroupLoadUnload : public CLogicalEntity, public CBaseEntity::Factory<CInfoSpawnGroupLoadUnload>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoSpawnGroupLoadUnload);

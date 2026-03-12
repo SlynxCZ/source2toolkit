@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CEntityBlocker : public CBaseModelEntity
+class CEntityBlocker : public CBaseModelEntity, public CBaseEntity::Factory<CEntityBlocker>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityBlocker);

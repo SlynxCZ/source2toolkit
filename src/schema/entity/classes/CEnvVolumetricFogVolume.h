@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvVolumetricFogVolume : public CBaseEntity
+class CEnvVolumetricFogVolume : public CBaseEntity, public CBaseEntity::Factory<CEnvVolumetricFogVolume>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvVolumetricFogVolume);

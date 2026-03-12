@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CMultiSource : public CLogicalEntity
+class CMultiSource : public CLogicalEntity, public CBaseEntity::Factory<CMultiSource>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiSource);

@@ -15,7 +15,7 @@
 class CFuncMover;
 class CPathMoverEntitySpawner;
 
-class CPathMover : public CPathWithDynamicNodes
+class CPathMover : public CPathWithDynamicNodes, public CBaseEntity::Factory<CPathMover>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathMover);

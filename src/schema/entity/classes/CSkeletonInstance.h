@@ -13,7 +13,7 @@
 #include "CGameSceneNode.h"
 #include "CModelState.h"
 
-class CSkeletonInstance : public CGameSceneNode
+class CSkeletonInstance : public CGameSceneNode, public CBaseEntity::Factory<CSkeletonInstance>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkeletonInstance);

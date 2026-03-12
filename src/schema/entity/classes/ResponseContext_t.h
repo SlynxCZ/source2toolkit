@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ResponseContext_t
+class ResponseContext_t : public CBaseEntity::Factory<ResponseContext_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(ResponseContext_t);

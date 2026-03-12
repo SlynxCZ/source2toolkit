@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CPropDataComponent : public CEntityComponent
+class CPropDataComponent : public CEntityComponent, public CBaseEntity::Factory<CPropDataComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPropDataComponent);

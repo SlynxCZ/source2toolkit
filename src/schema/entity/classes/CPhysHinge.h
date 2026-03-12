@@ -14,7 +14,7 @@
 #include "ConstraintSoundInfo.h"
 #include "CPhysConstraint.h"
 
-class CPhysHinge : public CPhysConstraint
+class CPhysHinge : public CPhysConstraint, public CBaseEntity::Factory<CPhysHinge>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysHinge);

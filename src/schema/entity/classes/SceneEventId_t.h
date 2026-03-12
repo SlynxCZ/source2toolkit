@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class SceneEventId_t
+class SceneEventId_t : public CBaseEntity::Factory<SceneEventId_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(SceneEventId_t);

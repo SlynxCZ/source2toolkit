@@ -20,7 +20,7 @@
 
 class CBaseAnimGraph;
 
-class CScriptedSequence : public CBaseEntity
+class CScriptedSequence : public CBaseEntity, public CBaseEntity::Factory<CScriptedSequence>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptedSequence);

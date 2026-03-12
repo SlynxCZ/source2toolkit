@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CPathQueryComponent : public CEntityComponent
+class CPathQueryComponent : public CEntityComponent, public CBaseEntity::Factory<CPathQueryComponent>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathQueryComponent);

@@ -12,7 +12,7 @@
 
 #include "CFuncNavBlocker.h"
 
-class CScriptNavBlocker : public CFuncNavBlocker
+class CScriptNavBlocker : public CFuncNavBlocker, public CBaseEntity::Factory<CScriptNavBlocker>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptNavBlocker);

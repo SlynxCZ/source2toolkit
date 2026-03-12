@@ -12,7 +12,7 @@
 
 #include "CHostage.h"
 
-class CHostageAlias_info_hostage_spawn : public CHostage
+class CHostageAlias_info_hostage_spawn : public CHostage, public CBaseEntity::Factory<CHostageAlias_info_hostage_spawn>
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageAlias_info_hostage_spawn);

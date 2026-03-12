@@ -12,7 +12,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncIllusionary : public CBaseModelEntity
+class CFuncIllusionary : public CBaseModelEntity, public CBaseEntity::Factory<CFuncIllusionary>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncIllusionary);

@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvViewPunch : public CPointEntity
+class CEnvViewPunch : public CPointEntity, public CBaseEntity::Factory<CEnvViewPunch>
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvViewPunch);

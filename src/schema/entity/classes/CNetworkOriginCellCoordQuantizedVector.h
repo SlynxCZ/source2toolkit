@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CNetworkOriginCellCoordQuantizedVector
+class CNetworkOriginCellCoordQuantizedVector : public CBaseEntity::Factory<CNetworkOriginCellCoordQuantizedVector>
 {
 public:
     DECLARE_SCHEMA_CLASS(CNetworkOriginCellCoordQuantizedVector);

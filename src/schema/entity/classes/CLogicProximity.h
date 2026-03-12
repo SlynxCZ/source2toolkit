@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CLogicProximity : public CPointEntity
+class CLogicProximity : public CPointEntity, public CBaseEntity::Factory<CLogicProximity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicProximity);

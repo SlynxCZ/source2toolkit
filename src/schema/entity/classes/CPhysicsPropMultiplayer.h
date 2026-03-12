@@ -12,7 +12,7 @@
 
 #include "CPhysicsProp.h"
 
-class CPhysicsPropMultiplayer : public CPhysicsProp
+class CPhysicsPropMultiplayer : public CPhysicsProp, public CBaseEntity::Factory<CPhysicsPropMultiplayer>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropMultiplayer);

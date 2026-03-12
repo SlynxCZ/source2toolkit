@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class constraint_breakableparams_t
+class constraint_breakableparams_t : public CBaseEntity::Factory<constraint_breakableparams_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(constraint_breakableparams_t);

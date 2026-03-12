@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class InfoForResourceTypeCModel
+class InfoForResourceTypeCModel : public CBaseEntity::Factory<InfoForResourceTypeCModel>
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCModel);

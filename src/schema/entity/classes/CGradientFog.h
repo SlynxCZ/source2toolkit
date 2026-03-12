@@ -13,7 +13,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CGradientFog : public CBaseEntity
+class CGradientFog : public CBaseEntity, public CBaseEntity::Factory<CGradientFog>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGradientFog);

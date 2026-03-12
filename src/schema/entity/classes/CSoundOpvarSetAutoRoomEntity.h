@@ -14,7 +14,7 @@
 #include "CSoundOpvarSetPointEntity.h"
 #include "SoundOpvarTraceResult_t.h"
 
-class CSoundOpvarSetAutoRoomEntity : public CSoundOpvarSetPointEntity
+class CSoundOpvarSetAutoRoomEntity : public CSoundOpvarSetPointEntity, public CBaseEntity::Factory<CSoundOpvarSetAutoRoomEntity>
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetAutoRoomEntity);

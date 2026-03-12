@@ -12,7 +12,7 @@
 
 #include "CPlayer_MovementServices.h"
 
-class CPlayer_MovementServices_Humanoid : public CPlayer_MovementServices
+class CPlayer_MovementServices_Humanoid : public CPlayer_MovementServices, public CBaseEntity::Factory<CPlayer_MovementServices_Humanoid>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_MovementServices_Humanoid);

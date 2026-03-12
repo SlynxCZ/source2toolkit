@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class constraint_axislimit_t
+class constraint_axislimit_t : public CBaseEntity::Factory<constraint_axislimit_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(constraint_axislimit_t);

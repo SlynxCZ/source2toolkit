@@ -12,7 +12,7 @@
 
 #include "CCSGO_TeamPreviewCharacterPosition.h"
 
-class CCSGO_TeamIntroCharacterPosition : public CCSGO_TeamPreviewCharacterPosition
+class CCSGO_TeamIntroCharacterPosition : public CCSGO_TeamPreviewCharacterPosition, public CBaseEntity::Factory<CCSGO_TeamIntroCharacterPosition>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamIntroCharacterPosition);

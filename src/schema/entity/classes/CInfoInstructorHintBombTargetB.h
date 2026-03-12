@@ -12,7 +12,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoInstructorHintBombTargetB : public CPointEntity
+class CInfoInstructorHintBombTargetB : public CPointEntity, public CBaseEntity::Factory<CInfoInstructorHintBombTargetB>
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintBombTargetB);

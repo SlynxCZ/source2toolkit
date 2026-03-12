@@ -12,7 +12,7 @@
 
 #include "CTriggerHurt.h"
 
-class CScriptTriggerHurt : public CTriggerHurt
+class CScriptTriggerHurt : public CTriggerHurt, public CBaseEntity::Factory<CScriptTriggerHurt>
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerHurt);

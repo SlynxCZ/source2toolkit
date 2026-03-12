@@ -12,7 +12,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CCSPlayer_BulletServices : public CPlayerPawnComponent
+class CCSPlayer_BulletServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_BulletServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_BulletServices);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class ISkeletonAnimationController
+class ISkeletonAnimationController : public CBaseEntity::Factory<ISkeletonAnimationController>
 {
 public:
     DECLARE_SCHEMA_CLASS(ISkeletonAnimationController);

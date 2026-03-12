@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class locksound_t
+class locksound_t : public CBaseEntity::Factory<locksound_t>
 {
 public:
     DECLARE_SCHEMA_CLASS(locksound_t);

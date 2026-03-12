@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CPhysicsWire : public CBaseEntity
+class CPhysicsWire : public CBaseEntity, public CBaseEntity::Factory<CPhysicsWire>
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsWire);

@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMathColorBlend : public CLogicalEntity
+class CMathColorBlend : public CLogicalEntity, public CBaseEntity::Factory<CMathColorBlend>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMathColorBlend);

@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CBombTarget : public CBaseTrigger
+class CBombTarget : public CBaseTrigger, public CBaseEntity::Factory<CBombTarget>
 {
 public:
     DECLARE_SCHEMA_CLASS(CBombTarget);

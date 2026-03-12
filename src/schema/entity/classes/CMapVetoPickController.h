@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CMapVetoPickController : public CBaseEntity
+class CMapVetoPickController : public CBaseEntity, public CBaseEntity::Factory<CMapVetoPickController>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapVetoPickController);

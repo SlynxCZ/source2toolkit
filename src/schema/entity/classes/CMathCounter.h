@@ -12,7 +12,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMathCounter : public CLogicalEntity
+class CMathCounter : public CLogicalEntity, public CBaseEntity::Factory<CMathCounter>
 {
 public:
     DECLARE_SCHEMA_CLASS(CMathCounter);

@@ -14,7 +14,7 @@
 
 class CBaseEntity;
 
-class CCSPlayerBase_CameraServices : public CPlayer_CameraServices
+class CCSPlayerBase_CameraServices : public CPlayer_CameraServices, public CBaseEntity::Factory<CCSPlayerBase_CameraServices>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerBase_CameraServices);

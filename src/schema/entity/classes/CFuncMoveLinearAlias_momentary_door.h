@@ -12,7 +12,7 @@
 
 #include "CFuncMoveLinear.h"
 
-class CFuncMoveLinearAlias_momentary_door : public CFuncMoveLinear
+class CFuncMoveLinearAlias_momentary_door : public CFuncMoveLinear, public CBaseEntity::Factory<CFuncMoveLinearAlias_momentary_door>
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMoveLinearAlias_momentary_door);

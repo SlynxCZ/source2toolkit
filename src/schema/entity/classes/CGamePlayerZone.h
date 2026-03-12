@@ -12,7 +12,7 @@
 
 #include "CRuleBrushEntity.h"
 
-class CGamePlayerZone : public CRuleBrushEntity
+class CGamePlayerZone : public CRuleBrushEntity, public CBaseEntity::Factory<CGamePlayerZone>
 {
 public:
     DECLARE_SCHEMA_CLASS(CGamePlayerZone);

@@ -10,7 +10,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class IEconItemInterface
+class IEconItemInterface : public CBaseEntity::Factory<IEconItemInterface>
 {
 public:
     DECLARE_SCHEMA_CLASS(IEconItemInterface);

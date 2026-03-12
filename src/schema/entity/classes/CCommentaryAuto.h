@@ -12,7 +12,7 @@
 
 #include "CBaseEntity.h"
 
-class CCommentaryAuto : public CBaseEntity
+class CCommentaryAuto : public CBaseEntity, public CBaseEntity::Factory<CCommentaryAuto>
 {
 public:
     DECLARE_SCHEMA_CLASS(CCommentaryAuto);
