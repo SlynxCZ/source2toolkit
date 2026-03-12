@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "constraint_axislimit_t.h"
 #include "constraint_breakableparams_t.h"
 
-class constraint_hingeparams_t : public CBaseEntity::Factory<constraint_hingeparams_t>
+class constraint_hingeparams_t
 {
 public:
     DECLARE_SCHEMA_CLASS(constraint_hingeparams_t);

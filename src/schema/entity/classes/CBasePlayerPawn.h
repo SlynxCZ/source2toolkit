@@ -1,4 +1,6 @@
 #pragma once
+#include "CBaseEntity.h"
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -60,6 +62,8 @@ public:
     SCHEMA_FIELD(CUtlVector<sndopvarlatchdata_t>, m_sndOpvarLatchData);
 
 public:
+    /// <summary>Force suicide.</summary>
     void CommitSuicide(bool bExplode, bool bForce);
+    /// <summary>Remove weapon from player.</summary>
     void RemovePlayerItem(CBasePlayerWeapon* pWeapon);
 };

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -16,7 +17,7 @@
 
 class CBaseAnimGraph;
 
-class ExternalAnimGraph_t : public CBaseEntity::Factory<ExternalAnimGraph_t>
+class ExternalAnimGraph_t
 {
 public:
     DECLARE_SCHEMA_CLASS(ExternalAnimGraph_t);

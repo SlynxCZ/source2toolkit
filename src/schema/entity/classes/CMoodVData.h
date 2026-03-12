@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "../enums/MoodType_t.h"
 
-class CMoodVData : public CBaseEntity::Factory<CMoodVData>
+class CMoodVData
 {
 public:
     DECLARE_SCHEMA_CLASS(CMoodVData);

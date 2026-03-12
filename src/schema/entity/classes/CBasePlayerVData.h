@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CEntitySubclassVDataBase.h"
 #include "CSkillFloat.h"
 
-class CBasePlayerVData : public CEntitySubclassVDataBase, public CBaseEntity::Factory<CBasePlayerVData>
+class CBasePlayerVData : public CEntitySubclassVDataBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerVData);

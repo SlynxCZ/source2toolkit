@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -22,7 +23,7 @@
 
 class CBaseAnimGraph;
 
-class CBaseAnimGraphController : public CSkeletonAnimationController, public CBaseEntity::Factory<CBaseAnimGraphController>
+class CBaseAnimGraphController : public CSkeletonAnimationController
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraphController);

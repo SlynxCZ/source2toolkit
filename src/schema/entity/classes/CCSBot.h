@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -17,7 +18,7 @@
 class CBaseEntity;
 class CCSPlayerPawn;
 
-class CCSBot : public CBot, public CBaseEntity::Factory<CCSBot>
+class CCSBot : public CBot
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSBot);

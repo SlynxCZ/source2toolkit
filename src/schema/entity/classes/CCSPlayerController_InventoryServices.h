@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 #include "../enums/MedalRank_t.h"
 #include "ServerAuthoritativeWeaponSlot_t.h"
 
-class CCSPlayerController_InventoryServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_InventoryServices>
+class CCSPlayerController_InventoryServices : public CPlayerControllerComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_InventoryServices);

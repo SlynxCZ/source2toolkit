@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "DecalGroupOption_t.h"
 
-class CDecalGroupVData : public CBaseEntity::Factory<CDecalGroupVData>
+class CDecalGroupVData
 {
 public:
     DECLARE_SCHEMA_CLASS(CDecalGroupVData);

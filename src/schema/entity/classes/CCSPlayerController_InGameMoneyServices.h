@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayerControllerComponent.h"
 
-class CCSPlayerController_InGameMoneyServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_InGameMoneyServices>
+class CCSPlayerController_InGameMoneyServices : public CPlayerControllerComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_InGameMoneyServices);

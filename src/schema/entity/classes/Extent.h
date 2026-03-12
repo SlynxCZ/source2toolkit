@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -10,7 +11,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class Extent : public CBaseEntity::Factory<Extent>
+class Extent
 {
 public:
     DECLARE_SCHEMA_CLASS(Extent);

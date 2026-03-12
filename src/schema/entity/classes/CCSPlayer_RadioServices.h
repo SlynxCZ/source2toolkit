@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CCSPlayer_RadioServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_RadioServices>
+class CCSPlayer_RadioServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_RadioServices);

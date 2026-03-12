@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPulseGraphInstance_ServerEntity.h"
 
-class CPulseGraphInstance_GameBlackboard : public CPulseGraphInstance_ServerEntity, public CBaseEntity::Factory<CPulseGraphInstance_GameBlackboard>
+class CPulseGraphInstance_GameBlackboard : public CPulseGraphInstance_ServerEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPulseGraphInstance_GameBlackboard);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "InfoForResourceTypeCModel.h"
 
-class CModelState : public CBaseEntity::Factory<CModelState>
+class CModelState
 {
 public:
     DECLARE_SCHEMA_CLASS(CModelState);

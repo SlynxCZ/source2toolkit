@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 
 class CBaseEntity;
 
-class CCSPlayer_HostageServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_HostageServices>
+class CCSPlayer_HostageServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_HostageServices);

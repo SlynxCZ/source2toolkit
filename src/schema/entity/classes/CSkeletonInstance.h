@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CGameSceneNode.h"
 #include "CModelState.h"
 
-class CSkeletonInstance : public CGameSceneNode, public CBaseEntity::Factory<CSkeletonInstance>
+class CSkeletonInstance : public CGameSceneNode
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkeletonInstance);

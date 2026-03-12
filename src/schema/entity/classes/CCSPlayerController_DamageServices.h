@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CDamageRecord.h"
 #include "CPlayerControllerComponent.h"
 
-class CCSPlayerController_DamageServices : public CPlayerControllerComponent, public CBaseEntity::Factory<CCSPlayerController_DamageServices>
+class CCSPlayerController_DamageServices : public CPlayerControllerComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController_DamageServices);

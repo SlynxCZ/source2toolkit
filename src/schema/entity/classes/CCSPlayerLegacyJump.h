@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -10,7 +11,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class CCSPlayerLegacyJump : public CBaseEntity::Factory<CCSPlayerLegacyJump>
+class CCSPlayerLegacyJump
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerLegacyJump);

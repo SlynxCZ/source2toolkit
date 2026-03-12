@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "SimpleConstraintSoundProfile.h"
 #include "VelocitySampler.h"
 
-class ConstraintSoundInfo : public CBaseEntity::Factory<ConstraintSoundInfo>
+class ConstraintSoundInfo
 {
 public:
     DECLARE_SCHEMA_CLASS(ConstraintSoundInfo);

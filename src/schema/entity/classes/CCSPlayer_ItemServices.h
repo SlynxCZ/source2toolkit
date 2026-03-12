@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 
 class CBasePlayerWeapon;
 
-class CCSPlayer_ItemServices : public CPlayer_ItemServices, public CBaseEntity::Factory<CCSPlayer_ItemServices>
+class CCSPlayer_ItemServices : public CPlayer_ItemServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_ItemServices);
@@ -23,7 +24,10 @@ public:
     SCHEMA_FIELD(bool, m_bHasHelmet);
 
 public:
+    /// <summary>Drop active weapon.</summary>
     void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon);
+    /// <summary>Remove all weapons.</summary>
     void RemoveWeapons();
+    /// <summary>Give item.</summary>
     CBasePlayerWeapon* GiveNamedItem(const char* pszItem);
 };

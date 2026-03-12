@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -10,7 +11,7 @@
 #include "schema/schema.h"
 #include <cstdint>
 
-class WeaponPurchaseCount_t : public CBaseEntity::Factory<WeaponPurchaseCount_t>
+class WeaponPurchaseCount_t
 {
 public:
     DECLARE_SCHEMA_CLASS(WeaponPurchaseCount_t);

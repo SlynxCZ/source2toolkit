@@ -1,4 +1,6 @@
 #pragma once
+#include "CBaseEntity.h"
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -116,4 +118,44 @@ public:
     SCHEMA_FIELD(uint32_t, m_nSuspiciousHitCount);
     SCHEMA_FIELD(uint32_t, m_nNonSuspiciousHitStreak);
     SCHEMA_FIELD(bool, m_bFireBulletsSeedSynchronized);
+
+public:
+    /// <summary>Print to console.</summary>
+    void PrintToConsole(const char* pszMessage);
+    /// <summary>Print to chat.</summary>
+    void PrintToChat(const char* pszMessage);
+    /// <summary>Print to center.</summary>
+    void PrintToCenter(const char* pszMessage);
+    /// <summary>Print alert.</summary>
+    void PrintToCenterAlert(const char* pszMessage);
+    /// <summary>Print to center in HTML.</summary>
+    void PrintToCenterHtml(const char* pszMessage, int iDuration = 5);
+    /// <summary>Respawn player.</summary>
+    void Respawn();
+    /// <summary>Switch team without killing.</summary>
+    void SwitchTeam(int nTeam);
+    /// <summary>Change team like jointeam.</summary>
+    void ChangeTeam(int nTeam);
+    /// <summary>Get userid.</summary>
+    int GetUserID();
+    /// <summary>Get player userid.</summary>
+    CPlayerUserId GetPlayerUserID();
+    /// <summary>Is bot.</summary>
+    bool IsBot();
+    /// <summary>Disconnect player.</summary>
+    void Disconnect(ENetworkDisconnectionReason eReason);
+    /// <summary>Execute client command.</summary>
+    void ExecuteClientCommand(const char* pszCommand);
+    /// <summary>Execute command from server.</summary>
+    void ExecuteClientCommandFromServer(const char* pszCommand);
+    /// <summary>Get slot.</summary>
+    int GetSlot();
+    /// <summary>Get player slot.</summary>
+    CPlayerSlot GetPlayerSlot();
+    /// <summary>Get IP address.</summary>
+    const char* GetIpAddress();
+    /// <summary>Replicate convar.</summary>
+    void ReplicateConVar(const char* pszConVar, const char* pszValue);
+    /// <summary>Fires gameEvent to client's legacy listener.</summary>
+    void FireEventToClient(IGameEvent* pEvent);
 };

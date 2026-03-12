@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CAnimGraphControllerBase.h"
 
-class CBaseAnimGraphDestructibleParts_GraphController : public CAnimGraphControllerBase, public CBaseEntity::Factory<CBaseAnimGraphDestructibleParts_GraphController>
+class CBaseAnimGraphDestructibleParts_GraphController : public CAnimGraphControllerBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraphDestructibleParts_GraphController);

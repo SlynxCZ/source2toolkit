@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 
 class CBasePlayerWeapon;
 
-class CPlayer_WeaponServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_WeaponServices>
+class CPlayer_WeaponServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_WeaponServices);

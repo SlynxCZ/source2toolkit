@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CBodyComponent.h"
 #include "CGameSceneNode.h"
 
-class CBodyComponentPoint : public CBodyComponent, public CBaseEntity::Factory<CBodyComponentPoint>
+class CBodyComponentPoint : public CBodyComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentPoint);

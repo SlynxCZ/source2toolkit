@@ -1,4 +1,6 @@
 #pragma once
+#include "CBaseEntity.h"
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -59,7 +61,10 @@ public:
     SCHEMA_FIELD_POINTER(uint32_t, m_bvDisabledHitGroups);
 
 public:
+    /// <summary>Get model name.</summary>
     CUtlSymbolLarge GetModelName();
+    /// <summary>Get eye position.</summary>
     Vector GetEyePosition();
+    /// <summary>Set entity model.</summary>
     void SetModel(const char* pszModel);
 };

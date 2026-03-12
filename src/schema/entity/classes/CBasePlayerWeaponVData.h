@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 #include "../enums/ItemFlagTypes_t.h"
 #include "../enums/RumbleEffect_t.h"
 
-class CBasePlayerWeaponVData : public CEntitySubclassVDataBase, public CBaseEntity::Factory<CBasePlayerWeaponVData>
+class CBasePlayerWeaponVData : public CEntitySubclassVDataBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerWeaponVData);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_AutoaimServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_AutoaimServices>
+class CPlayer_AutoaimServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_AutoaimServices);

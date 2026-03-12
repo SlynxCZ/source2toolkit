@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -15,7 +16,7 @@
 class CBaseAnimGraph;
 class CScriptedSequence;
 
-class CGameChoreoServices : public IChoreoServices, public CBaseEntity::Factory<CGameChoreoServices>
+class CGameChoreoServices : public IChoreoServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameChoreoServices);

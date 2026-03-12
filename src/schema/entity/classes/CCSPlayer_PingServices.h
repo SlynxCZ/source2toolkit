@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 
 class CPlayerPing;
 
-class CCSPlayer_PingServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_PingServices>
+class CCSPlayer_PingServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_PingServices);

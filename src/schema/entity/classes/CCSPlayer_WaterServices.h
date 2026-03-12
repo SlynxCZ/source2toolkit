@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayer_WaterServices.h"
 
-class CCSPlayer_WaterServices : public CPlayer_WaterServices, public CBaseEntity::Factory<CCSPlayer_WaterServices>
+class CCSPlayer_WaterServices : public CPlayer_WaterServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_WaterServices);

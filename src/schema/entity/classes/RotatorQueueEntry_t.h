@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "../enums/RotatorTargetSpace_t.h"
 
-class RotatorQueueEntry_t : public CBaseEntity::Factory<RotatorQueueEntry_t>
+class RotatorQueueEntry_t
 {
 public:
     DECLARE_SCHEMA_CLASS(RotatorQueueEntry_t);

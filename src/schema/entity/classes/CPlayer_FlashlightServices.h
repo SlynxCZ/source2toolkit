@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_FlashlightServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_FlashlightServices>
+class CPlayer_FlashlightServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_FlashlightServices);

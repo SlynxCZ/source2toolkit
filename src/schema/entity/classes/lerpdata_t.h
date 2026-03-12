@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 
 class CBaseEntity;
 
-class lerpdata_t : public CBaseEntity::Factory<lerpdata_t>
+class lerpdata_t
 {
 public:
     DECLARE_SCHEMA_CLASS(lerpdata_t);

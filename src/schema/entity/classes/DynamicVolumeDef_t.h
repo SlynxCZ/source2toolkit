@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 class CBaseEntity;
 
-class DynamicVolumeDef_t : public CBaseEntity::Factory<DynamicVolumeDef_t>
+class DynamicVolumeDef_t
 {
 public:
     DECLARE_SCHEMA_CLASS(DynamicVolumeDef_t);

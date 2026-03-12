@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "../enums/FixAngleSet_t.h"
 
-class ViewAngleServerChange_t : public CBaseEntity::Factory<ViewAngleServerChange_t>
+class ViewAngleServerChange_t
 {
 public:
     DECLARE_SCHEMA_CLASS(ViewAngleServerChange_t);

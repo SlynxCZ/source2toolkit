@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CInButtonState.h"
 #include "CPlayerPawnComponent.h"
 
-class CPlayer_MovementServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_MovementServices>
+class CPlayer_MovementServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_MovementServices);

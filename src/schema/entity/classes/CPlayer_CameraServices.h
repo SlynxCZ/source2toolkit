@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -20,7 +21,7 @@ class CEnvSoundscapeTriggerable;
 class CPostProcessingVolume;
 class CTonemapController2;
 
-class CPlayer_CameraServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_CameraServices>
+class CPlayer_CameraServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_CameraServices);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -11,7 +12,7 @@
 #include <cstdint>
 
 
-class CCSGameModeRules : public CBaseEntity::Factory<CCSGameModeRules>
+class CCSGameModeRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules);

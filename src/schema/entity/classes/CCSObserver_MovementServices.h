@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayer_MovementServices.h"
 
-class CCSObserver_MovementServices : public CPlayer_MovementServices, public CBaseEntity::Factory<CCSObserver_MovementServices>
+class CCSObserver_MovementServices : public CPlayer_MovementServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserver_MovementServices);

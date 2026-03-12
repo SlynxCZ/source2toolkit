@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -14,7 +15,7 @@
 
 class CAttributeManager;
 
-class CAttributeList : public CBaseEntity::Factory<CAttributeList>
+class CAttributeList
 {
 public:
     DECLARE_SCHEMA_CLASS(CAttributeList);

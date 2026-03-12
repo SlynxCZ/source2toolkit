@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayer_ObserverServices.h"
 
-class CCSObserver_ObserverServices : public CPlayer_ObserverServices, public CBaseEntity::Factory<CCSObserver_ObserverServices>
+class CCSObserver_ObserverServices : public CPlayer_ObserverServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserver_ObserverServices);

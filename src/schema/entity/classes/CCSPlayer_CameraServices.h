@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CCSPlayerBase_CameraServices.h"
 
-class CCSPlayer_CameraServices : public CCSPlayerBase_CameraServices, public CBaseEntity::Factory<CCSPlayer_CameraServices>
+class CCSPlayer_CameraServices : public CCSPlayerBase_CameraServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_CameraServices);

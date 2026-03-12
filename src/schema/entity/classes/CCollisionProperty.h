@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "../enums/SurroundingBoundsType_t.h"
 #include "VPhysicsCollisionAttribute_t.h"
 
-class CCollisionProperty : public CBaseEntity::Factory<CCollisionProperty>
+class CCollisionProperty
 {
 public:
     DECLARE_SCHEMA_CLASS(CCollisionProperty);

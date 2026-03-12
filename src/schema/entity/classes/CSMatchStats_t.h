@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CSPerRoundStats_t.h"
 
-class CSMatchStats_t : public CSPerRoundStats_t, public CBaseEntity::Factory<CSMatchStats_t>
+class CSMatchStats_t : public CSPerRoundStats_t
 {
 public:
     DECLARE_SCHEMA_CLASS(CSMatchStats_t);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CVectorExponentialMovingAverage.h"
 
-class CMovementStatsProperty : public CBaseEntity::Factory<CMovementStatsProperty>
+class CMovementStatsProperty
 {
 public:
     DECLARE_SCHEMA_CLASS(CMovementStatsProperty);

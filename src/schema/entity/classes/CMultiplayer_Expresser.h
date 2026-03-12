@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CAI_ExpresserWithFollowup.h"
 
-class CMultiplayer_Expresser : public CAI_ExpresserWithFollowup, public CBaseEntity::Factory<CMultiplayer_Expresser>
+class CMultiplayer_Expresser : public CAI_ExpresserWithFollowup
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiplayer_Expresser);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -15,7 +16,7 @@
 
 class CBaseEntity;
 
-class RelationshipOverride_t : public Relationship_t, public CBaseEntity::Factory<RelationshipOverride_t>
+class RelationshipOverride_t : public Relationship_t
 {
 public:
     DECLARE_SCHEMA_CLASS(RelationshipOverride_t);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -15,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPlayer_ObserverServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CPlayer_ObserverServices>
+class CPlayer_ObserverServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_ObserverServices);

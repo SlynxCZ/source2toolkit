@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -112,7 +113,9 @@ public:
     SCHEMA_FIELD(CPulseGraphInstance_ServerEntity*, m_pPulseGraphInstance);
 
 public:
+    /// <summary>Creates entity by classname.</summary>
     static CBaseEntity* CreateEntityByName(const char* pszClassName);
+    /// <summary>Factory helper for entity creation.</summary>
     template<typename T>
     struct Factory
     {
@@ -121,29 +124,50 @@ public:
             return reinterpret_cast<T*>(CBaseEntity::CreateEntityByName(className));
         }
     };
+    /// <summary>Create entity by classname.</summary>
     template<typename T>
     static T* New(const char* className)
     {    
         return reinterpret_cast<T*>(CreateEntityByName(className));
     }
+    /// <summary>Accepts entity input.</summary>
     void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "");
+    /// <summary>Add delayed entity IO event.</summary>
     void AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f);
+    /// <summary>Get absolute origin.</summary>
     Vector GetAbsOrigin();
+    /// <summary>Get local rotation.</summary>
     QAngle GetAngRotation();
+    /// <summary>Get absolute rotation.</summary>
     QAngle GetAbsRotation();
+    /// <summary>Get absolute velocity.</summary>
     Vector GetAbsVelocity();
+    /// <summary>Set absolute origin.</summary>
     void SetAbsOrigin(Vector vecOrigin);
+    /// <summary>Set absolute rotation.</summary>
     void SetAbsRotation(QAngle angAbsRotation);
+    /// <summary>Set local rotation.</summary>
     void SetAngRotation(QAngle angRotation);
+    /// <summary>Set absolute velocity.</summary>
     void SetAbsVelocity(Vector vecVelocity);
+    /// <summary>Set base velocity.</summary>
     void SetBaseVelocity(Vector vecVelocity);
+    /// <summary>Get entity VData.</summary>
     CEntitySubclassVDataBase* GetVData();
+    /// <summary>Spawn entity.</summary>
     void DispatchSpawn(CEntityKeyValues* pEntityKeyValues = nullptr);
+    /// <summary>Teleport entity.</summary>
     void Teleport(const Vector* pPosition, const QAngle* pAngles, const Vector* pVelocity);
+    /// <summary>Set move type.</summary>
     void SetMoveType(MoveType_t nMoveType);
+    /// <summary>Get collision group.</summary>
     uint8 GetCollisionGroup();
+    /// <summary>Set collision group.</summary>
     void SetCollisionGroup(uint8 nCollisionGroup);
+    /// <summary>Notify collision rules changed.</summary>
     void CollisionRulesChanged();
+    /// <summary>Get entity handle.</summary>
     CHandle<CBaseEntity> GetHandle();
+    /// <summary>Get entity name.</summary>
     const char* GetName() const;
 };

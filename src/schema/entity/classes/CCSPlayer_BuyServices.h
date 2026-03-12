@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CPlayerPawnComponent.h"
 #include "SellbackPurchaseEntry_t.h"
 
-class CCSPlayer_BuyServices : public CPlayerPawnComponent, public CBaseEntity::Factory<CCSPlayer_BuyServices>
+class CCSPlayer_BuyServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_BuyServices);

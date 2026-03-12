@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CAI_Expresser.h"
 
-class CAI_ExpresserWithFollowup : public CAI_Expresser, public CBaseEntity::Factory<CAI_ExpresserWithFollowup>
+class CAI_ExpresserWithFollowup : public CAI_Expresser
 {
 public:
     DECLARE_SCHEMA_CLASS(CAI_ExpresserWithFollowup);

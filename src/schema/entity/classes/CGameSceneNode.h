@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CNetworkOriginCellCoordQuantizedVector.h"
 
-class CGameSceneNode : public CBaseEntity::Factory<CGameSceneNode>
+class CGameSceneNode
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameSceneNode);

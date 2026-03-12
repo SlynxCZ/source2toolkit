@@ -1,4 +1,6 @@
 #pragma once
+#include "CBaseEntity.h"
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -30,6 +32,8 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerUse);
 
 public:
+    /// <summary>Get weapon VData.</summary>
     CCSWeaponBaseVData* GetWeaponVData();
+    /// <summary>Get weapon classname.</summary>
     const char* GetWeaponClassname();
 };

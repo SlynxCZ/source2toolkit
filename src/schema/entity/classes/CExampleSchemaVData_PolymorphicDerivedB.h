@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CExampleSchemaVData_PolymorphicBase.h"
 
-class CExampleSchemaVData_PolymorphicDerivedB : public CExampleSchemaVData_PolymorphicBase, public CBaseEntity::Factory<CExampleSchemaVData_PolymorphicDerivedB>
+class CExampleSchemaVData_PolymorphicDerivedB : public CExampleSchemaVData_PolymorphicBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CExampleSchemaVData_PolymorphicDerivedB);

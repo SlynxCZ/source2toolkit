@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 class CTakeDamageInfo;
 
-class CTakeDamageResult : public CBaseEntity::Factory<CTakeDamageResult>
+class CTakeDamageResult
 {
 public:
     DECLARE_SCHEMA_CLASS(CTakeDamageResult);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CPlayer_MovementServices.h"
 
-class CPlayer_MovementServices_Humanoid : public CPlayer_MovementServices, public CBaseEntity::Factory<CPlayer_MovementServices_Humanoid>
+class CPlayer_MovementServices_Humanoid : public CPlayer_MovementServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_MovementServices_Humanoid);

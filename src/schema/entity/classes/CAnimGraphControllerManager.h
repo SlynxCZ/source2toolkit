@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 class CAnimGraphControllerBase;
 
-class CAnimGraphControllerManager : public CBaseEntity::Factory<CAnimGraphControllerManager>
+class CAnimGraphControllerManager
 {
 public:
     DECLARE_SCHEMA_CLASS(CAnimGraphControllerManager);

@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CAttributeList.h"
 #include "IEconItemInterface.h"
 
-class CEconItemView : public IEconItemInterface, public CBaseEntity::Factory<CEconItemView>
+class CEconItemView : public IEconItemInterface
 {
 public:
     DECLARE_SCHEMA_CLASS(CEconItemView);

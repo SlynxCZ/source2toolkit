@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CLightComponent : public CEntityComponent, public CBaseEntity::Factory<CLightComponent>
+class CLightComponent : public CEntityComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightComponent);

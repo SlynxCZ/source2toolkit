@@ -1,4 +1,6 @@
 #pragma once
+#include "CBaseEntity.h"
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -47,5 +49,6 @@ public:
     SCHEMA_FIELD(uint32_t, m_iDesiredFOV);
 
 public:
+    /// <summary>Set pawn for controller.</summary>
     void SetPawn(CBasePlayerPawn* pPawn);
 };

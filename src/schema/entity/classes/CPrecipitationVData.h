@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CEntitySubclassVDataBase.h"
 #include "../enums/ParticleAttachment_t.h"
 
-class CPrecipitationVData : public CEntitySubclassVDataBase, public CBaseEntity::Factory<CPrecipitationVData>
+class CPrecipitationVData : public CEntitySubclassVDataBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitationVData);

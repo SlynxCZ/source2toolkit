@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 class CFogController;
 
-class fogplayerparams_t : public CBaseEntity::Factory<fogplayerparams_t>
+class fogplayerparams_t
 {
 public:
     DECLARE_SCHEMA_CLASS(fogplayerparams_t);

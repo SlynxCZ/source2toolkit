@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 
 class CBaseModelEntity;
 
-class CDestructiblePartsComponent : public CBaseEntity::Factory<CDestructiblePartsComponent>
+class CDestructiblePartsComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CDestructiblePartsComponent);

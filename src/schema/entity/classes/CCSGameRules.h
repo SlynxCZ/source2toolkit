@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -19,7 +20,7 @@ class CCSGameModeRules;
 class CCSPlayerController;
 class SpawnPoint;
 
-class CCSGameRules : public CTeamplayRules, public CBaseEntity::Factory<CCSGameRules>
+class CCSGameRules : public CTeamplayRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameRules);
@@ -214,7 +215,10 @@ public:
     SCHEMA_FIELD(double, m_flLastPerfSampleTime);
 
 public:
+    /// <summary>Terminate round.</summary>
     void TerminateRound(float flDelay, int32_t eRoundEndReason);
+    /// <summary>Find entity player is aiming at.</summary>
     CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer);
+    /// <summary>Get aim target.</summary>
     CCSPlayerController* GetClientAimTarget(CCSPlayerController* pPlayer);
 };

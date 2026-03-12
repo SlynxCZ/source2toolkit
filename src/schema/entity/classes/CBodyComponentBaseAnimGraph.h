@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -13,7 +14,7 @@
 #include "CBaseAnimGraphController.h"
 #include "CBodyComponentSkeletonInstance.h"
 
-class CBodyComponentBaseAnimGraph : public CBodyComponentSkeletonInstance, public CBaseEntity::Factory<CBodyComponentBaseAnimGraph>
+class CBodyComponentBaseAnimGraph : public CBodyComponentSkeletonInstance
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentBaseAnimGraph);

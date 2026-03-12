@@ -1,4 +1,5 @@
 #pragma once
+#include "igameevents.h"
 #include "ehandle.h"
 #include "entityhandle.h"
 #include "vector.h"
@@ -12,7 +13,7 @@
 
 #include "CGameRules.h"
 
-class CMultiplayRules : public CGameRules, public CBaseEntity::Factory<CMultiplayRules>
+class CMultiplayRules : public CGameRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiplayRules);

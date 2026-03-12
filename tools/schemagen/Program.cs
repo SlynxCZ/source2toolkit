@@ -478,6 +478,25 @@ internal static partial class Program
         }
     }
 
+    private static bool InheritsFromBaseEntity(
+        string className,
+        IReadOnlyDictionary<string, SchemaClass> allClasses)
+    {
+        while (true)
+        {
+            if (!allClasses.TryGetValue(className, out var clazz))
+                return false;
+
+            if (clazz.Parent == null)
+                return false;
+
+            if (clazz.Parent == "CBaseEntity")
+                return true;
+
+            className = clazz.Parent;
+        }
+    }
+
     private static void WriteClass(
         StringBuilder builder,
         string className,
@@ -522,6 +541,11 @@ internal static partial class Program
         forwards.ExceptWith(includes);
 
         builder.AppendLine("#pragma once");
+        if ((className == "CBaseEntity" || InheritsFromBaseEntity(className, allClasses)) && className != "CBaseEntity")
+        {
+            builder.AppendLine("#include \"CBaseEntity.h\"");
+        }
+        builder.AppendLine("#include \"igameevents.h\"");
         builder.AppendLine("#include \"ehandle.h\"");
         builder.AppendLine("#include \"entityhandle.h\"");
         builder.AppendLine("#include \"vector.h\"");
@@ -559,20 +583,43 @@ internal static partial class Program
         if (forwards.Count > 0)
             builder.AppendLine();
 
+        bool inheritsFromBaseEntity =
+            className == "CBaseEntity" ||
+            InheritsFromBaseEntity(className, allClasses);
+
         if (className == "CBaseEntity")
         {
-            builder.AppendLine($"class {className}" +
-                               (schemaClass.Parent != null ? $" : public {schemaClass.Parent}" : ""));
+            builder.AppendLine(
+                $"class {className}" +
+                (schemaClass.Parent != null
+                    ? $" : public {schemaClass.Parent}"
+                    : ""));
         }
         else if (schemaClass.Parent != null)
         {
-            builder.AppendLine(
-                $"class {className} : public {schemaClass.Parent}, public CBaseEntity::Factory<{className}>");
+            if (inheritsFromBaseEntity)
+            {
+                builder.AppendLine(
+                    $"class {className} : public {schemaClass.Parent}, public CBaseEntity::Factory<{className}>");
+            }
+            else
+            {
+                builder.AppendLine(
+                    $"class {className} : public {schemaClass.Parent}");
+            }
         }
         else
         {
-            builder.AppendLine(
-                $"class {className} : public CBaseEntity::Factory<{className}>");
+            if (inheritsFromBaseEntity)
+            {
+                builder.AppendLine(
+                    $"class {className} : public CBaseEntity::Factory<{className}>");
+            }
+            else
+            {
+                builder.AppendLine(
+                    $"class {className}");
+            }
         }
 
         builder.AppendLine("{");
