@@ -8,10 +8,10 @@
 #include <mutex>
 #include <queue>
 
-bool has_ticked = false;
-double universal_time = 0.0;
-double last_tick_time = 0.0;
-double timer_next_think = 0.0;
+bool g_bHasTicked = false;
+double g_dUniversalTime = 0.0;
+double g_dLastTickTime = 0.0;
+double g_dTimerNextThink = 0.0;
 
 namespace {
     std::vector<Timer *> once_off_timers;
@@ -29,9 +29,9 @@ Timer::Timer(float interval, double execTime, TimerCallback callback, int flags)
 }
 
 void scheduler::Init() {
-    universal_time = 0.0;
-    last_tick_time = 0.0;
-    timer_next_think = 0.0;
+    g_dUniversalTime = 0.0;
+    g_dLastTickTime = 0.0;
+    g_dTimerNextThink = 0.0;
 }
 
 void scheduler::Shutdown() {
@@ -65,18 +65,18 @@ void scheduler::Tick(bool simulating) {
         std::chrono::steady_clock::now().time_since_epoch()).count();
 
     if (simulating)
-        universal_time += now - last_tick_time;
+        g_dUniversalTime += now - g_dLastTickTime;
     else
-        universal_time += 0.015;
+        g_dUniversalTime += 0.015;
 
-    last_tick_time = now;
+    g_dLastTickTime = now;
 
-    if (universal_time < timer_next_think)
+    if (g_dUniversalTime < g_dTimerNextThink)
         return;
 
     for (int i = static_cast<int>(once_off_timers.size()) - 1; i >= 0; --i) {
         Timer *timer = once_off_timers[i];
-        if (universal_time >= timer->ExecTime) {
+        if (g_dUniversalTime >= timer->ExecTime) {
             timer->InExec = true;
             try {
                 timer->Callback();
@@ -89,7 +89,7 @@ void scheduler::Tick(bool simulating) {
 
     for (int i = static_cast<int>(repeat_timers.size()) - 1; i >= 0; --i) {
         Timer *timer = repeat_timers[i];
-        if (universal_time >= timer->ExecTime) {
+        if (g_dUniversalTime >= timer->ExecTime) {
             timer->InExec = true;
             try {
                 timer->Callback();
@@ -103,15 +103,15 @@ void scheduler::Tick(bool simulating) {
             }
 
             timer->InExec = false;
-            timer->ExecTime = universal_time + timer->Interval;
+            timer->ExecTime = g_dUniversalTime + timer->Interval;
         }
     }
 
-    timer_next_think = universal_time + 0.1;
+    g_dTimerNextThink = g_dUniversalTime + 0.1;
 }
 
 Timer *scheduler::AddTimer(float interval, TimerCallback callback, int flags) {
-    Timer *timer = new Timer(interval, universal_time + interval, std::move(callback), flags);
+    Timer *timer = new Timer(interval, g_dUniversalTime + interval, std::move(callback), flags);
 
     if (flags & TIMER_FLAG_REPEAT)
         repeat_timers.push_back(timer);

@@ -68,7 +68,7 @@ namespace virtualhooks
         if (!shared::getGlobalVars())
             return {KHook::Action::Ignore};
 
-        has_ticked = true;
+        g_bHasTicked = true;
         return {KHook::Action::Ignore};
     }
 
@@ -81,11 +81,11 @@ namespace virtualhooks
             shared::g_pEntitySystem->AddListenerEntity(&entityListener);
             shared::g_bDetoursLoaded = true;
         }
-        if (has_ticked)
+        if (g_bHasTicked)
         {
             scheduler::RemoveMapChangeTimers();
         }
-        has_ticked = false;
+        g_bHasTicked = false;
         return {KHook::Action::Ignore};
     }
 

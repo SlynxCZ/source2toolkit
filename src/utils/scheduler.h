@@ -13,10 +13,10 @@ enum TimerFlags {
     TIMER_FLAG_NO_MAPCHANGE = 1 << 1,
 };
 
-extern bool has_ticked;
-extern double universal_time;
-extern double last_tick_time;
-extern double timer_next_think;
+extern bool g_bHasTicked;
+extern double g_dUniversalTime;
+extern double g_dLastTickTime;
+extern double g_dTimerNextThink;
 
 class Timer {
 public:
