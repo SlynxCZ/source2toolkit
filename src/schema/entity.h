@@ -24,6 +24,7 @@
 #pragma once
 
 #include "core/addresses.h"
+#include "core/shared.h"
 #include "datamap.h"
 #include "platform.h"
 #include "string_t.h"
@@ -34,6 +35,7 @@ class CBaseEntity;
 class CBasePlayerController;
 class CCSGameRules;
 class IEntityFindFilter;
+class IEntityIOListener;
 
 CBaseEntity* UTIL_FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules = nullptr);
 CBaseEntity* UTIL_FindEntityByClassname(CEntityInstance* pStart, const char* name);
@@ -55,3 +57,9 @@ void UTIL_AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityIns
 void UTIL_AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput,
                            CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr,
                            const char* pszValue = "", float flDelay = 0.0f);
+
+void UTIL_AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName,
+                             const char* pchOutputName, Mode nMode = Mode::Pre);
+
+void UTIL_RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName,
+                             const char* pchOutputName, Mode nMode = Mode::Pre);

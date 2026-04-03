@@ -112,9 +112,9 @@ namespace virtualhooks
 
                     if (parsed.ArgC() > 0)
                     {
-                        KHook::Action r = commands::DispatchConsoleListener(ctx, parsed, virtualhooks::Mode::Pre);
+                        KHook::Action r = commands::DispatchConsoleListener(ctx, parsed, Mode::Pre);
                         if (r != KHook::Action::Supersede)
-                            commands::DispatchConsoleListener(ctx, parsed, virtualhooks::Mode::Post);
+                            commands::DispatchConsoleListener(ctx, parsed, Mode::Post);
                     }
 
                     return {KHook::Action::Supersede};
@@ -122,11 +122,11 @@ namespace virtualhooks
             }
         }
 
-        KHook::Action result = commands::DispatchConsoleListener(ctx, args, virtualhooks::Mode::Pre);
+        KHook::Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
         if (result > KHook::Action::Ignore)
             return {result};
 
-        commands::DispatchConsoleListener(ctx, args, virtualhooks::Mode::Post);
+        commands::DispatchConsoleListener(ctx, args, Mode::Post);
         return {result};
     }
 
@@ -135,11 +135,11 @@ namespace virtualhooks
         if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
         {
             CCommandContext ctx(CT_NO_TARGET, slot);
-            KHook::Action result = commands::DispatchConsoleListener(ctx, args, virtualhooks::Mode::Pre);
+            KHook::Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
             if (result > KHook::Action::Ignore)
                 return {result};
 
-            commands::DispatchConsoleListener(ctx, args, virtualhooks::Mode::Post);
+            commands::DispatchConsoleListener(ctx, args, Mode::Post);
         }
 
         return {KHook::Action::Ignore};
@@ -158,7 +158,7 @@ namespace virtualhooks
             return {KHook::Action::Ignore, false};
 
         bool localDontBroadcast = bDontBroadcast;
-        if (!events::DispatchGameEvent(event, virtualhooks::Mode::Pre, localDontBroadcast))
+        if (!events::DispatchGameEvent(event, Mode::Pre, localDontBroadcast))
             return {KHook::Action::Supersede, false};
 
         if (IGameEvent* copy = shared::g_pGameEventManager->DuplicateEvent(event))
@@ -184,7 +184,7 @@ namespace virtualhooks
             eventStack.pop_back();
 
             bool dummy = bDontBroadcast;
-            events::DispatchGameEvent(copy, virtualhooks::Mode::Post, dummy);
+            events::DispatchGameEvent(copy, Mode::Post, dummy);
             shared::g_pGameEventManager->FreeEvent(copy);
         }
 

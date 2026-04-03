@@ -4,7 +4,7 @@
 //
 #include "addresses.h"
 
-#include "Shared.h"
+#include "shared.h"
 
 bool addresses::Initialize()
 {
@@ -17,6 +17,7 @@ bool addresses::Initialize()
     RESOLVE_SIG(shared::g_pServer, "CCSPlayerController::LegacyGameEventListener", shared::g_pGameConfig->GetSignature("CCSPlayerController_LegacyGameEventListener"), addresses::CCSPlayerController_LegacyGameEventListener);
     RESOLVE_SIG(shared::g_pServer, "CCSPlayerController::SwitchTeam", shared::g_pGameConfig->GetSignature("CCSPlayerController_SwitchTeam"), addresses::CCSPlayerController_SwitchTeam);
     RESOLVE_SIG(shared::g_pServer, "CEntityInstance::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityInstance_AcceptInput"), addresses::CEntityInstance_AcceptInput);
+    RESOLVE_SIG(shared::g_pServer, "CEntityIOOutput::FireOutputInternal", shared::g_pGameConfig->GetSignature("CEntityIOOutput_FireOutputInternal"), addresses::CEntityIOOutput_FireOutputInternal);
     RESOLVE_SIG(shared::g_pServer, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem_AddEntityIOEvent"), addresses::CEntitySystem_AddEntityIOEvent);
     RESOLVE_SIG(shared::g_pServer, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByClassName"), addresses::CGameEntitySystem_FindEntityByClassName);
     RESOLVE_SIG(shared::g_pServer, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByName"), addresses::CGameEntitySystem_FindEntityByName);

@@ -24,7 +24,7 @@ namespace events {
         gameEvents.clear();
     }
 
-    bool DispatchGameEvent(IGameEvent *event, virtualhooks::Mode mode, bool &dontBroadcast) {
+    bool DispatchGameEvent(IGameEvent *event, Mode mode, bool &dontBroadcast) {
         const char *name = event->GetName();
         auto it = gameEvents.find(name);
         if (it == gameEvents.end())
@@ -43,7 +43,7 @@ namespace events {
         return true;
     }
 
-    void RegGameEvent(const std::string &name, GameEventHandler handler, virtualhooks::Mode mode) {
+    void RegGameEvent(const std::string &name, GameEventHandler handler, Mode mode) {
         gameEvents[name].push_back({handler, mode});
         if (!shared::g_pGameEventManager->FindListener(&eventManager, name.c_str()))
         {

@@ -2,7 +2,7 @@
 // Created by Michal Přikryl on 02.03.2026.
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
-#include "core/Shared.h"
+#include "core/shared.h"
 
 #include "schema.h"
 #include "platform.h"

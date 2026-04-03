@@ -35,10 +35,10 @@ namespace commands {
         if (it == commandCallbacks.end())
             return;
 
-        (void) it->second(ctx, args, virtualhooks::Mode::Post);
+        (void) it->second(ctx, args, Mode::Post);
     }
 
-    KHook::Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, virtualhooks::Mode mode) {
+    KHook::Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode) {
         std::string name = args.Arg(0);
         std::transform(name.begin(), name.end(), name.begin(),
                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
@@ -58,7 +58,7 @@ namespace commands {
             if (thisResult == KHook::Action::Supersede)
                 return KHook::Action::Supersede;
 
-            if (thisResult == KHook::Action::Override && mode == virtualhooks::Mode::Pre)
+            if (thisResult == KHook::Action::Override && mode == Mode::Pre)
                 return KHook::Action::Override;
 
             if (static_cast<int>(thisResult) > static_cast<int>(result))
@@ -71,9 +71,9 @@ namespace commands {
     void RegChatListener(const std::string &name, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        RegConListener(name, nativeHandler, virtualhooks::Mode::Pre);
-        RegConListener("/" + name, nativeHandler, virtualhooks::Mode::Pre);
-        RegConListener("!" + name, nativeHandler, virtualhooks::Mode::Pre);
+        RegConListener(name, nativeHandler, Mode::Pre);
+        RegConListener("/" + name, nativeHandler, Mode::Pre);
+        RegConListener("!" + name, nativeHandler, Mode::Pre);
     }
 
     void RegConCommand(const std::string &name, ChatHandler handler) {
@@ -81,9 +81,9 @@ namespace commands {
 
         if (shared::g_pCVar && shared::g_pCVar->FindConCommand(name.c_str()).IsValidRef()) {
             FP_WARN("Command '{}' exists in engine, registering chat-only alias", name);
-            RegConListener(name, nativeHandler, virtualhooks::Mode::Pre);
-            RegConListener("/" + name, nativeHandler, virtualhooks::Mode::Pre);
-            RegConListener("!" + name, nativeHandler, virtualhooks::Mode::Pre);
+            RegConListener(name, nativeHandler, Mode::Pre);
+            RegConListener("/" + name, nativeHandler, Mode::Pre);
+            RegConListener("!" + name, nativeHandler, Mode::Pre);
             return;
         }
 
@@ -93,12 +93,12 @@ namespace commands {
             registeredNames.insert(name);
         }
 
-        RegConListener(name, nativeHandler, virtualhooks::Mode::Pre);
-        RegConListener("/" + name, nativeHandler, virtualhooks::Mode::Pre);
-        RegConListener("!" + name, nativeHandler, virtualhooks::Mode::Pre);
+        RegConListener(name, nativeHandler, Mode::Pre);
+        RegConListener("/" + name, nativeHandler, Mode::Pre);
+        RegConListener("!" + name, nativeHandler, Mode::Pre);
     }
 
-    void RegConListener(const std::string &name, CommandHandler handler, virtualhooks::Mode mode) {
+    void RegConListener(const std::string &name, CommandHandler handler, Mode mode) {
         consoleListeners[name].push_back({handler, mode});
     }
 }

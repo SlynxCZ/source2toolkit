@@ -28,7 +28,8 @@
 #include "entity/classes/cgamerules.h"
 #include "entitysystem.h"
 #include "platform.h"
-#include "core/Shared.h"
+#include "core/inlinehooks.h"
+#include "core/shared.h"
 #include "entity/classes/CBasePlayerWeapon.h"
 
 #include "tier0/memdbgon.h"
@@ -72,4 +73,54 @@ void UTIL_AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEnti
 {
     addresses::CEntitySystem_AddEntityIOEvent(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller,
                                               variant_t(pszValue), flDelay, 0, nullptr, nullptr);
+}
+
+void UTIL_AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName,
+                              const char* pchOutputName, Mode nMode)
+{
+    OutputKey key{
+        pchClassName ? pchClassName : "*",
+        pchOutputName ? pchOutputName : "*"
+    };
+
+    if (nMode == Mode::Post)
+        inlinehooks::entityIOListenerStack[key].m_vecPost.push_back(pListener);
+    else
+        inlinehooks::entityIOListenerStack[key].m_vecPre.push_back(pListener);
+}
+
+void UTIL_RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName,
+                                 const char* pchOutputName, Mode nMode)
+{
+    if (!pchClassName && !pchOutputName)
+    {
+        for (auto it = inlinehooks::entityIOListenerStack.begin(); it != inlinehooks::entityIOListenerStack.end(); )
+        {
+            auto& vec = nMode == Mode::Post ? it->second.m_vecPost : it->second.m_vecPre;
+
+            std::erase(vec, pListener);
+
+            if (it->second.m_vecPre.empty() && it->second.m_vecPost.empty())
+                it = inlinehooks::entityIOListenerStack.erase(it);
+            else
+                ++it;
+        }
+        return;
+    }
+
+    OutputKey key{
+        pchClassName ? pchClassName : "*",
+        pchOutputName ? pchOutputName : "*"
+    };
+
+    auto it = inlinehooks::entityIOListenerStack.find(key);
+    if (it == inlinehooks::entityIOListenerStack.end())
+        return;
+
+    auto& vec = nMode == Mode::Post ? it->second.m_vecPost : it->second.m_vecPre;
+
+    std::erase(vec, pListener);
+
+    if (it->second.m_vecPre.empty() && it->second.m_vecPost.empty())
+        inlinehooks::entityIOListenerStack.erase(it);
 }

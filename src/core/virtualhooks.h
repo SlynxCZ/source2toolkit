@@ -11,13 +11,6 @@
 #include <dynlibutils/memaddr.h>
 
 namespace virtualhooks {
-    enum class Mode : std::uint8_t {
-        // Hook callback has been called before original function
-        Pre = 0,
-        // Hook callback has been called after original function
-        Post
-    };
-
     class Virtuals {
     public:
         Virtuals();

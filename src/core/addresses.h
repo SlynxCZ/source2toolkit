@@ -27,9 +27,8 @@
     FP_DEBUG("Found '{}' at {}", name, fmt::ptr(variable));           \
 }
 
-class IGameEventListener2;
-class IEntityFindFilter;
 class CEntityInstance;
+class CEntityIOOutput;
 class CEntitySystem;
 class CEntityKeyValues;
 class CBaseEntity;
@@ -39,6 +38,8 @@ class CBasePlayerPawn;
 class CBasePlayerController;
 class CGameRules;
 class CCSPlayerController;
+class IGameEventListener2;
+class IEntityFindFilter;
 
 namespace addresses
 {
@@ -53,6 +54,7 @@ namespace addresses
     inline IGameEventListener2*(FASTCALL* CCSPlayerController_LegacyGameEventListener)(CPlayerSlot playerSlot);
     inline void(FASTCALL* CCSPlayerController_SwitchTeam)(CCSPlayerController* pController, unsigned char nTeam);
     inline void(FASTCALL* CEntityInstance_AcceptInput)(CEntityInstance* pThis, const char* pInputName, CEntityInstance* pActivator, CEntityInstance* pCaller, const variant_t& pValue, int nOutputID, void*);
+    inline void(FASTCALL* CEntityIOOutput_FireOutputInternal)(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
     inline void(FASTCALL* CEntitySystem_AddEntityIOEvent)(CEntitySystem* pEntitySystem, CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const variant_t& pValue, float flDelay, int outputID, void*, void*);
     inline CBaseEntity*(FASTCALL* CGameEntitySystem_FindEntityByClassName)(CEntitySystem* pEntitySystem, CEntityInstance* pStartEntity, const char* szName);
     inline CBaseEntity*(FASTCALL* CGameEntitySystem_FindEntityByName)(CEntitySystem* pEntitySystem, CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter);

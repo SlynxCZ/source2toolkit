@@ -68,3 +68,36 @@ public:
 	variant_t value;
 	int nOutputID;
 };
+
+class IEntityIOListener
+{
+public:
+	virtual KHook::Action OnEntityOutput(const char* pchOutputName, CEntityInstance* pActivator, CEntityInstance* pCaller, float flDelay, Mode nMode) {};
+};
+
+struct EntityIOCallbackPair
+{
+	std::vector<IEntityIOListener*> m_vecPre;
+	std::vector<IEntityIOListener*> m_vecPost;
+};
+
+struct OutputKey
+{
+	std::string m_szClassName;
+	std::string m_szOutputName;
+
+	bool operator==(const OutputKey& other) const
+	{
+		return m_szClassName == other.m_szClassName &&
+			   m_szOutputName == other.m_szOutputName;
+	}
+};
+
+struct OutputKeyHash
+{
+	size_t operator()(const OutputKey& k) const
+	{
+		return std::hash<std::string>()(k.m_szClassName) ^
+			   (std::hash<std::string>()(k.m_szOutputName) << 1);
+	}
+};

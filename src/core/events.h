@@ -4,6 +4,7 @@
 //
 #pragma once
 #include "virtualhooks.h"
+#include "shared.h"
 
 #include "igameevents.h"
 #include <functional>
@@ -11,12 +12,12 @@
 class IGameEvent;
 
 namespace events {
-    using GameEventHandler = std::function<KHook::Action(IGameEvent* event, virtualhooks::Mode mode, bool& dontBroadcast)>;
+    using GameEventHandler = std::function<KHook::Action(IGameEvent* event, Mode mode, bool& dontBroadcast)>;
 
     struct EventEntry
     {
         GameEventHandler handler;
-        virtualhooks::Mode mode;
+        Mode mode;
     };
 
     class EventManager : public IGameEventListener2
@@ -27,7 +28,7 @@ namespace events {
     void InitEvents();
     void DestructEvents();
 
-    bool DispatchGameEvent(IGameEvent *event, virtualhooks::Mode mode, bool &dontBroadcast);
+    bool DispatchGameEvent(IGameEvent *event, Mode mode, bool &dontBroadcast);
 
-    void RegGameEvent(const std::string &name, GameEventHandler handler, virtualhooks::Mode mode);
+    void RegGameEvent(const std::string &name, GameEventHandler handler, Mode mode);
 }
