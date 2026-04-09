@@ -73,7 +73,7 @@ namespace inlinehooks
                     pActivator,
                     pCaller,
                     delay,
-                    false
+                    Mode::Pre
                 );
 
                 if (action == KHook::Action::Supersede)
@@ -100,7 +100,7 @@ namespace inlinehooks
                     pActivator,
                     pCaller,
                     delay,
-                    true
+                    Mode::Post
                 );
             }
         }

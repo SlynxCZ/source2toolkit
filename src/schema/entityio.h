@@ -22,7 +22,9 @@
 #ifndef NULL
 	#define NULL 0
 #endif
+#include "core/shared.h"
 
+#include "ISmmPlugin.h"
 #include "entityhandle.h"
 #include "entityinstance.h"
 #include "entitysystem.h"

@@ -4,6 +4,7 @@
 //
 #pragma once
 #include "virtualhooks.h"
+#include "shared.h"
 
 #include <functional>
 
