@@ -16,6 +16,8 @@
 
 #include "entitysystem.h"
 #include "events.h"
+#include "inlinehooks.h"
+#include "raytrace.h"
 #include "schema/cgameresourceserviceserver.h"
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
@@ -77,7 +79,9 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     g_SMAPI->AddListener(this, this);
 
     commands::InitCommands();
+    inlinehooks::inlines.InitListeners();
     virtualhooks::virtuals.InitListeners();
+    raytrace::rayTrace.InitRayTrace();
 
     g_pCVar = shared::g_pCVar;
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
@@ -90,7 +94,9 @@ bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
 {
     commands::DestructCommands();
     events::DestructEvents();
+    inlinehooks::inlines.DestructListeners();
     virtualhooks::virtuals.DestructListeners();
+    raytrace::rayTrace.DestructRayTrace();
     scheduler::Shutdown();
 
     shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);

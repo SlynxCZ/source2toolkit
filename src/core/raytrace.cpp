@@ -35,7 +35,7 @@ namespace raytrace
         pBeam->DispatchSpawn();
     }
 
-    void RayTrace::InitListeners()
+    void RayTrace::InitRayTrace()
     {
         m_pCNavPhysicsInterfaceVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
         if (!m_pCNavPhysicsInterfaceVTable)
@@ -47,14 +47,14 @@ namespace raytrace
         m_pCNavPhysicsInterface_TraceShape = m_pCNavPhysicsInterfaceVTable[shared::g_pGameConfig->GetOffset("CNavPhysicsInterface_TraceShape")];
     }
 
-    void RayTrace::DestructListeners()
+    void RayTrace::DestructRayTrace()
     {
         m_pCNavPhysicsInterfaceVTable = nullptr;
         m_pCNavPhysicsInterface_TraceShape = nullptr;
     }
 
     bool RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CEntityInstance* pIgnoreEntity,
-                                      TraceOptions* pTraceOptions, TraceResult* pTraceResult)
+                                      TraceOptions* pTraceOptions, CGameTrace* pGameTrace)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
 
@@ -83,19 +83,19 @@ namespace raytrace
         };
 
         Ray_t ray;
-        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pTraceResult);
+        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pGameTrace);
 
         if (pTraceOptions && pTraceOptions->DrawBeam)
         {
             Color col = res ? Color(255, 0, 0) : Color(0, 255, 0);
-            DrawBeam(vecStart, res ? pTraceResult->EndPos : vecEnd, col);
+            DrawBeam(vecStart, res ? pGameTrace->m_vEndPos : vecEnd, col);
         }
 
         return res;
     }
 
     bool RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CEntityInstance* pIgnoreEntity,
-                                         TraceOptions* pTraceOptions, TraceResult* pTraceResult)
+                                         TraceOptions* pTraceOptions, CGameTrace* pGameTrace)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
 
@@ -116,12 +116,12 @@ namespace raytrace
         }
 
         Ray_t ray;
-        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pTraceResult);
+        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pGameTrace);
 
         if (pTraceOptions && pTraceOptions->DrawBeam)
         {
             Color col = res ? Color(255, 0, 0) : Color(0, 255, 0);
-            DrawBeam(vecStart, res ? pTraceResult->EndPos : vecEnd, col);
+            DrawBeam(vecStart, res ? pGameTrace->m_vEndPos : vecEnd, col);
         }
 
         return res;
@@ -129,7 +129,7 @@ namespace raytrace
 
     bool RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins,
                                           const Vector& vecMaxs, CEntityInstance* pIgnoreEntity,
-                                          TraceOptions* pTraceOptions, TraceResult* pTraceResult)
+                                          TraceOptions* pTraceOptions, CGameTrace* pGameTrace)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
 
@@ -151,19 +151,19 @@ namespace raytrace
 
         Ray_t ray;
         ray.Init(vecMins, vecMaxs);
-        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pTraceResult);
+        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pGameTrace);
 
         if (pTraceOptions && pTraceOptions->DrawBeam)
         {
             Color col = res ? Color(255, 0, 0) : Color(0, 255, 0);
-            DrawBeam(vecStart, res ? pTraceResult->EndPos : vecEnd, col);
+            DrawBeam(vecStart, res ? pGameTrace->m_vEndPos : vecEnd, col);
         }
 
         return res;
     }
 
     bool RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter,
-                                        Ray_t* pRay, TraceResult* pTraceResult)
+                                        Ray_t* pRay, CGameTrace* pGameTrace)
     {
         if (!m_pCNavPhysicsInterface_TraceShape)
         {
@@ -171,37 +171,11 @@ namespace raytrace
             return false;
         }
 
-        CGameTrace trace{};
         Vector vecStartCopy = vecStart;
         Vector vecEndCopy = vecEnd;
         bool bResult = m_pCNavPhysicsInterface_TraceShape.RCast<
             bool (*)(void*, Ray_t&, Vector&, Vector&, CTraceFilter*, CGameTrace*)>()(
-            nullptr, *pRay, vecStartCopy, vecEndCopy, pTraceFilter, &trace);
-
-        if (pTraceResult)
-        {
-            pTraceResult->StartPos = trace.m_vStartPos;
-            pTraceResult->EndPos = trace.m_vEndPos;
-            pTraceResult->HitPoint = trace.m_vHitPoint;
-            pTraceResult->Normal = trace.m_vHitNormal;
-            pTraceResult->Fraction = trace.m_flFraction;
-            pTraceResult->HitOffset = trace.m_flHitOffset;
-
-            pTraceResult->TriangleIndex = trace.m_nTriangle;
-            pTraceResult->HitboxBoneIndex = trace.m_nHitboxBoneIndex;
-            pTraceResult->Contents = trace.m_nContents;
-            pTraceResult->RayType = trace.m_eRayType;
-            pTraceResult->AllSolid = trace.m_bStartInSolid;
-            pTraceResult->ExactHitPoint = trace.m_bExactHitPoint;
-
-            pTraceResult->HitEntity = trace.m_pEnt;
-            pTraceResult->Hitbox = const_cast<CHitBox*>(trace.m_pHitbox);
-            pTraceResult->SurfaceProps = const_cast<CPhysSurfaceProperties*>(trace.m_pSurfaceProperties);
-            pTraceResult->BodyHandle = trace.m_hBody;
-            pTraceResult->ShapeHandle = trace.m_hShape;
-            pTraceResult->BodyTransform = trace.m_BodyTransform;
-            pTraceResult->ShapeAttributes = trace.m_ShapeAttributes;
-        }
+            nullptr, *pRay, vecStartCopy, vecEndCopy, pTraceFilter, pGameTrace);
 
         return bResult;
     }

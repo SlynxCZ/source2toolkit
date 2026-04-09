@@ -143,32 +143,6 @@ struct TraceOptions
     int DrawBeam = 0;
 };
 
-struct TraceResult
-{
-    Vector StartPos;
-    Vector EndPos;
-    Vector HitPoint;
-    Vector Normal;
-    float Fraction;
-    float HitOffset;
-
-    int TriangleIndex;
-    int HitboxBoneIndex;
-    int Contents;
-    int RayType;
-    int AllSolid;
-    int ExactHitPoint;
-
-    CEntityInstance *HitEntity;
-    CHitBox *Hitbox;
-    CPhysSurfaceProperties *SurfaceProps;
-    IPhysicsBody *BodyHandle;
-    IPhysicsShape *ShapeHandle;
-
-    CTransform BodyTransform;
-    RnCollisionAttr_t ShapeAttributes;
-};
-
 class CTraceFilterEx : public CTraceFilter
 {
 public:
@@ -189,13 +163,13 @@ public:
 namespace raytrace {
     class RayTrace {
     public:
-        void InitListeners();
-        void DestructListeners();
+        void InitRayTrace();
+        void DestructRayTrace();
     public:
-        bool TraceShape(const Vector& vecStart, const QAngle& angAngles, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions, TraceResult* pTraceResult);
-        bool TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions, TraceResult* pTraceResult);
-        bool TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions, TraceResult* pTraceResult);
-        bool TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay, TraceResult* pTraceResult);
+        bool TraceShape(const Vector& vecStart, const QAngle& angAngles, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions, CGameTrace* pGameTrace);
+        bool TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions, CGameTrace* pGameTrace);
+        bool TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions, CGameTrace* pGameTrace);
+        bool TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay, CGameTrace* pGameTrace);
     protected:
         DynLibUtils::CMemory m_pCNavPhysicsInterface_TraceShape;
     protected:
