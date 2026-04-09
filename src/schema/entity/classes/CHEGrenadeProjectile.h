@@ -14,9 +14,15 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
-class CHEGrenadeProjectile : public CBaseCSGrenadeProjectile, public CBaseEntity::Factory<CHEGrenadeProjectile>
+class CHEGrenadeProjectile : public CBaseCSGrenadeProjectile
 {
 public:
     DECLARE_SCHEMA_CLASS(CHEGrenadeProjectile);
 
+
+public:
+    static CHEGrenadeProjectile* New(const char* className)
+    {
+        return CBaseEntity::New<CHEGrenadeProjectile>(className);
+    }
 };

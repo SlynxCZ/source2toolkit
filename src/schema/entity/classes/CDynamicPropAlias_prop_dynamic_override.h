@@ -14,9 +14,15 @@
 
 #include "CDynamicProp.h"
 
-class CDynamicPropAlias_prop_dynamic_override : public CDynamicProp, public CBaseEntity::Factory<CDynamicPropAlias_prop_dynamic_override>
+class CDynamicPropAlias_prop_dynamic_override : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_prop_dynamic_override);
 
+
+public:
+    static CDynamicPropAlias_prop_dynamic_override* New(const char* className)
+    {
+        return CBaseEntity::New<CDynamicPropAlias_prop_dynamic_override>(className);
+    }
 };

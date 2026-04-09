@@ -14,10 +14,16 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerMultiple : public CBaseTrigger, public CBaseEntity::Factory<CTriggerMultiple>
+class CTriggerMultiple : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerMultiple);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrigger);
+
+public:
+    static CTriggerMultiple* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerMultiple>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CFuncMoveLinear.h"
 
-class CFuncMoveLinearAlias_momentary_door : public CFuncMoveLinear, public CBaseEntity::Factory<CFuncMoveLinearAlias_momentary_door>
+class CFuncMoveLinearAlias_momentary_door : public CFuncMoveLinear
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMoveLinearAlias_momentary_door);
 
+
+public:
+    static CFuncMoveLinearAlias_momentary_door* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncMoveLinearAlias_momentary_door>(className);
+    }
 };

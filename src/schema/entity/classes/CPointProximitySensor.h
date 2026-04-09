@@ -16,11 +16,17 @@
 
 class CBaseEntity;
 
-class CPointProximitySensor : public CPointEntity, public CBaseEntity::Factory<CPointProximitySensor>
+class CPointProximitySensor : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointProximitySensor);
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEntity);
+
+public:
+    static CPointProximitySensor* New(const char* className)
+    {
+        return CBaseEntity::New<CPointProximitySensor>(className);
+    }
 };

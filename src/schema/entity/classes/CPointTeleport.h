@@ -14,7 +14,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class CPointTeleport : public CServerOnlyPointEntity, public CBaseEntity::Factory<CPointTeleport>
+class CPointTeleport : public CServerOnlyPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointTeleport);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(QAngle, m_vSaveAngles);
     SCHEMA_FIELD(bool, m_bTeleportParentedEntities);
     SCHEMA_FIELD(bool, m_bTeleportUseCurrentAngle);
+
+public:
+    static CPointTeleport* New(const char* className)
+    {
+        return CBaseEntity::New<CPointTeleport>(className);
+    }
 };

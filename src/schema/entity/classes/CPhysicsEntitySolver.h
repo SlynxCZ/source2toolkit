@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPhysicsEntitySolver : public CLogicalEntity, public CBaseEntity::Factory<CPhysicsEntitySolver>
+class CPhysicsEntitySolver : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsEntitySolver);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hPhysicsBlocker);
     SCHEMA_FIELD(float, m_separationDuration);
     SCHEMA_FIELD(float, m_cancelTime);
+
+public:
+    static CPhysicsEntitySolver* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicsEntitySolver>(className);
+    }
 };

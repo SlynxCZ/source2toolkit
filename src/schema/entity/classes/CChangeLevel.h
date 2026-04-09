@@ -14,7 +14,7 @@
 
 #include "CBaseTrigger.h"
 
-class CChangeLevel : public CBaseTrigger, public CBaseEntity::Factory<CChangeLevel>
+class CChangeLevel : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CChangeLevel);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(bool, m_bNoTouch);
     SCHEMA_FIELD(bool, m_bNewChapter);
     SCHEMA_FIELD(bool, m_bOnChangeLevelFired);
+
+public:
+    static CChangeLevel* New(const char* className)
+    {
+        return CBaseEntity::New<CChangeLevel>(className);
+    }
 };

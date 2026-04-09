@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CPointCamera : public CBaseEntity, public CBaseEntity::Factory<CPointCamera>
+class CPointCamera : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCamera);
@@ -45,4 +45,10 @@ public:
     SCHEMA_FIELD(float, m_DegreesPerSecond);
     SCHEMA_FIELD(bool, m_bIsOn);
     SCHEMA_FIELD(CPointCamera*, m_pNext);
+
+public:
+    static CPointCamera* New(const char* className)
+    {
+        return CBaseEntity::New<CPointCamera>(className);
+    }
 };

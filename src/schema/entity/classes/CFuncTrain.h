@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CFuncTrain : public CBasePlatTrain, public CBaseEntity::Factory<CFuncTrain>
+class CFuncTrain : public CBasePlatTrain
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrain);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(float, m_flBlockDamage);
     SCHEMA_FIELD(float, m_flNextBlockTime);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszLastTarget);
+
+public:
+    static CFuncTrain* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTrain>(className);
+    }
 };

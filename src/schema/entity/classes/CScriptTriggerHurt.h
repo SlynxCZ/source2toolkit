@@ -14,10 +14,16 @@
 
 #include "CTriggerHurt.h"
 
-class CScriptTriggerHurt : public CTriggerHurt, public CBaseEntity::Factory<CScriptTriggerHurt>
+class CScriptTriggerHurt : public CTriggerHurt
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerHurt);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    static CScriptTriggerHurt* New(const char* className)
+    {
+        return CBaseEntity::New<CScriptTriggerHurt>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CEnvFade : public CLogicalEntity, public CBaseEntity::Factory<CEnvFade>
+class CEnvFade : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvFade);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_Duration);
     SCHEMA_FIELD(float, m_HoldDuration);
     SCHEMA_FIELD(CEntityIOOutput, m_OnBeginFade);
+
+public:
+    static CEnvFade* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvFade>(className);
+    }
 };

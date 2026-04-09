@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CGunTarget : public CBaseToggle, public CBaseEntity::Factory<CGunTarget>
+class CGunTarget : public CBaseToggle
 {
 public:
     DECLARE_SCHEMA_CLASS(CGunTarget);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(bool, m_on);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEnt);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDeath);
+
+public:
+    static CGunTarget* New(const char* className)
+    {
+        return CBaseEntity::New<CGunTarget>(className);
+    }
 };

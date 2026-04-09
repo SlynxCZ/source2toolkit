@@ -22,7 +22,7 @@
 class CBaseEntity;
 class CBasePlayerPawn;
 
-class CBreakable : public CBaseModelEntity, public CBaseEntity::Factory<CBreakable>
+class CBreakable : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBreakable);
@@ -42,4 +42,10 @@ public:
     SCHEMA_FIELD(PerformanceMode_t, m_PerformanceMode);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hPhysicsAttacker);
     SCHEMA_FIELD(float, m_flLastPhysicsInfluenceTime);
+
+public:
+    static CBreakable* New(const char* className)
+    {
+        return CBaseEntity::New<CBreakable>(className);
+    }
 };

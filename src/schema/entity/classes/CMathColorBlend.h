@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMathColorBlend : public CLogicalEntity, public CBaseEntity::Factory<CMathColorBlend>
+class CMathColorBlend : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMathColorBlend);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_flInMax);
     SCHEMA_FIELD(Color, m_OutColor1);
     SCHEMA_FIELD(Color, m_OutColor2);
+
+public:
+    static CMathColorBlend* New(const char* className)
+    {
+        return CBaseEntity::New<CMathColorBlend>(className);
+    }
 };

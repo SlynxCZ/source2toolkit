@@ -14,10 +14,16 @@
 
 #include "CItem.h"
 
-class CScriptItem : public CItem, public CBaseEntity::Factory<CScriptItem>
+class CScriptItem : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptItem);
 
     SCHEMA_FIELD(MoveType_t, m_MoveTypeOverride);
+
+public:
+    static CScriptItem* New(const char* className)
+    {
+        return CBaseEntity::New<CScriptItem>(className);
+    }
 };

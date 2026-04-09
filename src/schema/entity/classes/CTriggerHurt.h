@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CTriggerHurt : public CBaseTrigger, public CBaseEntity::Factory<CTriggerHurt>
+class CTriggerHurt : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerHurt);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnHurt);
     SCHEMA_FIELD(CEntityIOOutput, m_OnHurtPlayer);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_hurtEntities);
+
+public:
+    static CTriggerHurt* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerHurt>(className);
+    }
 };

@@ -17,7 +17,7 @@
 #include "Extent.h"
 #include "IntervalTimer.h"
 
-class CInferno : public CBaseModelEntity, public CBaseEntity::Factory<CInferno>
+class CInferno : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInferno);
@@ -46,4 +46,10 @@ public:
     SCHEMA_FIELD(CountdownTimer, m_BookkeepingTimer);
     SCHEMA_FIELD(CountdownTimer, m_NextSpreadTimer);
     SCHEMA_FIELD(uint16_t, m_nSourceItemDefIndex);
+
+public:
+    static CInferno* New(const char* className)
+    {
+        return CBaseEntity::New<CInferno>(className);
+    }
 };

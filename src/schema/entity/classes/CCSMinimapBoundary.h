@@ -14,9 +14,15 @@
 
 #include "CBaseEntity.h"
 
-class CCSMinimapBoundary : public CBaseEntity, public CBaseEntity::Factory<CCSMinimapBoundary>
+class CCSMinimapBoundary : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSMinimapBoundary);
 
+
+public:
+    static CCSMinimapBoundary* New(const char* className)
+    {
+        return CBaseEntity::New<CCSMinimapBoundary>(className);
+    }
 };

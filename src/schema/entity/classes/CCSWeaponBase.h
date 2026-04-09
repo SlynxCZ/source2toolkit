@@ -19,7 +19,7 @@
 
 class CCSPlayerPawn;
 
-class CCSWeaponBase : public CBasePlayerWeapon, public CBaseEntity::Factory<CCSWeaponBase>
+class CCSWeaponBase : public CBasePlayerWeapon
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSWeaponBase);
@@ -75,4 +75,10 @@ public:
     SCHEMA_FIELD(float, m_flLastLOSTraceFailureTime);
     SCHEMA_FIELD(float, m_flWatTickOffset);
     SCHEMA_FIELD(float, m_flLastShakeTime);
+
+public:
+    static CCSWeaponBase* New(const char* className)
+    {
+        return CBaseEntity::New<CCSWeaponBase>(className);
+    }
 };

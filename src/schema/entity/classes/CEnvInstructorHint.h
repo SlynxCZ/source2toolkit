@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvInstructorHint : public CPointEntity, public CBaseEntity::Factory<CEnvInstructorHint>
+class CEnvInstructorHint : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvInstructorHint);
@@ -43,4 +43,10 @@ public:
     SCHEMA_FIELD(bool, m_bAllowNoDrawTarget);
     SCHEMA_FIELD(bool, m_bAutoStart);
     SCHEMA_FIELD(bool, m_bLocalPlayerOnly);
+
+public:
+    static CEnvInstructorHint* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvInstructorHint>(className);
+    }
 };

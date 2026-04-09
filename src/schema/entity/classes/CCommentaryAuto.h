@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CCommentaryAuto : public CBaseEntity, public CBaseEntity::Factory<CCommentaryAuto>
+class CCommentaryAuto : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCommentaryAuto);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryNewGame);
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryMidGame);
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryMultiplayerSpawn);
+
+public:
+    static CCommentaryAuto* New(const char* className)
+    {
+        return CBaseEntity::New<CCommentaryAuto>(className);
+    }
 };

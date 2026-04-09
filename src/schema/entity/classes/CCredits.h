@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CCredits : public CPointEntity, public CBaseEntity::Factory<CCredits>
+class CCredits : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCredits);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnCreditsDone);
     SCHEMA_FIELD(bool, m_bRolledOutroCredits);
     SCHEMA_FIELD(float, m_flLogoLength);
+
+public:
+    static CCredits* New(const char* className)
+    {
+        return CBaseEntity::New<CCredits>(className);
+    }
 };

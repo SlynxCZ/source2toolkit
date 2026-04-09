@@ -14,9 +14,15 @@
 
 #include "CBaseAnimGraph.h"
 
-class CHostageCarriableProp : public CBaseAnimGraph, public CBaseEntity::Factory<CHostageCarriableProp>
+class CHostageCarriableProp : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageCarriableProp);
 
+
+public:
+    static CHostageCarriableProp* New(const char* className)
+    {
+        return CBaseEntity::New<CHostageCarriableProp>(className);
+    }
 };

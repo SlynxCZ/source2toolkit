@@ -20,7 +20,7 @@
 class CBaseEntity;
 class CCSPlayerPawn;
 
-class CChicken : public CDynamicProp, public CBaseEntity::Factory<CChicken>
+class CChicken : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CChicken);
@@ -53,4 +53,10 @@ public:
     SCHEMA_FIELD(float, m_flActiveFollowStartTime);
     SCHEMA_FIELD(CountdownTimer, m_followMinuteTimer);
     SCHEMA_FIELD(CountdownTimer, m_BlockDirectionTimer);
+
+public:
+    static CChicken* New(const char* className)
+    {
+        return CBaseEntity::New<CChicken>(className);
+    }
 };

@@ -19,7 +19,7 @@
 
 class CEntityBlocker;
 
-class CPropDoorRotating : public CBasePropDoor, public CBaseEntity::Factory<CPropDoorRotating>
+class CPropDoorRotating : public CBasePropDoor
 {
 public:
     DECLARE_SCHEMA_CLASS(CPropDoorRotating);
@@ -42,4 +42,10 @@ public:
     SCHEMA_FIELD(Vector, m_vecBackBoundsMax);
     SCHEMA_FIELD(bool, m_bAjarDoorShouldntAlwaysOpen);
     SCHEMA_FIELD(CHandle<CEntityBlocker>, m_hEntityBlocker);
+
+public:
+    static CPropDoorRotating* New(const char* className)
+    {
+        return CBaseEntity::New<CPropDoorRotating>(className);
+    }
 };

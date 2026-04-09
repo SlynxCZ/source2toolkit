@@ -15,7 +15,7 @@
 #include "ConstraintSoundInfo.h"
 #include "CPhysConstraint.h"
 
-class CPhysSlideConstraint : public CPhysConstraint, public CBaseEntity::Factory<CPhysSlideConstraint>
+class CPhysSlideConstraint : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysSlideConstraint);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(float, m_flMotorDampingRatio);
     SCHEMA_FIELD(bool, m_bUseEntityPivot);
     SCHEMA_FIELD(ConstraintSoundInfo, m_soundInfo);
+
+public:
+    static CPhysSlideConstraint* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysSlideConstraint>(className);
+    }
 };

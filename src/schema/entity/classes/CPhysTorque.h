@@ -14,10 +14,16 @@
 
 #include "CPhysForce.h"
 
-class CPhysTorque : public CPhysForce, public CBaseEntity::Factory<CPhysTorque>
+class CPhysTorque : public CPhysForce
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysTorque);
 
     SCHEMA_FIELD(Vector, m_axis);
+
+public:
+    static CPhysTorque* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysTorque>(className);
+    }
 };

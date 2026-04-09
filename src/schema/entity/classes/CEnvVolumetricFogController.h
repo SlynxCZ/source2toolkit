@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvVolumetricFogController : public CBaseEntity, public CBaseEntity::Factory<CEnvVolumetricFogController>
+class CEnvVolumetricFogController : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvVolumetricFogController);
@@ -56,4 +56,10 @@ public:
     SCHEMA_FIELD(float, m_fWindSpeed);
     SCHEMA_FIELD(Vector, m_vWindDirection);
     SCHEMA_FIELD(bool, m_bFirstTime);
+
+public:
+    static CEnvVolumetricFogController* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvVolumetricFogController>(className);
+    }
 };

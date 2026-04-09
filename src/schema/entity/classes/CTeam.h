@@ -17,7 +17,7 @@
 class CBasePlayerController;
 class CBasePlayerPawn;
 
-class CTeam : public CBaseEntity, public CBaseEntity::Factory<CTeam>
+class CTeam : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTeam);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CBasePlayerPawn>>, m_aPlayers);
     SCHEMA_FIELD(int32_t, m_iScore);
     SCHEMA_FIELD_POINTER(char, m_szTeamname);
+
+public:
+    static CTeam* New(const char* className)
+    {
+        return CBaseEntity::New<CTeam>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerRemove : public CBaseTrigger, public CBaseEntity::Factory<CTriggerRemove>
+class CTriggerRemove : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerRemove);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnRemove);
+
+public:
+    static CTriggerRemove* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerRemove>(className);
+    }
 };

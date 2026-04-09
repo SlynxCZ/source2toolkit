@@ -14,7 +14,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class CPointPrefab : public CServerOnlyPointEntity, public CBaseEntity::Factory<CPointPrefab>
+class CPointPrefab : public CServerOnlyPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointPrefab);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(bool, m_fixupNames);
     SCHEMA_FIELD(bool, m_bLoadDynamic);
     SCHEMA_FIELD(CHandle<CPointPrefab>, m_associatedRelayEntity);
+
+public:
+    static CPointPrefab* New(const char* className)
+    {
+        return CBaseEntity::New<CPointPrefab>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CEntityBlocker : public CBaseModelEntity, public CBaseEntity::Factory<CEntityBlocker>
+class CEntityBlocker : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityBlocker);
 
+
+public:
+    static CEntityBlocker* New(const char* className)
+    {
+        return CBaseEntity::New<CEntityBlocker>(className);
+    }
 };

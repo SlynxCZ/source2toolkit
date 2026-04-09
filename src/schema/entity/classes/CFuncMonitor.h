@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CFuncMonitor : public CFuncBrush, public CBaseEntity::Factory<CFuncMonitor>
+class CFuncMonitor : public CFuncBrush
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMonitor);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(bool, m_bDraw3DSkybox);
     SCHEMA_FIELD(bool, m_bStartEnabled);
+
+public:
+    static CFuncMonitor* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncMonitor>(className);
+    }
 };

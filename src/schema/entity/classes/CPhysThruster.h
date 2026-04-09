@@ -14,10 +14,16 @@
 
 #include "CPhysForce.h"
 
-class CPhysThruster : public CPhysForce, public CBaseEntity::Factory<CPhysThruster>
+class CPhysThruster : public CPhysForce
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysThruster);
 
     SCHEMA_FIELD(Vector, m_localOrigin);
+
+public:
+    static CPhysThruster* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysThruster>(className);
+    }
 };

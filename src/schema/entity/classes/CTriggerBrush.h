@@ -14,7 +14,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CTriggerBrush : public CBaseModelEntity, public CBaseEntity::Factory<CTriggerBrush>
+class CTriggerBrush : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBrush);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnUse);
     SCHEMA_FIELD(int32_t, m_iInputFilter);
     SCHEMA_FIELD(int32_t, m_iDontMessageParent);
+
+public:
+    static CTriggerBrush* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerBrush>(className);
+    }
 };

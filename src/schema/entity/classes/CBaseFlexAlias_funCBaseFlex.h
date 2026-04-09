@@ -14,9 +14,15 @@
 
 #include "CBaseFlex.h"
 
-class CBaseFlexAlias_funCBaseFlex : public CBaseFlex, public CBaseEntity::Factory<CBaseFlexAlias_funCBaseFlex>
+class CBaseFlexAlias_funCBaseFlex : public CBaseFlex
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseFlexAlias_funCBaseFlex);
 
+
+public:
+    static CBaseFlexAlias_funCBaseFlex* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseFlexAlias_funCBaseFlex>(className);
+    }
 };

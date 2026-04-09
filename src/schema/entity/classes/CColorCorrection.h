@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CColorCorrection : public CBaseEntity, public CBaseEntity::Factory<CColorCorrection>
+class CColorCorrection : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CColorCorrection);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(float, m_flCurWeight);
     SCHEMA_FIELD_POINTER(char, m_netlookupFilename);
     SCHEMA_FIELD(CUtlSymbolLarge, m_lookupFilename);
+
+public:
+    static CColorCorrection* New(const char* className)
+    {
+        return CBaseEntity::New<CColorCorrection>(className);
+    }
 };

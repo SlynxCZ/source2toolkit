@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CPointServerCommand : public CPointEntity, public CBaseEntity::Factory<CPointServerCommand>
+class CPointServerCommand : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointServerCommand);
 
+
+public:
+    static CPointServerCommand* New(const char* className)
+    {
+        return CBaseEntity::New<CPointServerCommand>(className);
+    }
 };

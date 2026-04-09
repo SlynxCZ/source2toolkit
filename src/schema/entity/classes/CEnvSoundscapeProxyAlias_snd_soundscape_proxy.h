@@ -14,9 +14,15 @@
 
 #include "CEnvSoundscapeProxy.h"
 
-class CEnvSoundscapeProxyAlias_snd_soundscape_proxy : public CEnvSoundscapeProxy, public CBaseEntity::Factory<CEnvSoundscapeProxyAlias_snd_soundscape_proxy>
+class CEnvSoundscapeProxyAlias_snd_soundscape_proxy : public CEnvSoundscapeProxy
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeProxyAlias_snd_soundscape_proxy);
 
+
+public:
+    static CEnvSoundscapeProxyAlias_snd_soundscape_proxy* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSoundscapeProxyAlias_snd_soundscape_proxy>(className);
+    }
 };

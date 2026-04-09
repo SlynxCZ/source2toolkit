@@ -15,7 +15,7 @@
 #include "CBaseTrigger.h"
 #include "InfoForResourceTypeCPostProcessingResource.h"
 
-class CPostProcessingVolume : public CBaseTrigger, public CBaseEntity::Factory<CPostProcessingVolume>
+class CPostProcessingVolume : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CPostProcessingVolume);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(float, m_flTonemapEVSmoothingRange);
     SCHEMA_FIELD(bool, m_bMaster);
     SCHEMA_FIELD(bool, m_bExposureControl);
+
+public:
+    static CPostProcessingVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CPostProcessingVolume>(className);
+    }
 };

@@ -16,7 +16,7 @@
 
 class CSprite;
 
-class CEnvLaser : public CBeam, public CBaseEntity::Factory<CEnvLaser>
+class CEnvLaser : public CBeam
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvLaser);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSpriteName);
     SCHEMA_FIELD(Vector, m_firePosition);
     SCHEMA_FIELD(float, m_flStartFrame);
+
+public:
+    static CEnvLaser* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvLaser>(className);
+    }
 };

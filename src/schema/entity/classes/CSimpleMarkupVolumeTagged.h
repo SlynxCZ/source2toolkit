@@ -14,9 +14,15 @@
 
 #include "CMarkupVolumeTagged.h"
 
-class CSimpleMarkupVolumeTagged : public CMarkupVolumeTagged, public CBaseEntity::Factory<CSimpleMarkupVolumeTagged>
+class CSimpleMarkupVolumeTagged : public CMarkupVolumeTagged
 {
 public:
     DECLARE_SCHEMA_CLASS(CSimpleMarkupVolumeTagged);
 
+
+public:
+    static CSimpleMarkupVolumeTagged* New(const char* className)
+    {
+        return CBaseEntity::New<CSimpleMarkupVolumeTagged>(className);
+    }
 };

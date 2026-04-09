@@ -14,9 +14,15 @@
 
 #include "CBaseEntity.h"
 
-class CEnableMotionFixup : public CBaseEntity, public CBaseEntity::Factory<CEnableMotionFixup>
+class CEnableMotionFixup : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnableMotionFixup);
 
+
+public:
+    static CEnableMotionFixup* New(const char* className)
+    {
+        return CBaseEntity::New<CEnableMotionFixup>(className);
+    }
 };

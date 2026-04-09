@@ -16,7 +16,7 @@
 #include "../enums/FuncDoorSpawnPos_t.h"
 #include "locksound_t.h"
 
-class CBaseDoor : public CBaseToggle, public CBaseEntity::Factory<CBaseDoor>
+class CBaseDoor : public CBaseToggle
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseDoor);
@@ -49,4 +49,10 @@ public:
     SCHEMA_FIELD(bool, m_bCreateNavObstacle);
     SCHEMA_FIELD(bool, m_isChaining);
     SCHEMA_FIELD(bool, m_bIsUsable);
+
+public:
+    static CBaseDoor* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseDoor>(className);
+    }
 };

@@ -14,11 +14,17 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncNavBlocker : public CBaseModelEntity, public CBaseEntity::Factory<CFuncNavBlocker>
+class CFuncNavBlocker : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncNavBlocker);
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(int32_t, m_nBlockedTeamNumber);
+
+public:
+    static CFuncNavBlocker* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncNavBlocker>(className);
+    }
 };

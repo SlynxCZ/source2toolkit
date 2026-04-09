@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CInfoSpawnGroupLoadUnload : public CLogicalEntity, public CBaseEntity::Factory<CInfoSpawnGroupLoadUnload>
+class CInfoSpawnGroupLoadUnload : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoSpawnGroupLoadUnload);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(bool, m_bUnloadingStarted);
     SCHEMA_FIELD(bool, m_bQueueActiveSpawnGroupChange);
     SCHEMA_FIELD(bool, m_bQueueFinishLoading);
+
+public:
+    static CInfoSpawnGroupLoadUnload* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoSpawnGroupLoadUnload>(className);
+    }
 };

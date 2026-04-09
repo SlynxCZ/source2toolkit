@@ -17,7 +17,7 @@
 #include "../enums/PointWorldTextJustifyVertical_t.h"
 #include "../enums/PointWorldTextReorientMode_t.h"
 
-class CPointWorldText : public CModelPointEntity, public CBaseEntity::Factory<CPointWorldText>
+class CPointWorldText : public CModelPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointWorldText);
@@ -38,4 +38,10 @@ public:
     SCHEMA_FIELD(PointWorldTextJustifyHorizontal_t, m_nJustifyHorizontal);
     SCHEMA_FIELD(PointWorldTextJustifyVertical_t, m_nJustifyVertical);
     SCHEMA_FIELD(PointWorldTextReorientMode_t, m_nReorientMode);
+
+public:
+    static CPointWorldText* New(const char* className)
+    {
+        return CBaseEntity::New<CPointWorldText>(className);
+    }
 };

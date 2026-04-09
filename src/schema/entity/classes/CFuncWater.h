@@ -15,10 +15,16 @@
 #include "CBaseModelEntity.h"
 #include "CBuoyancyHelper.h"
 
-class CFuncWater : public CBaseModelEntity, public CBaseEntity::Factory<CFuncWater>
+class CFuncWater : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWater);
 
     SCHEMA_FIELD(CBuoyancyHelper, m_BuoyancyHelper);
+
+public:
+    static CFuncWater* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncWater>(className);
+    }
 };

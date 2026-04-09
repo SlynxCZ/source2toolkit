@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CPhysMotor : public CLogicalEntity, public CBaseEntity::Factory<CPhysMotor>
+class CPhysMotor : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysMotor);
@@ -35,4 +35,10 @@ public:
     SCHEMA_FIELD(float, m_flTargetSpeed);
     SCHEMA_FIELD(float, m_flSpeedWhenSpinUpOrSpinDownStarted);
     SCHEMA_FIELD(CMotorController, m_motor);
+
+public:
+    static CPhysMotor* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysMotor>(className);
+    }
 };

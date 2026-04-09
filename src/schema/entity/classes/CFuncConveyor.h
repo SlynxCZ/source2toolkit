@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CFuncConveyor : public CBaseModelEntity, public CBaseEntity::Factory<CFuncConveyor>
+class CFuncConveyor : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncConveyor);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nTransitionDurationTicks);
     SCHEMA_FIELD(float, m_flTransitionStartSpeed);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_hConveyorModels);
+
+public:
+    static CFuncConveyor* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncConveyor>(className);
+    }
 };

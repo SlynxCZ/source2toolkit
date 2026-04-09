@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CLogicNPCCounter : public CBaseEntity, public CBaseEntity::Factory<CLogicNPCCounter>
+class CLogicNPCCounter : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicNPCCounter);
@@ -59,4 +59,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nMinFactor_3);
     SCHEMA_FIELD(int32_t, m_nMaxFactor_3);
     SCHEMA_FIELD(float, m_flDefaultDist_3);
+
+public:
+    static CLogicNPCCounter* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicNPCCounter>(className);
+    }
 };

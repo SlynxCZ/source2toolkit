@@ -14,7 +14,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncInteractionLayerClip : public CBaseModelEntity, public CBaseEntity::Factory<CFuncInteractionLayerClip>
+class CFuncInteractionLayerClip : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncInteractionLayerClip);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszInteractsAs);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszInteractsWith);
+
+public:
+    static CFuncInteractionLayerClip* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncInteractionLayerClip>(className);
+    }
 };

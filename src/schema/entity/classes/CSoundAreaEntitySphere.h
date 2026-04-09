@@ -14,10 +14,16 @@
 
 #include "CSoundAreaEntityBase.h"
 
-class CSoundAreaEntitySphere : public CSoundAreaEntityBase, public CBaseEntity::Factory<CSoundAreaEntitySphere>
+class CSoundAreaEntitySphere : public CSoundAreaEntityBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundAreaEntitySphere);
 
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    static CSoundAreaEntitySphere* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundAreaEntitySphere>(className);
+    }
 };

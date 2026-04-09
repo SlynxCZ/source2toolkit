@@ -17,7 +17,7 @@
 class CBasePlayerPawn;
 class CEnvSoundscapeTriggerable;
 
-class CTriggerSoundscape : public CBaseTrigger, public CBaseEntity::Factory<CTriggerSoundscape>
+class CTriggerSoundscape : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerSoundscape);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(CHandle<CEnvSoundscapeTriggerable>, m_hSoundscape);
     SCHEMA_FIELD(CUtlSymbolLarge, m_SoundscapeName);
     SCHEMA_FIELD(CUtlVector<CHandle<CBasePlayerPawn>>, m_spectators);
+
+public:
+    static CTriggerSoundscape* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerSoundscape>(className);
+    }
 };

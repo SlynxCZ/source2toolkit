@@ -14,9 +14,15 @@
 
 #include "CBaseFilter.h"
 
-class CFilterLOS : public CBaseFilter, public CBaseEntity::Factory<CFilterLOS>
+class CFilterLOS : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterLOS);
 
+
+public:
+    static CFilterLOS* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterLOS>(className);
+    }
 };

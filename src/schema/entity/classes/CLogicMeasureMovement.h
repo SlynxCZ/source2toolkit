@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CLogicMeasureMovement : public CLogicalEntity, public CBaseEntity::Factory<CLogicMeasureMovement>
+class CLogicMeasureMovement : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicMeasureMovement);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetReference);
     SCHEMA_FIELD(float, m_flScale);
     SCHEMA_FIELD(int32_t, m_nMeasureType);
+
+public:
+    static CLogicMeasureMovement* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicMeasureMovement>(className);
+    }
 };

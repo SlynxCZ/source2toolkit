@@ -14,9 +14,15 @@
 
 #include "CRuleEntity.h"
 
-class CRuleBrushEntity : public CRuleEntity, public CBaseEntity::Factory<CRuleBrushEntity>
+class CRuleBrushEntity : public CRuleEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRuleBrushEntity);
 
+
+public:
+    static CRuleBrushEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CRuleBrushEntity>(className);
+    }
 };

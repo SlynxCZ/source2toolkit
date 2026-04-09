@@ -18,7 +18,7 @@
 class CBaseFilter;
 class CItemGenericTriggerHelper;
 
-class CItemGeneric : public CItem, public CBaseEntity::Factory<CItemGeneric>
+class CItemGeneric : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemGeneric);
@@ -55,4 +55,10 @@ public:
     SCHEMA_FIELD(Color, m_glowColor);
     SCHEMA_FIELD(bool, m_bUseable);
     SCHEMA_FIELD(CHandle<CItemGenericTriggerHelper>, m_hTriggerHelper);
+
+public:
+    static CItemGeneric* New(const char* className)
+    {
+        return CBaseEntity::New<CItemGeneric>(className);
+    }
 };

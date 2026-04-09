@@ -14,9 +14,15 @@
 
 #include "CServerOnlyEntity.h"
 
-class CInfoData : public CServerOnlyEntity, public CBaseEntity::Factory<CInfoData>
+class CInfoData : public CServerOnlyEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoData);
 
+
+public:
+    static CInfoData* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoData>(className);
+    }
 };

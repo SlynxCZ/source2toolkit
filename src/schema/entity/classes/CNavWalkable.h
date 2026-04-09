@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CNavWalkable : public CPointEntity, public CBaseEntity::Factory<CNavWalkable>
+class CNavWalkable : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavWalkable);
 
+
+public:
+    static CNavWalkable* New(const char* className)
+    {
+        return CBaseEntity::New<CNavWalkable>(className);
+    }
 };

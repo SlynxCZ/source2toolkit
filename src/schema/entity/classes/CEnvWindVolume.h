@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvWindVolume : public CBaseEntity, public CBaseEntity::Factory<CEnvWindVolume>
+class CEnvWindVolume : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWindVolume);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(float, m_fWindTurbulenceMultiplier);
     SCHEMA_FIELD(float, m_fWindSpeedVariationMultiplier);
     SCHEMA_FIELD(float, m_fWindDirectionVariationMultiplier);
+
+public:
+    static CEnvWindVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvWindVolume>(className);
+    }
 };

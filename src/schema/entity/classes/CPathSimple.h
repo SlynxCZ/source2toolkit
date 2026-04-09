@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "CPathQueryComponent.h"
 
-class CPathSimple : public CBaseEntity, public CBaseEntity::Factory<CPathSimple>
+class CPathSimple : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathSimple);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(CPathQueryComponent, m_CPathQueryComponent);
     SCHEMA_FIELD(CUtlString, m_pathString);
     SCHEMA_FIELD(bool, m_bClosedLoop);
+
+public:
+    static CPathSimple* New(const char* className)
+    {
+        return CBaseEntity::New<CPathSimple>(className);
+    }
 };

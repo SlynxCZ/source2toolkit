@@ -14,10 +14,16 @@
 
 #include "CRuleEntity.h"
 
-class CRulePointEntity : public CRuleEntity, public CBaseEntity::Factory<CRulePointEntity>
+class CRulePointEntity : public CRuleEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRulePointEntity);
 
     SCHEMA_FIELD(int32_t, m_Score);
+
+public:
+    static CRulePointEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CRulePointEntity>(className);
+    }
 };

@@ -14,11 +14,17 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerActiveWeaponDetect : public CBaseTrigger, public CBaseEntity::Factory<CTriggerActiveWeaponDetect>
+class CTriggerActiveWeaponDetect : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerActiveWeaponDetect);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnTouchedActiveWeapon);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszWeaponClassName);
+
+public:
+    static CTriggerActiveWeaponDetect* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerActiveWeaponDetect>(className);
+    }
 };

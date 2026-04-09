@@ -14,10 +14,16 @@
 
 #include "CPointCamera.h"
 
-class CPointCameraVFOV : public CPointCamera, public CBaseEntity::Factory<CPointCameraVFOV>
+class CPointCameraVFOV : public CPointCamera
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCameraVFOV);
 
     SCHEMA_FIELD(float, m_flVerticalFOV);
+
+public:
+    static CPointCameraVFOV* New(const char* className)
+    {
+        return CBaseEntity::New<CPointCameraVFOV>(className);
+    }
 };

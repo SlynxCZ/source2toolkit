@@ -14,7 +14,7 @@
 
 #include "CPathKeyFrame.h"
 
-class CBaseMoveBehavior : public CPathKeyFrame, public CBaseEntity::Factory<CBaseMoveBehavior>
+class CBaseMoveBehavior : public CPathKeyFrame
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseMoveBehavior);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(CPathKeyFrame*, m_pPostKeyFrame);
     SCHEMA_FIELD(float, m_flTimeIntoFrame);
     SCHEMA_FIELD(int32_t, m_iDirection);
+
+public:
+    static CBaseMoveBehavior* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseMoveBehavior>(className);
+    }
 };

@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPointAngleSensor : public CPointEntity, public CBaseEntity::Factory<CPointAngleSensor>
+class CPointAngleSensor : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointAngleSensor);
@@ -31,4 +31,10 @@ public:
     SCHEMA_FIELD(bool, m_bFired);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFacingLookat);
     SCHEMA_FIELD(CEntityIOOutput, m_OnNotFacingLookat);
+
+public:
+    static CPointAngleSensor* New(const char* className)
+    {
+        return CBaseEntity::New<CPointAngleSensor>(className);
+    }
 };

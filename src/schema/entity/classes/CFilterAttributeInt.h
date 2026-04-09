@@ -14,10 +14,16 @@
 
 #include "CBaseFilter.h"
 
-class CFilterAttributeInt : public CBaseFilter, public CBaseEntity::Factory<CFilterAttributeInt>
+class CFilterAttributeInt : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterAttributeInt);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_sAttributeName);
+
+public:
+    static CFilterAttributeInt* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterAttributeInt>(className);
+    }
 };

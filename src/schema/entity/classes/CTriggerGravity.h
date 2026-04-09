@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerGravity : public CBaseTrigger, public CBaseEntity::Factory<CTriggerGravity>
+class CTriggerGravity : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerGravity);
 
+
+public:
+    static CTriggerGravity* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerGravity>(className);
+    }
 };

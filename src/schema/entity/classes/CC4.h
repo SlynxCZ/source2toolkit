@@ -15,7 +15,7 @@
 #include "CCSWeaponBase.h"
 #include "EntitySpottedState_t.h"
 
-class CC4 : public CCSWeaponBase, public CBaseEntity::Factory<CC4>
+class CC4 : public CCSWeaponBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CC4);
@@ -31,4 +31,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nSpotRules);
     SCHEMA_FIELD_POINTER(bool, m_bPlayedArmingBeeps);
     SCHEMA_FIELD(bool, m_bBombPlanted);
+
+public:
+    static CC4* New(const char* className)
+    {
+        return CBaseEntity::New<CC4>(className);
+    }
 };

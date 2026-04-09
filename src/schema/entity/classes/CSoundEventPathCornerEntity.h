@@ -14,7 +14,7 @@
 
 #include "CSoundEventEntity.h"
 
-class CSoundEventPathCornerEntity : public CSoundEventEntity, public CBaseEntity::Factory<CSoundEventPathCornerEntity>
+class CSoundEventPathCornerEntity : public CSoundEventEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventPathCornerEntity);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(float, m_flDotProductMax);
     SCHEMA_FIELD(bool, m_bPlaying);
+
+public:
+    static CSoundEventPathCornerEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundEventPathCornerEntity>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CPointEntity.h"
 
-class CPointChildModifier : public CPointEntity, public CBaseEntity::Factory<CPointChildModifier>
+class CPointChildModifier : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointChildModifier);
 
     SCHEMA_FIELD(bool, m_bOrphanInsteadOfDeletingChildrenOnRemove);
+
+public:
+    static CPointChildModifier* New(const char* className)
+    {
+        return CBaseEntity::New<CPointChildModifier>(className);
+    }
 };

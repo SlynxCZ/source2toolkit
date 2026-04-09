@@ -14,9 +14,15 @@
 
 #include "CModelPointEntity.h"
 
-class CShower : public CModelPointEntity, public CBaseEntity::Factory<CShower>
+class CShower : public CModelPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CShower);
 
+
+public:
+    static CShower* New(const char* className)
+    {
+        return CBaseEntity::New<CShower>(className);
+    }
 };

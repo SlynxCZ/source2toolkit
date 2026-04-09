@@ -14,7 +14,7 @@
 
 #include "CBaseTrigger.h"
 
-class CColorCorrectionVolume : public CBaseTrigger, public CBaseEntity::Factory<CColorCorrectionVolume>
+class CColorCorrectionVolume : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CColorCorrectionVolume);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(float, m_LastEnterTime);
     SCHEMA_FIELD(float, m_LastExitWeight);
     SCHEMA_FIELD(float, m_LastExitTime);
+
+public:
+    static CColorCorrectionVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CColorCorrectionVolume>(className);
+    }
 };

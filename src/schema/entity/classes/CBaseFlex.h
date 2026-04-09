@@ -15,7 +15,7 @@
 #include "CBaseAnimGraph.h"
 #include "SceneEventId_t.h"
 
-class CBaseFlex : public CBaseAnimGraph, public CBaseEntity::Factory<CBaseFlex>
+class CBaseFlex : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseFlex);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(float, m_flLastFlexAnimationTime);
     SCHEMA_FIELD(SceneEventId_t, m_nNextSceneEventId);
     SCHEMA_FIELD(bool, m_bUpdateLayerPriorities);
+
+public:
+    static CBaseFlex* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseFlex>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvSpark : public CPointEntity, public CBaseEntity::Factory<CEnvSpark>
+class CEnvSpark : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSpark);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nTrailLength);
     SCHEMA_FIELD(int32_t, m_nType);
     SCHEMA_FIELD(CEntityIOOutput, m_OnSpark);
+
+public:
+    static CEnvSpark* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSpark>(className);
+    }
 };

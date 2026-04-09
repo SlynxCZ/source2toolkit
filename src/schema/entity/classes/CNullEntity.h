@@ -14,9 +14,15 @@
 
 #include "CBaseEntity.h"
 
-class CNullEntity : public CBaseEntity, public CBaseEntity::Factory<CNullEntity>
+class CNullEntity : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CNullEntity);
 
+
+public:
+    static CNullEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CNullEntity>(className);
+    }
 };

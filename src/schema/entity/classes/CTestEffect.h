@@ -16,7 +16,7 @@
 
 class CBeam;
 
-class CTestEffect : public CBaseEntity, public CBaseEntity::Factory<CTestEffect>
+class CTestEffect : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTestEffect);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD_POINTER(CHandle<CBeam>, m_pBeam);
     SCHEMA_FIELD_POINTER(float, m_flBeamTime);
     SCHEMA_FIELD(float, m_flStartTime);
+
+public:
+    static CTestEffect* New(const char* className)
+    {
+        return CBaseEntity::New<CTestEffect>(className);
+    }
 };

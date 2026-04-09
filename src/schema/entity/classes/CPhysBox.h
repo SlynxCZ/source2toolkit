@@ -17,7 +17,7 @@
 
 class CBasePlayerPawn;
 
-class CPhysBox : public CBreakable, public CBaseEntity::Factory<CPhysBox>
+class CPhysBox : public CBreakable
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysBox);
@@ -37,4 +37,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerUse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartTouch);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hCarryingPlayer);
+
+public:
+    static CPhysBox* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysBox>(className);
+    }
 };

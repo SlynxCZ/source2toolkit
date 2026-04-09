@@ -15,7 +15,7 @@
 #include "CPhysicsProp.h"
 #include "shard_model_desc_t.h"
 
-class CShatterGlassShardPhysics : public CPhysicsProp, public CBaseEntity::Factory<CShatterGlassShardPhysics>
+class CShatterGlassShardPhysics : public CPhysicsProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CShatterGlassShardPhysics);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(bool, m_bDebris);
     SCHEMA_FIELD(uint32_t, m_hParentShard);
     SCHEMA_FIELD(shard_model_desc_t, m_ShardDesc);
+
+public:
+    static CShatterGlassShardPhysics* New(const char* className)
+    {
+        return CBaseEntity::New<CShatterGlassShardPhysics>(className);
+    }
 };

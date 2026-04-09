@@ -14,9 +14,15 @@
 
 #include "CPathCorner.h"
 
-class CPathCornerCrash : public CPathCorner, public CBaseEntity::Factory<CPathCornerCrash>
+class CPathCornerCrash : public CPathCorner
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathCornerCrash);
 
+
+public:
+    static CPathCornerCrash* New(const char* className)
+    {
+        return CBaseEntity::New<CPathCornerCrash>(className);
+    }
 };

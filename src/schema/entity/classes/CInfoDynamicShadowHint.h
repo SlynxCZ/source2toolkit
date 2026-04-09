@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CInfoDynamicShadowHint : public CPointEntity, public CBaseEntity::Factory<CInfoDynamicShadowHint>
+class CInfoDynamicShadowHint : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoDynamicShadowHint);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nImportance);
     SCHEMA_FIELD(int32_t, m_nLightChoice);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLight);
+
+public:
+    static CInfoDynamicShadowHint* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoDynamicShadowHint>(className);
+    }
 };

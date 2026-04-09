@@ -104,7 +104,7 @@ static bool InitSchemaFieldsForClass(SchemaTableMap_t& tableMap, const char* cla
         SchemaKeyValueMap_t map;
         tableMap.insert(std::make_pair(classKey, map));
 
-        Warning("InitSchemaFieldsForClass(): '%s' was not found!\n", className);
+        FP_WARN("InitSchemaFieldsForClass(): '{}' was not found!", className);
         return false;
     }
 
@@ -165,7 +165,7 @@ SchemaKey schema::GetOffset(const char* className, uint32_t classKey, const char
     if (tableMap.find(memberKey) == tableMap.end())
     {
         if (memberKey != g_ChainKey)
-            Warning("schema::GetOffset(): '%s' was not found in '%s'!\n", memberName, className);
+            FP_WARN("schema::GetOffset(): '{}' was not found in '{}'!\n", memberName, className);
 
         return {0, 0};
     }

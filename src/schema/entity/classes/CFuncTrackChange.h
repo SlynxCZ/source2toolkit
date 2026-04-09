@@ -18,7 +18,7 @@
 class CFuncTrackTrain;
 class CPathTrack;
 
-class CFuncTrackChange : public CFuncPlatRot, public CBaseEntity::Factory<CFuncTrackChange>
+class CFuncTrackChange : public CFuncPlatRot
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrackChange);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(TRAIN_CODE, m_code);
     SCHEMA_FIELD(int32_t, m_targetState);
     SCHEMA_FIELD(int32_t, m_use);
+
+public:
+    static CFuncTrackChange* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTrackChange>(className);
+    }
 };

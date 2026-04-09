@@ -14,10 +14,16 @@
 
 #include "CBaseFilter.h"
 
-class CFilterContext : public CBaseFilter, public CBaseEntity::Factory<CFilterContext>
+class CFilterContext : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterContext);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterContext);
+
+public:
+    static CFilterContext* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterContext>(className);
+    }
 };

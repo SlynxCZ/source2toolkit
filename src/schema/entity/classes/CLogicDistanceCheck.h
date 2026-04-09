@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicDistanceCheck : public CLogicalEntity, public CBaseEntity::Factory<CLogicDistanceCheck>
+class CLogicDistanceCheck : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicDistanceCheck);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_InZone1);
     SCHEMA_FIELD(CEntityIOOutput, m_InZone2);
     SCHEMA_FIELD(CEntityIOOutput, m_InZone3);
+
+public:
+    static CLogicDistanceCheck* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicDistanceCheck>(className);
+    }
 };

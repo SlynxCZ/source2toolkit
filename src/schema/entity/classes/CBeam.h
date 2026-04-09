@@ -19,7 +19,7 @@
 
 class CBaseEntity;
 
-class CBeam : public CBaseModelEntity, public CBaseEntity::Factory<CBeam>
+class CBeam : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBeam);
@@ -47,4 +47,10 @@ public:
     SCHEMA_FIELD(Vector, m_vecEndPos);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndEntity);
     SCHEMA_FIELD(int32_t, m_nDissolveType);
+
+public:
+    static CBeam* New(const char* className)
+    {
+        return CBaseEntity::New<CBeam>(className);
+    }
 };

@@ -21,7 +21,7 @@
 class CBaseEntity;
 class CBasePlayerPawn;
 
-class CBreakableProp : public CBaseProp, public CBaseEntity::Factory<CBreakableProp>
+class CBreakableProp : public CBaseProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CBreakableProp);
@@ -58,4 +58,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPuntSound);
     SCHEMA_FIELD(bool, m_bUsePuntSound);
     SCHEMA_FIELD(bool, m_bOriginalBlockLOS);
+
+public:
+    static CBreakableProp* New(const char* className)
+    {
+        return CBaseEntity::New<CBreakableProp>(className);
+    }
 };

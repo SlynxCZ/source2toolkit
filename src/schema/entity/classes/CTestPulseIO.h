@@ -14,11 +14,17 @@
 
 #include "CLogicalEntity.h"
 
-class CTestPulseIO : public CLogicalEntity, public CBaseEntity::Factory<CTestPulseIO>
+class CTestPulseIO : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTestPulseIO);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnVariantVoid);
     SCHEMA_FIELD(bool, m_bAllowEmptyInputs);
+
+public:
+    static CTestPulseIO* New(const char* className)
+    {
+        return CBaseEntity::New<CTestPulseIO>(className);
+    }
 };

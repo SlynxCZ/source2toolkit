@@ -14,10 +14,16 @@
 
 #include "CBaseFilter.h"
 
-class CFilterTeam : public CBaseFilter, public CBaseEntity::Factory<CFilterTeam>
+class CFilterTeam : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterTeam);
 
     SCHEMA_FIELD(int32_t, m_iFilterTeam);
+
+public:
+    static CFilterTeam* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterTeam>(className);
+    }
 };

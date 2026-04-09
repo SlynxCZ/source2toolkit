@@ -17,7 +17,7 @@
 
 class CBaseModelEntity;
 
-class CBaseButton : public CBaseToggle, public CBaseEntity::Factory<CBaseButton>
+class CBaseButton : public CBaseToggle
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseButton);
@@ -47,4 +47,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseModelEntity>, m_glowEntity);
     SCHEMA_FIELD(bool, m_usable);
     SCHEMA_FIELD(CUtlSymbolLarge, m_szDisplayText);
+
+public:
+    static CBaseButton* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseButton>(className);
+    }
 };

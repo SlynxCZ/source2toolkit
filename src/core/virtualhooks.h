@@ -8,7 +8,7 @@
 #include "eiface.h"
 #include "entitysystem.h"
 
-#include <dynlibutils/memaddr.h>
+#include "dynlibutils/memaddr.h"
 
 namespace virtualhooks {
     class Virtuals {

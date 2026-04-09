@@ -14,9 +14,15 @@
 
 #include "CBaseButton.h"
 
-class CPhysicalButton : public CBaseButton, public CBaseEntity::Factory<CPhysicalButton>
+class CPhysicalButton : public CBaseButton
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicalButton);
 
+
+public:
+    static CPhysicalButton* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicalButton>(className);
+    }
 };

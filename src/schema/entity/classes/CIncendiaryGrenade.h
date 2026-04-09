@@ -14,9 +14,15 @@
 
 #include "CMolotovGrenade.h"
 
-class CIncendiaryGrenade : public CMolotovGrenade, public CBaseEntity::Factory<CIncendiaryGrenade>
+class CIncendiaryGrenade : public CMolotovGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CIncendiaryGrenade);
 
+
+public:
+    static CIncendiaryGrenade* New(const char* className)
+    {
+        return CBaseEntity::New<CIncendiaryGrenade>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CLogicalEntity.h"
 
-class CMapSharedEnvironment : public CLogicalEntity, public CBaseEntity::Factory<CMapSharedEnvironment>
+class CMapSharedEnvironment : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapSharedEnvironment);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_targetMapName);
+
+public:
+    static CMapSharedEnvironment* New(const char* className)
+    {
+        return CBaseEntity::New<CMapSharedEnvironment>(className);
+    }
 };

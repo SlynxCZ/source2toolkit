@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvCubemap : public CBaseEntity, public CBaseEntity::Factory<CEnvCubemap>
+class CEnvCubemap : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemap);
@@ -38,4 +38,10 @@ public:
     SCHEMA_FIELD(bool, m_Entity_bIndoorCubeMap);
     SCHEMA_FIELD(bool, m_Entity_bCopyDiffuseFromDefaultCubemap);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
+
+public:
+    static CEnvCubemap* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvCubemap>(className);
+    }
 };

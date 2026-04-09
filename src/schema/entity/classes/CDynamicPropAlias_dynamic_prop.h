@@ -14,9 +14,15 @@
 
 #include "CDynamicProp.h"
 
-class CDynamicPropAlias_dynamic_prop : public CDynamicProp, public CBaseEntity::Factory<CDynamicPropAlias_dynamic_prop>
+class CDynamicPropAlias_dynamic_prop : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_dynamic_prop);
 
+
+public:
+    static CDynamicPropAlias_dynamic_prop* New(const char* className)
+    {
+        return CBaseEntity::New<CDynamicPropAlias_dynamic_prop>(className);
+    }
 };

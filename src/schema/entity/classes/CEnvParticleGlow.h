@@ -15,7 +15,7 @@
 #include "CParticleSystem.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvParticleGlow : public CParticleSystem, public CBaseEntity::Factory<CEnvParticleGlow>
+class CEnvParticleGlow : public CParticleSystem
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvParticleGlow);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(float, m_flSelfIllumScale);
     SCHEMA_FIELD(Color, m_ColorTint);
     SCHEMA_FIELD(CStrongHandle< InfoForResourceTypeCTextureBase >, m_hTextureOverride);
+
+public:
+    static CEnvParticleGlow* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvParticleGlow>(className);
+    }
 };

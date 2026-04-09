@@ -18,7 +18,7 @@
 
 class CCSPlayerPawn;
 
-class CPlantedC4 : public CBaseAnimGraph, public CBaseEntity::Factory<CPlantedC4>
+class CPlantedC4 : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlantedC4);
@@ -50,4 +50,10 @@ public:
     SCHEMA_FIELD(float, m_flNextBotBeepTime);
     SCHEMA_FIELD(QAngle, m_angCatchUpToPlayerEye);
     SCHEMA_FIELD(float, m_flLastSpinDetectionTime);
+
+public:
+    static CPlantedC4* New(const char* className)
+    {
+        return CBaseEntity::New<CPlantedC4>(className);
+    }
 };

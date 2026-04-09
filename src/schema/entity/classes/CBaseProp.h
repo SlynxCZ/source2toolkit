@@ -14,7 +14,7 @@
 
 #include "CBaseAnimGraph.h"
 
-class CBaseProp : public CBaseAnimGraph, public CBaseEntity::Factory<CBaseProp>
+class CBaseProp : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseProp);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iShapeType);
     SCHEMA_FIELD(bool, m_bConformToCollisionBounds);
     SCHEMA_FIELD(CTransform, m_mPreferredCatchTransform);
+
+public:
+    static CBaseProp* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseProp>(className);
+    }
 };

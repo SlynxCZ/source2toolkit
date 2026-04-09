@@ -14,10 +14,16 @@
 
 #include "CCSWeaponBase.h"
 
-class CKnife : public CCSWeaponBase, public CBaseEntity::Factory<CKnife>
+class CKnife : public CCSWeaponBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CKnife);
 
     SCHEMA_FIELD(bool, m_bFirstAttack);
+
+public:
+    static CKnife* New(const char* className)
+    {
+        return CBaseEntity::New<CKnife>(className);
+    }
 };

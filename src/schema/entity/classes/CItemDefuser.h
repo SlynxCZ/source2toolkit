@@ -15,11 +15,17 @@
 #include "CItem.h"
 #include "EntitySpottedState_t.h"
 
-class CItemDefuser : public CItem, public CBaseEntity::Factory<CItemDefuser>
+class CItemDefuser : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDefuser);
 
     SCHEMA_FIELD(EntitySpottedState_t, m_entitySpottedState);
     SCHEMA_FIELD(int32_t, m_nSpotRules);
+
+public:
+    static CItemDefuser* New(const char* className)
+    {
+        return CBaseEntity::New<CItemDefuser>(className);
+    }
 };

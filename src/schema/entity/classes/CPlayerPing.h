@@ -16,7 +16,7 @@
 
 class CCSPlayerPawn;
 
-class CPlayerPing : public CBaseEntity, public CBaseEntity::Factory<CPlayerPing>
+class CPlayerPing : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerPing);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iType);
     SCHEMA_FIELD(bool, m_bUrgent);
     SCHEMA_FIELD_POINTER(char, m_szPlaceName);
+
+public:
+    static CPlayerPing* New(const char* className)
+    {
+        return CBaseEntity::New<CPlayerPing>(className);
+    }
 };

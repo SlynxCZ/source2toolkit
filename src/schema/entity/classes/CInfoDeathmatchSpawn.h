@@ -14,9 +14,15 @@
 
 #include "SpawnPoint.h"
 
-class CInfoDeathmatchSpawn : public SpawnPoint, public CBaseEntity::Factory<CInfoDeathmatchSpawn>
+class CInfoDeathmatchSpawn : public SpawnPoint
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoDeathmatchSpawn);
 
+
+public:
+    static CInfoDeathmatchSpawn* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoDeathmatchSpawn>(className);
+    }
 };

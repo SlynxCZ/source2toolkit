@@ -14,11 +14,17 @@
 
 #include "CBaseEntity.h"
 
-class CSoundEventParameter : public CBaseEntity, public CBaseEntity::Factory<CSoundEventParameter>
+class CSoundEventParameter : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventParameter);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParamName);
     SCHEMA_FIELD(float, m_flFloatValue);
+
+public:
+    static CSoundEventParameter* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundEventParameter>(className);
+    }
 };

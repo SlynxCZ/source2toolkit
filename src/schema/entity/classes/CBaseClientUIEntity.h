@@ -14,7 +14,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CBaseClientUIEntity : public CBaseModelEntity, public CBaseEntity::Factory<CBaseClientUIEntity>
+class CBaseClientUIEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseClientUIEntity);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_DialogXMLName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_PanelClassName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_PanelID);
+
+public:
+    static CBaseClientUIEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseClientUIEntity>(className);
+    }
 };

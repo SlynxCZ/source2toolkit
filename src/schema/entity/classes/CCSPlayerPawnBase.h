@@ -19,7 +19,7 @@
 class CCSPlayer_PingServices;
 class CCSPlayerController;
 
-class CCSPlayerPawnBase : public CBasePlayerPawn, public CBaseEntity::Factory<CCSPlayerPawnBase>
+class CCSPlayerPawnBase : public CBasePlayerPawn
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerPawnBase);
@@ -39,4 +39,10 @@ public:
     SCHEMA_FIELD(float, m_flProgressBarStartTime);
     SCHEMA_FIELD(int32_t, m_iProgressBarDuration);
     SCHEMA_FIELD(CHandle<CCSPlayerController>, m_hOriginalController);
+
+public:
+    static CCSPlayerPawnBase* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPlayerPawnBase>(className);
+    }
 };

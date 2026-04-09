@@ -17,7 +17,7 @@
 class CFuncMover;
 class CPathMoverEntitySpawner;
 
-class CPathMover : public CPathWithDynamicNodes, public CBaseEntity::Factory<CPathMover>
+class CPathMover : public CPathWithDynamicNodes
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathMover);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CFuncMover>>, m_vecMovers);
     SCHEMA_FIELD(CHandle<CPathMoverEntitySpawner>, m_hMoverSpawner);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMoverSpawnerName);
+
+public:
+    static CPathMover* New(const char* className)
+    {
+        return CBaseEntity::New<CPathMover>(className);
+    }
 };

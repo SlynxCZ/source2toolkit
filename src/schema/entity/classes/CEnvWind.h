@@ -15,10 +15,16 @@
 #include "CBaseEntity.h"
 #include "CEnvWindShared.h"
 
-class CEnvWind : public CBaseEntity, public CBaseEntity::Factory<CEnvWind>
+class CEnvWind : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWind);
 
     SCHEMA_FIELD(CEnvWindShared, m_EnvWindShared);
+
+public:
+    static CEnvWind* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvWind>(className);
+    }
 };

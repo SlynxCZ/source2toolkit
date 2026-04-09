@@ -30,7 +30,7 @@ class CPlayer_UseServices;
 class CPlayer_WaterServices;
 class CPlayer_WeaponServices;
 
-class CBasePlayerPawn : public CBaseCombatCharacter, public CBaseEntity::Factory<CBasePlayerPawn>
+class CBasePlayerPawn : public CBaseCombatCharacter
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerPawn);
@@ -66,4 +66,10 @@ public:
     void CommitSuicide(bool bExplode, bool bForce);
     /// <summary>Remove weapon from player.</summary>
     void RemovePlayerItem(CBasePlayerWeapon* pWeapon);
+
+public:
+    static CBasePlayerPawn* New(const char* className)
+    {
+        return CBaseEntity::New<CBasePlayerPawn>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseFilter.h"
 
-class CFilterEnemy : public CBaseFilter, public CBaseEntity::Factory<CFilterEnemy>
+class CFilterEnemy : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterEnemy);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(float, m_flOuterRadius);
     SCHEMA_FIELD(int32_t, m_nMaxSquadmatesPerEnemy);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPlayerName);
+
+public:
+    static CFilterEnemy* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterEnemy>(className);
+    }
 };

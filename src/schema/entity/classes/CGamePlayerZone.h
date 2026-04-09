@@ -14,11 +14,17 @@
 
 #include "CRuleBrushEntity.h"
 
-class CGamePlayerZone : public CRuleBrushEntity, public CBaseEntity::Factory<CGamePlayerZone>
+class CGamePlayerZone : public CRuleBrushEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGamePlayerZone);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerInZone);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerOutZone);
+
+public:
+    static CGamePlayerZone* New(const char* className)
+    {
+        return CBaseEntity::New<CGamePlayerZone>(className);
+    }
 };

@@ -16,7 +16,7 @@
 
 class CInfoLadderDismount;
 
-class CFuncLadder : public CBaseModelEntity, public CBaseEntity::Factory<CFuncLadder>
+class CFuncLadder : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncLadder);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_surfacePropName);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerGotOnLadder);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerGotOffLadder);
+
+public:
+    static CFuncLadder* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncLadder>(className);
+    }
 };

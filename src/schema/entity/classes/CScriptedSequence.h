@@ -22,7 +22,7 @@
 
 class CBaseAnimGraph;
 
-class CScriptedSequence : public CBaseEntity, public CBaseEntity::Factory<CScriptedSequence>
+class CScriptedSequence : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptedSequence);
@@ -104,4 +104,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hInteractionMainEntity);
     SCHEMA_FIELD(int32_t, m_iPlayerDeathBehavior);
     SCHEMA_FIELD(bool, m_bSkipFadeIn);
+
+public:
+    static CScriptedSequence* New(const char* className)
+    {
+        return CBaseEntity::New<CScriptedSequence>(className);
+    }
 };

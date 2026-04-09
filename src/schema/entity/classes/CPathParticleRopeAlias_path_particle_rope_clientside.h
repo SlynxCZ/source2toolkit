@@ -14,9 +14,15 @@
 
 #include "CPathParticleRope.h"
 
-class CPathParticleRopeAlias_path_particle_rope_clientside : public CPathParticleRope, public CBaseEntity::Factory<CPathParticleRopeAlias_path_particle_rope_clientside>
+class CPathParticleRopeAlias_path_particle_rope_clientside : public CPathParticleRope
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathParticleRopeAlias_path_particle_rope_clientside);
 
+
+public:
+    static CPathParticleRopeAlias_path_particle_rope_clientside* New(const char* className)
+    {
+        return CBaseEntity::New<CPathParticleRopeAlias_path_particle_rope_clientside>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CRulePointEntity.h"
 
-class CGameEnd : public CRulePointEntity, public CBaseEntity::Factory<CGameEnd>
+class CGameEnd : public CRulePointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameEnd);
 
+
+public:
+    static CGameEnd* New(const char* className)
+    {
+        return CBaseEntity::New<CGameEnd>(className);
+    }
 };

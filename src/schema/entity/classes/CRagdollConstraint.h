@@ -14,7 +14,7 @@
 
 #include "CPhysConstraint.h"
 
-class CRagdollConstraint : public CPhysConstraint, public CBaseEntity::Factory<CRagdollConstraint>
+class CRagdollConstraint : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollConstraint);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(float, m_xfriction);
     SCHEMA_FIELD(float, m_yfriction);
     SCHEMA_FIELD(float, m_zfriction);
+
+public:
+    static CRagdollConstraint* New(const char* className)
+    {
+        return CBaseEntity::New<CRagdollConstraint>(className);
+    }
 };

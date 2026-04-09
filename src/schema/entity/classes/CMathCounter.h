@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMathCounter : public CLogicalEntity, public CBaseEntity::Factory<CMathCounter>
+class CMathCounter : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMathCounter);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnHitMax);
     SCHEMA_FIELD(CEntityIOOutput, m_OnChangedFromMin);
     SCHEMA_FIELD(CEntityIOOutput, m_OnChangedFromMax);
+
+public:
+    static CMathCounter* New(const char* className)
+    {
+        return CBaseEntity::New<CMathCounter>(className);
+    }
 };

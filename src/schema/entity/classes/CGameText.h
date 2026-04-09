@@ -15,11 +15,17 @@
 #include "CRulePointEntity.h"
 #include "hudtextparms_t.h"
 
-class CGameText : public CRulePointEntity, public CBaseEntity::Factory<CGameText>
+class CGameText : public CRulePointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameText);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMessage);
     SCHEMA_FIELD(hudtextparms_t, m_textParms);
+
+public:
+    static CGameText* New(const char* className)
+    {
+        return CBaseEntity::New<CGameText>(className);
+    }
 };

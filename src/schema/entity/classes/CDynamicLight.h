@@ -14,7 +14,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CDynamicLight : public CBaseModelEntity, public CBaseEntity::Factory<CDynamicLight>
+class CDynamicLight : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicLight);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(float, m_InnerAngle);
     SCHEMA_FIELD(float, m_OuterAngle);
     SCHEMA_FIELD(float, m_SpotRadius);
+
+public:
+    static CDynamicLight* New(const char* className)
+    {
+        return CBaseEntity::New<CDynamicLight>(className);
+    }
 };

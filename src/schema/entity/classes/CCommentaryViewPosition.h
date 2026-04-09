@@ -14,9 +14,15 @@
 
 #include "CSprite.h"
 
-class CCommentaryViewPosition : public CSprite, public CBaseEntity::Factory<CCommentaryViewPosition>
+class CCommentaryViewPosition : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CCommentaryViewPosition);
 
+
+public:
+    static CCommentaryViewPosition* New(const char* className)
+    {
+        return CBaseEntity::New<CCommentaryViewPosition>(className);
+    }
 };

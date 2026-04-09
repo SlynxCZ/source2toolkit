@@ -16,11 +16,17 @@
 
 class CPathNode;
 
-class CPathWithDynamicNodes : public CPathSimple, public CBaseEntity::Factory<CPathWithDynamicNodes>
+class CPathWithDynamicNodes : public CPathSimple
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathWithDynamicNodes);
 
     SCHEMA_FIELD(CUtlVector<CHandle<CPathNode>>, m_vecPathNodes);
     SCHEMA_FIELD(CTransform, m_xInitialPathWorldToLocal);
+
+public:
+    static CPathWithDynamicNodes* New(const char* className)
+    {
+        return CBaseEntity::New<CPathWithDynamicNodes>(className);
+    }
 };

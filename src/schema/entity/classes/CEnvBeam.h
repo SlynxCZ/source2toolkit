@@ -18,7 +18,7 @@
 
 class CBaseEntity;
 
-class CEnvBeam : public CBeam, public CBaseEntity::Factory<CEnvBeam>
+class CEnvBeam : public CBeam
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvBeam);
@@ -42,4 +42,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hFilter);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszDecal);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTouchedByEntity);
+
+public:
+    static CEnvBeam* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvBeam>(className);
+    }
 };

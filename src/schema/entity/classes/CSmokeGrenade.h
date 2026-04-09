@@ -14,9 +14,15 @@
 
 #include "CBaseCSGrenade.h"
 
-class CSmokeGrenade : public CBaseCSGrenade, public CBaseEntity::Factory<CSmokeGrenade>
+class CSmokeGrenade : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CSmokeGrenade);
 
+
+public:
+    static CSmokeGrenade* New(const char* className)
+    {
+        return CBaseEntity::New<CSmokeGrenade>(className);
+    }
 };

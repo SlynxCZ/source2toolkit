@@ -15,7 +15,7 @@
 #include "CBaseToggle.h"
 #include "../enums/MoveLinearAuthoredPos_t.h"
 
-class CFuncMoveLinear : public CBaseToggle, public CBaseEntity::Factory<CFuncMoveLinear>
+class CFuncMoveLinear : public CBaseToggle
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMoveLinear);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD(bool, m_bCreateMovableNavMesh);
     SCHEMA_FIELD(bool, m_bAllowMovableNavMeshDockingOnEntireEntity);
     SCHEMA_FIELD(bool, m_bCreateNavObstacle);
+
+public:
+    static CFuncMoveLinear* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncMoveLinear>(className);
+    }
 };

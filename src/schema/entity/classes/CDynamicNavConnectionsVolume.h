@@ -15,7 +15,7 @@
 #include "CTriggerMultiple.h"
 #include "DynamicVolumeDef_t.h"
 
-class CDynamicNavConnectionsVolume : public CTriggerMultiple, public CBaseEntity::Factory<CDynamicNavConnectionsVolume>
+class CDynamicNavConnectionsVolume : public CTriggerMultiple
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicNavConnectionsVolume);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(float, m_flTargetAreaSearchRadius);
     SCHEMA_FIELD(float, m_flUpdateDistance);
     SCHEMA_FIELD(float, m_flMaxConnectionDistance);
+
+public:
+    static CDynamicNavConnectionsVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CDynamicNavConnectionsVolume>(className);
+    }
 };

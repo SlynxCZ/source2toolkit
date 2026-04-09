@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvSoundscape : public CBaseEntity, public CBaseEntity::Factory<CEnvSoundscape>
+class CEnvSoundscape : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscape);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_soundscapeName);
     SCHEMA_FIELD(uint32_t, m_soundEventHash);
+
+public:
+    static CEnvSoundscape* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSoundscape>(className);
+    }
 };

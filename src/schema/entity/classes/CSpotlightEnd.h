@@ -14,7 +14,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CSpotlightEnd : public CBaseModelEntity, public CBaseEntity::Factory<CSpotlightEnd>
+class CSpotlightEnd : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpotlightEnd);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(Vector, m_vSpotlightDir);
     SCHEMA_FIELD(Vector, m_vSpotlightOrg);
+
+public:
+    static CSpotlightEnd* New(const char* className)
+    {
+        return CBaseEntity::New<CSpotlightEnd>(className);
+    }
 };

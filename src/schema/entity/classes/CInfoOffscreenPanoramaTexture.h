@@ -16,7 +16,7 @@
 
 class CBaseModelEntity;
 
-class CInfoOffscreenPanoramaTexture : public CPointEntity, public CBaseEntity::Factory<CInfoOffscreenPanoramaTexture>
+class CInfoOffscreenPanoramaTexture : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoOffscreenPanoramaTexture);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(CUtlVector<CUtlSymbolLarge>, m_vecCSSClasses);
     SCHEMA_FIELD(CUtlSymbolLarge, m_szTargetsName);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseModelEntity>>, m_AdditionalTargetEntities);
+
+public:
+    static CInfoOffscreenPanoramaTexture* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoOffscreenPanoramaTexture>(className);
+    }
 };

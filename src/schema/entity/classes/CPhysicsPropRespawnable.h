@@ -14,7 +14,7 @@
 
 #include "CPhysicsProp.h"
 
-class CPhysicsPropRespawnable : public CPhysicsProp, public CBaseEntity::Factory<CPhysicsPropRespawnable>
+class CPhysicsPropRespawnable : public CPhysicsProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropRespawnable);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(Vector, m_vOriginalMins);
     SCHEMA_FIELD(Vector, m_vOriginalMaxs);
     SCHEMA_FIELD(float, m_flRespawnDuration);
+
+public:
+    static CPhysicsPropRespawnable* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicsPropRespawnable>(className);
+    }
 };

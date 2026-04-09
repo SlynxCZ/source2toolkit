@@ -14,9 +14,15 @@
 
 #include "CBaseEntity.h"
 
-class CGameRulesProxy : public CBaseEntity, public CBaseEntity::Factory<CGameRulesProxy>
+class CGameRulesProxy : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameRulesProxy);
 
+
+public:
+    static CGameRulesProxy* New(const char* className)
+    {
+        return CBaseEntity::New<CGameRulesProxy>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CServerOnlyModelEntity.h"
 
-class CCSPlace : public CServerOnlyModelEntity, public CBaseEntity::Factory<CCSPlace>
+class CCSPlace : public CServerOnlyModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlace);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_name);
+
+public:
+    static CCSPlace* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPlace>(className);
+    }
 };

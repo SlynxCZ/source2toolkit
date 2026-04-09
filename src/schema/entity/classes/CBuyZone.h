@@ -14,10 +14,16 @@
 
 #include "CBaseTrigger.h"
 
-class CBuyZone : public CBaseTrigger, public CBaseEntity::Factory<CBuyZone>
+class CBuyZone : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CBuyZone);
 
     SCHEMA_FIELD(int32_t, m_LegacyTeamNum);
+
+public:
+    static CBuyZone* New(const char* className)
+    {
+        return CBaseEntity::New<CBuyZone>(className);
+    }
 };

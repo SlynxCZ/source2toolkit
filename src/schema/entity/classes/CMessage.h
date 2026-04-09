@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CMessage : public CPointEntity, public CBaseEntity::Factory<CMessage>
+class CMessage : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMessage);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNoise);
     SCHEMA_FIELD(CEntityIOOutput, m_OnShowMessage);
+
+public:
+    static CMessage* New(const char* className)
+    {
+        return CBaseEntity::New<CMessage>(className);
+    }
 };

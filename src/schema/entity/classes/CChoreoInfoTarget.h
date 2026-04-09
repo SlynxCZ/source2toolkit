@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CChoreoInfoTarget : public CPointEntity, public CBaseEntity::Factory<CChoreoInfoTarget>
+class CChoreoInfoTarget : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CChoreoInfoTarget);
 
+
+public:
+    static CChoreoInfoTarget* New(const char* className)
+    {
+        return CBaseEntity::New<CChoreoInfoTarget>(className);
+    }
 };

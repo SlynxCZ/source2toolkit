@@ -14,7 +14,7 @@
 
 #include "CRulePointEntity.h"
 
-class CGameMoney : public CRulePointEntity, public CBaseEntity::Factory<CGameMoney>
+class CGameMoney : public CRulePointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameMoney);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnMoneySpentFail);
     SCHEMA_FIELD(int32_t, m_nMoney);
     SCHEMA_FIELD(CUtlString, m_strAwardText);
+
+public:
+    static CGameMoney* New(const char* className)
+    {
+        return CBaseEntity::New<CGameMoney>(className);
+    }
 };

@@ -18,6 +18,7 @@
  */
 
 #pragma once
+#include "log.h"
 #include "platform.h"
 
 #define CALL_VIRTUAL(retType, idx, ...) \
@@ -30,14 +31,14 @@ namespace vmt
 	{
 		if (!pClass)
 		{
-			Warning("Tried getting virtual function from a null class.\n");
+			FP_WARN("Tried getting virtual function from a null class.");
 			return T();
 		}
 
 		void** pVTable = *static_cast<void***>(pClass);
 		if (!pVTable)
 		{
-			Warning("Tried getting virtual function from a null vtable.\n");
+			FP_WARN("Tried getting virtual function from a null vtable.");
 			return T();
 		}
 
@@ -54,7 +55,7 @@ namespace vmt
 #endif
 		if (!pFunc)
 		{
-			Warning("Tried calling a null virtual function.\n");
+			FP_WARN("Tried calling a null virtual function.");
 			return T();
 		}
 

@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CEntityFlame : public CBaseEntity, public CBaseEntity::Factory<CEntityFlame>
+class CEntityFlame : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityFlame);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hAttacker);
     SCHEMA_FIELD(float, m_flDirectDamagePerSecond);
     SCHEMA_FIELD(int32_t, m_iCustomDamageType);
+
+public:
+    static CEntityFlame* New(const char* className)
+    {
+        return CBaseEntity::New<CEntityFlame>(className);
+    }
 };

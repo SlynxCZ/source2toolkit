@@ -15,7 +15,7 @@
 #include "CPointEntity.h"
 #include "../enums/TrackOrientationType_t.h"
 
-class CPathTrack : public CPointEntity, public CBaseEntity::Factory<CPathTrack>
+class CPathTrack : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathTrack);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nIterVal);
     SCHEMA_FIELD(TrackOrientationType_t, m_eOrientationType);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
+
+public:
+    static CPathTrack* New(const char* className)
+    {
+        return CBaseEntity::New<CPathTrack>(className);
+    }
 };

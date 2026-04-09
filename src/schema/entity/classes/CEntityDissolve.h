@@ -15,7 +15,7 @@
 #include "CBaseModelEntity.h"
 #include "../enums/EntityDisolveType_t.h"
 
-class CEntityDissolve : public CBaseModelEntity, public CBaseEntity::Factory<CEntityDissolve>
+class CEntityDissolve : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityDissolve);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(EntityDisolveType_t, m_nDissolveType);
     SCHEMA_FIELD(Vector, m_vDissolverOrigin);
     SCHEMA_FIELD(uint32_t, m_nMagnitude);
+
+public:
+    static CEntityDissolve* New(const char* className)
+    {
+        return CBaseEntity::New<CEntityDissolve>(className);
+    }
 };

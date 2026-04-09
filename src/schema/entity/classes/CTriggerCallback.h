@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerCallback : public CBaseTrigger, public CBaseEntity::Factory<CTriggerCallback>
+class CTriggerCallback : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerCallback);
 
+
+public:
+    static CTriggerCallback* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerCallback>(className);
+    }
 };

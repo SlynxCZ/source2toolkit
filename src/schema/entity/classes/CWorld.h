@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CWorld : public CBaseModelEntity, public CBaseEntity::Factory<CWorld>
+class CWorld : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CWorld);
 
+
+public:
+    static CWorld* New(const char* className)
+    {
+        return CBaseEntity::New<CWorld>(className);
+    }
 };

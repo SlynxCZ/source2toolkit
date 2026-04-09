@@ -16,7 +16,7 @@
 
 class CPathSimple;
 
-class CTriggerPush : public CBaseTrigger, public CBaseEntity::Factory<CTriggerPush>
+class CTriggerPush : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerPush);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathSimpleName);
     SCHEMA_FIELD(CPathSimple*, m_PathSimple);
     SCHEMA_FIELD(uint32_t, m_splinePushType);
+
+public:
+    static CTriggerPush* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerPush>(className);
+    }
 };

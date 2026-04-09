@@ -16,11 +16,17 @@
 
 class CCSPlayerPawn;
 
-class CItemDogtags : public CItem, public CBaseEntity::Factory<CItemDogtags>
+class CItemDogtags : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDogtags);
 
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_OwningPlayer);
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_KillingPlayer);
+
+public:
+    static CItemDogtags* New(const char* className)
+    {
+        return CBaseEntity::New<CItemDogtags>(className);
+    }
 };

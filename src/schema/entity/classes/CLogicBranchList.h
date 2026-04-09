@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CLogicBranchList : public CLogicalEntity, public CBaseEntity::Factory<CLogicBranchList>
+class CLogicBranchList : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicBranchList);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnAllTrue);
     SCHEMA_FIELD(CEntityIOOutput, m_OnAllFalse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnMixed);
+
+public:
+    static CLogicBranchList* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicBranchList>(className);
+    }
 };

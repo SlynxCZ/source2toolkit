@@ -14,11 +14,17 @@
 
 #include "CSoundEventEntity.h"
 
-class CSoundEventAABBEntity : public CSoundEventEntity, public CBaseEntity::Factory<CSoundEventAABBEntity>
+class CSoundEventAABBEntity : public CSoundEventEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventAABBEntity);
 
     SCHEMA_FIELD(Vector, m_vMins);
     SCHEMA_FIELD(Vector, m_vMaxs);
+
+public:
+    static CSoundEventAABBEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundEventAABBEntity>(className);
+    }
 };

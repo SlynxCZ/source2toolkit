@@ -15,7 +15,7 @@
 #include "CBaseCSGrenadeProjectile.h"
 #include "IntervalTimer.h"
 
-class CMolotovProjectile : public CBaseCSGrenadeProjectile, public CBaseEntity::Factory<CMolotovProjectile>
+class CMolotovProjectile : public CBaseCSGrenadeProjectile
 {
 public:
     DECLARE_SCHEMA_CLASS(CMolotovProjectile);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(bool, m_bIsIncGrenade);
     SCHEMA_FIELD(bool, m_bDetonated);
     SCHEMA_FIELD(IntervalTimer, m_stillTimer);
+
+public:
+    static CMolotovProjectile* New(const char* className)
+    {
+        return CBaseEntity::New<CMolotovProjectile>(className);
+    }
 };

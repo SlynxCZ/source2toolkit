@@ -14,10 +14,16 @@
 
 #include "CPointEntity.h"
 
-class CTankTargetChange : public CPointEntity, public CBaseEntity::Factory<CTankTargetChange>
+class CTankTargetChange : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTankTargetChange);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_newTargetName);
+
+public:
+    static CTankTargetChange* New(const char* className)
+    {
+        return CBaseEntity::New<CTankTargetChange>(className);
+    }
 };

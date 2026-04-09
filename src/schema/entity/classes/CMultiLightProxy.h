@@ -16,7 +16,7 @@
 
 class CLightEntity;
 
-class CMultiLightProxy : public CLogicalEntity, public CBaseEntity::Factory<CMultiLightProxy>
+class CMultiLightProxy : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiLightProxy);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(float, m_flTargetBrightnessMultiplier);
     SCHEMA_FIELD(float, m_flCurrentBrightnessMultiplier);
     SCHEMA_FIELD(CUtlVector<CHandle<CLightEntity>>, m_vecLights);
+
+public:
+    static CMultiLightProxy* New(const char* className)
+    {
+        return CBaseEntity::New<CMultiLightProxy>(className);
+    }
 };

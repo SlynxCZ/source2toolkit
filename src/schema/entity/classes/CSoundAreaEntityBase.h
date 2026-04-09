@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CSoundAreaEntityBase : public CBaseEntity, public CBaseEntity::Factory<CSoundAreaEntityBase>
+class CSoundAreaEntityBase : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundAreaEntityBase);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSoundAreaType);
     SCHEMA_FIELD(Vector, m_vPos);
+
+public:
+    static CSoundAreaEntityBase* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundAreaEntityBase>(className);
+    }
 };

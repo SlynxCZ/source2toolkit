@@ -17,7 +17,7 @@
 
 class CFishPool;
 
-class CFish : public CBaseAnimGraph, public CBaseEntity::Factory<CFish>
+class CFish : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CFish);
@@ -46,4 +46,10 @@ public:
     SCHEMA_FIELD(CountdownTimer, m_disperseTimer);
     SCHEMA_FIELD(CountdownTimer, m_proximityTimer);
     SCHEMA_FIELD(CUtlVector<CFish*>, m_visible);
+
+public:
+    static CFish* New(const char* className)
+    {
+        return CBaseEntity::New<CFish>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CBaseCSGrenade.h"
 
-class CFlashbang : public CBaseCSGrenade, public CBaseEntity::Factory<CFlashbang>
+class CFlashbang : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CFlashbang);
 
+
+public:
+    static CFlashbang* New(const char* className)
+    {
+        return CBaseEntity::New<CFlashbang>(className);
+    }
 };

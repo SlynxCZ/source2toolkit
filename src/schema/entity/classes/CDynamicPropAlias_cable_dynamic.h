@@ -14,9 +14,15 @@
 
 #include "CDynamicProp.h"
 
-class CDynamicPropAlias_cable_dynamic : public CDynamicProp, public CBaseEntity::Factory<CDynamicPropAlias_cable_dynamic>
+class CDynamicPropAlias_cable_dynamic : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_cable_dynamic);
 
+
+public:
+    static CDynamicPropAlias_cable_dynamic* New(const char* className)
+    {
+        return CBaseEntity::New<CDynamicPropAlias_cable_dynamic>(className);
+    }
 };

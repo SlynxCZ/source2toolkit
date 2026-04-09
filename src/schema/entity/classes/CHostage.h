@@ -20,7 +20,7 @@ class CBaseEntity;
 class CCSPlayerPawn;
 class CCSPlayerPawnBase;
 
-class CHostage : public CHostageExpresserShim, public CBaseEntity::Factory<CHostage>
+class CHostage : public CHostageExpresserShim
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostage);
@@ -64,4 +64,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nPickupEventCount);
     SCHEMA_FIELD(Vector, m_vecSpawnGroundPos);
     SCHEMA_FIELD(Vector, m_vecHostageResetPosition);
+
+public:
+    static CHostage* New(const char* className)
+    {
+        return CBaseEntity::New<CHostage>(className);
+    }
 };

@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPointAngularVelocitySensor : public CPointEntity, public CBaseEntity::Factory<CPointAngularVelocitySensor>
+class CPointAngularVelocitySensor : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointAngularVelocitySensor);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnGreaterThan);
     SCHEMA_FIELD(CEntityIOOutput, m_OnGreaterThanOrEqualTo);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEqualTo);
+
+public:
+    static CPointAngularVelocitySensor* New(const char* className)
+    {
+        return CBaseEntity::New<CPointAngularVelocitySensor>(className);
+    }
 };

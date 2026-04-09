@@ -18,7 +18,7 @@
 
 class CBaseEntity;
 
-class CBasePropDoor : public CDynamicProp, public CBaseEntity::Factory<CBasePropDoor>
+class CBasePropDoor : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePropDoor);
@@ -61,4 +61,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnOpen);
     SCHEMA_FIELD(CEntityIOOutput, m_OnLockedUse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnAjarOpen);
+
+public:
+    static CBasePropDoor* New(const char* className)
+    {
+        return CBaseEntity::New<CBasePropDoor>(className);
+    }
 };

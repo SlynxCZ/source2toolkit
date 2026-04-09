@@ -18,7 +18,7 @@
 class CBaseEntity;
 class CBasePlayerPawn;
 
-class CRagdollProp : public CBaseAnimGraph, public CBaseEntity::Factory<CRagdollProp>
+class CRagdollProp : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollProp);
@@ -49,4 +49,10 @@ public:
     SCHEMA_FIELD(CUtlVector<Vector>, m_ragdollMins);
     SCHEMA_FIELD(CUtlVector<Vector>, m_ragdollMaxs);
     SCHEMA_FIELD(bool, m_bShouldDeleteActivationRecord);
+
+public:
+    static CRagdollProp* New(const char* className)
+    {
+        return CBaseEntity::New<CRagdollProp>(className);
+    }
 };

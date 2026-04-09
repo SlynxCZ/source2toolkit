@@ -14,7 +14,7 @@
 
 #include "CPropDoorRotating.h"
 
-class CPropDoorRotatingBreakable : public CPropDoorRotating, public CBaseEntity::Factory<CPropDoorRotatingBreakable>
+class CPropDoorRotatingBreakable : public CPropDoorRotating
 {
 public:
     DECLARE_SCHEMA_CLASS(CPropDoorRotatingBreakable);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(bool, m_isAbleToCloseAreaPortals);
     SCHEMA_FIELD(int32_t, m_currentDamageState);
     SCHEMA_FIELD(CUtlVector<CUtlSymbolLarge>, m_damageStates);
+
+public:
+    static CPropDoorRotatingBreakable* New(const char* className)
+    {
+        return CBaseEntity::New<CPropDoorRotatingBreakable>(className);
+    }
 };

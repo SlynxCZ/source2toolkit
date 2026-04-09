@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CModelPointEntity : public CBaseModelEntity, public CBaseEntity::Factory<CModelPointEntity>
+class CModelPointEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CModelPointEntity);
 
+
+public:
+    static CModelPointEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CModelPointEntity>(className);
+    }
 };

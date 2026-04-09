@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CMapInfo : public CPointEntity, public CBaseEntity::Factory<CMapInfo>
+class CMapInfo : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapInfo);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD(float, m_flEnvPuddleRippleDirection);
     SCHEMA_FIELD(float, m_flEnvWetnessCoverage);
     SCHEMA_FIELD(float, m_flEnvWetnessDryingAmount);
+
+public:
+    static CMapInfo* New(const char* className)
+    {
+        return CBaseEntity::New<CMapInfo>(className);
+    }
 };

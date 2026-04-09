@@ -14,10 +14,16 @@
 
 #include "CBaseFilter.h"
 
-class CFilterProximity : public CBaseFilter, public CBaseEntity::Factory<CFilterProximity>
+class CFilterProximity : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterProximity);
 
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    static CFilterProximity* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterProximity>(className);
+    }
 };

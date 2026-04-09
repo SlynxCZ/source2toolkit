@@ -14,11 +14,17 @@
 
 #include "CBaseEntity.h"
 
-class CPulseGameBlackboard : public CBaseEntity, public CBaseEntity::Factory<CPulseGameBlackboard>
+class CPulseGameBlackboard : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPulseGameBlackboard);
 
     SCHEMA_FIELD(CUtlString, m_strGraphName);
     SCHEMA_FIELD(CUtlString, m_strStateBlob);
+
+public:
+    static CPulseGameBlackboard* New(const char* className)
+    {
+        return CBaseEntity::New<CPulseGameBlackboard>(className);
+    }
 };

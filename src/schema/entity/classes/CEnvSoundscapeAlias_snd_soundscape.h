@@ -14,9 +14,15 @@
 
 #include "CEnvSoundscape.h"
 
-class CEnvSoundscapeAlias_snd_soundscape : public CEnvSoundscape, public CBaseEntity::Factory<CEnvSoundscapeAlias_snd_soundscape>
+class CEnvSoundscapeAlias_snd_soundscape : public CEnvSoundscape
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeAlias_snd_soundscape);
 
+
+public:
+    static CEnvSoundscapeAlias_snd_soundscape* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSoundscapeAlias_snd_soundscape>(className);
+    }
 };

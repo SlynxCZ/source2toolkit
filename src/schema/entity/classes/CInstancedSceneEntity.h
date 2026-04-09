@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CInstancedSceneEntity : public CSceneEntity, public CBaseEntity::Factory<CInstancedSceneEntity>
+class CInstancedSceneEntity : public CSceneEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInstancedSceneEntity);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(bool, m_bIsBackground);
     SCHEMA_FIELD(bool, m_bRemoveOnCompletion);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTarget);
+
+public:
+    static CInstancedSceneEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CInstancedSceneEntity>(className);
+    }
 };

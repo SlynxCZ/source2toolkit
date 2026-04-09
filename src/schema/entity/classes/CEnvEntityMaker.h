@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CEnvEntityMaker : public CPointEntity, public CBaseEntity::Factory<CEnvEntityMaker>
+class CEnvEntityMaker : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvEntityMaker);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszTemplate);
     SCHEMA_FIELD(CEntityIOOutput, m_pOutputOnSpawned);
     SCHEMA_FIELD(CEntityIOOutput, m_pOutputOnFailedSpawn);
+
+public:
+    static CEnvEntityMaker* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvEntityMaker>(className);
+    }
 };

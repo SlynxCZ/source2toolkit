@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CPointHurt : public CPointEntity, public CBaseEntity::Factory<CPointHurt>
+class CPointHurt : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointHurt);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(float, m_flDelay);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
+
+public:
+    static CPointHurt* New(const char* className)
+    {
+        return CBaseEntity::New<CPointHurt>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CBarnLight.h"
 
-class CRectLight : public CBarnLight, public CBaseEntity::Factory<CRectLight>
+class CRectLight : public CBarnLight
 {
 public:
     DECLARE_SCHEMA_CLASS(CRectLight);
 
     SCHEMA_FIELD(bool, m_bShowLight);
+
+public:
+    static CRectLight* New(const char* className)
+    {
+        return CBaseEntity::New<CRectLight>(className);
+    }
 };

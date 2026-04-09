@@ -14,7 +14,7 @@
 
 #include "CMarkupVolume.h"
 
-class CMarkupVolumeTagged : public CMarkupVolume, public CBaseEntity::Factory<CMarkupVolumeTagged>
+class CMarkupVolumeTagged : public CMarkupVolume
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeTagged);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(bool, m_bGroupByVolume);
     SCHEMA_FIELD(bool, m_bGroupOtherGroups);
     SCHEMA_FIELD(bool, m_bIsInGroup);
+
+public:
+    static CMarkupVolumeTagged* New(const char* className)
+    {
+        return CBaseEntity::New<CMarkupVolumeTagged>(className);
+    }
 };

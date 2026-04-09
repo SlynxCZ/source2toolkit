@@ -14,10 +14,16 @@
 
 #include "CBaseModelEntity.h"
 
-class CRuleEntity : public CBaseModelEntity, public CBaseEntity::Factory<CRuleEntity>
+class CRuleEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRuleEntity);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMaster);
+
+public:
+    static CRuleEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CRuleEntity>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerTeleport : public CBaseTrigger, public CBaseEntity::Factory<CTriggerTeleport>
+class CTriggerTeleport : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerTeleport);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(bool, m_bUseLandmarkAngles);
     SCHEMA_FIELD(bool, m_bMirrorPlayer);
     SCHEMA_FIELD(bool, m_bCheckDestIfClearForPlayer);
+
+public:
+    static CTriggerTeleport* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerTeleport>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CRagdollManager : public CBaseEntity, public CBaseEntity::Factory<CRagdollManager>
+class CRagdollManager : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollManager);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iMaxRagdollCount);
     SCHEMA_FIELD(bool, m_bSaveImportant);
     SCHEMA_FIELD(bool, m_bCanTakeDamage);
+
+public:
+    static CRagdollManager* New(const char* className)
+    {
+        return CBaseEntity::New<CRagdollManager>(className);
+    }
 };

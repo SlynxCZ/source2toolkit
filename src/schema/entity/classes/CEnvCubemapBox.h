@@ -14,9 +14,15 @@
 
 #include "CEnvCubemap.h"
 
-class CEnvCubemapBox : public CEnvCubemap, public CBaseEntity::Factory<CEnvCubemapBox>
+class CEnvCubemapBox : public CEnvCubemap
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemapBox);
 
+
+public:
+    static CEnvCubemapBox* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvCubemapBox>(className);
+    }
 };

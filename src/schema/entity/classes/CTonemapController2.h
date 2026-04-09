@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CTonemapController2 : public CBaseEntity, public CBaseEntity::Factory<CTonemapController2>
+class CTonemapController2 : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTonemapController2);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(float, m_flExposureAdaptationSpeedUp);
     SCHEMA_FIELD(float, m_flExposureAdaptationSpeedDown);
     SCHEMA_FIELD(float, m_flTonemapEVSmoothingRange);
+
+public:
+    static CTonemapController2* New(const char* className)
+    {
+        return CBaseEntity::New<CTonemapController2>(className);
+    }
 };

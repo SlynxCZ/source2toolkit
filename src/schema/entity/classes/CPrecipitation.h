@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CPrecipitation : public CBaseTrigger, public CBaseEntity::Factory<CPrecipitation>
+class CPrecipitation : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitation);
 
+
+public:
+    static CPrecipitation* New(const char* className)
+    {
+        return CBaseEntity::New<CPrecipitation>(className);
+    }
 };

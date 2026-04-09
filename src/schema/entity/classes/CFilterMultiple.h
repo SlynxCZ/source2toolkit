@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CFilterMultiple : public CBaseFilter, public CBaseEntity::Factory<CFilterMultiple>
+class CFilterMultiple : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterMultiple);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(filter_t, m_nFilterType);
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_iFilterName);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hFilter);
+
+public:
+    static CFilterMultiple* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterMultiple>(className);
+    }
 };

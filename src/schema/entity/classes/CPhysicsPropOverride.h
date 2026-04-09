@@ -14,9 +14,15 @@
 
 #include "CPhysicsProp.h"
 
-class CPhysicsPropOverride : public CPhysicsProp, public CBaseEntity::Factory<CPhysicsPropOverride>
+class CPhysicsPropOverride : public CPhysicsProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropOverride);
 
+
+public:
+    static CPhysicsPropOverride* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicsPropOverride>(className);
+    }
 };

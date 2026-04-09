@@ -14,9 +14,15 @@
 
 #include "CBaseEntity.h"
 
-class CCSPointScriptEntity : public CBaseEntity, public CBaseEntity::Factory<CCSPointScriptEntity>
+class CCSPointScriptEntity : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPointScriptEntity);
 
+
+public:
+    static CCSPointScriptEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPointScriptEntity>(className);
+    }
 };

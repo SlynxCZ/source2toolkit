@@ -14,7 +14,7 @@
 
 #include "CServerOnlyPointEntity.h"
 
-class SpawnPoint : public CServerOnlyPointEntity, public CBaseEntity::Factory<SpawnPoint>
+class SpawnPoint : public CServerOnlyPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(SpawnPoint);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iPriority);
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(int32_t, m_nType);
+
+public:
+    static SpawnPoint* New(const char* className)
+    {
+        return CBaseEntity::New<SpawnPoint>(className);
+    }
 };

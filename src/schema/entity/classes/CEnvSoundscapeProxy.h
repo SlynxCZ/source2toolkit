@@ -14,10 +14,16 @@
 
 #include "CEnvSoundscape.h"
 
-class CEnvSoundscapeProxy : public CEnvSoundscape, public CBaseEntity::Factory<CEnvSoundscapeProxy>
+class CEnvSoundscapeProxy : public CEnvSoundscape
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeProxy);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_MainSoundscapeName);
+
+public:
+    static CEnvSoundscapeProxy* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSoundscapeProxy>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CBasePlatTrain.h"
 
-class CFuncPlat : public CBasePlatTrain, public CBaseEntity::Factory<CFuncPlat>
+class CFuncPlat : public CBasePlatTrain
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPlat);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNoise);
+
+public:
+    static CFuncPlat* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncPlat>(className);
+    }
 };

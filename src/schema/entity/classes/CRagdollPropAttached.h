@@ -14,7 +14,7 @@
 
 #include "CRagdollProp.h"
 
-class CRagdollPropAttached : public CRagdollProp, public CBaseEntity::Factory<CRagdollPropAttached>
+class CRagdollPropAttached : public CRagdollProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollPropAttached);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(Vector, m_attachmentPointRagdollSpace);
     SCHEMA_FIELD(bool, m_bShouldDetach);
     SCHEMA_FIELD(bool, m_bShouldDeleteAttachedActivationRecord);
+
+public:
+    static CRagdollPropAttached* New(const char* className)
+    {
+        return CBaseEntity::New<CRagdollPropAttached>(className);
+    }
 };

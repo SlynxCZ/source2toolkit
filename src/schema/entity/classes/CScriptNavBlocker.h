@@ -14,10 +14,16 @@
 
 #include "CFuncNavBlocker.h"
 
-class CScriptNavBlocker : public CFuncNavBlocker, public CBaseEntity::Factory<CScriptNavBlocker>
+class CScriptNavBlocker : public CFuncNavBlocker
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptNavBlocker);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    static CScriptNavBlocker* New(const char* className)
+    {
+        return CBaseEntity::New<CScriptNavBlocker>(className);
+    }
 };

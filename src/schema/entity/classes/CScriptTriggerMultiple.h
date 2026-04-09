@@ -14,10 +14,16 @@
 
 #include "CTriggerMultiple.h"
 
-class CScriptTriggerMultiple : public CTriggerMultiple, public CBaseEntity::Factory<CScriptTriggerMultiple>
+class CScriptTriggerMultiple : public CTriggerMultiple
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerMultiple);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    static CScriptTriggerMultiple* New(const char* className)
+    {
+        return CBaseEntity::New<CScriptTriggerMultiple>(className);
+    }
 };

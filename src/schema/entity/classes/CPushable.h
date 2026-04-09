@@ -14,9 +14,15 @@
 
 #include "CBreakable.h"
 
-class CPushable : public CBreakable, public CBaseEntity::Factory<CPushable>
+class CPushable : public CBreakable
 {
 public:
     DECLARE_SCHEMA_CLASS(CPushable);
 
+
+public:
+    static CPushable* New(const char* className)
+    {
+        return CBaseEntity::New<CPushable>(className);
+    }
 };

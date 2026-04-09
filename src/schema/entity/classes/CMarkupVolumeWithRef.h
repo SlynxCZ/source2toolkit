@@ -14,7 +14,7 @@
 
 #include "CMarkupVolumeTagged.h"
 
-class CMarkupVolumeWithRef : public CMarkupVolumeTagged, public CBaseEntity::Factory<CMarkupVolumeWithRef>
+class CMarkupVolumeWithRef : public CMarkupVolumeTagged
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeWithRef);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(Vector, m_vRefPosEntitySpace);
     SCHEMA_FIELD(Vector, m_vRefPosWorldSpace);
     SCHEMA_FIELD(float, m_flRefDot);
+
+public:
+    static CMarkupVolumeWithRef* New(const char* className)
+    {
+        return CBaseEntity::New<CMarkupVolumeWithRef>(className);
+    }
 };

@@ -19,7 +19,7 @@ class CBaseEntity;
 class CBaseFlex;
 class CSceneListManager;
 
-class CSceneEntity : public CPointEntity, public CBaseEntity::Factory<CSceneEntity>
+class CSceneEntity : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneEntity);
@@ -86,4 +86,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hActivator);
     SCHEMA_FIELD(int32_t, m_BusyActor);
     SCHEMA_FIELD(SceneOnPlayerDeath_t, m_iPlayerDeathBehavior);
+
+public:
+    static CSceneEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSceneEntity>(className);
+    }
 };

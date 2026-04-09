@@ -23,7 +23,7 @@ class CBaseEntity;
 class CMoverPathNode;
 class CPathMover;
 
-class CFuncMover : public CBaseModelEntity, public CBaseEntity::Factory<CFuncMover>
+class CFuncMover : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMover);
@@ -111,4 +111,10 @@ public:
     SCHEMA_FIELD(float, m_flFollowMoverSpeed);
     SCHEMA_FIELD(float, m_flFollowMoverVelocity);
     SCHEMA_FIELD(int32_t, m_nTickMovementRan);
+
+public:
+    static CFuncMover* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncMover>(className);
+    }
 };

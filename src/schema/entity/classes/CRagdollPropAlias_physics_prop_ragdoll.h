@@ -14,9 +14,15 @@
 
 #include "CRagdollProp.h"
 
-class CRagdollPropAlias_physics_prop_ragdoll : public CRagdollProp, public CBaseEntity::Factory<CRagdollPropAlias_physics_prop_ragdoll>
+class CRagdollPropAlias_physics_prop_ragdoll : public CRagdollProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollPropAlias_physics_prop_ragdoll);
 
+
+public:
+    static CRagdollPropAlias_physics_prop_ragdoll* New(const char* className)
+    {
+        return CBaseEntity::New<CRagdollPropAlias_physics_prop_ragdoll>(className);
+    }
 };

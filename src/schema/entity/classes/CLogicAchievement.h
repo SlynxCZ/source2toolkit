@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicAchievement : public CLogicalEntity, public CBaseEntity::Factory<CLogicAchievement>
+class CLogicAchievement : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicAchievement);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszAchievementEventID);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFired);
+
+public:
+    static CLogicAchievement* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicAchievement>(className);
+    }
 };

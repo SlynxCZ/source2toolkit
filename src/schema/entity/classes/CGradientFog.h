@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CGradientFog : public CBaseEntity, public CBaseEntity::Factory<CGradientFog>
+class CGradientFog : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGradientFog);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(bool, m_bStartDisabled);
     SCHEMA_FIELD(bool, m_bIsEnabled);
     SCHEMA_FIELD(bool, m_bGradientFogNeedsTextures);
+
+public:
+    static CGradientFog* New(const char* className)
+    {
+        return CBaseEntity::New<CGradientFog>(className);
+    }
 };

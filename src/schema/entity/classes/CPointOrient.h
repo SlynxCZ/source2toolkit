@@ -16,7 +16,7 @@
 #include "../enums/PointOrientConstraint_t.h"
 #include "../enums/PointOrientGoalDirectionType_t.h"
 
-class CPointOrient : public CBaseEntity, public CBaseEntity::Factory<CPointOrient>
+class CPointOrient : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointOrient);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(PointOrientConstraint_t, m_nConstraint);
     SCHEMA_FIELD(float, m_flMaxTurnRate);
     SCHEMA_FIELD(float, m_flLastGameTime);
+
+public:
+    static CPointOrient* New(const char* className)
+    {
+        return CBaseEntity::New<CPointOrient>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CServerRagdollTrigger : public CBaseTrigger, public CBaseEntity::Factory<CServerRagdollTrigger>
+class CServerRagdollTrigger : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerRagdollTrigger);
 
+
+public:
+    static CServerRagdollTrigger* New(const char* className)
+    {
+        return CBaseEntity::New<CServerRagdollTrigger>(className);
+    }
 };

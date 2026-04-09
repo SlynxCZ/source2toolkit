@@ -14,7 +14,7 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
-class CFlashbangProjectile : public CBaseCSGrenadeProjectile, public CBaseEntity::Factory<CFlashbangProjectile>
+class CFlashbangProjectile : public CBaseCSGrenadeProjectile
 {
 public:
     DECLARE_SCHEMA_CLASS(CFlashbangProjectile);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(float, m_flTimeToDetonate);
     SCHEMA_FIELD(uint8_t, m_numOpponentsHit);
     SCHEMA_FIELD(uint8_t, m_numTeammatesHit);
+
+public:
+    static CFlashbangProjectile* New(const char* className)
+    {
+        return CBaseEntity::New<CFlashbangProjectile>(className);
+    }
 };

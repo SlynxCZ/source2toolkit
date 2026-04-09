@@ -18,7 +18,7 @@
 
 class CBaseEntity;
 
-class CAmbientGeneric : public CPointEntity, public CBaseEntity::Factory<CAmbientGeneric>
+class CAmbientGeneric : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CAmbientGeneric);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_sSourceEntName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hSoundSource);
     SCHEMA_FIELD(CEntityIndex, m_nSoundSourceEntIndex);
+
+public:
+    static CAmbientGeneric* New(const char* className)
+    {
+        return CBaseEntity::New<CAmbientGeneric>(className);
+    }
 };

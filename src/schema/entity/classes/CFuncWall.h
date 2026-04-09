@@ -14,10 +14,16 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncWall : public CBaseModelEntity, public CBaseEntity::Factory<CFuncWall>
+class CFuncWall : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWall);
 
     SCHEMA_FIELD(int32_t, m_nState);
+
+public:
+    static CFuncWall* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncWall>(className);
+    }
 };

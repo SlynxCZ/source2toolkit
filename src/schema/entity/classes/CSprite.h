@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CSprite : public CBaseModelEntity, public CBaseEntity::Factory<CSprite>
+class CSprite : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSprite);
@@ -44,4 +44,10 @@ public:
     SCHEMA_FIELD(float, m_flBrightnessTimeStart);
     SCHEMA_FIELD(int32_t, m_nSpriteWidth);
     SCHEMA_FIELD(int32_t, m_nSpriteHeight);
+
+public:
+    static CSprite* New(const char* className)
+    {
+        return CBaseEntity::New<CSprite>(className);
+    }
 };

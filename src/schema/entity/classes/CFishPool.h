@@ -17,7 +17,7 @@
 
 class CFish;
 
-class CFishPool : public CBaseEntity, public CBaseEntity::Factory<CFishPool>
+class CFishPool : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFishPool);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(bool, m_isDormant);
     SCHEMA_FIELD(CUtlVector<CHandle<CFish>>, m_fishes);
     SCHEMA_FIELD(CountdownTimer, m_visTimer);
+
+public:
+    static CFishPool* New(const char* className)
+    {
+        return CBaseEntity::New<CFishPool>(className);
+    }
 };

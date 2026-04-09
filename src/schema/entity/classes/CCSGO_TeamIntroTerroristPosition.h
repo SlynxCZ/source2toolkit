@@ -14,9 +14,15 @@
 
 #include "CCSGO_TeamIntroCharacterPosition.h"
 
-class CCSGO_TeamIntroTerroristPosition : public CCSGO_TeamIntroCharacterPosition, public CBaseEntity::Factory<CCSGO_TeamIntroTerroristPosition>
+class CCSGO_TeamIntroTerroristPosition : public CCSGO_TeamIntroCharacterPosition
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamIntroTerroristPosition);
 
+
+public:
+    static CCSGO_TeamIntroTerroristPosition* New(const char* className)
+    {
+        return CBaseEntity::New<CCSGO_TeamIntroTerroristPosition>(className);
+    }
 };

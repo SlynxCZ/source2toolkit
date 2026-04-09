@@ -14,11 +14,17 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicCompare : public CLogicalEntity, public CBaseEntity::Factory<CLogicCompare>
+class CLogicCompare : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicCompare);
 
     SCHEMA_FIELD(float, m_flInValue);
     SCHEMA_FIELD(float, m_flCompareValue);
+
+public:
+    static CLogicCompare* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicCompare>(className);
+    }
 };

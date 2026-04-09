@@ -14,9 +14,15 @@
 
 #include "CLightEntity.h"
 
-class CLightOrthoEntity : public CLightEntity, public CBaseEntity::Factory<CLightOrthoEntity>
+class CLightOrthoEntity : public CLightEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightOrthoEntity);
 
+
+public:
+    static CLightOrthoEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CLightOrthoEntity>(className);
+    }
 };

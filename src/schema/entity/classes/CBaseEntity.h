@@ -115,15 +115,6 @@ public:
 public:
     /// <summary>Creates entity by classname.</summary>
     static CBaseEntity* CreateEntityByName(const char* pszClassName);
-    /// <summary>Factory helper for entity creation.</summary>
-    template<typename T>
-    struct Factory
-    {
-        static T* New(const char* className)
-        {
-            return reinterpret_cast<T*>(CBaseEntity::CreateEntityByName(className));
-        }
-    };
     /// <summary>Create entity by classname.</summary>
     template<typename T>
     static T* New(const char* className)

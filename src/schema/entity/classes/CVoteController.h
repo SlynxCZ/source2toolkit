@@ -17,7 +17,7 @@
 
 class CBaseIssue;
 
-class CVoteController : public CBaseEntity, public CBaseEntity::Factory<CVoteController>
+class CVoteController : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CVoteController);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nHighestCountIndex);
     SCHEMA_FIELD(CUtlVector<CBaseIssue*>, m_potentialIssues);
     SCHEMA_FIELD(CUtlVector<char*>, m_VoteOptions);
+
+public:
+    static CVoteController* New(const char* className)
+    {
+        return CBaseEntity::New<CVoteController>(className);
+    }
 };

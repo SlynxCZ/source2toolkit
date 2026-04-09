@@ -14,7 +14,7 @@
 
 #include "CBaseAnimGraph.h"
 
-class CItem : public CBaseAnimGraph, public CBaseEntity::Factory<CItem>
+class CItem : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CItem);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(Vector, m_vOriginalSpawnOrigin);
     SCHEMA_FIELD(QAngle, m_vOriginalSpawnAngles);
     SCHEMA_FIELD(bool, m_bPhysStartAsleep);
+
+public:
+    static CItem* New(const char* className)
+    {
+        return CBaseEntity::New<CItem>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CInfoLandmark : public CPointEntity, public CBaseEntity::Factory<CInfoLandmark>
+class CInfoLandmark : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoLandmark);
 
+
+public:
+    static CInfoLandmark* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoLandmark>(className);
+    }
 };

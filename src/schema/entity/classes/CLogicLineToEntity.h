@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CLogicLineToEntity : public CLogicalEntity, public CBaseEntity::Factory<CLogicLineToEntity>
+class CLogicLineToEntity : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicLineToEntity);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_SourceName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_StartEntity);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_EndEntity);
+
+public:
+    static CLogicLineToEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicLineToEntity>(className);
+    }
 };

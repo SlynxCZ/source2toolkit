@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CEconEntity : public CBaseFlex, public CBaseEntity::Factory<CEconEntity>
+class CEconEntity : public CBaseFlex
 {
 public:
     DECLARE_SCHEMA_CLASS(CEconEntity);
@@ -31,4 +31,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nFallbackStatTrak);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOldProvidee);
     SCHEMA_FIELD(int32_t, m_iOldOwnerClass);
+
+public:
+    static CEconEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CEconEntity>(className);
+    }
 };

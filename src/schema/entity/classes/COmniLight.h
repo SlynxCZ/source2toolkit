@@ -14,7 +14,7 @@
 
 #include "CBarnLight.h"
 
-class COmniLight : public CBarnLight, public CBaseEntity::Factory<COmniLight>
+class COmniLight : public CBarnLight
 {
 public:
     DECLARE_SCHEMA_CLASS(COmniLight);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(float, m_flInnerAngle);
     SCHEMA_FIELD(float, m_flOuterAngle);
     SCHEMA_FIELD(bool, m_bShowLight);
+
+public:
+    static COmniLight* New(const char* className)
+    {
+        return CBaseEntity::New<COmniLight>(className);
+    }
 };

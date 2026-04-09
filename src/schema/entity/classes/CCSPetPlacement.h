@@ -14,9 +14,15 @@
 
 #include "CBaseEntity.h"
 
-class CCSPetPlacement : public CBaseEntity, public CBaseEntity::Factory<CCSPetPlacement>
+class CCSPetPlacement : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPetPlacement);
 
+
+public:
+    static CCSPetPlacement* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPetPlacement>(className);
+    }
 };

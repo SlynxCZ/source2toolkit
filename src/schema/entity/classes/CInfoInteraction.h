@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoInteraction : public CPointEntity, public CBaseEntity::Factory<CInfoInteraction>
+class CInfoInteraction : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInteraction);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_strSlotEntityName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strInteractVData);
     SCHEMA_FIELD(float, m_flInteractRadius);
+
+public:
+    static CInfoInteraction* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoInteraction>(className);
+    }
 };

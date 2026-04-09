@@ -15,7 +15,7 @@
 #include "CBaseGrenade.h"
 #include "InfoForResourceTypeIParticleSystemDefinition.h"
 
-class CBaseCSGrenadeProjectile : public CBaseGrenade, public CBaseEntity::Factory<CBaseCSGrenadeProjectile>
+class CBaseCSGrenadeProjectile : public CBaseGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseCSGrenadeProjectile);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(Vector, m_vecLastHitSurfaceNormal);
     SCHEMA_FIELD(int32_t, m_nTicksAtZeroVelocity);
     SCHEMA_FIELD(bool, m_bHasEverHitEnemy);
+
+public:
+    static CBaseCSGrenadeProjectile* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseCSGrenadeProjectile>(className);
+    }
 };

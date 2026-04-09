@@ -14,9 +14,15 @@
 
 #include "CCSPlayerPawnBase.h"
 
-class CCSObserverPawn : public CCSPlayerPawnBase, public CBaseEntity::Factory<CCSObserverPawn>
+class CCSObserverPawn : public CCSPlayerPawnBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserverPawn);
 
+
+public:
+    static CCSObserverPawn* New(const char* className)
+    {
+        return CBaseEntity::New<CCSObserverPawn>(className);
+    }
 };

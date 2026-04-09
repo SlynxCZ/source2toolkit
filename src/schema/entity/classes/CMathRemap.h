@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CMathRemap : public CLogicalEntity, public CBaseEntity::Factory<CMathRemap>
+class CMathRemap : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMathRemap);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnRoseAboveMax);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMin);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMax);
+
+public:
+    static CMathRemap* New(const char* className)
+    {
+        return CBaseEntity::New<CMathRemap>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CFuncTrackChange.h"
 
-class CFuncTrackAuto : public CFuncTrackChange, public CBaseEntity::Factory<CFuncTrackAuto>
+class CFuncTrackAuto : public CFuncTrackChange
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrackAuto);
 
+
+public:
+    static CFuncTrackAuto* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTrackAuto>(className);
+    }
 };

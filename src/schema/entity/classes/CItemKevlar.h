@@ -14,9 +14,15 @@
 
 #include "CItem.h"
 
-class CItemKevlar : public CItem, public CBaseEntity::Factory<CItemKevlar>
+class CItemKevlar : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemKevlar);
 
+
+public:
+    static CItemKevlar* New(const char* className)
+    {
+        return CBaseEntity::New<CItemKevlar>(className);
+    }
 };

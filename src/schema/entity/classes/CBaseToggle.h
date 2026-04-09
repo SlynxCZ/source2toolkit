@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CBaseToggle : public CBaseModelEntity, public CBaseEntity::Factory<CBaseToggle>
+class CBaseToggle : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseToggle);
@@ -38,4 +38,10 @@ public:
     SCHEMA_FIELD(QAngle, m_vecFinalAngle);
     SCHEMA_FIELD(int32_t, m_movementType);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sMaster);
+
+public:
+    static CBaseToggle* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseToggle>(className);
+    }
 };

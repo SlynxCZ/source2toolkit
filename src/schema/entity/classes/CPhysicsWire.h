@@ -14,10 +14,16 @@
 
 #include "CBaseEntity.h"
 
-class CPhysicsWire : public CBaseEntity, public CBaseEntity::Factory<CPhysicsWire>
+class CPhysicsWire : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsWire);
 
     SCHEMA_FIELD(int32_t, m_nDensity);
+
+public:
+    static CPhysicsWire* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicsWire>(className);
+    }
 };

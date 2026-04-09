@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicEventListener : public CLogicalEntity, public CBaseEntity::Factory<CLogicEventListener>
+class CLogicEventListener : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicEventListener);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(CUtlString, m_strEventName);
     SCHEMA_FIELD(bool, m_bIsEnabled);
     SCHEMA_FIELD(int32_t, m_nTeam);
+
+public:
+    static CLogicEventListener* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicEventListener>(className);
+    }
 };

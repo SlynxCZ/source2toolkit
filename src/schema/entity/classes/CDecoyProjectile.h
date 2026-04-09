@@ -14,7 +14,7 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
-class CDecoyProjectile : public CBaseCSGrenadeProjectile, public CBaseEntity::Factory<CDecoyProjectile>
+class CDecoyProjectile : public CBaseCSGrenadeProjectile
 {
 public:
     DECLARE_SCHEMA_CLASS(CDecoyProjectile);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(int32_t, m_shotsRemaining);
     SCHEMA_FIELD(float, m_fExpireTime);
     SCHEMA_FIELD(uint16_t, m_decoyWeaponDefIndex);
+
+public:
+    static CDecoyProjectile* New(const char* className)
+    {
+        return CBaseEntity::New<CDecoyProjectile>(className);
+    }
 };

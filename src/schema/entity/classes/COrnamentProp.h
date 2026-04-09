@@ -14,10 +14,16 @@
 
 #include "CDynamicProp.h"
 
-class COrnamentProp : public CDynamicProp, public CBaseEntity::Factory<COrnamentProp>
+class COrnamentProp : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(COrnamentProp);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_initialOwner);
+
+public:
+    static COrnamentProp* New(const char* className)
+    {
+        return CBaseEntity::New<COrnamentProp>(className);
+    }
 };

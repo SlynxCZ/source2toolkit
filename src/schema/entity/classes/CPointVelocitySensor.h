@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPointVelocitySensor : public CPointEntity, public CBaseEntity::Factory<CPointVelocitySensor>
+class CPointVelocitySensor : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointVelocitySensor);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(float, m_fPrevVelocity);
     SCHEMA_FIELD(float, m_flAvgInterval);
+
+public:
+    static CPointVelocitySensor* New(const char* className)
+    {
+        return CBaseEntity::New<CPointVelocitySensor>(className);
+    }
 };

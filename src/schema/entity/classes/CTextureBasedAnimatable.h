@@ -15,7 +15,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CTextureBasedAnimatable : public CBaseModelEntity, public CBaseEntity::Factory<CTextureBasedAnimatable>
+class CTextureBasedAnimatable : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTextureBasedAnimatable);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(Vector, m_vAnimationBoundsMax);
     SCHEMA_FIELD(float, m_flStartTime);
     SCHEMA_FIELD(float, m_flStartFrame);
+
+public:
+    static CTextureBasedAnimatable* New(const char* className)
+    {
+        return CBaseEntity::New<CTextureBasedAnimatable>(className);
+    }
 };

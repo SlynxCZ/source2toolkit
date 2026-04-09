@@ -16,10 +16,16 @@
 
 class CItemGeneric;
 
-class CItemGenericTriggerHelper : public CBaseModelEntity, public CBaseEntity::Factory<CItemGenericTriggerHelper>
+class CItemGenericTriggerHelper : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemGenericTriggerHelper);
 
     SCHEMA_FIELD(CHandle<CItemGeneric>, m_hParentItem);
+
+public:
+    static CItemGenericTriggerHelper* New(const char* className)
+    {
+        return CBaseEntity::New<CItemGenericTriggerHelper>(className);
+    }
 };

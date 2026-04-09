@@ -16,10 +16,16 @@
 
 class CBaseEntity;
 
-class CPointGiveAmmo : public CPointEntity, public CBaseEntity::Factory<CPointGiveAmmo>
+class CPointGiveAmmo : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointGiveAmmo);
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
+
+public:
+    static CPointGiveAmmo* New(const char* className)
+    {
+        return CBaseEntity::New<CPointGiveAmmo>(className);
+    }
 };

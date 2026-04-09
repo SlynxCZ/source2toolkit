@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CPhysExplosion : public CPointEntity, public CBaseEntity::Factory<CPhysExplosion>
+class CPhysExplosion : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysExplosion);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(bool, m_bConvertToDebrisWhenPossible);
     SCHEMA_FIELD(bool, m_bAffectInvulnerableEnts);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPushedPlayer);
+
+public:
+    static CPhysExplosion* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysExplosion>(className);
+    }
 };

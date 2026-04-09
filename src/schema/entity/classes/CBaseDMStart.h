@@ -14,10 +14,16 @@
 
 #include "CPointEntity.h"
 
-class CBaseDMStart : public CPointEntity, public CBaseEntity::Factory<CBaseDMStart>
+class CBaseDMStart : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseDMStart);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_Master);
+
+public:
+    static CBaseDMStart* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseDMStart>(className);
+    }
 };

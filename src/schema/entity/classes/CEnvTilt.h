@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvTilt : public CPointEntity, public CBaseEntity::Factory<CEnvTilt>
+class CEnvTilt : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvTilt);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(float, m_TiltTime);
     SCHEMA_FIELD(float, m_stopTime);
+
+public:
+    static CEnvTilt* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvTilt>(className);
+    }
 };

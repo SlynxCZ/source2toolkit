@@ -15,7 +15,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CEnvSky : public CBaseModelEntity, public CBaseEntity::Factory<CEnvSky>
+class CEnvSky : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSky);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(float, m_flFogMaxStart);
     SCHEMA_FIELD(float, m_flFogMaxEnd);
     SCHEMA_FIELD(bool, m_bEnabled);
+
+public:
+    static CEnvSky* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSky>(className);
+    }
 };

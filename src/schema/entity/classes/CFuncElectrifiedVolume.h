@@ -14,7 +14,7 @@
 
 #include "CFuncBrush.h"
 
-class CFuncElectrifiedVolume : public CFuncBrush, public CBaseEntity::Factory<CFuncElectrifiedVolume>
+class CFuncElectrifiedVolume : public CFuncBrush
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncElectrifiedVolume);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_EffectInterpenetrateName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_EffectZapName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEffectSource);
+
+public:
+    static CFuncElectrifiedVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncElectrifiedVolume>(className);
+    }
 };

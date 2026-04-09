@@ -14,7 +14,7 @@
 
 #include "CTriggerMultiple.h"
 
-class CTriggerImpact : public CTriggerMultiple, public CBaseEntity::Factory<CTriggerImpact>
+class CTriggerImpact : public CTriggerMultiple
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerImpact);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(float, m_flMagnitude);
     SCHEMA_FIELD(float, m_flNoise);
     SCHEMA_FIELD(float, m_flViewkick);
+
+public:
+    static CTriggerImpact* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerImpact>(className);
+    }
 };

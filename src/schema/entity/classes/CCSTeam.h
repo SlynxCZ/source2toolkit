@@ -14,7 +14,7 @@
 
 #include "CTeam.h"
 
-class CCSTeam : public CTeam, public CBaseEntity::Factory<CCSTeam>
+class CCSTeam : public CTeam
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSTeam);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD_POINTER(char, m_szTeamLogoImage);
     SCHEMA_FIELD(float, m_flNextResourceTime);
     SCHEMA_FIELD(int32_t, m_iLastUpdateSentAt);
+
+public:
+    static CCSTeam* New(const char* className)
+    {
+        return CBaseEntity::New<CCSTeam>(className);
+    }
 };

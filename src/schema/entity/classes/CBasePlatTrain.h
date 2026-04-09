@@ -14,7 +14,7 @@
 
 #include "CBaseToggle.h"
 
-class CBasePlatTrain : public CBaseToggle, public CBaseEntity::Factory<CBasePlatTrain>
+class CBasePlatTrain : public CBaseToggle
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlatTrain);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(float, m_volume);
     SCHEMA_FIELD(float, m_flTWidth);
     SCHEMA_FIELD(float, m_flTLength);
+
+public:
+    static CBasePlatTrain* New(const char* className)
+    {
+        return CBaseEntity::New<CBasePlatTrain>(className);
+    }
 };

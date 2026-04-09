@@ -16,7 +16,7 @@
 
 class CBaseFilter;
 
-class CPointPush : public CPointEntity, public CBaseEntity::Factory<CPointPush>
+class CPointPush : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointPush);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(float, m_flConeOfInfluence);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszFilterName);
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
+
+public:
+    static CPointPush* New(const char* className)
+    {
+        return CBaseEntity::New<CPointPush>(className);
+    }
 };

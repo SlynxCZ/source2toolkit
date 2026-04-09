@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPointCommentaryNode : public CBaseAnimGraph, public CBaseEntity::Factory<CPointCommentaryNode>
+class CPointCommentaryNode : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCommentaryNode);
@@ -51,4 +51,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iNodeNumber);
     SCHEMA_FIELD(int32_t, m_iNodeNumberMax);
     SCHEMA_FIELD(bool, m_bListenedTo);
+
+public:
+    static CPointCommentaryNode* New(const char* className)
+    {
+        return CBaseEntity::New<CPointCommentaryNode>(className);
+    }
 };

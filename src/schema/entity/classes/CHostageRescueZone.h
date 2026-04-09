@@ -14,9 +14,15 @@
 
 #include "CHostageRescueZoneShim.h"
 
-class CHostageRescueZone : public CHostageRescueZoneShim, public CBaseEntity::Factory<CHostageRescueZone>
+class CHostageRescueZone : public CHostageRescueZoneShim
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageRescueZone);
 
+
+public:
+    static CHostageRescueZone* New(const char* className)
+    {
+        return CBaseEntity::New<CHostageRescueZone>(className);
+    }
 };

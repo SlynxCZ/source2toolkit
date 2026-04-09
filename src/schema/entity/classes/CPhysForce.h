@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CPhysForce : public CPointEntity, public CBaseEntity::Factory<CPhysForce>
+class CPhysForce : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysForce);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_attachedObject);
     SCHEMA_FIELD(bool, m_wasRestored);
     SCHEMA_FIELD(CConstantForceController, m_integrator);
+
+public:
+    static CPhysForce* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysForce>(className);
+    }
 };

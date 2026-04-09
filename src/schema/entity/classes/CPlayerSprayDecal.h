@@ -14,7 +14,7 @@
 
 #include "CModelPointEntity.h"
 
-class CPlayerSprayDecal : public CModelPointEntity, public CBaseEntity::Factory<CPlayerSprayDecal>
+class CPlayerSprayDecal : public CModelPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerSprayDecal);
@@ -34,4 +34,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nTintID);
     SCHEMA_FIELD(uint8_t, m_nVersion);
     SCHEMA_FIELD_POINTER(uint8_t, m_ubSignature);
+
+public:
+    static CPlayerSprayDecal* New(const char* className)
+    {
+        return CBaseEntity::New<CPlayerSprayDecal>(className);
+    }
 };

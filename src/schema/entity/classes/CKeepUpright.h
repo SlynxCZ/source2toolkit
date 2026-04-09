@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CKeepUpright : public CPointEntity, public CBaseEntity::Factory<CKeepUpright>
+class CKeepUpright : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CKeepUpright);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(float, m_angularLimit);
     SCHEMA_FIELD(bool, m_bActive);
     SCHEMA_FIELD(bool, m_bDampAllRotation);
+
+public:
+    static CKeepUpright* New(const char* className)
+    {
+        return CBaseEntity::New<CKeepUpright>(className);
+    }
 };

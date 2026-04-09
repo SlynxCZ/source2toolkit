@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CServerOnlyModelEntity : public CBaseModelEntity, public CBaseEntity::Factory<CServerOnlyModelEntity>
+class CServerOnlyModelEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerOnlyModelEntity);
 
+
+public:
+    static CServerOnlyModelEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CServerOnlyModelEntity>(className);
+    }
 };

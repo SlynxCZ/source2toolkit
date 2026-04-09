@@ -14,7 +14,7 @@
 
 #include "CModelPointEntity.h"
 
-class CRevertSaved : public CModelPointEntity, public CBaseEntity::Factory<CRevertSaved>
+class CRevertSaved : public CModelPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRevertSaved);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(float, m_loadTime);
     SCHEMA_FIELD(float, m_Duration);
     SCHEMA_FIELD(float, m_HoldTime);
+
+public:
+    static CRevertSaved* New(const char* className)
+    {
+        return CBaseEntity::New<CRevertSaved>(className);
+    }
 };

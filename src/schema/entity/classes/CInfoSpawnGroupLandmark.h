@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CInfoSpawnGroupLandmark : public CPointEntity, public CBaseEntity::Factory<CInfoSpawnGroupLandmark>
+class CInfoSpawnGroupLandmark : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoSpawnGroupLandmark);
 
+
+public:
+    static CInfoSpawnGroupLandmark* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoSpawnGroupLandmark>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CFuncLadder.h"
 
-class CFuncLadderAlias_func_useableladder : public CFuncLadder, public CBaseEntity::Factory<CFuncLadderAlias_func_useableladder>
+class CFuncLadderAlias_func_useableladder : public CFuncLadder
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncLadderAlias_func_useableladder);
 
+
+public:
+    static CFuncLadderAlias_func_useableladder* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncLadderAlias_func_useableladder>(className);
+    }
 };

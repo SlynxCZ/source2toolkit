@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CTriggerLook : public CTriggerOnce, public CBaseEntity::Factory<CTriggerLook>
+class CTriggerLook : public CTriggerOnce
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerLook);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnTimeout);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartLook);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEndLook);
+
+public:
+    static CTriggerLook* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerLook>(className);
+    }
 };

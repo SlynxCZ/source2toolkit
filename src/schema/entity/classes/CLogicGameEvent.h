@@ -14,10 +14,16 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicGameEvent : public CLogicalEntity, public CBaseEntity::Factory<CLogicGameEvent>
+class CLogicGameEvent : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicGameEvent);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEventName);
+
+public:
+    static CLogicGameEvent* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicGameEvent>(className);
+    }
 };

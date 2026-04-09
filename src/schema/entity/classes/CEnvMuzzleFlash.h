@@ -14,11 +14,17 @@
 
 #include "CPointEntity.h"
 
-class CEnvMuzzleFlash : public CPointEntity, public CBaseEntity::Factory<CEnvMuzzleFlash>
+class CEnvMuzzleFlash : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvMuzzleFlash);
 
     SCHEMA_FIELD(float, m_flScale);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParentAttachment);
+
+public:
+    static CEnvMuzzleFlash* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvMuzzleFlash>(className);
+    }
 };

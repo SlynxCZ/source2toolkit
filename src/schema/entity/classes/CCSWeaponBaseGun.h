@@ -14,7 +14,7 @@
 
 #include "CCSWeaponBase.h"
 
-class CCSWeaponBaseGun : public CCSWeaponBase, public CBaseEntity::Factory<CCSWeaponBaseGun>
+class CCSWeaponBaseGun : public CCSWeaponBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSWeaponBaseGun);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(bool, m_bSkillReloadLiftedReloadKey);
     SCHEMA_FIELD(bool, m_bSkillBoltInterruptAvailable);
     SCHEMA_FIELD(bool, m_bSkillBoltLiftedFireKey);
+
+public:
+    static CCSWeaponBaseGun* New(const char* className)
+    {
+        return CBaseEntity::New<CCSWeaponBaseGun>(className);
+    }
 };

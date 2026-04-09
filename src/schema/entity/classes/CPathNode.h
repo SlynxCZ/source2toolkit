@@ -16,7 +16,7 @@
 
 class CPathWithDynamicNodes;
 
-class CPathNode : public CPointEntity, public CBaseEntity::Factory<CPathNode>
+class CPathNode : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathNode);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(CUtlString, m_strPathNodeParameter);
     SCHEMA_FIELD(CTransform, m_xWSPrevParent);
     SCHEMA_FIELD(CHandle<CPathWithDynamicNodes>, m_hPath);
+
+public:
+    static CPathNode* New(const char* className)
+    {
+        return CBaseEntity::New<CPathNode>(className);
+    }
 };

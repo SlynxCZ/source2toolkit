@@ -14,7 +14,7 @@
 
 #include "CPhysConstraint.h"
 
-class CPhysLength : public CPhysConstraint, public CBaseEntity::Factory<CPhysLength>
+class CPhysLength : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysLength);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(float, m_addLength);
     SCHEMA_FIELD(float, m_minLength);
     SCHEMA_FIELD(float, m_totalLength);
+
+public:
+    static CPhysLength* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysLength>(className);
+    }
 };

@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CSplineConstraint : public CPhysConstraint, public CBaseEntity::Factory<CSplineConstraint>
+class CSplineConstraint : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CSplineConstraint);
@@ -35,4 +35,10 @@ public:
     SCHEMA_FIELD(Vector, m_vPreSolveAnchorPos);
     SCHEMA_FIELD(float, m_StartTransitionTime);
     SCHEMA_FIELD(Vector, m_vTangentSpaceAnchorAtTransitionStart);
+
+public:
+    static CSplineConstraint* New(const char* className)
+    {
+        return CBaseEntity::New<CSplineConstraint>(className);
+    }
 };

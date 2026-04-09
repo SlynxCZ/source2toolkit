@@ -16,7 +16,7 @@
 #include "../enums/CPhysicsPropCrateType_t.h"
 #include "../enums/DynamicContinuousContactBehavior_t.h"
 
-class CPhysicsProp : public CBreakableProp, public CBaseEntity::Factory<CPhysicsProp>
+class CPhysicsProp : public CBreakableProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsProp);
@@ -62,4 +62,10 @@ public:
     SCHEMA_FIELD(bool, m_bRemovableForAmmoBalancing);
     SCHEMA_FIELD(bool, m_bAwake);
     SCHEMA_FIELD(bool, m_bAttachedToReferenceFrame);
+
+public:
+    static CPhysicsProp* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicsProp>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CSprite.h"
 
-class CSpriteOriented : public CSprite, public CBaseEntity::Factory<CSpriteOriented>
+class CSpriteOriented : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpriteOriented);
 
+
+public:
+    static CSpriteOriented* New(const char* className)
+    {
+        return CBaseEntity::New<CSpriteOriented>(className);
+    }
 };

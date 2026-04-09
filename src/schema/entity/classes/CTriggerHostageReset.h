@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerHostageReset : public CBaseTrigger, public CBaseEntity::Factory<CTriggerHostageReset>
+class CTriggerHostageReset : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerHostageReset);
 
+
+public:
+    static CTriggerHostageReset* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerHostageReset>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CGameGibManager : public CBaseEntity, public CBaseEntity::Factory<CGameGibManager>
+class CGameGibManager : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameGibManager);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iCurrentMaxPieces);
     SCHEMA_FIELD(int32_t, m_iMaxPieces);
     SCHEMA_FIELD(int32_t, m_iLastFrame);
+
+public:
+    static CGameGibManager* New(const char* className)
+    {
+        return CBaseEntity::New<CGameGibManager>(className);
+    }
 };

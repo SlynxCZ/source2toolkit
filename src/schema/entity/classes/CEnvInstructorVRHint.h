@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CEnvInstructorVRHint : public CPointEntity, public CBaseEntity::Factory<CEnvInstructorVRHint>
+class CEnvInstructorVRHint : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvInstructorVRHint);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszCustomLayoutFile);
     SCHEMA_FIELD(int32_t, m_iAttachType);
     SCHEMA_FIELD(float, m_flHeightOffset);
+
+public:
+    static CEnvInstructorVRHint* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvInstructorVRHint>(className);
+    }
 };

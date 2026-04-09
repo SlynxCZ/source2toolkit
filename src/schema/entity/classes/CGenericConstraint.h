@@ -15,7 +15,7 @@
 #include "CPhysConstraint.h"
 #include "../enums/JointMotion_t.h"
 
-class CGenericConstraint : public CPhysConstraint, public CBaseEntity::Factory<CGenericConstraint>
+class CGenericConstraint : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CGenericConstraint);
@@ -68,4 +68,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedX);
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedY);
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedZ);
+
+public:
+    static CGenericConstraint* New(const char* className)
+    {
+        return CBaseEntity::New<CGenericConstraint>(className);
+    }
 };

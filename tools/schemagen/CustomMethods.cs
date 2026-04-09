@@ -9,9 +9,6 @@ public static class CustomMethods
             "/// <summary>Creates entity by classname.</summary>",
             "static CBaseEntity* CreateEntityByName(const char* pszClassName);",
 
-            "/// <summary>Factory helper for entity creation.</summary>",
-            "template<typename T>\n    struct Factory\n    {\n        static T* New(const char* className)\n        {\n            return reinterpret_cast<T*>(CBaseEntity::CreateEntityByName(className));\n        }\n    };",
-
             "/// <summary>Create entity by classname.</summary>",
             "template<typename T>\n    static T* New(const char* className)\n    {    \n        return reinterpret_cast<T*>(CreateEntityByName(className));\n    }",
 

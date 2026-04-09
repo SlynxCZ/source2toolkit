@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CTriggerLerpObject : public CBaseTrigger, public CBaseEntity::Factory<CTriggerLerpObject>
+class CTriggerLerpObject : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerLerpObject);
@@ -37,4 +37,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnLerpStarted);
     SCHEMA_FIELD(CEntityIOOutput, m_OnLerpFinished);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetached);
+
+public:
+    static CTriggerLerpObject* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerLerpObject>(className);
+    }
 };

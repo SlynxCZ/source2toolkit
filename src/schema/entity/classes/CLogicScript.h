@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CLogicScript : public CPointEntity, public CBaseEntity::Factory<CLogicScript>
+class CLogicScript : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicScript);
 
+
+public:
+    static CLogicScript* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicScript>(className);
+    }
 };

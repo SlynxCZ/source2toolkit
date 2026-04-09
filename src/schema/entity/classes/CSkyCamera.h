@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "sky3dparams_t.h"
 
-class CSkyCamera : public CBaseEntity, public CBaseEntity::Factory<CSkyCamera>
+class CSkyCamera : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkyCamera);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_skyboxSlotToken);
     SCHEMA_FIELD(bool, m_bUseAngles);
     SCHEMA_FIELD(CSkyCamera*, m_pNext);
+
+public:
+    static CSkyCamera* New(const char* className)
+    {
+        return CBaseEntity::New<CSkyCamera>(className);
+    }
 };

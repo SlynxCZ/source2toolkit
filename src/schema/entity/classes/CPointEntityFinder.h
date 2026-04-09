@@ -17,7 +17,7 @@
 
 class CBaseFilter;
 
-class CPointEntityFinder : public CBaseEntity, public CBaseEntity::Factory<CPointEntityFinder>
+class CPointEntityFinder : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointEntityFinder);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hReference);
     SCHEMA_FIELD(EntFinderMethod_t, m_FindMethod);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFoundEntity);
+
+public:
+    static CPointEntityFinder* New(const char* className)
+    {
+        return CBaseEntity::New<CPointEntityFinder>(className);
+    }
 };

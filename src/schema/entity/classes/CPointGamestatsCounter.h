@@ -14,11 +14,17 @@
 
 #include "CPointEntity.h"
 
-class CPointGamestatsCounter : public CPointEntity, public CBaseEntity::Factory<CPointGamestatsCounter>
+class CPointGamestatsCounter : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointGamestatsCounter);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_strStatisticName);
     SCHEMA_FIELD(bool, m_bDisabled);
+
+public:
+    static CPointGamestatsCounter* New(const char* className)
+    {
+        return CBaseEntity::New<CPointGamestatsCounter>(className);
+    }
 };

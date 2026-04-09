@@ -14,9 +14,15 @@
 
 #include "CCSGO_TeamPreviewCharacterPosition.h"
 
-class CCSGO_TeamIntroCharacterPosition : public CCSGO_TeamPreviewCharacterPosition, public CBaseEntity::Factory<CCSGO_TeamIntroCharacterPosition>
+class CCSGO_TeamIntroCharacterPosition : public CCSGO_TeamPreviewCharacterPosition
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamIntroCharacterPosition);
 
+
+public:
+    static CCSGO_TeamIntroCharacterPosition* New(const char* className)
+    {
+        return CBaseEntity::New<CCSGO_TeamIntroCharacterPosition>(className);
+    }
 };

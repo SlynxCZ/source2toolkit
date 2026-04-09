@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CFuncTimescale : public CBaseEntity, public CBaseEntity::Factory<CFuncTimescale>
+class CFuncTimescale : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTimescale);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(float, m_flMinBlendRate);
     SCHEMA_FIELD(float, m_flBlendDeltaMultiplier);
     SCHEMA_FIELD(bool, m_isStarted);
+
+public:
+    static CFuncTimescale* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTimescale>(className);
+    }
 };

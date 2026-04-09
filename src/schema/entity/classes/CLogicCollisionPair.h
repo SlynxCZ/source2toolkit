@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicCollisionPair : public CLogicalEntity, public CBaseEntity::Factory<CLogicCollisionPair>
+class CLogicCollisionPair : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicCollisionPair);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(bool, m_supportMultipleEntitiesWithSameName);
     SCHEMA_FIELD(bool, m_disabled);
     SCHEMA_FIELD(bool, m_succeeded);
+
+public:
+    static CLogicCollisionPair* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicCollisionPair>(className);
+    }
 };

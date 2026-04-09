@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CLogicBranch : public CLogicalEntity, public CBaseEntity::Factory<CLogicBranch>
+class CLogicBranch : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicBranch);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_Listeners);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrue);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFalse);
+
+public:
+    static CLogicBranch* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicBranch>(className);
+    }
 };

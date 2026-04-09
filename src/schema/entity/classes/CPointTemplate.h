@@ -16,7 +16,7 @@
 #include "../enums/PointTemplateClientOnlyEntityBehavior_t.h"
 #include "../enums/PointTemplateOwnerSpawnGroupType_t.h"
 
-class CPointTemplate : public CLogicalEntity, public CBaseEntity::Factory<CPointTemplate>
+class CPointTemplate : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointTemplate);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(PointTemplateOwnerSpawnGroupType_t, m_ownerSpawnGroupType);
     SCHEMA_FIELD(CUtlVector<uint32_t>, m_createdSpawnGroupHandles);
     SCHEMA_FIELD(CUtlVector<CEntityHandle>, m_SpawnedEntityHandles);
+
+public:
+    static CPointTemplate* New(const char* className)
+    {
+        return CBaseEntity::New<CPointTemplate>(className);
+    }
 };

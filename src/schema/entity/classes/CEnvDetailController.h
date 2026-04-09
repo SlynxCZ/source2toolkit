@@ -14,11 +14,17 @@
 
 #include "CBaseEntity.h"
 
-class CEnvDetailController : public CBaseEntity, public CBaseEntity::Factory<CEnvDetailController>
+class CEnvDetailController : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvDetailController);
 
     SCHEMA_FIELD(float, m_flFadeStartDist);
     SCHEMA_FIELD(float, m_flFadeEndDist);
+
+public:
+    static CEnvDetailController* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvDetailController>(className);
+    }
 };

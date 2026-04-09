@@ -16,11 +16,17 @@
 
 class CBaseFilter;
 
-class CTriggerVolume : public CBaseModelEntity, public CBaseEntity::Factory<CTriggerVolume>
+class CTriggerVolume : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerVolume);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterName);
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
+
+public:
+    static CTriggerVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerVolume>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncVehicleClip : public CBaseModelEntity, public CBaseEntity::Factory<CFuncVehicleClip>
+class CFuncVehicleClip : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncVehicleClip);
 
+
+public:
+    static CFuncVehicleClip* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncVehicleClip>(className);
+    }
 };

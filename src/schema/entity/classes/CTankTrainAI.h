@@ -17,7 +17,7 @@
 class CBaseEntity;
 class CFuncTrackTrain;
 
-class CTankTrainAI : public CPointEntity, public CBaseEntity::Factory<CTankTrainAI>
+class CTankTrainAI : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTankTrainAI);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_engineSoundName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_movementSoundName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_targetEntityName);
+
+public:
+    static CTankTrainAI* New(const char* className)
+    {
+        return CBaseEntity::New<CTankTrainAI>(className);
+    }
 };

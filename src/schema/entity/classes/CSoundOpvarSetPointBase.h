@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CSoundOpvarSetPointBase : public CBaseEntity, public CBaseEntity::Factory<CSoundOpvarSetPointBase>
+class CSoundOpvarSetPointBase : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetPointBase);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(int32_t, m_iOpvarIndex);
     SCHEMA_FIELD(bool, m_bUseAutoCompare);
     SCHEMA_FIELD(bool, m_bFastRefresh);
+
+public:
+    static CSoundOpvarSetPointBase* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetPointBase>(className);
+    }
 };

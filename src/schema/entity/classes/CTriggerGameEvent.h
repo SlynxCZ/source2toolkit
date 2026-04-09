@@ -14,7 +14,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerGameEvent : public CBaseTrigger, public CBaseEntity::Factory<CTriggerGameEvent>
+class CTriggerGameEvent : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerGameEvent);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(CUtlString, m_strStartTouchEventName);
     SCHEMA_FIELD(CUtlString, m_strEndTouchEventName);
     SCHEMA_FIELD(CUtlString, m_strTriggerID);
+
+public:
+    static CTriggerGameEvent* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerGameEvent>(className);
+    }
 };

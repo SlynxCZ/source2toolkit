@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoPlayerStart : public CPointEntity, public CBaseEntity::Factory<CInfoPlayerStart>
+class CInfoPlayerStart : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoPlayerStart);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bIsMaster);
     SCHEMA_FIELD(CGlobalSymbol, m_pPawnSubclass);
+
+public:
+    static CInfoPlayerStart* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoPlayerStart>(className);
+    }
 };

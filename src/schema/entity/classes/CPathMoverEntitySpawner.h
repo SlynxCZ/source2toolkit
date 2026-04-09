@@ -16,7 +16,7 @@
 
 class CPathMover;
 
-class CPathMoverEntitySpawner : public CLogicalEntity, public CBaseEntity::Factory<CPathMoverEntitySpawner>
+class CPathMoverEntitySpawner : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathMoverEntitySpawner);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nMaxActive);
     SCHEMA_FIELD(float, m_flLastSpawnTime);
     SCHEMA_FIELD(bool, m_bEnabled);
+
+public:
+    static CPathMoverEntitySpawner* New(const char* className)
+    {
+        return CBaseEntity::New<CPathMoverEntitySpawner>(className);
+    }
 };

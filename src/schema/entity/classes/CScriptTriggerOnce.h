@@ -14,10 +14,16 @@
 
 #include "CTriggerOnce.h"
 
-class CScriptTriggerOnce : public CTriggerOnce, public CBaseEntity::Factory<CScriptTriggerOnce>
+class CScriptTriggerOnce : public CTriggerOnce
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerOnce);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    static CScriptTriggerOnce* New(const char* className)
+    {
+        return CBaseEntity::New<CScriptTriggerOnce>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CPathKeyFrame : public CLogicalEntity, public CBaseEntity::Factory<CPathKeyFrame>
+class CPathKeyFrame : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathKeyFrame);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(CPathKeyFrame*, m_pNextKey);
     SCHEMA_FIELD(CPathKeyFrame*, m_pPrevKey);
     SCHEMA_FIELD(float, m_flMoveSpeed);
+
+public:
+    static CPathKeyFrame* New(const char* className)
+    {
+        return CBaseEntity::New<CPathKeyFrame>(className);
+    }
 };

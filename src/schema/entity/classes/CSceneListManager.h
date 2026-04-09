@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CSceneListManager : public CLogicalEntity, public CBaseEntity::Factory<CSceneListManager>
+class CSceneListManager : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneListManager);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CSceneListManager>>, m_hListManagers);
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_iszScenes);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hScenes);
+
+public:
+    static CSceneListManager* New(const char* className)
+    {
+        return CBaseEntity::New<CSceneListManager>(className);
+    }
 };

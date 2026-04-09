@@ -14,9 +14,15 @@
 
 #include "CSprite.h"
 
-class CCSSprite : public CSprite, public CBaseEntity::Factory<CCSSprite>
+class CCSSprite : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSSprite);
 
+
+public:
+    static CCSSprite* New(const char* className)
+    {
+        return CBaseEntity::New<CCSSprite>(className);
+    }
 };

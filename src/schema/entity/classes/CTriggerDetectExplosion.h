@@ -14,10 +14,16 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerDetectExplosion : public CBaseTrigger, public CBaseEntity::Factory<CTriggerDetectExplosion>
+class CTriggerDetectExplosion : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerDetectExplosion);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetectedExplosion);
+
+public:
+    static CTriggerDetectExplosion* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerDetectExplosion>(className);
+    }
 };

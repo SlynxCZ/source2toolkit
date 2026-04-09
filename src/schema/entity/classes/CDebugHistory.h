@@ -14,10 +14,16 @@
 
 #include "CBaseEntity.h"
 
-class CDebugHistory : public CBaseEntity, public CBaseEntity::Factory<CDebugHistory>
+class CDebugHistory : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CDebugHistory);
 
     SCHEMA_FIELD(int32_t, m_nNpcEvents);
+
+public:
+    static CDebugHistory* New(const char* className)
+    {
+        return CBaseEntity::New<CDebugHistory>(className);
+    }
 };

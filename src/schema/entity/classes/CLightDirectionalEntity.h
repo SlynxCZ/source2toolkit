@@ -14,9 +14,15 @@
 
 #include "CLightEntity.h"
 
-class CLightDirectionalEntity : public CLightEntity, public CBaseEntity::Factory<CLightDirectionalEntity>
+class CLightDirectionalEntity : public CLightEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightDirectionalEntity);
 
+
+public:
+    static CLightDirectionalEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CLightDirectionalEntity>(className);
+    }
 };

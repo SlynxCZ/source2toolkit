@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CInfoVisibilityBox : public CBaseEntity, public CBaseEntity::Factory<CInfoVisibilityBox>
+class CInfoVisibilityBox : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoVisibilityBox);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nMode);
     SCHEMA_FIELD(Vector, m_vBoxSize);
     SCHEMA_FIELD(bool, m_bEnabled);
+
+public:
+    static CInfoVisibilityBox* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoVisibilityBox>(className);
+    }
 };

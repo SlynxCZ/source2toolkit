@@ -14,9 +14,15 @@
 
 #include "CPhysicsProp.h"
 
-class CPhysicsPropMultiplayer : public CPhysicsProp, public CBaseEntity::Factory<CPhysicsPropMultiplayer>
+class CPhysicsPropMultiplayer : public CPhysicsProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropMultiplayer);
 
+
+public:
+    static CPhysicsPropMultiplayer* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysicsPropMultiplayer>(className);
+    }
 };

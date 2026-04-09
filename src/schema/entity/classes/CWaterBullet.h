@@ -14,9 +14,15 @@
 
 #include "CBaseAnimGraph.h"
 
-class CWaterBullet : public CBaseAnimGraph, public CBaseEntity::Factory<CWaterBullet>
+class CWaterBullet : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CWaterBullet);
 
+
+public:
+    static CWaterBullet* New(const char* className)
+    {
+        return CBaseEntity::New<CWaterBullet>(className);
+    }
 };

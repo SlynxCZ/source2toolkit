@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CBombTarget : public CBaseTrigger, public CBaseEntity::Factory<CBombTarget>
+class CBombTarget : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CBombTarget);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_szMountTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hInstructorHint);
     SCHEMA_FIELD(int32_t, m_nBombSiteDesignation);
+
+public:
+    static CBombTarget* New(const char* className)
+    {
+        return CBaseEntity::New<CBombTarget>(className);
+    }
 };

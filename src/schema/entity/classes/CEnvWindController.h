@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "CEnvWindShared.h"
 
-class CEnvWindController : public CBaseEntity, public CBaseEntity::Factory<CEnvWindController>
+class CEnvWindController : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWindController);
@@ -31,4 +31,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nClipmapLevels);
     SCHEMA_FIELD(bool, m_bIsMaster);
     SCHEMA_FIELD(bool, m_bFirstTime);
+
+public:
+    static CEnvWindController* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvWindController>(className);
+    }
 };

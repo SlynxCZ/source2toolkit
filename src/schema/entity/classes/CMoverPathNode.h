@@ -14,9 +14,15 @@
 
 #include "CPathNode.h"
 
-class CMoverPathNode : public CPathNode, public CBaseEntity::Factory<CMoverPathNode>
+class CMoverPathNode : public CPathNode
 {
 public:
     DECLARE_SCHEMA_CLASS(CMoverPathNode);
 
+
+public:
+    static CMoverPathNode* New(const char* className)
+    {
+        return CBaseEntity::New<CMoverPathNode>(className);
+    }
 };

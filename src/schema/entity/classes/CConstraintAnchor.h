@@ -14,10 +14,16 @@
 
 #include "CBaseAnimGraph.h"
 
-class CConstraintAnchor : public CBaseAnimGraph, public CBaseEntity::Factory<CConstraintAnchor>
+class CConstraintAnchor : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CConstraintAnchor);
 
     SCHEMA_FIELD(float, m_massScale);
+
+public:
+    static CConstraintAnchor* New(const char* className)
+    {
+        return CBaseEntity::New<CConstraintAnchor>(className);
+    }
 };

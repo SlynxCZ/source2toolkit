@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CMultiSource : public CLogicalEntity, public CBaseEntity::Factory<CMultiSource>
+class CMultiSource : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiSource);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrigger);
     SCHEMA_FIELD(int32_t, m_iTotal);
     SCHEMA_FIELD(CUtlSymbolLarge, m_globalstate);
+
+public:
+    static CMultiSource* New(const char* className)
+    {
+        return CBaseEntity::New<CMultiSource>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CMapVetoPickController : public CBaseEntity, public CBaseEntity::Factory<CMapVetoPickController>
+class CMapVetoPickController : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapVetoPickController);
@@ -38,4 +38,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nCurrentPhase);
     SCHEMA_FIELD(int32_t, m_nPhaseStartTick);
     SCHEMA_FIELD(int32_t, m_nPhaseDurationTicks);
+
+public:
+    static CMapVetoPickController* New(const char* className)
+    {
+        return CBaseEntity::New<CMapVetoPickController>(className);
+    }
 };

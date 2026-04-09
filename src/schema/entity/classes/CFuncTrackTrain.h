@@ -18,7 +18,7 @@
 
 class CPathTrack;
 
-class CFuncTrackTrain : public CBaseModelEntity, public CBaseEntity::Factory<CFuncTrackTrain>
+class CFuncTrackTrain : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrackTrain);
@@ -60,4 +60,10 @@ public:
     SCHEMA_FIELD(float, m_flDecelSpeed);
     SCHEMA_FIELD(bool, m_bAccelToSpeed);
     SCHEMA_FIELD(float, m_flNextMPSoundTime);
+
+public:
+    static CFuncTrackTrain* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTrackTrain>(className);
+    }
 };

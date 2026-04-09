@@ -14,10 +14,16 @@
 
 #include "CPointEntity.h"
 
-class CEnvSplash : public CPointEntity, public CBaseEntity::Factory<CEnvSplash>
+class CEnvSplash : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSplash);
 
     SCHEMA_FIELD(float, m_flScale);
+
+public:
+    static CEnvSplash* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSplash>(className);
+    }
 };

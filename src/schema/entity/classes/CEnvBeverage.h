@@ -14,11 +14,17 @@
 
 #include "CBaseEntity.h"
 
-class CEnvBeverage : public CBaseEntity, public CBaseEntity::Factory<CEnvBeverage>
+class CEnvBeverage : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvBeverage);
 
     SCHEMA_FIELD(bool, m_CanInDispenser);
     SCHEMA_FIELD(int32_t, m_nBeverageType);
+
+public:
+    static CEnvBeverage* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvBeverage>(className);
+    }
 };

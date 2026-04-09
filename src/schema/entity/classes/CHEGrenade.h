@@ -14,9 +14,15 @@
 
 #include "CBaseCSGrenade.h"
 
-class CHEGrenade : public CBaseCSGrenade, public CBaseEntity::Factory<CHEGrenade>
+class CHEGrenade : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CHEGrenade);
 
+
+public:
+    static CHEGrenade* New(const char* className)
+    {
+        return CBaseEntity::New<CHEGrenade>(className);
+    }
 };

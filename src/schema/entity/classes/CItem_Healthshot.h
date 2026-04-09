@@ -14,9 +14,15 @@
 
 #include "CWeaponBaseItem.h"
 
-class CItem_Healthshot : public CWeaponBaseItem, public CBaseEntity::Factory<CItem_Healthshot>
+class CItem_Healthshot : public CWeaponBaseItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItem_Healthshot);
 
+
+public:
+    static CItem_Healthshot* New(const char* className)
+    {
+        return CBaseEntity::New<CItem_Healthshot>(className);
+    }
 };

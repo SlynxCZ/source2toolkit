@@ -15,7 +15,7 @@
 #include "../enums/BrushSolidities_e.h"
 #include "CBaseModelEntity.h"
 
-class CFuncBrush : public CBaseModelEntity, public CBaseEntity::Factory<CFuncBrush>
+class CFuncBrush : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncBrush);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszExcludedClass);
     SCHEMA_FIELD(bool, m_bInvertExclusion);
     SCHEMA_FIELD(bool, m_bScriptedMovement);
+
+public:
+    static CFuncBrush* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncBrush>(className);
+    }
 };

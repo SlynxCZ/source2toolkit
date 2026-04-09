@@ -22,7 +22,7 @@ class CCSPlayerController_InGameMoneyServices;
 class CCSPlayerController_InventoryServices;
 class CCSPlayerPawn;
 
-class CCSPlayerController : public CBasePlayerController, public CBaseEntity::Factory<CCSPlayerController>
+class CCSPlayerController : public CBasePlayerController
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerController);
@@ -158,4 +158,10 @@ public:
     void ReplicateConVar(const char* pszConVar, const char* pszValue);
     /// <summary>Fires gameEvent to client's legacy listener.</summary>
     void FireEventToClient(IGameEvent* pEvent);
+
+public:
+    static CCSPlayerController* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPlayerController>(className);
+    }
 };

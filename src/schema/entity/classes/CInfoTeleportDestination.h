@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CInfoTeleportDestination : public CPointEntity, public CBaseEntity::Factory<CInfoTeleportDestination>
+class CInfoTeleportDestination : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoTeleportDestination);
 
+
+public:
+    static CInfoTeleportDestination* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoTeleportDestination>(className);
+    }
 };

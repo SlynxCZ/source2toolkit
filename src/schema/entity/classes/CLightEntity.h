@@ -16,10 +16,16 @@
 
 class CLightComponent;
 
-class CLightEntity : public CBaseModelEntity, public CBaseEntity::Factory<CLightEntity>
+class CLightEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightEntity);
 
     SCHEMA_FIELD(CLightComponent*, m_CLightComponent);
+
+public:
+    static CLightEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CLightEntity>(className);
+    }
 };

@@ -15,7 +15,7 @@
 #include "../enums/BloodType.h"
 #include "CPointEntity.h"
 
-class CBlood : public CPointEntity, public CBaseEntity::Factory<CBlood>
+class CBlood : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBlood);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(Vector, m_vecSprayDir);
     SCHEMA_FIELD(float, m_flAmount);
     SCHEMA_FIELD(BloodType, m_Color);
+
+public:
+    static CBlood* New(const char* className)
+    {
+        return CBaseEntity::New<CBlood>(className);
+    }
 };

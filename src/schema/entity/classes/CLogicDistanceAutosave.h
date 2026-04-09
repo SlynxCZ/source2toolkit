@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicDistanceAutosave : public CLogicalEntity, public CBaseEntity::Factory<CLogicDistanceAutosave>
+class CLogicDistanceAutosave : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicDistanceAutosave);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(bool, m_bCheckCough);
     SCHEMA_FIELD(bool, m_bThinkDangerous);
     SCHEMA_FIELD(float, m_flDangerousTime);
+
+public:
+    static CLogicDistanceAutosave* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicDistanceAutosave>(className);
+    }
 };

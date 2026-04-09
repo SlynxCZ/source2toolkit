@@ -17,7 +17,7 @@
 class CCSWeaponBase;
 class CCSWeaponBaseVData;
 
-class CBasePlayerWeapon : public CEconEntity, public CBaseEntity::Factory<CBasePlayerWeapon>
+class CBasePlayerWeapon : public CEconEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerWeapon);
@@ -36,4 +36,10 @@ public:
     CCSWeaponBaseVData* GetWeaponVData();
     /// <summary>Get weapon classname.</summary>
     const char* GetWeaponClassname();
+
+public:
+    static CBasePlayerWeapon* New(const char* className)
+    {
+        return CBaseEntity::New<CBasePlayerWeapon>(className);
+    }
 };

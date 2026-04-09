@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeIParticleSystemDefinition.h"
 
-class CPathParticleRope : public CBaseEntity, public CBaseEntity::Factory<CPathParticleRope>
+class CPathParticleRope : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathParticleRope);
@@ -36,4 +36,10 @@ public:
     SCHEMA_FIELD(CUtlVector<Vector>, m_PathNodes_Color);
     SCHEMA_FIELD(CUtlVector<bool>, m_PathNodes_PinEnabled);
     SCHEMA_FIELD(CUtlVector<float>, m_PathNodes_RadiusScale);
+
+public:
+    static CPathParticleRope* New(const char* className)
+    {
+        return CBaseEntity::New<CPathParticleRope>(className);
+    }
 };

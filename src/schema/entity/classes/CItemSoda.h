@@ -14,9 +14,15 @@
 
 #include "CBaseAnimGraph.h"
 
-class CItemSoda : public CBaseAnimGraph, public CBaseEntity::Factory<CItemSoda>
+class CItemSoda : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemSoda);
 
+
+public:
+    static CItemSoda* New(const char* className)
+    {
+        return CBaseEntity::New<CItemSoda>(className);
+    }
 };

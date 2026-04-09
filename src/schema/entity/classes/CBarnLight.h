@@ -15,7 +15,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CBarnLight : public CBaseModelEntity, public CBaseEntity::Factory<CBarnLight>
+class CBarnLight : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBarnLight);
@@ -97,4 +97,10 @@ public:
     SCHEMA_FIELD(Vector, m_vPrecomputedOBBExtent5);
     SCHEMA_FIELD(bool, m_bPvsModifyEntity);
     SCHEMA_FIELD(CUtlVector<uint16_t>, m_VisClusters);
+
+public:
+    static CBarnLight* New(const char* className)
+    {
+        return CBaseEntity::New<CBarnLight>(className);
+    }
 };

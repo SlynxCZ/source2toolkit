@@ -14,10 +14,16 @@
 
 #include "CBaseFilter.h"
 
-class CFilterMassGreater : public CBaseFilter, public CBaseEntity::Factory<CFilterMassGreater>
+class CFilterMassGreater : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterMassGreater);
 
     SCHEMA_FIELD(float, m_fFilterMass);
+
+public:
+    static CFilterMassGreater* New(const char* className)
+    {
+        return CBaseEntity::New<CFilterMassGreater>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CSceneEntity.h"
 
-class CSceneEntityAlias_logic_choreographed_scene : public CSceneEntity, public CBaseEntity::Factory<CSceneEntityAlias_logic_choreographed_scene>
+class CSceneEntityAlias_logic_choreographed_scene : public CSceneEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneEntityAlias_logic_choreographed_scene);
 
+
+public:
+    static CSceneEntityAlias_logic_choreographed_scene* New(const char* className)
+    {
+        return CBaseEntity::New<CSceneEntityAlias_logic_choreographed_scene>(className);
+    }
 };

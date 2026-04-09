@@ -14,7 +14,7 @@
 
 #include "CPhysConstraint.h"
 
-class CPhysFixed : public CPhysConstraint, public CBaseEntity::Factory<CPhysFixed>
+class CPhysFixed : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysFixed);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(bool, m_bEnableAngularConstraint);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sBoneName1);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sBoneName2);
+
+public:
+    static CPhysFixed* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysFixed>(className);
+    }
 };

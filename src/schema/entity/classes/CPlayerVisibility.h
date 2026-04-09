@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CPlayerVisibility : public CBaseEntity, public CBaseEntity::Factory<CPlayerVisibility>
+class CPlayerVisibility : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayerVisibility);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(float, m_flFadeTime);
     SCHEMA_FIELD(bool, m_bStartDisabled);
     SCHEMA_FIELD(bool, m_bIsEnabled);
+
+public:
+    static CPlayerVisibility* New(const char* className)
+    {
+        return CBaseEntity::New<CPlayerVisibility>(className);
+    }
 };

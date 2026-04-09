@@ -14,7 +14,7 @@
 
 #include "CSoundEventEntity.h"
 
-class CSoundEventConeEntity : public CSoundEventEntity, public CBaseEntity::Factory<CSoundEventConeEntity>
+class CSoundEventConeEntity : public CSoundEventEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventConeEntity);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(float, m_flAttenMin);
     SCHEMA_FIELD(float, m_flAttenMax);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParameterName);
+
+public:
+    static CSoundEventConeEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundEventConeEntity>(className);
+    }
 };

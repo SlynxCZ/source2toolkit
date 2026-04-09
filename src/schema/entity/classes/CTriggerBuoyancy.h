@@ -15,11 +15,17 @@
 #include "CBaseTrigger.h"
 #include "CBuoyancyHelper.h"
 
-class CTriggerBuoyancy : public CBaseTrigger, public CBaseEntity::Factory<CTriggerBuoyancy>
+class CTriggerBuoyancy : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBuoyancy);
 
     SCHEMA_FIELD(CBuoyancyHelper, m_BuoyancyHelper);
     SCHEMA_FIELD(float, m_flFluidDensity);
+
+public:
+    static CTriggerBuoyancy* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerBuoyancy>(className);
+    }
 };

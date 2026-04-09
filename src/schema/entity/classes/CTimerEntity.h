@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CTimerEntity : public CLogicalEntity, public CBaseEntity::Factory<CTimerEntity>
+class CTimerEntity : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTimerEntity);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(float, m_flUpperRandomBound);
     SCHEMA_FIELD(float, m_flRemainingTime);
     SCHEMA_FIELD(bool, m_bPaused);
+
+public:
+    static CTimerEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CTimerEntity>(className);
+    }
 };

@@ -16,7 +16,7 @@
 #include "CSoundOpvarSetPointEntity.h"
 #include "SoundOpvarTraceResult_t.h"
 
-class CSoundOpvarSetAutoRoomEntity : public CSoundOpvarSetPointEntity, public CBaseEntity::Factory<CSoundOpvarSetAutoRoomEntity>
+class CSoundOpvarSetAutoRoomEntity : public CSoundOpvarSetPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetAutoRoomEntity);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(float, m_flSize);
     SCHEMA_FIELD(float, m_flHeightTolerance);
     SCHEMA_FIELD(float, m_flSizeSqr);
+
+public:
+    static CSoundOpvarSetAutoRoomEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetAutoRoomEntity>(className);
+    }
 };

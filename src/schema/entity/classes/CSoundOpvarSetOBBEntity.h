@@ -14,9 +14,15 @@
 
 #include "CSoundOpvarSetAABBEntity.h"
 
-class CSoundOpvarSetOBBEntity : public CSoundOpvarSetAABBEntity, public CBaseEntity::Factory<CSoundOpvarSetOBBEntity>
+class CSoundOpvarSetOBBEntity : public CSoundOpvarSetAABBEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetOBBEntity);
 
+
+public:
+    static CSoundOpvarSetOBBEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetOBBEntity>(className);
+    }
 };

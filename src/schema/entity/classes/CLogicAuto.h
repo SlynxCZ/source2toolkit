@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CLogicAuto : public CBaseEntity, public CBaseEntity::Factory<CLogicAuto>
+class CLogicAuto : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicAuto);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnVREnabled);
     SCHEMA_FIELD(CEntityIOOutput, m_OnVRNotEnabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_globalstate);
+
+public:
+    static CLogicAuto* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicAuto>(className);
+    }
 };

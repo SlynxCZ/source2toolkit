@@ -19,7 +19,7 @@
 
 class CEconWearable;
 
-class CBaseCombatCharacter : public CBaseFlex, public CBaseEntity::Factory<CBaseCombatCharacter>
+class CBaseCombatCharacter : public CBaseFlex
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseCombatCharacter);
@@ -34,4 +34,10 @@ public:
     SCHEMA_FIELD(Hull_t, m_eHull);
     SCHEMA_FIELD(uint32_t, m_nNavHullIdx);
     SCHEMA_FIELD(CMovementStatsProperty, m_movementStats);
+
+public:
+    static CBaseCombatCharacter* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseCombatCharacter>(className);
+    }
 };

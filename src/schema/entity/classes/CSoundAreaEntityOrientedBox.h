@@ -14,11 +14,17 @@
 
 #include "CSoundAreaEntityBase.h"
 
-class CSoundAreaEntityOrientedBox : public CSoundAreaEntityBase, public CBaseEntity::Factory<CSoundAreaEntityOrientedBox>
+class CSoundAreaEntityOrientedBox : public CSoundAreaEntityBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundAreaEntityOrientedBox);
 
     SCHEMA_FIELD(Vector, m_vMin);
     SCHEMA_FIELD(Vector, m_vMax);
+
+public:
+    static CSoundAreaEntityOrientedBox* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundAreaEntityOrientedBox>(className);
+    }
 };

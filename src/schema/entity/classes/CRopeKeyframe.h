@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CRopeKeyframe : public CBaseModelEntity, public CBaseEntity::Factory<CRopeKeyframe>
+class CRopeKeyframe : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRopeKeyframe);
@@ -41,4 +41,10 @@ public:
     SCHEMA_FIELD(bool, m_bEndPointValid);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hStartPoint);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndPoint);
+
+public:
+    static CRopeKeyframe* New(const char* className)
+    {
+        return CBaseEntity::New<CRopeKeyframe>(className);
+    }
 };

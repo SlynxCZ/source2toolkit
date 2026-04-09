@@ -15,7 +15,7 @@
 #include "../enums/AnimLoopMode_t.h"
 #include "CBreakableProp.h"
 
-class CDynamicProp : public CBreakableProp, public CBaseEntity::Factory<CDynamicProp>
+class CDynamicProp : public CBreakableProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicProp);
@@ -42,4 +42,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nGlowRangeMin);
     SCHEMA_FIELD(Color, m_glowColor);
     SCHEMA_FIELD(int32_t, m_nGlowTeam);
+
+public:
+    static CDynamicProp* New(const char* className)
+    {
+        return CBaseEntity::New<CDynamicProp>(className);
+    }
 };

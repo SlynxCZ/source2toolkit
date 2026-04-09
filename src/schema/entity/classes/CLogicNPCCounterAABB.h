@@ -14,7 +14,7 @@
 
 #include "CLogicNPCCounter.h"
 
-class CLogicNPCCounterAABB : public CLogicNPCCounter, public CBaseEntity::Factory<CLogicNPCCounterAABB>
+class CLogicNPCCounterAABB : public CLogicNPCCounter
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicNPCCounterAABB);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(Vector, m_vDistanceOuterMaxs);
     SCHEMA_FIELD(Vector, m_vOuterMins);
     SCHEMA_FIELD(Vector, m_vOuterMaxs);
+
+public:
+    static CLogicNPCCounterAABB* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicNPCCounterAABB>(className);
+    }
 };

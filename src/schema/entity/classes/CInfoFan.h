@@ -14,7 +14,7 @@
 
 #include "CPointEntity.h"
 
-class CInfoFan : public CPointEntity, public CBaseEntity::Factory<CInfoFan>
+class CInfoFan : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoFan);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_fFanForceMinRadius);
     SCHEMA_FIELD(float, m_flCurveDistRange);
     SCHEMA_FIELD(CUtlSymbolLarge, m_FanForceCurveString);
+
+public:
+    static CInfoFan* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoFan>(className);
+    }
 };

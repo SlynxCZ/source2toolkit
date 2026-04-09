@@ -14,11 +14,17 @@
 
 #include "CBaseTrigger.h"
 
-class CTonemapTrigger : public CBaseTrigger, public CBaseEntity::Factory<CTonemapTrigger>
+class CTonemapTrigger : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTonemapTrigger);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_tonemapControllerName);
     SCHEMA_FIELD(CEntityHandle, m_hTonemapController);
+
+public:
+    static CTonemapTrigger* New(const char* className)
+    {
+        return CBaseEntity::New<CTonemapTrigger>(className);
+    }
 };

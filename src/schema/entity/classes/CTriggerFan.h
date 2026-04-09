@@ -17,7 +17,7 @@
 
 class CInfoFan;
 
-class CTriggerFan : public CBaseTrigger, public CBaseEntity::Factory<CTriggerFan>
+class CTriggerFan : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerFan);
@@ -47,4 +47,10 @@ public:
     SCHEMA_FIELD(bool, m_bPushPlayer);
     SCHEMA_FIELD(bool, m_bRampDown);
     SCHEMA_FIELD(int32_t, m_nManagerFanIdx);
+
+public:
+    static CTriggerFan* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerFan>(className);
+    }
 };

@@ -21,7 +21,7 @@
 
 class CBasePlayerPawn;
 
-class CPointValueRemapper : public CBaseEntity, public CBaseEntity::Factory<CPointValueRemapper>
+class CPointValueRemapper : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointValueRemapper);
@@ -68,4 +68,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnReachedValueCustom);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEngage);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDisengage);
+
+public:
+    static CPointValueRemapper* New(const char* className)
+    {
+        return CBaseEntity::New<CPointValueRemapper>(className);
+    }
 };

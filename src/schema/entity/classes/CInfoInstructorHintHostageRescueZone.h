@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CInfoInstructorHintHostageRescueZone : public CPointEntity, public CBaseEntity::Factory<CInfoInstructorHintHostageRescueZone>
+class CInfoInstructorHintHostageRescueZone : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintHostageRescueZone);
 
+
+public:
+    static CInfoInstructorHintHostageRescueZone* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoInstructorHintHostageRescueZone>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CInfoWorldLayer : public CBaseEntity, public CBaseEntity::Factory<CInfoWorldLayer>
+class CInfoWorldLayer : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoWorldLayer);
@@ -26,4 +26,10 @@ public:
     SCHEMA_FIELD(bool, m_bEntitiesSpawned);
     SCHEMA_FIELD(bool, m_bCreateAsChildSpawnGroup);
     SCHEMA_FIELD(uint32_t, m_hLayerSpawnGroup);
+
+public:
+    static CInfoWorldLayer* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoWorldLayer>(className);
+    }
 };

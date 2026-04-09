@@ -14,11 +14,17 @@
 
 #include "CPointEntity.h"
 
-class CInfoGameEventProxy : public CPointEntity, public CBaseEntity::Factory<CInfoGameEventProxy>
+class CInfoGameEventProxy : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoGameEventProxy);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEventName);
     SCHEMA_FIELD(float, m_flRange);
+
+public:
+    static CInfoGameEventProxy* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoGameEventProxy>(className);
+    }
 };

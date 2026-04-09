@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncIllusionary : public CBaseModelEntity, public CBaseEntity::Factory<CFuncIllusionary>
+class CFuncIllusionary : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncIllusionary);
 
+
+public:
+    static CFuncIllusionary* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncIllusionary>(className);
+    }
 };

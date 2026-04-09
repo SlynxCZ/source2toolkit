@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicCase : public CLogicalEntity, public CBaseEntity::Factory<CLogicCase>
+class CLogicCase : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicCase);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nLastShuffleCase);
     SCHEMA_FIELD_POINTER(uint8_t, m_uchShuffleCaseMap);
     SCHEMA_FIELD_POINTER(CEntityIOOutput, m_OnCase);
+
+public:
+    static CLogicCase* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicCase>(className);
+    }
 };

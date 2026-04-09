@@ -14,9 +14,15 @@
 
 #include "CCSWeaponBaseGun.h"
 
-class CWeaponUMP45 : public CCSWeaponBaseGun, public CBaseEntity::Factory<CWeaponUMP45>
+class CWeaponUMP45 : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponUMP45);
 
+
+public:
+    static CWeaponUMP45* New(const char* className)
+    {
+        return CBaseEntity::New<CWeaponUMP45>(className);
+    }
 };

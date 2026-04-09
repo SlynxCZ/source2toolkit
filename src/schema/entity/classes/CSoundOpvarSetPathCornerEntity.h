@@ -14,7 +14,7 @@
 
 #include "CSoundOpvarSetPointEntity.h"
 
-class CSoundOpvarSetPathCornerEntity : public CSoundOpvarSetPointEntity, public CBaseEntity::Factory<CSoundOpvarSetPathCornerEntity>
+class CSoundOpvarSetPathCornerEntity : public CSoundOpvarSetPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetPathCornerEntity);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_flDistMinSqr);
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathCornerEntityName);
+
+public:
+    static CSoundOpvarSetPathCornerEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetPathCornerEntity>(className);
+    }
 };

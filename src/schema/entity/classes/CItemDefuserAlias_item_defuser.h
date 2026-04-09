@@ -14,9 +14,15 @@
 
 #include "CItemDefuser.h"
 
-class CItemDefuserAlias_item_defuser : public CItemDefuser, public CBaseEntity::Factory<CItemDefuserAlias_item_defuser>
+class CItemDefuserAlias_item_defuser : public CItemDefuser
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDefuserAlias_item_defuser);
 
+
+public:
+    static CItemDefuserAlias_item_defuser* New(const char* className)
+    {
+        return CBaseEntity::New<CItemDefuserAlias_item_defuser>(className);
+    }
 };

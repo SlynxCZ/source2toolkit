@@ -14,10 +14,16 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncVPhysicsClip : public CBaseModelEntity, public CBaseEntity::Factory<CFuncVPhysicsClip>
+class CFuncVPhysicsClip : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncVPhysicsClip);
 
     SCHEMA_FIELD(bool, m_bDisabled);
+
+public:
+    static CFuncVPhysicsClip* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncVPhysicsClip>(className);
+    }
 };

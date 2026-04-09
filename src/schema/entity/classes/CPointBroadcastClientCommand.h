@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CPointBroadcastClientCommand : public CPointEntity, public CBaseEntity::Factory<CPointBroadcastClientCommand>
+class CPointBroadcastClientCommand : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointBroadcastClientCommand);
 
+
+public:
+    static CPointBroadcastClientCommand* New(const char* className)
+    {
+        return CBaseEntity::New<CPointBroadcastClientCommand>(className);
+    }
 };

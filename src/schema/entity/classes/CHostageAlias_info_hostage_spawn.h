@@ -14,9 +14,15 @@
 
 #include "CHostage.h"
 
-class CHostageAlias_info_hostage_spawn : public CHostage, public CBaseEntity::Factory<CHostageAlias_info_hostage_spawn>
+class CHostageAlias_info_hostage_spawn : public CHostage
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageAlias_info_hostage_spawn);
 
+
+public:
+    static CHostageAlias_info_hostage_spawn* New(const char* className)
+    {
+        return CBaseEntity::New<CHostageAlias_info_hostage_spawn>(className);
+    }
 };

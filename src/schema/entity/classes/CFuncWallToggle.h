@@ -14,9 +14,15 @@
 
 #include "CFuncWall.h"
 
-class CFuncWallToggle : public CFuncWall, public CBaseEntity::Factory<CFuncWallToggle>
+class CFuncWallToggle : public CFuncWall
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWallToggle);
 
+
+public:
+    static CFuncWallToggle* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncWallToggle>(className);
+    }
 };

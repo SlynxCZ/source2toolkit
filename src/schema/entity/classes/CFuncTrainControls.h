@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncTrainControls : public CBaseModelEntity, public CBaseEntity::Factory<CFuncTrainControls>
+class CFuncTrainControls : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrainControls);
 
+
+public:
+    static CFuncTrainControls* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTrainControls>(className);
+    }
 };

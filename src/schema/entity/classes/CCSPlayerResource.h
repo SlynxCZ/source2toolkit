@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CCSPlayerResource : public CBaseEntity, public CBaseEntity::Factory<CCSPlayerResource>
+class CCSPlayerResource : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerResource);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD_POINTER(int32_t, m_hostageRescueZ);
     SCHEMA_FIELD(bool, m_bEndMatchNextMapAllVoted);
     SCHEMA_FIELD(bool, m_foundGoalPositions);
+
+public:
+    static CCSPlayerResource* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPlayerResource>(className);
+    }
 };

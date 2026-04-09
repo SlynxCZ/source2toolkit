@@ -14,9 +14,15 @@
 
 #include "CSprite.h"
 
-class CSpriteAlias_env_glow : public CSprite, public CBaseEntity::Factory<CSpriteAlias_env_glow>
+class CSpriteAlias_env_glow : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpriteAlias_env_glow);
 
+
+public:
+    static CSpriteAlias_env_glow* New(const char* className)
+    {
+        return CBaseEntity::New<CSpriteAlias_env_glow>(className);
+    }
 };

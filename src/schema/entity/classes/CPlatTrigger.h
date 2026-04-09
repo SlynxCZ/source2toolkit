@@ -16,10 +16,16 @@
 
 class CFuncPlat;
 
-class CPlatTrigger : public CBaseModelEntity, public CBaseEntity::Factory<CPlatTrigger>
+class CPlatTrigger : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlatTrigger);
 
     SCHEMA_FIELD(CHandle<CFuncPlat>, m_pPlatform);
+
+public:
+    static CPlatTrigger* New(const char* className)
+    {
+        return CBaseEntity::New<CPlatTrigger>(className);
+    }
 };

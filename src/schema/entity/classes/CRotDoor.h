@@ -14,10 +14,16 @@
 
 #include "CBaseDoor.h"
 
-class CRotDoor : public CBaseDoor, public CBaseEntity::Factory<CRotDoor>
+class CRotDoor : public CBaseDoor
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotDoor);
 
     SCHEMA_FIELD(bool, m_bSolidBsp);
+
+public:
+    static CRotDoor* New(const char* className)
+    {
+        return CBaseEntity::New<CRotDoor>(className);
+    }
 };

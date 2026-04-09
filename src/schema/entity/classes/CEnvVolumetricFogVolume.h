@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CEnvVolumetricFogVolume : public CBaseEntity, public CBaseEntity::Factory<CEnvVolumetricFogVolume>
+class CEnvVolumetricFogVolume : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvVolumetricFogVolume);
@@ -37,4 +37,10 @@ public:
     SCHEMA_FIELD(bool, m_bOverrideIndirectLightStrength);
     SCHEMA_FIELD(bool, m_bOverrideSunLightStrength);
     SCHEMA_FIELD(bool, m_bOverrideNoiseStrength);
+
+public:
+    static CEnvVolumetricFogVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvVolumetricFogVolume>(className);
+    }
 };

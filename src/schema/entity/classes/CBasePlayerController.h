@@ -18,7 +18,7 @@
 
 class CBasePlayerPawn;
 
-class CBasePlayerController : public CBaseEntity, public CBaseEntity::Factory<CBasePlayerController>
+class CBasePlayerController : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePlayerController);
@@ -51,4 +51,10 @@ public:
 public:
     /// <summary>Set pawn for controller.</summary>
     void SetPawn(CBasePlayerPawn* pPawn);
+
+public:
+    static CBasePlayerController* New(const char* className)
+    {
+        return CBaseEntity::New<CBasePlayerController>(className);
+    }
 };

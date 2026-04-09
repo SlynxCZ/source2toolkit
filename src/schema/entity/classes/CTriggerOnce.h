@@ -14,9 +14,15 @@
 
 #include "CTriggerMultiple.h"
 
-class CTriggerOnce : public CTriggerMultiple, public CBaseEntity::Factory<CTriggerOnce>
+class CTriggerOnce : public CTriggerMultiple
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerOnce);
 
+
+public:
+    static CTriggerOnce* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerOnce>(className);
+    }
 };

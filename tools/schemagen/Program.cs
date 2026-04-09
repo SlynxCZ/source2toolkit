@@ -597,16 +597,8 @@ internal static partial class Program
         }
         else if (schemaClass.Parent != null)
         {
-            if (inheritsFromBaseEntity)
-            {
-                builder.AppendLine(
-                    $"class {className} : public {schemaClass.Parent}, public CBaseEntity::Factory<{className}>");
-            }
-            else
-            {
-                builder.AppendLine(
-                    $"class {className} : public {schemaClass.Parent}");
-            }
+            builder.AppendLine(
+                $"class {className} : public {schemaClass.Parent}");
         }
         else
         {
@@ -658,6 +650,16 @@ internal static partial class Program
             {
                 builder.AppendLine($"    {method}");
             }
+        }
+
+        if (inheritsFromBaseEntity && className != "CBaseEntity")
+        {
+            builder.AppendLine();
+            builder.AppendLine("public:");
+            builder.AppendLine($"    static {className}* New(const char* className)");
+            builder.AppendLine("    {");
+            builder.AppendLine($"        return CBaseEntity::New<{className}>(className);");
+            builder.AppendLine("    }");
         }
 
         builder.AppendLine("};");

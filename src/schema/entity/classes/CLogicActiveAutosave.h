@@ -14,7 +14,7 @@
 
 #include "CLogicAutosave.h"
 
-class CLogicActiveAutosave : public CLogicAutosave, public CBaseEntity::Factory<CLogicActiveAutosave>
+class CLogicActiveAutosave : public CLogicAutosave
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicActiveAutosave);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(float, m_flTimeToTrigger);
     SCHEMA_FIELD(float, m_flStartTime);
     SCHEMA_FIELD(float, m_flDangerousTime);
+
+public:
+    static CLogicActiveAutosave* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicActiveAutosave>(className);
+    }
 };

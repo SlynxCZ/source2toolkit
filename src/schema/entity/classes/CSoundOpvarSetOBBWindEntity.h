@@ -14,7 +14,7 @@
 
 #include "CSoundOpvarSetPointBase.h"
 
-class CSoundOpvarSetOBBWindEntity : public CSoundOpvarSetPointBase, public CBaseEntity::Factory<CSoundOpvarSetOBBWindEntity>
+class CSoundOpvarSetOBBWindEntity : public CSoundOpvarSetPointBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetOBBWindEntity);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(float, m_flWindMax);
     SCHEMA_FIELD(float, m_flWindMapMin);
     SCHEMA_FIELD(float, m_flWindMapMax);
+
+public:
+    static CSoundOpvarSetOBBWindEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetOBBWindEntity>(className);
+    }
 };

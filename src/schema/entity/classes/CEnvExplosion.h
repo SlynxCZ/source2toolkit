@@ -18,7 +18,7 @@
 
 class CBaseEntity;
 
-class CEnvExplosion : public CModelPointEntity, public CBaseEntity::Factory<CEnvExplosion>
+class CEnvExplosion : public CModelPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvExplosion);
@@ -38,4 +38,10 @@ public:
     SCHEMA_FIELD(Class_T, m_iClassIgnore2);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEntityIgnoreName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEntityIgnore);
+
+public:
+    static CEnvExplosion* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvExplosion>(className);
+    }
 };

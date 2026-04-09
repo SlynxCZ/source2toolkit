@@ -16,10 +16,16 @@
 
 class CAI_Expresser;
 
-class CHostageExpresserShim : public CBaseCombatCharacter, public CBaseEntity::Factory<CHostageExpresserShim>
+class CHostageExpresserShim : public CBaseCombatCharacter
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageExpresserShim);
 
     SCHEMA_FIELD(CAI_Expresser*, m_pExpresser);
+
+public:
+    static CHostageExpresserShim* New(const char* className)
+    {
+        return CBaseEntity::New<CHostageExpresserShim>(className);
+    }
 };

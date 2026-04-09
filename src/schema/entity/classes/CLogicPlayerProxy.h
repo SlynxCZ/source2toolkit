@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CLogicPlayerProxy : public CLogicalEntity, public CBaseEntity::Factory<CLogicPlayerProxy>
+class CLogicPlayerProxy : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicPlayerProxy);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_PlayerHasNoAmmo);
     SCHEMA_FIELD(CEntityIOOutput, m_PlayerDied);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hPlayer);
+
+public:
+    static CLogicPlayerProxy* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicPlayerProxy>(className);
+    }
 };

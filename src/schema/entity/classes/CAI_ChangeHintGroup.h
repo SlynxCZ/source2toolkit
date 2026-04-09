@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CAI_ChangeHintGroup : public CBaseEntity, public CBaseEntity::Factory<CAI_ChangeHintGroup>
+class CAI_ChangeHintGroup : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CAI_ChangeHintGroup);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_strSearchName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strNewHintGroup);
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    static CAI_ChangeHintGroup* New(const char* className)
+    {
+        return CBaseEntity::New<CAI_ChangeHintGroup>(className);
+    }
 };

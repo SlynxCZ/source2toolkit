@@ -16,7 +16,7 @@
 
 class CBasePlayerPawn;
 
-class CInstructorEventEntity : public CPointEntity, public CBaseEntity::Factory<CInstructorEventEntity>
+class CInstructorEventEntity : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInstructorEventEntity);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszHintTargetEntity);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hTargetPlayer);
+
+public:
+    static CInstructorEventEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CInstructorEventEntity>(className);
+    }
 };

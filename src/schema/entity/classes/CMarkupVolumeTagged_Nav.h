@@ -15,10 +15,16 @@
 #include "CMarkupVolumeTagged.h"
 #include "../enums/NavScopeFlags_t.h"
 
-class CMarkupVolumeTagged_Nav : public CMarkupVolumeTagged, public CBaseEntity::Factory<CMarkupVolumeTagged_Nav>
+class CMarkupVolumeTagged_Nav : public CMarkupVolumeTagged
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeTagged_Nav);
 
     SCHEMA_FIELD(NavScopeFlags_t, m_nScopes);
+
+public:
+    static CMarkupVolumeTagged_Nav* New(const char* className)
+    {
+        return CBaseEntity::New<CMarkupVolumeTagged_Nav>(className);
+    }
 };

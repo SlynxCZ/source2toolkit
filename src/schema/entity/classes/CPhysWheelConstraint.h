@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPhysWheelConstraint : public CPhysConstraint, public CBaseEntity::Factory<CPhysWheelConstraint>
+class CPhysWheelConstraint : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysWheelConstraint);
@@ -33,4 +33,10 @@ public:
     SCHEMA_FIELD(float, m_flSteeringAxisFriction);
     SCHEMA_FIELD(float, m_flSpinAxisFriction);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hSteeringMimicsEntity);
+
+public:
+    static CPhysWheelConstraint* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysWheelConstraint>(className);
+    }
 };

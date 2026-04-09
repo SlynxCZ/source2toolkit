@@ -14,7 +14,7 @@
 
 #include "CBaseModelEntity.h"
 
-class CFuncRotating : public CBaseModelEntity, public CBaseEntity::Factory<CFuncRotating>
+class CFuncRotating : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncRotating);
@@ -37,4 +37,10 @@ public:
     SCHEMA_FIELD(bool, m_bStopAtStartPos);
     SCHEMA_FIELD(Vector, m_vecClientOrigin);
     SCHEMA_FIELD(QAngle, m_vecClientAngles);
+
+public:
+    static CFuncRotating* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncRotating>(className);
+    }
 };

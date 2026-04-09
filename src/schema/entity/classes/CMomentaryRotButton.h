@@ -14,7 +14,7 @@
 
 #include "CRotButton.h"
 
-class CMomentaryRotButton : public CRotButton, public CBaseEntity::Factory<CMomentaryRotButton>
+class CMomentaryRotButton : public CRotButton
 {
 public:
     DECLARE_SCHEMA_CLASS(CMomentaryRotButton);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(int32_t, m_direction);
     SCHEMA_FIELD(float, m_returnSpeed);
     SCHEMA_FIELD(float, m_flStartPosition);
+
+public:
+    static CMomentaryRotButton* New(const char* className)
+    {
+        return CBaseEntity::New<CMomentaryRotButton>(className);
+    }
 };

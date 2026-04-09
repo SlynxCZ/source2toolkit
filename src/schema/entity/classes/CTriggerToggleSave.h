@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerToggleSave : public CBaseTrigger, public CBaseEntity::Factory<CTriggerToggleSave>
+class CTriggerToggleSave : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerToggleSave);
 
+
+public:
+    static CTriggerToggleSave* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerToggleSave>(className);
+    }
 };

@@ -14,11 +14,17 @@
 
 #include "CPointEntity.h"
 
-class CEnvViewPunch : public CPointEntity, public CBaseEntity::Factory<CEnvViewPunch>
+class CEnvViewPunch : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvViewPunch);
 
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(QAngle, m_angViewPunch);
+
+public:
+    static CEnvViewPunch* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvViewPunch>(className);
+    }
 };

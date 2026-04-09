@@ -14,7 +14,7 @@
 
 #include "CSoundOpvarSetPointEntity.h"
 
-class CSoundOpvarSetAABBEntity : public CSoundOpvarSetPointEntity, public CBaseEntity::Factory<CSoundOpvarSetAABBEntity>
+class CSoundOpvarSetAABBEntity : public CSoundOpvarSetPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetAABBEntity);
@@ -28,4 +28,10 @@ public:
     SCHEMA_FIELD(Vector, m_vInnerMaxs);
     SCHEMA_FIELD(Vector, m_vOuterMins);
     SCHEMA_FIELD(Vector, m_vOuterMaxs);
+
+public:
+    static CSoundOpvarSetAABBEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetAABBEntity>(className);
+    }
 };

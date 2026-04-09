@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CTriggerProximity : public CBaseTrigger, public CBaseEntity::Factory<CTriggerProximity>
+class CTriggerProximity : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerProximity);
@@ -25,4 +25,10 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMeasureTarget);
     SCHEMA_FIELD(float, m_fRadius);
     SCHEMA_FIELD(int32_t, m_nTouchers);
+
+public:
+    static CTriggerProximity* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerProximity>(className);
+    }
 };

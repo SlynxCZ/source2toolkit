@@ -14,9 +14,15 @@
 
 #include "CBaseButton.h"
 
-class CRotButton : public CBaseButton, public CBaseEntity::Factory<CRotButton>
+class CRotButton : public CBaseButton
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotButton);
 
+
+public:
+    static CRotButton* New(const char* className)
+    {
+        return CBaseEntity::New<CRotButton>(className);
+    }
 };

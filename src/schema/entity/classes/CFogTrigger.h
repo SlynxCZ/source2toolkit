@@ -15,10 +15,16 @@
 #include "CBaseTrigger.h"
 #include "fogparams_t.h"
 
-class CFogTrigger : public CBaseTrigger, public CBaseEntity::Factory<CFogTrigger>
+class CFogTrigger : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CFogTrigger);
 
     SCHEMA_FIELD(fogparams_t, m_fog);
+
+public:
+    static CFogTrigger* New(const char* className)
+    {
+        return CBaseEntity::New<CFogTrigger>(className);
+    }
 };

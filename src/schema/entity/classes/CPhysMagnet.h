@@ -15,7 +15,7 @@
 #include "CBaseAnimGraph.h"
 #include "magnetted_objects_t.h"
 
-class CPhysMagnet : public CBaseAnimGraph, public CBaseEntity::Factory<CPhysMagnet>
+class CPhysMagnet : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysMagnet);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(float, m_flNextSuckTime);
     SCHEMA_FIELD(int32_t, m_iMaxObjectsAttached);
+
+public:
+    static CPhysMagnet* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysMagnet>(className);
+    }
 };

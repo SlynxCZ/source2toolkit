@@ -14,9 +14,15 @@
 
 #include "CPointEntity.h"
 
-class CLogicProximity : public CPointEntity, public CBaseEntity::Factory<CLogicProximity>
+class CLogicProximity : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicProximity);
 
+
+public:
+    static CLogicProximity* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicProximity>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CBaseClientUIEntity.h"
 
-class CPointClientUIWorldPanel : public CBaseClientUIEntity, public CBaseEntity::Factory<CPointClientUIWorldPanel>
+class CPointClientUIWorldPanel : public CBaseClientUIEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointClientUIWorldPanel);
@@ -43,4 +43,10 @@ public:
     SCHEMA_FIELD(bool, m_bOnlyRenderToTexture);
     SCHEMA_FIELD(bool, m_bDisableMipGen);
     SCHEMA_FIELD(int32_t, m_nExplicitImageLayout);
+
+public:
+    static CPointClientUIWorldPanel* New(const char* className)
+    {
+        return CBaseEntity::New<CPointClientUIWorldPanel>(className);
+    }
 };

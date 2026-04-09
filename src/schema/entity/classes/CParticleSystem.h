@@ -17,7 +17,7 @@
 
 class CBaseEntity;
 
-class CParticleSystem : public CBaseModelEntity, public CBaseEntity::Factory<CParticleSystem>
+class CParticleSystem : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CParticleSystem);
@@ -44,4 +44,10 @@ public:
     SCHEMA_FIELD(Vector, m_vecDataCPValue);
     SCHEMA_FIELD(int32_t, m_nTintCP);
     SCHEMA_FIELD(Color, m_clrTint);
+
+public:
+    static CParticleSystem* New(const char* className)
+    {
+        return CBaseEntity::New<CParticleSystem>(className);
+    }
 };

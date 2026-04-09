@@ -15,7 +15,7 @@
 #include "CPhysicsShake.h"
 #include "CPointEntity.h"
 
-class CEnvShake : public CPointEntity, public CBaseEntity::Factory<CEnvShake>
+class CEnvShake : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvShake);
@@ -30,4 +30,10 @@ public:
     SCHEMA_FIELD(float, m_currentAmp);
     SCHEMA_FIELD(Vector, m_maxForce);
     SCHEMA_FIELD(CPhysicsShake, m_shakeCallback);
+
+public:
+    static CEnvShake* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvShake>(className);
+    }
 };

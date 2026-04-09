@@ -16,7 +16,7 @@
 #include "InfoForResourceTypeCTextureBase.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CEnvCubemapFog : public CBaseEntity, public CBaseEntity::Factory<CEnvCubemapFog>
+class CEnvCubemapFog : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemapFog);
@@ -39,4 +39,10 @@ public:
     SCHEMA_FIELD(CStrongHandle< InfoForResourceTypeCTextureBase >, m_hFogCubemapTexture);
     SCHEMA_FIELD(bool, m_bHasHeightFogEnd);
     SCHEMA_FIELD(bool, m_bFirstTime);
+
+public:
+    static CEnvCubemapFog* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvCubemapFog>(className);
+    }
 };

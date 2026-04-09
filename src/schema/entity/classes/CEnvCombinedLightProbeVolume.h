@@ -15,7 +15,7 @@
 #include "CBaseEntity.h"
 #include "InfoForResourceTypeCTextureBase.h"
 
-class CEnvCombinedLightProbeVolume : public CBaseEntity, public CBaseEntity::Factory<CEnvCombinedLightProbeVolume>
+class CEnvCombinedLightProbeVolume : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCombinedLightProbeVolume);
@@ -49,4 +49,10 @@ public:
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasY);
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasZ);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
+
+public:
+    static CEnvCombinedLightProbeVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvCombinedLightProbeVolume>(className);
+    }
 };

@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CBaseFilter : public CLogicalEntity, public CBaseEntity::Factory<CBaseFilter>
+class CBaseFilter : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseFilter);
@@ -22,4 +22,10 @@ public:
     SCHEMA_FIELD(bool, m_bNegated);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFail);
+
+public:
+    static CBaseFilter* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseFilter>(className);
+    }
 };

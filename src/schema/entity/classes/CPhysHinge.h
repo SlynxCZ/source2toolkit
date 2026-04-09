@@ -16,7 +16,7 @@
 #include "ConstraintSoundInfo.h"
 #include "CPhysConstraint.h"
 
-class CPhysHinge : public CPhysConstraint, public CBaseEntity::Factory<CPhysHinge>
+class CPhysHinge : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysHinge);
@@ -40,4 +40,10 @@ public:
     SCHEMA_FIELD(float, m_flLimitsDebugVisRotation);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartMoving);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStopMoving);
+
+public:
+    static CPhysHinge* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysHinge>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CBaseModelEntity.h"
 
-class CMarkupVolume : public CBaseModelEntity, public CBaseEntity::Factory<CMarkupVolume>
+class CMarkupVolume : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolume);
 
     SCHEMA_FIELD(bool, m_bDisabled);
+
+public:
+    static CMarkupVolume* New(const char* className)
+    {
+        return CBaseEntity::New<CMarkupVolume>(className);
+    }
 };

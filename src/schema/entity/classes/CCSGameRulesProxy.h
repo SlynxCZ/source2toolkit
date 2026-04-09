@@ -16,10 +16,16 @@
 
 class CCSGameRules;
 
-class CCSGameRulesProxy : public CGameRulesProxy, public CBaseEntity::Factory<CCSGameRulesProxy>
+class CCSGameRulesProxy : public CGameRulesProxy
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameRulesProxy);
 
     SCHEMA_FIELD(CCSGameRules*, m_pGameRules);
+
+public:
+    static CCSGameRulesProxy* New(const char* className)
+    {
+        return CBaseEntity::New<CCSGameRulesProxy>(className);
+    }
 };

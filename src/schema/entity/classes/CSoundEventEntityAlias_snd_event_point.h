@@ -14,9 +14,15 @@
 
 #include "CSoundEventEntity.h"
 
-class CSoundEventEntityAlias_snd_event_point : public CSoundEventEntity, public CBaseEntity::Factory<CSoundEventEntityAlias_snd_event_point>
+class CSoundEventEntityAlias_snd_event_point : public CSoundEventEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventEntityAlias_snd_event_point);
 
+
+public:
+    static CSoundEventEntityAlias_snd_event_point* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundEventEntityAlias_snd_event_point>(className);
+    }
 };

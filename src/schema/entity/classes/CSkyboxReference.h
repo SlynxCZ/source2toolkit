@@ -16,11 +16,17 @@
 
 class CSkyCamera;
 
-class CSkyboxReference : public CBaseEntity, public CBaseEntity::Factory<CSkyboxReference>
+class CSkyboxReference : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkyboxReference);
 
     SCHEMA_FIELD(WorldGroupId_t, m_worldGroupId);
     SCHEMA_FIELD(CHandle<CSkyCamera>, m_hSkyCamera);
+
+public:
+    static CSkyboxReference* New(const char* className)
+    {
+        return CBaseEntity::New<CSkyboxReference>(className);
+    }
 };

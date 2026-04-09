@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CEnvGlobal : public CLogicalEntity, public CBaseEntity::Factory<CEnvGlobal>
+class CEnvGlobal : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvGlobal);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD(int32_t, m_triggermode);
     SCHEMA_FIELD(int32_t, m_initialstate);
     SCHEMA_FIELD(int32_t, m_counter);
+
+public:
+    static CEnvGlobal* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvGlobal>(className);
+    }
 };

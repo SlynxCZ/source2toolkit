@@ -14,7 +14,7 @@
 
 #include "CPhysConstraint.h"
 
-class CPhysPulley : public CPhysConstraint, public CBaseEntity::Factory<CPhysPulley>
+class CPhysPulley : public CPhysConstraint
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysPulley);
@@ -23,4 +23,10 @@ public:
     SCHEMA_FIELD_POINTER(Vector, m_offset);
     SCHEMA_FIELD(float, m_addLength);
     SCHEMA_FIELD(float, m_gearRatio);
+
+public:
+    static CPhysPulley* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysPulley>(className);
+    }
 };

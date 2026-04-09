@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CPhysConstraint : public CLogicalEntity, public CBaseEntity::Factory<CPhysConstraint>
+class CPhysConstraint : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysConstraint);
@@ -34,4 +34,10 @@ public:
     SCHEMA_FIELD(bool, m_bSnapObjectPositions);
     SCHEMA_FIELD(bool, m_bTreatEntity1AsInfiniteMass);
     SCHEMA_FIELD(CEntityIOOutput, m_OnBreak);
+
+public:
+    static CPhysConstraint* New(const char* className)
+    {
+        return CBaseEntity::New<CPhysConstraint>(className);
+    }
 };

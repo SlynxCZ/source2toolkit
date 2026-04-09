@@ -15,7 +15,7 @@
 #include "CBaseModelEntity.h"
 #include "InfoForResourceTypeIMaterial2.h"
 
-class CEnvDecal : public CBaseModelEntity, public CBaseEntity::Factory<CEnvDecal>
+class CEnvDecal : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvDecal);
@@ -29,4 +29,10 @@ public:
     SCHEMA_FIELD(bool, m_bProjectOnCharacters);
     SCHEMA_FIELD(bool, m_bProjectOnWater);
     SCHEMA_FIELD(float, m_flDepthSortBias);
+
+public:
+    static CEnvDecal* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvDecal>(className);
+    }
 };

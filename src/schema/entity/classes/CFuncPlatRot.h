@@ -14,11 +14,17 @@
 
 #include "CFuncPlat.h"
 
-class CFuncPlatRot : public CFuncPlat, public CBaseEntity::Factory<CFuncPlatRot>
+class CFuncPlatRot : public CFuncPlat
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPlatRot);
 
     SCHEMA_FIELD(QAngle, m_end);
     SCHEMA_FIELD(QAngle, m_start);
+
+public:
+    static CFuncPlatRot* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncPlatRot>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CServerOnlyEntity.h"
 
-class CLogicalEntity : public CServerOnlyEntity, public CBaseEntity::Factory<CLogicalEntity>
+class CLogicalEntity : public CServerOnlyEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicalEntity);
 
+
+public:
+    static CLogicalEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicalEntity>(className);
+    }
 };

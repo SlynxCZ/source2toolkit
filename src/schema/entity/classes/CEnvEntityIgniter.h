@@ -14,10 +14,16 @@
 
 #include "CBaseEntity.h"
 
-class CEnvEntityIgniter : public CBaseEntity, public CBaseEntity::Factory<CEnvEntityIgniter>
+class CEnvEntityIgniter : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvEntityIgniter);
 
     SCHEMA_FIELD(float, m_flLifetime);
+
+public:
+    static CEnvEntityIgniter* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvEntityIgniter>(className);
+    }
 };

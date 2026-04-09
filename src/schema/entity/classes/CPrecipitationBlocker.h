@@ -14,9 +14,15 @@
 
 #include "CBaseModelEntity.h"
 
-class CPrecipitationBlocker : public CBaseModelEntity, public CBaseEntity::Factory<CPrecipitationBlocker>
+class CPrecipitationBlocker : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitationBlocker);
 
+
+public:
+    static CPrecipitationBlocker* New(const char* className)
+    {
+        return CBaseEntity::New<CPrecipitationBlocker>(className);
+    }
 };

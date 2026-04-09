@@ -14,7 +14,7 @@
 
 #include "CSoundOpvarSetPointBase.h"
 
-class CSoundOpvarSetPointEntity : public CSoundOpvarSetPointBase, public CBaseEntity::Factory<CSoundOpvarSetPointEntity>
+class CSoundOpvarSetPointEntity : public CSoundOpvarSetPointBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetPointEntity);
@@ -43,4 +43,10 @@ public:
     SCHEMA_FIELD(Vector, m_vPathingListenerPos);
     SCHEMA_FIELD(Vector, m_vPathingDirection);
     SCHEMA_FIELD(int32_t, m_nPathingSourceIndex);
+
+public:
+    static CSoundOpvarSetPointEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CSoundOpvarSetPointEntity>(className);
+    }
 };

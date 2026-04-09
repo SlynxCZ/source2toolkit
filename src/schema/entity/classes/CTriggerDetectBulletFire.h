@@ -14,11 +14,17 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerDetectBulletFire : public CBaseTrigger, public CBaseEntity::Factory<CTriggerDetectBulletFire>
+class CTriggerDetectBulletFire : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerDetectBulletFire);
 
     SCHEMA_FIELD(bool, m_bPlayerFireOnly);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetectedBulletFire);
+
+public:
+    static CTriggerDetectBulletFire* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerDetectBulletFire>(className);
+    }
 };

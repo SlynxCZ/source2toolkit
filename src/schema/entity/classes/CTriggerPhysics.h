@@ -14,7 +14,7 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerPhysics : public CBaseTrigger, public CBaseEntity::Factory<CTriggerPhysics>
+class CTriggerPhysics : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerPhysics);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(Vector, m_vecLinearForcePointAtWorld);
     SCHEMA_FIELD(Vector, m_vecLinearForceDirection);
     SCHEMA_FIELD(bool, m_bConvertToDebrisWhenPossible);
+
+public:
+    static CTriggerPhysics* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerPhysics>(className);
+    }
 };

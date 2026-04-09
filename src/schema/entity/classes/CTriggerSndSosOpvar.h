@@ -16,7 +16,7 @@
 
 class CBaseEntity;
 
-class CTriggerSndSosOpvar : public CBaseTrigger, public CBaseEntity::Factory<CTriggerSndSosOpvar>
+class CTriggerSndSosOpvar : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerSndSosOpvar);
@@ -35,4 +35,10 @@ public:
     SCHEMA_FIELD_POINTER(char, m_operatorNameChar);
     SCHEMA_FIELD(Vector, m_VecNormPos);
     SCHEMA_FIELD(float, m_flNormCenterSize);
+
+public:
+    static CTriggerSndSosOpvar* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerSndSosOpvar>(className);
+    }
 };

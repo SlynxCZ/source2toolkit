@@ -14,9 +14,15 @@
 
 #include "CEnvSoundscape.h"
 
-class CEnvSoundscapeTriggerable : public CEnvSoundscape, public CBaseEntity::Factory<CEnvSoundscapeTriggerable>
+class CEnvSoundscapeTriggerable : public CEnvSoundscape
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeTriggerable);
 
+
+public:
+    static CEnvSoundscapeTriggerable* New(const char* className)
+    {
+        return CBaseEntity::New<CEnvSoundscapeTriggerable>(className);
+    }
 };

@@ -21,7 +21,7 @@
 class CBaseEntity;
 class CFuncMover;
 
-class CFuncRotator : public CBaseModelEntity, public CBaseEntity::Factory<CFuncRotator>
+class CFuncRotator : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncRotator);
@@ -67,4 +67,10 @@ public:
     SCHEMA_FIELD(float, m_flSpeedScale);
     SCHEMA_FIELD(float, m_flMinYawRotation);
     SCHEMA_FIELD(float, m_flMaxYawRotation);
+
+public:
+    static CFuncRotator* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncRotator>(className);
+    }
 };

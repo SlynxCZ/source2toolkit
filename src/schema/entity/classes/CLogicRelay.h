@@ -14,7 +14,7 @@
 
 #include "CLogicalEntity.h"
 
-class CLogicRelay : public CLogicalEntity, public CBaseEntity::Factory<CLogicRelay>
+class CLogicRelay : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicRelay);
@@ -24,4 +24,10 @@ public:
     SCHEMA_FIELD(bool, m_bTriggerOnce);
     SCHEMA_FIELD(bool, m_bFastRetrigger);
     SCHEMA_FIELD(bool, m_bPassthoughCaller);
+
+public:
+    static CLogicRelay* New(const char* className)
+    {
+        return CBaseEntity::New<CLogicRelay>(className);
+    }
 };

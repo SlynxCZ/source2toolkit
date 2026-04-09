@@ -14,9 +14,15 @@
 
 #include "CRopeKeyframe.h"
 
-class CRopeKeyframeAlias_move_rope : public CRopeKeyframe, public CBaseEntity::Factory<CRopeKeyframeAlias_move_rope>
+class CRopeKeyframeAlias_move_rope : public CRopeKeyframe
 {
 public:
     DECLARE_SCHEMA_CLASS(CRopeKeyframeAlias_move_rope);
 
+
+public:
+    static CRopeKeyframeAlias_move_rope* New(const char* className)
+    {
+        return CBaseEntity::New<CRopeKeyframeAlias_move_rope>(className);
+    }
 };

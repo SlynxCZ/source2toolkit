@@ -14,7 +14,7 @@
 
 #include "CCSWeaponBase.h"
 
-class CBaseCSGrenade : public CCSWeaponBase, public CBaseEntity::Factory<CBaseCSGrenade>
+class CBaseCSGrenade : public CCSWeaponBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseCSGrenade);
@@ -32,4 +32,10 @@ public:
     SCHEMA_FIELD(int32_t, m_nNextHoldTick);
     SCHEMA_FIELD(float, m_flNextHoldFrac);
     SCHEMA_FIELD(CHandle<CCSWeaponBase>, m_hSwitchToWeaponAfterThrow);
+
+public:
+    static CBaseCSGrenade* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseCSGrenade>(className);
+    }
 };

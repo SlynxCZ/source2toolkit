@@ -14,10 +14,16 @@
 
 #include "CFuncTrackTrain.h"
 
-class CFuncTankTrain : public CFuncTrackTrain, public CBaseEntity::Factory<CFuncTankTrain>
+class CFuncTankTrain : public CFuncTrackTrain
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTankTrain);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnDeath);
+
+public:
+    static CFuncTankTrain* New(const char* className)
+    {
+        return CBaseEntity::New<CFuncTankTrain>(className);
+    }
 };

@@ -14,9 +14,15 @@
 
 #include "CBaseTrigger.h"
 
-class CTriggerBombReset : public CBaseTrigger, public CBaseEntity::Factory<CTriggerBombReset>
+class CTriggerBombReset : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBombReset);
 
+
+public:
+    static CTriggerBombReset* New(const char* className)
+    {
+        return CBaseEntity::New<CTriggerBombReset>(className);
+    }
 };

@@ -19,7 +19,7 @@
 class CAnimGraphControllerBase;
 class IChoreoServices;
 
-class CBaseAnimGraph : public CBaseModelEntity, public CBaseEntity::Factory<CBaseAnimGraph>
+class CBaseAnimGraph : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraph);
@@ -39,4 +39,10 @@ public:
     SCHEMA_FIELD(bool, m_bRagdollEnabled);
     SCHEMA_FIELD(bool, m_bRagdollClientSide);
     SCHEMA_FIELD(CTransform, m_xParentedRagdollRootInEntitySpace);
+
+public:
+    static CBaseAnimGraph* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseAnimGraph>(className);
+    }
 };

@@ -14,10 +14,16 @@
 
 #include "CBaseFilter.h"
 
-class FilterDamageType : public CBaseFilter, public CBaseEntity::Factory<FilterDamageType>
+class FilterDamageType : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(FilterDamageType);
 
     SCHEMA_FIELD(int32_t, m_iDamageType);
+
+public:
+    static FilterDamageType* New(const char* className)
+    {
+        return CBaseEntity::New<FilterDamageType>(className);
+    }
 };

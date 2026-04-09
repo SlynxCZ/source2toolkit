@@ -14,11 +14,17 @@
 
 #include "CInfoDynamicShadowHint.h"
 
-class CInfoDynamicShadowHintBox : public CInfoDynamicShadowHint, public CBaseEntity::Factory<CInfoDynamicShadowHintBox>
+class CInfoDynamicShadowHintBox : public CInfoDynamicShadowHint
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoDynamicShadowHintBox);
 
     SCHEMA_FIELD(Vector, m_vBoxMins);
     SCHEMA_FIELD(Vector, m_vBoxMaxs);
+
+public:
+    static CInfoDynamicShadowHintBox* New(const char* className)
+    {
+        return CBaseEntity::New<CInfoDynamicShadowHintBox>(className);
+    }
 };

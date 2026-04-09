@@ -22,7 +22,7 @@
 class CDestructiblePartsComponent;
 class CRenderComponent;
 
-class CBaseModelEntity : public CBaseEntity, public CBaseEntity::Factory<CBaseModelEntity>
+class CBaseModelEntity : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseModelEntity);
@@ -67,4 +67,10 @@ public:
     Vector GetEyePosition();
     /// <summary>Set entity model.</summary>
     void SetModel(const char* pszModel);
+
+public:
+    static CBaseModelEntity* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseModelEntity>(className);
+    }
 };

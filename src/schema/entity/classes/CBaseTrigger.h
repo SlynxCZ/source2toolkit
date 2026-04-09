@@ -17,7 +17,7 @@
 class CBaseEntity;
 class CBaseFilter;
 
-class CBaseTrigger : public CBaseToggle, public CBaseEntity::Factory<CBaseTrigger>
+class CBaseTrigger : public CBaseToggle
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseTrigger);
@@ -34,4 +34,10 @@ public:
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bUseAsyncQueries);
+
+public:
+    static CBaseTrigger* New(const char* className)
+    {
+        return CBaseEntity::New<CBaseTrigger>(className);
+    }
 };

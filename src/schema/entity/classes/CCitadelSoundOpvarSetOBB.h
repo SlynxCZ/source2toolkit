@@ -14,7 +14,7 @@
 
 #include "CBaseEntity.h"
 
-class CCitadelSoundOpvarSetOBB : public CBaseEntity, public CBaseEntity::Factory<CCitadelSoundOpvarSetOBB>
+class CCitadelSoundOpvarSetOBB : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCitadelSoundOpvarSetOBB);
@@ -27,4 +27,10 @@ public:
     SCHEMA_FIELD(Vector, m_vDistanceOuterMins);
     SCHEMA_FIELD(Vector, m_vDistanceOuterMaxs);
     SCHEMA_FIELD(int32_t, m_nAABBDirection);
+
+public:
+    static CCitadelSoundOpvarSetOBB* New(const char* className)
+    {
+        return CBaseEntity::New<CCitadelSoundOpvarSetOBB>(className);
+    }
 };

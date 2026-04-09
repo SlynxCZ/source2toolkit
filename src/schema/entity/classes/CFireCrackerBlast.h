@@ -14,9 +14,15 @@
 
 #include "CInferno.h"
 
-class CFireCrackerBlast : public CInferno, public CBaseEntity::Factory<CFireCrackerBlast>
+class CFireCrackerBlast : public CInferno
 {
 public:
     DECLARE_SCHEMA_CLASS(CFireCrackerBlast);
 
+
+public:
+    static CFireCrackerBlast* New(const char* className)
+    {
+        return CBaseEntity::New<CFireCrackerBlast>(className);
+    }
 };

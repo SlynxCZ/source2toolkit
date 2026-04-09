@@ -28,7 +28,7 @@ class CCSPlayer_DamageReactServices;
 class CCSPlayer_HostageServices;
 class CCSPlayer_RadioServices;
 
-class CCSPlayerPawn : public CCSPlayerPawnBase, public CBaseEntity::Factory<CCSPlayerPawn>
+class CCSPlayerPawn : public CCSPlayerPawnBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayerPawn);
@@ -154,4 +154,10 @@ public:
     SCHEMA_FIELD(bool, m_bGunGameImmunity);
     SCHEMA_FIELD(float, m_fMolotovDamageTime);
     SCHEMA_FIELD(QAngle, m_angEyeAngles);
+
+public:
+    static CCSPlayerPawn* New(const char* className)
+    {
+        return CBaseEntity::New<CCSPlayerPawn>(className);
+    }
 };
