@@ -140,7 +140,50 @@ struct TraceOptions
     uint64_t InteractsAs = 0;
     uint64_t InteractsWith = static_cast<uint64_t>(MASK_SHOT_PHYSICS);
     uint64_t InteractsExclude = 0;
-    int DrawBeam = 0;
+    bool DrawBeam = false;
+};
+
+struct TraceResult
+{
+    CGameTrace m_Trace{};
+
+    TraceResult() = default;
+
+    TraceResult(const TraceResult&) = delete;
+    TraceResult& operator=(const TraceResult&) = delete;
+
+    TraceResult(TraceResult&&) = delete;
+    TraceResult& operator=(TraceResult&&) = default;
+
+    const Vector& StartPos() const { return m_Trace.m_vStartPos; }
+    const Vector& EndPos() const { return m_Trace.m_vEndPos; }
+    const Vector& HitPoint() const { return m_Trace.m_vHitPoint; }
+    const Vector& Normal() const { return m_Trace.m_vHitNormal; }
+
+    float Fraction() const { return m_Trace.m_flFraction; }
+    float HitOffset() const { return m_Trace.m_flHitOffset; }
+
+    bool DidHit() const { return m_Trace.m_flFraction < 1.0f; }
+    bool IsAllSolid() const { return m_Trace.m_bStartInSolid; }
+    bool HasExactHit() const { return m_Trace.m_bExactHitPoint; }
+
+    CEntityInstance* HitEntity() const { return m_Trace.m_pEnt; }
+
+    int TriangleIndex() const { return m_Trace.m_nTriangle; }
+    int HitboxBoneIndex() const { return m_Trace.m_nHitboxBoneIndex; }
+
+    CHitBox* Hitbox() const { return const_cast<CHitBox*>(m_Trace.m_pHitbox); }
+
+    int Contents() const { return m_Trace.m_nContents; }
+    RayType_t RayType() const { return m_Trace.m_eRayType; }
+
+    IPhysicsBody* Body() const { return m_Trace.m_hBody; }
+    IPhysicsShape* Shape() const { return m_Trace.m_hShape; }
+
+    const CTransform& BodyTransform() const { return m_Trace.m_BodyTransform; }
+    const RnCollisionAttr_t& ShapeAttributes() const { return m_Trace.m_ShapeAttributes; }
+
+    CPhysSurfaceProperties* Surface() const { return const_cast<CPhysSurfaceProperties*>(m_Trace.m_pSurfaceProperties); }
 };
 
 class CTraceFilterEx : public CTraceFilter

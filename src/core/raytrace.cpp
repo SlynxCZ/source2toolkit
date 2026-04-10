@@ -25,14 +25,16 @@ namespace raytrace
         CBeam* pBeam = CBeam::New("env_beam");
         if (!pBeam) return;
 
-        pBeam->m_clrRender() = clrColor;
-        pBeam->m_fWidth() = 1.5f;
-        pBeam->m_nRenderMode() = kRenderNormal;
-        pBeam->m_nRenderFX() = kRenderFxNone;
+        pBeam->m_clrRender().SetColor(clrColor.r(), clrColor.g(), clrColor.b(), clrColor.a());
+        pBeam->m_fWidth(1.5f);
+        pBeam->m_nRenderMode(kRenderNormal);
+        pBeam->m_nRenderFX(kRenderFxNone);
 
         pBeam->Teleport(&vecStart, &vectorextends::RotationZero, &vectorextends::VectorZero);
-        pBeam->m_vecEndPos() = vecEnd;
+        pBeam->m_vecEndPos(vecEnd);
         pBeam->DispatchSpawn();
+
+        FP_DEBUG("Spawned entity beam: {} {} {}, ending at {} {} {}", pBeam->GetAbsOrigin().x, pBeam->GetAbsOrigin().y, pBeam->GetAbsOrigin().z, vecEnd.x, vecEnd.y, vecEnd.z);
     }
 
     void RayTrace::InitRayTrace()
@@ -155,7 +157,7 @@ namespace raytrace
 
         if (pTraceOptions && pTraceOptions->DrawBeam)
         {
-            Color col = res ? Color(255, 0, 0) : Color(0, 255, 0);
+            Color col = res ? Color(255, 0, 0, 255) : Color(0, 255, 0, 255);
             DrawBeam(vecStart, res ? pGameTrace->m_vEndPos : vecEnd, col);
         }
 
