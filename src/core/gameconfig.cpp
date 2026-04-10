@@ -68,6 +68,16 @@ constexpr auto platform = "windows";
 
 const std::string CGameConfig::GetPath() { return m_sPath; }
 
+const char* CGameConfig::GetLibrary(const char* pchName)
+{
+    auto it = m_umLibraries.find(pchName);
+    if (it == m_umLibraries.end())
+    {
+        return nullptr;
+    }
+    return it->second.c_str();
+}
+
 const char* CGameConfig::GetSignature(const char* pchName)
 {
     auto it = m_umSignatures.find(pchName);
@@ -76,6 +86,11 @@ const char* CGameConfig::GetSignature(const char* pchName)
         return nullptr;
     }
     return it->second.c_str();
+}
+
+const char* CGameConfig::GetSymbol(const char* pchName)
+{
+    return nullptr;
 }
 
 const char* CGameConfig::GetPatch(const char* pchName)
