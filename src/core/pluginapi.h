@@ -22,6 +22,12 @@ public:
     void* QueryInterface(CreateInterfaceFn fn, const char *iface, int min) override;
     void* InterfaceSearch(CreateInterfaceFn fn, const char *iface, int max, int *ret) override;
     int FormatIface(char iface[], size_t maxlength) override;
+
+    CreateInterfaceFn GetEngineFactory(bool syn=true) override;
+    CreateInterfaceFn GetPhysicsFactory(bool syn=true) override;
+    CreateInterfaceFn GetFileSystemFactory(bool syn=true) override;
+    CreateInterfaceFn GetServerFactory(bool syn=true) override;
+
     void* ToolkitFactory(const char *iface, int *ret, PluginId *id) override;
     void* MetaFactory(const char *iface, int *ret, PluginId *id) override;
 

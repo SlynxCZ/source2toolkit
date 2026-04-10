@@ -160,6 +160,26 @@ int PluginApi::FormatIface(char iface[], size_t maxlength)
     return num;
 }
 
+CreateInterfaceFn PluginApi::GetEngineFactory(bool syn/* =true */)
+{
+    return g_SMAPI->GetEngineFactory(syn);
+}
+
+CreateInterfaceFn PluginApi::GetPhysicsFactory(bool syn/* =true */)
+{
+    return g_SMAPI->GetPhysicsFactory(syn);
+}
+
+CreateInterfaceFn PluginApi::GetFileSystemFactory(bool syn/* =true */)
+{
+    return g_SMAPI->GetFileSystemFactory(syn);
+}
+
+CreateInterfaceFn PluginApi::GetServerFactory(bool syn/* =true */)
+{
+    return g_SMAPI->GetServerFactory(syn);
+}
+
 void* PluginApi::ToolkitFactory(const char *iface, int *ret, PluginId *id)
 {
     for (auto& p : pluginManager.m_plugins)
