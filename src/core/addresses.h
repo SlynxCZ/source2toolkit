@@ -60,7 +60,7 @@ namespace addresses
         CEntityInstance_AcceptInput_t AcceptInput = nullptr;
         CEntityIOOutput_FireOutputInternal_t FireOutputInternal = nullptr;
         CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
-        CGameEntitySystem_FindEntityByClassName_t FindEntityByClassname = nullptr;
+        CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
         CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
     public:
         CBaseEntity_CreateEntityByName_t CBaseEntity_CreateEntityByName() override;
