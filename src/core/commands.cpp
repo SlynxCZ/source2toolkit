@@ -4,11 +4,17 @@
 //
 #include "commands.h"
 
+#include "pluginapi.h"
+#include "pluginmanager.h"
 #include "raytrace.h"
 #include "shared.h"
 #include "schema/entity/classes/CCSPlayerController.h"
 #include "schema/entity/classes/CCSPlayerPawn.h"
+#include "source2toolkit/IToolkitPlugin.h"
 #include "utils/log.h"
+
+#define VERSION_STRING SEMVER " @ " GITHUB_SHA
+#define BUILD_TIMESTAMP __DATE__ " " __TIME__
 
 namespace commands {
     static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
@@ -16,9 +22,151 @@ namespace commands {
     static std::unordered_set<std::string> registeredNames;
     static std::unordered_map<std::string, CommandHandler> commandCallbacks;
 
+    static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
+    {
+        int argc = args.ArgC();
+
+        if (argc < 2)
+        {
+            FP_INFO("Source2Toolkit commands:");
+            FP_INFO("  toolkit list");
+            FP_INFO("  toolkit load <name>");
+            FP_INFO("  toolkit unload <id>");
+            FP_INFO("  toolkit info <id>");
+            FP_INFO("  toolkit refresh");
+            FP_INFO("  toolkit version");
+            return;
+        }
+
+        const char* cmd = args.Arg(1);
+
+        if (strcmp(cmd, "list") == 0)
+        {
+            if (pluginManager.m_plugins.empty())
+            {
+                FP_INFO("No plugins loaded.");
+                return;
+            }
+
+            FP_INFO("Listing {} plugin(s):", pluginManager.m_plugins.size());
+
+            for (auto& p : pluginManager.m_plugins)
+            {
+                auto* api = p->api;
+
+                FP_INFO("  [{}] {} ({})",
+                    p->id,
+                    api->GetName(),
+                    api->GetVersion());
+            }
+        }
+
+        else if (strcmp(cmd, "load") == 0)
+        {
+            if (argc < 3)
+            {
+                FP_ERROR("Usage: toolkit load <name>");
+                return;
+            }
+
+            char err[256]{};
+
+            if (!pluginManager.LoadPlugin(args.Arg(2), err, sizeof(err)))
+            {
+                FP_ERROR("Load failed: {}", err);
+                return;
+            }
+
+            FP_INFO("Plugin '{}' loaded.", args.Arg(2));
+        }
+
+        else if (strcmp(cmd, "unload") == 0)
+        {
+            if (argc < 3)
+            {
+                FP_ERROR("Usage: toolkit unload <id>");
+                return;
+            }
+
+            int id = atoi(args.Arg(2));
+
+            if (id <= 0)
+            {
+                FP_ERROR("Invalid plugin id.");
+                return;
+            }
+
+            if (!pluginManager.UnloadPlugin(id))
+            {
+                FP_ERROR("Plugin {} not found or failed to unload.", id);
+                return;
+            }
+
+            FP_INFO("Plugin {} unloaded.", id);
+        }
+
+        else if (strcmp(cmd, "info") == 0)
+        {
+            if (argc < 3)
+            {
+                FP_ERROR("Usage: toolkit info <id>");
+                return;
+            }
+
+            int id = atoi(args.Arg(2));
+
+            for (auto& p : pluginManager.m_plugins)
+            {
+                if (p->id == id)
+                {
+                    auto* api = p->api;
+
+                    FP_INFO("Plugin {} info:", id);
+                    FP_INFO("  Name: {}", api->GetName());
+                    FP_INFO("  Version: {}", api->GetVersion());
+                    FP_INFO("  Author: {}", api->GetAuthor());
+                    FP_INFO("  Description: {}", api->GetDescription());
+                    FP_INFO("  Path: {}", p->path);
+
+                    return;
+                }
+            }
+
+            FP_ERROR("Plugin {} not found.", id);
+        }
+
+        else if (strcmp(cmd, "refresh") == 0)
+        {
+            FP_INFO("Refreshing plugins...");
+
+            pluginManager.UnloadAll();
+            pluginManager.LoadAll();
+
+            FP_INFO("Plugins refreshed.");
+        }
+
+        else if (strcmp(cmd, "version") == 0)
+        {
+            FP_INFO("Source2Toolkit");
+            FP_INFO("  Version: {}", VERSION_STRING);
+            FP_INFO("  Build: {}", BUILD_TIMESTAMP);
+        }
+
+        else
+        {
+            FP_WARN("Unknown command '{}'", cmd);
+        }
+    }
+
     void InitCommands()
     {
-        // Todo: shared API vtable
+        RegConCommand("source2toolkit", HandleToolkitCommand);
+        RegConCommand("source2t", HandleToolkitCommand);
+        RegConCommand("s2toolkit", HandleToolkitCommand);
+        RegConCommand("s2t", HandleToolkitCommand);
+        RegConCommand("stoolkit", HandleToolkitCommand);
+        RegConCommand("st", HandleToolkitCommand);
+        RegConCommand("toolkit", HandleToolkitCommand);
     }
 
     void DestructCommands()

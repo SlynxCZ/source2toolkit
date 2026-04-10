@@ -12,8 +12,6 @@
 #include "utils/log.h"
 #include "utils/paths.h"
 
-#define TOOLKIT_INTERFACE_NAME "S2ToolkitPlugin001"
-
 PluginManager pluginManager;
 
 static LibHandle OpenLib(const char* path)
@@ -131,11 +129,16 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     }
 
     int ret = 0;
-    auto plugin = (IToolkitPlugin*)fn(TOOLKIT_INTERFACE_NAME, &ret);
+    auto plugin = (IToolkitPlugin*)fn(TOOLKIT_PLAPI_NAME, &ret);
 
     if (!plugin || ret != TOOLKIT_IFACE_OK)
     {
         FAIL("Invalid plugin interface");
+    }
+
+    if (plugin->GetApiVersion() != TOOLKIT_PLAPI_VERSION)
+    {
+        FAIL("Plugin API version mismatch");
     }
 
     auto pl = std::make_unique<ToolkitPlugin>();
