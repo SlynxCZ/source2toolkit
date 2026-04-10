@@ -14,6 +14,11 @@ class CS2ToolkitPlugin : public ISmmPlugin, public IMetamodListener
 public:
     bool Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late) override;
     bool Unload(char *error, size_t maxlen) override;
+    void AllPluginsLoaded() override;
+public:
+    void OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background) override;
+    void OnLevelShutdown() override;
+public:
     const char *GetAuthor() override;
     const char *GetName() override;
     const char *GetDescription() override;

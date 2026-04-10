@@ -21,6 +21,7 @@ namespace paths {
     }
 
     inline std::string GetRootDirectory() { return GameDirectory() + "/addons/source2toolkit"; }
+    inline std::string GetPluginsDirectory() { return GameDirectory() + "/addons/source2toolkit/plugins"; }
     inline std::string EnginePath() { return GameDirectory() + "../bin/linuxsteamrt64/libengine2.so"; }
     inline std::string Tier0Path() { return GameDirectory() + "../bin/linuxsteamrt64/libtier0.so"; }
     inline std::string ServerPath() { return GameDirectory() + "/bin/linuxsteamrt64/libserver.so"; }

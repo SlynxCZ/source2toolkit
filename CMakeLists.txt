@@ -28,6 +28,12 @@ include(makefiles/protobuf.cmake)
 
 add_subdirectory(vendor/spdlog)
 
+file(GLOB_RECURSE PUBLIC_FILES
+        public/*.cpp
+        public/*.h
+        public/*.hpp
+)
+
 file(GLOB_RECURSE SOURCE_FILES
         src/*.cpp
         src/*.h
@@ -46,14 +52,11 @@ list(APPEND SOURCE_FILES
         vendor/dynlibutils/module.h
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
-target_compile_definitions(${PROJECT_NAME}
-        PUBLIC PROJECT_NAMESPACE=${PROJECT_NAME}
-        PUBLIC PROJECT_NAMESPACE_STR=${PROJECT_NAME}
-)
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PUBLIC_FILES})
 
 target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
+        ${CMAKE_CURRENT_SOURCE_DIR}/public
 )
 
 find_package(Git QUIET)

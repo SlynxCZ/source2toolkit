@@ -17,6 +17,7 @@
 #include "entitysystem.h"
 #include "events.h"
 #include "inlinehooks.h"
+#include "pluginmanager.h"
 #include "raytrace.h"
 #include "schema/cgameresourceserviceserver.h"
 
@@ -87,11 +88,16 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
     FP_INFO("Load() success!");
+
+    pluginManager.LoadAll();
+
     return true;
 }
 
 bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
 {
+    pluginManager.UnloadAll();
+
     commands::DestructCommands();
     events::DestructEvents();
     inlinehooks::inlines.DestructListeners();
@@ -108,6 +114,21 @@ bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
     log::Close();
 
     return true;
+}
+
+void CS2ToolkitPlugin::AllPluginsLoaded()
+{
+    pluginManager.FireMetamodLoaded();
+}
+
+void CS2ToolkitPlugin::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background)
+{
+    pluginManager.OnLevelInit(pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background);
+}
+
+void CS2ToolkitPlugin::OnLevelShutdown()
+{
+    pluginManager.OnLevelShutdown();
 }
 
 const char* CS2ToolkitPlugin::GetAuthor() { return "Slynx, contributors"; }
