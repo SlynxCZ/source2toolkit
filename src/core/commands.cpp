@@ -16,11 +16,7 @@ namespace commands {
 
     void InitCommands()
     {
-        RegConCommand("prapele", [](const CCommandContext& ctx, const CCommand& args, Mode mode) -> void
-        {
-            CCSPlayerController* pPlayer = ctx.GetPlayerSlot();
-
-        });
+        // Todo: shared API vtable
     }
 
     void DestructCommands()
