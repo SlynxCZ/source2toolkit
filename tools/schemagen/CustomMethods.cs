@@ -129,6 +129,33 @@ public static class CustomMethods
 
         ["CCSPlayerController"] = new()
         {
+            "/// <summary>Get controller from pawn.</summary>",
+            "static CCSPlayerController* FromPawn(CCSPlayerPawn* pPawn);",
+
+            "/// <summary>Get controller from entity index.</summary>",
+            "static CCSPlayerController* FromIndex(int iIndex);",
+
+            "/// <summary>Get controller from entity index.</summary>",
+            "static CCSPlayerController* FromIndex(CEntityIndex index);",
+
+            "/// <summary>Get controller from slot.</summary>",
+            "static CCSPlayerController* FromSlot(int iSlot);",
+
+            "/// <summary>Get controller from slot.</summary>",
+            "static CCSPlayerController* FromSlot(CPlayerSlot slot);",
+
+            "/// <summary>Get controller from user id.</summary>",
+            "static CCSPlayerController* FromUserId(int iUserId);",
+
+            "/// <summary>Get controller from user id.</summary>",
+            "static CCSPlayerController* FromUserId(CPlayerUserId userId);",
+
+            "/// <summary>Get controller from steam id.</summary>",
+            "static CCSPlayerController* FromSteamId(uint64 uSteamId);",
+
+            "/// <summary>Get controller from steam id.</summary>",
+            "static CCSPlayerController* FromSteamId(CSteamID steamId);",
+
             "/// <summary>Print to console.</summary>",
             "void PrintToConsole(const char* pszMessage);",
 
@@ -153,12 +180,6 @@ public static class CustomMethods
             "/// <summary>Change team like jointeam.</summary>",
             "void ChangeTeam(int nTeam);",
 
-            "/// <summary>Get userid.</summary>",
-            "int GetUserID();",
-
-            "/// <summary>Get player userid.</summary>",
-            "CPlayerUserId GetPlayerUserID();",
-
             "/// <summary>Is bot.</summary>",
             "bool IsBot();",
 
@@ -171,11 +192,29 @@ public static class CustomMethods
             "/// <summary>Execute command from server.</summary>",
             "void ExecuteClientCommandFromServer(const char* pszCommand);",
 
+            "/// <summary>Get index.</summary>",
+            "int GetIndex();",
+
+            "/// <summary>Get player index.</summary>",
+            "CEntityIndex GetPlayerIndex();",
+
             "/// <summary>Get slot.</summary>",
             "int GetSlot();",
 
             "/// <summary>Get player slot.</summary>",
             "CPlayerSlot GetPlayerSlot();",
+
+            "/// <summary>Get steamid.</summary>",
+            "int GetUserID();",
+
+            "/// <summary>Get player userid.</summary>",
+            "CPlayerUserId GetPlayerUserID();",
+
+            "/// <summary>Get steamid.</summary>",
+            "uint64 GetSteamID();",
+
+            "/// <summary>Get player steamid.</summary>",
+            "CSteamID GetPlayerSteamID();",
 
             "/// <summary>Get IP address.</summary>",
             "const char* GetIpAddress();",
