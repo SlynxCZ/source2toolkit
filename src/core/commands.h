@@ -8,6 +8,8 @@
 
 #include <functional>
 
+#include "source2toolkit/IToolkitApi.h"
+
 class CCommand;
 class CCommandContext;
 

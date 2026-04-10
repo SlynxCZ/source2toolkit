@@ -6,6 +6,8 @@
 #include "virtualhooks.h"
 #include "shared.h"
 
+#include "source2toolkit/IToolkitApi.h"
+
 #include "igameevents.h"
 #include <functional>
 

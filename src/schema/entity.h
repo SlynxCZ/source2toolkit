@@ -29,6 +29,7 @@
 #include "platform.h"
 #include "string_t.h"
 #include "variant.h"
+#include "source2toolkit/IToolkitApi.h"
 
 class CEntityInstance;
 class CBaseEntity;

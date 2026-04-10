@@ -76,9 +76,16 @@ static std::string FindPluginBinary(const std::string& name)
     return "";
 }
 
-#define FAIL(msg, ...) \
+#define FAIL(msg) \
     do { \
-        if (error && maxlen) snprintf(error, maxlen, msg, __VA_ARGS__); \
+        if (error && maxlen) snprintf(error, maxlen, "%s", msg); \
+        if (lib) CloseLib(lib); \
+        return false; \
+    } while(0)
+
+#define FAILF(fmt, ...) \
+    do { \
+        if (error && maxlen) snprintf(error, maxlen, fmt, __VA_ARGS__); \
         if (lib) CloseLib(lib); \
         return false; \
     } while(0)
@@ -120,7 +127,7 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     auto fn = (CreateInterfaceFn)GetSymbol(lib, "CreateInterface");
     if (!fn)
     {
-        FAIL("CreateInterface not found in %s", fullPath.c_str());
+        FAILF("CreateInterface not found in %s", fullPath.c_str());
     }
 
     int ret = 0;
@@ -140,7 +147,7 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     char err[256]{};
     if (!plugin->Load(pl->id, &pluginApi, err, sizeof(err), false))
     {
-        FAIL("Plugin load failed: %s", err);
+        FAILF("Plugin load failed: %s", err);
     }
 
     m_plugins.push_back(std::move(pl));
