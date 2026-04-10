@@ -18,26 +18,7 @@ namespace commands {
 
     void InitCommands()
     {
-        RegConCommand("trace_view", [](const CCommandContext& ctx, const CCommand& args, Mode mode)
-        {
-            CCSPlayerController* controller = CCSPlayerController::FromSlot(ctx.GetPlayerSlot());
-            if (!controller)
-                return;
-
-            CCSPlayerPawn* pawn = controller->GetPlayerPawn();
-            if (!pawn)
-                return;
-
-            Vector start = pawn->GetAbsOrigin();
-            QAngle angles = pawn->GetAngRotation();
-
-            TraceResult result{};
-            TraceOptions options{};
-            options.DrawBeam = true;
-            raytrace::rayTrace.TraceShape(start, angles, pawn, &options, &result.m_Trace);
-
-            controller->PrintToChat(fmt::format("Trace executed, ended at: {} {} {}", result.EndPos().x, result.EndPos().y, result.EndPos().z).c_str());
-        });
+        // Todo: shared API vtable
     }
 
     void DestructCommands()

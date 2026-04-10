@@ -140,7 +140,6 @@ struct TraceOptions
     uint64_t InteractsAs = 0;
     uint64_t InteractsWith = static_cast<uint64_t>(MASK_SHOT_PHYSICS);
     uint64_t InteractsExclude = 0;
-    bool DrawBeam = false;
 };
 
 struct TraceResult
