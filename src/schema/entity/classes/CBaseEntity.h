@@ -117,14 +117,28 @@ public:
     static CBaseEntity* CreateEntityByName(const char* pszClassName);
     /// <summary>Create entity by classname.</summary>
     template<typename T>
-    static T* New(const char* className)
+    static T* New(const char* pszClassName)
     {    
-        return reinterpret_cast<T*>(CreateEntityByName(className));
+        return reinterpret_cast<T*>(CreateEntityByName(pszClassName));
+    }
+    /// <summary>Get entity by index.</summary>
+    template<typename T>
+    static T* FromIndex(int iIndex)
+    {    
+        return reinterpret_cast<T*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(iIndex)));
+    }
+    /// <summary>Get entity by entity index.</summary>
+    template<typename T>
+    static T* FromIndex(CEntityIndex index)
+    {    
+        return FromIndex<T>(index.Get());
     }
     /// <summary>Accepts entity input.</summary>
     void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "");
     /// <summary>Add delayed entity IO event.</summary>
     void AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f);
+    /// <summary>Add signle entity IO listener.</summary>
+    CEntityIOListenerHandle* AddSingleEntityIOListener(const char* pszOutput, std::function<KHook::Action(const char*,CEntityInstance*, CEntityInstance*, float, Mode)> callback, Mode mode);
     /// <summary>Get absolute origin.</summary>
     Vector GetAbsOrigin();
     /// <summary>Get local rotation.</summary>
@@ -157,6 +171,8 @@ public:
     void SetCollisionGroup(uint8 nCollisionGroup);
     /// <summary>Notify collision rules changed.</summary>
     void CollisionRulesChanged();
+    /// <summary>Get entity index.</summary>
+    int GetIndex();
     /// <summary>Get entity handle.</summary>
     CHandle<CBaseEntity> GetHandle();
     /// <summary>Get entity name.</summary>

@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsSpring>(className);
     }
+
+    static CPhysicsSpring* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsSpring>(iIndex);
+    }
+
+    static CPhysicsSpring* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoPlayerTerrorist>(className);
     }
+
+    static CInfoPlayerTerrorist* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoPlayerTerrorist>(iIndex);
+    }
+
+    static CInfoPlayerTerrorist* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

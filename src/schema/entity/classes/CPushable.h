@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPushable>(className);
     }
+
+    static CPushable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPushable>(iIndex);
+    }
+
+    static CPushable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

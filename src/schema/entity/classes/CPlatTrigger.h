@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CPlatTrigger>(className);
     }
+
+    static CPlatTrigger* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPlatTrigger>(iIndex);
+    }
+
+    static CPlatTrigger* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

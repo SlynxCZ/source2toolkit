@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CEnvSpark>(className);
     }
+
+    static CEnvSpark* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvSpark>(iIndex);
+    }
+
+    static CEnvSpark* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

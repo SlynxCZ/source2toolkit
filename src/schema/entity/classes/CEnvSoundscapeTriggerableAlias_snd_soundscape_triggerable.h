@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable>(className);
     }
+
+    static CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable>(iIndex);
+    }
+
+    static CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

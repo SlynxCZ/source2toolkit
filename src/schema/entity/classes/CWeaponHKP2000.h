@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponHKP2000>(className);
     }
+
+    static CWeaponHKP2000* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponHKP2000>(iIndex);
+    }
+
+    static CWeaponHKP2000* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

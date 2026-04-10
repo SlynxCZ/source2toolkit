@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CChangeLevel>(className);
     }
+
+    static CChangeLevel* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CChangeLevel>(iIndex);
+    }
+
+    static CChangeLevel* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CEnvMuzzleFlash>(className);
     }
+
+    static CEnvMuzzleFlash* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvMuzzleFlash>(iIndex);
+    }
+
+    static CEnvMuzzleFlash* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

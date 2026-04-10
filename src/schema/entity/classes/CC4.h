@@ -37,4 +37,14 @@ public:
     {
         return CBaseEntity::New<CC4>(className);
     }
+
+    static CC4* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CC4>(iIndex);
+    }
+
+    static CC4* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

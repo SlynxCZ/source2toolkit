@@ -41,4 +41,14 @@ public:
     {
         return CBaseEntity::New<CSplineConstraint>(className);
     }
+
+    static CSplineConstraint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSplineConstraint>(iIndex);
+    }
+
+    static CSplineConstraint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

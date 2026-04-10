@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CPointGiveAmmo>(className);
     }
+
+    static CPointGiveAmmo* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointGiveAmmo>(iIndex);
+    }
+
+    static CPointGiveAmmo* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

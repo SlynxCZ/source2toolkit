@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CPathNode>(className);
     }
+
+    static CPathNode* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPathNode>(iIndex);
+    }
+
+    static CPathNode* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

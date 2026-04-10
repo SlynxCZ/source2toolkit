@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponSawedoff>(className);
     }
+
+    static CWeaponSawedoff* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponSawedoff>(iIndex);
+    }
+
+    static CWeaponSawedoff* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

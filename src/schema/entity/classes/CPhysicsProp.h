@@ -68,4 +68,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsProp>(className);
     }
+
+    static CPhysicsProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsProp>(iIndex);
+    }
+
+    static CPhysicsProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

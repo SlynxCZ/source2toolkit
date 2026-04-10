@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CHandleDummy>(className);
     }
+
+    static CHandleDummy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHandleDummy>(iIndex);
+    }
+
+    static CHandleDummy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

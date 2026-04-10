@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CBaseCSGrenadeProjectile>(className);
     }
+
+    static CBaseCSGrenadeProjectile* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseCSGrenadeProjectile>(iIndex);
+    }
+
+    static CBaseCSGrenadeProjectile* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CPhysLength>(className);
     }
+
+    static CPhysLength* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysLength>(iIndex);
+    }
+
+    static CPhysLength* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

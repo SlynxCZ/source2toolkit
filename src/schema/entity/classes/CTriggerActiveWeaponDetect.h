@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CTriggerActiveWeaponDetect>(className);
     }
+
+    static CTriggerActiveWeaponDetect* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerActiveWeaponDetect>(iIndex);
+    }
+
+    static CTriggerActiveWeaponDetect* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

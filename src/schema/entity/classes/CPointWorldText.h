@@ -44,4 +44,14 @@ public:
     {
         return CBaseEntity::New<CPointWorldText>(className);
     }
+
+    static CPointWorldText* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointWorldText>(iIndex);
+    }
+
+    static CPointWorldText* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

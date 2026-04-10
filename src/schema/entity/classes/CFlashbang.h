@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFlashbang>(className);
     }
+
+    static CFlashbang* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFlashbang>(iIndex);
+    }
+
+    static CFlashbang* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CBaseDMStart>(className);
     }
+
+    static CBaseDMStart* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseDMStart>(iIndex);
+    }
+
+    static CBaseDMStart* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

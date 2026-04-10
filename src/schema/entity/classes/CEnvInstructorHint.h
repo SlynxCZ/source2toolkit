@@ -49,4 +49,14 @@ public:
     {
         return CBaseEntity::New<CEnvInstructorHint>(className);
     }
+
+    static CEnvInstructorHint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvInstructorHint>(iIndex);
+    }
+
+    static CEnvInstructorHint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

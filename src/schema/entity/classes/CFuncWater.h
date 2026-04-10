@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CFuncWater>(className);
     }
+
+    static CFuncWater* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncWater>(iIndex);
+    }
+
+    static CFuncWater* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

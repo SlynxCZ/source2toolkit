@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CSoundOpvarSetAutoRoomEntity>(className);
     }
+
+    static CSoundOpvarSetAutoRoomEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundOpvarSetAutoRoomEntity>(iIndex);
+    }
+
+    static CSoundOpvarSetAutoRoomEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

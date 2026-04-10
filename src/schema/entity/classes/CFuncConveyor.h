@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CFuncConveyor>(className);
     }
+
+    static CFuncConveyor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncConveyor>(iIndex);
+    }
+
+    static CFuncConveyor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

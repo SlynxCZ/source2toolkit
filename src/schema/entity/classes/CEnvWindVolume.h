@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CEnvWindVolume>(className);
     }
+
+    static CEnvWindVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvWindVolume>(iIndex);
+    }
+
+    static CEnvWindVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

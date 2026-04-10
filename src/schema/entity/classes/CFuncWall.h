@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CFuncWall>(className);
     }
+
+    static CFuncWall* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncWall>(iIndex);
+    }
+
+    static CFuncWall* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

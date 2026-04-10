@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CInfoInteraction>(className);
     }
+
+    static CInfoInteraction* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoInteraction>(iIndex);
+    }
+
+    static CInfoInteraction* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

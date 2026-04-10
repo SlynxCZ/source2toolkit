@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CPhysBallSocket>(className);
     }
+
+    static CPhysBallSocket* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysBallSocket>(iIndex);
+    }
+
+    static CPhysBallSocket* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

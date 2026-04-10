@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPhysHingeAlias_phys_hinge_local>(className);
     }
+
+    static CPhysHingeAlias_phys_hinge_local* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysHingeAlias_phys_hinge_local>(iIndex);
+    }
+
+    static CPhysHingeAlias_phys_hinge_local* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

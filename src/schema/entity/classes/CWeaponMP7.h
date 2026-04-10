@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponMP7>(className);
     }
+
+    static CWeaponMP7* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponMP7>(iIndex);
+    }
+
+    static CWeaponMP7* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

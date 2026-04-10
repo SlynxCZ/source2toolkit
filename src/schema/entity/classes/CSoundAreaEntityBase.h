@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CSoundAreaEntityBase>(className);
     }
+
+    static CSoundAreaEntityBase* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundAreaEntityBase>(iIndex);
+    }
+
+    static CSoundAreaEntityBase* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

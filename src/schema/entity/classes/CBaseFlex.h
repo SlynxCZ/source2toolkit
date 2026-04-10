@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CBaseFlex>(className);
     }
+
+    static CBaseFlex* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseFlex>(iIndex);
+    }
+
+    static CBaseFlex* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

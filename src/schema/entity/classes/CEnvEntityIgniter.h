@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CEnvEntityIgniter>(className);
     }
+
+    static CEnvEntityIgniter* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvEntityIgniter>(iIndex);
+    }
+
+    static CEnvEntityIgniter* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

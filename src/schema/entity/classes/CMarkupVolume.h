@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CMarkupVolume>(className);
     }
+
+    static CMarkupVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMarkupVolume>(iIndex);
+    }
+
+    static CMarkupVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

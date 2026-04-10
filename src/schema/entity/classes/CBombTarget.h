@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CBombTarget>(className);
     }
+
+    static CBombTarget* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBombTarget>(iIndex);
+    }
+
+    static CBombTarget* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

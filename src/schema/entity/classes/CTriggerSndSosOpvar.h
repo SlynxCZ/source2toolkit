@@ -41,4 +41,14 @@ public:
     {
         return CBaseEntity::New<CTriggerSndSosOpvar>(className);
     }
+
+    static CTriggerSndSosOpvar* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerSndSosOpvar>(iIndex);
+    }
+
+    static CTriggerSndSosOpvar* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

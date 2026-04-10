@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CItemDefuser>(className);
     }
+
+    static CItemDefuser* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemDefuser>(iIndex);
+    }
+
+    static CItemDefuser* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

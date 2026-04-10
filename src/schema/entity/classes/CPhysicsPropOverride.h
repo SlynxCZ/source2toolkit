@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsPropOverride>(className);
     }
+
+    static CPhysicsPropOverride* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsPropOverride>(iIndex);
+    }
+
+    static CPhysicsPropOverride* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

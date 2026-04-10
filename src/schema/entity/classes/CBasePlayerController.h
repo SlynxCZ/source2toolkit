@@ -57,4 +57,14 @@ public:
     {
         return CBaseEntity::New<CBasePlayerController>(className);
     }
+
+    static CBasePlayerController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBasePlayerController>(iIndex);
+    }
+
+    static CBasePlayerController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

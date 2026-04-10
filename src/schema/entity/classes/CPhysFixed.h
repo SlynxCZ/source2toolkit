@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CPhysFixed>(className);
     }
+
+    static CPhysFixed* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysFixed>(iIndex);
+    }
+
+    static CPhysFixed* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

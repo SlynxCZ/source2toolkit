@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CFilterEnemy>(className);
     }
+
+    static CFilterEnemy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterEnemy>(iIndex);
+    }
+
+    static CFilterEnemy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CLogicRelay>(className);
     }
+
+    static CLogicRelay* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicRelay>(iIndex);
+    }
+
+    static CLogicRelay* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

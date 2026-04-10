@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CPointOrient>(className);
     }
+
+    static CPointOrient* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointOrient>(iIndex);
+    }
+
+    static CPointOrient* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

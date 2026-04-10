@@ -74,4 +74,14 @@ public:
     {
         return CBaseEntity::New<CPointValueRemapper>(className);
     }
+
+    static CPointValueRemapper* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointValueRemapper>(iIndex);
+    }
+
+    static CPointValueRemapper* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

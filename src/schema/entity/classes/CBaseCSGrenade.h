@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CBaseCSGrenade>(className);
     }
+
+    static CBaseCSGrenade* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseCSGrenade>(iIndex);
+    }
+
+    static CBaseCSGrenade* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

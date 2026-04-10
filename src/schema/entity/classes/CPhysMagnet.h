@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CPhysMagnet>(className);
     }
+
+    static CPhysMagnet* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysMagnet>(iIndex);
+    }
+
+    static CPhysMagnet* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

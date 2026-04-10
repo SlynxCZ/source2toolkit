@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CFuncLadder>(className);
     }
+
+    static CFuncLadder* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncLadder>(iIndex);
+    }
+
+    static CFuncLadder* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -74,4 +74,14 @@ public:
     {
         return CBaseEntity::New<CGenericConstraint>(className);
     }
+
+    static CGenericConstraint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGenericConstraint>(iIndex);
+    }
+
+    static CGenericConstraint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

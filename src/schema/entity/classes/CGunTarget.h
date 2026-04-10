@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CGunTarget>(className);
     }
+
+    static CGunTarget* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGunTarget>(iIndex);
+    }
+
+    static CGunTarget* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

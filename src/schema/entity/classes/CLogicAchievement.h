@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CLogicAchievement>(className);
     }
+
+    static CLogicAchievement* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicAchievement>(iIndex);
+    }
+
+    static CLogicAchievement* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

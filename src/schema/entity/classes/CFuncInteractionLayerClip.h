@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CFuncInteractionLayerClip>(className);
     }
+
+    static CFuncInteractionLayerClip* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncInteractionLayerClip>(iIndex);
+    }
+
+    static CFuncInteractionLayerClip* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

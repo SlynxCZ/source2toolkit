@@ -72,4 +72,14 @@ public:
     {
         return CBaseEntity::New<CBasePlayerPawn>(className);
     }
+
+    static CBasePlayerPawn* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBasePlayerPawn>(iIndex);
+    }
+
+    static CBasePlayerPawn* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

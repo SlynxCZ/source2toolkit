@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoSpawnGroupLandmark>(className);
     }
+
+    static CInfoSpawnGroupLandmark* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoSpawnGroupLandmark>(iIndex);
+    }
+
+    static CInfoSpawnGroupLandmark* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

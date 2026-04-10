@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CWeaponTaser>(className);
     }
+
+    static CWeaponTaser* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponTaser>(iIndex);
+    }
+
+    static CWeaponTaser* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

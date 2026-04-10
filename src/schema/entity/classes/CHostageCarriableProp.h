@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CHostageCarriableProp>(className);
     }
+
+    static CHostageCarriableProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHostageCarriableProp>(iIndex);
+    }
+
+    static CHostageCarriableProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

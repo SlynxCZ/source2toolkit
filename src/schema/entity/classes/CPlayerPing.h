@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CPlayerPing>(className);
     }
+
+    static CPlayerPing* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPlayerPing>(iIndex);
+    }
+
+    static CPlayerPing* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

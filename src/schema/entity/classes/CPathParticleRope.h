@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CPathParticleRope>(className);
     }
+
+    static CPathParticleRope* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPathParticleRope>(iIndex);
+    }
+
+    static CPathParticleRope* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

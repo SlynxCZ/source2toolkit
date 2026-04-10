@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CAI_ChangeHintGroup>(className);
     }
+
+    static CAI_ChangeHintGroup* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CAI_ChangeHintGroup>(iIndex);
+    }
+
+    static CAI_ChangeHintGroup* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

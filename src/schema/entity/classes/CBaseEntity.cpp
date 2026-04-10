@@ -29,6 +29,23 @@ void CBaseEntity::AddEntityIOEvent(const char* pszInput, CEntityInstance* pActiv
     UTIL_AddEntityIOEvent(this, pszInput, pActivator, pCaller, pszValue, flDelay);
 }
 
+CEntityIOListenerHandle* CBaseEntity::AddSingleEntityIOListener(const char* pszOutput, std::function<KHook::Action(const char*,CEntityInstance*, CEntityInstance*, float, Mode)> callback, Mode mode)
+{
+    auto* listener = new CSingleEntityIOListener(this, std::move(callback));
+
+    const char* classname = this->GetClassname();
+
+    UTIL_AddEntityIOListener(listener, classname, pszOutput, mode);
+
+    auto* handle = new CEntityIOListenerHandle();
+    handle->m_pListener = listener;
+    handle->m_szClassname = classname ? classname : "*";
+    handle->m_szOutput = pszOutput ? pszOutput : "*";
+    handle->m_nMode = mode;
+
+    return handle;
+}
+
 Vector CBaseEntity::GetAbsOrigin()
 {
     return m_CBodyComponent->m_pSceneNode->m_vecAbsOrigin;
@@ -116,6 +133,11 @@ void CBaseEntity::SetCollisionGroup(uint8 nCollisionGroup = COLLISION_GROUP_DEBR
 void CBaseEntity::CollisionRulesChanged()
 {
     CALL_VIRTUAL(void, shared::g_pGameConfig->GetOffset("CBaseEntity_CollisionRulesChanged"), this);
+}
+
+int CBaseEntity::GetIndex()
+{
+    return GetEntityIndex().Get();
 }
 
 CHandle<CBaseEntity> CBaseEntity::GetHandle() { return m_pEntity->m_EHandle; }

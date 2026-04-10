@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CEnvSoundscapeProxyAlias_snd_soundscape_proxy>(className);
     }
+
+    static CEnvSoundscapeProxyAlias_snd_soundscape_proxy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvSoundscapeProxyAlias_snd_soundscape_proxy>(iIndex);
+    }
+
+    static CEnvSoundscapeProxyAlias_snd_soundscape_proxy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

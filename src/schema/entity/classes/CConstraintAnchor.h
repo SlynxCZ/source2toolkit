@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CConstraintAnchor>(className);
     }
+
+    static CConstraintAnchor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CConstraintAnchor>(iIndex);
+    }
+
+    static CConstraintAnchor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

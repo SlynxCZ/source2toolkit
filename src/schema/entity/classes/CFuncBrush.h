@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CFuncBrush>(className);
     }
+
+    static CFuncBrush* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncBrush>(iIndex);
+    }
+
+    static CFuncBrush* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

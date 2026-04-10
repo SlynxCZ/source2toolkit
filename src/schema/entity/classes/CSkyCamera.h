@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CSkyCamera>(className);
     }
+
+    static CSkyCamera* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSkyCamera>(iIndex);
+    }
+
+    static CSkyCamera* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSPetPlacement>(className);
     }
+
+    static CCSPetPlacement* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSPetPlacement>(iIndex);
+    }
+
+    static CCSPetPlacement* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

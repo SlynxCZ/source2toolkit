@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CGameGibManager>(className);
     }
+
+    static CGameGibManager* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGameGibManager>(iIndex);
+    }
+
+    static CGameGibManager* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

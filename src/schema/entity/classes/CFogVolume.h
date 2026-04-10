@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CFogVolume>(className);
     }
+
+    static CFogVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFogVolume>(iIndex);
+    }
+
+    static CFogVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

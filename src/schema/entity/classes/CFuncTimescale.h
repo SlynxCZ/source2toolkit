@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CFuncTimescale>(className);
     }
+
+    static CFuncTimescale* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncTimescale>(iIndex);
+    }
+
+    static CFuncTimescale* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

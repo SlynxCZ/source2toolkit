@@ -59,4 +59,14 @@ public:
     {
         return CBaseEntity::New<CChicken>(className);
     }
+
+    static CChicken* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CChicken>(iIndex);
+    }
+
+    static CChicken* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

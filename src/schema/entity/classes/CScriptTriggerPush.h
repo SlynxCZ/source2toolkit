@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CScriptTriggerPush>(className);
     }
+
+    static CScriptTriggerPush* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CScriptTriggerPush>(iIndex);
+    }
+
+    static CScriptTriggerPush* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

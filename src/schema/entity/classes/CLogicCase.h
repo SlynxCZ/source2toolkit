@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CLogicCase>(className);
     }
+
+    static CLogicCase* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicCase>(iIndex);
+    }
+
+    static CLogicCase* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

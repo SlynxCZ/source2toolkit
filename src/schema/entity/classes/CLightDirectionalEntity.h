@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CLightDirectionalEntity>(className);
     }
+
+    static CLightDirectionalEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLightDirectionalEntity>(iIndex);
+    }
+
+    static CLightDirectionalEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

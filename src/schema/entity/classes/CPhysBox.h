@@ -43,4 +43,14 @@ public:
     {
         return CBaseEntity::New<CPhysBox>(className);
     }
+
+    static CPhysBox* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysBox>(iIndex);
+    }
+
+    static CPhysBox* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CTriggerBrush>(className);
     }
+
+    static CTriggerBrush* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerBrush>(iIndex);
+    }
+
+    static CTriggerBrush* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

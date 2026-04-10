@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoInstructorHintHostageRescueZone>(className);
     }
+
+    static CInfoInstructorHintHostageRescueZone* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoInstructorHintHostageRescueZone>(iIndex);
+    }
+
+    static CInfoInstructorHintHostageRescueZone* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

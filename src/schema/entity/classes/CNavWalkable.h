@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CNavWalkable>(className);
     }
+
+    static CNavWalkable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CNavWalkable>(iIndex);
+    }
+
+    static CNavWalkable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

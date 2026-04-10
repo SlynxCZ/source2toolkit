@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CMultiSource>(className);
     }
+
+    static CMultiSource* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMultiSource>(iIndex);
+    }
+
+    static CMultiSource* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

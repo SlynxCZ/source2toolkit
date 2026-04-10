@@ -48,4 +48,14 @@ public:
     {
         return CBaseEntity::New<CEnvBeam>(className);
     }
+
+    static CEnvBeam* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvBeam>(iIndex);
+    }
+
+    static CEnvBeam* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CDynamicPropAlias_cable_dynamic>(className);
     }
+
+    static CDynamicPropAlias_cable_dynamic* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDynamicPropAlias_cable_dynamic>(iIndex);
+    }
+
+    static CDynamicPropAlias_cable_dynamic* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

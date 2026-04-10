@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CGamePlayerEquip>(className);
     }
+
+    static CGamePlayerEquip* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGamePlayerEquip>(iIndex);
+    }
+
+    static CGamePlayerEquip* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

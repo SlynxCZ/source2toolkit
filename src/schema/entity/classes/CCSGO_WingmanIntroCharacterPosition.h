@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSGO_WingmanIntroCharacterPosition>(className);
     }
+
+    static CCSGO_WingmanIntroCharacterPosition* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSGO_WingmanIntroCharacterPosition>(iIndex);
+    }
+
+    static CCSGO_WingmanIntroCharacterPosition* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

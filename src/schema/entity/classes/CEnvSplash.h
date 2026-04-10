@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CEnvSplash>(className);
     }
+
+    static CEnvSplash* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvSplash>(iIndex);
+    }
+
+    static CEnvSplash* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

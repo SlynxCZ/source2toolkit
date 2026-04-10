@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CRagdollMagnet>(className);
     }
+
+    static CRagdollMagnet* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRagdollMagnet>(iIndex);
+    }
+
+    static CRagdollMagnet* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

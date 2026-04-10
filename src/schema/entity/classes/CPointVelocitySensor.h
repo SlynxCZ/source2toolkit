@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CPointVelocitySensor>(className);
     }
+
+    static CPointVelocitySensor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointVelocitySensor>(iIndex);
+    }
+
+    static CPointVelocitySensor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

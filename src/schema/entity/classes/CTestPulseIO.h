@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CTestPulseIO>(className);
     }
+
+    static CTestPulseIO* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTestPulseIO>(iIndex);
+    }
+
+    static CTestPulseIO* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

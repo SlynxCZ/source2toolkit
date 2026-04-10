@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CTonemapTrigger>(className);
     }
+
+    static CTonemapTrigger* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTonemapTrigger>(iIndex);
+    }
+
+    static CTonemapTrigger* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

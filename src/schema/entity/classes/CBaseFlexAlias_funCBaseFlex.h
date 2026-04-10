@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CBaseFlexAlias_funCBaseFlex>(className);
     }
+
+    static CBaseFlexAlias_funCBaseFlex* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseFlexAlias_funCBaseFlex>(iIndex);
+    }
+
+    static CBaseFlexAlias_funCBaseFlex* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

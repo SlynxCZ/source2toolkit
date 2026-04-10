@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CLogicBranchList>(className);
     }
+
+    static CLogicBranchList* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicBranchList>(iIndex);
+    }
+
+    static CLogicBranchList* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

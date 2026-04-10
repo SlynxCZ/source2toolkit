@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoInstructorHintBombTargetB>(className);
     }
+
+    static CInfoInstructorHintBombTargetB* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoInstructorHintBombTargetB>(iIndex);
+    }
+
+    static CInfoInstructorHintBombTargetB* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

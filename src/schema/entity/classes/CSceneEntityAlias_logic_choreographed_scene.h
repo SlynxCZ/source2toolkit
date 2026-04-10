@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CSceneEntityAlias_logic_choreographed_scene>(className);
     }
+
+    static CSceneEntityAlias_logic_choreographed_scene* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSceneEntityAlias_logic_choreographed_scene>(iIndex);
+    }
+
+    static CSceneEntityAlias_logic_choreographed_scene* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

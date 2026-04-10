@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CTextureBasedAnimatable>(className);
     }
+
+    static CTextureBasedAnimatable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTextureBasedAnimatable>(iIndex);
+    }
+
+    static CTextureBasedAnimatable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

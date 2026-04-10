@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CHEGrenade>(className);
     }
+
+    static CHEGrenade* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHEGrenade>(iIndex);
+    }
+
+    static CHEGrenade* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

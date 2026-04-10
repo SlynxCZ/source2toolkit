@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CInstancedSceneEntity>(className);
     }
+
+    static CInstancedSceneEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInstancedSceneEntity>(iIndex);
+    }
+
+    static CInstancedSceneEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -70,4 +70,14 @@ public:
     {
         return CBaseEntity::New<CHostage>(className);
     }
+
+    static CHostage* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHostage>(iIndex);
+    }
+
+    static CHostage* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

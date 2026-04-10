@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CGameRulesProxy>(className);
     }
+
+    static CGameRulesProxy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGameRulesProxy>(iIndex);
+    }
+
+    static CGameRulesProxy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

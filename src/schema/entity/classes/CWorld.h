@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWorld>(className);
     }
+
+    static CWorld* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWorld>(iIndex);
+    }
+
+    static CWorld* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

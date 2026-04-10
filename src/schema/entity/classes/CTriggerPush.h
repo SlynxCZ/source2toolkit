@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CTriggerPush>(className);
     }
+
+    static CTriggerPush* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerPush>(iIndex);
+    }
+
+    static CTriggerPush* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

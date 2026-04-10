@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CFuncTrackChange>(className);
     }
+
+    static CFuncTrackChange* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncTrackChange>(iIndex);
+    }
+
+    static CFuncTrackChange* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

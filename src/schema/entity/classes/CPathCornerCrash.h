@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPathCornerCrash>(className);
     }
+
+    static CPathCornerCrash* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPathCornerCrash>(iIndex);
+    }
+
+    static CPathCornerCrash* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

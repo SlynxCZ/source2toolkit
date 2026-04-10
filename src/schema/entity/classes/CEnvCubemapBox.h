@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CEnvCubemapBox>(className);
     }
+
+    static CEnvCubemapBox* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvCubemapBox>(iIndex);
+    }
+
+    static CEnvCubemapBox* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

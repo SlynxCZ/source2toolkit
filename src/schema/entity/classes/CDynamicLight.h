@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CDynamicLight>(className);
     }
+
+    static CDynamicLight* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDynamicLight>(iIndex);
+    }
+
+    static CDynamicLight* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

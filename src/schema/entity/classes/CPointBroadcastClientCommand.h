@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPointBroadcastClientCommand>(className);
     }
+
+    static CPointBroadcastClientCommand* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointBroadcastClientCommand>(iIndex);
+    }
+
+    static CPointBroadcastClientCommand* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

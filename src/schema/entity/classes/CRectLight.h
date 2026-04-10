@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CRectLight>(className);
     }
+
+    static CRectLight* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRectLight>(iIndex);
+    }
+
+    static CRectLight* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

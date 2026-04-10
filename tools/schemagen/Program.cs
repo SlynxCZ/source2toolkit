@@ -660,6 +660,16 @@ internal static partial class Program
             builder.AppendLine("    {");
             builder.AppendLine($"        return CBaseEntity::New<{className}>(className);");
             builder.AppendLine("    }");
+            builder.AppendLine();
+            builder.AppendLine($"    static {className}* FromIndex(int iIndex)");
+            builder.AppendLine("    {");
+            builder.AppendLine($"        return CBaseEntity::FromIndex<{className}>(iIndex);");
+            builder.AppendLine("    }");
+            builder.AppendLine();
+            builder.AppendLine($"    static {className}* FromIndex(CEntityIndex index)");
+            builder.AppendLine("    {");
+            builder.AppendLine("        return FromIndex(index.Get());");
+            builder.AppendLine("    }");
         }
 
         builder.AppendLine("};");

@@ -41,4 +41,14 @@ public:
     {
         return CBaseEntity::New<CPhysMotor>(className);
     }
+
+    static CPhysMotor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysMotor>(iIndex);
+    }
+
+    static CPhysMotor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

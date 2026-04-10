@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CLogicProximity>(className);
     }
+
+    static CLogicProximity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicProximity>(iIndex);
+    }
+
+    static CLogicProximity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

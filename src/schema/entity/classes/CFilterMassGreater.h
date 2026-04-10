@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CFilterMassGreater>(className);
     }
+
+    static CFilterMassGreater* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterMassGreater>(iIndex);
+    }
+
+    static CFilterMassGreater* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

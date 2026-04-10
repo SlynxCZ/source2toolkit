@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CNavSpaceInfo>(className);
     }
+
+    static CNavSpaceInfo* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CNavSpaceInfo>(iIndex);
+    }
+
+    static CNavSpaceInfo* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

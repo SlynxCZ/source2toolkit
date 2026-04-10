@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CGamePlayerZone>(className);
     }
+
+    static CGamePlayerZone* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGamePlayerZone>(iIndex);
+    }
+
+    static CGamePlayerZone* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

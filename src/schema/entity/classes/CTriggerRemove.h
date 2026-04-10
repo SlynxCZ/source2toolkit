@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CTriggerRemove>(className);
     }
+
+    static CTriggerRemove* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerRemove>(iIndex);
+    }
+
+    static CTriggerRemove* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CItem>(className);
     }
+
+    static CItem* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItem>(iIndex);
+    }
+
+    static CItem* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

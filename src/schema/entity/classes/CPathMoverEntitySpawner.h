@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CPathMoverEntitySpawner>(className);
     }
+
+    static CPathMoverEntitySpawner* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPathMoverEntitySpawner>(iIndex);
+    }
+
+    static CPathMoverEntitySpawner* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

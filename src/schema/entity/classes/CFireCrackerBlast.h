@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFireCrackerBlast>(className);
     }
+
+    static CFireCrackerBlast* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFireCrackerBlast>(iIndex);
+    }
+
+    static CFireCrackerBlast* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

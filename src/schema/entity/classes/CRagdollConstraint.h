@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CRagdollConstraint>(className);
     }
+
+    static CRagdollConstraint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRagdollConstraint>(iIndex);
+    }
+
+    static CRagdollConstraint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

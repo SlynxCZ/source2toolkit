@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CScriptTriggerMultiple>(className);
     }
+
+    static CScriptTriggerMultiple* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CScriptTriggerMultiple>(iIndex);
+    }
+
+    static CScriptTriggerMultiple* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

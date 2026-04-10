@@ -73,4 +73,14 @@ public:
     {
         return CBaseEntity::New<CBaseModelEntity>(className);
     }
+
+    static CBaseModelEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseModelEntity>(iIndex);
+    }
+
+    static CBaseModelEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -48,16 +48,6 @@ CCSPlayerController *CCSPlayerController::FromPawn(CCSPlayerPawn* pPawn)
     return static_cast<CCSPlayerController*>(pPawn->m_hController().Get());
 }
 
-CCSPlayerController *CCSPlayerController::FromIndex(int iIndex)
-{
-    return static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(iIndex)));
-}
-
-CCSPlayerController *CCSPlayerController::FromIndex(CEntityIndex index)
-{
-    return FromIndex(index.Get());
-}
-
 CCSPlayerController *CCSPlayerController::FromSlot(int iSlot)
 {
     return static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(iSlot + 1)));
@@ -205,11 +195,6 @@ CCSObserverPawn* CCSPlayerController::GetObserverPawn()
     return nullptr;
 }
 
-int CCSPlayerController::GetIndex()
-{
-    return GetEntityIndex().Get();
-}
-
 CEntityIndex CCSPlayerController::GetPlayerIndex()
 {
     return GetEntityIndex();
@@ -217,7 +202,7 @@ CEntityIndex CCSPlayerController::GetPlayerIndex()
 
 int CCSPlayerController::GetSlot()
 {
-    return GetEntityIndex().Get() - 1;
+    return GetIndex() - 1;
 }
 
 CPlayerSlot CCSPlayerController::GetPlayerSlot()

@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CFuncElectrifiedVolume>(className);
     }
+
+    static CFuncElectrifiedVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncElectrifiedVolume>(iIndex);
+    }
+
+    static CFuncElectrifiedVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -50,4 +50,14 @@ public:
     {
         return CBaseEntity::New<CParticleSystem>(className);
     }
+
+    static CParticleSystem* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CParticleSystem>(iIndex);
+    }
+
+    static CParticleSystem* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

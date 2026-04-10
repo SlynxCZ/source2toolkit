@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CCredits>(className);
     }
+
+    static CCredits* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCredits>(iIndex);
+    }
+
+    static CCredits* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCommentaryViewPosition>(className);
     }
+
+    static CCommentaryViewPosition* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCommentaryViewPosition>(iIndex);
+    }
+
+    static CCommentaryViewPosition* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

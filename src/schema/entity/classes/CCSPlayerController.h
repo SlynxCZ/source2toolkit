@@ -122,10 +122,6 @@ public:
 public:
     /// <summary>Get controller from pawn.</summary>
     static CCSPlayerController* FromPawn(CCSPlayerPawn* pPawn);
-    /// <summary>Get controller from entity index.</summary>
-    static CCSPlayerController* FromIndex(int iIndex);
-    /// <summary>Get controller from entity index.</summary>
-    static CCSPlayerController* FromIndex(CEntityIndex index);
     /// <summary>Get controller from slot.</summary>
     static CCSPlayerController* FromSlot(int iSlot);
     /// <summary>Get controller from slot.</summary>
@@ -168,8 +164,6 @@ public:
     CCSPlayerPawn* GetPlayerPawn();
     /// <summary>Get observer pawn.</summary>
     CCSObserverPawn* GetObserverPawn();
-    /// <summary>Get index.</summary>
-    int GetIndex();
     /// <summary>Get player index.</summary>
     CEntityIndex GetPlayerIndex();
     /// <summary>Get slot.</summary>
@@ -197,5 +191,15 @@ public:
     static CCSPlayerController* New(const char* className)
     {
         return CBaseEntity::New<CCSPlayerController>(className);
+    }
+
+    static CCSPlayerController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSPlayerController>(iIndex);
+    }
+
+    static CCSPlayerController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
     }
 };

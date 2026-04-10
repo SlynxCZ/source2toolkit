@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CInfoDynamicShadowHint>(className);
     }
+
+    static CInfoDynamicShadowHint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoDynamicShadowHint>(iIndex);
+    }
+
+    static CInfoDynamicShadowHint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

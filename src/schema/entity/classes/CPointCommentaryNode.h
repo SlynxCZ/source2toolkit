@@ -57,4 +57,14 @@ public:
     {
         return CBaseEntity::New<CPointCommentaryNode>(className);
     }
+
+    static CPointCommentaryNode* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointCommentaryNode>(iIndex);
+    }
+
+    static CPointCommentaryNode* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

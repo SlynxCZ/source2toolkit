@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CRevertSaved>(className);
     }
+
+    static CRevertSaved* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRevertSaved>(iIndex);
+    }
+
+    static CRevertSaved* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

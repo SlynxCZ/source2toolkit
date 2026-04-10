@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CFilterContext>(className);
     }
+
+    static CFilterContext* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterContext>(iIndex);
+    }
+
+    static CFilterContext* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

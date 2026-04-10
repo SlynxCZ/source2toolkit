@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CLogicDistanceAutosave>(className);
     }
+
+    static CLogicDistanceAutosave* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicDistanceAutosave>(iIndex);
+    }
+
+    static CLogicDistanceAutosave* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

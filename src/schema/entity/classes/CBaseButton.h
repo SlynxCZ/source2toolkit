@@ -53,4 +53,14 @@ public:
     {
         return CBaseEntity::New<CBaseButton>(className);
     }
+
+    static CBaseButton* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseButton>(iIndex);
+    }
+
+    static CBaseButton* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

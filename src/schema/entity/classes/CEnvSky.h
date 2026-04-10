@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CEnvSky>(className);
     }
+
+    static CEnvSky* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvSky>(iIndex);
+    }
+
+    static CEnvSky* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

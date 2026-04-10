@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CDecoyGrenade>(className);
     }
+
+    static CDecoyGrenade* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDecoyGrenade>(iIndex);
+    }
+
+    static CDecoyGrenade* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

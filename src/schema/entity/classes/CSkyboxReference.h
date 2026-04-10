@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CSkyboxReference>(className);
     }
+
+    static CSkyboxReference* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSkyboxReference>(iIndex);
+    }
+
+    static CSkyboxReference* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CItemGenericTriggerHelper>(className);
     }
+
+    static CItemGenericTriggerHelper* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemGenericTriggerHelper>(iIndex);
+    }
+
+    static CItemGenericTriggerHelper* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

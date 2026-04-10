@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoTeleportDestination>(className);
     }
+
+    static CInfoTeleportDestination* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoTeleportDestination>(iIndex);
+    }
+
+    static CInfoTeleportDestination* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

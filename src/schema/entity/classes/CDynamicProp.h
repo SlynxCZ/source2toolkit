@@ -48,4 +48,14 @@ public:
     {
         return CBaseEntity::New<CDynamicProp>(className);
     }
+
+    static CDynamicProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDynamicProp>(iIndex);
+    }
+
+    static CDynamicProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

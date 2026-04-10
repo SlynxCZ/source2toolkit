@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoDeathmatchSpawn>(className);
     }
+
+    static CInfoDeathmatchSpawn* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoDeathmatchSpawn>(iIndex);
+    }
+
+    static CInfoDeathmatchSpawn* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

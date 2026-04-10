@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CTonemapController2Alias_env_tonemap_controller2>(className);
     }
+
+    static CTonemapController2Alias_env_tonemap_controller2* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTonemapController2Alias_env_tonemap_controller2>(iIndex);
+    }
+
+    static CTonemapController2Alias_env_tonemap_controller2* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

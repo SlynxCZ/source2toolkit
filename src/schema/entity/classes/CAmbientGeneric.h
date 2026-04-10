@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CAmbientGeneric>(className);
     }
+
+    static CAmbientGeneric* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CAmbientGeneric>(iIndex);
+    }
+
+    static CAmbientGeneric* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

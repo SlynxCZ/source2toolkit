@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CPulseGameBlackboard>(className);
     }
+
+    static CPulseGameBlackboard* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPulseGameBlackboard>(iIndex);
+    }
+
+    static CPulseGameBlackboard* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

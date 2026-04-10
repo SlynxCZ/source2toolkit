@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CSmokeGrenade>(className);
     }
+
+    static CSmokeGrenade* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSmokeGrenade>(iIndex);
+    }
+
+    static CSmokeGrenade* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

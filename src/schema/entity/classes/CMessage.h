@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CMessage>(className);
     }
+
+    static CMessage* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMessage>(iIndex);
+    }
+
+    static CMessage* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

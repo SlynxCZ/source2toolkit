@@ -117,4 +117,14 @@ public:
     {
         return CBaseEntity::New<CFuncMover>(className);
     }
+
+    static CFuncMover* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncMover>(iIndex);
+    }
+
+    static CFuncMover* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

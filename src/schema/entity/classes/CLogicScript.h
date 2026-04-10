@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CLogicScript>(className);
     }
+
+    static CLogicScript* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicScript>(iIndex);
+    }
+
+    static CLogicScript* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

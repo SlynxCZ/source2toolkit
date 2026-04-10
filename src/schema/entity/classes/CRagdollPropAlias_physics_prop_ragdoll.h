@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CRagdollPropAlias_physics_prop_ragdoll>(className);
     }
+
+    static CRagdollPropAlias_physics_prop_ragdoll* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRagdollPropAlias_physics_prop_ragdoll>(iIndex);
+    }
+
+    static CRagdollPropAlias_physics_prop_ragdoll* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

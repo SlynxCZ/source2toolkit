@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CEnableMotionFixup>(className);
     }
+
+    static CEnableMotionFixup* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnableMotionFixup>(iIndex);
+    }
+
+    static CEnableMotionFixup* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

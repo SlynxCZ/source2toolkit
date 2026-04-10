@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CDebugHistory>(className);
     }
+
+    static CDebugHistory* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDebugHistory>(iIndex);
+    }
+
+    static CDebugHistory* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

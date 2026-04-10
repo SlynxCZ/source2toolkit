@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncRetakeBarrier>(className);
     }
+
+    static CFuncRetakeBarrier* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncRetakeBarrier>(iIndex);
+    }
+
+    static CFuncRetakeBarrier* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

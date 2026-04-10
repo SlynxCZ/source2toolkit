@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CShatterGlassShardPhysics>(className);
     }
+
+    static CShatterGlassShardPhysics* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CShatterGlassShardPhysics>(iIndex);
+    }
+
+    static CShatterGlassShardPhysics* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

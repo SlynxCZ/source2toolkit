@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CPathWithDynamicNodes>(className);
     }
+
+    static CPathWithDynamicNodes* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPathWithDynamicNodes>(iIndex);
+    }
+
+    static CPathWithDynamicNodes* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

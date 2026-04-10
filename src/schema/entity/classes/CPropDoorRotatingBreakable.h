@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CPropDoorRotatingBreakable>(className);
     }
+
+    static CPropDoorRotatingBreakable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPropDoorRotatingBreakable>(iIndex);
+    }
+
+    static CPropDoorRotatingBreakable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

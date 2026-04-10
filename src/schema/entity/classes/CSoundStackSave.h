@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CSoundStackSave>(className);
     }
+
+    static CSoundStackSave* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundStackSave>(iIndex);
+    }
+
+    static CSoundStackSave* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

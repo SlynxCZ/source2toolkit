@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CFootstepControl>(className);
     }
+
+    static CFootstepControl* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFootstepControl>(iIndex);
+    }
+
+    static CFootstepControl* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

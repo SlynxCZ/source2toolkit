@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CTriggerSave>(className);
     }
+
+    static CTriggerSave* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerSave>(iIndex);
+    }
+
+    static CTriggerSave* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

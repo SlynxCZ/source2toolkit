@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CSoundEventSphereEntity>(className);
     }
+
+    static CSoundEventSphereEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundEventSphereEntity>(iIndex);
+    }
+
+    static CSoundEventSphereEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -55,4 +55,14 @@ public:
     {
         return CBaseEntity::New<CRagdollProp>(className);
     }
+
+    static CRagdollProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRagdollProp>(iIndex);
+    }
+
+    static CRagdollProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CPointClientUIDialog>(className);
     }
+
+    static CPointClientUIDialog* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointClientUIDialog>(iIndex);
+    }
+
+    static CPointClientUIDialog* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

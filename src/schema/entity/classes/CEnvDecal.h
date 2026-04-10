@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CEnvDecal>(className);
     }
+
+    static CEnvDecal* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvDecal>(iIndex);
+    }
+
+    static CEnvDecal* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

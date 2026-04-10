@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CTriggerProximity>(className);
     }
+
+    static CTriggerProximity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerProximity>(iIndex);
+    }
+
+    static CTriggerProximity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

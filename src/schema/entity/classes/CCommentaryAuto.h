@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CCommentaryAuto>(className);
     }
+
+    static CCommentaryAuto* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCommentaryAuto>(iIndex);
+    }
+
+    static CCommentaryAuto* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

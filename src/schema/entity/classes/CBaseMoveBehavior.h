@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CBaseMoveBehavior>(className);
     }
+
+    static CBaseMoveBehavior* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseMoveBehavior>(iIndex);
+    }
+
+    static CBaseMoveBehavior* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

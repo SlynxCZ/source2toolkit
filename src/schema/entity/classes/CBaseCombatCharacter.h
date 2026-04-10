@@ -40,4 +40,14 @@ public:
     {
         return CBaseEntity::New<CBaseCombatCharacter>(className);
     }
+
+    static CBaseCombatCharacter* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseCombatCharacter>(iIndex);
+    }
+
+    static CBaseCombatCharacter* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

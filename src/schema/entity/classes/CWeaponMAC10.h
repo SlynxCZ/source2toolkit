@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponMAC10>(className);
     }
+
+    static CWeaponMAC10* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponMAC10>(iIndex);
+    }
+
+    static CWeaponMAC10* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

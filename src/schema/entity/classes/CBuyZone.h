@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CBuyZone>(className);
     }
+
+    static CBuyZone* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBuyZone>(iIndex);
+    }
+
+    static CBuyZone* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

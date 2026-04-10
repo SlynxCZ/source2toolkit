@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CRuleEntity>(className);
     }
+
+    static CRuleEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRuleEntity>(iIndex);
+    }
+
+    static CRuleEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CEnvDetailController>(className);
     }
+
+    static CEnvDetailController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvDetailController>(iIndex);
+    }
+
+    static CEnvDetailController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

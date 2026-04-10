@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CMathColorBlend>(className);
     }
+
+    static CMathColorBlend* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMathColorBlend>(iIndex);
+    }
+
+    static CMathColorBlend* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CCSPlayerResource>(className);
     }
+
+    static CCSPlayerResource* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSPlayerResource>(iIndex);
+    }
+
+    static CCSPlayerResource* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

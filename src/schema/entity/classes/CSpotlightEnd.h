@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CSpotlightEnd>(className);
     }
+
+    static CSpotlightEnd* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSpotlightEnd>(iIndex);
+    }
+
+    static CSpotlightEnd* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

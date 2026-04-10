@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CDEagle>(className);
     }
+
+    static CDEagle* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDEagle>(iIndex);
+    }
+
+    static CDEagle* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

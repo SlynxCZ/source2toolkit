@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CLogicBranch>(className);
     }
+
+    static CLogicBranch* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicBranch>(iIndex);
+    }
+
+    static CLogicBranch* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

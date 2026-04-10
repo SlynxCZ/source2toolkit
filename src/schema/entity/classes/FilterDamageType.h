@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<FilterDamageType>(className);
     }
+
+    static FilterDamageType* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<FilterDamageType>(iIndex);
+    }
+
+    static FilterDamageType* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

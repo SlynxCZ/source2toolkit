@@ -52,4 +52,14 @@ public:
     {
         return CBaseEntity::New<CInferno>(className);
     }
+
+    static CInferno* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInferno>(iIndex);
+    }
+
+    static CInferno* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

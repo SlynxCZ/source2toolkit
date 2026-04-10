@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<SpawnPoint>(className);
     }
+
+    static SpawnPoint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<SpawnPoint>(iIndex);
+    }
+
+    static SpawnPoint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

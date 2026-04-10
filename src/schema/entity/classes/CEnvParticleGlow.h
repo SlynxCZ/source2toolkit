@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CEnvParticleGlow>(className);
     }
+
+    static CEnvParticleGlow* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvParticleGlow>(iIndex);
+    }
+
+    static CEnvParticleGlow* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

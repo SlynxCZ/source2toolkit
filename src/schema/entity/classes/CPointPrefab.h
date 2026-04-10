@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CPointPrefab>(className);
     }
+
+    static CPointPrefab* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointPrefab>(iIndex);
+    }
+
+    static CPointPrefab* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

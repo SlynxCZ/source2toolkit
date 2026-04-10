@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CMarkupVolumeTagged>(className);
     }
+
+    static CMarkupVolumeTagged* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMarkupVolumeTagged>(iIndex);
+    }
+
+    static CMarkupVolumeTagged* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

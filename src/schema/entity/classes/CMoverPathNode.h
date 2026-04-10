@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CMoverPathNode>(className);
     }
+
+    static CMoverPathNode* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMoverPathNode>(iIndex);
+    }
+
+    static CMoverPathNode* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

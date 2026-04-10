@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncVehicleClip>(className);
     }
+
+    static CFuncVehicleClip* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncVehicleClip>(iIndex);
+    }
+
+    static CFuncVehicleClip* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

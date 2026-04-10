@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CInfoWorldLayer>(className);
     }
+
+    static CInfoWorldLayer* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoWorldLayer>(iIndex);
+    }
+
+    static CInfoWorldLayer* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

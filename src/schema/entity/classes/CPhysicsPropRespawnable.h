@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsPropRespawnable>(className);
     }
+
+    static CPhysicsPropRespawnable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsPropRespawnable>(iIndex);
+    }
+
+    static CPhysicsPropRespawnable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

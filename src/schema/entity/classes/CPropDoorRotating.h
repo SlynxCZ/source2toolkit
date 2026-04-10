@@ -48,4 +48,14 @@ public:
     {
         return CBaseEntity::New<CPropDoorRotating>(className);
     }
+
+    static CPropDoorRotating* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPropDoorRotating>(iIndex);
+    }
+
+    static CPropDoorRotating* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

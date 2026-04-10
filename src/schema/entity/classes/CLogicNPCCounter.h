@@ -65,4 +65,14 @@ public:
     {
         return CBaseEntity::New<CLogicNPCCounter>(className);
     }
+
+    static CLogicNPCCounter* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicNPCCounter>(iIndex);
+    }
+
+    static CLogicNPCCounter* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

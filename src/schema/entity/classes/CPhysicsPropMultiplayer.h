@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsPropMultiplayer>(className);
     }
+
+    static CPhysicsPropMultiplayer* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsPropMultiplayer>(iIndex);
+    }
+
+    static CPhysicsPropMultiplayer* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

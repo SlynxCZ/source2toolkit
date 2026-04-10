@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CInfoFan>(className);
     }
+
+    static CInfoFan* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoFan>(iIndex);
+    }
+
+    static CInfoFan* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

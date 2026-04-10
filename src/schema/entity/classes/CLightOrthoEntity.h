@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CLightOrthoEntity>(className);
     }
+
+    static CLightOrthoEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLightOrthoEntity>(iIndex);
+    }
+
+    static CLightOrthoEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CRagdollManager>(className);
     }
+
+    static CRagdollManager* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRagdollManager>(iIndex);
+    }
+
+    static CRagdollManager* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

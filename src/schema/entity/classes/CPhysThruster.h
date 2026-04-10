@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CPhysThruster>(className);
     }
+
+    static CPhysThruster* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysThruster>(iIndex);
+    }
+
+    static CPhysThruster* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

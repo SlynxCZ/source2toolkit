@@ -51,4 +51,14 @@ public:
     {
         return CBaseEntity::New<CPointCamera>(className);
     }
+
+    static CPointCamera* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointCamera>(iIndex);
+    }
+
+    static CPointCamera* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

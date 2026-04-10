@@ -52,4 +52,14 @@ public:
     {
         return CBaseEntity::New<CFuncShatterglass>(className);
     }
+
+    static CFuncShatterglass* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncShatterglass>(iIndex);
+    }
+
+    static CFuncShatterglass* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

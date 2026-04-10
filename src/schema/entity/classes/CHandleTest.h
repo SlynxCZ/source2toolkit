@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CHandleTest>(className);
     }
+
+    static CHandleTest* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHandleTest>(iIndex);
+    }
+
+    static CHandleTest* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

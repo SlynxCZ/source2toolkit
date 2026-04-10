@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CInfoDynamicShadowHintBox>(className);
     }
+
+    static CInfoDynamicShadowHintBox* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoDynamicShadowHintBox>(iIndex);
+    }
+
+    static CInfoDynamicShadowHintBox* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

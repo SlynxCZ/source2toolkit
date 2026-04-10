@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CServerRagdollTrigger>(className);
     }
+
+    static CServerRagdollTrigger* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CServerRagdollTrigger>(iIndex);
+    }
+
+    static CServerRagdollTrigger* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

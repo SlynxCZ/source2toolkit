@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CEconWearable>(className);
     }
+
+    static CEconWearable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEconWearable>(iIndex);
+    }
+
+    static CEconWearable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

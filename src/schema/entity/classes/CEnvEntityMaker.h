@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CEnvEntityMaker>(className);
     }
+
+    static CEnvEntityMaker* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvEntityMaker>(iIndex);
+    }
+
+    static CEnvEntityMaker* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

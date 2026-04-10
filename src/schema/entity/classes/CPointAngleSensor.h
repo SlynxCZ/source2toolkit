@@ -37,4 +37,14 @@ public:
     {
         return CBaseEntity::New<CPointAngleSensor>(className);
     }
+
+    static CPointAngleSensor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointAngleSensor>(iIndex);
+    }
+
+    static CPointAngleSensor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSPointScriptEntity>(className);
     }
+
+    static CCSPointScriptEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSPointScriptEntity>(iIndex);
+    }
+
+    static CCSPointScriptEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

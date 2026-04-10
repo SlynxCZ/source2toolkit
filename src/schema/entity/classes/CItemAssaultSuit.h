@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CItemAssaultSuit>(className);
     }
+
+    static CItemAssaultSuit* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemAssaultSuit>(iIndex);
+    }
+
+    static CItemAssaultSuit* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

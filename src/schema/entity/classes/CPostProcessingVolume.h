@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CPostProcessingVolume>(className);
     }
+
+    static CPostProcessingVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPostProcessingVolume>(iIndex);
+    }
+
+    static CPostProcessingVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

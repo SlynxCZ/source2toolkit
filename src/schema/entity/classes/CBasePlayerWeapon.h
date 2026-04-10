@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CBasePlayerWeapon>(className);
     }
+
+    static CBasePlayerWeapon* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBasePlayerWeapon>(iIndex);
+    }
+
+    static CBasePlayerWeapon* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

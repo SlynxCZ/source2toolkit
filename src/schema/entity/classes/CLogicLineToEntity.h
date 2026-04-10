@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CLogicLineToEntity>(className);
     }
+
+    static CLogicLineToEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicLineToEntity>(iIndex);
+    }
+
+    static CLogicLineToEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

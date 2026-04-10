@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CTankTrainAI>(className);
     }
+
+    static CTankTrainAI* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTankTrainAI>(iIndex);
+    }
+
+    static CTankTrainAI* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

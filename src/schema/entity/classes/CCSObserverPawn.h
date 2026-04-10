@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSObserverPawn>(className);
     }
+
+    static CCSObserverPawn* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSObserverPawn>(iIndex);
+    }
+
+    static CCSObserverPawn* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

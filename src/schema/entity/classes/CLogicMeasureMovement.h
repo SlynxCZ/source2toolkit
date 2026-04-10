@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CLogicMeasureMovement>(className);
     }
+
+    static CLogicMeasureMovement* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicMeasureMovement>(iIndex);
+    }
+
+    static CLogicMeasureMovement* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

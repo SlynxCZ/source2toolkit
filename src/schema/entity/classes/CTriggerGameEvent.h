@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CTriggerGameEvent>(className);
     }
+
+    static CTriggerGameEvent* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerGameEvent>(iIndex);
+    }
+
+    static CTriggerGameEvent* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

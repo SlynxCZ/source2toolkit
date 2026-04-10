@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CLogicActiveAutosave>(className);
     }
+
+    static CLogicActiveAutosave* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicActiveAutosave>(iIndex);
+    }
+
+    static CLogicActiveAutosave* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

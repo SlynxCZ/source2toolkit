@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CBaseProp>(className);
     }
+
+    static CBaseProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseProp>(iIndex);
+    }
+
+    static CBaseProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

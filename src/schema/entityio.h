@@ -23,6 +23,7 @@
 	#define NULL 0
 #endif
 #include "core/shared.h"
+#include "entity.h"
 
 #include "ISmmPlugin.h"
 #include "entityhandle.h"
@@ -75,6 +76,52 @@ class IEntityIOListener
 {
 public:
 	virtual KHook::Action OnEntityOutput(const char* pchOutputName, CEntityInstance* pActivator, CEntityInstance* pCaller, float flDelay, Mode nMode) {};
+};
+
+class CSingleEntityIOListener : public IEntityIOListener
+{
+public:
+	CEntityInstance* m_pTarget;
+	std::function<KHook::Action(const char*, CEntityInstance*, CEntityInstance*, float, Mode)> m_Callback;
+
+	CSingleEntityIOListener(CEntityInstance* target, std::function<KHook::Action(const char*, CEntityInstance*, CEntityInstance*, float, Mode)> cb) :
+		m_pTarget(target),
+		m_Callback(std::move(cb))
+	{
+	}
+
+	KHook::Action OnEntityOutput(const char* outputName, CEntityInstance* pActivator, CEntityInstance* pCaller, float delay, Mode mode) override
+	{
+		if (pCaller != m_pTarget)
+			return KHook::Action::Ignore;
+
+		return m_Callback(outputName, pActivator, pCaller, delay, mode);
+	}
+};
+
+class CEntityIOListenerHandle
+{
+public:
+	CSingleEntityIOListener* m_pListener = nullptr;
+	std::string m_szClassname;
+	std::string m_szOutput;
+	Mode m_nMode = Mode::Pre;
+
+	void Unhook()
+	{
+		if (!m_pListener)
+			return;
+
+		UTIL_RemoveEntityIOListener(m_pListener, m_szClassname.c_str(), m_szOutput.c_str(), m_nMode);
+
+		delete m_pListener;
+		m_pListener = nullptr;
+	}
+
+	~CEntityIOListenerHandle()
+	{
+		Unhook();
+	}
 };
 
 struct EntityIOCallbackPair

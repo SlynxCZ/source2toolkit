@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CPlayerVisibility>(className);
     }
+
+    static CPlayerVisibility* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPlayerVisibility>(iIndex);
+    }
+
+    static CPlayerVisibility* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

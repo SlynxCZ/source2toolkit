@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CPhysWheelConstraint>(className);
     }
+
+    static CPhysWheelConstraint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysWheelConstraint>(iIndex);
+    }
+
+    static CPhysWheelConstraint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

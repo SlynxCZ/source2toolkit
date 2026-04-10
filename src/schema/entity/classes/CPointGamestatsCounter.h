@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CPointGamestatsCounter>(className);
     }
+
+    static CPointGamestatsCounter* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointGamestatsCounter>(iIndex);
+    }
+
+    static CPointGamestatsCounter* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

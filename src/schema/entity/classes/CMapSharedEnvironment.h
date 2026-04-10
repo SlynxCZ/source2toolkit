@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CMapSharedEnvironment>(className);
     }
+
+    static CMapSharedEnvironment* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMapSharedEnvironment>(iIndex);
+    }
+
+    static CMapSharedEnvironment* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

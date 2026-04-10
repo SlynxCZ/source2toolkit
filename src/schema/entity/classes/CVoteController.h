@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CVoteController>(className);
     }
+
+    static CVoteController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CVoteController>(iIndex);
+    }
+
+    static CVoteController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

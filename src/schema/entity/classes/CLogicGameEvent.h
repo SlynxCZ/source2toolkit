@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CLogicGameEvent>(className);
     }
+
+    static CLogicGameEvent* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicGameEvent>(iIndex);
+    }
+
+    static CLogicGameEvent* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

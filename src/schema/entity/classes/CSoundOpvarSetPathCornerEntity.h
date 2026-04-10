@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CSoundOpvarSetPathCornerEntity>(className);
     }
+
+    static CSoundOpvarSetPathCornerEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundOpvarSetPathCornerEntity>(iIndex);
+    }
+
+    static CSoundOpvarSetPathCornerEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

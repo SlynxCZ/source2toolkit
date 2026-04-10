@@ -44,4 +44,14 @@ public:
     {
         return CBaseEntity::New<CEnvCubemap>(className);
     }
+
+    static CEnvCubemap* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvCubemap>(iIndex);
+    }
+
+    static CEnvCubemap* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

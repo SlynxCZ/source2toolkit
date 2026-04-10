@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CColorCorrectionVolume>(className);
     }
+
+    static CColorCorrectionVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CColorCorrectionVolume>(iIndex);
+    }
+
+    static CColorCorrectionVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

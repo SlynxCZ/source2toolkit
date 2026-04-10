@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CSoundEventPathCornerEntity>(className);
     }
+
+    static CSoundEventPathCornerEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundEventPathCornerEntity>(iIndex);
+    }
+
+    static CSoundEventPathCornerEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

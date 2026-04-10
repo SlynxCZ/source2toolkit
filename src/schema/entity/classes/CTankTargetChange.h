@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CTankTargetChange>(className);
     }
+
+    static CTankTargetChange* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTankTargetChange>(iIndex);
+    }
+
+    static CTankTargetChange* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

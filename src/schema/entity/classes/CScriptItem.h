@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CScriptItem>(className);
     }
+
+    static CScriptItem* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CScriptItem>(iIndex);
+    }
+
+    static CScriptItem* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

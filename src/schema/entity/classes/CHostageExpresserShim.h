@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CHostageExpresserShim>(className);
     }
+
+    static CHostageExpresserShim* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHostageExpresserShim>(iIndex);
+    }
+
+    static CHostageExpresserShim* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

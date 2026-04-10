@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CKnife>(className);
     }
+
+    static CKnife* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CKnife>(iIndex);
+    }
+
+    static CKnife* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

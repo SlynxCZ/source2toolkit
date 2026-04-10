@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CEntityBlocker>(className);
     }
+
+    static CEntityBlocker* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEntityBlocker>(iIndex);
+    }
+
+    static CEntityBlocker* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

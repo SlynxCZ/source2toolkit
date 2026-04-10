@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CLogicPlayerProxy>(className);
     }
+
+    static CLogicPlayerProxy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicPlayerProxy>(iIndex);
+    }
+
+    static CLogicPlayerProxy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

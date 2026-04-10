@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CGameMoney>(className);
     }
+
+    static CGameMoney* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGameMoney>(iIndex);
+    }
+
+    static CGameMoney* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

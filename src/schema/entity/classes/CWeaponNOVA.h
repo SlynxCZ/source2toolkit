@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponNOVA>(className);
     }
+
+    static CWeaponNOVA* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponNOVA>(iIndex);
+    }
+
+    static CWeaponNOVA* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

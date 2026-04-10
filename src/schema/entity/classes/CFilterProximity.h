@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CFilterProximity>(className);
     }
+
+    static CFilterProximity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterProximity>(iIndex);
+    }
+
+    static CFilterProximity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -53,4 +53,14 @@ public:
     {
         return CBaseEntity::New<CBeam>(className);
     }
+
+    static CBeam* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBeam>(iIndex);
+    }
+
+    static CBeam* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -45,4 +45,14 @@ public:
     {
         return CBaseEntity::New<CBaseAnimGraph>(className);
     }
+
+    static CBaseAnimGraph* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseAnimGraph>(iIndex);
+    }
+
+    static CBaseAnimGraph* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

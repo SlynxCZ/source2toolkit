@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CEntityFlame>(className);
     }
+
+    static CEntityFlame* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEntityFlame>(iIndex);
+    }
+
+    static CEntityFlame* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

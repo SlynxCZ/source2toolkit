@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPhysicalButton>(className);
     }
+
+    static CPhysicalButton* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicalButton>(iIndex);
+    }
+
+    static CPhysicalButton* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

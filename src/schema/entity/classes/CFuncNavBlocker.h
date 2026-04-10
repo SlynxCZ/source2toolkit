@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CFuncNavBlocker>(className);
     }
+
+    static CFuncNavBlocker* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncNavBlocker>(iIndex);
+    }
+
+    static CFuncNavBlocker* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CItemSoda>(className);
     }
+
+    static CItemSoda* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemSoda>(iIndex);
+    }
+
+    static CItemSoda* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

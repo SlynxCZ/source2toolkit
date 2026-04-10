@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CMarkupVolumeTagged_NavGame>(className);
     }
+
+    static CMarkupVolumeTagged_NavGame* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMarkupVolumeTagged_NavGame>(iIndex);
+    }
+
+    static CMarkupVolumeTagged_NavGame* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

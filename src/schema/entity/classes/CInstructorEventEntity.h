@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CInstructorEventEntity>(className);
     }
+
+    static CInstructorEventEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInstructorEventEntity>(iIndex);
+    }
+
+    static CInstructorEventEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

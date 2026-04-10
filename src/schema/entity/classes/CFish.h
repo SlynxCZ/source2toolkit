@@ -52,4 +52,14 @@ public:
     {
         return CBaseEntity::New<CFish>(className);
     }
+
+    static CFish* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFish>(iIndex);
+    }
+
+    static CFish* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

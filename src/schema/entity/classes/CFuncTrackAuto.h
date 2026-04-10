@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncTrackAuto>(className);
     }
+
+    static CFuncTrackAuto* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncTrackAuto>(iIndex);
+    }
+
+    static CFuncTrackAuto* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

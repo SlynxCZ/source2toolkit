@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPathParticleRopeAlias_path_particle_rope_clientside>(className);
     }
+
+    static CPathParticleRopeAlias_path_particle_rope_clientside* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPathParticleRopeAlias_path_particle_rope_clientside>(iIndex);
+    }
+
+    static CPathParticleRopeAlias_path_particle_rope_clientside* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

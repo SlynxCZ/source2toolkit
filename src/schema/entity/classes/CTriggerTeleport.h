@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CTriggerTeleport>(className);
     }
+
+    static CTriggerTeleport* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerTeleport>(iIndex);
+    }
+
+    static CTriggerTeleport* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

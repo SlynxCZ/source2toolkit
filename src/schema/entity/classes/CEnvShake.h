@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CEnvShake>(className);
     }
+
+    static CEnvShake* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvShake>(iIndex);
+    }
+
+    static CEnvShake* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

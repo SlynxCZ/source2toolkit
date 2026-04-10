@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CEnvSoundscapeProxy>(className);
     }
+
+    static CEnvSoundscapeProxy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvSoundscapeProxy>(iIndex);
+    }
+
+    static CEnvSoundscapeProxy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

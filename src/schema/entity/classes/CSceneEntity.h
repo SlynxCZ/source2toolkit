@@ -92,4 +92,14 @@ public:
     {
         return CBaseEntity::New<CSceneEntity>(className);
     }
+
+    static CSceneEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSceneEntity>(iIndex);
+    }
+
+    static CSceneEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

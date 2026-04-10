@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CItemDogtags>(className);
     }
+
+    static CItemDogtags* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemDogtags>(iIndex);
+    }
+
+    static CItemDogtags* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

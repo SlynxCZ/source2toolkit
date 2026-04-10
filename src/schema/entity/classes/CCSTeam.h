@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CCSTeam>(className);
     }
+
+    static CCSTeam* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSTeam>(iIndex);
+    }
+
+    static CCSTeam* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

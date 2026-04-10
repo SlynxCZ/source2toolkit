@@ -40,4 +40,14 @@ public:
     {
         return CBaseEntity::New<CPlayerSprayDecal>(className);
     }
+
+    static CPlayerSprayDecal* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPlayerSprayDecal>(iIndex);
+    }
+
+    static CPlayerSprayDecal* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

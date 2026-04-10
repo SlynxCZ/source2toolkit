@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CTriggerOnce>(className);
     }
+
+    static CTriggerOnce* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerOnce>(iIndex);
+    }
+
+    static CTriggerOnce* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

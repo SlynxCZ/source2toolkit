@@ -48,4 +48,14 @@ public:
     {
         return CBaseEntity::New<CEnvLightProbeVolume>(className);
     }
+
+    static CEnvLightProbeVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvLightProbeVolume>(iIndex);
+    }
+
+    static CEnvLightProbeVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

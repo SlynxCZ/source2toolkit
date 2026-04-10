@@ -13,6 +13,9 @@
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
 #include "schema/entity/classes/CCSGameRulesProxy.h"
+#include "schema/entity/classes/CCSPlayerController.h"
+#include "schema/entity/classes/CCSPlayerPawn.h"
+#include "schema/entity/classes/CCSWeaponBase.h"
 
 class GameSessionConfiguration_t
 {
@@ -203,6 +206,42 @@ namespace virtualhooks
 
     void CEntityListener::OnEntitySpawned(CEntityInstance* pEntity)
     {
+        CBaseEntity* pBaseEntity = static_cast<CBaseEntity*>(pEntity);
+        if (!pBaseEntity)
+            return;
+
+        const char* classname = pBaseEntity->GetClassname();
+
+        if (!classname || !strstr(classname, "weapon_"))
+            return;
+
+        if (strcmp(classname, "weapon_knife") != 0 &&
+            strcmp(classname, "weapon_bayonet") != 0)
+        {
+            return;
+        }
+
+        pBaseEntity->AddSingleEntityIOListener("OnPlayerPickup",
+            [](const char* output, CEntityInstance* activator, CEntityInstance* caller, float delay, Mode mode)
+            {
+                CCSPlayerPawn* pawn = (CCSPlayerPawn*)activator;
+                if (!pawn)
+                    return KHook::Action::Ignore;
+
+                CCSWeaponBase* weapon = (CCSWeaponBase*)caller;
+                if (!weapon)
+                    return KHook::Action::Ignore;
+
+                CCSPlayerController* player = pawn->GetController();
+                if (!output || !player)
+                    return KHook::Action::Ignore;
+
+                player->PrintToChat(fmt::format("Sebral jsi: {}", weapon->GetWeaponClassname()).c_str());
+
+                return KHook::Action::Ignore;
+            },
+            Mode::Post
+        );
     }
 
     void CEntityListener::OnEntityCreated(CEntityInstance* pEntity)

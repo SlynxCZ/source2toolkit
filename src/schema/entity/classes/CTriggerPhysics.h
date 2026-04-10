@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CTriggerPhysics>(className);
     }
+
+    static CTriggerPhysics* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerPhysics>(iIndex);
+    }
+
+    static CTriggerPhysics* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

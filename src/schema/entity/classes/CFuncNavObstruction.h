@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CFuncNavObstruction>(className);
     }
+
+    static CFuncNavObstruction* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncNavObstruction>(iIndex);
+    }
+
+    static CFuncNavObstruction* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

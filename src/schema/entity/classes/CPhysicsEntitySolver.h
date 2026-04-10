@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsEntitySolver>(className);
     }
+
+    static CPhysicsEntitySolver* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsEntitySolver>(iIndex);
+    }
+
+    static CPhysicsEntitySolver* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

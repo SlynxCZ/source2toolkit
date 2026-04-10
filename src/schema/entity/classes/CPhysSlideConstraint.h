@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CPhysSlideConstraint>(className);
     }
+
+    static CPhysSlideConstraint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysSlideConstraint>(iIndex);
+    }
+
+    static CPhysSlideConstraint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

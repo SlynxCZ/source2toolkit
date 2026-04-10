@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CEnvLaser>(className);
     }
+
+    static CEnvLaser* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvLaser>(iIndex);
+    }
+
+    static CEnvLaser* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSGO_TeamSelectCounterTerroristPosition>(className);
     }
+
+    static CCSGO_TeamSelectCounterTerroristPosition* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSGO_TeamSelectCounterTerroristPosition>(iIndex);
+    }
+
+    static CCSGO_TeamSelectCounterTerroristPosition* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

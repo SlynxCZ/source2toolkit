@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CTonemapController2>(className);
     }
+
+    static CTonemapController2* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTonemapController2>(iIndex);
+    }
+
+    static CTonemapController2* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CFogTrigger>(className);
     }
+
+    static CFogTrigger* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFogTrigger>(iIndex);
+    }
+
+    static CFogTrigger* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

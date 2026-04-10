@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CMathRemap>(className);
     }
+
+    static CMathRemap* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMathRemap>(iIndex);
+    }
+
+    static CMathRemap* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

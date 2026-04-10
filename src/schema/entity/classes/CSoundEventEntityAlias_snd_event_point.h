@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CSoundEventEntityAlias_snd_event_point>(className);
     }
+
+    static CSoundEventEntityAlias_snd_event_point* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundEventEntityAlias_snd_event_point>(iIndex);
+    }
+
+    static CSoundEventEntityAlias_snd_event_point* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

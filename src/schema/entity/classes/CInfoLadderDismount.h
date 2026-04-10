@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoLadderDismount>(className);
     }
+
+    static CInfoLadderDismount* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoLadderDismount>(iIndex);
+    }
+
+    static CInfoLadderDismount* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

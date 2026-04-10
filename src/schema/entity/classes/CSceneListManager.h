@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CSceneListManager>(className);
     }
+
+    static CSceneListManager* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSceneListManager>(iIndex);
+    }
+
+    static CSceneListManager* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

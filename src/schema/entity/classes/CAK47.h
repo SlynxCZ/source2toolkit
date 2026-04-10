@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CAK47>(className);
     }
+
+    static CAK47* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CAK47>(iIndex);
+    }
+
+    static CAK47* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

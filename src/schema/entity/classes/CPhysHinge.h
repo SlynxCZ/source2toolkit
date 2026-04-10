@@ -46,4 +46,14 @@ public:
     {
         return CBaseEntity::New<CPhysHinge>(className);
     }
+
+    static CPhysHinge* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysHinge>(iIndex);
+    }
+
+    static CPhysHinge* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

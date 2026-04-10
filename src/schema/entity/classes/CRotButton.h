@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CRotButton>(className);
     }
+
+    static CRotButton* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRotButton>(iIndex);
+    }
+
+    static CRotButton* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

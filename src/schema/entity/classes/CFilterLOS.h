@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFilterLOS>(className);
     }
+
+    static CFilterLOS* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterLOS>(iIndex);
+    }
+
+    static CFilterLOS* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CDecoyProjectile>(className);
     }
+
+    static CDecoyProjectile* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDecoyProjectile>(iIndex);
+    }
+
+    static CDecoyProjectile* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

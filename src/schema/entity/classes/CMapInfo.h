@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CMapInfo>(className);
     }
+
+    static CMapInfo* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMapInfo>(iIndex);
+    }
+
+    static CMapInfo* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

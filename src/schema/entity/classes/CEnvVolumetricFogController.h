@@ -62,4 +62,14 @@ public:
     {
         return CBaseEntity::New<CEnvVolumetricFogController>(className);
     }
+
+    static CEnvVolumetricFogController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvVolumetricFogController>(iIndex);
+    }
+
+    static CEnvVolumetricFogController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponGalilAR>(className);
     }
+
+    static CWeaponGalilAR* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponGalilAR>(iIndex);
+    }
+
+    static CWeaponGalilAR* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

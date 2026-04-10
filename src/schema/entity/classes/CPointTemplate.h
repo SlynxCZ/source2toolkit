@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CPointTemplate>(className);
     }
+
+    static CPointTemplate* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointTemplate>(iIndex);
+    }
+
+    static CPointTemplate* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

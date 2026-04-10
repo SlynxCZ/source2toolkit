@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CItem_Healthshot>(className);
     }
+
+    static CItem_Healthshot* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItem_Healthshot>(iIndex);
+    }
+
+    static CItem_Healthshot* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

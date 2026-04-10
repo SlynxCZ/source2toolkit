@@ -10,13 +10,22 @@ public static class CustomMethods
             "static CBaseEntity* CreateEntityByName(const char* pszClassName);",
 
             "/// <summary>Create entity by classname.</summary>",
-            "template<typename T>\n    static T* New(const char* className)\n    {    \n        return reinterpret_cast<T*>(CreateEntityByName(className));\n    }",
+            "template<typename T>\n    static T* New(const char* pszClassName)\n    {    \n        return reinterpret_cast<T*>(CreateEntityByName(pszClassName));\n    }",
+
+            "/// <summary>Get entity by index.</summary>",
+            "template<typename T>\n    static T* FromIndex(int iIndex)\n    {    \n        return reinterpret_cast<T*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(iIndex)));\n    }",
+
+            "/// <summary>Get entity by entity index.</summary>",
+            "template<typename T>\n    static T* FromIndex(CEntityIndex index)\n    {    \n        return FromIndex<T>(index.Get());\n    }",
 
             "/// <summary>Accepts entity input.</summary>",
             "void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = \"\");",
 
             "/// <summary>Add delayed entity IO event.</summary>",
             "void AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = \"\", float flDelay = 0.0f);",
+
+            "/// <summary>Add signle entity IO listener.</summary>",
+            "CEntityIOListenerHandle* AddSingleEntityIOListener(const char* pszOutput, std::function<KHook::Action(const char*,CEntityInstance*, CEntityInstance*, float, Mode)> callback, Mode mode);",
 
             "/// <summary>Get absolute origin.</summary>",
             "Vector GetAbsOrigin();",
@@ -65,6 +74,9 @@ public static class CustomMethods
 
             "/// <summary>Notify collision rules changed.</summary>",
             "void CollisionRulesChanged();",
+
+            "/// <summary>Get entity index.</summary>",
+            "int GetIndex();",
 
             "/// <summary>Get entity handle.</summary>",
             "CHandle<CBaseEntity> GetHandle();",
@@ -132,12 +144,6 @@ public static class CustomMethods
             "/// <summary>Get controller from pawn.</summary>",
             "static CCSPlayerController* FromPawn(CCSPlayerPawn* pPawn);",
 
-            "/// <summary>Get controller from entity index.</summary>",
-            "static CCSPlayerController* FromIndex(int iIndex);",
-
-            "/// <summary>Get controller from entity index.</summary>",
-            "static CCSPlayerController* FromIndex(CEntityIndex index);",
-
             "/// <summary>Get controller from slot.</summary>",
             "static CCSPlayerController* FromSlot(int iSlot);",
 
@@ -200,9 +206,6 @@ public static class CustomMethods
 
             "/// <summary>Get observer pawn.</summary>",
             "CCSObserverPawn* GetObserverPawn();",
-
-            "/// <summary>Get index.</summary>",
-            "int GetIndex();",
 
             "/// <summary>Get player index.</summary>",
             "CEntityIndex GetPlayerIndex();",

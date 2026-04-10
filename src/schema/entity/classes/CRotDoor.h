@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CRotDoor>(className);
     }
+
+    static CRotDoor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRotDoor>(iIndex);
+    }
+
+    static CRotDoor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

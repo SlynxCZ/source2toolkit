@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CChoreoInfoTarget>(className);
     }
+
+    static CChoreoInfoTarget* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CChoreoInfoTarget>(iIndex);
+    }
+
+    static CChoreoInfoTarget* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

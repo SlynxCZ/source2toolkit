@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CInfoSpawnGroupLoadUnload>(className);
     }
+
+    static CInfoSpawnGroupLoadUnload* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoSpawnGroupLoadUnload>(iIndex);
+    }
+
+    static CInfoSpawnGroupLoadUnload* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncPropRespawnZone>(className);
     }
+
+    static CFuncPropRespawnZone* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncPropRespawnZone>(iIndex);
+    }
+
+    static CFuncPropRespawnZone* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

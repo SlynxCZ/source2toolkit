@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CSoundAreaEntityOrientedBox>(className);
     }
+
+    static CSoundAreaEntityOrientedBox* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundAreaEntityOrientedBox>(iIndex);
+    }
+
+    static CSoundAreaEntityOrientedBox* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

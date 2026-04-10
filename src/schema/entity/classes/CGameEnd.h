@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CGameEnd>(className);
     }
+
+    static CGameEnd* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGameEnd>(iIndex);
+    }
+
+    static CGameEnd* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

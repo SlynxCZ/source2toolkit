@@ -44,4 +44,14 @@ public:
     {
         return CBaseEntity::New<CMapVetoPickController>(className);
     }
+
+    static CMapVetoPickController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMapVetoPickController>(iIndex);
+    }
+
+    static CMapVetoPickController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

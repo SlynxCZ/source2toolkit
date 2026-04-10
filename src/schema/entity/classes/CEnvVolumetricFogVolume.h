@@ -43,4 +43,14 @@ public:
     {
         return CBaseEntity::New<CEnvVolumetricFogVolume>(className);
     }
+
+    static CEnvVolumetricFogVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvVolumetricFogVolume>(iIndex);
+    }
+
+    static CEnvVolumetricFogVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

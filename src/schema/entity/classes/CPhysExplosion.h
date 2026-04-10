@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CPhysExplosion>(className);
     }
+
+    static CPhysExplosion* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysExplosion>(iIndex);
+    }
+
+    static CPhysExplosion* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -55,4 +55,14 @@ public:
     {
         return CBaseEntity::New<CBaseDoor>(className);
     }
+
+    static CBaseDoor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseDoor>(iIndex);
+    }
+
+    static CBaseDoor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

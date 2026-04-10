@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CInfoData>(className);
     }
+
+    static CInfoData* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoData>(iIndex);
+    }
+
+    static CInfoData* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

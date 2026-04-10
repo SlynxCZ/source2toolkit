@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CEntityDissolve>(className);
     }
+
+    static CEntityDissolve* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEntityDissolve>(iIndex);
+    }
+
+    static CEntityDissolve* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

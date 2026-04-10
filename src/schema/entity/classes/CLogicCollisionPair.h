@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CLogicCollisionPair>(className);
     }
+
+    static CLogicCollisionPair* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicCollisionPair>(iIndex);
+    }
+
+    static CLogicCollisionPair* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

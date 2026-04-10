@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CPrecipitation>(className);
     }
+
+    static CPrecipitation* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPrecipitation>(iIndex);
+    }
+
+    static CPrecipitation* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

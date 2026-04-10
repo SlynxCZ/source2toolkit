@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncWallToggle>(className);
     }
+
+    static CFuncWallToggle* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncWallToggle>(iIndex);
+    }
+
+    static CFuncWallToggle* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

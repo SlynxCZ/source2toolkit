@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CPointProximitySensor>(className);
     }
+
+    static CPointProximitySensor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointProximitySensor>(iIndex);
+    }
+
+    static CPointProximitySensor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

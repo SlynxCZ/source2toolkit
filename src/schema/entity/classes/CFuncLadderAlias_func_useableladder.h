@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncLadderAlias_func_useableladder>(className);
     }
+
+    static CFuncLadderAlias_func_useableladder* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncLadderAlias_func_useableladder>(iIndex);
+    }
+
+    static CFuncLadderAlias_func_useableladder* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

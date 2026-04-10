@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CTriggerImpact>(className);
     }
+
+    static CTriggerImpact* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerImpact>(iIndex);
+    }
+
+    static CTriggerImpact* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

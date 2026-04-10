@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<COmniLight>(className);
     }
+
+    static COmniLight* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<COmniLight>(iIndex);
+    }
+
+    static COmniLight* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

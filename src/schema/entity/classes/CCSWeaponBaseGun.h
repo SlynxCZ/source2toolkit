@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CCSWeaponBaseGun>(className);
     }
+
+    static CCSWeaponBaseGun* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSWeaponBaseGun>(iIndex);
+    }
+
+    static CCSWeaponBaseGun* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

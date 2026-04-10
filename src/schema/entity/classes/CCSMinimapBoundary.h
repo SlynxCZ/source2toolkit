@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSMinimapBoundary>(className);
     }
+
+    static CCSMinimapBoundary* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSMinimapBoundary>(iIndex);
+    }
+
+    static CCSMinimapBoundary* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

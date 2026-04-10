@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CPointCameraVFOV>(className);
     }
+
+    static CPointCameraVFOV* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointCameraVFOV>(iIndex);
+    }
+
+    static CPointCameraVFOV* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

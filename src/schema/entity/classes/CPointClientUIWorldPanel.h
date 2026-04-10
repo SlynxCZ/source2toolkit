@@ -49,4 +49,14 @@ public:
     {
         return CBaseEntity::New<CPointClientUIWorldPanel>(className);
     }
+
+    static CPointClientUIWorldPanel* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointClientUIWorldPanel>(iIndex);
+    }
+
+    static CPointClientUIWorldPanel* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

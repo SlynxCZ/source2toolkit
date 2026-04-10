@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CPhysicsWire>(className);
     }
+
+    static CPhysicsWire* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysicsWire>(iIndex);
+    }
+
+    static CPhysicsWire* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

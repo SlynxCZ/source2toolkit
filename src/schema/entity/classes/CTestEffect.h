@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CTestEffect>(className);
     }
+
+    static CTestEffect* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTestEffect>(iIndex);
+    }
+
+    static CTestEffect* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CEnvInstructorVRHint>(className);
     }
+
+    static CEnvInstructorVRHint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvInstructorVRHint>(iIndex);
+    }
+
+    static CEnvInstructorVRHint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

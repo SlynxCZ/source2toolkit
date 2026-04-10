@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CTimerEntity>(className);
     }
+
+    static CTimerEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTimerEntity>(iIndex);
+    }
+
+    static CTimerEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

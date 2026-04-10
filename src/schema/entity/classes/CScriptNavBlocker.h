@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CScriptNavBlocker>(className);
     }
+
+    static CScriptNavBlocker* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CScriptNavBlocker>(iIndex);
+    }
+
+    static CScriptNavBlocker* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

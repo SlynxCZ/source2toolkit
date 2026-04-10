@@ -37,4 +37,14 @@ public:
     {
         return CBaseEntity::New<CSmokeGrenadeProjectile>(className);
     }
+
+    static CSmokeGrenadeProjectile* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSmokeGrenadeProjectile>(iIndex);
+    }
+
+    static CSmokeGrenadeProjectile* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

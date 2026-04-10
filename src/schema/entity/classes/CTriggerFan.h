@@ -53,4 +53,14 @@ public:
     {
         return CBaseEntity::New<CTriggerFan>(className);
     }
+
+    static CTriggerFan* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerFan>(iIndex);
+    }
+
+    static CTriggerFan* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

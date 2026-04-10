@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CTriggerHostageReset>(className);
     }
+
+    static CTriggerHostageReset* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerHostageReset>(iIndex);
+    }
+
+    static CTriggerHostageReset* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

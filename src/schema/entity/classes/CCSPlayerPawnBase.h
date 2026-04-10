@@ -45,4 +45,14 @@ public:
     {
         return CBaseEntity::New<CCSPlayerPawnBase>(className);
     }
+
+    static CCSPlayerPawnBase* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSPlayerPawnBase>(iIndex);
+    }
+
+    static CCSPlayerPawnBase* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

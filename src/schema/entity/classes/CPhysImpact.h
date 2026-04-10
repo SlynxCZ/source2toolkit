@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CPhysImpact>(className);
     }
+
+    static CPhysImpact* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysImpact>(iIndex);
+    }
+
+    static CPhysImpact* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

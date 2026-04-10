@@ -47,4 +47,14 @@ public:
     {
         return CBaseEntity::New<CRopeKeyframe>(className);
     }
+
+    static CRopeKeyframe* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRopeKeyframe>(iIndex);
+    }
+
+    static CRopeKeyframe* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

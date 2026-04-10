@@ -43,4 +43,14 @@ public:
     {
         return CBaseEntity::New<CTriggerLerpObject>(className);
     }
+
+    static CTriggerLerpObject* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerLerpObject>(iIndex);
+    }
+
+    static CTriggerLerpObject* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

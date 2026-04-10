@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CEnvViewPunch>(className);
     }
+
+    static CEnvViewPunch* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvViewPunch>(iIndex);
+    }
+
+    static CEnvViewPunch* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

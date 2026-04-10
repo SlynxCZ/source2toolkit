@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CFuncTrain>(className);
     }
+
+    static CFuncTrain* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncTrain>(iIndex);
+    }
+
+    static CFuncTrain* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

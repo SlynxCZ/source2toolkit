@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CTriggerSoundscape>(className);
     }
+
+    static CTriggerSoundscape* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerSoundscape>(iIndex);
+    }
+
+    static CTriggerSoundscape* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

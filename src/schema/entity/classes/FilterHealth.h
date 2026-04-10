@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<FilterHealth>(className);
     }
+
+    static FilterHealth* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<FilterHealth>(iIndex);
+    }
+
+    static FilterHealth* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

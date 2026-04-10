@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncIllusionary>(className);
     }
+
+    static CFuncIllusionary* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncIllusionary>(iIndex);
+    }
+
+    static CFuncIllusionary* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

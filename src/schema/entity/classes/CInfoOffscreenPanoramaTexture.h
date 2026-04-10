@@ -38,4 +38,14 @@ public:
     {
         return CBaseEntity::New<CInfoOffscreenPanoramaTexture>(className);
     }
+
+    static CInfoOffscreenPanoramaTexture* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoOffscreenPanoramaTexture>(iIndex);
+    }
+
+    static CInfoOffscreenPanoramaTexture* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

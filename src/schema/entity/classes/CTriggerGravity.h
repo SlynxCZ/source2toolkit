@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CTriggerGravity>(className);
     }
+
+    static CTriggerGravity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerGravity>(iIndex);
+    }
+
+    static CTriggerGravity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

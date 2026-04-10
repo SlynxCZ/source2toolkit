@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CCSSprite>(className);
     }
+
+    static CCSSprite* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CCSSprite>(iIndex);
+    }
+
+    static CCSSprite* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

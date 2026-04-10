@@ -56,4 +56,14 @@ public:
     {
         return CBaseEntity::New<CPlantedC4>(className);
     }
+
+    static CPlantedC4* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPlantedC4>(iIndex);
+    }
+
+    static CPlantedC4* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

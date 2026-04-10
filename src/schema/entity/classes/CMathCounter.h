@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CMathCounter>(className);
     }
+
+    static CMathCounter* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMathCounter>(iIndex);
+    }
+
+    static CMathCounter* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CPointChildModifier>(className);
     }
+
+    static CPointChildModifier* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointChildModifier>(iIndex);
+    }
+
+    static CPointChildModifier* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

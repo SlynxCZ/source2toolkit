@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CFilterTeam>(className);
     }
+
+    static CFilterTeam* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterTeam>(iIndex);
+    }
+
+    static CFilterTeam* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CEnvHudHint>(className);
     }
+
+    static CEnvHudHint* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvHudHint>(iIndex);
+    }
+
+    static CEnvHudHint* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

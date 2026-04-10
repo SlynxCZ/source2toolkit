@@ -44,4 +44,14 @@ public:
     {
         return CBaseEntity::New<CEnvExplosion>(className);
     }
+
+    static CEnvExplosion* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvExplosion>(iIndex);
+    }
+
+    static CEnvExplosion* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

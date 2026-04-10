@@ -110,4 +110,14 @@ public:
     {
         return CBaseEntity::New<CScriptedSequence>(className);
     }
+
+    static CScriptedSequence* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CScriptedSequence>(iIndex);
+    }
+
+    static CScriptedSequence* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

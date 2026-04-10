@@ -50,4 +50,14 @@ public:
     {
         return CBaseEntity::New<CSprite>(className);
     }
+
+    static CSprite* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSprite>(iIndex);
+    }
+
+    static CSprite* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

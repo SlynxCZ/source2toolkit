@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CFuncPlatRot>(className);
     }
+
+    static CFuncPlatRot* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncPlatRot>(iIndex);
+    }
+
+    static CFuncPlatRot* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -39,4 +39,14 @@ public:
     {
         return CBaseEntity::New<CFuncMoveLinear>(className);
     }
+
+    static CFuncMoveLinear* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncMoveLinear>(iIndex);
+    }
+
+    static CFuncMoveLinear* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

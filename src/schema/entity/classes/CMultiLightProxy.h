@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CMultiLightProxy>(className);
     }
+
+    static CMultiLightProxy* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMultiLightProxy>(iIndex);
+    }
+
+    static CMultiLightProxy* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

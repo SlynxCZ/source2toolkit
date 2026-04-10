@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncMoveLinearAlias_momentary_door>(className);
     }
+
+    static CFuncMoveLinearAlias_momentary_door* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncMoveLinearAlias_momentary_door>(iIndex);
+    }
+
+    static CFuncMoveLinearAlias_momentary_door* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

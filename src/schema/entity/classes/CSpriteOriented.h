@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CSpriteOriented>(className);
     }
+
+    static CSpriteOriented* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSpriteOriented>(iIndex);
+    }
+
+    static CSpriteOriented* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

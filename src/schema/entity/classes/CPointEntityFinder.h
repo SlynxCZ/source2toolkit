@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CPointEntityFinder>(className);
     }
+
+    static CPointEntityFinder* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointEntityFinder>(iIndex);
+    }
+
+    static CPointEntityFinder* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

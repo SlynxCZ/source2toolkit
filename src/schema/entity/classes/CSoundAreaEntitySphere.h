@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CSoundAreaEntitySphere>(className);
     }
+
+    static CSoundAreaEntitySphere* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundAreaEntitySphere>(iIndex);
+    }
+
+    static CSoundAreaEntitySphere* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

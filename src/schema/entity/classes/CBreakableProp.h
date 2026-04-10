@@ -64,4 +64,14 @@ public:
     {
         return CBaseEntity::New<CBreakableProp>(className);
     }
+
+    static CBreakableProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBreakableProp>(iIndex);
+    }
+
+    static CBreakableProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

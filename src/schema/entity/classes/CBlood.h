@@ -30,4 +30,14 @@ public:
     {
         return CBaseEntity::New<CBlood>(className);
     }
+
+    static CBlood* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBlood>(iIndex);
+    }
+
+    static CBlood* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

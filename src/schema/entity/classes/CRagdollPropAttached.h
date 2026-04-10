@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CRagdollPropAttached>(className);
     }
+
+    static CRagdollPropAttached* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRagdollPropAttached>(iIndex);
+    }
+
+    static CRagdollPropAttached* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

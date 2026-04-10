@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWaterBullet>(className);
     }
+
+    static CWaterBullet* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWaterBullet>(iIndex);
+    }
+
+    static CWaterBullet* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CWeaponUSPSilencer>(className);
     }
+
+    static CWeaponUSPSilencer* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CWeaponUSPSilencer>(iIndex);
+    }
+
+    static CWeaponUSPSilencer* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

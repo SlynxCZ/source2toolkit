@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CFuncVPhysicsClip>(className);
     }
+
+    static CFuncVPhysicsClip* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncVPhysicsClip>(iIndex);
+    }
+
+    static CFuncVPhysicsClip* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

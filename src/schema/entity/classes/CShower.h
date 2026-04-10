@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CShower>(className);
     }
+
+    static CShower* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CShower>(iIndex);
+    }
+
+    static CShower* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CMarkupVolumeTagged_Nav>(className);
     }
+
+    static CMarkupVolumeTagged_Nav* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMarkupVolumeTagged_Nav>(iIndex);
+    }
+
+    static CMarkupVolumeTagged_Nav* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

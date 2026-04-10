@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CHostageAlias_info_hostage_spawn>(className);
     }
+
+    static CHostageAlias_info_hostage_spawn* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHostageAlias_info_hostage_spawn>(iIndex);
+    }
+
+    static CHostageAlias_info_hostage_spawn* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

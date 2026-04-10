@@ -61,4 +61,14 @@ public:
     {
         return CBaseEntity::New<CItemGeneric>(className);
     }
+
+    static CItemGeneric* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemGeneric>(iIndex);
+    }
+
+    static CItemGeneric* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

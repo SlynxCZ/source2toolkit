@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CLogicEventListener>(className);
     }
+
+    static CLogicEventListener* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicEventListener>(iIndex);
+    }
+
+    static CLogicEventListener* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

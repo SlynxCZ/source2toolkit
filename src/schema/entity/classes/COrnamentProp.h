@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<COrnamentProp>(className);
     }
+
+    static COrnamentProp* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<COrnamentProp>(iIndex);
+    }
+
+    static COrnamentProp* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CInfoVisibilityBox>(className);
     }
+
+    static CInfoVisibilityBox* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CInfoVisibilityBox>(iIndex);
+    }
+
+    static CInfoVisibilityBox* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

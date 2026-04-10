@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CServerOnlyPointEntity>(className);
     }
+
+    static CServerOnlyPointEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CServerOnlyPointEntity>(iIndex);
+    }
+
+    static CServerOnlyPointEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

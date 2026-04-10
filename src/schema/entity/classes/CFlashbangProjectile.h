@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CFlashbangProjectile>(className);
     }
+
+    static CFlashbangProjectile* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFlashbangProjectile>(iIndex);
+    }
+
+    static CFlashbangProjectile* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

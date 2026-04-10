@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CDynamicPropAlias_dynamic_prop>(className);
     }
+
+    static CDynamicPropAlias_dynamic_prop* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDynamicPropAlias_dynamic_prop>(iIndex);
+    }
+
+    static CDynamicPropAlias_dynamic_prop* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CTriggerHurt>(className);
     }
+
+    static CTriggerHurt* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerHurt>(iIndex);
+    }
+
+    static CTriggerHurt* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CItemDefuserAlias_item_defuser>(className);
     }
+
+    static CItemDefuserAlias_item_defuser* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CItemDefuserAlias_item_defuser>(iIndex);
+    }
+
+    static CItemDefuserAlias_item_defuser* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CLogicNavigation>(className);
     }
+
+    static CLogicNavigation* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicNavigation>(iIndex);
+    }
+
+    static CLogicNavigation* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

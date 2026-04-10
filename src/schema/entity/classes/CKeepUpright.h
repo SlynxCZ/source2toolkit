@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CKeepUpright>(className);
     }
+
+    static CKeepUpright* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CKeepUpright>(iIndex);
+    }
+
+    static CKeepUpright* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

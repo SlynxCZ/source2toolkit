@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CLogicAuto>(className);
     }
+
+    static CLogicAuto* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicAuto>(iIndex);
+    }
+
+    static CLogicAuto* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -36,4 +36,14 @@ public:
     {
         return CBaseEntity::New<CFuncMonitor>(className);
     }
+
+    static CFuncMonitor* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncMonitor>(iIndex);
+    }
+
+    static CFuncMonitor* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CPhysTorque>(className);
     }
+
+    static CPhysTorque* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysTorque>(iIndex);
+    }
+
+    static CPhysTorque* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

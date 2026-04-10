@@ -48,4 +48,14 @@ public:
     {
         return CBaseEntity::New<CBreakable>(className);
     }
+
+    static CBreakable* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBreakable>(iIndex);
+    }
+
+    static CBreakable* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

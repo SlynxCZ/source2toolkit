@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CFogController>(className);
     }
+
+    static CFogController* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFogController>(iIndex);
+    }
+
+    static CFogController* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

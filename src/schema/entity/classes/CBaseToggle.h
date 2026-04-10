@@ -44,4 +44,14 @@ public:
     {
         return CBaseEntity::New<CBaseToggle>(className);
     }
+
+    static CBaseToggle* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBaseToggle>(iIndex);
+    }
+
+    static CBaseToggle* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

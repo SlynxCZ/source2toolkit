@@ -35,4 +35,14 @@ public:
     {
         return CBaseEntity::New<CFishPool>(className);
     }
+
+    static CFishPool* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFishPool>(iIndex);
+    }
+
+    static CFishPool* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

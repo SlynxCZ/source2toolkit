@@ -31,4 +31,14 @@ public:
     {
         return CBaseEntity::New<CFilterMultiple>(className);
     }
+
+    static CFilterMultiple* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFilterMultiple>(iIndex);
+    }
+
+    static CFilterMultiple* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

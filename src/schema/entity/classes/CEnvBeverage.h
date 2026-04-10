@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CEnvBeverage>(className);
     }
+
+    static CEnvBeverage* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CEnvBeverage>(iIndex);
+    }
+
+    static CEnvBeverage* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

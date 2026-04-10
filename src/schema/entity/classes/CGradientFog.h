@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CGradientFog>(className);
     }
+
+    static CGradientFog* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CGradientFog>(iIndex);
+    }
+
+    static CGradientFog* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CTriggerLook>(className);
     }
+
+    static CTriggerLook* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerLook>(iIndex);
+    }
+
+    static CTriggerLook* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

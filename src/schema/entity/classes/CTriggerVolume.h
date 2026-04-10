@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CTriggerVolume>(className);
     }
+
+    static CTriggerVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerVolume>(iIndex);
+    }
+
+    static CTriggerVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

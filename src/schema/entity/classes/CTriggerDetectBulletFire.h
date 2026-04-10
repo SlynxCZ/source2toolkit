@@ -27,4 +27,14 @@ public:
     {
         return CBaseEntity::New<CTriggerDetectBulletFire>(className);
     }
+
+    static CTriggerDetectBulletFire* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerDetectBulletFire>(iIndex);
+    }
+
+    static CTriggerDetectBulletFire* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

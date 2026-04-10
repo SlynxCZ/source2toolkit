@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CTriggerBombReset>(className);
     }
+
+    static CTriggerBombReset* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerBombReset>(iIndex);
+    }
+
+    static CTriggerBombReset* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

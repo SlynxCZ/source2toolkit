@@ -42,4 +42,14 @@ public:
     {
         return CBaseEntity::New<CColorCorrection>(className);
     }
+
+    static CColorCorrection* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CColorCorrection>(iIndex);
+    }
+
+    static CColorCorrection* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CFuncTrainControls>(className);
     }
+
+    static CFuncTrainControls* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncTrainControls>(iIndex);
+    }
+
+    static CFuncTrainControls* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

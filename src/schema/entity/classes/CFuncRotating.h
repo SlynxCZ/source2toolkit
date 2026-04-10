@@ -43,4 +43,14 @@ public:
     {
         return CBaseEntity::New<CFuncRotating>(className);
     }
+
+    static CFuncRotating* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CFuncRotating>(iIndex);
+    }
+
+    static CFuncRotating* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

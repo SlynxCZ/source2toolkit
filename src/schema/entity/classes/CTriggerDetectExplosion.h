@@ -26,4 +26,14 @@ public:
     {
         return CBaseEntity::New<CTriggerDetectExplosion>(className);
     }
+
+    static CTriggerDetectExplosion* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CTriggerDetectExplosion>(iIndex);
+    }
+
+    static CTriggerDetectExplosion* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

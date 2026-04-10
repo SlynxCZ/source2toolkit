@@ -103,4 +103,14 @@ public:
     {
         return CBaseEntity::New<CBarnLight>(className);
     }
+
+    static CBarnLight* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CBarnLight>(iIndex);
+    }
+
+    static CBarnLight* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

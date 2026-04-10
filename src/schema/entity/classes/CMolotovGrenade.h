@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CMolotovGrenade>(className);
     }
+
+    static CMolotovGrenade* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CMolotovGrenade>(iIndex);
+    }
+
+    static CMolotovGrenade* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

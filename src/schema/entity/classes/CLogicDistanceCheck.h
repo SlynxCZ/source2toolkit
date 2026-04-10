@@ -32,4 +32,14 @@ public:
     {
         return CBaseEntity::New<CLogicDistanceCheck>(className);
     }
+
+    static CLogicDistanceCheck* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CLogicDistanceCheck>(iIndex);
+    }
+
+    static CLogicDistanceCheck* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -25,4 +25,14 @@ public:
     {
         return CBaseEntity::New<CHostageRescueZoneShim>(className);
     }
+
+    static CHostageRescueZoneShim* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CHostageRescueZoneShim>(iIndex);
+    }
+
+    static CHostageRescueZoneShim* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CPointTeleport>(className);
     }
+
+    static CPointTeleport* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPointTeleport>(iIndex);
+    }
+
+    static CPointTeleport* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

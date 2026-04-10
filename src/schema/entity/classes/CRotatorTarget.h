@@ -28,4 +28,14 @@ public:
     {
         return CBaseEntity::New<CRotatorTarget>(className);
     }
+
+    static CRotatorTarget* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CRotatorTarget>(iIndex);
+    }
+
+    static CRotatorTarget* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

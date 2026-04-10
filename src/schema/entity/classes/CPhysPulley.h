@@ -29,4 +29,14 @@ public:
     {
         return CBaseEntity::New<CPhysPulley>(className);
     }
+
+    static CPhysPulley* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CPhysPulley>(iIndex);
+    }
+
+    static CPhysPulley* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

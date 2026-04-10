@@ -33,4 +33,14 @@ public:
     {
         return CBaseEntity::New<CDynamicNavConnectionsVolume>(className);
     }
+
+    static CDynamicNavConnectionsVolume* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CDynamicNavConnectionsVolume>(iIndex);
+    }
+
+    static CDynamicNavConnectionsVolume* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };

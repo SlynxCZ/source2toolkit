@@ -34,4 +34,14 @@ public:
     {
         return CBaseEntity::New<CSoundOpvarSetAABBEntity>(className);
     }
+
+    static CSoundOpvarSetAABBEntity* FromIndex(int iIndex)
+    {
+        return CBaseEntity::FromIndex<CSoundOpvarSetAABBEntity>(iIndex);
+    }
+
+    static CSoundOpvarSetAABBEntity* FromIndex(CEntityIndex index)
+    {
+        return FromIndex(index.Get());
+    }
 };
