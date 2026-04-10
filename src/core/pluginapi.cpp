@@ -244,52 +244,52 @@ IToolkitTrace* PluginApi::Trace()
     return &raytrace::rayTrace;
 }
 
-IGameEventManager2* GetGameEventManager()
+IGameEventManager2* PluginApi::GetGameEventManager()
 {
     return shared::g_pGameEventManager;
 }
 
-CGlobalVars* GetGlobalVars()
+CGlobalVars* PluginApi::GetGlobalVars()
 {
     return shared::getGlobalVars();
 }
 
-ICvar* GetCVar()
+ICvar* PluginApi::GetCVar()
 {
     return shared::g_pCVar;
 }
 
-ISource2Server* GetSource2Server()
+ISource2Server* PluginApi::GetSource2Server()
 {
     return shared::g_pServer;
 }
 
-IVEngineServer* GetEngineServer()
+IVEngineServer* PluginApi::GetEngineServer()
 {
     return shared::g_pEngine;
 }
 
-IGameEventSystem* GetGameEventSystem()
+IGameEventSystem* PluginApi::GetGameEventSystem()
 {
     return shared::g_pGameEventSystem;
 }
 
-INetworkMessages* GetNetworkMessages()
+INetworkMessages* PluginApi::GetNetworkMessages()
 {
     return shared::g_pNetworkMessages;
 }
 
-INetworkServerService* GetNetworkServerService()
+INetworkServerService* PluginApi::GetNetworkServerService()
 {
     return shared::g_pNetworkServerService;
 }
 
-CGameEntitySystem* GetEntitySystem()
+CGameEntitySystem* PluginApi::GetEntitySystem()
 {
     return shared::g_pEntitySystem;
 }
 
-CSchemaSystem* GetSchemaSystem()
+CSchemaSystem* PluginApi::GetSchemaSystem()
 {
     return shared::g_pSchemaSystem;
 }
