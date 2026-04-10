@@ -2,37 +2,20 @@
 project(source2toolkit C CXX ASM)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+if (LINUX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
+endif ()
+
 set(FMT_WERROR OFF CACHE BOOL "" FORCE)
 
-if(DEFINED ENV{HL2SDKCS2})
-    set(SOURCESDK_DIR $ENV{HL2SDKCS2})
-else()
-    message(FATAL_ERROR "Environment variable HL2SDKCS2 is not set!")
-endif()
-
-# if(DEFINED ENV{MMSOURCE_DEV})
-#     set(METAMOD_DIR $ENV{MMSOURCE_DEV})
-# else()
-#     message(FATAL_ERROR "Environment variable MMSOURCE_DEV is not set!")
-# endif()
 set(METAMOD_DIR vendor/metamod-source)
 
-if(DEFINED ENV{CSGO_PROTO})
-    set(CSGO_PROTO_DIR $ENV{CSGO_PROTO})
-else()
-    message(FATAL_ERROR "Environment variable CSGO_PROTO is not set!")
-endif()
-
-include(makefiles/shared.cmake)
-include(makefiles/protobuf.cmake)
-
+add_subdirectory(vendor/source2toolkit-sdk)
 add_subdirectory(vendor/spdlog)
-
-file(GLOB_RECURSE PUBLIC_FILES
-        public/*.cpp
-        public/*.h
-        public/*.hpp
-)
 
 file(GLOB_RECURSE SOURCE_FILES
         src/*.cpp
@@ -41,22 +24,33 @@ file(GLOB_RECURSE SOURCE_FILES
 )
 
 list(APPEND SOURCE_FILES
-        ${SOURCESDK_DIR}/public/tier0/memoverride.cpp
-        ${SOURCESDK_DIR}/tier1/generichash.cpp
-        ${SOURCESDK_DIR}/tier1/keyvalues3.cpp
-        ${SOURCESDK_DIR}/tier1/convar.cpp
-        ${SOURCESDK_DIR}/entity2/entityidentity.cpp
-        ${SOURCESDK_DIR}/entity2/entitysystem.cpp
-        ${SOURCESDK_DIR}/entity2/entitykeyvalues.cpp
         vendor/dynlibutils/module.cpp
         vendor/dynlibutils/module.h
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${PUBLIC_FILES})
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+
+if (DEFINED ENV{GITHUB_SHA_SHORT})
+    add_definitions(-DGITHUB_SHA="$ENV{GITHUB_SHA_SHORT}")
+else ()
+    add_definitions(-DGITHUB_SHA="Local")
+endif ()
+
+if (DEFINED ENV{SEMVER})
+    add_definitions(-DSEMVER="$ENV{SEMVER}")
+else ()
+    add_definitions(-DSEMVER="Local")
+endif ()
+
+include(${CMAKE_CURRENT_LIST_DIR}/makefiles/metamod/configure_metamod.cmake)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        ${CMAKE_CURRENT_SOURCE_DIR}/public
+        ${CMAKE_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}/src
+        ${METAMOD_DIR}/core
+        ${METAMOD_DIR}/third_party/khook/include
+        vendor/spdlog/include
+        vendor
 )
 
 find_package(Git QUIET)
@@ -73,20 +67,22 @@ else()
 endif()
 
 if (LINUX)
-    include(${CMAKE_SOURCE_DIR}/makefiles/linux.base.cmake)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/linuxsteamrt64"
     )
 elseif (WIN32)
-    include(${CMAKE_SOURCE_DIR}/makefiles/windows.base.cmake)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/win64"
     )
 endif()
 
-target_link_libraries(${PROJECT_NAME} ${LINK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME}
+        source2toolkit-config
+        source2toolkit-sdk
+        spdlog
+)
 
 add_custom_command(
         TARGET ${PROJECT_NAME} PRE_BUILD
