@@ -5,6 +5,7 @@
 #include "commands.h"
 
 #include "shared.h"
+#include "schema/entity/classes/CCSPlayerController.h"
 #include "utils/log.h"
 
 namespace commands {
@@ -15,7 +16,11 @@ namespace commands {
 
     void InitCommands()
     {
-        // Todo: shared API vtable
+        RegConCommand("prapele", [](const CCommandContext& ctx, const CCommand& args, Mode mode) -> void
+        {
+            CCSPlayerController* pPlayer = ctx.GetPlayerSlot();
+
+        });
     }
 
     void DestructCommands()

@@ -42,6 +42,70 @@ static void ClientPrint(int slot, int hudDestination, const char* message)
     delete data;
 }
 
+CCSPlayerController *CCSPlayerController::FromPawn(CCSPlayerPawn* pPawn)
+{
+    return static_cast<CCSPlayerController*>(pPawn->m_hController().Get());
+}
+
+CCSPlayerController *CCSPlayerController::FromIndex(int iIndex)
+{
+    return static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(iIndex)));
+}
+
+CCSPlayerController *CCSPlayerController::FromIndex(CEntityIndex index)
+{
+    return FromIndex(index.Get());
+}
+
+CCSPlayerController *CCSPlayerController::FromSlot(int iSlot)
+{
+    return static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(iSlot + 1)));
+}
+
+CCSPlayerController *CCSPlayerController::FromSlot(CPlayerSlot slot)
+{
+    if (!slot.IsValid())
+        return nullptr;
+
+    return FromSlot(slot.Get());
+}
+
+CCSPlayerController *CCSPlayerController::FromUserId(int iUserId)
+{
+    for (int i = 0; i < shared::getGlobalVars()->maxClients; ++i)
+    {
+        CCSPlayerController* controller = FromSlot(i);
+        if (!controller)
+            continue;
+
+        if (iUserId == shared::g_pEngine->GetPlayerUserId(i).Get()) return controller;
+    }
+    return nullptr;
+}
+
+CCSPlayerController *CCSPlayerController::FromUserId(CPlayerUserId userId)
+{
+    return FromUserId(userId.Get());
+}
+
+CCSPlayerController *CCSPlayerController::FromSteamId(uint64 uSteamId)
+{
+    for (int i = 0; i < shared::getGlobalVars()->maxClients; ++i)
+    {
+        CCSPlayerController* controller = FromSlot(i);
+        if (!controller)
+            continue;
+
+        if (uSteamId == controller->m_steamID()) return controller;
+    }
+    return nullptr;
+}
+
+CCSPlayerController *CCSPlayerController::FromSteamId(CSteamID steamId)
+{
+    return FromSteamId(steamId.ConvertToUint64());
+}
+
 void CCSPlayerController::PrintToConsole(const char* pszMessage)
 {
     std::string pszSanitizedMessage = fmt::format("{}\n\0", pszMessage);
@@ -91,16 +155,6 @@ void CCSPlayerController::ChangeTeam(int nTeam)
     CALL_VIRTUAL(void, shared::g_pGameConfig->GetOffset("CCSPlayerController_ChangeTeam"), this, nTeam);
 }
 
-int CCSPlayerController::GetUserID()
-{
-    return shared::g_pEngine->GetPlayerUserId(GetPlayerSlot()).Get();
-}
-
-CPlayerUserId CCSPlayerController::GetPlayerUserID()
-{
-    return shared::g_pEngine->GetPlayerUserId(GetPlayerSlot());
-}
-
 bool CCSPlayerController::IsBot()
 {
     return (m_fFlags & FL_FAKECLIENT) != 0;
@@ -129,6 +183,37 @@ void CCSPlayerController::ExecuteClientCommandFromServer(const char* pszCommand)
     shared::g_pCVar->DispatchConCommand(handle, context, args);
 }
 
+CCSPlayerPawn* CCSPlayerController::GetPawn()
+{
+    if (auto handle = m_hPawn(); handle.IsValid())
+        return static_cast<CCSPlayerPawn*>(handle.Get());
+    return nullptr;
+}
+
+CCSPlayerPawn* CCSPlayerController::GetPlayerPawn()
+{
+    if (auto handle = m_hPlayerPawn(); handle.IsValid())
+        return handle.Get();
+    return nullptr;
+}
+
+CCSPlayerPawn* CCSPlayerController::GetObserverPawn()
+{
+    if (auto handle = m_hObserverPawn(); handle.IsValid())
+        return (CCSPlayerPawn*)handle.Get();
+    return nullptr;
+}
+
+int CCSPlayerController::GetIndex()
+{
+    return GetEntityIndex().Get();
+}
+
+CEntityIndex CCSPlayerController::GetPlayerIndex()
+{
+    return GetEntityIndex();
+}
+
 int CCSPlayerController::GetSlot()
 {
     return GetEntityIndex().Get() - 1;
@@ -137,6 +222,31 @@ int CCSPlayerController::GetSlot()
 CPlayerSlot CCSPlayerController::GetPlayerSlot()
 {
     return CPlayerSlot(GetSlot());
+}
+
+int CCSPlayerController::GetUserID()
+{
+    return shared::g_pEngine->GetPlayerUserId(GetPlayerSlot()).Get();
+}
+
+CPlayerUserId CCSPlayerController::GetPlayerUserID()
+{
+    return shared::g_pEngine->GetPlayerUserId(GetPlayerSlot());
+}
+
+uint64 CCSPlayerController::GetSteamID()
+{
+    return m_steamID();
+}
+
+CSteamID CCSPlayerController::GetPlayerSteamID()
+{
+    return CSteamID(static_cast<uint64>(m_steamID()));
+}
+
+const char* CCSPlayerController::GetPlayerName()
+{
+    return m_iszPlayerName();
 }
 
 const char* CCSPlayerController::GetIpAddress()

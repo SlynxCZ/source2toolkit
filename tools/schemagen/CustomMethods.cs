@@ -192,6 +192,15 @@ public static class CustomMethods
             "/// <summary>Execute command from server.</summary>",
             "void ExecuteClientCommandFromServer(const char* pszCommand);",
 
+            "/// <summary>Get pawn.</summary>",
+            "CCSPlayerPawn* GetPawn();",
+
+            "/// <summary>Get player pawn.</summary>",
+            "CCSPlayerPawn* GetPlayerPawn();",
+
+            "/// <summary>Get observer pawn.</summary>",
+            "CCSPlayerPawn* GetObserverPawn();",
+
             "/// <summary>Get index.</summary>",
             "int GetIndex();",
 
@@ -215,6 +224,9 @@ public static class CustomMethods
 
             "/// <summary>Get player steamid.</summary>",
             "CSteamID GetPlayerSteamID();",
+
+            "/// <summary>Get player name.</summary>",
+            "const char* GetPlayerName();",
 
             "/// <summary>Get IP address.</summary>",
             "const char* GetIpAddress();",

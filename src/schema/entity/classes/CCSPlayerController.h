@@ -120,6 +120,24 @@ public:
     SCHEMA_FIELD(bool, m_bFireBulletsSeedSynchronized);
 
 public:
+    /// <summary>Get controller from pawn.</summary>
+    static CCSPlayerController* FromPawn(CCSPlayerPawn* pPawn);
+    /// <summary>Get controller from entity index.</summary>
+    static CCSPlayerController* FromIndex(int iIndex);
+    /// <summary>Get controller from entity index.</summary>
+    static CCSPlayerController* FromIndex(CEntityIndex index);
+    /// <summary>Get controller from slot.</summary>
+    static CCSPlayerController* FromSlot(int iSlot);
+    /// <summary>Get controller from slot.</summary>
+    static CCSPlayerController* FromSlot(CPlayerSlot slot);
+    /// <summary>Get controller from user id.</summary>
+    static CCSPlayerController* FromUserId(int iUserId);
+    /// <summary>Get controller from user id.</summary>
+    static CCSPlayerController* FromUserId(CPlayerUserId userId);
+    /// <summary>Get controller from steam id.</summary>
+    static CCSPlayerController* FromSteamId(uint64 uSteamId);
+    /// <summary>Get controller from steam id.</summary>
+    static CCSPlayerController* FromSteamId(CSteamID steamId);
     /// <summary>Print to console.</summary>
     void PrintToConsole(const char* pszMessage);
     /// <summary>Print to chat.</summary>
@@ -136,10 +154,6 @@ public:
     void SwitchTeam(int nTeam);
     /// <summary>Change team like jointeam.</summary>
     void ChangeTeam(int nTeam);
-    /// <summary>Get userid.</summary>
-    int GetUserID();
-    /// <summary>Get player userid.</summary>
-    CPlayerUserId GetPlayerUserID();
     /// <summary>Is bot.</summary>
     bool IsBot();
     /// <summary>Disconnect player.</summary>
@@ -148,10 +162,30 @@ public:
     void ExecuteClientCommand(const char* pszCommand);
     /// <summary>Execute command from server.</summary>
     void ExecuteClientCommandFromServer(const char* pszCommand);
+    /// <summary>Get pawn.</summary>
+    CCSPlayerPawn* GetPawn();
+    /// <summary>Get player pawn.</summary>
+    CCSPlayerPawn* GetPlayerPawn();
+    /// <summary>Get observer pawn.</summary>
+    CCSPlayerPawn* GetObserverPawn();
+    /// <summary>Get index.</summary>
+    int GetIndex();
+    /// <summary>Get player index.</summary>
+    CEntityIndex GetPlayerIndex();
     /// <summary>Get slot.</summary>
     int GetSlot();
     /// <summary>Get player slot.</summary>
     CPlayerSlot GetPlayerSlot();
+    /// <summary>Get steamid.</summary>
+    int GetUserID();
+    /// <summary>Get player userid.</summary>
+    CPlayerUserId GetPlayerUserID();
+    /// <summary>Get steamid.</summary>
+    uint64 GetSteamID();
+    /// <summary>Get player steamid.</summary>
+    CSteamID GetPlayerSteamID();
+    /// <summary>Get player name.</summary>
+    const char* GetPlayerName();
     /// <summary>Get IP address.</summary>
     const char* GetIpAddress();
     /// <summary>Replicate convar.</summary>
