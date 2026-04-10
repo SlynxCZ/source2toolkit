@@ -10,6 +10,7 @@ set(FMT_WERROR OFF CACHE BOOL "" FORCE)
 
 set(METAMOD_DIR vendor/metamod-source)
 
+set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(vendor/source2toolkit-sdk)
 add_subdirectory(vendor/spdlog)
 
@@ -25,6 +26,7 @@ list(APPEND SOURCE_FILES
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+target_compile_definitions(source2toolkit-sdk PUBLIC SOURCE2TOOLKIT_CORE)
 
 if (DEFINED ENV{GITHUB_SHA_SHORT})
     add_definitions(-DGITHUB_SHA="$ENV{GITHUB_SHA_SHORT}")
@@ -45,8 +47,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         ${CMAKE_SOURCE_DIR}/src
         ${METAMOD_DIR}/core
         ${METAMOD_DIR}/third_party/khook/include
-        vendor/spdlog/include
         vendor
+        vendor/spdlog/include
 )
 
 find_package(Git QUIET)

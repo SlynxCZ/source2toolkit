@@ -1,8 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class RTProxyInstanceFlags_t : uint8_t
-{
-    RTPROXY_INSTANCE_FLAG_NONE = 0,
-    RTPROXY_INSTANCE_UNIQUE_MESH = 1,
-};

@@ -31,6 +31,24 @@ public:
     void* ToolkitFactory(const char *iface, int *ret, PluginId *id) override;
     void* MetaFactory(const char *iface, int *ret, PluginId *id) override;
 
+    IToolkitAddresses* Addresses() override;
+    IToolkitCommands* Commands() override;
+    IToolkitEntityIO* EntityIO() override;
+    IToolkitEvents* Events() override;
+    IToolkitGameConfig* GameConfig() override;
+    IToolkitScheduler* Scheduler() override;
+    IToolkitTrace* Trace() override;
+
+    IGameEventManager2* GetGameEventManager() override;
+    CGlobalVars* GetGlobalVars() override;
+    ICvar* GetCVar() override;
+    ISource2Server* GetSource2Server() override;
+    IVEngineServer* GetEngineServer() override;
+    IGameEventSystem* GetGameEventSystem() override;
+    INetworkMessages* GetNetworkMessages() override;
+    INetworkServerService* GetNetworkServerService() override;
+    CGameEntitySystem* GetEntitySystem() override;
+    CSchemaSystem* GetSchemaSystem() override;
     const char* GetBaseDir() override;
 
     size_t Format(char *buffer, size_t maxlength, const char *format, ...) override;

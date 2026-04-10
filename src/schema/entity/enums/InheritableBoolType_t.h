@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class InheritableBoolType_t : uint32_t
-{
-    INHERITABLE_BOOL_INHERIT = 0,
-    INHERITABLE_BOOL_FALSE = 1,
-    INHERITABLE_BOOL_TRUE = 2,
-};

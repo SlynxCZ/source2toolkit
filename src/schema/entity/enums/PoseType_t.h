@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class PoseType_t : uint8_t
-{
-    POSETYPE_STATIC = 0,
-    POSETYPE_DYNAMIC = 1,
-    POSETYPE_INVALID = 255,
-};

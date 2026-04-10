@@ -6,6 +6,8 @@
 
 #include <functional>
 
+#include "source2toolkit/IToolkitScheduler.h"
+
 using TimerCallback = std::function<void()>;
 
 enum TimerFlags {
@@ -31,12 +33,18 @@ public:
     bool KillMe = false;
 };
 
+class Scheduler : public IToolkitScheduler
+{
+    void NextFrame(std::function<void()> &&task) override;
+    Timer* AddTimer(float interval, TimerCallback callback, int flags = 0) override;
+    void KillTimer(Timer* timer) override;
+};
+
+extern Scheduler toolkitScheduler;
+
 namespace scheduler {
     void Init();
     void Shutdown();
     void Tick(bool simulating = true);
-    void NextFrame(std::function<void()> &&task);
-    Timer* AddTimer(float interval, TimerCallback callback, int flags = 0);
-    void KillTimer(Timer* timer);
     void RemoveMapChangeTimers();
 }

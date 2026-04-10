@@ -6,10 +6,16 @@
 #include <cstring>
 #include <stdarg.h>
 
+#include "commands.h"
+#include "entityio.h"
+#include "events.h"
+#include "plugin.h"
 #include "source2toolkit/IToolkitPlugin.h"
 
 #include "plugin.h"
 #include "pluginmanager.h"
+#include "raytrace.h"
+#include "utils/scheduler.h"
 
 PluginApi pluginApi;
 
@@ -201,6 +207,41 @@ void* PluginApi::ToolkitFactory(const char *iface, int *ret, PluginId *id)
 void* PluginApi::MetaFactory(const char *iface, int *ret, PluginId *id)
 {
     return g_SMAPI->MetaFactory(iface, ret, id);
+}
+
+IToolkitAddresses* PluginApi::Addresses()
+{
+    return &addresses::toolkitAddresses;
+}
+
+IToolkitCommands* PluginApi::Commands()
+{
+    return &commands::commandsManager;
+}
+
+IToolkitEntityIO* PluginApi::EntityIO()
+{
+    return &entityio::entityIo;
+}
+
+IToolkitEvents* PluginApi::Events()
+{
+    return &events::eventManager;
+}
+
+IToolkitGameConfig* PluginApi::GameConfig()
+{
+    return shared::g_pGameConfig;
+}
+
+IToolkitScheduler* PluginApi::Scheduler()
+{
+    return &toolkitScheduler;
+}
+
+IToolkitTrace* PluginApi::Trace()
+{
+    return &raytrace::rayTrace;
 }
 
 const char* PluginApi::GetBaseDir()

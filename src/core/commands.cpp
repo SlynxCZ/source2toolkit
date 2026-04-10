@@ -8,8 +8,8 @@
 #include "pluginmanager.h"
 #include "raytrace.h"
 #include "shared.h"
-#include "schema/entity/classes/CCSPlayerController.h"
-#include "schema/entity/classes/CCSPlayerPawn.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
 #include "source2toolkit/IToolkitPlugin.h"
 #include "utils/log.h"
 
@@ -21,6 +21,8 @@ namespace commands {
     static std::unordered_map<std::string, std::vector<CommandEntry> > consoleListeners;
     static std::unordered_set<std::string> registeredNames;
     static std::unordered_map<std::string, CommandHandler> commandCallbacks;
+
+    CommandsManager commandsManager;
 
     static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
     {
@@ -160,13 +162,13 @@ namespace commands {
 
     void InitCommands()
     {
-        RegConCommand("source2toolkit", HandleToolkitCommand);
-        RegConCommand("source2t", HandleToolkitCommand);
-        RegConCommand("s2toolkit", HandleToolkitCommand);
-        RegConCommand("s2t", HandleToolkitCommand);
-        RegConCommand("stoolkit", HandleToolkitCommand);
-        RegConCommand("st", HandleToolkitCommand);
-        RegConCommand("toolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand("source2toolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand("source2t", HandleToolkitCommand);
+        commandsManager.RegConCommand("s2toolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand("s2t", HandleToolkitCommand);
+        commandsManager.RegConCommand("stoolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand("st", HandleToolkitCommand);
+        commandsManager.RegConCommand("toolkit", HandleToolkitCommand);
     }
 
     void DestructCommands()
@@ -189,28 +191,28 @@ namespace commands {
         (void) it->second(ctx, args, Mode::Post);
     }
 
-    KHook::Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode) {
+    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode) {
         std::string name = args.Arg(0);
         std::transform(name.begin(), name.end(), name.begin(),
                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
 
         auto it = consoleListeners.find(name);
         if (it == consoleListeners.end())
-            return KHook::Action::Ignore;
+            return Action::Ignore;
 
-        KHook::Action result = KHook::Action::Ignore;
+        Action result = Action::Ignore;
 
         for (const auto &entry: it->second) {
             if (entry.mode != mode)
                 continue;
 
-            KHook::Action thisResult = entry.handler(ctx, args, mode);
+            Action thisResult = entry.handler(ctx, args, mode);
 
-            if (thisResult == KHook::Action::Supersede)
-                return KHook::Action::Supersede;
+            if (thisResult == Action::Supersede)
+                return Action::Supersede;
 
-            if (thisResult == KHook::Action::Override && mode == Mode::Pre)
-                return KHook::Action::Override;
+            if (thisResult == Action::Override && mode == Mode::Pre)
+                return Action::Override;
 
             if (static_cast<int>(thisResult) > static_cast<int>(result))
                 result = thisResult;
@@ -219,37 +221,37 @@ namespace commands {
         return result;
     }
 
-    void RegChatListener(const std::string &name, ChatHandler handler) {
+    void CommandsManager::RegChatListener(const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        RegConListener(name, nativeHandler, Mode::Pre);
-        RegConListener("/" + name, nativeHandler, Mode::Pre);
-        RegConListener("!" + name, nativeHandler, Mode::Pre);
+        RegConListener(pchName, nativeHandler, Mode::Pre);
+        RegConListener(std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
     }
 
-    void RegConCommand(const std::string &name, ChatHandler handler) {
+    void CommandsManager::RegConCommand(const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        if (shared::g_pCVar && shared::g_pCVar->FindConCommand(name.c_str()).IsValidRef()) {
-            FP_WARN("Command '{}' exists in engine, registering chat-only alias", name);
-            RegConListener(name, nativeHandler, Mode::Pre);
-            RegConListener("/" + name, nativeHandler, Mode::Pre);
-            RegConListener("!" + name, nativeHandler, Mode::Pre);
+        if (shared::g_pCVar && shared::g_pCVar->FindConCommand(pchName).IsValidRef()) {
+            FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
+            RegConListener(pchName, nativeHandler, Mode::Pre);
+            RegConListener(std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+            RegConListener(std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
             return;
         }
 
-        if (!registeredNames.contains(name)) {
-            auto cmd = std::make_unique<ConCommand>(name.c_str(), ConCommandRouter, ("Registered command: " + name).c_str(), FCVAR_NONE);
+        if (!registeredNames.contains(pchName)) {
+            auto cmd = std::make_unique<ConCommand>(pchName, ConCommandRouter, ("Registered command: " + std::string(pchName)).c_str(), FCVAR_NONE);
             registeredCommands.push_back(std::move(cmd));
-            registeredNames.insert(name);
+            registeredNames.insert(pchName);
         }
 
-        RegConListener(name, nativeHandler, Mode::Pre);
-        RegConListener("/" + name, nativeHandler, Mode::Pre);
-        RegConListener("!" + name, nativeHandler, Mode::Pre);
+        RegConListener(pchName, nativeHandler, Mode::Pre);
+        RegConListener(std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
     }
 
-    void RegConListener(const std::string &name, CommandHandler handler, Mode mode) {
-        consoleListeners[name].push_back({handler, mode});
+    void CommandsManager::RegConListener(const char* pchName, CommandHandler handler, Mode mode) {
+        consoleListeners[pchName].push_back({handler, mode});
     }
 }

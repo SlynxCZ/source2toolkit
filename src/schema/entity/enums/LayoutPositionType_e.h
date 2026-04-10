@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class LayoutPositionType_e : uint32_t
-{
-    LAYOUTPOSITIONTYPE_VIEWPORT_RELATIVE = 0,
-    LAYOUTPOSITIONTYPE_FRACTIONAL = 1,
-    LAYOUTPOSITIONTYPE_NONE = 2,
-};

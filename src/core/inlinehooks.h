@@ -3,7 +3,7 @@
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
-#include "schema/entityio.h"
+#include "source2toolkit/schema/entityio.h"
 
 #include "ISmmPlugin.h"
 #include "eiface.h"

@@ -7,15 +7,15 @@
 #include "commands.h"
 #include "events.h"
 #include "shared.h"
-#include "utils/plat.h"
+#include "source2toolkit/utils/plat.h"
 #include "utils/scheduler.h"
 #include "dynlibutils/module.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
-#include "schema/entity/classes/CCSGameRulesProxy.h"
-#include "schema/entity/classes/CCSPlayerController.h"
-#include "schema/entity/classes/CCSPlayerPawn.h"
-#include "schema/entity/classes/CCSWeaponBase.h"
+#include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
+#include "source2toolkit/schema/entity/classes/CCSWeaponBase.h"
 
 class GameSessionConfiguration_t
 {
@@ -115,8 +115,8 @@ namespace virtualhooks
 
                     if (parsed.ArgC() > 0)
                     {
-                        KHook::Action r = commands::DispatchConsoleListener(ctx, parsed, Mode::Pre);
-                        if (r != KHook::Action::Supersede)
+                        Action r = commands::DispatchConsoleListener(ctx, parsed, Mode::Pre);
+                        if (r != Action::Supersede)
                             commands::DispatchConsoleListener(ctx, parsed, Mode::Post);
                     }
 
@@ -125,12 +125,12 @@ namespace virtualhooks
             }
         }
 
-        KHook::Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
-        if (result > KHook::Action::Ignore)
-            return {result};
+        Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
+        if (result > Action::Ignore)
+            return {static_cast<KHook::Action>(result)};
 
         commands::DispatchConsoleListener(ctx, args, Mode::Post);
-        return {result};
+        return {static_cast<KHook::Action>(result)};
     }
 
     KHook::Return<void> Virtuals::Hook_ClientCommand(IServerGameClients* pThis, CPlayerSlot slot, const CCommand& args)
@@ -138,9 +138,9 @@ namespace virtualhooks
         if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
         {
             CCommandContext ctx(CT_NO_TARGET, slot);
-            KHook::Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
-            if (result > KHook::Action::Ignore)
-                return {result};
+            Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
+            if (result > Action::Ignore)
+                return {static_cast<KHook::Action>(result)};
 
             commands::DispatchConsoleListener(ctx, args, Mode::Post);
         }

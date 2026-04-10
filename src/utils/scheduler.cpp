@@ -13,15 +13,51 @@ double g_dUniversalTime = 0.0;
 double g_dLastTickTime = 0.0;
 double g_dTimerNextThink = 0.0;
 
+Scheduler toolkitScheduler;
+
 namespace {
     std::vector<Timer *> once_off_timers;
     std::vector<Timer *> repeat_timers;
     std::mutex nextFrameMutex;
     std::queue<std::function<void()> > nextFrameQueue;
 }
-void scheduler::NextFrame(std::function<void()> &&task) {
+
+void Scheduler::NextFrame(std::function<void()> &&task) {
     std::lock_guard lock(nextFrameMutex);
     nextFrameQueue.emplace(std::move(task));
+}
+
+Timer *Scheduler::AddTimer(float interval, TimerCallback callback, int flags) {
+    Timer *timer = new Timer(interval, g_dUniversalTime + interval, std::move(callback), flags);
+
+    if (flags & TIMER_FLAG_REPEAT)
+        repeat_timers.push_back(timer);
+    else
+        once_off_timers.push_back(timer);
+
+    return timer;
+}
+
+void Scheduler::KillTimer(Timer *timer) {
+    if (!timer) return;
+
+    auto killFrom = [](std::vector<Timer *> &list, Timer *target) {
+        auto it = std::remove_if(list.begin(), list.end(), [=](Timer *t) { return t == target; });
+        if (it != list.end()) {
+            delete target;
+            list.erase(it, list.end());
+        }
+    };
+
+    if (timer->InExec) {
+        timer->KillMe = true;
+        return;
+    }
+
+    if (timer->Flags & TIMER_FLAG_REPEAT)
+        killFrom(repeat_timers, timer);
+    else
+        killFrom(once_off_timers, timer);
 }
 
 Timer::Timer(float interval, double execTime, TimerCallback callback, int flags)
@@ -108,39 +144,6 @@ void scheduler::Tick(bool simulating) {
     }
 
     g_dTimerNextThink = g_dUniversalTime + 0.1;
-}
-
-Timer *scheduler::AddTimer(float interval, TimerCallback callback, int flags) {
-    Timer *timer = new Timer(interval, g_dUniversalTime + interval, std::move(callback), flags);
-
-    if (flags & TIMER_FLAG_REPEAT)
-        repeat_timers.push_back(timer);
-    else
-        once_off_timers.push_back(timer);
-
-    return timer;
-}
-
-void scheduler::KillTimer(Timer *timer) {
-    if (!timer) return;
-
-    auto killFrom = [](std::vector<Timer *> &list, Timer *target) {
-        auto it = std::remove_if(list.begin(), list.end(), [=](Timer *t) { return t == target; });
-        if (it != list.end()) {
-            delete target;
-            list.erase(it, list.end());
-        }
-    };
-
-    if (timer->InExec) {
-        timer->KillMe = true;
-        return;
-    }
-
-    if (timer->Flags & TIMER_FLAG_REPEAT)
-        killFrom(repeat_timers, timer);
-    else
-        killFrom(once_off_timers, timer);
 }
 
 void scheduler::RemoveMapChangeTimers() {

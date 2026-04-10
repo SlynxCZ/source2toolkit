@@ -8,12 +8,12 @@
 #include "commands.h"
 #include "events.h"
 #include "shared.h"
-#include "utils/plat.h"
+#include "source2toolkit/utils/plat.h"
 #include "utils/scheduler.h"
 #include "dynlibutils/module.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
-#include "schema/entity/classes/CCSGameRulesProxy.h"
+#include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
 
 namespace inlinehooks
 {
@@ -27,7 +27,7 @@ namespace inlinehooks
 
     void Inlines::InitListeners()
     {
-        m_FireOutputInternal.Configure(addresses::CEntityIOOutput_FireOutputInternal);
+        m_FireOutputInternal.Configure(addresses::toolkitAddresses.FireOutputInternal);
     }
 
     void Inlines::DestructListeners()
@@ -76,11 +76,11 @@ namespace inlinehooks
                     Mode::Pre
                 );
 
-                if (action == KHook::Action::Supersede)
+                if (action == Action::Supersede)
                     return {KHook::Action::Supersede};
 
-                if (action > finalAction)
-                    finalAction = action;
+                if (static_cast<KHook::Action>(action) > finalAction)
+                    finalAction = static_cast<KHook::Action>(action);
             }
         }
 

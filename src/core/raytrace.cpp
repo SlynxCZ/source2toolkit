@@ -8,12 +8,12 @@
 #include "commands.h"
 #include "events.h"
 #include "shared.h"
-#include "utils/plat.h"
+#include "source2toolkit/utils/plat.h"
 #include "utils/scheduler.h"
 #include "utils/vectorextends.h"
 #include "dynlibutils/module.h"
 #include "iserver.h"
-#include "schema/entity/classes/CBeam.h"
+#include "source2toolkit/schema/entity/classes/CBeam.h"
 #include "schema/cgameresourceserviceserver.h"
 
 namespace raytrace
@@ -38,8 +38,7 @@ namespace raytrace
         m_pCNavPhysicsInterface_TraceShape = nullptr;
     }
 
-    bool RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CEntityInstance* pIgnoreEntity,
-                                      TraceOptions* pTraceOptions, CGameTrace* pGameTrace)
+    TraceResult RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
 
@@ -68,13 +67,11 @@ namespace raytrace
         };
 
         Ray_t ray;
-        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pGameTrace);
 
-        return res;
+        return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    bool RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CEntityInstance* pIgnoreEntity,
-                                         TraceOptions* pTraceOptions, CGameTrace* pGameTrace)
+    TraceResult RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
 
@@ -95,14 +92,12 @@ namespace raytrace
         }
 
         Ray_t ray;
-        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pGameTrace);
 
-        return res;
+        return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    bool RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins,
-                                          const Vector& vecMaxs, CEntityInstance* pIgnoreEntity,
-                                          TraceOptions* pTraceOptions, CGameTrace* pGameTrace)
+    TraceResult RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins,
+                                          const Vector& vecMaxs, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
 
@@ -124,26 +119,26 @@ namespace raytrace
 
         Ray_t ray;
         ray.Init(vecMins, vecMaxs);
-        auto res = TraceShapeEx(vecStart, vecEnd, &filter, &ray, pGameTrace);
 
-        return res;
+        return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    bool RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter,
-                                        Ray_t* pRay, CGameTrace* pGameTrace)
+    TraceResult RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay)
     {
         if (!m_pCNavPhysicsInterface_TraceShape)
         {
             FP_ERROR("CNavPhysicsInterface::TraceShape is not bound!");
-            return false;
+            return TraceResult();
         }
 
         Vector vecStartCopy = vecStart;
         Vector vecEndCopy = vecEnd;
+        CGameTrace trace;
+
         bool bResult = m_pCNavPhysicsInterface_TraceShape.RCast<
             bool (*)(void*, Ray_t&, Vector&, Vector&, CTraceFilter*, CGameTrace*)>()(
-            nullptr, *pRay, vecStartCopy, vecEndCopy, pTraceFilter, pGameTrace);
+            nullptr, *pRay, vecStartCopy, vecEndCopy, pTraceFilter, &trace);
 
-        return bResult;
+        return TraceResult(&trace, bResult);
     }
 }

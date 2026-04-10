@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class ParticleDepthFeatheringMode_t : uint32_t
-{
-    PARTICLE_DEPTH_FEATHERING_OFF = 0,
-    PARTICLE_DEPTH_FEATHERING_ON_OPTIONAL = 1,
-    PARTICLE_DEPTH_FEATHERING_ON_REQUIRED = 2,
-};

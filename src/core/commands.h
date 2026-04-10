@@ -8,15 +8,12 @@
 
 #include <functional>
 
-#include "source2toolkit/IToolkitApi.h"
+#include "source2toolkit/IToolkitCommands.h"
 
 class CCommand;
 class CCommandContext;
 
 namespace commands {
-    using ChatHandler = std::function<void(const CCommandContext&, const CCommand&, Mode)>;
-    using CommandHandler = std::function<KHook::Action(const CCommandContext&, const CCommand&, Mode)>;
-
     struct CommandEntry
     {
         CommandHandler handler;
@@ -25,10 +22,10 @@ namespace commands {
 
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
     {
-        return [fn](const CCommandContext& ctx, const CCommand& args, Mode mode) -> KHook::Action
+        return [fn](const CCommandContext& ctx, const CCommand& args, Mode mode) -> Action
         {
             fn(ctx, args, mode);
-            return KHook::Action::Ignore;
+            return Action::Ignore;
         };
     }
 
@@ -36,9 +33,15 @@ namespace commands {
     void DestructCommands();
 
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);
-    KHook::Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode);
+    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode);
 
-    void RegChatListener(const std::string &name, ChatHandler handler);
-    void RegConCommand(const std::string &name, ChatHandler handler);
-    void RegConListener(const std::string &name, CommandHandler handler, Mode mode);
+    class CommandsManager : public IToolkitCommands
+    {
+    public:
+        void RegChatListener(const char* pchName, ChatHandler handler) override;
+        void RegConCommand(const char* pchName, ChatHandler handler) override;
+        void RegConListener(const char* pchName, CommandHandler handler, Mode mode) override;
+    };
+
+    extern CommandsManager commandsManager;
 }

@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class ViewFadeMode_t : uint32_t
-{
-    VIEW_FADE_CONSTANT_COLOR = 0,
-    VIEW_FADE_MODULATE = 1,
-    VIEW_FADE_MOD2X = 2,
-};

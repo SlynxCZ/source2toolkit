@@ -68,9 +68,9 @@ constexpr auto platform = "windows";
 
 const std::string CGameConfig::GetPath() { return m_sPath; }
 
-const char* CGameConfig::GetSignature(const std::string& name)
+const char* CGameConfig::GetSignature(const char* pchName)
 {
-    auto it = m_umSignatures.find(name);
+    auto it = m_umSignatures.find(pchName);
     if (it == m_umSignatures.end())
     {
         return nullptr;
@@ -78,9 +78,9 @@ const char* CGameConfig::GetSignature(const std::string& name)
     return it->second.c_str();
 }
 
-const char* CGameConfig::GetPatch(const std::string& name)
+const char* CGameConfig::GetPatch(const char* pchName)
 {
-    auto it = m_umPatches.find(name);
+    auto it = m_umPatches.find(pchName);
     if (it == m_umPatches.end())
     {
         return nullptr;
@@ -88,9 +88,9 @@ const char* CGameConfig::GetPatch(const std::string& name)
     return it->second.c_str();
 }
 
-int CGameConfig::GetOffset(const std::string& name)
+int CGameConfig::GetOffset(const char* pchName)
 {
-    auto it = m_umOffsets.find(name);
+    auto it = m_umOffsets.find(pchName);
     if (it == m_umOffsets.end())
     {
         return -1;

@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class SoundEventStartType_t : uint32_t
-{
-    SOUNDEVENT_START_PLAYER = 0,
-    SOUNDEVENT_START_WORLD = 1,
-    SOUNDEVENT_START_ENTITY = 2,
-};

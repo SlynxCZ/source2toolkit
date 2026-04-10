@@ -9,9 +9,19 @@
 
 namespace events {
     static std::unordered_map<std::string, std::vector<EventEntry> > gameEvents;
-    static EventManager eventManager;
+    static EventListener eventListener;
 
-    void EventManager::FireGameEvent(IGameEvent* pEvent) {}
+    EventManager eventManager;
+
+    void EventManager::RegGameEvent(const char* pchName, GameEventHandler handler, Mode mode) {
+        gameEvents[pchName].push_back({handler, mode});
+        if (!shared::g_pGameEventManager->FindListener(&eventListener, pchName))
+        {
+            shared::g_pGameEventManager->AddListener(&eventListener, pchName, true);
+        }
+    }
+
+    void EventListener::FireGameEvent(IGameEvent* pEvent) {}
 
     void InitEvents()
     {
@@ -21,7 +31,7 @@ namespace events {
     void DestructEvents()
     {
         if (shared::g_pGameEventManager)
-            shared::g_pGameEventManager->RemoveListener(&eventManager);
+            shared::g_pGameEventManager->RemoveListener(&eventListener);
         gameEvents.clear();
     }
 
@@ -35,20 +45,12 @@ namespace events {
             if (hook.mode != mode)
                 continue;
 
-            KHook::Action result = hook.handler(event, mode, dontBroadcast);
+            Action result = hook.handler(event, mode, dontBroadcast);
 
-            if (result == KHook::Action::Supersede)
+            if (result == Action::Supersede)
                 return false;
         }
 
         return true;
-    }
-
-    void RegGameEvent(const std::string &name, GameEventHandler handler, Mode mode) {
-        gameEvents[name].push_back({handler, mode});
-        if (!shared::g_pGameEventManager->FindListener(&eventManager, name.c_str()))
-        {
-            shared::g_pGameEventManager->AddListener(&eventManager, name.c_str(), true);
-        }
     }
 }

@@ -3,14 +3,17 @@
 // Copyright (c) 2025 slynxcz. All rights reserved.
 //
 #pragma once
+#include "nlohmann/json.hpp"
 #include "KeyValues.h"
+
+#include "source2toolkit/IToolkitGameConfig.h"
+
 #include <string>
 #include <unordered_map>
 
 #undef snprintf
-#include "nlohmann/json.hpp"
 
-class CGameConfig
+class CGameConfig : public IToolkitGameConfig
 {
 public:
     using json = nlohmann::json;
@@ -19,11 +22,11 @@ public:
 
     bool Init(char* conf_error, int conf_error_size);
     const std::string GetPath();
-    const char* GetLibrary(const std::string& name);
-    const char* GetSignature(const std::string& name);
-    const char* GetSymbol(const char* name);
-    const char* GetPatch(const std::string& name);
-    int GetOffset(const std::string& name);
+    const char* GetLibrary(const char* pchName) override;
+    const char* GetSignature(const char* pchName) override;
+    const char* GetSymbol(const char* pchName) override;
+    const char* GetPatch(const char* pchName) override;
+    int GetOffset(const char* pchName) override;
 
 private:
     std::string m_sPath;

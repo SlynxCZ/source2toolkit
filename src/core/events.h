@@ -6,7 +6,8 @@
 #include "virtualhooks.h"
 #include "shared.h"
 
-#include "source2toolkit/IToolkitApi.h"
+#include "source2toolkit/IToolkitEvents.h"
+#include "source2toolkit/IToolkitTypes.h"
 
 #include "igameevents.h"
 #include <functional>
@@ -14,23 +15,26 @@
 class IGameEvent;
 
 namespace events {
-    using GameEventHandler = std::function<KHook::Action(IGameEvent* event, Mode mode, bool& dontBroadcast)>;
-
     struct EventEntry
     {
         GameEventHandler handler;
         Mode mode;
     };
 
-    class EventManager : public IGameEventListener2
+    class EventListener : public IGameEventListener2
     {
         void FireGameEvent(IGameEvent* pEvent) override;
     };
+
+    class EventManager : public IToolkitEvents
+    {
+        void RegGameEvent(const char* pchName, GameEventHandler handler, Mode mode) override;
+    };
+
+    extern EventManager eventManager;
 
     void InitEvents();
     void DestructEvents();
 
     bool DispatchGameEvent(IGameEvent *event, Mode mode, bool &dontBroadcast);
-
-    void RegGameEvent(const std::string &name, GameEventHandler handler, Mode mode);
 }

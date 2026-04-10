@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class ParticleTraceMissBehavior_t : uint32_t
-{
-    PARTICLE_TRACE_MISS_BEHAVIOR_NONE = 0,
-    PARTICLE_TRACE_MISS_BEHAVIOR_KILL = 1,
-    PARTICLE_TRACE_MISS_BEHAVIOR_TRACE_END = 2,
-};

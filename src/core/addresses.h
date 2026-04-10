@@ -3,6 +3,8 @@
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
 #pragma once
+#include "source2toolkit/IToolkitAddresses.h"
+
 #include "utils/log.h"
 
 #include "platform.h"
@@ -45,17 +47,36 @@ namespace addresses
 {
     bool Initialize();
 
-    inline CBaseEntity*(FASTCALL* CBaseEntity_CreateEntityByName)(const char* className, int iForceEdictIndex);
-    inline void(FASTCALL* CBaseEntity_DispatchSpawn)(CBaseEntity* pEntity, CEntityKeyValues* pEntityKeyValues);
-    inline void(FASTCALL* CBaseModelEntity_SetModel)(CBaseModelEntity* pModel, const char* szModel);
-    inline void(FASTCALL* CBasePlayerController_SetPawn)(CBasePlayerController* pController, CBasePlayerPawn* pPawn, bool a3, bool a4, bool a5, bool a6);
-    inline void(FASTCALL* CBasePlayerPawn_RemovePlayerItem)(CBasePlayerPawn* pPawn, CBasePlayerWeapon* pWeapon);
-    inline void(FASTCALL* CGameRules_TerminateRound)(CGameRules* pGameRules, float delay, unsigned int reason, int64 a4, unsigned int a5);
-    inline IGameEventListener2*(FASTCALL* CCSPlayerController_LegacyGameEventListener)(CPlayerSlot playerSlot);
-    inline void(FASTCALL* CCSPlayerController_SwitchTeam)(CCSPlayerController* pController, unsigned char nTeam);
-    inline void(FASTCALL* CEntityInstance_AcceptInput)(CEntityInstance* pThis, const char* pInputName, CEntityInstance* pActivator, CEntityInstance* pCaller, const variant_t& pValue, int nOutputID, void*);
-    inline void(FASTCALL* CEntityIOOutput_FireOutputInternal)(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
-    inline void(FASTCALL* CEntitySystem_AddEntityIOEvent)(CEntitySystem* pEntitySystem, CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const variant_t& pValue, float flDelay, int outputID, void*, void*);
-    inline CBaseEntity*(FASTCALL* CGameEntitySystem_FindEntityByClassName)(CEntitySystem* pEntitySystem, CEntityInstance* pStartEntity, const char* szName);
-    inline CBaseEntity*(FASTCALL* CGameEntitySystem_FindEntityByName)(CEntitySystem* pEntitySystem, CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter);
+    class Addresses : public IToolkitAddresses {
+    public:
+        CBaseEntity_CreateEntityByName_t CreateEntityByName = nullptr;
+        CBaseEntity_DispatchSpawn_t DispatchSpawn = nullptr;
+        CBaseModelEntity_SetModel_t SetModel = nullptr;
+        CBasePlayerController_SetPawn_t SetPawn = nullptr;
+        CBasePlayerPawn_RemovePlayerItem_t RemovePlayerItem = nullptr;
+        CGameRules_TerminateRound_t TerminateRound = nullptr;
+        CCSPlayerController_LegacyGameEventListener_t LegacyGameEventListener = nullptr;
+        CCSPlayerController_SwitchTeam_t SwitchTeam = nullptr;
+        CEntityInstance_AcceptInput_t AcceptInput = nullptr;
+        CEntityIOOutput_FireOutputInternal_t FireOutputInternal = nullptr;
+        CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
+        CGameEntitySystem_FindEntityByClassName_t FindEntityByClassname = nullptr;
+        CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
+    public:
+        CBaseEntity_CreateEntityByName_t CBaseEntity_CreateEntityByName() override;
+        CBaseEntity_DispatchSpawn_t CBaseEntity_DispatchSpawn() override;
+        CBaseModelEntity_SetModel_t CBaseModelEntity_SetModel() override;
+        CBasePlayerController_SetPawn_t CBasePlayerController_SetPawn() override;
+        CBasePlayerPawn_RemovePlayerItem_t CBasePlayerPawn_RemovePlayerItem() override;
+        CGameRules_TerminateRound_t CGameRules_TerminateRound() override;
+        CCSPlayerController_LegacyGameEventListener_t CCSPlayerController_LegacyGameEventListener() override;
+        CCSPlayerController_SwitchTeam_t CCSPlayerController_SwitchTeam() override;
+        CEntityInstance_AcceptInput_t CEntityInstance_AcceptInput() override;
+        CEntityIOOutput_FireOutputInternal_t CEntityIOOutput_FireOutputInternal() override;
+        CEntitySystem_AddEntityIOEvent_t CEntitySystem_AddEntityIOEvent() override;
+        CGameEntitySystem_FindEntityByClassName_t CGameEntitySystem_FindEntityByClassName() override;
+        CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
+    };
+
+    extern Addresses toolkitAddresses;
 }

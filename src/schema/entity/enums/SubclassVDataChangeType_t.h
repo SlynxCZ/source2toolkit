@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class SubclassVDataChangeType_t : uint32_t
-{
-    SUBCLASS_VDATA_CREATED = 0,
-    SUBCLASS_VDATA_SUBCLASS_CHANGED = 1,
-    SUBCLASS_VDATA_RELOADED = 2,
-};

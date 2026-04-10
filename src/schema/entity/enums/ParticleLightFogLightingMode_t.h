@@ -1,9 +1,0 @@
-#pragma once
-#include <cstdint>
-
-enum class ParticleLightFogLightingMode_t : uint32_t
-{
-    PARTICLE_LIGHT_FOG_LIGHTING_MODE_NONE = 0,
-    PARTICLE_LIGHT_FOG_LIGHTING_MODE_DYNAMIC = 2,
-    PARTICLE_LIGHT_FOG_LIGHTING_MODE_DYNAMIC_NOSHADOWS = 4,
-};
