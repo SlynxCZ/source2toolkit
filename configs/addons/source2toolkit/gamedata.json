@@ -96,6 +96,12 @@
       "linux": 184
     }
   },
+  "CBaseEntity_GetHammerUniqueId": {
+    "offsets": {
+      "windows": 111,
+      "linux": 110
+    }
+  },
   "CBaseEntity_Teleport": {
     "offsets": {
       "windows": 162,

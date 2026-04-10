@@ -20,7 +20,8 @@ namespace events {
 
     void DestructEvents()
     {
-        shared::g_pGameEventManager->RemoveListener(&eventManager);
+        if (shared::g_pGameEventManager)
+            shared::g_pGameEventManager->RemoveListener(&eventManager);
         gameEvents.clear();
     }
 

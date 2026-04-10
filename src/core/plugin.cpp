@@ -99,7 +99,8 @@ bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
     raytrace::rayTrace.DestructRayTrace();
     scheduler::Shutdown();
 
-    shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);
+    if (shared::g_pEntitySystem)
+        shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);
     shared::g_bDetoursLoaded = false;
 
     FP_INFO("Unload() success!");

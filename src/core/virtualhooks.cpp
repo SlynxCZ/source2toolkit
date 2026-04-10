@@ -193,7 +193,7 @@ namespace virtualhooks
 
     void Patch_GetHammerUniqueId(CEntityInstance* pEntity)
     {
-        static int offset = shared::g_pGameConfig->GetOffset("GetHammerUniqueId");
+        static int offset = shared::g_pGameConfig->GetOffset("CBaseEntity_GetHammerUniqueId");
         void** vtable = *(void***)pEntity;
 
         // xor al, al -> mov al, 1
