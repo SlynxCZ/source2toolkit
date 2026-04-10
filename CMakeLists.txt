@@ -5,11 +5,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-if (LINUX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
-endif ()
-
+set(SPDLOG_HEADER_ONLY ON CACHE BOOL "" FORCE)
 set(FMT_WERROR OFF CACHE BOOL "" FORCE)
 
 set(METAMOD_DIR vendor/metamod-source)
@@ -81,7 +77,6 @@ endif()
 target_link_libraries(${PROJECT_NAME}
         source2toolkit-config
         source2toolkit-sdk
-        spdlog
 )
 
 add_custom_command(
