@@ -27,6 +27,7 @@ class CCSPlayer_BuyServices;
 class CCSPlayer_DamageReactServices;
 class CCSPlayer_HostageServices;
 class CCSPlayer_RadioServices;
+class CCSPlayerController;
 
 class CCSPlayerPawn : public CCSPlayerPawnBase
 {
@@ -154,6 +155,14 @@ public:
     SCHEMA_FIELD(bool, m_bGunGameImmunity);
     SCHEMA_FIELD(float, m_fMolotovDamageTime);
     SCHEMA_FIELD(QAngle, m_angEyeAngles);
+
+public:
+    /// <summary>Get controller.</summary>
+    CCSPlayerController* GetController();
+    /// <summary>Get default controller.</summary>
+    CCSPlayerController* GetDefaultController();
+    /// <summary>Get original controller.</summary>
+    CCSPlayerController* GetOriginalController();
 
 public:
     static CCSPlayerPawn* New(const char* className)

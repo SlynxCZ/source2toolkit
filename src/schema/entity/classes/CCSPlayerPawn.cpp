@@ -1,0 +1,30 @@
+﻿//
+// Created by Michal Přikryl on 10.04.2026.
+// Copyright (c) 2026 slynxcz. All rights reserved.
+//
+#include "CCSPlayerPawn.h"
+#include "CCSPlayerController.h"
+
+#include "core/addresses.h"
+#include "core/shared.h"
+
+CCSPlayerController* CCSPlayerPawn::GetController()
+{
+    if (auto handle = m_hController(); handle.IsValid())
+        return static_cast<CCSPlayerController*>(handle.Get());
+    return nullptr;
+}
+
+CCSPlayerController* CCSPlayerPawn::GetDefaultController()
+{
+    if (auto handle = m_hDefaultController(); handle.IsValid())
+        return static_cast<CCSPlayerController*>(handle.Get());
+    return nullptr;
+}
+
+CCSPlayerController* CCSPlayerPawn::GetOriginalController()
+{
+    if (auto handle = m_hOriginalController(); handle.IsValid())
+        return handle.Get();
+    return nullptr;
+}

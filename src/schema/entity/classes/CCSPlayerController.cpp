@@ -5,6 +5,7 @@
 #include "CCSPlayerController.h"
 
 #include "CCSPlayerPawn.h"
+#include "CCSObserverPawn.h"
 #include "core/addresses.h"
 #include "core/shared.h"
 
@@ -197,10 +198,10 @@ CCSPlayerPawn* CCSPlayerController::GetPlayerPawn()
     return nullptr;
 }
 
-CCSPlayerPawn* CCSPlayerController::GetObserverPawn()
+CCSObserverPawn* CCSPlayerController::GetObserverPawn()
 {
     if (auto handle = m_hObserverPawn(); handle.IsValid())
-        return (CCSPlayerPawn*)handle.Get();
+        return handle.Get();
     return nullptr;
 }
 

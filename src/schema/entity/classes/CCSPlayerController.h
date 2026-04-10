@@ -167,7 +167,7 @@ public:
     /// <summary>Get player pawn.</summary>
     CCSPlayerPawn* GetPlayerPawn();
     /// <summary>Get observer pawn.</summary>
-    CCSPlayerPawn* GetObserverPawn();
+    CCSObserverPawn* GetObserverPawn();
     /// <summary>Get index.</summary>
     int GetIndex();
     /// <summary>Get player index.</summary>

@@ -199,7 +199,7 @@ public static class CustomMethods
             "CCSPlayerPawn* GetPlayerPawn();",
 
             "/// <summary>Get observer pawn.</summary>",
-            "CCSPlayerPawn* GetObserverPawn();",
+            "CCSObserverPawn* GetObserverPawn();",
 
             "/// <summary>Get index.</summary>",
             "int GetIndex();",
@@ -236,6 +236,19 @@ public static class CustomMethods
 
             "/// <summary>Fires gameEvent to client's legacy listener.</summary>",
             "void FireEventToClient(IGameEvent* pEvent);",
+        },
+
+
+        ["CCSPlayerPawn"] = new()
+        {
+            "/// <summary>Get controller.</summary>",
+            "CCSPlayerController* GetController();",
+
+            "/// <summary>Get default controller.</summary>",
+            "CCSPlayerController* GetDefaultController();",
+
+            "/// <summary>Get original controller.</summary>",
+            "CCSPlayerController* GetOriginalController();",
         },
 
 
