@@ -13,7 +13,7 @@
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 
 Plugin g_Plugin;
-PLUGIN_EXPOSE(source2toolkit_test, g_Plugin);
+TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 
 IGameEventSystem* g_pGameEventSystem = nullptr;
 
@@ -30,7 +30,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
         return false;
     }
 
-    PLUGIN_SAVEVARS();
+    TOOLKIT_SAVEVARS();
 
     GET_IFACE_CURRENT(GetEngineFactory, g_pEngineServer, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
