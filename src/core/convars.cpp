@@ -2,269 +2,475 @@
 // Created by Michal Přikryl on 03.03.2026.
 // Copyright (c) 2026 slynxcz. All rights reserved.
 //
-#include "commands.h"
-
+#include "convars.h"
 #include "pluginapi.h"
-#include "pluginmanager.h"
-#include "raytrace.h"
-#include "shared.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
-#include "source2toolkit/IToolkitPlugin.h"
 #include "utils/log.h"
 
-#define VERSION_STRING SEMVER " @ " GITHUB_SHA
-#define BUILD_TIMESTAMP __DATE__ " " __TIME__
+// ---- Flag setter compatible with various SDKs ----
+template <typename T>
+concept HasAddClear = requires(T* t, uint64_t f)
+{
+    t->AddFlags(f);
+    t->ClearFlags(f);
+};
 
-#define ANSI_RESET  "\033[0m"
-#define ANSI_RED    "\033[31m"
-#define ANSI_GREEN  "\033[32m"
-#define ANSI_YELLOW "\033[33m"
-#define ANSI_BLUE   "\033[34m"
+template <typename T>
+concept HasAddRemove = requires(T* t, uint64_t f)
+{
+    t->AddFlags(f);
+    t->RemoveFlags(f);
+};
 
-#define LOG_INFO(fmt, ...) \
-ConMsg(ANSI_GREEN fmt ANSI_RESET "\n", ##__VA_ARGS__)
+template <typename T>
+concept HasSetFlagBit = requires(T* t, uint64_t f)
+{
+    t->SetFlag(f, true);
+    t->SetFlag(f, false);
+};
 
-#define LOG_WARN(fmt, ...) \
-ConMsg(ANSI_YELLOW fmt ANSI_RESET "\n", ##__VA_ARGS__)
+template <typename T>
+void SetAllFlagsCompat(T* data, uint64_t desired)
+{
+    uint64_t cur = data->GetFlags();
+    uint64_t add = desired & ~cur;
+    uint64_t rem = cur & ~desired;
 
-#define LOG_ERROR(fmt, ...) \
-ConMsg(ANSI_RED fmt ANSI_RESET "\n", ##__VA_ARGS__)
-
-namespace commands {
-    static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
-    static std::unordered_map<std::string, std::vector<CommandEntry> > consoleListeners;
-    static std::unordered_set<std::string> registeredNames;
-    static std::unordered_map<std::string, CommandHandler> commandCallbacks;
-
-    CommandsManager commandsManager;
-
-    static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
+    if constexpr (HasAddClear<T>)
     {
-        int argc = args.ArgC();
-
-        if (argc < 2)
-        {
-            LOG_INFO("Source2Toolkit commands:");
-            LOG_INFO("  toolkit list");
-            LOG_INFO("  toolkit load <name>");
-            LOG_INFO("  toolkit unload <id>");
-            LOG_INFO("  toolkit info <id>");
-            LOG_INFO("  toolkit refresh");
-            LOG_INFO("  toolkit version");
-            return;
-        }
-
-        const char* cmd = args.Arg(1);
-
-        if (strcmp(cmd, "list") == 0)
-        {
-            if (pluginManager.m_plugins.empty())
-            {
-                LOG_WARN("No plugins loaded.");
-                return;
-            }
-
-            LOG_INFO("Listing %zu plugin(s):", pluginManager.m_plugins.size());
-
-            for (auto& p : pluginManager.m_plugins)
-            {
-                auto* api = p->api;
-
-                LOG_INFO("  [%d] %s (%s)\n",
-                    p->id,
-                    api->GetName(),
-                    api->GetVersion());
-            }
-        }
-
-        else if (strcmp(cmd, "load") == 0)
-        {
-            if (argc < 3)
-            {
-                LOG_ERROR("Usage: toolkit load <name>");
-                return;
-            }
-
-            char err[256]{};
-
-            if (!pluginManager.LoadPlugin(args.Arg(2), err, sizeof(err)))
-            {
-                LOG_ERROR("Load failed: %s", err);
-                return;
-            }
-
-            LOG_INFO("Plugin '%s' loaded.", args.Arg(2));
-        }
-
-        else if (strcmp(cmd, "unload") == 0)
-        {
-            if (argc < 3)
-            {
-                LOG_ERROR("Usage: toolkit unload <id>");
-                return;
-            }
-
-            int id = atoi(args.Arg(2));
-
-            if (id <= 0)
-            {
-                LOG_ERROR("Invalid plugin id.");
-                return;
-            }
-
-            if (!pluginManager.UnloadPlugin(id))
-            {
-                LOG_ERROR("Plugin %d not found or failed to unload.", id);
-                return;
-            }
-
-            LOG_INFO("Plugin %d unloaded.", id);
-        }
-
-        else if (strcmp(cmd, "info") == 0)
-        {
-            if (argc < 3)
-            {
-                LOG_ERROR("Usage: toolkit info <id>");
-                return;
-            }
-
-            int id = atoi(args.Arg(2));
-
-            for (auto& p : pluginManager.m_plugins)
-            {
-                if (p->id == id)
-                {
-                    auto* api = p->api;
-
-                    LOG_INFO("Plugin %d info:", id);
-                    LOG_INFO("  Name: %s", api->GetName());
-                    LOG_INFO("  Version: %s", api->GetVersion());
-                    LOG_INFO("  Author: %s", api->GetAuthor());
-                    LOG_INFO("  Description: %s", api->GetDescription());
-                    LOG_INFO("  Path: %s", p->path.c_str());
-                    return;
-                }
-            }
-
-            LOG_ERROR("Plugin %d not found.", id);
-        }
-
-        else if (strcmp(cmd, "refresh") == 0)
-        {
-            LOG_INFO("Loading missing plugins...");
-
-            pluginManager.LoadMissing();
-
-            LOG_INFO("Done.");
-        }
-
-        else if (strcmp(cmd, "version") == 0)
-        {
-            LOG_INFO("Source2Toolkit");
-            LOG_INFO("  Version: %s", VERSION_STRING);
-            LOG_INFO("  Build: %s", BUILD_TIMESTAMP);
-        }
-
-        else
-        {
-            LOG_WARN("Unknown command '%s'", cmd);
-        }
+        if (add) data->AddFlags(add);
+        if (rem) data->ClearFlags(rem);
     }
-
-    void InitCommands()
+    else if constexpr (HasAddRemove<T>)
     {
-        commandsManager.RegConCommand(0, "source2toolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "source2t", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "s2toolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "s2t", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "stoolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "st", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "toolkit", HandleToolkitCommand);
+        if (add) data->AddFlags(add);
+        if (rem) data->RemoveFlags(rem);
     }
-
-    void DestructCommands()
+    else if constexpr (HasSetFlagBit<T>)
     {
-        registeredCommands.clear();
-        consoleListeners.clear();
-        registeredNames.clear();
-        commandCallbacks.clear();
+        // Fallback: set/clear bitwise
+        for (int i = 0; i < 64; i)
+        {
+            uint64_t bit = (1ULL << i);
+            bool want = (desired & bit) != 0;
+            data->SetFlag(bit, want);
+        }
+    }
+    else
+    {
+        static_assert(sizeof(T) == 0, "ConVarData hat keine passende Flags-API (Add/Clear/Remove/SetFlag).");
+    }
+}
+
+#define CHECK_REF_RET(ref, ret) \
+    if (!ref.IsValidRef()) { \
+        FP_ERROR("Invalid convar access index."); \
+        return ret; \
     }
 
-    void ConCommandRouter(const CCommandContext &ctx, const CCommand &args) {
-        if (args.ArgC() < 1)
-            return;
-
-        std::string name = args.Arg(0);
-        auto it = commandCallbacks.find(name);
-        if (it == commandCallbacks.end())
-            return;
-
-        (void) it->second(ctx, args, Mode::Post);
+#define CHECK_DATA_RET(ref, idx, ret) \
+    if (!ref.IsConVarDataValid()) { \
+        FP_ERROR("Convar data invalid for {}", idx); \
+        return ret; \
     }
 
-    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode) {
-        std::string name = args.Arg(0);
-        std::transform(name.begin(), name.end(), name.begin(),
-                       [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+#define CHECK_REF(ref) \
+    if (!ref.IsValidRef()) { \
+        FP_ERROR("Invalid convar access index."); \
+        return; \
+    }
 
-        auto it = consoleListeners.find(name);
-        if (it == consoleListeners.end())
-            return Action::Ignore;
+#define CHECK_DATA(ref, idx) \
+    if (!ref.IsConVarDataValid()) { \
+        FP_ERROR("Convar data invalid for {}", idx); \
+        return; \
+    }
 
-        Action result = Action::Ignore;
+#define CREATE_CVAR(type) \
+{ \
+    auto created = new CConVar<type>(name, flags, help, *(type*)def, hasMin, *(type*)min, hasMax, *(type*)max); \
+    return created->GetAccessIndex(); \
+}
 
-        for (const auto &entry: it->second) {
-            if (entry.mode != mode)
-                continue;
+#define CREATE_CVAR_PTR(type) \
+{ \
+    auto created = new CConVar<type>(name, flags, help, *(type*)def, hasMin, *(type*)min, hasMax, *(type*)max); \
+    return created->GetAccessIndex(); \
+}
 
-            Action thisResult = entry.handler(ctx, args, mode);
+namespace convars
+{
+    ConVarsManager convarsManager;
 
-            if (thisResult == Action::Supersede)
-                return Action::Supersede;
+    uint16 ConVarsManager::GetConvarAccessIndexByName(const char* name)
+    {
+        ConVarRef ref(name);
+        return ref.IsValidRef() ? ref.GetAccessIndex() : 0;
+    }
 
-            if (thisResult == Action::Override && mode == Mode::Pre)
-                return Action::Override;
+    ConVarRefAbstract ConVarsManager::GetConvarRef(uint16 accessIndex)
+    {
+        return ConVarRefAbstract(accessIndex);
+    }
 
-            if (static_cast<int>(thisResult) > static_cast<int>(result))
-                result = thisResult;
+    const char* ConVarsManager::GetName(uint16 accessIndex)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, "");
+
+        return ref.GetName();
+    }
+
+    const char* ConVarsManager::GetHelpText(uint16 accessIndex)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, "");
+
+        return ref.GetHelpText();
+    }
+
+    EConVarType ConVarsManager::GetType(uint16 accessIndex)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, EConVarType_Int32);
+
+        return ref.GetType();
+    }
+
+    uint64 ConVarsManager::GetFlags(uint16 accessIndex)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, 0);
+
+        return ref.GetFlags();
+    }
+
+    void ConVarsManager::SetFlags(uint16 accessIndex, uint64 flags)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        SetAllFlagsCompat(ref.GetConVarData(), flags);
+    }
+
+    void* ConVarsManager::GetValueAddress(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, nullptr);
+        CHECK_DATA_RET(ref, accessIndex, nullptr);
+
+        return ref.GetConVarData()->ValueOrDefault(slot);
+    }
+
+    const char* ConVarsManager::GetString(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, "");
+        CHECK_DATA_RET(ref, accessIndex, "");
+
+        thread_local static std::string buffer;
+
+        CBufferString buf;
+        ref.GetValueAsString(buf, slot);
+        buffer = buf.Get();
+
+        return buffer.c_str();
+    }
+
+    void ConVarsManager::SetString(uint16 accessIndex, const char* value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetString(value, slot);
+    }
+
+    bool ConVarsManager::GetBool(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, false);
+        CHECK_DATA_RET(ref, accessIndex, false);
+
+        return ref.GetAs<bool>(slot);
+    }
+
+    int32 ConVarsManager::GetInt(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, 0);
+        CHECK_DATA_RET(ref, accessIndex, 0);
+
+        return ref.GetAs<int32>(slot);
+    }
+
+    float ConVarsManager::GetFloat(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, 0);
+        CHECK_DATA_RET(ref, accessIndex, 0);
+
+        return ref.GetAs<float>(slot);
+    }
+
+    double ConVarsManager::GetDouble(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, 0);
+        CHECK_DATA_RET(ref, accessIndex, 0);
+
+        return ref.GetAs<double>(slot);
+    }
+
+    void ConVarsManager::SetBool(uint16 accessIndex, bool value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<bool>(value, slot);
+    }
+
+    void ConVarsManager::SetInt(uint16 accessIndex, int32 value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<int32>(value, slot);
+    }
+
+    void ConVarsManager::SetFloat(uint16 accessIndex, float value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<float>(value, slot);
+    }
+
+    void ConVarsManager::SetDouble(uint16 accessIndex, double value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<double>(value, slot);
+    }
+
+    Vector2D ConVarsManager::GetVector2(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, Vector2D{});
+        CHECK_DATA_RET(ref, accessIndex, Vector2D{});
+
+        return ref.GetAs<Vector2D>(slot);
+    }
+
+    Vector ConVarsManager::GetVector3(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, Vector{});
+        CHECK_DATA_RET(ref, accessIndex, Vector{});
+
+        return ref.GetAs<Vector>(slot);
+    }
+
+    Vector4D ConVarsManager::GetVector4(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, Vector4D{});
+        CHECK_DATA_RET(ref, accessIndex, Vector4D{});
+
+        return ref.GetAs<Vector4D>(slot);
+    }
+
+    QAngle ConVarsManager::GetQAngle(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, QAngle{});
+        CHECK_DATA_RET(ref, accessIndex, QAngle{});
+
+        return ref.GetAs<QAngle>(slot);
+    }
+
+    Color ConVarsManager::GetColor(uint16 accessIndex, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF_RET(ref, Color{});
+        CHECK_DATA_RET(ref, accessIndex, Color{});
+
+        return ref.GetAs<Color>(slot);
+    }
+
+    void ConVarsManager::SetVector2(uint16 accessIndex, const Vector2D& value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<Vector2D>(value, slot);
+    }
+
+    void ConVarsManager::SetVector3(uint16 accessIndex, const Vector& value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<Vector>(value, slot);
+    }
+
+    void ConVarsManager::SetVector4(uint16 accessIndex, const Vector4D& value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<Vector4D>(value, slot);
+    }
+
+    void ConVarsManager::SetQAngle(uint16 accessIndex, const QAngle& value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<QAngle>(value, slot);
+    }
+
+    void ConVarsManager::SetColor(uint16 accessIndex, const Color& value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        ref.SetAs<Color>(value, slot);
+    }
+
+    void ConVarsManager::GetValue(uint16 accessIndex, void* outValue, CSplitScreenSlot slot)
+    {
+        if (!outValue)
+        {
+            FP_ERROR("GetValue: outValue is null");
+            return;
         }
 
-        return result;
-    }
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
 
-    void CommandsManager::RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
-        CommandHandler nativeHandler = WrapVoidHandler(handler);
-
-        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-    }
-
-    void CommandsManager::RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
-        CommandHandler nativeHandler = WrapVoidHandler(handler);
-
-        if (shared::g_pCVar && shared::g_pCVar->FindConCommand(pchName).IsValidRef()) {
-            FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
-            RegConListener(owner, pchName, nativeHandler, Mode::Pre);
-            RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-            RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        auto addr = ref.GetConVarData()->ValueOrDefault(slot);
+        if (!addr)
+        {
+            FP_ERROR("GetValue: value address null for {}", accessIndex);
             return;
         }
 
-        if (!registeredNames.contains(pchName)) {
-            auto cmd = std::make_unique<ConCommand>(pchName, ConCommandRouter, ("Registered command: " + std::string(pchName)).c_str(), FCVAR_NONE);
-            registeredCommands.push_back(std::move(cmd));
-            registeredNames.insert(pchName);
-        }
-
-        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        std::memcpy(outValue, addr, sizeof(CVValue_t));
     }
 
-    void CommandsManager::RegConListener(PluginId owner, const char* pchName, CommandHandler handler, Mode mode) {
-        consoleListeners[pchName].push_back({owner, handler, mode});
+    void ConVarsManager::SetValue(uint16 accessIndex, const void* value, CSplitScreenSlot slot)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+        CHECK_DATA(ref, accessIndex);
+
+        switch (ref.GetType())
+        {
+        case EConVarType_Int16:   ref.SetAs<int16>(*(int16*)value, slot); break;
+        case EConVarType_UInt16:  ref.SetAs<uint16>(*(uint16*)value, slot); break;
+        case EConVarType_UInt32:  ref.SetAs<uint32>(*(uint32*)value, slot); break;
+        case EConVarType_Int32:   ref.SetAs<int32>(*(int32*)value, slot); break;
+        case EConVarType_UInt64:  ref.SetAs<uint64>(*(uint64*)value, slot); break;
+        case EConVarType_Int64:   ref.SetAs<int64>(*(int64*)value, slot); break;
+        case EConVarType_Bool:    ref.SetAs<bool>(*(bool*)value, slot); break;
+        case EConVarType_Float32: ref.SetAs<float>(*(float*)value, slot); break;
+        case EConVarType_Float64: ref.SetAs<double>(*(double*)value, slot); break;
+
+        case EConVarType_String:
+            ref.SetString((const char*)value, slot);
+            break;
+
+        case EConVarType_Vector2:
+            ref.SetAs<Vector2D>(*(Vector2D*)value, slot);
+            break;
+
+        case EConVarType_Vector3:
+            ref.SetAs<Vector>(*(Vector*)value, slot);
+            break;
+
+        case EConVarType_Vector4:
+            ref.SetAs<Vector4D>(*(Vector4D*)value, slot);
+            break;
+
+        case EConVarType_Qangle:
+            ref.SetAs<QAngle>(*(QAngle*)value, slot);
+            break;
+
+        default:
+            FP_ERROR("Unsupported convar type: {}", (int)ref.GetType());
+            break;
+        }
+    }
+
+    uint16 ConVarsManager::CreateConVar(const char* name, EConVarType type, const char* help,
+                                        uint64 flags, bool hasMin, bool hasMax,
+                                        void* def, const void* min, const void* max)
+    {
+        ConVarRef ref(name);
+        if (ref.IsValidRef())
+        {
+            FP_ERROR("ConVar '{}' already exists", name);
+            return ref.GetAccessIndex();
+        }
+
+        switch (type)
+        {
+        case EConVarType_Int16: CREATE_CVAR(int16);
+        case EConVarType_UInt16: CREATE_CVAR(uint16);
+        case EConVarType_UInt32: CREATE_CVAR(uint32);
+        case EConVarType_Int32: CREATE_CVAR(int32);
+        case EConVarType_UInt64: CREATE_CVAR(uint64);
+        case EConVarType_Int64: CREATE_CVAR(int64);
+        case EConVarType_Bool: CREATE_CVAR(bool);
+        case EConVarType_Float32: CREATE_CVAR(float);
+        case EConVarType_Float64: CREATE_CVAR(double);
+
+        case EConVarType_String:
+            {
+                auto created = new CConVar<CUtlString>(
+                    name, flags, help,
+                    (const char*)def,
+                    hasMin, (const char*)min,
+                    hasMax, (const char*)max
+                );
+                return created->GetAccessIndex();
+            }
+
+        case EConVarType_Vector2: CREATE_CVAR_PTR(Vector2D);
+        case EConVarType_Vector3: CREATE_CVAR_PTR(Vector);
+        case EConVarType_Vector4: CREATE_CVAR_PTR(Vector4D);
+        case EConVarType_Qangle: CREATE_CVAR_PTR(QAngle);
+
+        default:
+            FP_ERROR("Unsupported convar type: {}", (int)type);
+            return 0;
+        }
+    }
+
+    void ConVarsManager::DeleteConVar(uint16 accessIndex)
+    {
+        auto ref = GetRef(accessIndex);
+        CHECK_REF(ref);
+
+        auto data = ref.GetConVarData();
+        if (!data)
+        {
+            FP_ERROR("Convar data null for {}", accessIndex);
+            return;
+        }
+
+        data->Invalidate();
     }
 }

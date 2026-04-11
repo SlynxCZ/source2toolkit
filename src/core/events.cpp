@@ -24,9 +24,27 @@ namespace events {
         }
     }
 
-    void EventManager::RegGameEvent(const char* pchName, GameEventHandler handler, Mode mode) {
-        gameEvents[pchName].push_back({handler, mode});
-        RegisterListenerIfNeeded(pchName);
+    void EventManager::RegGameEvent(PluginId owner, const char* name, GameEventHandler handler, Mode mode)
+    {
+        gameEvents[name].push_back({owner, handler, mode});
+        RegisterListenerIfNeeded(name);
+    }
+
+    void EventManager::RemoveAllForPlugin(PluginId id)
+    {
+        for (auto it = gameEvents.begin(); it != gameEvents.end(); )
+        {
+            auto& vec = it->second;
+
+            std::erase_if(vec, [id](const EventEntry& e) {
+                return e.owner == id;
+            });
+
+            if (vec.empty())
+                it = gameEvents.erase(it);
+            else
+                ++it;
+        }
     }
 
     void EventListener::FireGameEvent(IGameEvent* pEvent) {}

@@ -12,11 +12,14 @@
 #include "igameevents.h"
 #include <functional>
 
+#include "source2toolkit/IToolkitPlugin.h"
+
 class IGameEvent;
 
 namespace events {
     struct EventEntry
     {
+        PluginId owner;
         GameEventHandler handler;
         Mode mode;
     };
@@ -29,7 +32,9 @@ namespace events {
     class EventManager : public IToolkitEvents
     {
     public:
-        void RegGameEvent(const char* pchName, GameEventHandler handler, Mode mode) override;
+        void RegGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, Mode mode) override;
+    public:
+        void RemoveAllForPlugin(PluginId id);
     };
 
     extern EventManager eventManager;

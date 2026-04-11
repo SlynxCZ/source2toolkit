@@ -175,13 +175,13 @@ namespace commands {
 
     void InitCommands()
     {
-        commandsManager.RegConCommand("source2toolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand("source2t", HandleToolkitCommand);
-        commandsManager.RegConCommand("s2toolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand("s2t", HandleToolkitCommand);
-        commandsManager.RegConCommand("stoolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand("st", HandleToolkitCommand);
-        commandsManager.RegConCommand("toolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "source2toolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "source2t", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "s2toolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "s2t", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "stoolkit", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "st", HandleToolkitCommand);
+        commandsManager.RegConCommand(0, "toolkit", HandleToolkitCommand);
     }
 
     void DestructCommands()
@@ -234,22 +234,22 @@ namespace commands {
         return result;
     }
 
-    void CommandsManager::RegChatListener(const char* pchName, ChatHandler handler) {
+    void CommandsManager::RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        RegConListener(pchName, nativeHandler, Mode::Pre);
-        RegConListener(std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-        RegConListener(std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
+        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
     }
 
-    void CommandsManager::RegConCommand(const char* pchName, ChatHandler handler) {
+    void CommandsManager::RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
         if (shared::g_pCVar && shared::g_pCVar->FindConCommand(pchName).IsValidRef()) {
             FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
-            RegConListener(pchName, nativeHandler, Mode::Pre);
-            RegConListener(std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-            RegConListener(std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+            RegConListener(owner, pchName, nativeHandler, Mode::Pre);
+            RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+            RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
             return;
         }
 
@@ -259,12 +259,12 @@ namespace commands {
             registeredNames.insert(pchName);
         }
 
-        RegConListener(pchName, nativeHandler, Mode::Pre);
-        RegConListener(std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-        RegConListener(std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
+        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
     }
 
-    void CommandsManager::RegConListener(const char* pchName, CommandHandler handler, Mode mode) {
-        consoleListeners[pchName].push_back({handler, mode});
+    void CommandsManager::RegConListener(PluginId owner, const char* pchName, CommandHandler handler, Mode mode) {
+        consoleListeners[pchName].push_back({owner, handler, mode});
     }
 }

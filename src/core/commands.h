@@ -9,6 +9,7 @@
 #include <functional>
 
 #include "source2toolkit/IToolkitCommands.h"
+#include "source2toolkit/IToolkitPlugin.h"
 
 class CCommand;
 class CCommandContext;
@@ -16,6 +17,7 @@ class CCommandContext;
 namespace commands {
     struct CommandEntry
     {
+        PluginId owner;
         CommandHandler handler;
         Mode mode;
     };
@@ -38,9 +40,11 @@ namespace commands {
     class CommandsManager : public IToolkitCommands
     {
     public:
-        void RegChatListener(const char* pchName, ChatHandler handler) override;
-        void RegConCommand(const char* pchName, ChatHandler handler) override;
-        void RegConListener(const char* pchName, CommandHandler handler, Mode mode) override;
+        void RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) override;
+        void RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) override;
+        void RegConListener(PluginId owner, const char* pchName, CommandHandler handler, Mode mode) override;
+    public:
+        void RemoveAllForPlugin(PluginId id);
     };
 
     extern CommandsManager commandsManager;

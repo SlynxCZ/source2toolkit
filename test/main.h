@@ -18,7 +18,7 @@ public:
     bool Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late) override;
     bool Unload(char* error, size_t maxlen) override;
 public:
-    KHook::Return<void> Hook_ProcessMovement(CCSPlayer_MovementServices* pThis, void* pMoveData, void* pUnk001);
+    KHook::Return<void> Hook_ProcessMovementPre(CCSPlayer_MovementServices* pThis, void* pMoveData, void* pUnk001);
 protected:
     KHook::Function<void, CCSPlayer_MovementServices*, void*, void*> m_ProcessMovement;
 private:

@@ -5,6 +5,10 @@
 #include "pluginmanager.h"
 #include <cstring>
 
+#include "commands.h"
+#include "events.h"
+#include "entityio.h"
+
 #include "source2toolkit/IToolkitApi.h"
 #include "source2toolkit/IToolkitPlugin.h"
 
@@ -215,6 +219,9 @@ bool PluginManager::UnloadPlugin(PluginId id)
 
         p->listeners.clear();
 
+        events::eventManager.RemoveAllForPlugin(id);
+        commands::commandsManager.RemoveAllForPlugin(id);
+
         CloseLib(p->lib);
 
         m_plugins.erase(it);
@@ -306,6 +313,9 @@ void PluginManager::UnloadAll()
         p->api->Unload(err, sizeof(err));
 
         p->listeners.clear();
+
+        events::eventManager.RemoveAllForPlugin(p->id);
+        commands::commandsManager.RemoveAllForPlugin(p->id);
 
         CloseLib(p->lib);
     }

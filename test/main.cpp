@@ -22,7 +22,7 @@ TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 IGameEventSystem* g_pGameEventSystem = nullptr;
 
 Plugin::Plugin() :
-    m_ProcessMovement(this, &Plugin::Hook_ProcessMovement, nullptr)
+    m_ProcessMovement(this, &Plugin::Hook_ProcessMovementPre, nullptr)
 {
 }
 
@@ -95,18 +95,47 @@ bool Plugin::Unload(char* error, size_t maxlen)
     return true;
 }
 
-KHook::Return<void> Plugin::Hook_ProcessMovement(CCSPlayer_MovementServices* pThis, void* pMoveData, void* pUnk001)
+bool m_WasAutoBhop = false;
+bool m_WasEnableBhop = false;
+
+KHook::Return<void> Plugin::Hook_ProcessMovementPre(CCSPlayer_MovementServices* pThis, void*, void*)
 {
     if (!pThis)
         return {KHook::Action::Ignore};
 
-    CCSPlayerPawn* pPawn = pThis->GetPlayerPawn();
-    if (!pPawn) return {KHook::Action::Ignore};
+    auto* pawn = pThis->GetPlayerPawn();
+    if (!pawn) return {KHook::Action::Ignore};
 
-    CCSPlayerController* pPlayer = pPawn->GetController();
-    if (!pPlayer) return {KHook::Action::Ignore};
+    auto* player = pawn->GetController();
+    if (!player) return {KHook::Action::Ignore};
 
-    pPlayer->ReplicateConVar("sv_autobunnyhopping", "1");
+    bool shouldHaveBhop = true;
+    if (!shouldHaveBhop)
+        return {KHook::Action::Ignore};
+
+    ConVarRef refAuto{"sv_autobunnyhopping"};
+    ConVarRefAbstract autoVar{refAuto};
+
+    if (autoVar.IsConVarDataAvailable())
+    {
+        if (!autoVar.GetBool())
+        {
+            autoVar.SetBool(true);
+            m_WasAutoBhop = true;
+        }
+    }
+
+    ConVarRef refEnable{"sv_enablebunnyhopping"};
+    ConVarRefAbstract enableVar{refEnable};
+
+    if (enableVar.IsConVarDataAvailable())
+    {
+        if (!enableVar.GetBool())
+        {
+            enableVar.SetBool(true);
+            m_WasEnableBhop = true;
+        }
+    }
 
     return {KHook::Action::Ignore};
 }

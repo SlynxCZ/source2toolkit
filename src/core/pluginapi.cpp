@@ -7,6 +7,7 @@
 #include <stdarg.h>
 
 #include "commands.h"
+#include "convars.h"
 #include "entityio.h"
 #include "events.h"
 #include "plugin.h"
@@ -217,6 +218,11 @@ IToolkitAddresses* PluginApi::Addresses()
 IToolkitCommands* PluginApi::Commands()
 {
     return &commands::commandsManager;
+}
+
+IToolkitConVars* PluginApi::ConVars()
+{
+    return &convars::convarsManager;
 }
 
 IToolkitEntityIO* PluginApi::EntityIO()
