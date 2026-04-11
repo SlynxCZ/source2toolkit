@@ -9,7 +9,6 @@
 
 #include "eiface.h"
 #include "entitysystem.h"
-#include "source2toolkit/IToolkitPlugin.h"
 
 namespace entityio {
     class EntityIO : public IToolkitEntityIO {

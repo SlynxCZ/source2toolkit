@@ -9,7 +9,6 @@
 #include <functional>
 
 #include "source2toolkit/IToolkitCommands.h"
-#include "source2toolkit/IToolkitPlugin.h"
 
 class CCommand;
 class CCommandContext;

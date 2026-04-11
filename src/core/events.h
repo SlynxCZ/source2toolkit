@@ -12,8 +12,6 @@
 #include "igameevents.h"
 #include <functional>
 
-#include "source2toolkit/IToolkitPlugin.h"
-
 class IGameEvent;
 
 namespace events {
