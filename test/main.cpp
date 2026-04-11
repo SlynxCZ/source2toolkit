@@ -50,7 +50,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     TOOLKIT_LOG(&g_Plugin, "Events ptr: %p\n", api->Events());
     TOOLKIT_LOG(&g_Plugin, "Scheduler ptr: %p\n", api->Scheduler());
 
-    m_GameFrame.Add(g_pSource2Server);
+    m_GameFrame.Add(GetSource2Server());
 
     api->Commands()->RegConCommand("s2t_test", [](const CCommandContext& ctx, const CCommand& cmd, Mode mode)
     {
@@ -80,7 +80,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
 bool Plugin::Unload(char* error, size_t maxlen)
 {
-    m_GameFrame.Remove(g_pSource2Server);
+    m_GameFrame.Remove(GetSource2Server());
 
     TOOLKIT_LOG(&g_Plugin, "Unload() done\n");
 
@@ -89,7 +89,7 @@ bool Plugin::Unload(char* error, size_t maxlen)
 
 KHook::Return<void> Plugin::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
 {
-    TOOLKIT_LOG(&g_Plugin, "GameFrame(%p, %b, %b, %b)", pThis, simulating, bFirstTick, bLastTick);
+    TOOLKIT_LOG(&g_Plugin, "GameFrame(%p, %b, %b, %b) at %f\n", pThis, simulating, bFirstTick, bLastTick, GetGlobalVars()->curtime);
 
     return {KHook::Action::Ignore};
 }

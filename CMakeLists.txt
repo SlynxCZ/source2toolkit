@@ -14,10 +14,6 @@ set(METAMOD_DIR vendor/metamod-source)
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(vendor/source2toolkit-sdk)
 
-# tests build
-set(SOURCE2TOOLKIT_CORE OFF CACHE BOOL "" FORCE)
-add_subdirectory(test)
-
 SET(source2toolkit_include_directories
         ${CMAKE_SOURCE_DIR}
         ${CMAKE_SOURCE_DIR}/src
