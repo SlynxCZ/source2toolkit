@@ -5,6 +5,8 @@
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitTypes.h"
 
+#include "source2toolkit/utils/addresses.h"
+
 #include "khook.hpp"
 #include "eiface.h"
 #include "igameeventsystem.h"
@@ -18,6 +20,7 @@ TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 IGameEventSystem* g_pGameEventSystem = nullptr;
 
 Plugin::Plugin() :
+    m_ProcessMovement(this, &Plugin::Hook_ProcessMovement, nullptr)
 {
 }
 
@@ -44,10 +47,10 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     api->AddListener(this, this);
 
-    TOOLKIT_LOG(&g_Plugin, "API ptr: %p\n", api);
-    TOOLKIT_LOG(&g_Plugin, "Commands ptr: %p\n", api->Commands());
-    TOOLKIT_LOG(&g_Plugin, "Events ptr: %p\n", api->Events());
-    TOOLKIT_LOG(&g_Plugin, "Scheduler ptr: %p\n", api->Scheduler());
+    TOOLKIT_LOG(this, "API ptr: %p\n", api);
+    TOOLKIT_LOG(this, "Commands ptr: %p\n", api->Commands());
+    TOOLKIT_LOG(this, "Events ptr: %p\n", api->Events());
+    TOOLKIT_LOG(this, "Scheduler ptr: %p\n", api->Scheduler());
 
     api->Commands()->RegConCommand("s2t_test", [](const CCommandContext& ctx, const CCommand& cmd, Mode mode)
     {
@@ -70,16 +73,31 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
         return Action::Ignore;
     }, Mode::Pre);
 
-    TOOLKIT_LOG(&g_Plugin, "Load() done\n");
+    uintptr_t pProcessMovement = UTIL_FindPattern(g_pSource2Server, "55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 53 48 89 FB 48 83 EC ? 48 8B 7F");
+    if (pProcessMovement)
+    {
+        m_ProcessMovement.Configure(reinterpret_cast<void(*)(CCSPlayer_MovementServices*, void*, void*)>(pProcessMovement));
+    }
+
+    TOOLKIT_LOG(this, "Load() done\n");
 
     return true;
 }
 
 bool Plugin::Unload(char* error, size_t maxlen)
 {
-    TOOLKIT_LOG(&g_Plugin, "Unload() done\n");
+    m_ProcessMovement.~Function();
+
+    TOOLKIT_LOG(this, "Unload() done\n");
 
     return true;
+}
+
+KHook::Return<void> Plugin::Hook_ProcessMovement(CCSPlayer_MovementServices* pThis, void* pMoveData, void* pUnk001)
+{
+    TOOLKIT_LOG(this, "Hook_ProcessMovement(%p, %p, %p)", pThis, pMoveData, pUnk001);
+
+    return {KHook::Action::Ignore};
 }
 
 const char* Plugin::GetVersion()
