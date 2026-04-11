@@ -35,7 +35,7 @@ namespace commands {
     static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
     static std::unordered_map<std::string, std::vector<CommandEntry> > consoleListeners;
     static std::unordered_set<std::string> registeredNames;
-    static std::unordered_map<std::string, CommandHandler> commandCallbacks;
+    static std::unordered_map<std::string, CallbackEntry> commandCallbacks;
 
     CommandsManager commandsManager;
 
@@ -201,7 +201,7 @@ namespace commands {
         if (it == commandCallbacks.end())
             return;
 
-        (void) it->second(ctx, args, Mode::Post);
+        (void) it->second.handler(ctx, args, Mode::Post);
     }
 
     Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode) {
@@ -259,6 +259,11 @@ namespace commands {
             registeredNames.insert(pchName);
         }
 
+        std::string key = pchName;
+        std::transform(key.begin(), key.end(), key.begin(), tolower);
+
+        commandCallbacks[key] = { owner, nativeHandler };
+
         RegConListener(owner, pchName, nativeHandler, Mode::Pre);
         RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
         RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
@@ -266,5 +271,31 @@ namespace commands {
 
     void CommandsManager::RegConListener(PluginId owner, const char* pchName, CommandHandler handler, Mode mode) {
         consoleListeners[pchName].push_back({owner, handler, mode});
+    }
+
+    void CommandsManager::RemoveAllForPlugin(PluginId id)
+    {
+        for (auto it = consoleListeners.begin(); it != consoleListeners.end(); )
+        {
+            auto& vec = it->second;
+
+            std::erase_if(vec, [id](const CommandEntry& e)
+            {
+                return e.owner == id;
+            });
+
+            if (vec.empty())
+                it = consoleListeners.erase(it);
+            else
+                ++it;
+        }
+
+        for (auto it = commandCallbacks.begin(); it != commandCallbacks.end(); )
+        {
+            if (it->second.owner == id)
+                it = commandCallbacks.erase(it);
+            else
+                ++it;
+        }
     }
 }
