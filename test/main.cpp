@@ -5,6 +5,7 @@
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitTypes.h"
 
+#include "khook.hpp"
 #include "eiface.h"
 #include "igameeventsystem.h"
 #include "schemasystem.h"
@@ -15,6 +16,11 @@ Plugin g_Plugin;
 PLUGIN_EXPOSE(source2toolkit_test, g_Plugin);
 
 IGameEventSystem* g_pGameEventSystem = nullptr;
+
+Plugin::Plugin() :
+    m_GameFrame(&IServerGameDLL::GameFrame, this, nullptr, &Plugin::Hook_GameFrame)
+{
+}
 
 bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late)
 {
@@ -44,14 +50,16 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     TOOLKIT_LOG(&g_Plugin, "Events ptr: %p\n", api->Events());
     TOOLKIT_LOG(&g_Plugin, "Scheduler ptr: %p\n", api->Scheduler());
 
+    m_GameFrame.Add(g_pSource2Server);
+
     api->Commands()->RegConCommand("s2t_test", [](const CCommandContext& ctx, const CCommand& cmd, Mode mode)
     {
-        Msg("[S2Toolkit] s2t_test command executed!\n");
+        TOOLKIT_LOG(&g_Plugin, "s2t_test command executed!\n");
         CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot());
         if (!player)
             return;
 
-        player->PrintToChat("[S2Toolkit] s2t_test executed");
+        player->PrintToChat("s2t_test executed");
     });
 
     api->Events()->RegGameEvent("player_connect_full", [](IGameEvent* event, Mode mode, bool& dontBroadcast)
@@ -60,7 +68,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
         if (!player)
             return Action::Ignore;
 
-        Msg("[S2Toolkit] player_connect: %s\n", player->GetPlayerName());
+        TOOLKIT_LOG(&g_Plugin, "player_connect: %s\n", player->GetPlayerName());
 
         return Action::Ignore;
     }, Mode::Pre);
@@ -70,11 +78,20 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     return true;
 }
 
-bool Plugin::Unload(char* error, size_t maxlen){
+bool Plugin::Unload(char* error, size_t maxlen)
+{
+    m_GameFrame.Remove(g_pSource2Server);
 
     TOOLKIT_LOG(&g_Plugin, "Unload() done\n");
 
     return true;
+}
+
+KHook::Return<void> Plugin::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
+{
+    TOOLKIT_LOG(&g_Plugin, "GameFrame(%p, %b, %b, %b)", pThis, simulating, bFirstTick, bLastTick);
+
+    return {KHook::Action::Ignore};
 }
 
 const char* Plugin::GetVersion()
