@@ -89,7 +89,7 @@ bool Plugin::Unload(char* error, size_t maxlen)
 
 KHook::Return<void> Plugin::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
 {
-    TOOLKIT_LOG(&g_Plugin, "GameFrame(%p, %b, %b, %b) at %f\n", pThis, simulating, bFirstTick, bLastTick, GetGlobalVars()->curtime);
+    TOOLKIT_LOG(&g_Plugin, "GameFrame(%p, %d, %d, %d) at %f\n", pThis, simulating, bFirstTick, bLastTick, GetGlobalVars()->curtime);
 
     return {KHook::Action::Ignore};
 }

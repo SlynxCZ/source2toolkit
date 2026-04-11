@@ -28,15 +28,20 @@ namespace commands {
     {
         int argc = args.ArgC();
 
+        const Color colInfo(80, 200, 120, 255);
+        const Color colWarn(255, 200, 80, 255);
+        const Color colError(255, 80, 80, 255);
+        const Color colDefault(200, 200, 200, 255);
+
         if (argc < 2)
         {
-            FP_INFO("Source2Toolkit commands:");
-            FP_INFO("  toolkit list");
-            FP_INFO("  toolkit load <name>");
-            FP_INFO("  toolkit unload <id>");
-            FP_INFO("  toolkit info <id>");
-            FP_INFO("  toolkit refresh");
-            FP_INFO("  toolkit version");
+            ConColorMsg(colInfo, "Source2Toolkit commands:\n");
+            ConColorMsg(colDefault, "  toolkit list\n");
+            ConColorMsg(colDefault, "  toolkit load <name>\n");
+            ConColorMsg(colDefault, "  toolkit unload <id>\n");
+            ConColorMsg(colDefault, "  toolkit info <id>\n");
+            ConColorMsg(colDefault, "  toolkit refresh\n");
+            ConColorMsg(colDefault, "  toolkit version\n");
             return;
         }
 
@@ -46,17 +51,17 @@ namespace commands {
         {
             if (pluginManager.m_plugins.empty())
             {
-                FP_INFO("No plugins loaded.");
+                ConColorMsg(colWarn, "No plugins loaded.\n");
                 return;
             }
 
-            FP_INFO("Listing {} plugin(s):", pluginManager.m_plugins.size());
+            ConColorMsg(colInfo, "Listing %zu plugin(s):\n", pluginManager.m_plugins.size());
 
             for (auto& p : pluginManager.m_plugins)
             {
                 auto* api = p->api;
 
-                FP_INFO("  [{}] {} ({})",
+                ConColorMsg(colDefault, "  [%d] %s (%s)\n",
                     p->id,
                     api->GetName(),
                     api->GetVersion());
@@ -67,7 +72,7 @@ namespace commands {
         {
             if (argc < 3)
             {
-                FP_ERROR("Usage: toolkit load <name>");
+                ConColorMsg(colError, "Usage: toolkit load <name>\n");
                 return;
             }
 
@@ -75,18 +80,18 @@ namespace commands {
 
             if (!pluginManager.LoadPlugin(args.Arg(2), err, sizeof(err)))
             {
-                FP_ERROR("Load failed: {}", err);
+                ConColorMsg(colError, "Load failed: %s\n", err);
                 return;
             }
 
-            FP_INFO("Plugin '{}' loaded.", args.Arg(2));
+            ConColorMsg(colInfo, "Plugin '%s' loaded.\n", args.Arg(2));
         }
 
         else if (strcmp(cmd, "unload") == 0)
         {
             if (argc < 3)
             {
-                FP_ERROR("Usage: toolkit unload <id>");
+                ConColorMsg(colError, "Usage: toolkit unload <id>\n");
                 return;
             }
 
@@ -94,24 +99,24 @@ namespace commands {
 
             if (id <= 0)
             {
-                FP_ERROR("Invalid plugin id.");
+                ConColorMsg(colError, "Invalid plugin id.\n");
                 return;
             }
 
             if (!pluginManager.UnloadPlugin(id))
             {
-                FP_ERROR("Plugin {} not found or failed to unload.", id);
+                ConColorMsg(colError, "Plugin %d not found or failed to unload.\n", id);
                 return;
             }
 
-            FP_INFO("Plugin {} unloaded.", id);
+            ConColorMsg(colInfo, "Plugin %d unloaded.\n", id);
         }
 
         else if (strcmp(cmd, "info") == 0)
         {
             if (argc < 3)
             {
-                FP_ERROR("Usage: toolkit info <id>");
+                ConColorMsg(colError, "Usage: toolkit info <id>\n");
                 return;
             }
 
@@ -123,40 +128,40 @@ namespace commands {
                 {
                     auto* api = p->api;
 
-                    FP_INFO("Plugin {} info:", id);
-                    FP_INFO("  Name: {}", api->GetName());
-                    FP_INFO("  Version: {}", api->GetVersion());
-                    FP_INFO("  Author: {}", api->GetAuthor());
-                    FP_INFO("  Description: {}", api->GetDescription());
-                    FP_INFO("  Path: {}", p->path);
+                    ConColorMsg(colInfo, "Plugin %d info:\n", id);
+                    ConColorMsg(colDefault, "  Name: %s\n", api->GetName());
+                    ConColorMsg(colDefault, "  Version: %s\n", api->GetVersion());
+                    ConColorMsg(colDefault, "  Author: %s\n", api->GetAuthor());
+                    ConColorMsg(colDefault, "  Description: %s\n", api->GetDescription());
+                    ConColorMsg(colDefault, "  Path: %s\n", p->path.c_str());
 
                     return;
                 }
             }
 
-            FP_ERROR("Plugin {} not found.", id);
+            ConColorMsg(colError, "Plugin %d not found.\n", id);
         }
 
         else if (strcmp(cmd, "refresh") == 0)
         {
-            FP_INFO("Refreshing plugins...");
+            ConColorMsg(colInfo, "Refreshing plugins...\n");
 
             pluginManager.UnloadAll();
             pluginManager.LoadAll();
 
-            FP_INFO("Plugins refreshed.");
+            ConColorMsg(colInfo, "Plugins refreshed.\n");
         }
 
         else if (strcmp(cmd, "version") == 0)
         {
-            FP_INFO("Source2Toolkit");
-            FP_INFO("  Version: {}", VERSION_STRING);
-            FP_INFO("  Build: {}", BUILD_TIMESTAMP);
+            ConColorMsg(colInfo, "Source2Toolkit\n");
+            ConColorMsg(colDefault, "  Version: %s\n", VERSION_STRING);
+            ConColorMsg(colDefault, "  Build: %s\n", BUILD_TIMESTAMP);
         }
 
         else
         {
-            FP_WARN("Unknown command '{}'", cmd);
+            ConColorMsg(colWarn, "Unknown command '%s'\n", cmd);
         }
     }
 
