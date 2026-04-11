@@ -142,8 +142,6 @@ namespace virtualhooks
         if (!event)
             return {KHook::Action::Ignore, false};
 
-        FP_DEBUG("[EVENT] {}", event->GetName());
-
         bool localDontBroadcast = bDontBroadcast;
         if (!events::DispatchGameEvent(event, Mode::Pre, localDontBroadcast))
             return {KHook::Action::Supersede, false};

@@ -113,8 +113,6 @@ namespace inlinehooks
 
     KHook::Return<void> Inlines::Hook_GameEventManagerInit(IGameEventManager2* pThis)
     {
-        FP_DEBUG("LoadEvents: {}", fmt::ptr(pThis));
-
         shared::g_pGameEventManager = pThis;
 
         virtualhooks::virtuals.m_FireEventPre.Add(pThis);
