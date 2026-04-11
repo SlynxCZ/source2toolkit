@@ -97,6 +97,21 @@ static std::string FindPluginBinary(const std::string& name)
         return false; \
     } while(0)
 
+bool PluginManager::IsPluginLoaded(const std::string& fullPath)
+{
+    auto normalized = std::filesystem::weakly_canonical(fullPath).string();
+
+    for (auto& p : m_plugins)
+    {
+        auto existing = std::filesystem::weakly_canonical(p->path).string();
+
+        if (existing == normalized)
+            return true;
+    }
+
+    return false;
+}
+
 bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
 {
     std::string fullPath = FindPluginBinary(name);
@@ -205,6 +220,46 @@ bool PluginManager::UnloadPlugin(PluginId id)
     }
 
     return false;
+}
+
+bool PluginManager::LoadMissing()
+{
+    namespace fs = std::filesystem;
+
+    auto dir = paths::GetPluginsDirectory();
+
+    if (!fs::exists(dir))
+        return false;
+
+    char error[256];
+
+    int loaded = 0;
+
+    for (const auto& entry : fs::directory_iterator(dir))
+    {
+        if (!entry.is_regular_file())
+            continue;
+
+        auto path = entry.path();
+
+        if (path.extension() != ".stx")
+            continue;
+
+        auto fullPath = path.string();
+
+        if (IsPluginLoaded(fullPath))
+            continue;
+
+        if (LoadPlugin(path.stem().string().c_str(), error, sizeof(error)))
+        {
+            loaded++;
+        }
+    }
+
+    if (loaded > 0)
+        SetAllLoaded();
+
+    return true;
 }
 
 bool PluginManager::LoadAll()

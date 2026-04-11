@@ -31,8 +31,12 @@ struct ToolkitPlugin
 class PluginManager
 {
 public:
+    bool IsPluginLoaded(const std::string& fullPath);
+
     bool LoadPlugin(const char* path, char* error, size_t maxlen);
     bool UnloadPlugin(int id);
+
+    bool LoadMissing();
 
     bool LoadAll();
     void UnloadAll();

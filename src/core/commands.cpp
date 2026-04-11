@@ -16,6 +16,21 @@
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
 
+#define ANSI_RESET  "\033[0m"
+#define ANSI_RED    "\033[31m"
+#define ANSI_GREEN  "\033[32m"
+#define ANSI_YELLOW "\033[33m"
+#define ANSI_BLUE   "\033[34m"
+
+#define LOG_INFO(fmt, ...) \
+ConMsg(ANSI_GREEN fmt ANSI_RESET "\n", ##__VA_ARGS__)
+
+#define LOG_WARN(fmt, ...) \
+ConMsg(ANSI_YELLOW fmt ANSI_RESET "\n", ##__VA_ARGS__)
+
+#define LOG_ERROR(fmt, ...) \
+ConMsg(ANSI_RED fmt ANSI_RESET "\n", ##__VA_ARGS__)
+
 namespace commands {
     static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
     static std::unordered_map<std::string, std::vector<CommandEntry> > consoleListeners;
@@ -28,20 +43,15 @@ namespace commands {
     {
         int argc = args.ArgC();
 
-        const Color colInfo(80, 200, 120, 255);
-        const Color colWarn(255, 200, 80, 255);
-        const Color colError(255, 80, 80, 255);
-        const Color colDefault(200, 200, 200, 255);
-
         if (argc < 2)
         {
-            ConColorMsg(colInfo, "Source2Toolkit commands:\n");
-            ConColorMsg(colDefault, "  toolkit list\n");
-            ConColorMsg(colDefault, "  toolkit load <name>\n");
-            ConColorMsg(colDefault, "  toolkit unload <id>\n");
-            ConColorMsg(colDefault, "  toolkit info <id>\n");
-            ConColorMsg(colDefault, "  toolkit refresh\n");
-            ConColorMsg(colDefault, "  toolkit version\n");
+            LOG_INFO("Source2Toolkit commands:");
+            LOG_INFO("  toolkit list\n");
+            LOG_INFO("  toolkit load <name>\n");
+            LOG_INFO("  toolkit unload <id>\n");
+            LOG_INFO("  toolkit info <id>\n");
+            LOG_INFO("  toolkit refresh\n");
+            LOG_INFO("  toolkit version\n");
             return;
         }
 
@@ -51,17 +61,17 @@ namespace commands {
         {
             if (pluginManager.m_plugins.empty())
             {
-                ConColorMsg(colWarn, "No plugins loaded.\n");
+                LOG_WARN("No plugins loaded.");
                 return;
             }
 
-            ConColorMsg(colInfo, "Listing %zu plugin(s):\n", pluginManager.m_plugins.size());
+            LOG_INFO("Listing %zu plugin(s):", pluginManager.m_plugins.size());
 
             for (auto& p : pluginManager.m_plugins)
             {
                 auto* api = p->api;
 
-                ConColorMsg(colDefault, "  [%d] %s (%s)\n",
+                LOG_INFO("  [%d] %s (%s)\n",
                     p->id,
                     api->GetName(),
                     api->GetVersion());
@@ -72,7 +82,7 @@ namespace commands {
         {
             if (argc < 3)
             {
-                ConColorMsg(colError, "Usage: toolkit load <name>\n");
+                LOG_ERROR("Usage: toolkit load <name>");
                 return;
             }
 
@@ -80,18 +90,18 @@ namespace commands {
 
             if (!pluginManager.LoadPlugin(args.Arg(2), err, sizeof(err)))
             {
-                ConColorMsg(colError, "Load failed: %s\n", err);
+                LOG_ERROR("Load failed: %s", err);
                 return;
             }
 
-            ConColorMsg(colInfo, "Plugin '%s' loaded.\n", args.Arg(2));
+            LOG_INFO("Plugin '%s' loaded.", args.Arg(2));
         }
 
         else if (strcmp(cmd, "unload") == 0)
         {
             if (argc < 3)
             {
-                ConColorMsg(colError, "Usage: toolkit unload <id>\n");
+                LOG_ERROR("Usage: toolkit unload <id>");
                 return;
             }
 
@@ -99,24 +109,24 @@ namespace commands {
 
             if (id <= 0)
             {
-                ConColorMsg(colError, "Invalid plugin id.\n");
+                LOG_ERROR("Invalid plugin id.");
                 return;
             }
 
             if (!pluginManager.UnloadPlugin(id))
             {
-                ConColorMsg(colError, "Plugin %d not found or failed to unload.\n", id);
+                LOG_ERROR("Plugin %d not found or failed to unload.", id);
                 return;
             }
 
-            ConColorMsg(colInfo, "Plugin %d unloaded.\n", id);
+            LOG_INFO("Plugin %d unloaded.", id);
         }
 
         else if (strcmp(cmd, "info") == 0)
         {
             if (argc < 3)
             {
-                ConColorMsg(colError, "Usage: toolkit info <id>\n");
+                LOG_ERROR("Usage: toolkit info <id>");
                 return;
             }
 
@@ -128,40 +138,38 @@ namespace commands {
                 {
                     auto* api = p->api;
 
-                    ConColorMsg(colInfo, "Plugin %d info:\n", id);
-                    ConColorMsg(colDefault, "  Name: %s\n", api->GetName());
-                    ConColorMsg(colDefault, "  Version: %s\n", api->GetVersion());
-                    ConColorMsg(colDefault, "  Author: %s\n", api->GetAuthor());
-                    ConColorMsg(colDefault, "  Description: %s\n", api->GetDescription());
-                    ConColorMsg(colDefault, "  Path: %s\n", p->path.c_str());
-
+                    LOG_INFO("Plugin %d info:", id);
+                    LOG_INFO("  Name: %s\n", api->GetName());
+                    LOG_INFO("  Version: %s\n", api->GetVersion());
+                    LOG_INFO("  Author: %s\n", api->GetAuthor());
+                    LOG_INFO("  Description: %s\n", api->GetDescription());
+                    LOG_INFO("  Path: %s\n", p->path.c_str());
                     return;
                 }
             }
 
-            ConColorMsg(colError, "Plugin %d not found.\n", id);
+            LOG_ERROR("Plugin %d not found.", id);
         }
 
         else if (strcmp(cmd, "refresh") == 0)
         {
-            ConColorMsg(colInfo, "Refreshing plugins...\n");
+            LOG_INFO("Loading missing plugins...");
 
-            pluginManager.UnloadAll();
-            pluginManager.LoadAll();
+            pluginManager.LoadMissing();
 
-            ConColorMsg(colInfo, "Plugins refreshed.\n");
+            LOG_INFO("Done.");
         }
 
         else if (strcmp(cmd, "version") == 0)
         {
-            ConColorMsg(colInfo, "Source2Toolkit\n");
-            ConColorMsg(colDefault, "  Version: %s\n", VERSION_STRING);
-            ConColorMsg(colDefault, "  Build: %s\n", BUILD_TIMESTAMP);
+            LOG_INFO("Source2Toolkit");
+            LOG_INFO("  Version: %s\n", VERSION_STRING);
+            LOG_INFO("  Build: %s\n", BUILD_TIMESTAMP);
         }
 
         else
         {
-            ConColorMsg(colWarn, "Unknown command '%s'\n", cmd);
+            LOG_WARN("Unknown command '%s'", cmd);
         }
     }
 
