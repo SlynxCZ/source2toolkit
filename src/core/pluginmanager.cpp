@@ -17,14 +17,21 @@ PluginManager pluginManager;
 static LibHandle OpenLib(const char* path)
 {
 #ifdef _WIN32
-    std::string fixed = path;
-
-    if (!fixed.ends_with(".dll"))
-        fixed += ".";
-
-    return LoadLibraryA(fixed.c_str());
+    return LoadLibraryA(path);
 #else
-    return dlopen(path, RTLD_NOW);
+    dlerror();
+
+    void* lib = dlopen(path, RTLD_NOW);
+    if (!lib)
+    {
+        const char* err = dlerror();
+        if (err)
+        {
+            fprintf(stderr, "[dlopen ERROR] %s\n", err);
+        }
+    }
+
+    return lib;
 #endif
 }
 
