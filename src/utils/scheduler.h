@@ -35,6 +35,7 @@ public:
 
 class Scheduler : public IToolkitScheduler
 {
+public:
     void NextFrame(std::function<void()> &&task) override;
     Timer* AddTimer(float interval, TimerCallback callback, int flags = 0) override;
     void KillTimer(Timer* timer) override;

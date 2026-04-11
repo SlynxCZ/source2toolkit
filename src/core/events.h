@@ -28,6 +28,7 @@ namespace events {
 
     class EventManager : public IToolkitEvents
     {
+    public:
         void RegGameEvent(const char* pchName, GameEventHandler handler, Mode mode) override;
     };
 

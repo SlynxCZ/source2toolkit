@@ -10,10 +10,12 @@ set(FMT_WERROR OFF CACHE BOOL "" FORCE)
 
 set(METAMOD_DIR vendor/metamod-source)
 
+# core build
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(vendor/source2toolkit-sdk)
 
-# TEST SUITE
+# tests build
+set(SOURCE2TOOLKIT_CORE OFF CACHE BOOL "" FORCE)
 add_subdirectory(test)
 
 SET(source2toolkit_include_directories
