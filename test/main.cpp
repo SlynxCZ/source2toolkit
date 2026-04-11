@@ -6,6 +6,9 @@
 #include "source2toolkit/IToolkitTypes.h"
 
 #include "source2toolkit/utils/addresses.h"
+#include "source2toolkit/utils/commands.h"
+#include "source2toolkit/utils/convars.h"
+#include "source2toolkit/utils/events.h"
 
 #include "khook.hpp"
 #include "eiface.h"
@@ -54,7 +57,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     TOOLKIT_LOG(this, "Events ptr: %p\n", api->Events());
     TOOLKIT_LOG(this, "Scheduler ptr: %p\n", api->Scheduler());
 
-    api->Commands()->RegConCommand("s2t_test", [](const CCommandContext& ctx, const CCommand& cmd, Mode mode)
+    UTIL_RegConCommand("s2t_test", [](const CCommandContext& ctx, const CCommand& cmd, Mode mode)
     {
         TOOLKIT_LOG(&g_Plugin, "s2t_test command executed!\n");
         CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot());
@@ -64,7 +67,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
         player->PrintToChat("s2t_test executed");
     });
 
-    api->Events()->RegGameEvent("player_connect_full", [](IGameEvent* event, Mode mode, bool& dontBroadcast)
+    UTIL_RegGameEvent("player_connect_full", [](IGameEvent* event, Mode mode, bool& dontBroadcast)
     {
         CCSPlayerController* player = static_cast<CCSPlayerController*>(event->GetPlayerController("userid"));
         if (!player)
@@ -86,8 +89,20 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     return true;
 }
 
+static uint16 s_autoIdx = 0;
+static uint16 s_enableIdx = 0;
+
+static bool m_WasAutoBhop = false;
+static bool m_WasEnableBhop = false;
+
 bool Plugin::Unload(char* error, size_t maxlen)
 {
+    if (s_autoIdx && m_WasAutoBhop)
+        UTIL_SetConVarBool(s_autoIdx, false);
+
+    if (s_enableIdx && m_WasEnableBhop)
+        UTIL_SetConVarBool(s_enableIdx, false);
+
     m_ProcessMovement.~Function();
 
     TOOLKIT_LOG(this, "Unload() done\n");
@@ -95,44 +110,39 @@ bool Plugin::Unload(char* error, size_t maxlen)
     return true;
 }
 
-bool m_WasAutoBhop = false;
-bool m_WasEnableBhop = false;
-
 KHook::Return<void> Plugin::Hook_ProcessMovementPre(CCSPlayer_MovementServices* pThis, void*, void*)
 {
     if (!pThis)
         return {KHook::Action::Ignore};
 
     auto* pawn = pThis->GetPlayerPawn();
-    if (!pawn) return {KHook::Action::Ignore};
-
-    auto* player = pawn->GetController();
-    if (!player) return {KHook::Action::Ignore};
-
-    bool shouldHaveBhop = true;
-    if (!shouldHaveBhop)
+    if (!pawn)
         return {KHook::Action::Ignore};
 
-    ConVarRef refAuto{"sv_autobunnyhopping"};
-    ConVarRefAbstract autoVar{refAuto};
+    auto* player = pawn->GetController();
+    if (!player)
+        return {KHook::Action::Ignore};
 
-    if (autoVar.IsConVarDataAvailable())
+    if (!s_autoIdx)
+        s_autoIdx = UTIL_FindConVar("sv_autobunnyhopping");
+
+    if (!s_enableIdx)
+        s_enableIdx = UTIL_FindConVar("sv_enablebunnyhopping");
+
+    if (s_autoIdx)
     {
-        if (!autoVar.GetBool())
+        if (!UTIL_GetConVarBool(s_autoIdx))
         {
-            autoVar.SetBool(true);
+            UTIL_SetConVarBool(s_autoIdx, true);
             m_WasAutoBhop = true;
         }
     }
 
-    ConVarRef refEnable{"sv_enablebunnyhopping"};
-    ConVarRefAbstract enableVar{refEnable};
-
-    if (enableVar.IsConVarDataAvailable())
+    if (s_enableIdx)
     {
-        if (!enableVar.GetBool())
+        if (!UTIL_GetConVarBool(s_enableIdx))
         {
-            enableVar.SetBool(true);
+            UTIL_SetConVarBool(s_enableIdx, true);
             m_WasEnableBhop = true;
         }
     }
