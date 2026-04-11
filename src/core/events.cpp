@@ -13,19 +13,33 @@ namespace events {
 
     EventManager eventManager;
 
+    static void RegisterListenerIfNeeded(const std::string& name)
+    {
+        if (!shared::g_pGameEventManager)
+            return;
+
+        if (!shared::g_pGameEventManager->FindListener(&eventListener, name.c_str()))
+        {
+            shared::g_pGameEventManager->AddListener(&eventListener, name.c_str(), true);
+        }
+    }
+
     void EventManager::RegGameEvent(const char* pchName, GameEventHandler handler, Mode mode) {
         gameEvents[pchName].push_back({handler, mode});
-        if (!shared::g_pGameEventManager->FindListener(&eventListener, pchName))
-        {
-            shared::g_pGameEventManager->AddListener(&eventListener, pchName, true);
-        }
+        RegisterListenerIfNeeded(pchName);
     }
 
     void EventListener::FireGameEvent(IGameEvent* pEvent) {}
 
     void InitEvents()
     {
-        // Todo: shared API vtable
+        if (!shared::g_pGameEventManager)
+            return;
+
+        for (const auto& [name, _] : gameEvents)
+        {
+            RegisterListenerIfNeeded(name);
+        }
     }
 
     void DestructEvents()
