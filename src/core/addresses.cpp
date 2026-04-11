@@ -30,6 +30,93 @@ namespace addresses
         return true;
     }
 
+    DynLibUtils::CModule& Addresses::GetOrLoadModule(void* ptr)
+    {
+        uintptr_t key = reinterpret_cast<uintptr_t>(ptr);
+
+        auto it = m_Modules.find(key);
+        if (it != m_Modules.end())
+            return it->second;
+
+        auto [iter, _] = m_Modules.emplace(key, DynLibUtils::CModule(DynLibUtils::CMemory(ptr)));
+        return iter->second;
+    }
+
+    void* Addresses::GetModuleHandle(void* modulePtr)
+    {
+        return GetOrLoadModule(modulePtr).GetModuleHandle();
+    }
+
+    uintptr_t Addresses::GetModuleBase(void* modulePtr)
+    {
+        return GetOrLoadModule(modulePtr).GetModuleBase().GetPtr();
+    }
+
+    uintptr_t Addresses::FindPattern(void* modulePtr, const char* pattern)
+    {
+        auto& mod = GetOrLoadModule(modulePtr);
+        return mod.FindPattern(pattern).GetPtr();
+    }
+
+    uintptr_t Addresses::FindPatternInSection(void* modulePtr, const char* section, const char* pattern)
+    {
+        auto& mod = GetOrLoadModule(modulePtr);
+        auto sec = mod.GetSectionByName(section);
+
+        if (!sec.IsSectionValid())
+            return 0;
+
+        return mod.FindPattern(pattern, nullptr, &sec).GetPtr();
+    }
+
+    uintptr_t Addresses::GetFunctionByName(void* modulePtr, const char* symbol)
+    {
+        auto& mod = GetOrLoadModule(modulePtr);
+        return mod.GetFunctionByName(symbol).GetPtr();
+    }
+
+    uintptr_t Addresses::GetVirtualTableByName(void* modulePtr, const char* name)
+    {
+        auto& mod = GetOrLoadModule(modulePtr);
+        return mod.GetVirtualTableByName(name).GetPtr();
+    }
+
+    uintptr_t Addresses::Offset(uintptr_t address, ptrdiff_t offset)
+    {
+        return DynLibUtils::CMemory(address).Offset(offset).GetPtr();
+    }
+
+    uintptr_t Addresses::OffsetSelf(uintptr_t& address, ptrdiff_t offset)
+    {
+        DynLibUtils::CMemory mem(address);
+        mem.OffsetSelf(offset);
+        address = mem.GetPtr();
+        return address;
+    }
+
+    uintptr_t Addresses::Deref(uintptr_t address, int count)
+    {
+        return DynLibUtils::CMemory(address).Deref(count).GetPtr();
+    }
+
+    uintptr_t Addresses::DerefSelf(uintptr_t& address, int count)
+    {
+        DynLibUtils::CMemory mem(address);
+        mem.DerefSelf(count);
+        address = mem.GetPtr();
+        return address;
+    }
+
+    uintptr_t Addresses::ResolveRelativeAddress(uintptr_t address, ptrdiff_t offset, ptrdiff_t size)
+    {
+        return DynLibUtils::CMemory(address).ResolveRelativeAddress(offset, size).GetPtr();
+    }
+
+    uintptr_t Addresses::FollowNearCall(uintptr_t address, ptrdiff_t offset, ptrdiff_t size)
+    {
+        return DynLibUtils::CMemory(address).FollowNearCall(offset, size).GetPtr();
+    }
+
     CBaseEntity_CreateEntityByName_t Addresses::CBaseEntity_CreateEntityByName()
     {
         return CreateEntityByName;

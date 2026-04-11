@@ -15,10 +15,6 @@ public:
 public:
     bool Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late) override;
     bool Unload(char* error, size_t maxlen) override;
-public:
-    KHook::Return<void> Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick);
-private:
-    KHook::Virtual<IServerGameDLL, void, bool, bool, bool> m_GameFrame;
 private:
     const char* GetAuthor() override;
     const char* GetName() override;

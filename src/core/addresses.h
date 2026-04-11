@@ -16,7 +16,8 @@
 
 #define RESOLVE_SIG(handle, name, pattern, variable)                  \
 {                                                                     \
-    auto addr = DynLibUtils::CModule(handle).FindPattern(pattern);    \
+    auto& mod = toolkitAddresses.GetOrLoadModule(handle);             \
+    auto addr = mod.FindPattern(pattern);                             \
                                                                       \
     if (!addr)                                                        \
     {                                                                 \
@@ -50,21 +51,26 @@ namespace addresses
 
     class Addresses : public IToolkitAddresses {
     public:
-        CBaseEntity_CreateEntityByName_t CreateEntityByName = nullptr;
-        CBaseEntity_DispatchSpawn_t DispatchSpawn = nullptr;
-        CBaseModelEntity_SetModel_t SetModel = nullptr;
-        CBasePlayerController_SetPawn_t SetPawn = nullptr;
-        CBasePlayerPawn_RemovePlayerItem_t RemovePlayerItem = nullptr;
-        CGameRules_TerminateRound_t TerminateRound = nullptr;
-        CCSPlayerController_LegacyGameEventListener_t LegacyGameEventListener = nullptr;
-        CCSPlayerController_SwitchTeam_t SwitchTeam = nullptr;
-        CEntityInstance_AcceptInput_t AcceptInput = nullptr;
-        CEntityIOOutput_FireOutputInternal_t FireOutputInternal = nullptr;
-        CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
-        CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
-        CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
-        CGameEventManager_Init_t GameEventManagerInit = nullptr;
+        DynLibUtils::CModule& GetOrLoadModule(void* ptr);
     public:
+        void* GetModuleHandle(void* modulePtr) override;
+        uintptr_t GetModuleBase(void* modulePtr) override;
+
+        uintptr_t FindPattern(void* modulePtr, const char* pattern) override;
+        uintptr_t FindPatternInSection(void* modulePtr, const char* section, const char* pattern) override;
+
+        uintptr_t GetFunctionByName(void* modulePtr, const char* symbol) override;
+        uintptr_t GetVirtualTableByName(void* modulePtr, const char* name) override;
+
+        uintptr_t Offset(uintptr_t address, ptrdiff_t offset) override;
+        uintptr_t OffsetSelf(uintptr_t& address, ptrdiff_t offset) override;
+
+        uintptr_t Deref(uintptr_t address, int count = 1) override;
+        uintptr_t DerefSelf(uintptr_t& address, int count = 1) override;
+
+        uintptr_t ResolveRelativeAddress(uintptr_t address, ptrdiff_t offset = 0x0, ptrdiff_t size = 0x4) override;
+        uintptr_t FollowNearCall(uintptr_t address, ptrdiff_t offset = 0x1, ptrdiff_t size = 0x5) override;
+
         CBaseEntity_CreateEntityByName_t CBaseEntity_CreateEntityByName() override;
         CBaseEntity_DispatchSpawn_t CBaseEntity_DispatchSpawn() override;
         CBaseModelEntity_SetModel_t CBaseModelEntity_SetModel() override;
@@ -79,6 +85,23 @@ namespace addresses
         CGameEntitySystem_FindEntityByClassName_t CGameEntitySystem_FindEntityByClassName() override;
         CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
         CGameEventManager_Init_t CGameEventManager_Init() override;
+    public:
+        CBaseEntity_CreateEntityByName_t CreateEntityByName = nullptr;
+        CBaseEntity_DispatchSpawn_t DispatchSpawn = nullptr;
+        CBaseModelEntity_SetModel_t SetModel = nullptr;
+        CBasePlayerController_SetPawn_t SetPawn = nullptr;
+        CBasePlayerPawn_RemovePlayerItem_t RemovePlayerItem = nullptr;
+        CGameRules_TerminateRound_t TerminateRound = nullptr;
+        CCSPlayerController_LegacyGameEventListener_t LegacyGameEventListener = nullptr;
+        CCSPlayerController_SwitchTeam_t SwitchTeam = nullptr;
+        CEntityInstance_AcceptInput_t AcceptInput = nullptr;
+        CEntityIOOutput_FireOutputInternal_t FireOutputInternal = nullptr;
+        CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
+        CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
+        CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
+        CGameEventManager_Init_t GameEventManagerInit = nullptr;
+    private:
+        std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
     };
 
     extern Addresses toolkitAddresses;
