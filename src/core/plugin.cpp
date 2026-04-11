@@ -39,6 +39,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     if (late)
     {
         META_CONPRINTF("Plugin can't be loaded manually.\n");
+        return false;
     }
 
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pEngine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
