@@ -30,7 +30,6 @@ namespace virtualhooks
         m_StartupServer(&INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer),
         m_DispatchConCommand(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr),
         m_ClientCommand(&IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr),
-        m_LoadEventsFromFile(&IGameEventManager2::LoadEventsFromFile, this, &Virtuals::Hook_LoadEventsFromFile, nullptr),
         m_FireEventPre(&IGameEventManager2::FireEvent,this, &Virtuals::Hook_FireEvent, nullptr),
         m_FireEventPost(&IGameEventManager2::FireEvent, this, nullptr, &Virtuals::Hook_FireEventPost)
     {
@@ -42,12 +41,6 @@ namespace virtualhooks
         m_StartupServer.Add(shared::g_pNetworkServerService);
         m_DispatchConCommand.Add(shared::g_pCVar);
         m_ClientCommand.Add(shared::g_pGameClients);
-
-        m_pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
-
-        m_LoadEventsFromFile.AddGlobal(m_pCGameEventManagerVTable);
-        m_FireEventPre.AddGlobal(m_pCGameEventManagerVTable);
-        m_FireEventPost.AddGlobal(m_pCGameEventManagerVTable);
     }
 
     void Virtuals::DestructListeners()
@@ -56,9 +49,8 @@ namespace virtualhooks
         m_StartupServer.Remove(shared::g_pNetworkServerService);
         m_DispatchConCommand.Remove(shared::g_pCVar);
         m_ClientCommand.Remove(shared::g_pGameClients);
-        m_LoadEventsFromFile.RemoveGlobal(m_pCGameEventManagerVTable);
-        m_FireEventPre.RemoveGlobal(m_pCGameEventManagerVTable);
-        m_FireEventPost.RemoveGlobal(m_pCGameEventManagerVTable);
+        m_FireEventPre.Remove(shared::g_pGameEventManager);
+        m_FireEventPost.Remove(shared::g_pGameEventManager);
     }
 
     KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
@@ -145,17 +137,12 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAll)
-    {
-        ExecuteOnce(shared::g_pGameEventManager = pThis);
-        events::InitEvents();
-        return {KHook::Action::Ignore, 0};
-    }
-
     KHook::Return<bool> Virtuals::Hook_FireEvent(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast)
     {
         if (!event)
             return {KHook::Action::Ignore, false};
+
+        FP_DEBUG("[EVENT] {}", event->GetName());
 
         bool localDontBroadcast = bDontBroadcast;
         if (!events::DispatchGameEvent(event, Mode::Pre, localDontBroadcast))

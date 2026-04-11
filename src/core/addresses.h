@@ -41,6 +41,7 @@ class CBasePlayerController;
 class CGameRules;
 class CCSPlayerController;
 class IGameEventListener2;
+class IGameEventManager2;
 class IEntityFindFilter;
 
 namespace addresses
@@ -62,6 +63,7 @@ namespace addresses
         CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
         CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
         CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
+        CGameEventManager_Init_t GameEventManagerInit = nullptr;
     public:
         CBaseEntity_CreateEntityByName_t CBaseEntity_CreateEntityByName() override;
         CBaseEntity_DispatchSpawn_t CBaseEntity_DispatchSpawn() override;
@@ -76,6 +78,7 @@ namespace addresses
         CEntitySystem_AddEntityIOEvent_t CEntitySystem_AddEntityIOEvent() override;
         CGameEntitySystem_FindEntityByClassName_t CGameEntitySystem_FindEntityByClassName() override;
         CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
+        CGameEventManager_Init_t CGameEventManager_Init() override;
     };
 
     extern Addresses toolkitAddresses;
