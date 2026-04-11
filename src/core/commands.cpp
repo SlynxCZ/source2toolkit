@@ -46,12 +46,12 @@ namespace commands {
         if (argc < 2)
         {
             LOG_INFO("Source2Toolkit commands:");
-            LOG_INFO("  toolkit list\n");
-            LOG_INFO("  toolkit load <name>\n");
-            LOG_INFO("  toolkit unload <id>\n");
-            LOG_INFO("  toolkit info <id>\n");
-            LOG_INFO("  toolkit refresh\n");
-            LOG_INFO("  toolkit version\n");
+            LOG_INFO("  toolkit list");
+            LOG_INFO("  toolkit load <name>");
+            LOG_INFO("  toolkit unload <id>");
+            LOG_INFO("  toolkit info <id>");
+            LOG_INFO("  toolkit refresh");
+            LOG_INFO("  toolkit version");
             return;
         }
 
@@ -139,11 +139,11 @@ namespace commands {
                     auto* api = p->api;
 
                     LOG_INFO("Plugin %d info:", id);
-                    LOG_INFO("  Name: %s\n", api->GetName());
-                    LOG_INFO("  Version: %s\n", api->GetVersion());
-                    LOG_INFO("  Author: %s\n", api->GetAuthor());
-                    LOG_INFO("  Description: %s\n", api->GetDescription());
-                    LOG_INFO("  Path: %s\n", p->path.c_str());
+                    LOG_INFO("  Name: %s", api->GetName());
+                    LOG_INFO("  Version: %s", api->GetVersion());
+                    LOG_INFO("  Author: %s", api->GetAuthor());
+                    LOG_INFO("  Description: %s", api->GetDescription());
+                    LOG_INFO("  Path: %s", p->path.c_str());
                     return;
                 }
             }
@@ -163,8 +163,8 @@ namespace commands {
         else if (strcmp(cmd, "version") == 0)
         {
             LOG_INFO("Source2Toolkit");
-            LOG_INFO("  Version: %s\n", VERSION_STRING);
-            LOG_INFO("  Build: %s\n", BUILD_TIMESTAMP);
+            LOG_INFO("  Version: %s", VERSION_STRING);
+            LOG_INFO("  Build: %s", BUILD_TIMESTAMP);
         }
 
         else
