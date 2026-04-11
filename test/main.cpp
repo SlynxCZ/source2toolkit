@@ -13,6 +13,8 @@
 #include "schemasystem.h"
 #include "interfaces/interfaces.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayer_MovementServices.h"
 
 Plugin g_Plugin;
 TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
@@ -95,7 +97,16 @@ bool Plugin::Unload(char* error, size_t maxlen)
 
 KHook::Return<void> Plugin::Hook_ProcessMovement(CCSPlayer_MovementServices* pThis, void* pMoveData, void* pUnk001)
 {
-    TOOLKIT_LOG(this, "Hook_ProcessMovement(%p, %p, %p)", pThis, pMoveData, pUnk001);
+    if (!pThis)
+        return {KHook::Action::Ignore};
+
+    CCSPlayerPawn* pPawn = pThis->GetPlayerPawn();
+    if (!pPawn) return {KHook::Action::Ignore};
+
+    CCSPlayerController* pPlayer = pPawn->GetController();
+    if (!pPlayer) return {KHook::Action::Ignore};
+
+    pPlayer->ReplicateConVar("sv_autobunnyhopping", "1");
 
     return {KHook::Action::Ignore};
 }
