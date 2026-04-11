@@ -213,6 +213,8 @@ bool PluginManager::UnloadPlugin(PluginId id)
         char err[128]{};
         p->api->Unload(err, sizeof(err));
 
+        p->listeners.clear();
+
         CloseLib(p->lib);
 
         m_plugins.erase(it);
@@ -302,6 +304,8 @@ void PluginManager::UnloadAll()
 
         char err[128]{};
         p->api->Unload(err, sizeof(err));
+
+        p->listeners.clear();
 
         CloseLib(p->lib);
     }
