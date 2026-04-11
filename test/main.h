@@ -1,0 +1,20 @@
+﻿#ifndef SOURCE2TOOLKIT_TEST_LIBRARY_H
+#define SOURCE2TOOLKIT_TEST_LIBRARY_H
+
+#pragma once
+
+#include "source2toolkit/IToolkitPlugin.h"
+
+class Plugin final : public IToolkitPlugin, IToolkitListener
+{
+public:
+    bool Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late) override;
+    bool Unload(char* error, size_t maxlen) override;
+private:
+    const char* GetAuthor() override;
+    const char* GetName() override;
+    const char* GetDescription() override;
+    const char* GetVersion() override;
+};
+
+#endif //SOURCE2TOOLKIT_TEST_LIBRARY_H
