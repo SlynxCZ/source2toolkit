@@ -264,7 +264,6 @@ namespace commands {
 
         commandCallbacks[key] = { owner, nativeHandler };
 
-        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
         RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
         RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
     }
