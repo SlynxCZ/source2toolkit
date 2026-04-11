@@ -27,11 +27,6 @@
 CS2ToolkitPlugin g_S2ToolkitPlugin;
 PLUGIN_EXPOSE(Source2Toolkit, g_S2ToolkitPlugin);
 
-CGameEntitySystem* GameEntitySystem()
-{
-    return shared::g_pEntitySystem;
-}
-
 bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool late)
 {
     PLUGIN_SAVEVARS();

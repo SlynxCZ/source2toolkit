@@ -12,14 +12,11 @@
 #include "dynlibutils/module.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
+#include "source2toolkit/schema/schema.h"
 #include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
 #include "source2toolkit/schema/entity/classes/CCSWeaponBase.h"
-
-class GameSessionConfiguration_t
-{
-};
 
 namespace virtualhooks
 {
