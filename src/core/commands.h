@@ -21,12 +21,6 @@ namespace commands {
         Mode mode;
     };
 
-    struct CallbackEntry
-    {
-        PluginId owner;
-        CommandHandler handler;
-    };
-
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
     {
         return [fn](const CCommandContext& ctx, const CCommand& args, Mode mode) -> Action
