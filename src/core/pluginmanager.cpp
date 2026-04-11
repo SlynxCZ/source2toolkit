@@ -14,10 +14,15 @@
 
 PluginManager pluginManager;
 
-static LibHandle OpenLib(const char* path)
+static LibHandle OpenLib(const char* path, std::string& outError)
 {
 #ifdef _WIN32
-    return LoadLibraryA(path);
+    auto lib = LoadLibraryA(path);
+    if (!lib)
+    {
+        outError = "LoadLibrary failed";
+    }
+    return lib;
 #else
     dlerror();
 
@@ -25,10 +30,7 @@ static LibHandle OpenLib(const char* path)
     if (!lib)
     {
         const char* err = dlerror();
-        if (err)
-        {
-            fprintf(stderr, "[dlopen ERROR] %s\n", err);
-        }
+        outError = err ? err : "unknown dlopen error";
     }
 
     return lib;
@@ -121,11 +123,15 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
         }
     }
 
-    auto lib = OpenLib(fullPath.c_str());
+    std::string dlErr;
+    auto lib = OpenLib(fullPath.c_str(), dlErr);
+
     if (!lib)
     {
         if (error && maxlen)
-            snprintf(error, maxlen, "Failed to load %s", fullPath.c_str());
+            snprintf(error, maxlen, "%s", dlErr.c_str());
+
+        FP_ERROR("Failed to load {}: {}", fullPath, dlErr);
         return false;
     }
 
@@ -222,10 +228,7 @@ bool PluginManager::LoadAll()
         if (path.extension() != ".stx")
             continue;
 
-        if (!LoadPlugin(path.stem().string().c_str(), error, sizeof(error)))
-        {
-            FP_ERROR("Failed to load {}: {}", path.string(), error);
-        }
+        LoadPlugin(path.stem().string().c_str(), error, sizeof(error));
     }
 
     SetAllLoaded();
