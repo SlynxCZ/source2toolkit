@@ -69,3 +69,22 @@ cd source2toolkit
 mkdir build && cd build
 cmake ..
 cmake --build . --config Release
+```
+
+## Documentation
+
+- Docs: https://www.source2toolkit.net  
+- Getting Started: https://www.source2toolkit.net/docs
+- API Reference: https://www.source2toolkit.net/docs
+
+---
+
+## License
+
+This project is licensed under the GNU General Public License v3.0.
+
+---
+
+<div align="center">
+  <strong>Everything you need to build Source2Toolkit plugins. Nothing more.</strong>
+</div>
