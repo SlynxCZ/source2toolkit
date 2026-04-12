@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - '*'
+    paths:
+      - pushbuild.txt
   workflow_dispatch:
 
 permissions:
