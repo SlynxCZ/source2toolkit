@@ -10,28 +10,10 @@
 
 using TimerCallback = std::function<void()>;
 
-enum TimerFlags {
-    TIMER_FLAG_REPEAT = 1 << 0,
-    TIMER_FLAG_NO_MAPCHANGE = 1 << 1,
-};
-
 extern bool g_bHasTicked;
 extern double g_dUniversalTime;
 extern double g_dLastTickTime;
 extern double g_dTimerNextThink;
-
-class Timer {
-public:
-    Timer(float interval, double execTime, TimerCallback callback, int flags);
-    ~Timer() = default;
-
-    float Interval;
-    double ExecTime;
-    TimerCallback Callback;
-    int Flags;
-    bool InExec = false;
-    bool KillMe = false;
-};
 
 class Scheduler : public IToolkitScheduler
 {
