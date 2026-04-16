@@ -4,6 +4,7 @@
 //
 #include "commands.h"
 
+#include "menus.h"
 #include "pluginapi.h"
 #include "pluginmanager.h"
 #include "raytrace.h"
@@ -173,6 +174,24 @@ namespace commands {
         }
     }
 
+    static void HandleMenuCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
+    {
+        CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot().Get());
+        if (!player || player->m_iConnected() != PlayerConnectedState::PlayerConnected)
+            return;
+
+        if (args.ArgC() < 1)
+            return;
+
+        const char* cmd = args.Arg(0);
+
+        int key = atoi(cmd);
+        if (key < 1 || key > 9)
+            return;
+
+        menus::menuManager.OnKeyPress(player, key);
+    }
+
     void InitCommands()
     {
         commandsManager.RegConCommand(0, "source2toolkit", HandleToolkitCommand);
@@ -182,6 +201,16 @@ namespace commands {
         commandsManager.RegConCommand(0, "stoolkit", HandleToolkitCommand);
         commandsManager.RegConCommand(0, "st", HandleToolkitCommand);
         commandsManager.RegConCommand(0, "toolkit", HandleToolkitCommand);
+
+        commandsManager.RegConCommand(0, "1", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "2", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "3", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "4", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "5", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "6", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "7", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "8", HandleMenuCommand);
+        commandsManager.RegConCommand(0, "9", HandleMenuCommand);
     }
 
     void DestructCommands()
