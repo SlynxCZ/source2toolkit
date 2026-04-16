@@ -67,8 +67,8 @@ namespace menus
         html += "</font></b><br>\n";
 
         int keyOffset = 1;
-        const int end = std::min(currentOffset_ + MenuItemsPerPage(), total);
-        for (int i = currentOffset_; i < end; ++i)
+        const int pageEnd = std::min(currentOffset_ + MenuItemsPerPage(), total);
+        for (int i = currentOffset_; i < pageEnd; ++i)
         {
             const auto& opt = opts[i];
             const std::string& color = opt.Disabled ? chMenu_->DisabledColor : chMenu_->EnabledColor;
