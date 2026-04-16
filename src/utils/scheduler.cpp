@@ -60,10 +60,6 @@ void Scheduler::KillTimer(Timer *timer) {
         killFrom(once_off_timers, timer);
 }
 
-Timer::Timer(float interval, double execTime, TimerCallback callback, int flags)
-    : Interval(interval), ExecTime(execTime), Callback(std::move(callback)), Flags(flags) {
-}
-
 void scheduler::Init() {
     g_dUniversalTime = 0.0;
     g_dLastTickTime = 0.0;

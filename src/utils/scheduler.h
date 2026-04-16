@@ -8,8 +8,6 @@
 
 #include "source2toolkit/IToolkitScheduler.h"
 
-using TimerCallback = std::function<void()>;
-
 extern bool g_bHasTicked;
 extern double g_dUniversalTime;
 extern double g_dLastTickTime;
