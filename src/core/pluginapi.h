@@ -37,6 +37,7 @@ public:
     IToolkitEntityIO* EntityIO() override;
     IToolkitEvents* Events() override;
     IToolkitGameConfig* GameConfig() override;
+    IToolkitMenus* Menus() override;
     IToolkitScheduler* Scheduler() override;
     IToolkitTrace* Trace() override;
 

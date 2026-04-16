@@ -10,6 +10,7 @@
 #include "convars.h"
 #include "entityio.h"
 #include "events.h"
+#include "menus.h"
 #include "plugin.h"
 #include "source2toolkit/IToolkitPlugin.h"
 
@@ -238,6 +239,11 @@ IToolkitEvents* PluginApi::Events()
 IToolkitGameConfig* PluginApi::GameConfig()
 {
     return shared::g_pGameConfig;
+}
+
+IToolkitMenus* PluginApi::Menus()
+{
+    return &menus::menuManager;
 }
 
 IToolkitScheduler* PluginApi::Scheduler()
