@@ -67,7 +67,7 @@ namespace menus
         html += "</font></b><br>\n";
 
         int keyOffset = 1;
-        const int pageEnd = std::min(currentOffset_ + MenuItemsPerPage(), total);
+        const int pageEnd = (std::min)(currentOffset_ + MenuItemsPerPage(), total);
         for (int i = currentOffset_; i < pageEnd; ++i)
         {
             const auto& opt = opts[i];
@@ -156,7 +156,7 @@ namespace menus
 
     void CenterHtmlMenuInstance::Close()
     {
-        IMenuInstance::Close();
+        menuManager.CloseActiveMenu(player_);
         if (player_)
         {
             player_->PrintToCenterHtml(" ", 3);

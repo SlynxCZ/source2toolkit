@@ -14,6 +14,10 @@
 #include <string_view>
 #include <utility>
 
+#ifdef _WIN32
+#undef GetModuleHandle
+#endif
+
 namespace DynLibUtils {
 
 class CModule
