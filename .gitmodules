@@ -5,3 +5,6 @@
 	path = vendor/metamod-source
 	url = https://github.com/FUNPLAY-pro-CS2/metamod-source.git
 	branch = khook
+[submodule "vendor/source2toolkit-sdk"]
+	path = vendor/source2toolkit-sdk
+	url = https://github.com/SlynxCZ/source2toolkit-sdk.git
