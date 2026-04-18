@@ -55,6 +55,7 @@ namespace addresses
     public:
         void* GetModuleHandle(void* modulePtr) override;
         uintptr_t GetModuleBase(void* modulePtr) override;
+        const char* GetModulePath(void* modulePtr) override;
 
         uintptr_t FindPattern(void* modulePtr, const char* pattern) override;
         uintptr_t FindPatternInSection(void* modulePtr, const char* section, const char* pattern) override;

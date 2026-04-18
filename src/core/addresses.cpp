@@ -52,6 +52,11 @@ namespace addresses
         return GetOrLoadModule(modulePtr).GetModuleBase().GetPtr();
     }
 
+    const char* Addresses::GetModulePath(void* modulePtr)
+    {
+        return GetOrLoadModule(modulePtr).GetModulePath().data();
+    }
+
     uintptr_t Addresses::FindPattern(void* modulePtr, const char* pattern)
     {
         auto& mod = GetOrLoadModule(modulePtr);
