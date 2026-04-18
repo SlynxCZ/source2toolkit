@@ -12,14 +12,14 @@
 #endif
 #include "utlstring.h"
 
-class IGameEventListener2;
+class CServerSideClient_GameEventLegacyProxy;
 
 class CSource1LegacyGameEventGameSystem
 {
 public:
     CUtlString* GetName();
 
-    IGameEventListener2* GetLegacyGameEventListener(int slot);
+    CServerSideClient_GameEventLegacyProxy* GetLegacyGameEventListener(int slot);
 };
 
 #endif //CSOURCE1LEGACYGAMEEVENTSYSTEM_H

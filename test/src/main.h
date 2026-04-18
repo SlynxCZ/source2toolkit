@@ -21,13 +21,12 @@ public:
     bool Unload(char* error, size_t maxlen) override;
 public:
     KHook::Return<bool> Hook_ListenBitsReceived(CSource1LegacyGameEventGameSystem* pThis, CLCMsg_ListenEvents* pMsg);
-    KHook::Return<int> Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAlls);
 protected:
     KHook::Function<bool, CSource1LegacyGameEventGameSystem*, CLCMsg_ListenEvents*> m_hListenBitsReceived;
-    KHook::Virtual<IGameEventManager2, int, const char*, bool> m_hLoadEventsFromFile;
 protected:
     uintptr_t m_pListenBitsReceived;
-    IGameEventManager2* m_pCGameEventManagerVTable;
+public:
+    void LoadEventsFromFile(const char* path, const char* kvName, int& currentId);
 private:
     const char* GetAuthor() override;
     const char* GetName() override;

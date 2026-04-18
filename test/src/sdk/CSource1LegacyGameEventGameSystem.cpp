@@ -18,7 +18,7 @@ CUtlString* CSource1LegacyGameEventGameSystem::GetName()
     return (CUtlString*)(UTIL_Offset((uintptr_t)this, UTIL_GetOffset("CSource1LegacyGameEventGameSystem_Name")));
 }
 
-IGameEventListener2* CSource1LegacyGameEventGameSystem::GetLegacyGameEventListener(int slot)
+CServerSideClient_GameEventLegacyProxy* CSource1LegacyGameEventGameSystem::GetLegacyGameEventListener(int slot)
 {
     if (slot < 0 || slot > 63)
     {
@@ -26,5 +26,7 @@ IGameEventListener2* CSource1LegacyGameEventGameSystem::GetLegacyGameEventListen
         return nullptr;
     }
 
-    return g_ToolkitAPI->Addresses()->CCSPlayerController_LegacyGameEventListener()(CPlayerSlot(slot));
+    uintptr_t base = UTIL_Offset((uintptr_t)this, UTIL_GetOffset("CSource1LegacyGameEventGameSystem_Listeners"));
+
+    return (CServerSideClient_GameEventLegacyProxy*)(UTIL_Offset(base, (slot * 0x10)));
 }

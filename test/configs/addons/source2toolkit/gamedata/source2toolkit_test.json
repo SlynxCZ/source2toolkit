@@ -6,18 +6,6 @@
       "linux": "48 63 46 ? 83 F8 ? 0F 87"
     }
   },
-  "CGameEventManager_EventList": {
-    "offsets": {
-      "windows": 168,
-      "linux": 168
-    }
-  },
-  "CGameEventManager_EventCount": {
-    "offsets": {
-      "windows": 160,
-      "linux": 160
-    }
-  },
   "CLCMsg_ListenEvents_PlayerSlot": {
     "offsets": {
       "windows": 88,
@@ -34,6 +22,18 @@
     "offsets": {
       "windows": 80,
       "linux": 80
+    }
+  },
+  "CServerSideClient_GameEventLegacyProxy_PlayerSlot": {
+    "offsets": {
+      "windows": 88,
+      "linux": 88
+    }
+  },
+  "CSource1LegacyGameEventGameSystem_Listeners": {
+    "offsets": {
+      "windows": 64,
+      "linux": 64
     }
   },
   "CSource1LegacyGameEventGameSystem_Name": {

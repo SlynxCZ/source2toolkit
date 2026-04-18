@@ -1,5 +1,7 @@
 ﻿#include "main.h"
 
+#include <iserver.h>
+
 #include "source2toolkit/IToolkitApi.h"
 #include "source2toolkit/IToolkitCommands.h"
 #include "source2toolkit/IToolkitEvents.h"
@@ -12,6 +14,7 @@
 #include "source2toolkit/utils/gameconfig.h"
 
 #include "sdk/CLCMsg_ListenEvents.h"
+#include "sdk/CServerSideClient_GameEventLegacyProxy.h"
 #include "sdk/CSource1LegacyGameEventGameSystem.h"
 
 #include "source2toolkit/schema/schema.h"
@@ -32,7 +35,7 @@ Plugin g_Plugin;
 IGameEventSystem* g_pGameEventSystem = nullptr;
 
 static std::unordered_map<int, std::string> g_EventIdToName;
-static std::unordered_set<int> g_kBlacklistIds;
+static std::unordered_set<int> g_BlacklistIds;
 static const std::unordered_set<std::string> g_kBlacklist = {
     "gameui_hidden", "player_chat", "player_score", "player_shoot",
     "game_init", "game_start", "game_end", "warmup_end",
@@ -107,8 +110,7 @@ static const std::unordered_set<std::string> g_kBlacklist = {
 };
 
 Plugin::Plugin() :
-    m_hListenBitsReceived(this, &Plugin::Hook_ListenBitsReceived, nullptr),
-    m_hLoadEventsFromFile(&IGameEventManager2::LoadEventsFromFile, this, nullptr, &Plugin::Hook_LoadEventsFromFile)
+    m_hListenBitsReceived(this, nullptr, &Plugin::Hook_ListenBitsReceived)
 {
 }
 
@@ -118,34 +120,49 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     GET_IFACE_CURRENT(GetEngineFactory, g_pEngineServer, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
-    GET_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService,
-                      GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_IFACE_CURRENT(GetFileSystemFactory, g_pFullFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
     GET_IFACE_ANY(GetServerFactory, g_pSource2Server, ISource2Server, INTERFACEVERSION_SERVERGAMEDLL);
     GET_IFACE_ANY(GetServerFactory, g_pSource2GameClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
-    GET_IFACE_ANY(GetEngineFactory, g_pNetworkServerService, INetworkServerService,
-                  NETWORKSERVERSERVICE_INTERFACE_VERSION);
+    GET_IFACE_ANY(GetEngineFactory, g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
     GET_IFACE_ANY(GetEngineFactory, g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
     GET_IFACE_ANY(GetEngineFactory, g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
     GET_IFACE_ANY(GetEngineFactory, g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
-    GET_IFACE_ANY(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities,
-                  SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_IFACE_ANY(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
 
     api->AddListener(this, this);
 
     {
         m_pListenBitsReceived = UTIL_FindPattern(g_pSource2Server, UTIL_GetSignature("CSource1LegacyGameEventGameSystem_ListenBitsReceived"));
         if (m_pListenBitsReceived)
-        {
             m_hListenBitsReceived.Configure(reinterpret_cast<bool(*)(CSource1LegacyGameEventGameSystem*, CLCMsg_ListenEvents*)>(m_pListenBitsReceived));
-        }
     }
 
+    // Load configuration file
     {
-        m_pCGameEventManagerVTable = (IGameEventManager2*)UTIL_GetVirtualTableByName(g_pSource2Server, "CGameEventManager");
-        if (m_pCGameEventManagerVTable)
-        {
-            m_hLoadEventsFromFile.AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-        }
+        int currentId = 0;
+
+        char basePath[256];
+        V_strncpy(basePath, UTIL_GetModulePath(this), sizeof(basePath));
+        V_StripFilename(basePath);
+        V_AppendSlash(basePath, sizeof(basePath));
+        V_strncat(basePath, "source2toolkit_test/resource/", sizeof(basePath));
+
+        char path[512];
+
+        // core.gameevents
+        V_snprintf(path, sizeof(path), "%score.gameevents", basePath);
+        LoadEventsFromFile(path, "core game events", currentId);
+
+        // game.gameevents
+        V_snprintf(path, sizeof(path), "%sgame.gameevents", basePath);
+        LoadEventsFromFile(path, "gameevents", currentId);
+
+        // mod.gameevents
+        V_snprintf(path, sizeof(path), "%smod.gameevents", basePath);
+        LoadEventsFromFile(path, "cstrikeevents", currentId);
+
+        TOOLKIT_LOG(this, "Loaded %d events total\n", currentId);
     }
 
     TOOLKIT_LOG(this, "Load() done\n");
@@ -159,10 +176,6 @@ bool Plugin::Unload(char* error, size_t maxlen)
         m_hListenBitsReceived.~Function();
     }
 
-    {
-        m_hLoadEventsFromFile.RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-    }
-
     TOOLKIT_LOG(this, "Unload() done\n");
 
     return true;
@@ -170,123 +183,87 @@ bool Plugin::Unload(char* error, size_t maxlen)
 
 KHook::Return<bool> Plugin::Hook_ListenBitsReceived(CSource1LegacyGameEventGameSystem* pThis, CLCMsg_ListenEvents* pMsg)
 {
-    TOOLKIT_LOG(this, "[ListenBits] called (%p %p)\n", pThis, pMsg);
+    TOOLKIT_LOG(this, "Hook_ListenBitsReceived( %p %p )\n", pThis, pMsg);
 
     auto mgr = GetGameEventManager();
     if (!mgr)
     {
         TOOLKIT_LOG(this, "[ListenBits] GameEventManager is null\n");
-        return { KHook::Action::Ignore };
+        return { KHook::Action::Ignore, false };
     }
 
     CPlayerSlot slot = pMsg->GetPlayerSlot();
     int iSlot = slot.Get();
 
-    TOOLKIT_LOG(this, "[ListenBits] slot: %d\n", iSlot);
-
     auto player = CCSPlayerController::FromSlot(slot);
     if (!player || player->IsBot())
-    {
-        TOOLKIT_LOG(this, "[ListenBits] invalid player or bot\n");
-        return { KHook::Action::Ignore };
-    }
+        return { KHook::Action::Ignore, false };
+
+    auto* proxy = pThis->GetLegacyGameEventListener(iSlot);
+    if (!proxy)
+        return { KHook::Action::Ignore, false };
 
     const char* playerName = player->GetPlayerName();
 
-    int count = pMsg->GetEventMaskSize();
-    uint32_t* data = pMsg->GetEventMaskData();
-
-    TOOLKIT_LOG(this, "Player: %s // mask size: %d\n", playerName, count);
-
     bool bDetected = false;
-    std::vector<int> activeEvents;
 
-    for (int i = 0; i < count; i++)
+    for (const auto& [eventId, name] : g_EventIdToName)
     {
-        uint32_t bits = data[i];
-        if (!bits)
-            continue;
-
-        for (int b = 0; b < 32; b++)
+        if (mgr->FindListener(proxy, name.c_str()))
         {
-            if (bits & (1 << b))
+            TOOLKIT_LOG(this, "[ListenBits] %s listens to: %s (%d)\n",
+                playerName, name.c_str(), eventId);
+
+            if (g_BlacklistIds.contains(eventId))
             {
-                int eventId = i * 32 + b;
-                activeEvents.push_back(eventId);
+                TOOLKIT_LOG(this, "BLACKLIST HIT: %s (%d)\n",
+                    name.c_str(), eventId);
 
-                const char* name = "unknown";
-                auto it = g_EventIdToName.find(eventId);
-                if (it != g_EventIdToName.end())
-                    name = it->second.c_str();
-
-                TOOLKIT_LOG(this, "[ListenBits] Player %s listens to: %s (%d)\n", playerName, name, eventId);
-
-                if (g_kBlacklistIds.contains(eventId))
-                {
-                    const char* name = "unknown";
-
-                    auto it = g_EventIdToName.find(eventId);
-                    if (it != g_EventIdToName.end()) name = it->second.c_str();
-
-                    TOOLKIT_LOG(this, "BLACKLIST HIT: %s (%d)\n", name, eventId);
-
-                    bDetected = true;
-                }
+                bDetected = true;
             }
         }
     }
 
     if (bDetected)
     {
-        TOOLKIT_LOG(this, "Player: %s // DETECTED blacklisted events\n", playerName);
-
-        return { KHook::Action::Ignore, false };
+        TOOLKIT_LOG(this, "Player %s DETECTED\n", playerName);
     }
 
-    TOOLKIT_LOG(this, "[ListenBits] allowed\n");
     return { KHook::Action::Ignore, false };
 }
 
-KHook::Return<int> Plugin::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAlls)
+void Plugin::LoadEventsFromFile(const char* path, const char* kvName, int& currentId)
 {
-    TOOLKIT_LOG(this, "[GameEvents] Loaded: %s\n", filename);
-
-    UTIL_AddTimer(0.1f, [this, pThis, filename = std::string(filename)]()
+    if (!Plat_FileExists(path, 0))
     {
-        const char* pchKvName = nullptr;
+        TOOLKIT_LOG(this, "FILE DOES NOT EXIST: %s\n", path);
+        return;
+    }
 
-        if (filename == "resource/core.gameevents")
-            pchKvName = "core game events";
-        else if (filename == "resource/game.gameevents")
-            pchKvName = "gameevents";
-        else if (filename == "resource/mod.gameevents")
-            pchKvName = "cstrikeevents";
+    KeyValues::AutoDelete kv(kvName);
 
-        KeyValues::AutoDelete kv(pchKvName ? pchKvName : "");
+    if (!kv->LoadFromFile(g_pFullFileSystem, path))
+    {
+        TOOLKIT_LOG(this, "Failed to load %s\n", path);
+        return;
+    }
 
-        if (!kv->LoadFromFile(g_pFullFileSystem, filename.c_str(), "GAME"))
-        {
-            TOOLKIT_LOG(this, "FAILED to load KV (deferred): %s\n", filename.c_str());
-            return;
-        }
+    for (KeyValues* pEvent = kv->GetFirstSubKey(); pEvent; pEvent = pEvent->GetNextKey())
+    {
+        const char* eventName = pEvent->GetName();
 
-        for (KeyValues* event = kv->GetFirstSubKey(); event; event = event->GetNextKey())
-        {
-            const char* name = event->GetName();
-            if (!name || !*name)
-                continue;
+        if (!eventName || !*eventName)
+            continue;
 
-            int id = pThis->LookupEventId(name);
+        g_EventIdToName[currentId] = eventName;
 
-            if (id != -1)
-            {
-                g_EventIdToName[id] = name;
-                TOOLKIT_LOG(this, "[KV MAP] %s -> %d\n", name, id);
-            }
-        }
-    });
+        if (g_kBlacklist.contains(eventName))
+            g_BlacklistIds.insert(currentId);
 
-    return { KHook::Action::Ignore, 0 };
+        TOOLKIT_LOG(this, "[EventRegistry] %d -> %s\n", currentId, eventName);
+
+        currentId++;
+    }
 }
 
 const char* Plugin::GetVersion()
