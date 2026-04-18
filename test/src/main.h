@@ -8,7 +8,9 @@
 #include "eiface.h"
 #include "khook.hpp"
 
-class CCSPlayer_MovementServices;
+class IGameEventManager2;
+class CLCMsg_ListenEvents;
+class CSource1LegacyGameEventGameSystem;
 
 class Plugin final : public IToolkitPlugin, IToolkitListener
 {
@@ -18,14 +20,21 @@ public:
     bool Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late) override;
     bool Unload(char* error, size_t maxlen) override;
 public:
-    KHook::Return<void> Hook_ProcessMovementPre(CCSPlayer_MovementServices* pThis, void* pMoveData, void* pUnk001);
+    KHook::Return<bool> Hook_ListenBitsReceived(CSource1LegacyGameEventGameSystem* pThis, CLCMsg_ListenEvents* pMsg);
+    KHook::Return<int> Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAlls);
 protected:
-    KHook::Function<void, CCSPlayer_MovementServices*, void*, void*> m_ProcessMovement;
+    KHook::Function<bool, CSource1LegacyGameEventGameSystem*, CLCMsg_ListenEvents*> m_hListenBitsReceived;
+    KHook::Virtual<IGameEventManager2, int, const char*, bool> m_hLoadEventsFromFile;
+protected:
+    uintptr_t m_pListenBitsReceived;
+    IGameEventManager2* m_pCGameEventManagerVTable;
 private:
     const char* GetAuthor() override;
     const char* GetName() override;
     const char* GetDescription() override;
     const char* GetVersion() override;
 };
+
+extern Plugin g_Plugin;
 
 #endif //SOURCE2TOOLKIT_TEST_LIBRARY_H

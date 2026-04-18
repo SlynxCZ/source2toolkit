@@ -3,6 +3,7 @@ project(source2toolkit_test CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+set(PLUGIN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/addons/source2toolkit/plugins")
 set(S2TK_SDK $ENV{S2TK_SDK})
 
 if (NOT S2TK_SDK)
@@ -11,4 +12,20 @@ endif()
 
 add_subdirectory(${S2TK_SDK} source2toolkit-sdk-consumer)
 
-add_s2toolkit_plugin(source2toolkit_test main.cpp)
+target_include_directories(source2toolkit-sdk PUBLIC ${CMAKE_SOURCE_DIR}/src)
+
+file(GLOB_RECURSE SOURCE_FILES
+        src/*.cpp
+        src/*.h
+        src/*.hpp
+)
+
+add_s2toolkit_plugin(source2toolkit_test ${SOURCE_FILES})
+
+add_custom_command(
+        TARGET ${PROJECT_NAME} PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/configs ${CMAKE_BINARY_DIR}
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${PLUGIN_OUTPUT_DIR})
