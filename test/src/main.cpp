@@ -84,15 +84,15 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
         // resource/core.gameevents
         V_snprintf(path, sizeof(path), "%sresource/core.gameevents", basePath);
-        LoadEventsFromFile(path, "core game events", currentId);
+        LoadEventsFromFile("resource/core.gameevents", "core game events", currentId);
 
         // resource/game.gameevents
         V_snprintf(path, sizeof(path), "%sresource/game.gameevents", basePath);
-        LoadEventsFromFile(path, "gameevents", currentId);
+        LoadEventsFromFile("resource/core.gameevents", "gameevents", currentId);
 
         // resource/mod.gameevents
         V_snprintf(path, sizeof(path), "%sresource/mod.gameevents", basePath);
-        LoadEventsFromFile(path, "cstrikeevents", currentId);
+        LoadEventsFromFile("resource/core.gameevents", "cstrikeevents", currentId);
 
         TOOLKIT_LOG(this, "Loaded %d events total\n", currentId);
     }
@@ -194,15 +194,9 @@ void Plugin::LoadBlacklist(const char* pchPath, const char* pchKVName)
 
 void Plugin::LoadEventsFromFile(const char* pchPath, const char* pchKVName, int& iCurrentId)
 {
-    if (!Plat_FileExists(pchPath, 0))
-    {
-        TOOLKIT_LOG(this, "File does not exist: %s\n", pchPath);
-        return;
-    }
-
     KeyValues::AutoDelete kv(pchKVName);
 
-    if (!kv->LoadFromFile(g_pFullFileSystem, pchPath))
+    if (!kv->LoadFromFile(g_pFullFileSystem, pchPath, "GAME"))
     {
         TOOLKIT_LOG(this, "Failed to load: %s\n", pchPath);
         return;
@@ -220,7 +214,7 @@ void Plugin::LoadEventsFromFile(const char* pchPath, const char* pchKVName, int&
         if (g_Blacklist.contains(eventName))
             g_BlacklistIds.insert(iCurrentId);
 
-        // TOOLKIT_LOG(this, " %d -> %s\n", currentId, eventName);
+        // TOOLKIT_LOG(this, " %d -> %s\n", iCurrentId, eventName);
 
         iCurrentId++;
     }
@@ -228,7 +222,7 @@ void Plugin::LoadEventsFromFile(const char* pchPath, const char* pchKVName, int&
 
 const char* Plugin::GetVersion()
 {
-    return "v1.0.0";
+    return "1.0.0";
 }
 
 const char* Plugin::GetAuthor()
