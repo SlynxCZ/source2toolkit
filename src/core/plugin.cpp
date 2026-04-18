@@ -57,7 +57,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     log::Init();
     scheduler::Init();
 
-    auto gamedata_folder = paths::GetRootDirectory() + "/gamedata";
+    auto gamedata_folder = paths::GetGamedataDirectory();
     shared::g_pGameConfig = new CGameConfig(gamedata_folder);
     char conf_error[255] = {};
 
