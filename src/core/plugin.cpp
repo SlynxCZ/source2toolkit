@@ -57,13 +57,13 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     log::Init();
     scheduler::Init();
 
-    auto gamedata_path = std::string(paths::GetRootDirectory() + "/gamedata.json");
-    shared::g_pGameConfig = new CGameConfig(gamedata_path);
-    char conf_error[255] = "";
+    auto gamedata_folder = paths::GetRootDirectory() + "/gamedata";
+    shared::g_pGameConfig = new CGameConfig(gamedata_folder);
+    char conf_error[255] = {};
 
-    if (!shared::g_pGameConfig->Init(conf_error, sizeof(conf_error)))
+    if (!shared::g_pGameConfig->InitAll(gamedata_folder, conf_error, sizeof(conf_error)))
     {
-        FP_ERROR("Could not read '{}'. Error: {}", gamedata_path, conf_error);
+        FP_ERROR("Failed to load gamedata folder. Error: {}", conf_error);
         return false;
     }
 

@@ -20,7 +20,8 @@ public:
     CGameConfig(const std::string& path);
     ~CGameConfig();
 
-    bool Init(char* conf_error, int conf_error_size);
+    bool LoadSingle(const std::string& path, char* conf_error, int conf_error_size);
+    bool InitAll(const std::string& folder, char* conf_error, int conf_error_size);
     const std::string GetPath();
     const char* GetLibrary(const char* pchName) override;
     const char* GetSignature(const char* pchName) override;
