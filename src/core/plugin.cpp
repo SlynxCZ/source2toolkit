@@ -105,6 +105,8 @@ bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
         shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);
     shared::g_bDetoursLoaded = false;
 
+    ConVar_Unregister();
+
     FP_INFO("Unload() success!");
 
     log::Close();
