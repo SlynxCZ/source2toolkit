@@ -1,0 +1,94 @@
+﻿"blacklist"
+{
+    "gameui_hidden"                "1"
+    "player_chat"                  "1"
+    "player_score"                 "1"
+    "player_shoot"                 "1"
+
+    "game_init"                    "1"
+    "game_start"                   "1"
+    "game_end"                     "1"
+    "warmup_end"                   "1"
+
+    "ugc_map_info_received"        "1"
+    "ugc_map_unsubscribed"         "1"
+    "ugc_map_download_error"       "1"
+    "ugc_file_download_finished"   "1"
+    "ugc_file_download_start"      "1"
+
+    "dm_bonus_weapon_start"        "1"
+    "survival_announce_phase"      "1"
+    "break_prop"                   "1"
+    "player_decal"                 "1"
+
+    "instructor_server_hint_create" "1"
+    "instructor_server_hint_stop"   "1"
+
+    "reset_game_titledata"         "1"
+    "vote_ended"                   "1"
+    "vote_started"                 "1"
+    "vote_options"                 "1"
+
+    "inventory_updated"            "1"
+    "client_loadout_changed"       "1"
+
+    "door_open"                    "1"
+    "door_closed"                  "1"
+    "door_break"                   "1"
+
+    "item_purchase"                "1"
+    "bomb_beginplant"              "1"
+    "bomb_abortplant"              "1"
+    "bomb_begindefuse"             "1"
+    "bomb_abortdefuse"             "1"
+
+    "weapon_zoom"                  "1"
+    "inspect_weapon"               "1"
+
+    "player_jump"                  "1"
+    "player_blind"                 "1"
+    "player_falldamage"            "1"
+
+    "nav_blocked"                  "1"
+    "nav_generate"                 "1"
+
+    "hltv_changed_mode"            "1"
+
+    "achievement_earned_local"     "1"
+
+    "parachute_pickup"             "1"
+    "parachute_deploy"             "1"
+
+    "dronegun_attack"              "1"
+    "drone_dispatched"             "1"
+
+    "smoke_beacon_paradrop"        "1"
+
+    "server_shutdown"              "1"
+    "server_message"               "1"
+
+    "player_full_update"           "1"
+
+    "team_info"                    "1"
+    "team_score"                   "1"
+
+    "map_shutdown"                 "1"
+    "map_transition"               "1"
+
+    "vote_failed"                  "1"
+    "vote_passed"                  "1"
+
+    "achievement_event"            "1"
+    "achievement_write_failed"     "1"
+
+    "bonus_updated"                "1"
+
+    "gameinstructor_draw"          "1"
+    "gameinstructor_nodraw"        "1"
+
+    "physgun_pickup"               "1"
+
+    "gc_connected"                 "1"
+
+    "dynamic_shadow_light_changed" "1"
+}

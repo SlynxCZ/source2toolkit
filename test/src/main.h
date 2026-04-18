@@ -26,7 +26,8 @@ protected:
 protected:
     uintptr_t m_pListenBitsReceived;
 public:
-    void LoadEventsFromFile(const char* path, const char* kvName, int& currentId);
+    void LoadBlacklist(const char* pchPath, const char* pchKVName);
+    void LoadEventsFromFile(const char* pchPath, const char* pchKVName, int& iCurrentId);
 private:
     const char* GetAuthor() override;
     const char* GetName() override;
