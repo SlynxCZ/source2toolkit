@@ -83,16 +83,16 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
         LoadBlacklist(path, "blacklist");
 
         // resource/core.gameevents
-        V_snprintf(path, sizeof(path), "%sresource/core.gameevents", basePath);
-        LoadEventsFromFile("resource/core.gameevents", "core game events", currentId);
+        V_snprintf(path, sizeof(path), "resource/core.gameevents");
+        LoadEventsFromFile(path, "core game events", currentId);
 
         // resource/game.gameevents
-        V_snprintf(path, sizeof(path), "%sresource/game.gameevents", basePath);
-        LoadEventsFromFile("resource/core.gameevents", "gameevents", currentId);
+        V_snprintf(path, sizeof(path), "resource/game.gameevents");
+        LoadEventsFromFile(path, "gameevents", currentId);
 
         // resource/mod.gameevents
-        V_snprintf(path, sizeof(path), "%sresource/mod.gameevents", basePath);
-        LoadEventsFromFile("resource/core.gameevents", "cstrikeevents", currentId);
+        V_snprintf(path, sizeof(path), "resource/mod.gameevents");
+        LoadEventsFromFile(path, "cstrikeevents", currentId);
 
         TOOLKIT_LOG(this, "Loaded %d events total\n", currentId);
     }

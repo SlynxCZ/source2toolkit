@@ -22,7 +22,7 @@ CServerSideClient_GameEventLegacyProxy* CSource1LegacyGameEventGameSystem::GetLe
 {
     if (slot < 0 || slot > 63)
     {
-        TOOLKIT_LOG(&g_Plugin, "Invalid player slot");
+        TOOLKIT_LOG(&g_Plugin, "Invalid player slot\n");
         return nullptr;
     }
 
