@@ -119,6 +119,16 @@ void CS2ToolkitPlugin::AllPluginsLoaded()
     pluginManager.FireMetamodLoaded();
 }
 
+void CS2ToolkitPlugin::OnPluginLoad(PluginId id)
+{
+    pluginManager.OnPluginLoad(id);
+}
+
+void CS2ToolkitPlugin::OnPluginUnload(PluginId id)
+{
+    pluginManager.OnPluginUnload(id);
+}
+
 void CS2ToolkitPlugin::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background)
 {
     pluginManager.OnLevelInit(pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background);

@@ -16,6 +16,8 @@ public:
     bool Unload(char *error, size_t maxlen) override;
     void AllPluginsLoaded() override;
 public:
+    void OnPluginLoad(PluginId id) override;
+    void OnPluginUnload(PluginId id) override;
     void OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background) override;
     void OnLevelShutdown() override;
 public:

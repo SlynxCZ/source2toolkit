@@ -4,6 +4,7 @@
 //
 #pragma once
 
+#include <ISmmPluginExt.h>
 #include <vector>
 #include <string>
 #include <memory>
@@ -46,6 +47,8 @@ public:
 
     void AddListener(IToolkitPlugin* plugin, IToolkitListener* listener);
 public:
+    void OnPluginLoad(SourceMM::PluginId id);
+    void OnPluginUnload(SourceMM::PluginId id);
     void OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background);
     void OnLevelShutdown();
 public:

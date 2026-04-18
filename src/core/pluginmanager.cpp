@@ -179,13 +179,15 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     pl->api = plugin;
     pl->path = fullPath;
 
+    m_plugins.push_back(std::move(pl));
+
+    auto& stored = m_plugins.back();
+
     char err[256]{};
-    if (!plugin->Load(pl->id, &pluginApi, err, sizeof(err), false))
+    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), false))
     {
         FAILF("Plugin load failed: %s", err);
     }
-
-    m_plugins.push_back(std::move(pl));
 
     auto newId = m_plugins.back()->id;
 
@@ -353,8 +355,26 @@ void PluginManager::AddListener(IToolkitPlugin* plugin, IToolkitListener* listen
     }
 }
 
+void PluginManager::OnPluginLoad(SourceMM::PluginId id)
+{
+    for (auto& p : pluginManager.m_plugins)
+    {
+        for (auto* l : p->listeners)
+            l->OnPluginLoad(id);
+    }
+}
+
+void PluginManager::OnPluginUnload(SourceMM::PluginId id)
+{
+    for (auto& p : pluginManager.m_plugins)
+    {
+        for (auto* l : p->listeners)
+            l->OnPluginUnload(id);
+    }
+}
+
 void PluginManager::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel,
-    char const* pLandmarkName, bool loadGame, bool background)
+                                char const* pLandmarkName, bool loadGame, bool background)
 {
     for (auto& p : pluginManager.m_plugins)
     {
