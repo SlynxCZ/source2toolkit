@@ -198,24 +198,12 @@ namespace virtualhooks
         return {KHook::Action::Ignore, true};
     }
 
-    void Patch_GetHammerUniqueId(CEntityInstance* pEntity)
-    {
-        static int offset = shared::g_pGameConfig->GetOffset("CBaseEntity_GetHammerUniqueId");
-        void** vtable = *(void***)pEntity;
-
-        // xor al, al -> mov al, 1
-        // so it always returns true and allows hammerid to be copied into the schema prop
-        Plat_WriteMemory(vtable[offset], (uint8_t*)"\xB0\x01", 2);
-    }
-
     void CEntityListener::OnEntitySpawned(CEntityInstance* pEntity)
     {
     }
 
     void CEntityListener::OnEntityCreated(CEntityInstance* pEntity)
     {
-        ExecuteOnce(Patch_GetHammerUniqueId(pEntity));
-
         if (!V_strcmp("cs_gamerules", pEntity->GetClassname()))
             shared::g_pGameRules = ((CCSGameRulesProxy*)pEntity)->m_pGameRules;
     }

@@ -90,6 +90,17 @@
       "linux": "55 48 89 E5 41 54 53 48 83 EC ? 48 85 D2"
     }
   },
+  "SetSchemaHammerUniqueId": {
+    "signatures": {
+      "library": "server",
+      "windows": "75 ? 48 8B 03 48 8B CB FF 90 ? ? ? ? 84 C0 74 ? 48 8D 05",
+      "linux": "75 ? 48 8B 03 48 8D 15 ? ? ? ? 48 8B 80 ? ? ? ? 48 39 D0 75 ? 48 83 C4"
+    },
+    "patches": {
+      "windows": "EB",
+      "linux": "EB"
+    }
+  },
   "CBaseEntity_CollisionRulesChanged": {
     "offsets": {
       "windows": 186,

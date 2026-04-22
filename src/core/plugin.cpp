@@ -20,6 +20,7 @@
 #include "pluginmanager.h"
 #include "raytrace.h"
 #include "schema/cgameresourceserviceserver.h"
+#include "source2toolkit/utils/plat.h"
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
@@ -79,6 +80,29 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     inlinehooks::inlines.InitListeners();
     virtualhooks::virtuals.InitListeners();
     raytrace::rayTrace.InitRayTrace();
+
+    {
+        uintptr_t addr = DynLibUtils::CModule(shared::g_pServer).FindPattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId"));
+        if (!addr)
+        {
+            FP_ERROR("SetSchemaHammerUniqueId sig not found.");
+            return false;
+        }
+
+        uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
+
+        // optional safety check
+        if (*(uint8_t*)addr != 0x75)
+        {
+            FP_ERROR("Unexpected byte, skipping patch");
+            return false;
+        }
+
+        Plat_WriteMemory((void*)addr, &patch, 1);
+
+        FP_ERROR("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(addr));
+        return addr;
+    }
 
     g_pCVar = shared::g_pCVar;
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
