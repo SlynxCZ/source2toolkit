@@ -186,9 +186,4 @@ namespace addresses
     {
         return FindEntityByName;
     }
-
-    CGameEventManager_Init_t Addresses::CGameEventManager_Init()
-    {
-        return GameEventManagerInit;
-    }
 }

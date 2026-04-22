@@ -85,7 +85,6 @@ namespace addresses
         CEntitySystem_AddEntityIOEvent_t CEntitySystem_AddEntityIOEvent() override;
         CGameEntitySystem_FindEntityByClassName_t CGameEntitySystem_FindEntityByClassName() override;
         CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
-        CGameEventManager_Init_t CGameEventManager_Init() override;
     public:
         CBaseEntity_CreateEntityByName_t CreateEntityByName = nullptr;
         CBaseEntity_DispatchSpawn_t DispatchSpawn = nullptr;
@@ -100,7 +99,6 @@ namespace addresses
         CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
         CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
         CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
-        CGameEventManager_Init_t GameEventManagerInit = nullptr;
     private:
         std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
     };
