@@ -6,21 +6,21 @@
 
 #include "addresses.h"
 #include "commands.h"
+#include "events.h"
 #include "gameconfig.h"
-#include "virtualhooks.h"
+#include "inlinehooks.h"
+#include "pluginmanager.h"
+#include "raytrace.h"
 #include "shared.h"
+#include "virtualhooks.h"
+
+#include "source2toolkit/utils/plat.h"
+
+#include "schema/cgameresourceserviceserver.h"
 
 #include "utils/log.h"
 #include "utils/paths.h"
 #include "utils/scheduler.h"
-
-#include "entitysystem.h"
-#include "events.h"
-#include "inlinehooks.h"
-#include "pluginmanager.h"
-#include "raytrace.h"
-#include "schema/cgameresourceserviceserver.h"
-#include "source2toolkit/utils/plat.h"
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
