@@ -83,25 +83,12 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
 
     {
         uintptr_t addr = DynLibUtils::CModule(shared::g_pServer).FindPattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId"));
-        if (!addr)
+        if (addr)
         {
-            FP_ERROR("SetSchemaHammerUniqueId sig not found.");
-            return false;
+            uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
+            Plat_WriteMemory((void*)addr, &patch, 1);
+            FP_ERROR("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(addr));
         }
-
-        uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
-
-        // optional safety check
-        if (*(uint8_t*)addr != 0x75)
-        {
-            FP_ERROR("Unexpected byte, skipping patch");
-            return false;
-        }
-
-        Plat_WriteMemory((void*)addr, &patch, 1);
-
-        FP_ERROR("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(addr));
-        return addr;
     }
 
     g_pCVar = shared::g_pCVar;
