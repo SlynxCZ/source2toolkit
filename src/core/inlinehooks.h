@@ -20,10 +20,8 @@ namespace inlinehooks {
         void DestructListeners();
     public:
         KHook::Return<void> Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
-        KHook::Return<void> Hook_GameEventManagerInit(IGameEventManager2* pThis);
     protected:
         KHook::Function<void, CEntityIOOutput*, CEntityInstance*, CEntityInstance*, void*, float, void*, void*> m_FireOutputInternal;
-        KHook::Function<void, IGameEventManager2*> m_GameEventManagerInit;
     };
 
     extern Inlines inlines;

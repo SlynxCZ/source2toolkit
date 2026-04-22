@@ -21,21 +21,18 @@ namespace inlinehooks
     std::unordered_map<OutputKey, EntityIOCallbackPair, OutputKeyHash> entityIOListenerStack;
 
     Inlines::Inlines() :
-        m_FireOutputInternal(this, &Inlines::Hook_FireOutputInternal, nullptr),
-        m_GameEventManagerInit(this, nullptr, &Inlines::Hook_GameEventManagerInit)
+        m_FireOutputInternal(this, &Inlines::Hook_FireOutputInternal, nullptr)
     {
     }
 
     void Inlines::InitListeners()
     {
         m_FireOutputInternal.Configure(addresses::toolkitAddresses.FireOutputInternal);
-        m_GameEventManagerInit.Configure(addresses::toolkitAddresses.GameEventManagerInit);
     }
 
     void Inlines::DestructListeners()
     {
         m_FireOutputInternal.~Function();
-        m_GameEventManagerInit.~Function();
     }
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
@@ -109,17 +106,5 @@ namespace inlinehooks
         }
 
         return {KHook::Action::Supersede};
-    }
-
-    KHook::Return<void> Inlines::Hook_GameEventManagerInit(IGameEventManager2* pThis)
-    {
-        shared::g_pGameEventManager = pThis;
-
-        virtualhooks::virtuals.m_FireEventPre.Add(pThis);
-        virtualhooks::virtuals.m_FireEventPost.Add(pThis);
-
-        events::InitEvents();
-
-        return {KHook::Action::Ignore};
     }
 }
