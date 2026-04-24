@@ -150,7 +150,7 @@ void CS2ToolkitPlugin::OnLevelShutdown()
     pluginManager.OnLevelShutdown();
 }
 
-const char* CS2ToolkitPlugin::GetAuthor() { return "Slynx, contributors"; }
+const char* CS2ToolkitPlugin::GetAuthor() { return "Slynx (˙·٠● S l y n x ●٠·˙), AlliedModders and contributors"; }
 const char* CS2ToolkitPlugin::GetName() { return "Source2Toolkit"; }
 const char* CS2ToolkitPlugin::GetDescription() { return "Source2Toolkit"; }
 const char* CS2ToolkitPlugin::GetURL() { return "https://slynxdev.cz"; }
