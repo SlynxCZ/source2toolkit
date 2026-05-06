@@ -10,18 +10,19 @@
 namespace shared
 {
     ICvar* g_pCVar = nullptr;
-    IServerGameDLL* g_pServer = nullptr;
     IVEngineServer* g_pEngine = nullptr;
-    CSchemaSystem* g_pSchemaSystem = nullptr;
+    CGameEntitySystem* g_pEntitySystem = nullptr;
     IGameEventManager2* g_pGameEventManager = nullptr;
     IGameEventSystem* g_pGameEventSystem = nullptr;
-    ISource2GameEntities* g_pGameEntities = nullptr;
+    CGameResourceService* g_pGameResourceServiceServer = nullptr;
     INetworkMessages* g_pNetworkMessages = nullptr;
     INetworkServerService* g_pNetworkServerService = nullptr;
-    CGameEntitySystem* g_pEntitySystem = nullptr;
+    CSchemaSystem* g_pSchemaSystem = nullptr;
+    IServerGameDLL* g_pServer = nullptr;
     IServerGameClients* g_pGameClients = nullptr;
+    ISource2GameEntities* g_pGameEntities = nullptr;
+
     CGlobalVars* g_pGlobalVars = nullptr;
-    CGameResourceService* g_pGameResourceServiceServer = nullptr;
     CGameConfig* g_pGameConfig = nullptr;
     CCSGameRules* g_pGameRules = nullptr;
 

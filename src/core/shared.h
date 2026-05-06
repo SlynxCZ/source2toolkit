@@ -19,18 +19,19 @@ class CGameResourceService;
 namespace shared
 {
     extern ICvar* g_pCVar;
-    extern IServerGameDLL* g_pServer;
     extern IVEngineServer* g_pEngine;
-    extern CSchemaSystem* g_pSchemaSystem;
+    extern CGameEntitySystem* g_pEntitySystem;
     extern IGameEventManager2* g_pGameEventManager;
     extern IGameEventSystem* g_pGameEventSystem;
-    extern ISource2GameEntities* g_pGameEntities;
+    extern CGameResourceService* g_pGameResourceServiceServer;
     extern INetworkMessages* g_pNetworkMessages;
     extern INetworkServerService* g_pNetworkServerService;
-    extern CGameEntitySystem* g_pEntitySystem;
+    extern CSchemaSystem* g_pSchemaSystem;
+    extern IServerGameDLL* g_pServer;
     extern IServerGameClients* g_pGameClients;
+    extern ISource2GameEntities* g_pGameEntities;
+
     extern CGlobalVars* g_pGlobalVars;
-    extern CGameResourceService* g_pGameResourceServiceServer;
     extern CGameConfig* g_pGameConfig;
     extern CCSGameRules* g_pGameRules;
 

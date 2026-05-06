@@ -9,7 +9,7 @@
 
 #include "ISmmPlugin.h"
 
-class CS2ToolkitPlugin : public ISmmPlugin, public IMetamodListener
+class ToolkitCore : public ISmmPlugin, public IMetamodListener
 {
 public:
     bool Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late) override;
@@ -31,7 +31,7 @@ public:
     const char *GetLogTag() override;
 };
 
-extern CS2ToolkitPlugin g_S2ToolkitPlugin;
+extern ToolkitCore g_ToolkitCore;
 
 #endif //_INCLUDE_METAMOD_SOURCE_STUB_PLUGIN_H_
 

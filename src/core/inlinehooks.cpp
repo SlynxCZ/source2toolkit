@@ -21,18 +21,26 @@ namespace inlinehooks
     std::unordered_map<OutputKey, EntityIOCallbackPair, OutputKeyHash> entityIOListenerStack;
 
     Inlines::Inlines() :
-        m_FireOutputInternal(this, &Inlines::Hook_FireOutputInternal, nullptr)
+        m_FireOutputInternal(this, &Inlines::Hook_FireOutputInternal, nullptr),
+        m_PlatDebug(this, &Inlines::Hook_PlatDebug, nullptr)
     {
     }
 
     void Inlines::InitListeners()
     {
         m_FireOutputInternal.Configure(addresses::toolkitAddresses.FireOutputInternal);
+
+        auto platDebugAddr = DynLibUtils::CModule("tier0").GetFunctionByName("Plat_DebugString_Buffered").RCast<void (*)(void*, void*)>();
+        if (platDebugAddr)
+        {
+            m_PlatDebug.Configure(platDebugAddr);
+        }
     }
 
     void Inlines::DestructListeners()
     {
         m_FireOutputInternal.~Function();
+        m_PlatDebug.~Function();
     }
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
@@ -106,5 +114,13 @@ namespace inlinehooks
         }
 
         return {KHook::Action::Supersede};
+    }
+
+    KHook::Return<void> Inlines::Hook_PlatDebug(void* unk001, void* unk002)
+    {
+        if (!unk001)
+            return { KHook::Action::Supersede };
+
+        return { KHook::Action::Ignore };
     }
 }

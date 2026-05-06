@@ -10,6 +10,7 @@
 #include "source2toolkit/utils/plat.h"
 #include "utils/scheduler.h"
 #include "dynlibutils/module.h"
+#include "steam/isteamgameserver.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
 #include "source2toolkit/schema/schema.h"
@@ -70,6 +71,26 @@ namespace virtualhooks
 
         if (!shared::getGlobalVars())
             return {KHook::Action::Ignore};
+
+        if (shared::g_pEntitySystem)
+        {
+            for (int i = 0; i < shared::getGlobalVars()->maxClients; i++)
+            {
+                auto steamId = shared::g_pEngine->GetClientSteamID(CPlayerSlot(i));
+                if (steamId)
+                {
+                    auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(i + 1)));
+                    if(controller)
+                    {
+                        ISteamGameServer* gs = SteamGameServer();
+                        if (gs && gs->BLoggedOn())
+                        {
+                            gs->BUpdateUserData(*steamId, controller->GetPlayerName(), shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
+                        }
+                    }
+                }
+            }
+        }
 
         g_bHasTicked = true;
         return {KHook::Action::Ignore};

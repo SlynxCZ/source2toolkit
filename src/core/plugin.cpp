@@ -17,6 +17,7 @@
 #include "source2toolkit/utils/plat.h"
 
 #include "schema/cgameresourceserviceserver.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerController_InGameMoneyServices.h"
 
 #include "utils/log.h"
 #include "utils/paths.h"
@@ -25,10 +26,10 @@
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
 
-CS2ToolkitPlugin g_S2ToolkitPlugin;
-PLUGIN_EXPOSE(Source2Toolkit, g_S2ToolkitPlugin);
+ToolkitCore g_ToolkitCore;
+PLUGIN_EXPOSE(Source2Toolkit, g_ToolkitCore);
 
-bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool late)
+bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool late)
 {
     PLUGIN_SAVEVARS();
 
@@ -38,22 +39,26 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
         return false;
     }
 
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pEngine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
-    GET_V_IFACE_ANY(GetServerFactory, shared::g_pServer, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
-    GET_V_IFACE_ANY(GetServerFactory, shared::g_pGameClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
-    GET_V_IFACE_ANY(GetEngineFactory, shared::g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
-    GET_V_IFACE_ANY(GetEngineFactory, shared::g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
-    GET_V_IFACE_ANY(GetEngineFactory, shared::g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
-    GET_V_IFACE_ANY(GetEngineFactory, shared::g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
-    GET_V_IFACE_ANY(GetServerFactory, shared::g_pGameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pEngine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameResourceServiceServer, CGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pServer, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
+    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
+    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
 
     g_pCVar = shared::g_pCVar;
+    g_pEngineServer = shared::g_pEngine;
+    g_pGameResourceServiceServer = reinterpret_cast<IGameResourceService*>(shared::g_pGameResourceServiceServer);
+    g_pNetworkMessages = shared::g_pNetworkMessages;
+    g_pNetworkServerService = shared::g_pNetworkServerService;
+    g_pSchemaSystem = shared::g_pSchemaSystem;
+    g_pSource2Server = shared::g_pServer;
+    g_pSource2GameClients = shared::g_pGameClients;
     g_pSource2GameEntities = shared::g_pGameEntities;
-    shared::g_pGameResourceServiceServer = (CGameResourceService*)g_pGameResourceServiceServer;
-    if (!shared::g_pGameResourceServiceServer)
-        return false;
 
     log::Init();
     scheduler::Init();
@@ -74,8 +79,6 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
         return false;
     }
 
-    g_SMAPI->AddListener(this, this);
-
     commands::InitCommands();
     inlinehooks::inlines.InitListeners();
     virtualhooks::virtuals.InitListeners();
@@ -91,7 +94,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
         }
     }
 
-    g_pCVar = shared::g_pCVar;
+    g_SMAPI->AddListener(this, this);
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
     FP_INFO("Load() success!");
@@ -101,7 +104,7 @@ bool CS2ToolkitPlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxl
     return true;
 }
 
-bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
+bool ToolkitCore::Unload(char* error, size_t maxlen)
 {
     pluginManager.UnloadAll();
 
@@ -125,36 +128,36 @@ bool CS2ToolkitPlugin::Unload(char* error, size_t maxlen)
     return true;
 }
 
-void CS2ToolkitPlugin::AllPluginsLoaded()
+void ToolkitCore::AllPluginsLoaded()
 {
     pluginManager.FireMetamodLoaded();
 }
 
-void CS2ToolkitPlugin::OnPluginLoad(PluginId id)
+void ToolkitCore::OnPluginLoad(PluginId id)
 {
     pluginManager.OnPluginLoad(id);
 }
 
-void CS2ToolkitPlugin::OnPluginUnload(PluginId id)
+void ToolkitCore::OnPluginUnload(PluginId id)
 {
     pluginManager.OnPluginUnload(id);
 }
 
-void CS2ToolkitPlugin::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background)
+void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background)
 {
     pluginManager.OnLevelInit(pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background);
 }
 
-void CS2ToolkitPlugin::OnLevelShutdown()
+void ToolkitCore::OnLevelShutdown()
 {
     pluginManager.OnLevelShutdown();
 }
 
-const char* CS2ToolkitPlugin::GetAuthor() { return "Slynx (˙·٠● S l y n x ●٠·˙), AlliedModders and contributors"; }
-const char* CS2ToolkitPlugin::GetName() { return "Source2Toolkit"; }
-const char* CS2ToolkitPlugin::GetDescription() { return "Source2Toolkit"; }
-const char* CS2ToolkitPlugin::GetURL() { return "https://slynxdev.cz"; }
-const char* CS2ToolkitPlugin::GetLicense() { return "GPLv3"; }
-const char* CS2ToolkitPlugin::GetVersion() { return VERSION_STRING; }
-const char* CS2ToolkitPlugin::GetDate() { return BUILD_TIMESTAMP; }
-const char* CS2ToolkitPlugin::GetLogTag() { return "S2Toolkit"; }
+const char* ToolkitCore::GetAuthor() { return "Slynx (˙·٠● S l y n x ●٠·˙), AlliedModders and contributors"; }
+const char* ToolkitCore::GetName() { return "Source2Toolkit"; }
+const char* ToolkitCore::GetDescription() { return "Source2Toolkit"; }
+const char* ToolkitCore::GetURL() { return "https://www.slynxdev.cz, https://www.alliedmods.net"; }
+const char* ToolkitCore::GetLicense() { return "GPLv3"; }
+const char* ToolkitCore::GetVersion() { return VERSION_STRING; }
+const char* ToolkitCore::GetDate() { return BUILD_TIMESTAMP; }
+const char* ToolkitCore::GetLogTag() { return "Source2Toolkit"; }
