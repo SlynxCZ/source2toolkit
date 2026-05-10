@@ -2,9 +2,15 @@ FROM registry.gitlab.steamos.cloud/steamrt/sniper/sdk:latest
 
 WORKDIR /app
 
+RUN echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-18 main" >> /etc/apt/sources.list.d/llvm.list
+RUN echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-18 main" >> /etc/apt/sources.list.d/llvm.list
+RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+RUN apt update && apt install -y clang-18 lld-18 libc++-18-dev libc++abi-18-dev
+RUN ln -sf /usr/bin/clang-18 /usr/bin/clang
+RUN ln -sf /usr/bin/clang++-18 /usr/bin/clang++
+
 RUN apt update && apt install -y \
     build-essential \
-    g++ \
     cmake \
     ninja-build \
     git \
@@ -15,7 +21,6 @@ RUN apt update && apt install -y \
     protobuf-compiler \
     pkg-config \
     libcurl4-openssl-dev \
-    libmaxminddb-dev \
     curl
 
 RUN git config --system --add safe.directory '*'
