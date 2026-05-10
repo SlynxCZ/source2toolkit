@@ -8,11 +8,11 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(SPDLOG_HEADER_ONLY ON CACHE BOOL "" FORCE)
 set(FMT_WERROR OFF CACHE BOOL "" FORCE)
 
-set(METAMOD_DIR vendor/metamod-source)
-
 # core build
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(vendor/source2toolkit-sdk)
+
+resolve_dep(METAMOD_DIR MMSOURCE_DEV "${CMAKE_CURRENT_SOURCE_DIR}/vendor/metamod-source")
 
 SET(source2toolkit_include_directories
         ${CMAKE_SOURCE_DIR}
