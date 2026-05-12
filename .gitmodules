@@ -1,6 +1,3 @@
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "vendor/source2toolkit-sdk"]
-	path = vendor/source2toolkit-sdk
-	url = https://github.com/SlynxCZ/source2toolkit-sdk.git
