@@ -1,7 +1,39 @@
-﻿//
-// Created by Michal Přikryl on 09.04.2026.
-// Copyright (c) 2026 slynxcz. All rights reserved.
-//
+﻿/**
+* vim: set ts=4 sw=4 tw=99 noet:
+ * =============================================================================
+ * Source2Toolkit
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
+ * AlliedModders LLC. All rights reserved.
+ * =============================================================================
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
+ * AlliedModders LLC give you permission to link the code of this program
+ * (as well as its derivative works) to "Counter-Strike 2," "Source 2,"
+ * "Steam," and any Game MODs or server software running on software by
+ * Valve Corporation. You must obey the GNU General Public License in all
+ * respects for all other code used.
+ *
+ * Additionally, this exception applies to all derivative works unless
+ * otherwise stated in LICENSE.txt.
+ *
+ * Authors:
+ *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
+ *   - AlliedModders LLC
+ *
+ * Project: Source2Toolkit
+ */
 #include "raytrace.h"
 
 #include "addresses.h"
@@ -15,46 +47,30 @@
 #include "iserver.h"
 #include "source2toolkit/schema/entity/classes/CBeam.h"
 #include "schema/cgameresourceserviceserver.h"
+#include "schema/navphysicsinterface.h"
 
 namespace raytrace
 {
     RayTrace rayTrace;
 
-    void RayTrace::InitRayTrace()
+    TraceResult RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CBaseEntity* pIgnoreEntity,
+                                     TraceOptions* pTraceOptions)
     {
-        m_pCNavPhysicsInterfaceVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-        if (!m_pCNavPhysicsInterfaceVTable)
-        {
-            FP_WARN("Tried getting virtual function from a null vtable.");
-            return;
-        }
+        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity) : CTraceFilterEx();
 
-        m_pCNavPhysicsInterface_TraceShape = m_pCNavPhysicsInterfaceVTable[shared::g_pGameConfig->GetOffset("CNavPhysicsInterface_TraceShape")];
-    }
-
-    void RayTrace::DestructRayTrace()
-    {
-        m_pCNavPhysicsInterfaceVTable = nullptr;
-        m_pCNavPhysicsInterface_TraceShape = nullptr;
-    }
-
-    TraceResult RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions)
-    {
-        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
-
-        filter.m_nInteractsAs = 0;
-        filter.m_nInteractsWith = static_cast<uint64_t>(MASK_SHOT_PHYSICS);
-        filter.m_nInteractsExclude = 0;
+        filter.m_nInteractsAs = CONTENTS_EMPTY;
+        filter.m_nInteractsWith = MASK_ALL;
+        filter.m_nInteractsExclude = CONTENTS_EMPTY;
 
         if (pTraceOptions)
         {
-            if (pTraceOptions->InteractsAs != 0)
+            if (pTraceOptions->InteractsAs != CONTENTS_EMPTY)
                 filter.m_nInteractsAs = pTraceOptions->InteractsAs;
 
-            if (pTraceOptions->InteractsWith != static_cast<uint64_t>(MASK_SHOT_PHYSICS))
+            if (pTraceOptions->InteractsWith != MASK_ALL)
                 filter.m_nInteractsWith = pTraceOptions->InteractsWith;
 
-            if (pTraceOptions->InteractsExclude != 0)
+            if (pTraceOptions->InteractsExclude != CONTENTS_EMPTY)
                 filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
         }
 
@@ -71,23 +87,24 @@ namespace raytrace
         return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    TraceResult RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions)
+    TraceResult RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CBaseEntity* pIgnoreEntity,
+                                        TraceOptions* pTraceOptions)
     {
-        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
+        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity) : CTraceFilterEx();
 
-        filter.m_nInteractsAs = 0;
-        filter.m_nInteractsWith = static_cast<uint64_t>(MASK_SHOT_PHYSICS);
-        filter.m_nInteractsExclude = 0;
+        filter.m_nInteractsAs = CONTENTS_EMPTY;
+        filter.m_nInteractsWith = MASK_ALL;
+        filter.m_nInteractsExclude = CONTENTS_EMPTY;
 
         if (pTraceOptions)
         {
-            if (pTraceOptions->InteractsAs != 0)
+            if (pTraceOptions->InteractsAs != CONTENTS_EMPTY)
                 filter.m_nInteractsAs = pTraceOptions->InteractsAs;
 
-            if (pTraceOptions->InteractsWith != static_cast<uint64_t>(MASK_SHOT_PHYSICS))
+            if (pTraceOptions->InteractsWith != MASK_ALL)
                 filter.m_nInteractsWith = pTraceOptions->InteractsWith;
 
-            if (pTraceOptions->InteractsExclude != 0)
+            if (pTraceOptions->InteractsExclude != CONTENTS_EMPTY)
                 filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
         }
 
@@ -97,23 +114,23 @@ namespace raytrace
     }
 
     TraceResult RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins,
-                                          const Vector& vecMaxs, CEntityInstance* pIgnoreEntity, TraceOptions* pTraceOptions)
+                                         const Vector& vecMaxs, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
-        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity)) : CTraceFilterEx();
+        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity) : CTraceFilterEx();
 
-        filter.m_nInteractsAs = 0;
-        filter.m_nInteractsWith = static_cast<uint64_t>(MASK_SHOT_PHYSICS);
-        filter.m_nInteractsExclude = 0;
+        filter.m_nInteractsAs = CONTENTS_EMPTY;
+        filter.m_nInteractsWith = MASK_ALL;
+        filter.m_nInteractsExclude = CONTENTS_EMPTY;
 
         if (pTraceOptions)
         {
-            if (pTraceOptions->InteractsAs != 0)
+            if (pTraceOptions->InteractsAs != CONTENTS_EMPTY)
                 filter.m_nInteractsAs = pTraceOptions->InteractsAs;
 
-            if (pTraceOptions->InteractsWith != static_cast<uint64_t>(MASK_SHOT_PHYSICS))
+            if (pTraceOptions->InteractsWith != MASK_ALL)
                 filter.m_nInteractsWith = pTraceOptions->InteractsWith;
 
-            if (pTraceOptions->InteractsExclude != 0)
+            if (pTraceOptions->InteractsExclude != CONTENTS_EMPTY)
                 filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
         }
 
@@ -123,11 +140,12 @@ namespace raytrace
         return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    TraceResult RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay)
+    TraceResult RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter,
+                                       Ray_t* pRay)
     {
-        if (!m_pCNavPhysicsInterface_TraceShape)
+        if (!INavPhysicsInterface::vTable)
         {
-            FP_ERROR("CNavPhysicsInterface::TraceShape is not bound!");
+            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
             return TraceResult();
         }
 
@@ -135,10 +153,42 @@ namespace raytrace
         Vector vecEndCopy = vecEnd;
         CGameTrace trace;
 
-        bool bResult = m_pCNavPhysicsInterface_TraceShape.RCast<
-            bool (*)(void*, Ray_t&, Vector&, Vector&, CTraceFilter*, CGameTrace*)>()(
-            nullptr, *pRay, vecStartCopy, vecEndCopy, pTraceFilter, &trace);
+        INavPhysicsInterface::TraceShape(*pRay, vecStartCopy, vecEndCopy, pTraceFilter, &trace);
 
-        return TraceResult(&trace, bResult);
+        return TraceResult(&trace);
+    }
+
+    uint64 RayTrace::PointContents(const Vector* const vTestPos, uint64 nContentsMask)
+    {
+        if (!INavPhysicsInterface::vTable)
+        {
+            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            return 0;
+        }
+
+        return INavPhysicsInterface::PointContents(vTestPos, nContentsMask);
+    }
+
+    bool RayTrace::CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity,
+                                              bool bExtrudeHullHeight)
+    {
+        if (!INavPhysicsInterface::vTable)
+        {
+            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            return false;
+        }
+
+        return INavPhysicsInterface::CheckAreaOverlappingEntity(rArea, rEntity, bExtrudeHullHeight);
+    }
+
+    void RayTrace::GetEntityWorldSpaceAABB(const CBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut)
+    {
+        if (!INavPhysicsInterface::vTable)
+        {
+            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            return;
+        }
+
+        INavPhysicsInterface::GetEntityWorldSpaceAABB(rEntity, pMinsOut, pMaxsOut);
     }
 }
