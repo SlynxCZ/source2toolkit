@@ -4,13 +4,13 @@ project(source2toolkit_test CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 set(PLUGIN_OUTPUT_DIR "${CMAKE_BINARY_DIR}/addons/source2toolkit/plugins")
-set(S2TK_SDK $ENV{S2TK_SDK})
+set(SOURCE2TOOLKIT_SDK $ENV{SOURCE2TOOLKIT_SDK})
 
-if (NOT S2TK_SDK)
-    message(FATAL_ERROR "S2TK_SDK env variable not set")
+if (NOT SOURCE2TOOLKIT_SDK)
+    message(FATAL_ERROR "SOURCE2TOOLKIT_SDK env variable not set")
 endif()
 
-add_subdirectory(${S2TK_SDK} source2toolkit-sdk-consumer)
+add_subdirectory(${SOURCE2TOOLKIT_SDK} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
 target_include_directories(source2toolkit-sdk PUBLIC ${CMAKE_SOURCE_DIR}/src)
 

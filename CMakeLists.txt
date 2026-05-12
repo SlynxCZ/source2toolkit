@@ -8,11 +8,22 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(SPDLOG_HEADER_ONLY ON CACHE BOOL "" FORCE)
 set(FMT_WERROR OFF CACHE BOOL "" FORCE)
 
+function(resolve_dep_internal OUT_VAR ENV_NAME)
+    if (DEFINED ENV{${ENV_NAME}} AND NOT "$ENV{${ENV_NAME}}" STREQUAL "")
+        file(TO_CMAKE_PATH "$ENV{${ENV_NAME}}" _resolved)
+        set(${OUT_VAR} "${_resolved}" PARENT_SCOPE)
+        message(STATUS "${ENV_NAME} -> ${_resolved}")
+    else()
+        message(FATAL_ERROR "${ENV_NAME} is not set")
+    endif()
+endfunction()
+
+resolve_dep_internal(SOURCE2TOOLKIT_SDK_DIR SOURCE2TOOLKIT_SDK)
+resolve_dep_internal(METAMOD_DIR MMSOURCE_DEV)
+
 # core build
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
-add_subdirectory(vendor/source2toolkit-sdk)
-
-resolve_dep(METAMOD_DIR MMSOURCE_DEV "${CMAKE_CURRENT_SOURCE_DIR}/vendor/metamod-source")
+add_subdirectory(${SOURCE2TOOLKIT_SDK_DIR} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
 SET(source2toolkit_include_directories
         ${CMAKE_SOURCE_DIR}

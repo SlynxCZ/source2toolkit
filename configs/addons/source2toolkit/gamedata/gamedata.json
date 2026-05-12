@@ -143,12 +143,6 @@
       "linux": 21
     }
   },
-  "CCSPlayer_WeaponServices_CanUse": {
-    "offsets": {
-      "windows": 24,
-      "linux": 25
-    }
-  },
   "CCSPlayer_WeaponServices_DropWeapon": {
     "offsets": {
       "windows": 25,
@@ -159,12 +153,6 @@
     "offsets": {
       "windows": 27,
       "linux": 28
-    }
-  },
-  "CPlayer_MovementServices_RunCommand": {
-    "offsets": {
-      "windows": 22,
-      "linux": 23
     }
   },
   "CCSPlayerController_ChangeTeam": {
