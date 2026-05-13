@@ -209,7 +209,7 @@ namespace commands {
     static void HandleMenuCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
     {
         CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot().Get());
-        if (!player || player->m_iConnected() != PlayerConnectedState::PlayerConnected)
+        if (!player || player->m_iConnected() != PlayerConnectedState::Connected)
             return;
 
         if (args.ArgC() < 1)
