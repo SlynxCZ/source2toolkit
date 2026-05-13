@@ -121,7 +121,7 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         {
             uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
             Plat_WriteMemory((void*)addr, &patch, 1);
-            FP_ERROR("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(reinterpret_cast<void*>(addr)));
+            FP_DEBUG("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(reinterpret_cast<void*>(addr)));
         }
     }
 
