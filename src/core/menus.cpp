@@ -167,7 +167,12 @@ namespace menus
         auto& opt = options[idx];
         if (opt.Disabled || !opt.OnSelect) return;
 
+        auto *self = this;
+
         opt.OnSelect(player_, opt);
+
+        if (menuManager.GetActiveMenu(player_) != self)
+            return;
 
         // Apply PostSelectAction just like CSSharp BaseMenuInstance
         switch (menu_->GetPostSelectAction())
