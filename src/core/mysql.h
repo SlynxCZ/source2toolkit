@@ -57,6 +57,8 @@ namespace mysql {
     class ThreadOperation
     {
     public:
+        virtual ~ThreadOperation() = default;
+
         virtual void RunThreadPart() = 0;
         virtual void CancelThinkPart() = 0;
         virtual void RunThinkPart() = 0;
