@@ -1,0 +1,8 @@
+﻿{
+  "PublicChatTrigger": [ "!" ],
+  "SilentChatTrigger": [ "/" ],
+  "PluginHotReloadEnabled": true,
+  "PluginAutoLoadEnabled": true,
+  "UnlockConCommands": true,
+  "UnlockConVars": true
+}

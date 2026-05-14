@@ -104,10 +104,11 @@ namespace commands {
             {
                 auto* api = p->api;
 
-                LOG_INFO("  [%d] %s (%s)\n",
+                LOG_INFO("  [%d] %s (%s) by (%s)\n",
                     p->id,
                     api->GetName(),
-                    api->GetVersion());
+                    api->GetVersion(),
+                    api->GetAuthor());
             }
         }
 
