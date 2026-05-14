@@ -43,6 +43,7 @@
 #include "entityio.h"
 #include "events.h"
 #include "menus.h"
+#include "mysql.h"
 #include "plugin.h"
 #include "source2toolkit/IToolkitPlugin.h"
 
@@ -276,6 +277,11 @@ IToolkitGameConfig* PluginApi::GameConfig()
 IToolkitMenus* PluginApi::Menus()
 {
     return &menus::menuManager;
+}
+
+IToolkitMySQL* PluginApi::MySQL()
+{
+    return &mysql::mysqlManager;
 }
 
 IToolkitScheduler* PluginApi::Scheduler()

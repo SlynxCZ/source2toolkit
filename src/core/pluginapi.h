@@ -70,6 +70,7 @@ public:
     IToolkitEvents* Events() override;
     IToolkitGameConfig* GameConfig() override;
     IToolkitMenus* Menus() override;
+    IToolkitMySQL* MySQL() override;
     IToolkitScheduler* Scheduler() override;
     IToolkitTrace* Trace() override;
 
