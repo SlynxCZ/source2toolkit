@@ -98,12 +98,12 @@ bool Plugin::Unload(char* error, size_t maxlen)
 
 void Plugin::OnPluginLoad(PluginId id)
 {
-    TOOLKIT_LOG(this, "OnPluginLoad(%d)\n", id);
+    TOOLKIT_LOG(this, "OnPluginLoad( id=%d )\n", id);
 }
 
 void Plugin::OnPluginUnload(PluginId id)
 {
-    TOOLKIT_LOG(this, "OnPluginUnload(%d)\n", id);
+    TOOLKIT_LOG(this, "OnPluginUnload( id=%d )\n", id);
 }
 
 void Plugin::OnAllToolkitPluginsLoaded()
@@ -119,14 +119,7 @@ void Plugin::OnAllMetamodPluginsLoaded()
 void Plugin::OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel,
     const char* landmarkName, bool loadGame, bool background)
 {
-    TOOLKIT_LOG(this,
-        "OnLevelInit(map=%s, old=%s, landmark=%s, loadGame=%d, background=%d)\n",
-        mapName ? mapName : "nullptr",
-        oldLevel ? oldLevel : "nullptr",
-        landmarkName ? landmarkName : "nullptr",
-        loadGame,
-        background
-    );
+    TOOLKIT_LOG(this, "OnLevelInit( map=%s, old=%s, landmark=%s, loadGame=%d, background=%d )\n", mapName ? mapName : "nullptr", oldLevel ? oldLevel : "nullptr",landmarkName ? landmarkName : "nullptr", loadGame, background);
 }
 
 void Plugin::OnLevelShutdown()
