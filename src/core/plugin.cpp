@@ -38,9 +38,11 @@
 
 #include "addresses.h"
 #include "commands.h"
+#include "convars.h"
 #include "events.h"
 #include "gameconfig.h"
 #include "inlinehooks.h"
+#include "patches.h"
 #include "pluginmanager.h"
 #include "raytrace.h"
 #include "shared.h"
@@ -49,7 +51,6 @@
 #include "source2toolkit/utils/plat.h"
 
 #include "schema/cgameresourceserviceserver.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerController_InGameMoneyServices.h"
 
 #include "utils/log.h"
 #include "utils/paths.h"
@@ -95,13 +96,23 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
     log::Init();
     scheduler::Init();
 
+    auto coreconfig_path = std::string(paths::GetConfigsDirectory() + "/core");
+    shared::g_pCoreConfig = new CCoreConfig(coreconfig_path);
+    char coreconfig_error[255] = "";
+
+    if (!shared::g_pCoreConfig->Init(coreconfig_error, sizeof(coreconfig_error)))
+    {
+        FP_ERROR("Failed to load CCoreConfig. Could not read \'{}\'. Error: {}", coreconfig_path, coreconfig_error);
+        return false;
+    }
+
     auto gamedata_folder = paths::GetGamedataDirectory();
     shared::g_pGameConfig = new CGameConfig(gamedata_folder);
     char conf_error[255] = {};
 
     if (!shared::g_pGameConfig->InitAll(gamedata_folder, conf_error, sizeof(conf_error)))
     {
-        FP_ERROR("Failed to load gamedata folder. Error: {}", conf_error);
+        FP_ERROR("Failed to load CGameConfig. Error: {}", conf_error);
         return false;
     }
 
@@ -111,26 +122,28 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         return false;
     }
 
+    if (!patches::Initialize())
+    {
+        FP_ERROR("Could not initialize patches.");
+        return false;
+    }
+
     commands::InitCommands();
+    commands::commandsManager.UnlockConCommands();
+    convars::convarsManager.UnlockConVars();
     inlinehooks::inlines.InitListeners();
     virtualhooks::virtuals.InitListeners();
-
-    {
-        uintptr_t addr = DynLibUtils::CModule(shared::g_pServer).FindPattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId"));
-        if (addr)
-        {
-            uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
-            Plat_WriteMemory((void*)addr, &patch, 1);
-            FP_DEBUG("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(reinterpret_cast<void*>(addr)));
-        }
-    }
 
     g_SMAPI->AddListener(this, this);
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
     FP_INFO("Load() success!");
 
-    pluginManager.LoadAll();
+    if (!pluginManager.LoadAll())
+    {
+        FP_ERROR("Could not load plugins.");
+        return false;
+    }
 
     return true;
 }
@@ -147,6 +160,7 @@ bool ToolkitCore::Unload(char* error, size_t maxlen)
 
     if (shared::g_pEntitySystem)
         shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);
+
     shared::g_bDetoursLoaded = false;
 
     ConVar_Unregister();

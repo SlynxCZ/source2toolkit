@@ -349,4 +349,17 @@ namespace commands {
                 ++it;
         }
     }
+
+    void CommandsManager::UnlockConCommands()
+    {
+        if (shared::g_pCoreConfig->UnlockConCommands)
+        {
+            ConCommandData* data = g_pCVar->GetConCommandData(ConCommandRef());
+            for (ConCommandRef ref = ConCommandRef((uint16)0); ref.GetRawData() != data; ref = ConCommandRef(ref.GetAccessIndex() + 1))
+            {
+                if (!ref.IsFlagSet(FCVAR_HIDDEN | FCVAR_DEVELOPMENTONLY)) continue;
+                ref.RemoveFlags(FCVAR_HIDDEN | FCVAR_DEVELOPMENTONLY);
+            }
+        }
+    }
 }

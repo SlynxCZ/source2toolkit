@@ -53,6 +53,7 @@ namespace paths {
     }
 
     inline std::string GetRootDirectory() { return GameDirectory() + "/addons/source2toolkit"; }
+    inline std::string GetConfigsDirectory() { return GameDirectory() + "/addons/source2toolkit/configs"; }
     inline std::string GetGamedataDirectory() { return GameDirectory() + "/addons/source2toolkit/gamedata"; }
     inline std::string GetPluginsDirectory() { return GameDirectory() + "/addons/source2toolkit/plugins"; }
     inline std::string EnginePath() { return GameDirectory() + "../bin/linuxsteamrt64/libengine2.so"; }

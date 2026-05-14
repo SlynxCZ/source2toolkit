@@ -34,38 +34,31 @@
  *
  * Project: Source2Toolkit
  */
+#include "patches.h"
+
+#include "source2toolkit/utils/plat.h"
+
 #include "shared.h"
+#include "dynlibutils/module.h"
+#include "utils/log.h"
 
-#include "icvar.h"
-#include "iserver.h"
-#include "schemasystem.h"
-
-namespace shared
+namespace patches
 {
-    ICvar* g_pCVar = nullptr;
-    IVEngineServer* g_pEngine = nullptr;
-    CGameEntitySystem* g_pEntitySystem = nullptr;
-    IGameEventManager2* g_pGameEventManager = nullptr;
-    IGameEventSystem* g_pGameEventSystem = nullptr;
-    CGameResourceService* g_pGameResourceServiceServer = nullptr;
-    INetworkMessages* g_pNetworkMessages = nullptr;
-    INetworkServerService* g_pNetworkServerService = nullptr;
-    CSchemaSystem* g_pSchemaSystem = nullptr;
-    IServerGameDLL* g_pServer = nullptr;
-    IServerGameClients* g_pGameClients = nullptr;
-    ISource2GameEntities* g_pGameEntities = nullptr;
+    bool Initialize()
+    {
+        uintptr_t addr = DynLibUtils::CModule(shared::g_pServer).FindPattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId"));
+        if (addr)
+        {
+            uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
+            Plat_WriteMemory((void*)addr, &patch, 1);
+            FP_DEBUG("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(reinterpret_cast<void*>(addr)));
+        }
+        else
+        {
+            FP_ERROR("Failed to patch SetSchemaHammerUniqueId");
+            return false;
+        }
 
-    CGlobalVars* g_pGlobalVars = nullptr;
-    CCoreConfig* g_pCoreConfig = nullptr;
-    CGameConfig* g_pGameConfig = nullptr;
-    CCSGameRules* g_pGameRules = nullptr;
-
-    CGlobalVars *getGlobalVars() {
-        INetworkGameServer *server = g_pNetworkServerService->GetIGameServer();
-        if (!server) return nullptr;
-        if (!g_pGlobalVars) g_pGlobalVars = server->GetGlobals();
-        return g_pNetworkServerService->GetIGameServer()->GetGlobals();
+        return true;
     }
-
-    bool g_bDetoursLoaded = false;
 }

@@ -41,6 +41,7 @@
 #include "entitysystem.h"
 #include "igameevents.h"
 #include "vector"
+#include "coreconfig.h"
 #include "gameconfig.h"
 #include "igameeventsystem.h"
 #include <memory>
@@ -64,6 +65,7 @@ namespace shared
     extern ISource2GameEntities* g_pGameEntities;
 
     extern CGlobalVars* g_pGlobalVars;
+    extern CCoreConfig* g_pCoreConfig;
     extern CGameConfig* g_pGameConfig;
     extern CCSGameRules* g_pGameRules;
 

@@ -309,6 +309,9 @@ bool PluginManager::LoadAll()
 {
     namespace fs = std::filesystem;
 
+    if (!shared::g_pCoreConfig->PluginAutoLoadEnabled)
+        return true;
+
     auto dir = paths::GetPluginsDirectory();
 
     if (!fs::exists(dir))

@@ -76,6 +76,7 @@ namespace commands {
         void RegConListener(PluginId owner, const char* pchName, CommandHandler handler, Mode mode) override;
     public:
         void RemoveAllForPlugin(PluginId id);
+        void UnlockConCommands();
     };
 
     extern CommandsManager commandsManager;

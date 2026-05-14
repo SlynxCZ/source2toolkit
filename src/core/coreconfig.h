@@ -34,38 +34,36 @@
  *
  * Project: Source2Toolkit
  */
-#include "shared.h"
 
-#include "icvar.h"
-#include "iserver.h"
-#include "schemasystem.h"
+#pragma once
 
-namespace shared
+#include <nlohmann/json.hpp>
+#include <string>
+
+class CCoreConfig
 {
-    ICvar* g_pCVar = nullptr;
-    IVEngineServer* g_pEngine = nullptr;
-    CGameEntitySystem* g_pEntitySystem = nullptr;
-    IGameEventManager2* g_pGameEventManager = nullptr;
-    IGameEventSystem* g_pGameEventSystem = nullptr;
-    CGameResourceService* g_pGameResourceServiceServer = nullptr;
-    INetworkMessages* g_pNetworkMessages = nullptr;
-    INetworkServerService* g_pNetworkServerService = nullptr;
-    CSchemaSystem* g_pSchemaSystem = nullptr;
-    IServerGameDLL* g_pServer = nullptr;
-    IServerGameClients* g_pGameClients = nullptr;
-    ISource2GameEntities* g_pGameEntities = nullptr;
+public:
+    std::vector<std::string> PublicChatTrigger = { std::string("!") };
+    std::vector<std::string> SilentChatTrigger = { std::string("/") };
+    bool PluginHotReloadEnabled = true;
+    bool PluginAutoLoadEnabled = true;
+    bool UnlockConCommands = true;
+    bool UnlockConVars = true;
 
-    CGlobalVars* g_pGlobalVars = nullptr;
-    CCoreConfig* g_pCoreConfig = nullptr;
-    CGameConfig* g_pGameConfig = nullptr;
-    CCSGameRules* g_pGameRules = nullptr;
+    using json = nlohmann::json;
+    CCoreConfig(const std::string& path);
+    ~CCoreConfig();
 
-    CGlobalVars *getGlobalVars() {
-        INetworkGameServer *server = g_pNetworkServerService->GetIGameServer();
-        if (!server) return nullptr;
-        if (!g_pGlobalVars) g_pGlobalVars = server->GetGlobals();
-        return g_pNetworkServerService->GetIGameServer()->GetGlobals();
-    }
+    bool Init(char* conf_error, int conf_error_size);
+    const std::string GetPath() const;
 
-    bool g_bDetoursLoaded = false;
-}
+    bool IsSilentChatTrigger(const std::string& message, std::string& prefix) const;
+    bool IsPublicChatTrigger(const std::string& message, std::string& prefix) const;
+
+private:
+    bool IsTriggerInternal(std::vector<std::string> triggers, const std::string& message, std::string& prefix) const;
+
+private:
+    std::string m_sPath;
+    json m_json;
+};

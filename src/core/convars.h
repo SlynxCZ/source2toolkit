@@ -88,6 +88,9 @@ namespace convars {
 
         void DeleteConVar(uint16 accessIndex) override;
 
+    public:
+        void UnlockConVars();
+
     private:
         inline ConVarRefAbstract GetRef(uint16 idx)
         {
