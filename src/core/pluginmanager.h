@@ -40,6 +40,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <thread>
+#include <atomic>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -68,11 +70,15 @@ public:
 
     bool LoadPlugin(const char* path, char* error, size_t maxlen);
     bool UnloadPlugin(int id);
+    bool ReloadPlugin(int id);
 
     bool LoadMissing();
 
     bool LoadAll();
     void UnloadAll();
+
+    void StartFileWatcher();
+    void StopFileWatcher();
 
     void SetAllLoaded();
     void FireMetamodLoaded();
@@ -86,6 +92,12 @@ public:
 public:
     std::vector<std::unique_ptr<ToolkitPlugin>> m_plugins;
     int m_nextId = 1;
+private:
+    bool LoadPluginFromPath(const char* fullPath, char* error, size_t maxlen, bool hotReload);
+    bool ReloadPluginByPath(const std::string& fullPath);
+
+    std::thread m_watcherThread;
+    std::atomic<bool> m_stopWatcher{false};
 };
 
 extern PluginManager pluginManager;

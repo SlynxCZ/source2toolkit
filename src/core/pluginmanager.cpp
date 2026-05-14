@@ -45,8 +45,16 @@
 #include "source2toolkit/IToolkitPlugin.h"
 
 #include "pluginapi.h"
+#include "core/shared.h"
 #include "utils/log.h"
 #include "utils/paths.h"
+#include "utils/scheduler.h"
+
+#ifndef _WIN32
+#include <sys/inotify.h>
+#include <sys/select.h>
+#include <unistd.h>
+#endif
 
 PluginManager pluginManager;
 
@@ -148,34 +156,10 @@ bool PluginManager::IsPluginLoaded(const std::string& fullPath)
     return false;
 }
 
-bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
+bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t maxlen, bool hotReload)
 {
-    std::string fullPath = FindPluginBinary(name);
-
-    if (fullPath.empty())
-    {
-        if (error && maxlen)
-            snprintf(error, maxlen, "Plugin '%s' not found", name);
-
-        return false;
-    }
-
-    auto normalized = std::filesystem::weakly_canonical(fullPath).string();
-
-    for (auto& p : m_plugins)
-    {
-        auto existing = std::filesystem::weakly_canonical(p->path).string();
-
-        if (existing == normalized)
-        {
-            if (error && maxlen)
-                snprintf(error, maxlen, "Plugin already loaded (same file)");
-            return false;
-        }
-    }
-
     std::string dlErr;
-    auto lib = OpenLib(fullPath.c_str(), dlErr);
+    auto lib = OpenLib(fullPath, dlErr);
 
     if (!lib)
     {
@@ -189,7 +173,7 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     auto fn = (CreateInterfaceFn)GetSymbol(lib, "CreateInterface");
     if (!fn)
     {
-        FAILF("CreateInterface not found in %s", fullPath.c_str());
+        FAILF("CreateInterface not found in %s", fullPath);
     }
 
     int ret = 0;
@@ -216,7 +200,7 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     auto& stored = m_plugins.back();
 
     char err[256]{};
-    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), false))
+    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), hotReload))
     {
         FAILF("Plugin load failed: %s", err);
     }
@@ -229,7 +213,84 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
             l->OnPluginLoad(newId);
     }
 
+    FP_INFO("{} plugin {}", hotReload ? "Hot reloaded" : "Loaded", std::filesystem::path(fullPath).stem().string());
     return true;
+}
+
+bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
+{
+    std::string fullPath = FindPluginBinary(name);
+
+    if (fullPath.empty())
+    {
+        if (error && maxlen)
+            snprintf(error, maxlen, "Plugin '%s' not found", name);
+
+        return false;
+    }
+
+    auto normalized = std::filesystem::weakly_canonical(fullPath).string();
+
+    for (auto& p : m_plugins)
+    {
+        auto existing = std::filesystem::weakly_canonical(p->path).string();
+
+        if (existing == normalized)
+        {
+            if (error && maxlen)
+                snprintf(error, maxlen, "Plugin already loaded (same file)");
+            return false;
+        }
+    }
+
+    return LoadPluginFromPath(fullPath.c_str(), error, maxlen, false);
+}
+
+bool PluginManager::ReloadPlugin(int id)
+{
+    std::string path;
+
+    for (auto it = m_plugins.begin(); it != m_plugins.end(); ++it)
+    {
+        if ((*it)->id != id)
+            continue;
+
+        path = (*it)->path;
+
+        for (auto& other : m_plugins)
+            for (auto* l : other->listeners)
+                l->OnPluginUnload(id);
+
+        char err[128]{};
+        (*it)->api->Unload(err, sizeof(err));
+        (*it)->listeners.clear();
+
+        events::eventManager.RemoveAllForPlugin(id);
+        commands::commandsManager.RemoveAllForPlugin(id);
+
+        CloseLib((*it)->lib);
+        m_plugins.erase(it);
+        break;
+    }
+
+    if (path.empty())
+        return false;
+
+    char err[256]{};
+    return LoadPluginFromPath(path.c_str(), err, sizeof(err), true);
+}
+
+bool PluginManager::ReloadPluginByPath(const std::string& fullPath)
+{
+    auto normalized = std::filesystem::weakly_canonical(fullPath).string();
+
+    for (auto& p : m_plugins)
+    {
+        if (std::filesystem::weakly_canonical(p->path).string() == normalized)
+            return ReloadPlugin(p->id);
+    }
+
+    return false;
 }
 
 bool PluginManager::UnloadPlugin(PluginId id)
@@ -358,6 +419,78 @@ void PluginManager::UnloadAll()
     }
 
     m_plugins.clear();
+}
+
+void PluginManager::StartFileWatcher()
+{
+#ifndef _WIN32
+    if (!shared::g_pCoreConfig->PluginHotReloadEnabled)
+        return;
+
+    m_stopWatcher = false;
+    auto dir = paths::GetPluginsDirectory();
+
+    m_watcherThread = std::thread([this, dir]()
+    {
+        int fd = inotify_init1(IN_NONBLOCK);
+        if (fd < 0)
+        {
+            FP_ERROR("inotify_init1 failed, hot reload unavailable");
+            return;
+        }
+
+        inotify_add_watch(fd, dir.c_str(), IN_CLOSE_WRITE);
+
+        alignas(struct inotify_event) char buf[4096];
+
+        while (!m_stopWatcher)
+        {
+            fd_set fds;
+            FD_ZERO(&fds);
+            FD_SET(fd, &fds);
+
+            timeval tv{0, 100000};
+            if (select(fd + 1, &fds, nullptr, nullptr, &tv) <= 0)
+                continue;
+
+            int len = read(fd, buf, sizeof(buf));
+            if (len <= 0)
+                continue;
+
+            for (int i = 0; i < len; )
+            {
+                auto* ev = reinterpret_cast<struct inotify_event*>(buf + i);
+
+                if (ev->len > 0 && (ev->mask & IN_CLOSE_WRITE))
+                {
+                    std::string name = ev->name;
+                    if (name.size() > 4 && name.substr(name.size() - 4) == ".stx")
+                    {
+                        std::string fullPath = dir + "/" + name;
+                        FP_INFO("Detected change in {}, queuing hot reload...", name);
+                        toolkitScheduler.NextFrame([this, fullPath]()
+                        {
+                            ReloadPluginByPath(fullPath);
+                        });
+                    }
+                }
+
+                i += static_cast<int>(sizeof(struct inotify_event)) + ev->len;
+            }
+        }
+
+        close(fd);
+    });
+#endif
+}
+
+void PluginManager::StopFileWatcher()
+{
+#ifndef _WIN32
+    m_stopWatcher = true;
+    if (m_watcherThread.joinable())
+        m_watcherThread.join();
+#endif
 }
 
 void PluginManager::SetAllLoaded()

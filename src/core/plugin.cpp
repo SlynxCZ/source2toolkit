@@ -145,11 +145,14 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         return false;
     }
 
+    pluginManager.StartFileWatcher();
+
     return true;
 }
 
 bool ToolkitCore::Unload(char* error, size_t maxlen)
 {
+    pluginManager.StopFileWatcher();
     pluginManager.UnloadAll();
 
     commands::DestructCommands();

@@ -210,6 +210,21 @@ namespace virtualhooks
         return {static_cast<KHook::Action>(result)};
     }
 
+    KHook::Return<void> Virtuals::Hook_ClientCommand(IServerGameClients* pThis, CPlayerSlot slot, const CCommand& args)
+    {
+        if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
+        {
+            CCommandContext ctx(CT_NO_TARGET, slot);
+            Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
+            if (result > Action::Ignore)
+                return {static_cast<KHook::Action>(result)};
+
+            commands::DispatchConsoleListener(ctx, args, Mode::Post);
+        }
+
+        return {KHook::Action::Ignore};
+    }
+
     KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis,
                                                                 const EventServerGamePostSimulate_t* const pMsg)
     {
