@@ -40,6 +40,8 @@
 
 namespace mysql
 {
+    MySQLManager mysqlManager;
+
     void TMySQLConnectOp::RunThreadPart()
     {
         m_szError[0] = '\0';
