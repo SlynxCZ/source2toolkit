@@ -37,6 +37,7 @@
 #pragma once
 #include "ISmmPlugin.h"
 #include "igameevents.h"
+#include "igamesystem.h"
 #include "eiface.h"
 #include "entitysystem.h"
 
@@ -54,18 +55,20 @@ namespace virtualhooks {
         KHook::Return<void> Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t &config, ISource2WorldSession *pWorldSession, const char *);
         KHook::Return<void> Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
         KHook::Return<void> Hook_ClientCommand(IServerGameClients* pThis, CPlayerSlot slot, const CCommand& args);
+        KHook::Return<void> Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg);
         KHook::Return<int> Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char *filename, bool bSearchAll);
         KHook::Return<bool> Hook_FireEvent(IGameEventManager2* pThis, IGameEvent *event, bool bDontBroadcast);
         KHook::Return<bool> Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent *event, bool bDontBroadcast);
     protected:
         KHook::Virtual<IServerGameDLL, void, bool, bool, bool> m_GameFrame;
-        KHook::Virtual<INetworkServerService, void, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*> m_StartupServer;
         KHook::Virtual<ICvar, void, ConCommandRef, const CCommandContext&, const CCommand&> m_DispatchConCommand;
         KHook::Virtual<IServerGameClients, void, CPlayerSlot, const CCommand&> m_ClientCommand;
-    public:
+        KHook::Virtual<INetworkServerService, void, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*> m_StartupServer;
+        KHook::Virtual<IGameSystem, void, const EventServerGamePostSimulate_t*> m_OnServerGamePostSimulate;
         KHook::Virtual<IGameEventManager2, int, const char*, bool> m_LoadEventsFromFile;
         KHook::Virtual<IGameEventManager2, bool, IGameEvent*, bool> m_FireEvent;
     protected:
+        IGameSystem* m_pCEntityDebugGameSystemVTable;
         IGameEventManager2* m_pCGameEventManagerVTable;
     };
 

@@ -44,6 +44,7 @@
 #include "dynlibutils/module.h"
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
+#include "mysql.h"
 #include "schema/cgameresourceserviceserver.h"
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
@@ -63,6 +64,7 @@ namespace virtualhooks
         m_StartupServer(&INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer),
         m_DispatchConCommand(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr),
         m_ClientCommand(&IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr),
+        m_OnServerGamePostSimulate(&IGameSystem::OnServerGamePostSimulate, this, nullptr, &Virtuals::Hook_OnServerGamePostSimulate),
         m_LoadEventsFromFile(&IGameEventManager2::LoadEventsFromFile,this, nullptr, &Virtuals::Hook_LoadEventsFromFile),
         m_FireEvent(&IGameEventManager2::FireEvent,this, &Virtuals::Hook_FireEvent, &Virtuals::Hook_FireEventPost)
     {
@@ -74,6 +76,12 @@ namespace virtualhooks
         m_StartupServer.Add(shared::g_pNetworkServerService);
         m_DispatchConCommand.Add(shared::g_pCVar);
         m_ClientCommand.Add(shared::g_pGameClients);
+
+        m_pCEntityDebugGameSystemVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CEntityDebugGameSystem").RCast<IGameSystem*>();
+        if (m_pCEntityDebugGameSystemVTable)
+        {
+            m_OnServerGamePostSimulate.AddGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
+        }
 
         m_pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
         if (m_pCGameEventManagerVTable)
@@ -89,6 +97,11 @@ namespace virtualhooks
         m_StartupServer.Remove(shared::g_pNetworkServerService);
         m_DispatchConCommand.Remove(shared::g_pCVar);
         m_ClientCommand.Remove(shared::g_pGameClients);
+
+        if (m_pCEntityDebugGameSystemVTable)
+        {
+            m_OnServerGamePostSimulate.RemoveGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
+        }
 
         if (m_pCGameEventManagerVTable)
         {
@@ -198,6 +211,15 @@ namespace virtualhooks
             commands::DispatchConsoleListener(ctx, args, Mode::Post);
         }
 
+        return {KHook::Action::Ignore};
+    }
+
+    KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg)
+    {
+        for (auto connection : mysql::mysqlManager.m_vecMysqlConnections)
+        {
+            connection->RunFrame();
+        }
         return {KHook::Action::Ignore};
     }
 

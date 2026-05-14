@@ -25,17 +25,6 @@ resolve_dep_internal(METAMOD_DIR MMSOURCE_DEV)
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(${SOURCE2TOOLKIT_SDK_DIR} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
-SET(source2toolkit_include_directories
-        ${CMAKE_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/src
-        ${METAMOD_DIR}/core
-        ${METAMOD_DIR}/third_party/khook/include
-        vendor
-        vendor/spdlog/include
-)
-
-target_include_directories(source2toolkit-sdk PUBLIC ${source2toolkit_include_directories})
-
 add_subdirectory(vendor/spdlog)
 
 file(GLOB_RECURSE SOURCE_FILES
@@ -66,8 +55,6 @@ endif ()
 
 include(${CMAKE_CURRENT_LIST_DIR}/makefiles/metamod/configure_metamod.cmake)
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${source2toolkit_include_directories})
-
 find_package(Git QUIET)
 if (GIT_FOUND)
     execute_process(
@@ -82,20 +69,53 @@ else()
 endif()
 
 if (UNIX AND NOT APPLE)
+    SET(source2toolkit_include_directories
+            ${CMAKE_SOURCE_DIR}/src
+            ${METAMOD_DIR}/core
+            ${METAMOD_DIR}/third_party/khook/include
+            ${CMAKE_SOURCE_DIR}/vendor
+            ${CMAKE_SOURCE_DIR}/vendor/openssl/include
+            ${CMAKE_SOURCE_DIR}/vendor/mysql/include
+            ${CMAKE_SOURCE_DIR}/vendor/spdlog/include
+    )
+    SET(source2toolkit_link_libraries
+            ${CMAKE_SOURCE_DIR}/vendor/mysql/lib/libmysqlclient.a
+            ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libssl.a
+            ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libcrypto.a
+    )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/linuxsteamrt64"
     )
 elseif (WIN32)
+    SET(source2toolkit_include_directories
+            ${CMAKE_SOURCE_DIR}/src
+            ${METAMOD_DIR}/core
+            ${METAMOD_DIR}/third_party/khook/include
+            ${CMAKE_SOURCE_DIR}/vendor
+            ${CMAKE_SOURCE_DIR}/vendor/openssl/include
+            ${CMAKE_SOURCE_DIR}/vendor/mysql/include
+            ${CMAKE_SOURCE_DIR}/vendor/spdlog/include
+    )
+    SET(source2toolkit_link_libraries
+            ${CMAKE_SOURCE_DIR}/vendor/mysql/lib/mysqlclient.lib
+            ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/ssl.lib
+            ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/crypto.lib
+            crypt32.lib
+    )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/win64"
     )
 endif()
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${source2toolkit_include_directories})
+target_include_directories(source2toolkit-sdk PUBLIC ${source2toolkit_include_directories})
+
 target_link_libraries(${PROJECT_NAME}
         source2toolkit-config
         source2toolkit-sdk
+        ${source2toolkit_link_libraries}
 )
 
 add_custom_command(
