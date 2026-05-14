@@ -71,8 +71,9 @@ namespace inlinehooks
 
     void Inlines::DestructListeners()
     {
-        m_FireOutputInternal.~Function();
-        m_PlatDebug.~Function();
+        // TODO: Find valid way to uninstall inline hooks, using KHook
+        // m_FireOutputInternal.~Function();
+        // m_PlatDebug.~Function();
     }
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
