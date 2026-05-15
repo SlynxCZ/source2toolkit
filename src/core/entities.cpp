@@ -42,7 +42,7 @@
 #include "shared.h"
 
 #include "source2toolkit/utils/plat.h"
-#include "source2toolkit/schema/entities.h"
+#include "source2toolkit/schema/entityio.h"
 #include "source2toolkit/schema/entity/classes/CBeam.h"
 
 namespace entities

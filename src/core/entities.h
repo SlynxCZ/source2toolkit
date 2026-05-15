@@ -36,7 +36,7 @@
  */
 #pragma once
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
-#include "source2toolkit/schema/entities.h"
+#include "source2toolkit/schema/entityio.h"
 #include "source2toolkit/IToolkitEntities.h"
 
 #include "eiface.h"
