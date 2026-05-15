@@ -166,8 +166,7 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx,
-                                                          const CCommand& args)
+    KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args)
     {
         if (args.ArgC() >= 2)
         {
@@ -182,8 +181,14 @@ namespace virtualhooks
                     message = message.substr(1, message.size() - 2);
 
                 std::string prefix;
-                if (!message.empty() && (shared::g_pCoreConfig->IsPublicChatTrigger(message, prefix) ||
-                    shared::g_pCoreConfig->IsSilentChatTrigger(message, prefix)))
+
+                bool isPublic =
+                    shared::g_pCoreConfig->IsPublicChatTrigger(message, prefix);
+
+                bool isSilent =
+                    shared::g_pCoreConfig->IsSilentChatTrigger(message, prefix);
+
+                if (isPublic || isSilent)
                 {
                     std::string cleaned = message.substr(prefix.size());
 
@@ -193,20 +198,29 @@ namespace virtualhooks
                     if (parsed.ArgC() > 0)
                     {
                         Action r = commands::DispatchConsoleListener(ctx, parsed, Mode::Pre);
+
                         if (r != Action::Supersede)
                             commands::DispatchConsoleListener(ctx, parsed, Mode::Post);
+
+                        if (r == Action::Supersede)
+                            return {KHook::Action::Supersede};
                     }
 
-                    return {KHook::Action::Supersede};
+                    if (isSilent)
+                        return {KHook::Action::Supersede};
+
+                    return {KHook::Action::Ignore};
                 }
             }
         }
 
         Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
+
         if (result > Action::Ignore)
             return {static_cast<KHook::Action>(result)};
 
         commands::DispatchConsoleListener(ctx, args, Mode::Post);
+
         return {static_cast<KHook::Action>(result)};
     }
 
