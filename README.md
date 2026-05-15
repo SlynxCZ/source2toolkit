@@ -66,9 +66,7 @@ Designed for both beginners and hardcore engine hackers.
 git clone --recurse-submodules https://github.com/SlynxCZ/source2toolkit.git
 cd source2toolkit
 
-mkdir build && cd build
-cmake ..
-cmake --build . --config Release
+docker compose -f docker/docker-compose.yml up
 ```
 
 ## Documentation
