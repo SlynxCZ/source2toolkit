@@ -39,7 +39,7 @@
 
 #include "commands.h"
 #include "events.h"
-#include "entityio.h"
+#include "entities.h"
 
 #include "source2toolkit/IToolkitApi.h"
 #include "source2toolkit/IToolkitPlugin.h"

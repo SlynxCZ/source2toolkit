@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
-#include "source2toolkit/schema/entityio.h"
+#include "source2toolkit/schema/entities.h"
 
 #include "ISmmPlugin.h"
 #include "eiface.h"

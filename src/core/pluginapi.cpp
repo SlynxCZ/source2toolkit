@@ -40,7 +40,7 @@
 
 #include "commands.h"
 #include "convars.h"
-#include "entityio.h"
+#include "entities.h"
 #include "events.h"
 #include "menus.h"
 #include "mysql.h"
@@ -259,9 +259,9 @@ IToolkitConVars* PluginApi::ConVars()
     return &convars::convarsManager;
 }
 
-IToolkitEntityIO* PluginApi::EntityIO()
+IToolkitEntities* PluginApi::Entities()
 {
-    return &entityio::entityIo;
+    return &entities::entitiesManager;
 }
 
 IToolkitEvents* PluginApi::Events()

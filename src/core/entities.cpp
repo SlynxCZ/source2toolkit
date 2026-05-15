@@ -34,60 +34,67 @@
  *
  * Project: Source2Toolkit
  */
-#include "entityio.h"
+#include "entities.h"
 
 #include "addresses.h"
 #include "commands.h"
 #include "events.h"
 #include "shared.h"
+
 #include "source2toolkit/utils/plat.h"
-#include "utils/scheduler.h"
-#include "utils/vectorextends.h"
-#include "dynlibutils/module.h"
-#include "iserver.h"
+#include "source2toolkit/schema/entities.h"
 #include "source2toolkit/schema/entity/classes/CBeam.h"
-#include "schema/cgameresourceserviceserver.h"
 
-namespace entityio
+namespace entities
 {
-    EntityIO entityIo;
+    EntitiesManager entitiesManager;
 
-    CBaseEntity* EntityIO::FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules)
+    CBaseEntity* EntitiesManager::FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules)
     {
         return UTIL_FindPickerEntity(pPlayer, pGameRules);
     }
 
-    CBaseEntity* EntityIO::FindEntityByClassname(CEntityInstance* pStart, const char* name)
+    CBaseEntity* EntitiesManager::FindEntityByClassname(CEntityInstance* pStart, const char* name)
     {
         return UTIL_FindEntityByClassname(pStart, name);
     }
 
-    CBaseEntity* EntityIO::FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter)
+    CBaseEntity* EntitiesManager::FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter)
     {
         return UTIL_FindEntityByName(pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
     }
 
-    CBaseEntity* EntityIO::CreateEntityByName(const char* pszClassName)
+    CBaseEntity* EntitiesManager::CreateEntityByName(const char* pszClassName)
     {
         return UTIL_CreateEntityByName(pszClassName);
     }
 
-    void EntityIO::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
+    void EntitiesManager::AddEntityListener(IEntityListener* pListener)
+    {
+        UTIL_AddEntityListener(pListener);
+    }
+
+    void EntitiesManager::RemoveEntityListener(IEntityListener* pListener)
+    {
+        UTIL_RemoveEntityListener(pListener);
+    }
+
+    void EntitiesManager::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
     {
         return UTIL_AcceptInput(pTarget, pszInput, pActivator, pCaller, pszValue);
     }
 
-    void EntityIO::AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
+    void EntitiesManager::AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
     {
         return UTIL_AddEntityIOEvent(pTarget, pszInput, pActivator, pCaller, pszValue, flDelay);
     }
 
-    void EntityIO::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
+    void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
     {
         UTIL_AddEntityIOListener(pListener, pchClassName, pchOutputName, nMode);
     }
 
-    void EntityIO::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
+    void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
     {
         UTIL_RemoveEntityIOListener(pListener, pchClassName, pchOutputName, nMode);
     }

@@ -37,7 +37,7 @@
 #pragma once
 #include "source2toolkit/schema/entity/classes/CBaseEntity.h"
 #include "source2toolkit/schema/entity/classes/CCollisionProperty.h"
-#include "source2toolkit/schema/entityio.h"
+#include "source2toolkit/schema/entities.h"
 
 #include "eiface.h"
 #include "entitysystem.h"

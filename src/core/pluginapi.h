@@ -66,7 +66,7 @@ public:
     IToolkitAddresses* Addresses() override;
     IToolkitCommands* Commands() override;
     IToolkitConVars* ConVars() override;
-    IToolkitEntityIO* EntityIO() override;
+    IToolkitEntities* Entities() override;
     IToolkitEvents* Events() override;
     IToolkitGameConfig* GameConfig() override;
     IToolkitMenus* Menus() override;
