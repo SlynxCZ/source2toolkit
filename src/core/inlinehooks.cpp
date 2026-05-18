@@ -53,27 +53,27 @@ namespace inlinehooks
     std::unordered_map<OutputKey, EntityIOCallbackPair, OutputKeyHash> entityIOListenerStack;
 
     Inlines::Inlines() :
-        m_FireOutputInternal(this, &Inlines::Hook_FireOutputInternal, nullptr),
-        m_PlatDebug(this, &Inlines::Hook_PlatDebug, nullptr)
+        m_FireOutputInternal(new KHook::Function(this, &Inlines::Hook_FireOutputInternal, nullptr)),
+        m_PlatDebug(new KHook::Function(this, &Inlines::Hook_PlatDebug, nullptr))
     {
     }
 
     void Inlines::InitListeners()
     {
-        m_FireOutputInternal.Configure(addresses::toolkitAddresses.FireOutputInternal);
+        m_FireOutputInternal->Configure(addresses::toolkitAddresses.FireOutputInternal);
 
         auto platDebugAddr = DynLibUtils::CModule("tier0").GetFunctionByName("Plat_DebugString_Buffered").RCast<void (*)(void*, void*)>();
         if (platDebugAddr)
         {
-            m_PlatDebug.Configure(platDebugAddr);
+            m_PlatDebug->Configure(platDebugAddr);
         }
     }
 
     void Inlines::DestructListeners()
     {
-        // TODO: Find valid way to uninstall inline hooks, using KHook
-        // m_FireOutputInternal.~Function();
-        // m_PlatDebug.~Function();
+        // TODO: Check if deleting pointer disables hook without SIGSEGV
+        delete m_FireOutputInternal;
+        delete m_PlatDebug;
     }
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
@@ -127,9 +127,7 @@ namespace inlinehooks
 
         if (finalAction != KHook::Action::Supersede)
         {
-            m_FireOutputInternal.CallOriginal(
-                pThis, pActivator, pCaller, variantValue, delay, unk01, unk02
-            );
+            m_FireOutputInternal->CallOriginal(pThis, pActivator, pCaller, variantValue, delay, unk01, unk02);
         }
 
         for (auto* pair : matched)
