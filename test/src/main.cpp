@@ -84,7 +84,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     api->AddListener(this, this);
 
-    TOOLKIT_LOG(this, "Load() done\n");
+    TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
 
     return true;
 }
