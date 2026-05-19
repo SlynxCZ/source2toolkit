@@ -64,7 +64,7 @@ namespace virtualhooks
     Virtuals::Virtuals() :
         m_GameFrame(new KHook::Virtual(&IServerGameDLL::GameFrame, this, nullptr, &Virtuals::Hook_GameFrame)),
         m_DispatchConCommand(new KHook::Virtual(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr)),
-        m_ClientCommand(new KHook::Virtual(IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr)),
+        m_ClientCommand(new KHook::Virtual( &IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr)),
         m_StartupServer(new KHook::Virtual(&INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer)),
         m_OnServerGamePostSimulate(new KHook::Virtual(&IGameSystem::OnServerGamePostSimulate, this, nullptr, &Virtuals::Hook_OnServerGamePostSimulate)),
         m_LoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr, &Virtuals::Hook_LoadEventsFromFile)),
