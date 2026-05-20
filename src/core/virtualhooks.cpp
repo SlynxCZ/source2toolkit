@@ -62,53 +62,53 @@ namespace virtualhooks
     static std::vector<IGameEvent*> eventStack;
 
     Virtuals::Virtuals() :
-        m_GameFrame(new KHook::Virtual(&IServerGameDLL::GameFrame, this, nullptr, &Virtuals::Hook_GameFrame)),
-        m_DispatchConCommand(new KHook::Virtual(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr)),
-        m_ClientCommand(new KHook::Virtual( &IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr)),
-        m_StartupServer(new KHook::Virtual(&INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer)),
-        m_OnServerGamePostSimulate(new KHook::Virtual(&IGameSystem::OnServerGamePostSimulate, this, nullptr, &Virtuals::Hook_OnServerGamePostSimulate)),
-        m_LoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr, &Virtuals::Hook_LoadEventsFromFile)),
-        m_FireEvent(new KHook::Virtual(&IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent, &Virtuals::Hook_FireEventPost))
+        m_pGameFrame(new KHook::Virtual(&IServerGameDLL::GameFrame, this, nullptr, &Virtuals::Hook_GameFrame)),
+        m_pDispatchConCommand(new KHook::Virtual(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr)),
+        m_pClientCommand(new KHook::Virtual( &IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr)),
+        m_pStartupServer(new KHook::Virtual(&INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer)),
+        m_pOnServerGamePostSimulate(new KHook::Virtual(&IGameSystem::OnServerGamePostSimulate, this, nullptr, &Virtuals::Hook_OnServerGamePostSimulate)),
+        m_pLoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr, &Virtuals::Hook_LoadEventsFromFile)),
+        m_pFireEvent(new KHook::Virtual(&IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent, &Virtuals::Hook_FireEventPost))
     {
     }
 
     void Virtuals::InitListeners()
     {
-        m_GameFrame->Add(shared::g_pServer);
-        m_StartupServer->Add(shared::g_pNetworkServerService);
-        m_DispatchConCommand->Add(shared::g_pCVar);
-        m_ClientCommand->Add(shared::g_pGameClients);
+        m_pGameFrame->Add(shared::g_pServer);
+        m_pStartupServer->Add(shared::g_pNetworkServerService);
+        m_pDispatchConCommand->Add(shared::g_pCVar);
+        m_pClientCommand->Add(shared::g_pGameClients);
 
         m_pCEntityDebugGameSystemVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CEntityDebugGameSystem").RCast<IGameSystem*>();
         if (m_pCEntityDebugGameSystemVTable)
         {
-            m_OnServerGamePostSimulate->AddGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
+            m_pOnServerGamePostSimulate->AddGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
         }
 
         m_pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
         if (m_pCGameEventManagerVTable)
         {
-            m_LoadEventsFromFile->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-            m_FireEvent->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
+            m_pLoadEventsFromFile->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
+            m_pFireEvent->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
         }
     }
 
     void Virtuals::DestructListeners()
     {
-        m_GameFrame->Remove(shared::g_pServer);
-        m_StartupServer->Remove(shared::g_pNetworkServerService);
-        m_DispatchConCommand->Remove(shared::g_pCVar);
-        m_ClientCommand->Remove(shared::g_pGameClients);
+        m_pGameFrame->Remove(shared::g_pServer);
+        m_pStartupServer->Remove(shared::g_pNetworkServerService);
+        m_pDispatchConCommand->Remove(shared::g_pCVar);
+        m_pClientCommand->Remove(shared::g_pGameClients);
 
         if (m_pCEntityDebugGameSystemVTable)
         {
-            m_OnServerGamePostSimulate->RemoveGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
+            m_pOnServerGamePostSimulate->RemoveGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
         }
 
         if (m_pCGameEventManagerVTable)
         {
-            m_LoadEventsFromFile->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-            m_FireEvent->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
+            m_pLoadEventsFromFile->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
+            m_pFireEvent->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
         }
     }
 
@@ -272,7 +272,7 @@ namespace virtualhooks
 
         if (localDontBroadcast != bDontBroadcast)
         {
-            bool original = m_FireEvent->CallOriginal(pThis, event, localDontBroadcast);
+            bool original = m_pFireEvent->CallOriginal(pThis, event, localDontBroadcast);
             return {KHook::Action::Supersede, original};
         }
 
