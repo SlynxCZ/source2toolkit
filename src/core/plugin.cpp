@@ -204,7 +204,7 @@ const char* ToolkitCore::GetAuthor() { return "Michal \"Slynx (˙·٠● S l y n
 const char* ToolkitCore::GetName() { return "Source2Toolkit"; }
 const char* ToolkitCore::GetDescription() { return "Source2Toolkit"; }
 const char* ToolkitCore::GetURL() { return "https://www.slynxdev.cz, https://www.alliedmods.net"; }
-const char* ToolkitCore::GetLicense() { return "GPLv3"; }
+const char* ToolkitCore::GetLicense() { return "Source2Toolkit (GPLv3 with exceptions)"; }
 const char* ToolkitCore::GetVersion() { return VERSION_STRING; }
 const char* ToolkitCore::GetDate() { return BUILD_TIMESTAMP; }
 const char* ToolkitCore::GetLogTag() { return "Source2Toolkit"; }
