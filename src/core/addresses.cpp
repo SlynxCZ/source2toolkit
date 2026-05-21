@@ -46,6 +46,7 @@ namespace addresses
     {
         RESOLVE_SIG(shared::g_pServer, "CBaseEntity::CreateEntityByName", shared::g_pGameConfig->GetSignature("CBaseEntity_CreateEntityByName"), toolkitAddresses.CreateEntityByName);
         RESOLVE_SIG(shared::g_pServer, "CBaseEntity::DispatchSpawn", shared::g_pGameConfig->GetSignature("CBaseEntity_DispatchSpawn"), toolkitAddresses.DispatchSpawn);
+        RESOLVE_SIG(shared::g_pServer, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity_TakeDamageOld"), toolkitAddresses.TakeDamageOld);
         RESOLVE_SIG(shared::g_pServer, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity_SetModel"), toolkitAddresses.SetModel);
         RESOLVE_SIG(shared::g_pServer, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController_SetPawn"), toolkitAddresses.SetPawn);
         RESOLVE_SIG(shared::g_pServer, "CBasePlayerPawn::RemovePlayerItem", shared::g_pGameConfig->GetSignature("CBasePlayerPawn_RemovePlayerItem"), toolkitAddresses.RemovePlayerItem);
@@ -57,6 +58,7 @@ namespace addresses
         RESOLVE_SIG(shared::g_pServer, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem_AddEntityIOEvent"), toolkitAddresses.AddEntityIOEvent);
         RESOLVE_SIG(shared::g_pServer, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByClassName"), toolkitAddresses.FindEntityByClassName);
         RESOLVE_SIG(shared::g_pServer, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByName"), toolkitAddresses.FindEntityByName);
+        RESOLVE_SIG(shared::g_pServer, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo_CTakeDamageInfo"), toolkitAddresses.CTakeDamageInfo);
 
         return true;
     }
@@ -163,6 +165,11 @@ namespace addresses
         return DispatchSpawn;
     }
 
+    CBaseEntity_TakeDamageOld_t Addresses::CBaseEntity_TakeDamageOld()
+    {
+        return TakeDamageOld;
+    }
+
     CBaseModelEntity_SetModel_t Addresses::CBaseModelEntity_SetModel()
     {
         return SetModel;
@@ -216,5 +223,10 @@ namespace addresses
     CGameEntitySystem_FindEntityByName_t Addresses::CGameEntitySystem_FindEntityByName()
     {
         return FindEntityByName;
+    }
+
+    CTakeDamageInfo_CTakeDamageInfo_t Addresses::CTakeDamageInfo_CTakeDamageInfo()
+    {
+        return CTakeDamageInfo;
     }
 }

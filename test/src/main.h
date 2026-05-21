@@ -44,9 +44,16 @@
 #include "eiface.h"
 #include "khook.hpp"
 
+class CBasePlayerWeapon;
+class CCSPlayer_WeaponServices;
+class CNETMsg_StringCmd_t;
+class CServerSideClientBase;
+
 class Plugin final : public IToolkitPlugin, IToolkitListener
 {
 public:
+    Plugin();
+
     bool Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late) override;
     bool Unload(char* error, size_t maxlen) override;
 
@@ -57,6 +64,17 @@ public:
     void OnAllMetamodPluginsLoaded() override;
     void OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName, bool loadGame, bool background) override;
     void OnLevelShutdown() override;
+
+public:
+    KHook::Return<void> CCSPlayer_WeaponServices_SelectItem(CCSPlayer_WeaponServices* pThis, CBasePlayerWeapon* pWeapon, int unk1);
+    KHook::Return<bool> CServerSideClient_ExecuteStringCommand(CServerSideClientBase* pThis, const CNETMsg_StringCmd_t& msg);
+
+protected:
+    KHook::Virtual<CCSPlayer_WeaponServices, void, CBasePlayerWeapon*, int>* m_pSelectItem = nullptr;
+    KHook::Virtual<CServerSideClientBase, bool, const CNETMsg_StringCmd_t&>* m_pExecuteStringCommand = nullptr;
+
+    CCSPlayer_WeaponServices* m_pCCSPlayer_WeaponServicesVTable = nullptr;
+    CServerSideClientBase* m_pCServerSideClientBaseVTable = nullptr;
 
 private:
     const char* GetAuthor() override;

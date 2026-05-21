@@ -106,6 +106,7 @@ namespace addresses
 
         CBaseEntity_CreateEntityByName_t CBaseEntity_CreateEntityByName() override;
         CBaseEntity_DispatchSpawn_t CBaseEntity_DispatchSpawn() override;
+        CBaseEntity_TakeDamageOld_t CBaseEntity_TakeDamageOld() override;
         CBaseModelEntity_SetModel_t CBaseModelEntity_SetModel() override;
         CBasePlayerController_SetPawn_t CBasePlayerController_SetPawn() override;
         CBasePlayerPawn_RemovePlayerItem_t CBasePlayerPawn_RemovePlayerItem() override;
@@ -117,9 +118,11 @@ namespace addresses
         CEntitySystem_AddEntityIOEvent_t CEntitySystem_AddEntityIOEvent() override;
         CGameEntitySystem_FindEntityByClassName_t CGameEntitySystem_FindEntityByClassName() override;
         CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
+        CTakeDamageInfo_CTakeDamageInfo_t CTakeDamageInfo_CTakeDamageInfo() override;
     public:
         CBaseEntity_CreateEntityByName_t CreateEntityByName = nullptr;
         CBaseEntity_DispatchSpawn_t DispatchSpawn = nullptr;
+        CBaseEntity_TakeDamageOld_t TakeDamageOld = nullptr;
         CBaseModelEntity_SetModel_t SetModel = nullptr;
         CBasePlayerController_SetPawn_t SetPawn = nullptr;
         CBasePlayerPawn_RemovePlayerItem_t RemovePlayerItem = nullptr;
@@ -131,6 +134,7 @@ namespace addresses
         CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
         CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
         CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
+        CTakeDamageInfo_CTakeDamageInfo_t CTakeDamageInfo = nullptr;
     private:
         std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
     };

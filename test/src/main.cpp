@@ -66,6 +66,12 @@ TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 Plugin g_Plugin;
 IGameEventSystem* g_pGameEventSystem = nullptr;
 
+Plugin::Plugin() :
+    m_pSelectItem(new KHook::Virtual(this, &Plugin::CCSPlayer_WeaponServices_SelectItem, nullptr)),
+    m_pExecuteStringCommand(new KHook::Virtual(&CServerSideClientBase::ExecuteStringCommand, this, &Plugin::CServerSideClient_ExecuteStringCommand, nullptr))
+{
+}
+
 bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late)
 {
     TOOLKIT_SAVEVARS();
@@ -84,6 +90,28 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     api->AddListener(this, this);
 
+    // Virtual function hooks
+    {
+        m_pCCSPlayer_WeaponServicesVTable = reinterpret_cast<CCSPlayer_WeaponServices*>(UTIL_GetVirtualTableByName(g_pSource2Server, "CCSPlayer_WeaponServices"));
+        if (m_pCCSPlayer_WeaponServicesVTable)
+        {
+            int offset = UTIL_GetOffset("CCSPlayer_WeaponServices_SelectWeapon");
+            if (offset == -1)
+            {
+                TOOLKIT_LOG(this, "Failed to find offset for CCSPlayer_WeaponServices_SelectWeapon\n");
+            }
+
+            m_pSelectItem->Configure(offset);
+            m_pSelectItem->AddGlobal((CCSPlayer_WeaponServices*)&m_pCCSPlayer_WeaponServicesVTable);
+        }
+
+        m_pCServerSideClientBaseVTable = reinterpret_cast<CServerSideClientBase*>(UTIL_GetVirtualTableByName(g_pEngineServer, "CServerSideClient"));
+        if (m_pCServerSideClientBaseVTable)
+        {
+            m_pExecuteStringCommand->AddGlobal((CServerSideClientBase*)&m_pCServerSideClientBaseVTable);
+        }
+    }
+
     TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
 
     return true;
@@ -91,6 +119,16 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
 bool Plugin::Unload(char* error, size_t maxlen)
 {
+    if (m_pCCSPlayer_WeaponServicesVTable)
+    {
+        m_pSelectItem->RemoveGlobal((CCSPlayer_WeaponServices*)&m_pCCSPlayer_WeaponServicesVTable);
+    }
+
+    if (m_pCServerSideClientBaseVTable)
+    {
+        m_pExecuteStringCommand->RemoveGlobal((CServerSideClientBase*)&m_pCServerSideClientBaseVTable);
+    }
+
     TOOLKIT_LOG(this, "Unload() done\n");
 
     return true;
@@ -125,6 +163,20 @@ void Plugin::OnLevelInit(const char* mapName, const char* mapEntities, const cha
 void Plugin::OnLevelShutdown()
 {
     TOOLKIT_LOG(this, "OnLevelShutdown()\n");
+}
+
+KHook::Return<void> Plugin::CCSPlayer_WeaponServices_SelectItem(CCSPlayer_WeaponServices* pThis, CBasePlayerWeapon* pWeapon, int unk1)
+{
+    TOOLKIT_LOG(this, "CCSPlayer_WeaponServices_SelectItem( pThis=%p, pWeapon=%p, unk1=%d )\n", pThis, pWeapon, unk1);
+
+    return { KHook::Action::Ignore };
+}
+
+KHook::Return<bool> Plugin::CServerSideClient_ExecuteStringCommand(CServerSideClientBase* pThis, const CNETMsg_StringCmd_t& msg)
+{
+    TOOLKIT_LOG(this, "CServerSideClient_ExecuteStringCommand( pThis=%p, command=%s )\n", pThis, msg.command().c_str());
+
+    return { KHook::Action::Ignore, false };
 }
 
 const char* Plugin::GetVersion()
