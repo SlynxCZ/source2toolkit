@@ -12,7 +12,12 @@ endif()
 
 add_subdirectory(${SOURCE2TOOLKIT_SDK} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
-target_include_directories(source2toolkit-sdk PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(source2toolkit-sdk PUBLIC
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/src/sdk
+        ${CMAKE_SOURCE_DIR}/vendor
+        ${CMAKE_SOURCE_DIR}/vendor/nlohmann
+)
 
 file(GLOB_RECURSE SOURCE_FILES
         src/*.cpp

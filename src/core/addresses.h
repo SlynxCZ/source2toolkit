@@ -84,7 +84,9 @@ namespace addresses
     class Addresses : public IToolkitAddresses {
     public:
         DynLibUtils::CModule& GetOrLoadModule(void* ptr);
+        DynLibUtils::CModule& GetOrLoadModule(const char* name);
     public:
+        void* GetModulePtr(const char* moduleName) override;
         void* GetModuleHandle(void* modulePtr) override;
         uintptr_t GetModuleBase(void* modulePtr) override;
         const char* GetModulePath(void* modulePtr) override;
@@ -137,6 +139,7 @@ namespace addresses
         CTakeDamageInfo_CTakeDamageInfo_t CTakeDamageInfo = nullptr;
     private:
         std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
+        std::unordered_map<std::string, DynLibUtils::CModule> m_ModulesByName;
     };
 
     extern Addresses toolkitAddresses;
