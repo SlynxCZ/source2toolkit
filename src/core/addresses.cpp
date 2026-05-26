@@ -75,46 +75,19 @@ namespace addresses
         return iter->second;
     }
 
-    DynLibUtils::CModule& Addresses::GetOrLoadModule(const char* name)
-    {
-        std::string key(name);
-
-        auto it = m_ModulesByName.find(key);
-        if (it != m_ModulesByName.end())
-            return it->second;
-
-        auto [iter, _] =
-            m_ModulesByName.emplace(key, DynLibUtils::CModule(key));
-
-        return iter->second;
-    }
-
-    void* Addresses::GetModulePtr(const char* moduleName)
-    {
-        return &GetOrLoadModule(moduleName);
-    }
-
-    void* Addresses::GetModulePtr(void* classPtr)
-    {
-        return &GetOrLoadModule(classPtr);
-    }
-
     void* Addresses::GetModuleHandle(void* modulePtr)
     {
-        auto& mod = GetOrLoadModule(modulePtr);
-        return mod.GetModuleHandle();
+        return GetOrLoadModule(modulePtr).GetModuleHandle();
     }
 
     uintptr_t Addresses::GetModuleBase(void* modulePtr)
     {
-        auto& mod = GetOrLoadModule(modulePtr);
-        return mod.GetModuleBase().GetPtr();
+        return GetOrLoadModule(modulePtr).GetModuleBase().GetPtr();
     }
 
     const char* Addresses::GetModulePath(void* modulePtr)
     {
-        auto& mod = GetOrLoadModule(modulePtr);
-        return mod.GetModulePath().data();
+        return GetOrLoadModule(modulePtr).GetModulePath().data();
     }
 
     uintptr_t Addresses::FindPattern(void* modulePtr, const char* pattern)
