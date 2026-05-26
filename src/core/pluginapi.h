@@ -74,6 +74,9 @@ public:
     IToolkitScheduler* Scheduler() override;
     IToolkitTrace* Trace() override;
 
+    IToolkitModule* LoadModule(const char* name) override;
+    void FreeModule(IToolkitModule* module) override;
+
     IGameEventManager2* GetGameEventManager() override;
     CGlobalVars* GetGlobalVars() override;
     ICvar* GetCVar() override;

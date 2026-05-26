@@ -50,6 +50,7 @@
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "raytrace.h"
+#include "module.h"
 #include "utils/scheduler.h"
 
 PluginApi pluginApi;
@@ -292,6 +293,16 @@ IToolkitScheduler* PluginApi::Scheduler()
 IToolkitTrace* PluginApi::Trace()
 {
     return &raytrace::rayTrace;
+}
+
+IToolkitModule* PluginApi::LoadModule(const char* name)
+{
+    return new ToolkitModule(name);
+}
+
+void PluginApi::FreeModule(IToolkitModule* module)
+{
+    delete module;
 }
 
 IGameEventManager2* PluginApi::GetGameEventManager()

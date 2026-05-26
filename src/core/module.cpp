@@ -1,0 +1,100 @@
+/**
+* vim: set ts=4 sw=4 tw=99 noet:
+ * =============================================================================
+ * Source2Toolkit
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
+ * AlliedModders LLC. All rights reserved.
+ * =============================================================================
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
+ * AlliedModders LLC give you permission to link the code of this program
+ * (as well as its derivative works) to "Counter-Strike 2," "Source 2,"
+ * "Steam," and any Game MODs or server software running on software by
+ * Valve Corporation. You must obey the GNU General Public License in all
+ * respects for all other code used.
+ *
+ * Additionally, this exception applies to all derivative works unless
+ * otherwise stated in LICENSE.txt.
+ *
+ * Authors:
+ *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
+ *   - AlliedModders LLC
+ *
+ * Project: Source2Toolkit
+ */
+#include "module.h"
+
+ToolkitModule::ToolkitModule(const char* name) : m_module(name) {}
+
+bool ToolkitModule::InitFromName(const char* name, bool extension)
+{
+    m_cachedName.clear();
+    return m_module.InitFromName(name, extension);
+}
+
+bool ToolkitModule::InitFromMemory(uintptr_t ptr)
+{
+    m_cachedName.clear();
+    return m_module.InitFromMemory(DynLibUtils::CMemory(ptr));
+}
+
+IToolkitMemory ToolkitModule::FindPattern(const char* pattern, IToolkitMemory startAddress) const
+{
+    return IToolkitMemory(m_module.FindPattern(pattern, DynLibUtils::CMemory(startAddress.GetPtr())).GetPtr());
+}
+
+IToolkitMemory ToolkitModule::FindPatternInSection(const char* pattern, const char* section, IToolkitMemory startAddress) const
+{
+    auto sec = m_module.GetSectionByName(section);
+    return IToolkitMemory(m_module.FindPattern(pattern, DynLibUtils::CMemory(startAddress.GetPtr()), &sec).GetPtr());
+}
+
+IToolkitMemory ToolkitModule::GetVirtualTableByName(const char* name, bool decorated) const
+{
+    return IToolkitMemory(m_module.GetVirtualTableByName(name, decorated).GetPtr());
+}
+
+IToolkitMemory ToolkitModule::GetFunctionByName(const char* name) const
+{
+    return IToolkitMemory(m_module.GetFunctionByName(name).GetPtr());
+}
+
+IToolkitModule::SectionInfo ToolkitModule::GetSectionByName(const char* name) const
+{
+    auto sec = m_module.GetSectionByName(name);
+    return { sec.m_pSectionBase.GetPtr(), sec.m_nSectionSize };
+}
+
+void* ToolkitModule::GetModuleHandle() const
+{
+    return m_module.GetModuleHandle();
+}
+
+IToolkitMemory ToolkitModule::GetModuleBase() const
+{
+    return IToolkitMemory(m_module.GetModuleBase().GetPtr());
+}
+
+const char* ToolkitModule::GetModulePath() const
+{
+    return m_module.GetModulePath().data();
+}
+
+const char* ToolkitModule::GetModuleName() const
+{
+    if (m_cachedName.empty())
+        m_cachedName = m_module.GetModuleName();
+    return m_cachedName.c_str();
+}
