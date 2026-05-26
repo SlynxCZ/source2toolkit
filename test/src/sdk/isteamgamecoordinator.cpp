@@ -9,7 +9,7 @@
 ISteamGameCoordinator *SteamGameCoordinator();
 
 CCallbackBase* g_pGameCoordinatorMessageAvailableCallback = nullptr;
-CCallbackBase** g_ppGCCallbackCapture = nullptr;
+CCallbackBase** g_ppGameCoordinatorCallbackCapture = nullptr;
 std::vector<std::pair<uint32_t, std::string>> g_vecGameCoordinatorPending;
 
 std::optional<std::pair<uint32_t, std::string>> CreateGCSendProto(uint32_t type, google::protobuf::Message &msg, CMsgProtoBufHeader &header)

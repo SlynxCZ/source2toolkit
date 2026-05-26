@@ -74,19 +74,20 @@ TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 
 Plugin g_Plugin;
 IGameEventSystem* g_pGameEventSystem = nullptr;
+void* g_pExportedSteamApi = nullptr;
 CSteamGameServerAPIContext* g_pSteamAPI = nullptr;
 ISteamGameCoordinator* g_pSteamGameCoordinator = nullptr;
 
 Plugin::Plugin() :
-    m_pGameServerSteamAPIActivated(new KHook::Virtual(&ISource2Server::GameServerSteamAPIActivated, this, nullptr, &Plugin::CSource2Server_GameServerSteamAPIActivated)),
+    m_pGameServerSteamAPIActivated(new KHook::Virtual(&ISource2Server::GameServerSteamAPIActivated, this, &Plugin::CSource2Server_GameServerSteamAPIActivated, nullptr)),
     m_pSendMessage(new KHook::Virtual(&ISteamGameCoordinator::SendMessage, this, &Plugin::ISteamGameCoordinator_SendMessage, nullptr)),
     m_pIsMessageAvailable(new KHook::Virtual(&ISteamGameCoordinator::IsMessageAvailable, this, &Plugin::ISteamGameCoordinator_IsMessageAvailable, nullptr)),
     m_pRetrieveMessage(new KHook::Virtual(&ISteamGameCoordinator::RetrieveMessage, this, &Plugin::ISteamGameCoordinator_RetrieveMessage, nullptr)),
-    m_pRunCallbacks(new KHook::Function(SteamGameServer_RunCallbacks, this, &Plugin::ISteamGameServer_RunCallbacks, nullptr)),
-    m_pRegisterCallback(new KHook::Function(SteamAPI_RegisterCallback, this, &Plugin::ISteamGameServer_RegisterCallback, nullptr)),
-    m_pUnregisterCallback(new KHook::Function(SteamAPI_UnregisterCallback, this, &Plugin::ISteamGameServer_UnregisterCallback, nullptr))
+    m_pRunCallbacks(new KHook::Function(this, &Plugin::ISteamGameServer_RunCallbacks, nullptr)),
+    m_pRegisterCallback(new KHook::Function(this, &Plugin::ISteamGameServer_RegisterCallback, nullptr)),
+    m_pUnregisterCallback(new KHook::Function(this, &Plugin::ISteamGameServer_UnregisterCallback, nullptr))
 {
-    g_ppGCCallbackCapture = &g_pGameCoordinatorMessageAvailableCallback;
+    g_ppGameCoordinatorCallbackCapture = &g_pGameCoordinatorMessageAvailableCallback;
 }
 
 bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late)
@@ -107,24 +108,34 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     api->AddListener(this, this);
 
-    // Virtual function hooks
+    // Function hooks
     {
-        m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
+    	m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
+
+    	TOOLKIT_LOG(this, "pTier0=%p, pPlatDebugStringBuffered=%p\n", UTIL_GetModulePtr("tier0"), (void*)UTIL_GetFunctionByName(UTIL_GetModulePtr("tier0"), "Plat_DebugString_Buffered"));
+
+    	g_pExportedSteamApi = UTIL_GetModulePtr("steam_api");
+    	if (g_pExportedSteamApi)
+    	{
+    		auto pRunCallbacks = (void*)UTIL_GetFunctionByName(g_pExportedSteamApi, "SteamGameServer_RunCallbacks");
+    		auto pRegisterCallback = (void*)UTIL_GetFunctionByName(g_pExportedSteamApi, "SteamAPI_RegisterCallback");
+    		auto pUnregisterCallback = (void*)UTIL_GetFunctionByName(g_pExportedSteamApi, "SteamAPI_UnregisterCallback");
+    		TOOLKIT_LOG(this, "pRunCallbacks=%p, pRegisterCallback=%p, pUnregisterCallback=%p\n", pRunCallbacks, pRegisterCallback, pUnregisterCallback);
+    		m_pRunCallbacks->Configure(reinterpret_cast<void (*)()>(pRunCallbacks));
+    		m_pRegisterCallback->Configure(reinterpret_cast<void (*)(CCallbackBase*, int)>(pRegisterCallback));
+    		m_pUnregisterCallback->Configure(reinterpret_cast<void (*)(CCallbackBase*)>(pUnregisterCallback));
+    	}
 
     	if (late)
     	{
     		g_pSteamGameCoordinator = SteamGameCoordinator();
-    		m_pSendMessage->Add(g_pSteamGameCoordinator);
-    		m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
-    		m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
+    		if (g_pSteamGameCoordinator)
+    		{
+    			m_pSendMessage->Add(g_pSteamGameCoordinator);
+    			m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
+    			m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
+    		}
     	}
-    }
-
-	// Inline function hooks
-    {
-    	// m_pRunCallbacks->Configure(g_pSource2Server);
-    	// m_pRegisterCallback->Configure(g_pSource2Server);
-    	// m_pUnregisterCallback->Configure(g_pSource2Server);
     }
 
     UTIL_RegConCommand("test", [this](const CCommandContext& ctx, const CCommand& cmd, Mode mode)
@@ -248,13 +259,11 @@ KHook::Return<void> Plugin::CSource2Server_GameServerSteamAPIActivated(ISource2S
     g_pSteamAPI = new CSteamGameServerAPIContext();
     g_pSteamAPI->Init();
 
-	TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated: g_pSteamAPI=%p, g_pExportedSteamApi=%p\n", g_pSteamAPI, UTIL_GetLibrary());
-
-    g_pSteamGameCoordinator = SteamGameCoordinator();
+	g_pSteamGameCoordinator = SteamGameCoordinator();
+	TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated: g_pSteamAPI=%p, g_pExportedSteamApi=%p, g_pSteamGameCoordinator=%p\n", g_pSteamAPI, g_pExportedSteamApi, g_pSteamGameCoordinator);
 
 	if (g_pSteamGameCoordinator)
 	{
-		TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated: pGameCoordinator=%p\n", g_pSteamGameCoordinator);
 		m_pSendMessage->Add(g_pSteamGameCoordinator);
 		m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
 		m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
@@ -265,6 +274,8 @@ KHook::Return<void> Plugin::CSource2Server_GameServerSteamAPIActivated(ISource2S
 
 KHook::Return<void> Plugin::ISteamGameServer_RunCallbacks()
 {
+    TOOLKIT_LOG(this, "ISteamGameServer_RunCallbacks()\n");
+
     if (!g_vecGameCoordinatorPending.empty())
         TriggerGCCallback();
 
@@ -273,10 +284,22 @@ KHook::Return<void> Plugin::ISteamGameServer_RunCallbacks()
 
 KHook::Return<void> Plugin::ISteamGameServer_RegisterCallback(CCallbackBase* pCallback, int iCallback)
 {
-	if (iCallback == GCMessageAvailable_t::k_iCallback && g_ppGCCallbackCapture)
-		*g_ppGCCallbackCapture = pCallback;
+	TOOLKIT_LOG(this, "ISteamGameServer_RegisterCallback( pCallback=%p, iCallback=%d )\n", pCallback, iCallback);
+
+	if (iCallback == GCMessageAvailable_t::k_iCallback && g_ppGameCoordinatorCallbackCapture)
+		*g_ppGameCoordinatorCallbackCapture = pCallback;
 
 	return { KHook::Action::Ignore };
+}
+
+KHook::Return<void> Plugin::ISteamGameServer_UnregisterCallback(CCallbackBase* pCallback)
+{
+	TOOLKIT_LOG(this, "ISteamGameServer_UnregisterCallback( pCallback=%p )\n", pCallback);
+
+	if (pCallback == *g_ppGameCoordinatorCallbackCapture)
+		*g_ppGameCoordinatorCallbackCapture = nullptr;
+
+	return { KHook::Action::Supersede };
 }
 
 KHook::Return<EGCResults> Plugin::ISteamGameCoordinator_SendMessage(ISteamGameCoordinator* pThis, uint32 unMsgType, const void* pubData, uint32 cubData)

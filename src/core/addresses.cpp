@@ -91,8 +91,12 @@ namespace addresses
 
     void* Addresses::GetModulePtr(const char* moduleName)
     {
-        auto& mod = GetOrLoadModule(moduleName);
-        return mod.GetModuleHandle();
+        return &GetOrLoadModule(moduleName);
+    }
+
+    void* Addresses::GetModulePtr(void* classPtr)
+    {
+        return &GetOrLoadModule(classPtr);
     }
 
     void* Addresses::GetModuleHandle(void* modulePtr)

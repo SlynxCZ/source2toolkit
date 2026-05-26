@@ -87,6 +87,7 @@ namespace addresses
         DynLibUtils::CModule& GetOrLoadModule(const char* name);
     public:
         void* GetModulePtr(const char* moduleName) override;
+        void* GetModulePtr(void* classPtr) override;
         void* GetModuleHandle(void* modulePtr) override;
         uintptr_t GetModuleBase(void* modulePtr) override;
         const char* GetModulePath(void* modulePtr) override;

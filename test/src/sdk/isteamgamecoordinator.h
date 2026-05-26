@@ -78,7 +78,7 @@ extern ISteamGameCoordinator *SteamGameCoordinator();
 STEAM_DEFINE_GAMESERVER_INTERFACE_ACCESSOR( ISteamGameCoordinator *, SteamGameCoordinator, STEAMGAMECOORDINATOR_INTERFACE_VERSION );
 
 extern CCallbackBase* g_pGameCoordinatorMessageAvailableCallback;
-extern CCallbackBase** g_ppGCCallbackCapture;
+extern CCallbackBase** g_ppGameCoordinatorCallbackCapture;
 extern std::vector<std::pair<uint32_t, std::string>> g_vecGameCoordinatorPending;
 
 template<typename T>
