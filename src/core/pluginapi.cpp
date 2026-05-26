@@ -300,6 +300,11 @@ IToolkitModule* PluginApi::LoadModule(const char* name)
     return new ToolkitModule(name);
 }
 
+IToolkitModule* PluginApi::LoadModuleFromMemory(uintptr_t ptr)
+{
+    return new ToolkitModule(ptr);
+}
+
 void PluginApi::FreeModule(IToolkitModule* module)
 {
     delete module;

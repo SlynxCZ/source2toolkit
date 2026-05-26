@@ -47,6 +47,7 @@ class ToolkitModule : public IToolkitModule
 public:
     ToolkitModule() = default;
     explicit ToolkitModule(const char* name);
+    explicit ToolkitModule(uintptr_t ptr);
 
     bool InitFromName(const char* name, bool extension = false) override;
     bool InitFromMemory(uintptr_t ptr) override;

@@ -38,6 +38,11 @@
 
 ToolkitModule::ToolkitModule(const char* name) : m_module(name) {}
 
+ToolkitModule::ToolkitModule(uintptr_t ptr)
+{
+    InitFromMemory(ptr);
+}
+
 bool ToolkitModule::InitFromName(const char* name, bool extension)
 {
     m_cachedName.clear();

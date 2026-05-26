@@ -41,9 +41,10 @@
 #include "source2toolkit/IToolkitApi.h"
 #include "source2toolkit/IToolkitCommands.h"
 #include "source2toolkit/IToolkitEvents.h"
+#include "source2toolkit/IToolkitMemory.h"
+#include "source2toolkit/IToolkitModule.h"
 #include "source2toolkit/IToolkitTypes.h"
 
-#include "source2toolkit/utils/addresses.h"
 #include "source2toolkit/utils/commands.h"
 #include "source2toolkit/utils/convars.h"
 #include "source2toolkit/utils/events.h"
@@ -70,11 +71,11 @@
 #include "interfaces/interfaces.h"
 #include "networksystem/inetworkmessages.h"
 
+Plugin g_Plugin;
 TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 
-Plugin g_Plugin;
+IToolkitModule* g_pLibSteamApi = nullptr;
 IGameEventSystem* g_pGameEventSystem = nullptr;
-void* g_pExportedSteamApi = nullptr;
 CSteamGameServerAPIContext* g_pSteamAPI = nullptr;
 ISteamGameCoordinator* g_pSteamGameCoordinator = nullptr;
 
@@ -112,18 +113,24 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     {
     	m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
 
-    	TOOLKIT_LOG(this, "pTier0=%p, pPlatDebugStringBuffered=%p\n", UTIL_GetModulePtr("tier0"), (void*)UTIL_GetFunctionByName(UTIL_GetModulePtr("tier0"), "Plat_DebugString_Buffered"));
-
-    	g_pExportedSteamApi = UTIL_GetModulePtr("steam_api");
-    	if (g_pExportedSteamApi)
     	{
-    		auto pRunCallbacks = (void*)UTIL_GetFunctionByName(g_pExportedSteamApi, "SteamGameServer_RunCallbacks");
-    		auto pRegisterCallback = (void*)UTIL_GetFunctionByName(g_pExportedSteamApi, "SteamAPI_RegisterCallback");
-    		auto pUnregisterCallback = (void*)UTIL_GetFunctionByName(g_pExportedSteamApi, "SteamAPI_UnregisterCallback");
+    		auto* pTier0 = IToolkitModule::New("tier0");
+    		TOOLKIT_LOG(this, "pTier0=%p, pPlatDebugStringBuffered=%p\n",
+    			pTier0 ? pTier0->GetModuleHandle() : nullptr,
+    			pTier0 ? (void*)pTier0->GetFunctionByName("Plat_DebugString_Buffered").GetPtr() : nullptr);
+    		delete pTier0;
+    	}
+
+    	g_pLibSteamApi = IToolkitModule::New("steam_api");
+    	if (g_pLibSteamApi)
+    	{
+    		auto pRunCallbacks    = g_pLibSteamApi->GetFunctionByName("SteamGameServer_RunCallbacks").RCast<void(*)()>();
+    		auto pRegisterCallback   = g_pLibSteamApi->GetFunctionByName("SteamAPI_RegisterCallback").RCast<void(*)(CCallbackBase*, int)>();
+    		auto pUnregisterCallback = g_pLibSteamApi->GetFunctionByName("SteamAPI_UnregisterCallback").RCast<void(*)(CCallbackBase*)>();
     		TOOLKIT_LOG(this, "pRunCallbacks=%p, pRegisterCallback=%p, pUnregisterCallback=%p\n", pRunCallbacks, pRegisterCallback, pUnregisterCallback);
-    		m_pRunCallbacks->Configure(reinterpret_cast<void (*)()>(pRunCallbacks));
-    		m_pRegisterCallback->Configure(reinterpret_cast<void (*)(CCallbackBase*, int)>(pRegisterCallback));
-    		m_pUnregisterCallback->Configure(reinterpret_cast<void (*)(CCallbackBase*)>(pUnregisterCallback));
+    		m_pRunCallbacks->Configure(pRunCallbacks);
+    		m_pRegisterCallback->Configure(pRegisterCallback);
+    		m_pUnregisterCallback->Configure(pUnregisterCallback);
     	}
 
     	if (late)
@@ -177,6 +184,9 @@ bool Plugin::Unload(char* error, size_t maxlen)
 	delete m_pRunCallbacks;
 	delete m_pRegisterCallback;
 	delete m_pUnregisterCallback;
+
+	delete g_pLibSteamApi;
+	g_pLibSteamApi = nullptr;
 
     TOOLKIT_LOG(this, "Unload() done\n");
 
@@ -260,7 +270,7 @@ KHook::Return<void> Plugin::CSource2Server_GameServerSteamAPIActivated(ISource2S
     g_pSteamAPI->Init();
 
 	g_pSteamGameCoordinator = SteamGameCoordinator();
-	TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated: g_pSteamAPI=%p, g_pExportedSteamApi=%p, g_pSteamGameCoordinator=%p\n", g_pSteamAPI, g_pExportedSteamApi, g_pSteamGameCoordinator);
+	TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated: g_pSteamAPI=%p, g_pLibSteamApi=%p, g_pSteamGameCoordinator=%p\n", g_pSteamAPI, g_pLibSteamApi ? g_pLibSteamApi->GetModuleHandle() : nullptr, g_pSteamGameCoordinator);
 
 	if (g_pSteamGameCoordinator)
 	{

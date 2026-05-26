@@ -75,6 +75,7 @@ public:
     IToolkitTrace* Trace() override;
 
     IToolkitModule* LoadModule(const char* name) override;
+    IToolkitModule* LoadModuleFromMemory(uintptr_t ptr) override;
     void FreeModule(IToolkitModule* module) override;
 
     IGameEventManager2* GetGameEventManager() override;
