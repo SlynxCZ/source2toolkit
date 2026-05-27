@@ -45,7 +45,8 @@
 #include "source2toolkit/IToolkitPlugin.h"
 #endif
 
-void CBasePlayerController::SetPawn(CBasePlayerPawn* pPawn){
+void CBasePlayerController::SetPawn(CBasePlayerPawn* pPawn)
+{
 #ifdef SOURCE2TOOLKIT_CORE
     addresses::toolkitAddresses.SetPawn(this, pPawn, true, false, false, false);
 #else

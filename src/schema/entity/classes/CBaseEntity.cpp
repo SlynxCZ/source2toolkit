@@ -171,7 +171,7 @@ uint8 CBaseEntity::GetCollisionGroup()
     return m_pCollision->m_collisionAttribute().m_nCollisionGroup;
 }
 
-void CBaseEntity::SetCollisionGroup(uint8 nCollisionGroup = COLLISION_GROUP_DEBRIS)
+void CBaseEntity::SetCollisionGroup(uint8 nCollisionGroup)
 {
     if (!m_pCollision())
         return;

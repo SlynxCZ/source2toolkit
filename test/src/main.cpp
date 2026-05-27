@@ -1399,7 +1399,8 @@ CEntitySubclassVDataBase* g_pCEntitySubclassVDataBase = nullptr;
 CEnvBeam* g_pCEnvBeam = nullptr;
 CEnvBeverage* g_pCEnvBeverage = nullptr;
 CEnvCombinedLightProbeVolume* g_pCEnvCombinedLightProbeVolume = nullptr;
-CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* g_pCEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume = nullptr;
+CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume*
+    g_pCEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume = nullptr;
 CEnvCubemap* g_pCEnvCubemap = nullptr;
 CEnvCubemapBox* g_pCEnvCubemapBox = nullptr;
 CEnvCubemapFog* g_pCEnvCubemapFog = nullptr;
@@ -1424,7 +1425,8 @@ CEnvSoundscapeAlias_snd_soundscape* g_pCEnvSoundscapeAlias_snd_soundscape = null
 CEnvSoundscapeProxy* g_pCEnvSoundscapeProxy = nullptr;
 CEnvSoundscapeProxyAlias_snd_soundscape_proxy* g_pCEnvSoundscapeProxyAlias_snd_soundscape_proxy = nullptr;
 CEnvSoundscapeTriggerable* g_pCEnvSoundscapeTriggerable = nullptr;
-CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* g_pCEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable = nullptr;
+CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* g_pCEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable
+    = nullptr;
 CEnvSpark* g_pCEnvSpark = nullptr;
 CEnvSplash* g_pCEnvSplash = nullptr;
 CEnvTilt* g_pCEnvTilt = nullptr;
@@ -2443,26 +2445,26 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     // Function hooks
     {
-    	m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
+        m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
 
-    	g_pLibSteamApi = IToolkitModule::New("steam_api");
-    	if (g_pLibSteamApi)
-    	{
-    		m_pRunCallbacks->Configure(g_pLibSteamApi->GetFunctionByName("SteamGameServer_RunCallbacks").RCast<void(*)()>());
-    		m_pRegisterCallback->Configure(g_pLibSteamApi->GetFunctionByName("SteamAPI_RegisterCallback").RCast<void(*)(CCallbackBase*, int)>());
-    		m_pUnregisterCallback->Configure(g_pLibSteamApi->GetFunctionByName("SteamAPI_UnregisterCallback").RCast<void(*)(CCallbackBase*)>());
-    	}
+        g_pLibSteamApi = IToolkitModule::New("steam_api");
+        if (g_pLibSteamApi)
+        {
+            m_pRunCallbacks->Configure(g_pLibSteamApi->GetFunctionByName("SteamGameServer_RunCallbacks").RCast<void(*)()>());
+            m_pRegisterCallback->Configure(g_pLibSteamApi->GetFunctionByName("SteamAPI_RegisterCallback").RCast<void(*)(CCallbackBase*, int)>());
+            m_pUnregisterCallback->Configure(g_pLibSteamApi->GetFunctionByName("SteamAPI_UnregisterCallback").RCast<void(*)(CCallbackBase*)>());
+        }
 
-    	if (late)
-    	{
-    		g_pSteamGameCoordinator = SteamGameCoordinator();
-    		if (g_pSteamGameCoordinator)
-    		{
-    			m_pSendMessage->Add(g_pSteamGameCoordinator);
-    			m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
-    			m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
-    		}
-    	}
+        if (late)
+        {
+            g_pSteamGameCoordinator = SteamGameCoordinator();
+            if (g_pSteamGameCoordinator)
+            {
+                m_pSendMessage->Add(g_pSteamGameCoordinator);
+                m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
+                m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
+            }
+        }
     }
 
     TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
@@ -2473,15 +2475,15 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 bool Plugin::Unload(char* error, size_t maxlen)
 {
     m_pGameServerSteamAPIActivated->Remove(g_pSource2Server);
-	m_pSendMessage->Remove(g_pSteamGameCoordinator);
-	m_pIsMessageAvailable->Remove(g_pSteamGameCoordinator);
-	m_pRetrieveMessage->Remove(g_pSteamGameCoordinator);
+    m_pSendMessage->Remove(g_pSteamGameCoordinator);
+    m_pIsMessageAvailable->Remove(g_pSteamGameCoordinator);
+    m_pRetrieveMessage->Remove(g_pSteamGameCoordinator);
 
-	delete m_pRunCallbacks;
-	delete m_pRegisterCallback;
-	delete m_pUnregisterCallback;
+    delete m_pRunCallbacks;
+    delete m_pRegisterCallback;
+    delete m_pUnregisterCallback;
 
-	delete g_pLibSteamApi;
+    delete g_pLibSteamApi;
 
     TOOLKIT_LOG(this, "Unload() done\n");
 
@@ -2510,7 +2512,7 @@ void Plugin::OnAllMetamodPluginsLoaded()
 
 void Plugin::OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName, bool loadGame, bool background)
 {
-    TOOLKIT_LOG(this, "OnLevelInit( map=%s, old=%s, landmark=%s, loadGame=%d, background=%d )\n", mapName ? mapName : "nullptr", oldLevel ? oldLevel : "nullptr",landmarkName ? landmarkName : "nullptr", loadGame, background);
+    TOOLKIT_LOG(this, "OnLevelInit( map=%s, old=%s, landmark=%s, loadGame=%d, background=%d )\n", mapName ? mapName : "nullptr", oldLevel ? oldLevel : "nullptr", landmarkName ? landmarkName : "nullptr", loadGame, background);
 }
 
 void Plugin::OnLevelShutdown()
@@ -2520,41 +2522,41 @@ void Plugin::OnLevelShutdown()
 
 std::optional<std::pair<uint32_t, std::string>> Plugin::CreateGCSendProto(uint32_t type, google::protobuf::Message& msg, CMsgProtoBufHeader* pHeader)
 {
-	CMsgProtoBufHeader defaultHdr;
-	CMsgProtoBufHeader& hdr = pHeader ? *pHeader : defaultHdr;
+    CMsgProtoBufHeader defaultHdr;
+    CMsgProtoBufHeader& hdr = pHeader ? *pHeader : defaultHdr;
 
-	size_t hdrSize  = hdr.ByteSizeLong();
-	size_t bodySize = msg.ByteSizeLong();
-	std::string s(sizeof(uint32_t) * 2 + hdrSize + bodySize, '\0');
+    size_t hdrSize = hdr.ByteSizeLong();
+    size_t bodySize = msg.ByteSizeLong();
+    std::string s(sizeof(uint32_t) * 2 + hdrSize + bodySize, '\0');
 
-	*reinterpret_cast<uint32_t*>(s.data())                    = type | 0x80000000u;
-	*reinterpret_cast<uint32_t*>(s.data() + sizeof(uint32_t)) = static_cast<uint32_t>(hdrSize);
+    *reinterpret_cast<uint32_t*>(s.data()) = type | 0x80000000u;
+    *reinterpret_cast<uint32_t*>(s.data() + sizeof(uint32_t)) = static_cast<uint32_t>(hdrSize);
 
-	if (!hdr.SerializeToArray(s.data() + sizeof(uint32_t) * 2, static_cast<int>(hdrSize)))
-		return std::nullopt;
-	if (!msg.SerializeToArray(s.data() + sizeof(uint32_t) * 2 + hdrSize, static_cast<int>(bodySize)))
-		return std::nullopt;
+    if (!hdr.SerializeToArray(s.data() + sizeof(uint32_t) * 2, static_cast<int>(hdrSize)))
+        return std::nullopt;
+    if (!msg.SerializeToArray(s.data() + sizeof(uint32_t) * 2 + hdrSize, static_cast<int>(bodySize)))
+        return std::nullopt;
 
-	return std::make_pair(type | 0x80000000u, std::move(s));
+    return std::make_pair(type | 0x80000000u, std::move(s));
 }
 
 void Plugin::QueueGCMessage(uint32_t type, google::protobuf::Message& msg, CMsgProtoBufHeader* pHeader)
 {
-	if (auto send = CreateGCSendProto(type, msg, pHeader))
-	{
-		g_vecGameCoordinatorPending.push_back(std::move(send.value()));
-		TriggerGCCallback();
-	}
+    if (auto send = CreateGCSendProto(type, msg, pHeader))
+    {
+        g_vecGameCoordinatorPending.push_back(std::move(send.value()));
+        TriggerGCCallback();
+    }
 }
 
 void Plugin::TriggerGCCallback()
 {
-	if (!g_pGameCoordinatorMessageAvailableCallback || g_vecGameCoordinatorPending.empty())
-		return;
+    if (!g_pGameCoordinatorMessageAvailableCallback || g_vecGameCoordinatorPending.empty())
+        return;
 
-	GCMessageAvailable_t msg;
-	msg.m_nMessageSize = static_cast<uint32>(g_vecGameCoordinatorPending.front().second.size());
-	g_pGameCoordinatorMessageAvailableCallback->Run(&msg);
+    GCMessageAvailable_t msg;
+    msg.m_nMessageSize = static_cast<uint32>(g_vecGameCoordinatorPending.front().second.size());
+    g_pGameCoordinatorMessageAvailableCallback->Run(&msg);
 }
 
 KHook::Return<void> Plugin::CSource2Server_GameServerSteamAPIActivated(ISource2Server* pThis)
@@ -2564,17 +2566,20 @@ KHook::Return<void> Plugin::CSource2Server_GameServerSteamAPIActivated(ISource2S
     g_pSteamAPI = new CSteamGameServerAPIContext();
     g_pSteamAPI->Init();
 
-	g_pSteamGameCoordinator = SteamGameCoordinator();
-	TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated: g_pSteamAPI=%p, g_pLibSteamApi=%p, g_pSteamGameCoordinator=%p\n", g_pSteamAPI, g_pLibSteamApi ? g_pLibSteamApi->GetModuleHandle() : nullptr, g_pSteamGameCoordinator);
+    g_pSteamGameCoordinator = SteamGameCoordinator();
+    TOOLKIT_LOG(
+        this,
+        "CSource2Server_GameServerSteamAPIActivated: g_pSteamAPI=%p, g_pLibSteamApi=%p, g_pSteamGameCoordinator=%p\n",
+        g_pSteamAPI, g_pLibSteamApi ? g_pLibSteamApi->GetModuleHandle() : nullptr, g_pSteamGameCoordinator);
 
-	if (g_pSteamGameCoordinator)
-	{
-		m_pSendMessage->Add(g_pSteamGameCoordinator);
-		m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
-		m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
-	}
+    if (g_pSteamGameCoordinator)
+    {
+        m_pSendMessage->Add(g_pSteamGameCoordinator);
+        m_pIsMessageAvailable->Add(g_pSteamGameCoordinator);
+        m_pRetrieveMessage->Add(g_pSteamGameCoordinator);
+    }
 
-    return { KHook::Action::Ignore };
+    return {KHook::Action::Ignore};
 }
 
 KHook::Return<void> Plugin::ISteamGameServer_RunCallbacks()
@@ -2584,320 +2589,320 @@ KHook::Return<void> Plugin::ISteamGameServer_RunCallbacks()
     if (!g_vecGameCoordinatorPending.empty())
         TriggerGCCallback();
 
-    return { KHook::Action::Ignore };
+    return {KHook::Action::Ignore};
 }
 
 KHook::Return<void> Plugin::ISteamGameServer_RegisterCallback(CCallbackBase* pCallback, int iCallback)
 {
-	TOOLKIT_LOG(this, "ISteamGameServer_RegisterCallback( pCallback=%p, iCallback=%d )\n", pCallback, iCallback);
+    TOOLKIT_LOG(this, "ISteamGameServer_RegisterCallback( pCallback=%p, iCallback=%d )\n", pCallback, iCallback);
 
-	if (iCallback == GCMessageAvailable_t::k_iCallback && g_ppGameCoordinatorCallbackCapture)
-		*g_ppGameCoordinatorCallbackCapture = pCallback;
+    if (iCallback == GCMessageAvailable_t::k_iCallback && g_ppGameCoordinatorCallbackCapture)
+        *g_ppGameCoordinatorCallbackCapture = pCallback;
 
-	return { KHook::Action::Ignore };
+    return {KHook::Action::Ignore};
 }
 
 KHook::Return<void> Plugin::ISteamGameServer_UnregisterCallback(CCallbackBase* pCallback)
 {
-	TOOLKIT_LOG(this, "ISteamGameServer_UnregisterCallback( pCallback=%p )\n", pCallback);
+    TOOLKIT_LOG(this, "ISteamGameServer_UnregisterCallback( pCallback=%p )\n", pCallback);
 
-	if (pCallback == *g_ppGameCoordinatorCallbackCapture)
-		*g_ppGameCoordinatorCallbackCapture = nullptr;
+    if (pCallback == *g_ppGameCoordinatorCallbackCapture)
+        *g_ppGameCoordinatorCallbackCapture = nullptr;
 
-	return { KHook::Action::Supersede };
+    return {KHook::Action::Supersede};
 }
 
 KHook::Return<EGCResults> Plugin::ISteamGameCoordinator_SendMessage(ISteamGameCoordinator* pThis, uint32 unMsgType, const void* pubData, uint32 cubData)
 {
     uint32 realType = unMsgType & ~0x80000000u;
-    bool isProto    = (unMsgType & 0x80000000u) != 0;
+    bool isProto = (unMsgType & 0x80000000u) != 0;
     TOOLKIT_LOG(this, "ISteamGameCoordinator_SendMessage( type=%u (0x%X), proto=%d, size=%u )\n", realType, realType, isProto, cubData);
 
- //    CMsgProtoBufHeader header;
-	// if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCEnterMatchmaking, CMsgServerToGCEnterMatchmaking>(unMsgType, pubData, cubData, header))
-	// {
-	// 	Msg("CMsgServerToGCEnterMatchmaking (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
- //
-	// 	if (object_cache.sent_lobby)
-	// 	{
-	// 		for (int i = 0; i < 5; i++)
-	// 			Msg("Received k_EMsgServerToGCEnterMatchmaking but lobby already sent prior");
-	// 		return k_EGCResultOK;
-	// 	}
-	// 	object_cache.sent_lobby = true;
- //
-	// 	if (!ParseMatchInformation())
-	// 	{
-	// 		// Already logged
-	// 		return k_EGCResultOK;
-	// 	}
- //
-	// 	// Create an object cache on the server with our data
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::Lobby);
-	// 		msg.set_object_data(object_cache.lobby.SerializeAsString());
-	// 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Create, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::ServerStaticLobby);
-	// 		msg.set_object_data(object_cache.static_lobby.SerializeAsString());
-	// 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Create, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::ServerDynamicLobby);
-	// 		msg.set_object_data(object_cache.dynamic_lobby.SerializeAsString());
-	// 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Create, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	return k_EGCResultOK;
-	// }
-	// else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCUpdateLobbyServerState, CMsgServerToGCUpdateLobbyServerState>(unMsgType, pubData, cubData, header))
-	// {
-	// 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCUpdateLobbyServerState (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
- //
-	// 	bool didUpdate = false;
-	// 	if (msg->lobby_id() == object_cache.lobby.lobby_id())
-	// 	{
-	// 		if (msg->has_server_state())
-	// 		{
-	// 			object_cache.lobby.set_server_state(msg->server_state());
-	// 			didUpdate = true;
-	// 		}
-	// 		if (msg->has_safe_to_abandon())
-	// 		{
-	// 			object_cache.lobby.set_safe_to_abandon(msg->safe_to_abandon());
-	// 			didUpdate = true;
-	// 		}
-	// 	}
- //
-	// 	// Update the cache
-	// 	if (didUpdate)
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::Lobby);
-	// 		msg.set_object_data(object_cache.lobby.SerializeAsString());
-	// 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Update, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	return k_EGCResultOK;
-	// }
-	// else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCMatchSignoutPermission, CMsgServerToGCMatchSignoutPermission>(unMsgType, pubData, cubData, header))
-	// {
-	// 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCMatchSignoutPermission (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
- //
-	// 	uint64_t jobid = header.job_id_source();
- //
-	// 	// We just always say yes and request all data
-	// 	{
-	// 		CMsgProtoBufHeader header;
-	// 		header.set_job_id_target(jobid);
- //
-	// 		CMsgServerToGCMatchSignoutPermissionResponse msg;
-	// 		msg.set_can_sign_out(true);
-	// 		msg.add_requested_data(k_EServerSignoutData_Disconnections);
-	// 		msg.add_requested_data(k_EServerSignoutData_AccountStatChanges);
-	// 		msg.add_requested_data(k_EServerSignoutData_DetailedStats);
-	// 		msg.add_requested_data(k_EServerSignoutData_ServerPerfStats);
-	// 		msg.add_requested_data(k_EServerSignoutData_PerfData);
-	// 		msg.add_requested_data(k_EServerSignoutData_PlayerChat);
-	// 		msg.add_requested_data(k_EServerSignoutData_BookRewards);
-	// 		msg.add_requested_data(k_EServerSignoutData_PenalizedPlayers);
-	// 		if (auto send = CreateGCSendProto(k_EMsgServerToGCMatchSignoutPermissionResponse, msg, header))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	return k_EGCResultOK;
-	// }
-	// else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCMatchSignout, CMsgServerToGCMatchSignout>(unMsgType, pubData, cubData, header))
-	// {
-	// 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCMatchSignout (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
- //
-	// 	try
-	// 	{
-	// 		if (std::optional<nlohmann::json> json = MatchSignoutToFullJson(msg.value()))
-	// 		{
-	// 			std::ofstream f(GetMatchDirectory() / "result.json");
-	// 			f << std::setw(4) << json.value();
-	// 		}
-	// 	}
-	// 	catch (const std::exception &ex)
-	// 	{
-	// 		Msg("Failed to serialize convert 'CMsgServerToGCMatchSignout' to JSON and dump to file: {}, no match stats will be saved", ex.what());
-	// 	}
-	// 	catch (...)
-	// 	{
-	// 		Msg("Failed to serialize convert 'CMsgServerToGCMatchSignout' to JSON and dump to file, no match stats will be saved");
-	// 	}
- //
-	// 	uint64_t jobid = header.job_id_source();
- //
-	// 	// Destroy the caches
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::Lobby);
-	// 		msg.set_object_data(object_cache.lobby.SerializeAsString());
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::ServerStaticLobby);
-	// 		msg.set_object_data(object_cache.static_lobby.SerializeAsString());
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::ServerDynamicLobby);
-	// 		msg.set_object_data(object_cache.dynamic_lobby.SerializeAsString());
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgProtoBufHeader header;
-	// 		header.set_job_id_target(jobid);
- //
-	// 		CMsgServerToGCMatchSignoutResponse msg;
-	// 		msg.set_result(CMsgServerToGCMatchSignoutResponse_ESignoutResult_k_ESignout_Success);
-	// 		if (auto send = CreateGCSendProto(k_EMsgServerToGCMatchSignoutResponse, msg, header))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
-	// 	return k_EGCResultOK;
-	// }
-	// else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCAbandonMatch, CMsgServerToGCAbandonMatch>(unMsgType, pubData, cubData, header))
-	// {
-	// 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCAbandonMatch (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
- //
-	// 	uint64_t jobid = header.job_id_source();
- //
-	// 	// Destroy the caches
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::Lobby);
-	// 		msg.set_object_data(object_cache.lobby.SerializeAsString());
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::ServerStaticLobby);
-	// 		msg.set_object_data(object_cache.static_lobby.SerializeAsString());
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgSOSingleObject msg;
-	// 		msg.set_type_id(ObjectCache::ServerDynamicLobby);
-	// 		msg.set_object_data(object_cache.dynamic_lobby.SerializeAsString());
-	// 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
-	// 		{
-	// 			owner->set_type(1);
-	// 			owner->set_id(GetServerSteamID());
-	// 		}
-	// 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	{
-	// 		CMsgProtoBufHeader header;
-	// 		header.set_job_id_target(jobid);
- //
-	// 		CMsgServerToGCAbandonMatchResponse msg;
-	// 		if (auto send = CreateGCSendProto(k_EMsgServerToGCAbandonMatchResponse, msg, header))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	return k_EGCResultOK;
-	// }
-	// else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCTestConnection, CMsgServerToGCTestConnection>(unMsgType, pubData, cubData, header))
-	// {
-	// 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCTestConnection (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
- //
-	// 	uint64_t jobid = header.job_id_source();
- //
-	// 	{
-	// 		CMsgProtoBufHeader header;
-	// 		header.set_job_id_target(jobid);
- //
-	// 		CMsgServerToGCTestConnectionResponse msg;
-	// 		msg.set_state(object_cache.lobby.server_state());
-	// 		msg.set_state(object_cache.lobby.lobby_id());
-	// 		if (auto send = CreateGCSendProto(k_EMsgServerToGCTestConnectionResponse, msg, header))
-	// 			gc_custom_pending.push_back(send.value());
-	// 	}
- //
-	// 	return k_EGCResultOK;
-	// }
-	// else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCUpdateMatchInfo, CMsgServerToGCUpdateMatchInfo>(unMsgType, pubData, cubData, header))
-	// {
-	// 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCUpdateMatchInfo (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
-	// 	return k_EGCResultOK;
-	// }
+    //    CMsgProtoBufHeader header;
+    // if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCEnterMatchmaking, CMsgServerToGCEnterMatchmaking>(unMsgType, pubData, cubData, header))
+    // {
+    // 	Msg("CMsgServerToGCEnterMatchmaking (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    //
+    // 	if (object_cache.sent_lobby)
+    // 	{
+    // 		for (int i = 0; i < 5; i++)
+    // 			Msg("Received k_EMsgServerToGCEnterMatchmaking but lobby already sent prior");
+    // 		return k_EGCResultOK;
+    // 	}
+    // 	object_cache.sent_lobby = true;
+    //
+    // 	if (!ParseMatchInformation())
+    // 	{
+    // 		// Already logged
+    // 		return k_EGCResultOK;
+    // 	}
+    //
+    // 	// Create an object cache on the server with our data
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::Lobby);
+    // 		msg.set_object_data(object_cache.lobby.SerializeAsString());
+    // 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Create, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::ServerStaticLobby);
+    // 		msg.set_object_data(object_cache.static_lobby.SerializeAsString());
+    // 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Create, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::ServerDynamicLobby);
+    // 		msg.set_object_data(object_cache.dynamic_lobby.SerializeAsString());
+    // 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Create, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	return k_EGCResultOK;
+    // }
+    // else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCUpdateLobbyServerState, CMsgServerToGCUpdateLobbyServerState>(unMsgType, pubData, cubData, header))
+    // {
+    // 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCUpdateLobbyServerState (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    //
+    // 	bool didUpdate = false;
+    // 	if (msg->lobby_id() == object_cache.lobby.lobby_id())
+    // 	{
+    // 		if (msg->has_server_state())
+    // 		{
+    // 			object_cache.lobby.set_server_state(msg->server_state());
+    // 			didUpdate = true;
+    // 		}
+    // 		if (msg->has_safe_to_abandon())
+    // 		{
+    // 			object_cache.lobby.set_safe_to_abandon(msg->safe_to_abandon());
+    // 			didUpdate = true;
+    // 		}
+    // 	}
+    //
+    // 	// Update the cache
+    // 	if (didUpdate)
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::Lobby);
+    // 		msg.set_object_data(object_cache.lobby.SerializeAsString());
+    // 		msg.set_version(GetRandom(std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max()));
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Update, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	return k_EGCResultOK;
+    // }
+    // else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCMatchSignoutPermission, CMsgServerToGCMatchSignoutPermission>(unMsgType, pubData, cubData, header))
+    // {
+    // 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCMatchSignoutPermission (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    //
+    // 	uint64_t jobid = header.job_id_source();
+    //
+    // 	// We just always say yes and request all data
+    // 	{
+    // 		CMsgProtoBufHeader header;
+    // 		header.set_job_id_target(jobid);
+    //
+    // 		CMsgServerToGCMatchSignoutPermissionResponse msg;
+    // 		msg.set_can_sign_out(true);
+    // 		msg.add_requested_data(k_EServerSignoutData_Disconnections);
+    // 		msg.add_requested_data(k_EServerSignoutData_AccountStatChanges);
+    // 		msg.add_requested_data(k_EServerSignoutData_DetailedStats);
+    // 		msg.add_requested_data(k_EServerSignoutData_ServerPerfStats);
+    // 		msg.add_requested_data(k_EServerSignoutData_PerfData);
+    // 		msg.add_requested_data(k_EServerSignoutData_PlayerChat);
+    // 		msg.add_requested_data(k_EServerSignoutData_BookRewards);
+    // 		msg.add_requested_data(k_EServerSignoutData_PenalizedPlayers);
+    // 		if (auto send = CreateGCSendProto(k_EMsgServerToGCMatchSignoutPermissionResponse, msg, header))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	return k_EGCResultOK;
+    // }
+    // else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCMatchSignout, CMsgServerToGCMatchSignout>(unMsgType, pubData, cubData, header))
+    // {
+    // 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCMatchSignout (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    //
+    // 	try
+    // 	{
+    // 		if (std::optional<nlohmann::json> json = MatchSignoutToFullJson(msg.value()))
+    // 		{
+    // 			std::ofstream f(GetMatchDirectory() / "result.json");
+    // 			f << std::setw(4) << json.value();
+    // 		}
+    // 	}
+    // 	catch (const std::exception &ex)
+    // 	{
+    // 		Msg("Failed to serialize convert 'CMsgServerToGCMatchSignout' to JSON and dump to file: {}, no match stats will be saved", ex.what());
+    // 	}
+    // 	catch (...)
+    // 	{
+    // 		Msg("Failed to serialize convert 'CMsgServerToGCMatchSignout' to JSON and dump to file, no match stats will be saved");
+    // 	}
+    //
+    // 	uint64_t jobid = header.job_id_source();
+    //
+    // 	// Destroy the caches
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::Lobby);
+    // 		msg.set_object_data(object_cache.lobby.SerializeAsString());
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::ServerStaticLobby);
+    // 		msg.set_object_data(object_cache.static_lobby.SerializeAsString());
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::ServerDynamicLobby);
+    // 		msg.set_object_data(object_cache.dynamic_lobby.SerializeAsString());
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgProtoBufHeader header;
+    // 		header.set_job_id_target(jobid);
+    //
+    // 		CMsgServerToGCMatchSignoutResponse msg;
+    // 		msg.set_result(CMsgServerToGCMatchSignoutResponse_ESignoutResult_k_ESignout_Success);
+    // 		if (auto send = CreateGCSendProto(k_EMsgServerToGCMatchSignoutResponse, msg, header))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    // 	return k_EGCResultOK;
+    // }
+    // else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCAbandonMatch, CMsgServerToGCAbandonMatch>(unMsgType, pubData, cubData, header))
+    // {
+    // 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCAbandonMatch (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    //
+    // 	uint64_t jobid = header.job_id_source();
+    //
+    // 	// Destroy the caches
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::Lobby);
+    // 		msg.set_object_data(object_cache.lobby.SerializeAsString());
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::ServerStaticLobby);
+    // 		msg.set_object_data(object_cache.static_lobby.SerializeAsString());
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgSOSingleObject msg;
+    // 		msg.set_type_id(ObjectCache::ServerDynamicLobby);
+    // 		msg.set_object_data(object_cache.dynamic_lobby.SerializeAsString());
+    // 		if (CMsgSOIDOwner *owner = msg.mutable_owner_soid())
+    // 		{
+    // 			owner->set_type(1);
+    // 			owner->set_id(GetServerSteamID());
+    // 		}
+    // 		if (auto send = CreateGCSendProto(k_ESOMsg_Destroy, msg))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	{
+    // 		CMsgProtoBufHeader header;
+    // 		header.set_job_id_target(jobid);
+    //
+    // 		CMsgServerToGCAbandonMatchResponse msg;
+    // 		if (auto send = CreateGCSendProto(k_EMsgServerToGCAbandonMatchResponse, msg, header))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	return k_EGCResultOK;
+    // }
+    // else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCTestConnection, CMsgServerToGCTestConnection>(unMsgType, pubData, cubData, header))
+    // {
+    // 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCTestConnection (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    //
+    // 	uint64_t jobid = header.job_id_source();
+    //
+    // 	{
+    // 		CMsgProtoBufHeader header;
+    // 		header.set_job_id_target(jobid);
+    //
+    // 		CMsgServerToGCTestConnectionResponse msg;
+    // 		msg.set_state(object_cache.lobby.server_state());
+    // 		msg.set_state(object_cache.lobby.lobby_id());
+    // 		if (auto send = CreateGCSendProto(k_EMsgServerToGCTestConnectionResponse, msg, header))
+    // 			gc_custom_pending.push_back(send.value());
+    // 	}
+    //
+    // 	return k_EGCResultOK;
+    // }
+    // else if (auto msg = CheckProtoAndRemoveHeader<k_EMsgServerToGCUpdateMatchInfo, CMsgServerToGCUpdateMatchInfo>(unMsgType, pubData, cubData, header))
+    // {
+    // 	MsgIf(wantsProtobufDebugLog, "CMsgServerToGCUpdateMatchInfo (Header)\n{}\n(Body)\n{}", header.Utf8DebugString(), msg->Utf8DebugString());
+    // 	return k_EGCResultOK;
+    // }
 
-	return { KHook::Action::Ignore, k_EGCResultOK };
+    return {KHook::Action::Ignore, k_EGCResultOK};
 }
 
 KHook::Return<bool> Plugin::ISteamGameCoordinator_IsMessageAvailable(ISteamGameCoordinator* pThis, uint32* pcubMsgSize)
@@ -2908,10 +2913,10 @@ KHook::Return<bool> Plugin::ISteamGameCoordinator_IsMessageAvailable(ISteamGameC
     {
         if (pcubMsgSize)
             *pcubMsgSize = g_vecGameCoordinatorPending[0].second.size();
-        return { KHook::Action::Override, true };
+        return {KHook::Action::Override, true};
     }
 
-    return { KHook::Action::Ignore, true };
+    return {KHook::Action::Ignore, true};
 }
 
 KHook::Return<EGCResults> Plugin::ISteamGameCoordinator_RetrieveMessage(ISteamGameCoordinator* pThis, uint32* punMsgType, void* pubDest, uint32 cubDest, uint32* pcubMsgSize)
@@ -2925,15 +2930,16 @@ KHook::Return<EGCResults> Plugin::ISteamGameCoordinator_RetrieveMessage(ISteamGa
         if (pcubMsgSize)
             *pcubMsgSize = g_vecGameCoordinatorPending[0].second.size();
         if (cubDest < g_vecGameCoordinatorPending[0].second.size())
-            return { KHook::Action::Override, k_EGCResultBufferTooSmall };
+            return {KHook::Action::Override, k_EGCResultBufferTooSmall};
 
-        std::memcpy(pubDest, g_vecGameCoordinatorPending[0].second.data(), g_vecGameCoordinatorPending[0].second.size());
+        std::memcpy(pubDest, g_vecGameCoordinatorPending[0].second.data(),
+                    g_vecGameCoordinatorPending[0].second.size());
         g_vecGameCoordinatorPending.erase(g_vecGameCoordinatorPending.begin());
 
-        return { KHook::Action::Override, k_EGCResultOK };
+        return {KHook::Action::Override, k_EGCResultOK};
     }
 
-    return { KHook::Action::Ignore, k_EGCResultOK };
+    return {KHook::Action::Ignore, k_EGCResultOK};
 }
 
 const char* Plugin::GetVersion()

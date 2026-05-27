@@ -50,7 +50,8 @@
 #include "source2toolkit/IToolkitPlugin.h"
 #endif
 
-void CBasePlayerPawn::CommitSuicide(bool bExplode, bool bForce) {
+void CBasePlayerPawn::CommitSuicide(bool bExplode, bool bForce)
+{
 #ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CBasePlayerPawn_CommitSuicide");
 #else
@@ -59,7 +60,8 @@ void CBasePlayerPawn::CommitSuicide(bool bExplode, bool bForce) {
     CALL_VIRTUAL(void, offset, this, bExplode, bForce);
 }
 
-void CBasePlayerPawn::RemovePlayerItem(CBasePlayerWeapon* pWeapon) {
+void CBasePlayerPawn::RemovePlayerItem(CBasePlayerWeapon* pWeapon)
+{
     if (!pWeapon) return;
 
 #ifdef SOURCE2TOOLKIT_CORE
