@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/RotatorTargetSpace_t.h"
+#include "source2toolkit/schema/entity/enums/RotatorTargetSpace_t.h"
 
 class RotatorQueueEntry_t
 {

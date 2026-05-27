@@ -56,7 +56,7 @@
 
 #include "CBaseAnimGraph.h"
 #include "CMovementStatsProperty.h"
-#include "../enums/Hull_t.h"
+#include "source2toolkit/schema/entity/enums/Hull_t.h"
 #include "RelationshipOverride_t.h"
 
 class CEconWearable;

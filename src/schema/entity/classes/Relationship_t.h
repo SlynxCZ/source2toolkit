@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/Disposition_t.h"
+#include "source2toolkit/schema/entity/enums/Disposition_t.h"
 
 class Relationship_t
 {

@@ -54,7 +54,7 @@
 #include <cstdint>
 
 #include "CEntitySubclassVDataBase.h"
-#include "../enums/ParticleAttachment_t.h"
+#include "source2toolkit/schema/entity/enums/ParticleAttachment_t.h"
 #include "PrecipitationFilter_t.h"
 
 class CPrecipitationVData : public CEntitySubclassVDataBase

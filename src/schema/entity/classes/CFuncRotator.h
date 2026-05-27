@@ -55,10 +55,10 @@
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/CFuncRotator__Rotate_t.h"
+#include "source2toolkit/schema/entity/enums/CFuncRotator__Rotate_t.h"
 #include "RotatorHistoryEntry_t.h"
 #include "RotatorQueueEntry_t.h"
-#include "../enums/RotatorTargetSpace_t.h"
+#include "source2toolkit/schema/entity/enums/RotatorTargetSpace_t.h"
 
 class CBaseEntity;
 class CFuncMover;

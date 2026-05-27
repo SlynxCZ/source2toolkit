@@ -54,13 +54,13 @@
 #include <cstdint>
 
 #include "AnimGraph2SerializedPoseRecipeSlot_t.h"
-#include "../enums/AnimLoopMode_t.h"
-#include "../enums/AnimationAlgorithm_t.h"
+#include "source2toolkit/schema/entity/enums/AnimLoopMode_t.h"
+#include "source2toolkit/schema/entity/enums/AnimationAlgorithm_t.h"
 #include "CSkeletonAnimationController.h"
 #include "ExternalAnimGraphHandle_t.h"
 #include "ExternalAnimGraph_t.h"
 #include "ResourceId_t.h"
-#include "../enums/SequenceFinishNotifyState_t.h"
+#include "source2toolkit/schema/entity/enums/SequenceFinishNotifyState_t.h"
 
 class CBaseAnimGraph;
 class CNmGraphInstance;

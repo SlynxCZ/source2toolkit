@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/Class_T.h"
+#include "source2toolkit/schema/entity/enums/Class_T.h"
 #include "Relationship_t.h"
 
 class CBaseEntity;

@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBreakable.h"
-#include "../enums/HoverPoseFlags_t.h"
+#include "source2toolkit/schema/entity/enums/HoverPoseFlags_t.h"
 
 class CBasePlayerPawn;
 

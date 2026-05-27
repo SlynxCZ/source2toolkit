@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/FixAngleSet_t.h"
+#include "source2toolkit/schema/entity/enums/FixAngleSet_t.h"
 
 class ViewAngleServerChange_t
 {

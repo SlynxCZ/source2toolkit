@@ -55,9 +55,9 @@
 #include <cstdint>
 
 #include "CBreakableProp.h"
-#include "../enums/CPhysicsProp__CrateType_t.h"
-#include "../enums/DynamicContinuousContactBehavior_t.h"
-#include "../enums/INavObstacle__NavObstacleType_t.h"
+#include "source2toolkit/schema/entity/enums/CPhysicsProp__CrateType_t.h"
+#include "source2toolkit/schema/entity/enums/DynamicContinuousContactBehavior_t.h"
+#include "source2toolkit/schema/entity/enums/INavObstacle__NavObstacleType_t.h"
 
 class CPhysicsProp : public CBreakableProp
 {

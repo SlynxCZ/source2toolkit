@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/CInfoChoreoLocatorShapeType_t.h"
+#include "source2toolkit/schema/entity/enums/CInfoChoreoLocatorShapeType_t.h"
 
 class CInfoChoreoAnchorPosition
 {

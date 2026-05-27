@@ -56,10 +56,10 @@
 
 #include "CBaseModelEntity.h"
 #include "CPropDataComponent.h"
-#include "../enums/EOverrideBlockLOS_t.h"
-#include "../enums/Explosions.h"
-#include "../enums/Materials.h"
-#include "../enums/PerformanceMode_t.h"
+#include "source2toolkit/schema/entity/enums/EOverrideBlockLOS_t.h"
+#include "source2toolkit/schema/entity/enums/Explosions.h"
+#include "source2toolkit/schema/entity/enums/Materials.h"
+#include "source2toolkit/schema/entity/enums/PerformanceMode_t.h"
 
 class CBaseEntity;
 class CBasePlayerPawn;

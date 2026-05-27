@@ -54,7 +54,7 @@
 #include <cstdint>
 
 #include "CAttributeManager__cached_attribute_float_t.h"
-#include "../enums/attributeprovidertypes_t.h"
+#include "source2toolkit/schema/entity/enums/attributeprovidertypes_t.h"
 
 class CBaseEntity;
 

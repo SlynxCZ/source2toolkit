@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBasePlayerPawn.h"
-#include "../enums/CSPlayerState.h"
+#include "source2toolkit/schema/entity/enums/CSPlayerState.h"
 #include "CTouchExpansionComponent.h"
 
 class CCSPlayerController;

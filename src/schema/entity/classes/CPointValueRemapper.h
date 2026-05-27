@@ -55,11 +55,11 @@
 #include <cstdint>
 
 #include "CBaseEntity.h"
-#include "../enums/ValueRemapperHapticsType_t.h"
-#include "../enums/ValueRemapperInputType_t.h"
-#include "../enums/ValueRemapperMomentumType_t.h"
-#include "../enums/ValueRemapperOutputType_t.h"
-#include "../enums/ValueRemapperRatchetType_t.h"
+#include "source2toolkit/schema/entity/enums/ValueRemapperHapticsType_t.h"
+#include "source2toolkit/schema/entity/enums/ValueRemapperInputType_t.h"
+#include "source2toolkit/schema/entity/enums/ValueRemapperMomentumType_t.h"
+#include "source2toolkit/schema/entity/enums/ValueRemapperOutputType_t.h"
+#include "source2toolkit/schema/entity/enums/ValueRemapperRatchetType_t.h"
 
 class CBasePlayerPawn;
 

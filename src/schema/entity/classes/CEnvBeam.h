@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBeam.h"
-#include "../enums/Touch_t.h"
+#include "source2toolkit/schema/entity/enums/Touch_t.h"
 
 class CBaseEntity;
 class InfoForResourceTypeIMaterial2;

@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CPointEntity.h"
-#include "../enums/RotatorTargetSpace_t.h"
+#include "source2toolkit/schema/entity/enums/RotatorTargetSpace_t.h"
 
 class CRotatorTarget : public CPointEntity
 {

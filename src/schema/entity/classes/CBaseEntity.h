@@ -53,12 +53,12 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/BloodType.h"
+#include "source2toolkit/schema/entity/enums/BloodType.h"
 #include "CNetworkTransmitComponent.h"
 #include "CNetworkVelocityVector.h"
-#include "../enums/EntityPlatformTypes_t.h"
+#include "source2toolkit/schema/entity/enums/EntityPlatformTypes_t.h"
 #include "ResponseContext_t.h"
-#include "../enums/TakeDamageFlags_t.h"
+#include "source2toolkit/schema/entity/enums/TakeDamageFlags_t.h"
 #include "thinkfunc_t.h"
 
 class CBaseFilter;

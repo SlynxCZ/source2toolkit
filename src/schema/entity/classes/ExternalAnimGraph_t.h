@@ -54,7 +54,7 @@
 #include <cstdint>
 
 #include "ExternalAnimGraphHandle_t.h"
-#include "../enums/ExternalAnimGraphInactiveBehavior_t.h"
+#include "source2toolkit/schema/entity/enums/ExternalAnimGraphInactiveBehavior_t.h"
 
 class CBaseAnimGraph;
 class InfoForResourceTypeCNmGraphDefinition;

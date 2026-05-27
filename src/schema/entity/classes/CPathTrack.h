@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CPointEntity.h"
-#include "../enums/TrackOrientationType_t.h"
+#include "source2toolkit/schema/entity/enums/TrackOrientationType_t.h"
 
 class CPathTrack : public CPointEntity
 {

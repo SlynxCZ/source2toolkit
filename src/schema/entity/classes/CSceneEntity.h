@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CPointEntity.h"
-#include "../enums/SceneOnPlayerDeath_t.h"
+#include "source2toolkit/schema/entity/enums/SceneOnPlayerDeath_t.h"
 
 class CBaseEntity;
 class CBaseModelEntity;

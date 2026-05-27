@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CPhysConstraint.h"
-#include "../enums/JointMotion_t.h"
+#include "source2toolkit/schema/entity/enums/JointMotion_t.h"
 
 class CGenericConstraint : public CPhysConstraint
 {

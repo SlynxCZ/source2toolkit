@@ -55,9 +55,9 @@
 #include <cstdint>
 
 #include "CModelPointEntity.h"
-#include "../enums/PointWorldTextJustifyHorizontal_t.h"
-#include "../enums/PointWorldTextJustifyVertical_t.h"
-#include "../enums/PointWorldTextReorientMode_t.h"
+#include "source2toolkit/schema/entity/enums/PointWorldTextJustifyHorizontal_t.h"
+#include "source2toolkit/schema/entity/enums/PointWorldTextJustifyVertical_t.h"
+#include "source2toolkit/schema/entity/enums/PointWorldTextReorientMode_t.h"
 
 class CPointWorldText : public CModelPointEntity
 {

@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CDynamicProp.h"
-#include "../enums/DoorState_t.h"
+#include "source2toolkit/schema/entity/enums/DoorState_t.h"
 #include "locksound_t.h"
 
 class CBaseEntity;

@@ -56,8 +56,8 @@
 
 #include "CBasePlayerWeapon.h"
 #include "CIronSightController.h"
-#include "../enums/CSWeaponMode.h"
-#include "../enums/WeaponGameplayAnimState.h"
+#include "source2toolkit/schema/entity/enums/CSWeaponMode.h"
+#include "source2toolkit/schema/entity/enums/WeaponGameplayAnimState.h"
 
 class CCSPlayerPawn;
 

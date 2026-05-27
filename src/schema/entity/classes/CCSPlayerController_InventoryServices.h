@@ -54,7 +54,7 @@
 #include <cstdint>
 
 #include "CPlayerControllerComponent.h"
-#include "../enums/MedalRank_t.h"
+#include "source2toolkit/schema/entity/enums/MedalRank_t.h"
 #include "ServerAuthoritativeWeaponSlot_t.h"
 
 class CCSPlayerController_InventoryServices : public CPlayerControllerComponent

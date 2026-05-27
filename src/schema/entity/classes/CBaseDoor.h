@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBaseToggle.h"
-#include "../enums/FuncDoorSpawnPos_t.h"
+#include "source2toolkit/schema/entity/enums/FuncDoorSpawnPos_t.h"
 #include "locksound_t.h"
 
 class CBaseDoor : public CBaseToggle

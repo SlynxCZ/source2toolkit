@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBaseEntity.h"
-#include "../enums/EntFinderMethod_t.h"
+#include "source2toolkit/schema/entity/enums/EntFinderMethod_t.h"
 
 class CBaseFilter;
 

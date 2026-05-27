@@ -53,8 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/ENPCBehaviorOverride_t.h"
-#include "../enums/InteractionPriority_t.h"
+#include "source2toolkit/schema/entity/enums/ENPCBehaviorOverride_t.h"
+#include "source2toolkit/schema/entity/enums/InteractionPriority_t.h"
 
 class CScenePayloadVData
 {

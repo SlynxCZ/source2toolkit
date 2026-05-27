@@ -55,8 +55,8 @@
 #include <cstdint>
 
 #include "CBaseEntity.h"
-#include "../enums/ChatIgnoreType_t.h"
-#include "../enums/PlayerConnectedState.h"
+#include "source2toolkit/schema/entity/enums/ChatIgnoreType_t.h"
+#include "source2toolkit/schema/entity/enums/PlayerConnectedState.h"
 
 class CBasePlayerPawn;
 

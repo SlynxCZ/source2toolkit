@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/SurroundingBoundsType_t.h"
+#include "source2toolkit/schema/entity/enums/SurroundingBoundsType_t.h"
 #include "VPhysicsCollisionAttribute_t.h"
 
 class CCollisionProperty

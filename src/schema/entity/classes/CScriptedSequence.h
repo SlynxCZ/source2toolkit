@@ -55,12 +55,12 @@
 #include <cstdint>
 
 #include "CBaseEntity.h"
-#include "../enums/ForcedCrouchState_t.h"
-#include "../enums/ScriptedConflictResponse_t.h"
-#include "../enums/ScriptedHeldWeaponBehavior_t.h"
-#include "../enums/ScriptedMoveTo_t.h"
-#include "../enums/ScriptedOnDeath_t.h"
-#include "../enums/SharedMovementGait_t.h"
+#include "source2toolkit/schema/entity/enums/ForcedCrouchState_t.h"
+#include "source2toolkit/schema/entity/enums/ScriptedConflictResponse_t.h"
+#include "source2toolkit/schema/entity/enums/ScriptedHeldWeaponBehavior_t.h"
+#include "source2toolkit/schema/entity/enums/ScriptedMoveTo_t.h"
+#include "source2toolkit/schema/entity/enums/ScriptedOnDeath_t.h"
+#include "source2toolkit/schema/entity/enums/SharedMovementGait_t.h"
 
 class CBaseAnimGraph;
 

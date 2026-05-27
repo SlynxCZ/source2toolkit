@@ -53,8 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/DamageTypes_t.h"
-#include "../enums/EDestructibleParts_DestroyParameterFlags.h"
+#include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
+#include "source2toolkit/schema/entity/enums/EDestructibleParts_DestroyParameterFlags.h"
 
 class DestructiblePartDamageRequest_t
 {

@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CMarkupVolumeTagged.h"
-#include "../enums/NavScopeFlags_t.h"
+#include "source2toolkit/schema/entity/enums/NavScopeFlags_t.h"
 
 class CMarkupVolumeTagged_Nav : public CMarkupVolumeTagged
 {

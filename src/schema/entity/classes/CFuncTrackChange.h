@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CFuncPlatRot.h"
-#include "../enums/TRAIN_CODE.h"
+#include "source2toolkit/schema/entity/enums/TRAIN_CODE.h"
 
 class CFuncTrackTrain;
 class CPathTrack;

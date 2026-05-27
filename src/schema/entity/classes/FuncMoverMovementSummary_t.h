@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/FuncMoverMovementSummaryFlags_t.h"
+#include "source2toolkit/schema/entity/enums/FuncMoverMovementSummaryFlags_t.h"
 
 class CPathMover;
 

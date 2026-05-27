@@ -54,7 +54,7 @@
 #include <cstdint>
 
 #include "CPlayerPawnComponent.h"
-#include "../enums/ObserverMode_t.h"
+#include "source2toolkit/schema/entity/enums/ObserverMode_t.h"
 
 class CBaseEntity;
 

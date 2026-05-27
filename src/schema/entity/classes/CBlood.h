@@ -54,7 +54,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/BloodType.h"
+#include "source2toolkit/schema/entity/enums/BloodType.h"
 #include "CPointEntity.h"
 
 class CBlood : public CPointEntity

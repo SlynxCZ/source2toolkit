@@ -54,7 +54,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/CLogicBranchList__LogicBranchListenerLastState_t.h"
+#include "source2toolkit/schema/entity/enums/CLogicBranchList__LogicBranchListenerLastState_t.h"
 #include "CLogicalEntity.h"
 
 class CBaseEntity;

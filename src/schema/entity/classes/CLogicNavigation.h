@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CLogicalEntity.h"
-#include "../enums/navproperties_t.h"
+#include "source2toolkit/schema/entity/enums/navproperties_t.h"
 
 class CLogicNavigation : public CLogicalEntity
 {

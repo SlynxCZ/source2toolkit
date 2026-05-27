@@ -54,8 +54,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/BeamClipStyle_t.h"
-#include "../enums/BeamType_t.h"
+#include "source2toolkit/schema/entity/enums/BeamClipStyle_t.h"
+#include "source2toolkit/schema/entity/enums/BeamType_t.h"
 #include "CBaseModelEntity.h"
 
 class CBaseEntity;

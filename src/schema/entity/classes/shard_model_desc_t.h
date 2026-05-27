@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/ShardSolid_t.h"
+#include "source2toolkit/schema/entity/enums/ShardSolid_t.h"
 
 class InfoForResourceTypeIMaterial2;
 

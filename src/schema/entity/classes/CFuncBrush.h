@@ -54,7 +54,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/BrushSolidities_e.h"
+#include "source2toolkit/schema/entity/enums/BrushSolidities_e.h"
 #include "CBaseModelEntity.h"
 
 class CFuncBrush : public CBaseModelEntity

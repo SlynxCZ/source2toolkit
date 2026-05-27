@@ -55,9 +55,9 @@
 #include <cstdint>
 
 #include "CBasePlayerController.h"
-#include "../enums/DamageTypes_t.h"
+#include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
 #include "IntervalTimer.h"
-#include "../enums/QuestProgress__Reason.h"
+#include "source2toolkit/schema/entity/enums/QuestProgress__Reason.h"
 
 class CCSObserverPawn;
 class CCSPlayerController_ActionTrackingServices;

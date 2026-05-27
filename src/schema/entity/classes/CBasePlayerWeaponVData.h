@@ -54,8 +54,8 @@
 #include <cstdint>
 
 #include "CEntitySubclassVDataBase.h"
-#include "../enums/ItemFlagTypes_t.h"
-#include "../enums/RumbleEffect_t.h"
+#include "source2toolkit/schema/entity/enums/ItemFlagTypes_t.h"
+#include "source2toolkit/schema/entity/enums/RumbleEffect_t.h"
 
 class CBasePlayerWeaponVData : public CEntitySubclassVDataBase
 {

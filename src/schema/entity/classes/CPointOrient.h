@@ -55,8 +55,8 @@
 #include <cstdint>
 
 #include "CBaseEntity.h"
-#include "../enums/PointOrientConstraint_t.h"
-#include "../enums/PointOrientGoalDirectionType_t.h"
+#include "source2toolkit/schema/entity/enums/PointOrientConstraint_t.h"
+#include "source2toolkit/schema/entity/enums/PointOrientGoalDirectionType_t.h"
 
 class CPointOrient : public CBaseEntity
 {

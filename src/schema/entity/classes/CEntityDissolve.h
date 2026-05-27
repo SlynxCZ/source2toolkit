@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/EntityDisolveType_t.h"
+#include "source2toolkit/schema/entity/enums/EntityDisolveType_t.h"
 
 class CEntityDissolve : public CBaseModelEntity
 {

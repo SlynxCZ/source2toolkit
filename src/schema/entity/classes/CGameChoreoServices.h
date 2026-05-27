@@ -54,8 +54,8 @@
 #include <cstdint>
 
 #include "IChoreoServices.h"
-#include "../enums/IChoreoServices__ChoreoState_t.h"
-#include "../enums/IChoreoServices__ScriptState_t.h"
+#include "source2toolkit/schema/entity/enums/IChoreoServices__ChoreoState_t.h"
+#include "source2toolkit/schema/entity/enums/IChoreoServices__ScriptState_t.h"
 
 class CBaseModelEntity;
 class CScriptedSequence;

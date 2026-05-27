@@ -54,10 +54,10 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/BreakableContentsType_t.h"
+#include "source2toolkit/schema/entity/enums/BreakableContentsType_t.h"
 #include "CBaseProp.h"
 #include "CPropDataComponent.h"
-#include "../enums/PerformanceMode_t.h"
+#include "source2toolkit/schema/entity/enums/PerformanceMode_t.h"
 
 class CBaseEntity;
 class CBasePlayerPawn;

@@ -56,11 +56,11 @@
 #include "CBasePlayerWeaponVData.h"
 #include "CFiringModeFloat.h"
 #include "CFiringModeInt.h"
-#include "../enums/CSWeaponCategory.h"
-#include "../enums/CSWeaponSilencerType.h"
-#include "../enums/CSWeaponType.h"
-#include "../enums/gear_slot_t.h"
-#include "../enums/loadout_slot_t.h"
+#include "source2toolkit/schema/entity/enums/CSWeaponCategory.h"
+#include "source2toolkit/schema/entity/enums/CSWeaponSilencerType.h"
+#include "source2toolkit/schema/entity/enums/CSWeaponType.h"
+#include "source2toolkit/schema/entity/enums/gear_slot_t.h"
+#include "source2toolkit/schema/entity/enums/loadout_slot_t.h"
 
 class CCSWeaponBaseVData : public CBasePlayerWeaponVData
 {

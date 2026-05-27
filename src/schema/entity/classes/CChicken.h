@@ -56,7 +56,7 @@
 
 #include "CAttributeContainer.h"
 #include "CDynamicProp.h"
-#include "../enums/ChickenActivity.h"
+#include "source2toolkit/schema/entity/enums/ChickenActivity.h"
 #include "CountdownTimer.h"
 
 class CBaseEntity;

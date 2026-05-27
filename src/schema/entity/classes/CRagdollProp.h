@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBaseAnimGraph.h"
-#include "../enums/INavObstacle__NavObstacleType_t.h"
+#include "source2toolkit/schema/entity/enums/INavObstacle__NavObstacleType_t.h"
 #include "ragdoll_t.h"
 
 class CBaseEntity;

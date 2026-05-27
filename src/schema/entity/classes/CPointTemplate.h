@@ -55,8 +55,8 @@
 #include <cstdint>
 
 #include "CLogicalEntity.h"
-#include "../enums/PointTemplateClientOnlyEntityBehavior_t.h"
-#include "../enums/PointTemplateOwnerSpawnGroupType_t.h"
+#include "source2toolkit/schema/entity/enums/PointTemplateClientOnlyEntityBehavior_t.h"
+#include "source2toolkit/schema/entity/enums/PointTemplateOwnerSpawnGroupType_t.h"
 
 class CPointTemplate : public CLogicalEntity
 {

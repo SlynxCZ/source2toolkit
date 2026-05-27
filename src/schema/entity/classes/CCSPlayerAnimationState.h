@@ -53,10 +53,10 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/CCSPlayerAnimationState__AirAction_t.h"
-#include "../enums/CCSPlayerAnimationState__Direction_t.h"
-#include "../enums/CCSPlayerAnimationState__GroundMoveState_t.h"
-#include "../enums/CCSPlayerAnimationState__MoveType_t.h"
+#include "source2toolkit/schema/entity/enums/CCSPlayerAnimationState__AirAction_t.h"
+#include "source2toolkit/schema/entity/enums/CCSPlayerAnimationState__Direction_t.h"
+#include "source2toolkit/schema/entity/enums/CCSPlayerAnimationState__GroundMoveState_t.h"
+#include "source2toolkit/schema/entity/enums/CCSPlayerAnimationState__MoveType_t.h"
 
 class CCSPlayerAnimationState
 {

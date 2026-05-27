@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBaseToggle.h"
-#include "../enums/MoveLinearAuthoredPos_t.h"
+#include "source2toolkit/schema/entity/enums/MoveLinearAuthoredPos_t.h"
 
 class CFuncMoveLinear : public CBaseToggle
 {

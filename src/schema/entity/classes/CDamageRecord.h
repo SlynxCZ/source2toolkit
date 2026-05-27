@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/EKillTypes_t.h"
+#include "source2toolkit/schema/entity/enums/EKillTypes_t.h"
 
 class CCSPlayerController;
 class CCSPlayerPawn;

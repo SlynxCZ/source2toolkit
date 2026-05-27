@@ -55,8 +55,8 @@
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/TrainOrientationType_t.h"
-#include "../enums/TrainVelocityType_t.h"
+#include "source2toolkit/schema/entity/enums/TrainOrientationType_t.h"
+#include "source2toolkit/schema/entity/enums/TrainVelocityType_t.h"
 
 class CPathTrack;
 

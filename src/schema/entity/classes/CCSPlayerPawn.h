@@ -56,9 +56,9 @@
 
 #include "CCSPlayerPawnBase.h"
 #include "CEconItemView.h"
-#include "../enums/CSPlayerBlockingUseAction_t.h"
+#include "source2toolkit/schema/entity/enums/CSPlayerBlockingUseAction_t.h"
 #include "EntitySpottedState_t.h"
-#include "../enums/loadout_slot_t.h"
+#include "source2toolkit/schema/entity/enums/loadout_slot_t.h"
 
 class CBaseEntity;
 class CCSBot;

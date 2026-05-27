@@ -55,11 +55,11 @@
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/CFuncMover__FollowConstraint_t.h"
-#include "../enums/CFuncMover__FollowEntityDirection_t.h"
-#include "../enums/CFuncMover__Move_t.h"
-#include "../enums/CFuncMover__OrientationUpdate_t.h"
-#include "../enums/CFuncMover__TransitionToPathNodeAction_t.h"
+#include "source2toolkit/schema/entity/enums/CFuncMover__FollowConstraint_t.h"
+#include "source2toolkit/schema/entity/enums/CFuncMover__FollowEntityDirection_t.h"
+#include "source2toolkit/schema/entity/enums/CFuncMover__Move_t.h"
+#include "source2toolkit/schema/entity/enums/CFuncMover__OrientationUpdate_t.h"
+#include "source2toolkit/schema/entity/enums/CFuncMover__TransitionToPathNodeAction_t.h"
 #include "FuncMoverMovementSummary_t.h"
 
 class CBaseEntity;

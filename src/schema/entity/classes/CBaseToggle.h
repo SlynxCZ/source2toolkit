@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CBaseModelEntity.h"
-#include "../enums/TOGGLE_STATE.h"
+#include "source2toolkit/schema/entity/enums/TOGGLE_STATE.h"
 
 class CBaseEntity;
 

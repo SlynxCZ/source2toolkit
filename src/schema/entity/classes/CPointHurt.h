@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CPointEntity.h"
-#include "../enums/DamageTypes_t.h"
+#include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
 
 class CBaseEntity;
 

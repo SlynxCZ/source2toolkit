@@ -55,7 +55,7 @@
 #include <cstdint>
 
 #include "CMarkupVolumeWithRef.h"
-#include "../enums/NavScopeFlags_t.h"
+#include "source2toolkit/schema/entity/enums/NavScopeFlags_t.h"
 
 class CMarkupVolumeTagged_NavGame : public CMarkupVolumeWithRef
 {

@@ -53,7 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/MoodType_t.h"
+#include "source2toolkit/schema/entity/enums/MoodType_t.h"
 
 class CMoodVData
 {

@@ -54,7 +54,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
-#include "../enums/AnimLoopMode_t.h"
+#include "source2toolkit/schema/entity/enums/AnimLoopMode_t.h"
 #include "CBreakableProp.h"
 
 class CDynamicProp : public CBreakableProp
