@@ -414,6 +414,10 @@ public:
     void RoundStartCountUpdated() override { Real()->m_nRoundStartCount.NetworkStateChanged(); }
     double& LastPerfSampleTime() override { return Real()->m_flLastPerfSampleTime(); }
     void LastPerfSampleTimeUpdated() override { Real()->m_flLastPerfSampleTime.NetworkStateChanged(); }
+
+    void TerminateRound(float flDelay, int32_t eRoundEndReason) override { Real()->TerminateRound(flDelay, eRoundEndReason); }
+    CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer) override { return Real()->FindPickerEntity(pPlayer); }
+    CCSPlayerController* GetClientAimTarget(CCSPlayerController* pPlayer) override { return Real()->GetClientAimTarget(pPlayer); }
 };
 
 #endif // _INCLUDE_CCSGAMERULESIMPL_H

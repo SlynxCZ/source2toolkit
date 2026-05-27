@@ -58,6 +58,10 @@ public:
     void HasDefuserUpdated() override { Real()->m_bHasDefuser.NetworkStateChanged(); }
     bool& HasHelmet() override { return Real()->m_bHasHelmet(); }
     void HasHelmetUpdated() override { Real()->m_bHasHelmet.NetworkStateChanged(); }
+
+    void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon) override { Real()->DropActivePlayerWeapon(pActiveWeapon); }
+    void RemoveWeapons() override { Real()->RemoveWeapons(); }
+    CBasePlayerWeapon* GiveNamedItem(const char* pszItem) override { return Real()->GiveNamedItem(pszItem); }
 };
 
 #endif // _INCLUDE_CCSPLAYER_ITEMSERVICESIMPL_H

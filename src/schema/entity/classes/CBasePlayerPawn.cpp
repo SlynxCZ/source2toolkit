@@ -2,7 +2,7 @@
 * vim: set ts=4 sw=4 tw=99 noet:
  * =============================================================================
  * Source2Toolkit
- * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
  * AlliedModders LLC. All rights reserved.
  * =============================================================================
  *
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
+ * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
  * AlliedModders LLC give you permission to link the code of this program
  * (as well as its derivative works) to "Counter-Strike 2," "Source 2,"
  * "Steam," and any Game MODs or server software running on software by
@@ -29,37 +29,42 @@
  * otherwise stated in LICENSE.txt.
  *
  * Authors:
- *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
+ *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
  *   - AlliedModders LLC
  *
  * Project: Source2Toolkit
  */
 
-#ifndef _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H
-#define _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H
+#include "schema/entity/classes/CBasePlayerPawn.h"
 
-#pragma once
+#include "source2toolkit/utils/virtual.h"
 
-#include "source2toolkit/schema/entity/classes/IPlayerControllerComponent.h"
-#include "schema/entity/classes/CPlayerControllerComponent.h"
+#ifdef SOURCE2TOOLKIT_CORE
+#include "core/shared.h"
+#include "core/gameconfig.h"
+#include "core/addresses.h"
+#else
+#include "source2toolkit/IToolkitAddresses.h"
+#include "source2toolkit/IToolkitGameConfig.h"
+#include "source2toolkit/IToolkitApi.h"
+#include "source2toolkit/IToolkitPlugin.h"
+#endif
 
-class CPlayerControllerComponentImpl : public virtual IPlayerControllerComponent
-{
+void CBasePlayerPawn::CommitSuicide(bool bExplode, bool bForce) {
+#ifdef SOURCE2TOOLKIT_CORE
+    static int offset = shared::g_pGameConfig->GetOffset("CBasePlayerPawn_CommitSuicide");
+#else
+    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CBasePlayerPawn_CommitSuicide");
+#endif
+    CALL_VIRTUAL(void, offset, this, bExplode, bForce);
+}
 
-protected:
-    void* m_pReal;
+void CBasePlayerPawn::RemovePlayerItem(CBasePlayerWeapon* pWeapon) {
+    if (!pWeapon) return;
 
-public:
-    explicit CPlayerControllerComponentImpl(void* p) : m_pReal(p) {}
-
-private:
-    CPlayerControllerComponent* Real() { return static_cast<CPlayerControllerComponent*>(m_pReal); }
-
-public:
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
-    void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
-
-    CCSPlayerController* GetPlayerController() override { return Real()->GetPlayerController(); }
-};
-
-#endif // _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H
+#ifdef SOURCE2TOOLKIT_CORE
+    addresses::toolkitAddresses.RemovePlayerItem(this, pWeapon);
+#else
+    g_ToolkitAPI->Addresses()->CBasePlayerPawn_RemovePlayerItem()(this, pWeapon);
+#endif
+}

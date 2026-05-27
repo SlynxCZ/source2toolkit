@@ -1,8 +1,8 @@
-/**
+﻿/**
 * vim: set ts=4 sw=4 tw=99 noet:
  * =============================================================================
  * Source2Toolkit
- * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
  * AlliedModders LLC. All rights reserved.
  * =============================================================================
  *
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License along with
  * this program. If not, see <http://www.gnu.org/licenses/>.
  *
- * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
+ * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
  * AlliedModders LLC give you permission to link the code of this program
  * (as well as its derivative works) to "Counter-Strike 2," "Source 2,"
  * "Steam," and any Game MODs or server software running on software by
@@ -29,37 +29,16 @@
  * otherwise stated in LICENSE.txt.
  *
  * Authors:
- *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
+ *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
  *   - AlliedModders LLC
  *
  * Project: Source2Toolkit
  */
 
-#ifndef _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H
-#define _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H
+#include "schema/entity/classes/CPlayerPawnComponent.h"
 
-#pragma once
+#include "schema/entity/classes/CCSPlayerPawn.h"
 
-#include "source2toolkit/schema/entity/classes/IPlayerControllerComponent.h"
-#include "schema/entity/classes/CPlayerControllerComponent.h"
-
-class CPlayerControllerComponentImpl : public virtual IPlayerControllerComponent
-{
-
-protected:
-    void* m_pReal;
-
-public:
-    explicit CPlayerControllerComponentImpl(void* p) : m_pReal(p) {}
-
-private:
-    CPlayerControllerComponent* Real() { return static_cast<CPlayerControllerComponent*>(m_pReal); }
-
-public:
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
-    void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
-
-    CCSPlayerController* GetPlayerController() override { return Real()->GetPlayerController(); }
-};
-
-#endif // _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H
+CCSPlayerPawn* CPlayerPawnComponent::GetPlayerPawn() {
+    return static_cast<CCSPlayerPawn*>(__m_pChainEntity());
+}

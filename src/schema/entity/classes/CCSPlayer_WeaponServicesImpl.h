@@ -80,6 +80,9 @@ public:
     void NetworkAnimTimingUpdated() override { Real()->m_networkAnimTiming.NetworkStateChanged(); }
     bool& BlockInspectUntilNextGraphUpdate() override { return Real()->m_bBlockInspectUntilNextGraphUpdate(); }
     void BlockInspectUntilNextGraphUpdateUpdated() override { Real()->m_bBlockInspectUntilNextGraphUpdate.NetworkStateChanged(); }
+
+    void DropWeapon(CBasePlayerWeapon *pWeapon, Vector *pVecTarget, Vector *pVelocity) override { Real()->DropWeapon(pWeapon, pVecTarget, pVelocity); }
+    void SelectWeapon(CBasePlayerWeapon *pWeapon, int unk1) override { Real()->SelectWeapon(pWeapon, unk1); }
 };
 
 #endif // _INCLUDE_CCSPLAYER_WEAPONSERVICESIMPL_H

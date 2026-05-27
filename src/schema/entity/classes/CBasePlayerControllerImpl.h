@@ -103,6 +103,8 @@ public:
     void NoClipEnabledUpdated() override { Real()->m_bNoClipEnabled.NetworkStateChanged(); }
     uint32_t& DesiredFOV() override { return Real()->m_iDesiredFOV(); }
     void DesiredFOVUpdated() override { Real()->m_iDesiredFOV.NetworkStateChanged(); }
+
+    void SetPawn(CBasePlayerPawn* pPawn) override { Real()->SetPawn(pPawn); }
 };
 
 #endif // _INCLUDE_CBASEPLAYERCONTROLLERIMPL_H

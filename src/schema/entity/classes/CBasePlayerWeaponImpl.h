@@ -69,6 +69,9 @@ public:
     int32_t* ReserveAmmo() override { return Real()->m_pReserveAmmo(); }
     CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
     void OnPlayerUseUpdated() override { Real()->m_OnPlayerUse.NetworkStateChanged(); }
+
+    CCSWeaponBaseVData* GetWeaponVData() override { return Real()->GetWeaponVData(); }
+    const char* GetWeaponClassname() override { return Real()->GetWeaponClassname(); }
 };
 
 #endif // _INCLUDE_CBASEPLAYERWEAPONIMPL_H

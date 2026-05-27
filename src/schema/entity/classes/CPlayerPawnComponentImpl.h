@@ -58,6 +58,8 @@ private:
 public:
     CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
+
+    CCSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }
 };
 
 #endif // _INCLUDE_CPLAYERPAWNCOMPONENTIMPL_H

@@ -104,6 +104,9 @@ public:
     void HltvReplayEntityUpdated() override { Real()->m_iHltvReplayEntity.NetworkStateChanged(); }
     CUtlVector<sndopvarlatchdata_t>& SndOpvarLatchData() override { return Real()->m_sndOpvarLatchData(); }
     void SndOpvarLatchDataUpdated() override { Real()->m_sndOpvarLatchData.NetworkStateChanged(); }
+
+    void CommitSuicide(bool bExplode, bool bForce) override { Real()->CommitSuicide(bExplode, bForce); }
+    void RemovePlayerItem(CBasePlayerWeapon* pWeapon) override { Real()->RemovePlayerItem(pWeapon); }
 };
 
 #endif // _INCLUDE_CBASEPLAYERPAWNIMPL_H

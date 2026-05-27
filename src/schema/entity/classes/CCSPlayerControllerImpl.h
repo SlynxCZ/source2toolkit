@@ -237,6 +237,34 @@ public:
     void NonSuspiciousHitStreakUpdated() override { Real()->m_nNonSuspiciousHitStreak.NetworkStateChanged(); }
     bool& FireBulletsSeedSynchronized() override { return Real()->m_bFireBulletsSeedSynchronized(); }
     void FireBulletsSeedSynchronizedUpdated() override { Real()->m_bFireBulletsSeedSynchronized.NetworkStateChanged(); }
+
+    void PrintToConsole(const char* pszMessage) override { Real()->PrintToConsole(pszMessage); }
+    void PrintToChat(const char* pszMessage) override { Real()->PrintToChat(pszMessage); }
+    void PrintToCenter(const char* pszMessage) override { Real()->PrintToCenter(pszMessage); }
+    void PrintToCenterAlert(const char* pszMessage) override { Real()->PrintToCenterAlert(pszMessage); }
+    void PrintToCenterHtml(const char* pszMessage, int iDuration) override { Real()->PrintToCenterHtml(pszMessage, iDuration); }
+    void TakeDamage(CCSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType) override { Real()->TakeDamage(pAttacker, iDamage, bitsDamageType); }
+    void Respawn() override { Real()->Respawn(); }
+    void SwitchTeam(int nTeam) override { Real()->SwitchTeam(nTeam); }
+    void ChangeTeam(int nTeam) override { Real()->ChangeTeam(nTeam); }
+    bool IsBot() override { return Real()->IsBot(); }
+    void Disconnect(ENetworkDisconnectionReason eReason) override { Real()->Disconnect(eReason); }
+    void ExecuteClientCommand(const char* pszCommand) override { Real()->ExecuteClientCommand(pszCommand); }
+    void ExecuteClientCommandFromServer(const char* pszCommand) override { Real()->ExecuteClientCommandFromServer(pszCommand); }
+    CCSPlayerPawn* GetPawn() override { return Real()->GetPawn(); }
+    CCSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }
+    CCSObserverPawn* GetObserverPawn() override { return Real()->GetObserverPawn(); }
+    CEntityIndex GetPlayerIndex() override { return Real()->GetPlayerIndex(); }
+    int GetSlot() override { return Real()->GetSlot(); }
+    CPlayerSlot GetPlayerSlot() override { return Real()->GetPlayerSlot(); }
+    int GetUserID() override { return Real()->GetUserID(); }
+    CPlayerUserId GetPlayerUserID() override { return Real()->GetPlayerUserID(); }
+    uint64 GetSteamID() override { return Real()->GetSteamID(); }
+    CSteamID GetPlayerSteamID() override { return Real()->GetPlayerSteamID(); }
+    const char* GetPlayerName() override { return Real()->GetPlayerName(); }
+    CUtlString GetIpAddress() override { return Real()->GetIpAddress(); }
+    void ReplicateConVar(const char* pszConVar, const char* pszValue) override { Real()->ReplicateConVar(pszConVar, pszValue); }
+    void FireEventToClient(IGameEvent* pEvent) override { Real()->FireEventToClient(pEvent); }
 };
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLERIMPL_H

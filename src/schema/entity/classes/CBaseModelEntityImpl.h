@@ -129,6 +129,10 @@ public:
     CNetworkViewOffsetVector& ViewOffset() override { return Real()->m_vecViewOffset(); }
     void ViewOffsetUpdated() override { Real()->m_vecViewOffset.NetworkStateChanged(); }
     uint32_t* DisabledHitGroups() override { return Real()->m_bvDisabledHitGroups(); }
+
+    CUtlSymbolLarge GetModelName() override { return Real()->GetModelName(); }
+    Vector GetEyePosition() override { return Real()->GetEyePosition(); }
+    void SetModel(const char* pszModel) override { Real()->SetModel(pszModel); }
 };
 
 #endif // _INCLUDE_CBASEMODELENTITYIMPL_H

@@ -227,6 +227,29 @@ public:
     void BloodTypeUpdated() override { Real()->m_nBloodType.NetworkStateChanged(); }
     CPulseGraphInstance_ServerEntity*& PulseGraphInstance() override { return Real()->m_pPulseGraphInstance(); }
     void PulseGraphInstanceUpdated() override { Real()->m_pPulseGraphInstance.NetworkStateChanged(); }
+
+    void AcceptInput(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue) override { Real()->AcceptInput(pszInput, pActivator, pCaller, pszValue); }
+    void AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay) override { Real()->AddEntityIOEvent(pszInput, pActivator, pCaller, pszValue, flDelay); }
+    CEntityIOListenerHandle* AddSingleEntityIOListener(const char* pszOutput, std::function<Action(const char*,CEntityInstance*, CEntityInstance*, float, Mode)> callback, Mode mode) override { return Real()->AddSingleEntityIOListener(pszOutput, callback, mode); }
+    Vector GetAbsOrigin() override { return Real()->GetAbsOrigin(); }
+    QAngle GetAngRotation() override { return Real()->GetAngRotation(); }
+    QAngle GetAbsRotation() override { return Real()->GetAbsRotation(); }
+    Vector GetAbsVelocity() override { return Real()->GetAbsVelocity(); }
+    void SetAbsOrigin(Vector vecOrigin) override { Real()->SetAbsOrigin(vecOrigin); }
+    void SetAbsRotation(QAngle angAbsRotation) override { Real()->SetAbsRotation(angAbsRotation); }
+    void SetAngRotation(QAngle angRotation) override { Real()->SetAngRotation(angRotation); }
+    void SetAbsVelocity(Vector vecVelocity) override { Real()->SetAbsVelocity(vecVelocity); }
+    void SetBaseVelocity(Vector vecVelocity) override { Real()->SetBaseVelocity(vecVelocity); }
+    CEntitySubclassVDataBase* GetVData() override { return Real()->GetVData(); }
+    void DispatchSpawn(CEntityKeyValues* pEntityKeyValues) override { Real()->DispatchSpawn(pEntityKeyValues); }
+    void Teleport(const Vector* pPosition, const QAngle* pAngles, const Vector* pVelocity) override { Real()->Teleport(pPosition, pAngles, pVelocity); }
+    void SetMoveType(MoveType_t nMoveType) override { Real()->SetMoveType(nMoveType); }
+    uint8 GetCollisionGroup() override { return Real()->GetCollisionGroup(); }
+    void SetCollisionGroup(uint8 nCollisionGroup) override { Real()->SetCollisionGroup(nCollisionGroup); }
+    void CollisionRulesChanged() override { Real()->CollisionRulesChanged(); }
+    int GetIndex() override { return Real()->GetIndex(); }
+    CHandle<CBaseEntity> GetHandle() override { return Real()->GetHandle(); }
+    const char* GetName() const override { return Real()->GetName(); }
 };
 
 #endif // _INCLUDE_CBASEENTITYIMPL_H

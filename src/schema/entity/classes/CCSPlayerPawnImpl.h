@@ -264,6 +264,10 @@ public:
     void MolotovDamageTimeUpdated() override { Real()->m_fMolotovDamageTime.NetworkStateChanged(); }
     QAngle& EyeAngles() override { return Real()->m_angEyeAngles(); }
     void EyeAnglesUpdated() override { Real()->m_angEyeAngles.NetworkStateChanged(); }
+
+    CCSPlayerController* GetController() override { return Real()->GetController(); }
+    CCSPlayerController* GetDefaultController() override { return Real()->GetDefaultController(); }
+    CCSPlayerController* GetOriginalController() override { return Real()->GetOriginalController(); }
 };
 
 #endif // _INCLUDE_CCSPLAYERPAWNIMPL_H
