@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeCNmGraphDefinition* InfoForResourceTypeCNmGraphDefinition::ToInterface() { return new InfoForResourceTypeCNmGraphDefinitionImpl(this); }
+inline IInfoForResourceTypeCNmGraphDefinition* IInfoForResourceTypeCNmGraphDefinition::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeCNmGraphDefinition* IInfoForResourceTypeCNmGraphDefinition::FromOriginal(InfoForResourceTypeCNmGraphDefinition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECNMGRAPHDEFINITIONIMPL_H

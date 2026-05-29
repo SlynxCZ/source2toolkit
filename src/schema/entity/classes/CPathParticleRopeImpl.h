@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathParticleRope.h"
 #include "CBaseEntityImpl.h"
 
-class CPathParticleRopeImpl : public CBaseEntityImpl, public IPathParticleRope
+class CPathParticleRopeImpl : public CBaseEntityImpl, public virtual IPathParticleRope
 {
 
 public:
@@ -90,7 +90,20 @@ public:
     void PathNodes_RadiusScaleUpdated() override { Real()->m_PathNodes_RadiusScale.NetworkStateChanged(); }
 };
 
-inline IPathParticleRope* CPathParticleRope::ToInterface() { return new CPathParticleRopeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathParticleRope* CPathParticleRope::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathParticleRope*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathParticleRopeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathParticleRope*>(impl));
+    return impl;
+}
+inline IPathParticleRope* IPathParticleRope::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathParticleRope*>(p)->ToInterface() : nullptr; }
 inline IPathParticleRope* IPathParticleRope::FromOriginal(CPathParticleRope* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHPARTICLEROPEIMPL_H

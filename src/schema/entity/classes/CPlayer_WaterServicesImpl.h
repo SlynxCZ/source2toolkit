@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_WaterServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_WaterServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_WaterServices
+class CPlayer_WaterServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_WaterServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IPlayer_WaterServices* CPlayer_WaterServices::ToInterface() { return new CPlayer_WaterServicesImpl(this); }
+inline IPlayer_WaterServices* IPlayer_WaterServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_WaterServices* IPlayer_WaterServices::FromOriginal(CPlayer_WaterServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_WATERSERVICESIMPL_H

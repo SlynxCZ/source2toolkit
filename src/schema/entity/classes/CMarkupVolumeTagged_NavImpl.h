@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMarkupVolumeTagged_Nav.h"
 #include "CMarkupVolumeTaggedImpl.h"
 
-class CMarkupVolumeTagged_NavImpl : public CMarkupVolumeTaggedImpl, public IMarkupVolumeTagged_Nav
+class CMarkupVolumeTagged_NavImpl : public CMarkupVolumeTaggedImpl, public virtual IMarkupVolumeTagged_Nav
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ScopesUpdated() override { Real()->m_nScopes.NetworkStateChanged(); }
 };
 
-inline IMarkupVolumeTagged_Nav* CMarkupVolumeTagged_Nav::ToInterface() { return new CMarkupVolumeTagged_NavImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMarkupVolumeTagged_Nav* CMarkupVolumeTagged_Nav::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMarkupVolumeTagged_Nav*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMarkupVolumeTagged_NavImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMarkupVolumeTagged_Nav*>(impl));
+    return impl;
+}
+inline IMarkupVolumeTagged_Nav* IMarkupVolumeTagged_Nav::FromRaw(CEntityInstance* p) { return p ? static_cast<CMarkupVolumeTagged_Nav*>(p)->ToInterface() : nullptr; }
 inline IMarkupVolumeTagged_Nav* IMarkupVolumeTagged_Nav::FromOriginal(CMarkupVolumeTagged_Nav* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAVIMPL_H

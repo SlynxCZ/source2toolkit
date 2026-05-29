@@ -65,6 +65,7 @@ public:
 };
 
 inline IIntervalTimer* IntervalTimer::ToInterface() { return new IntervalTimerImpl(this); }
+inline IIntervalTimer* IIntervalTimer::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIntervalTimer* IIntervalTimer::FromOriginal(IntervalTimer* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INTERVALTIMERIMPL_H

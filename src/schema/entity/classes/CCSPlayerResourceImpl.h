@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerResource.h"
 #include "CBaseEntityImpl.h"
 
-class CCSPlayerResourceImpl : public CBaseEntityImpl, public ICSPlayerResource
+class CCSPlayerResourceImpl : public CBaseEntityImpl, public virtual ICSPlayerResource
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void FoundGoalPositionsUpdated() override { Real()->m_foundGoalPositions.NetworkStateChanged(); }
 };
 
-inline ICSPlayerResource* CCSPlayerResource::ToInterface() { return new CCSPlayerResourceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSPlayerResource* CCSPlayerResource::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPlayerResource*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPlayerResourceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPlayerResource*>(impl));
+    return impl;
+}
+inline ICSPlayerResource* ICSPlayerResource::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSPlayerResource*>(p)->ToInterface() : nullptr; }
 inline ICSPlayerResource* ICSPlayerResource::FromOriginal(CCSPlayerResource* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERRESOURCEIMPL_H

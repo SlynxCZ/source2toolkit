@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTonemapController2.h"
 #include "CBaseEntityImpl.h"
 
-class CTonemapController2Impl : public CBaseEntityImpl, public ITonemapController2
+class CTonemapController2Impl : public CBaseEntityImpl, public virtual ITonemapController2
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void TonemapEVSmoothingRangeUpdated() override { Real()->m_flTonemapEVSmoothingRange.NetworkStateChanged(); }
 };
 
-inline ITonemapController2* CTonemapController2::ToInterface() { return new CTonemapController2Impl(this); }
+#include "core/virtualhooks.h"
+
+inline ITonemapController2* CTonemapController2::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITonemapController2*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTonemapController2Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITonemapController2*>(impl));
+    return impl;
+}
+inline ITonemapController2* ITonemapController2::FromRaw(CEntityInstance* p) { return p ? static_cast<CTonemapController2*>(p)->ToInterface() : nullptr; }
 inline ITonemapController2* ITonemapController2::FromOriginal(CTonemapController2* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTONEMAPCONTROLLER2IMPL_H

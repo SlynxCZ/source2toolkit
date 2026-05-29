@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMapVetoPickController.h"
 #include "CBaseEntityImpl.h"
 
-class CMapVetoPickControllerImpl : public CBaseEntityImpl, public IMapVetoPickController
+class CMapVetoPickControllerImpl : public CBaseEntityImpl, public virtual IMapVetoPickController
 {
 
 public:
@@ -86,7 +86,20 @@ public:
     void PhaseDurationTicksUpdated() override { Real()->m_nPhaseDurationTicks.NetworkStateChanged(); }
 };
 
-inline IMapVetoPickController* CMapVetoPickController::ToInterface() { return new CMapVetoPickControllerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMapVetoPickController* CMapVetoPickController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMapVetoPickController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMapVetoPickControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMapVetoPickController*>(impl));
+    return impl;
+}
+inline IMapVetoPickController* IMapVetoPickController::FromRaw(CEntityInstance* p) { return p ? static_cast<CMapVetoPickController*>(p)->ToInterface() : nullptr; }
 inline IMapVetoPickController* IMapVetoPickController::FromOriginal(CMapVetoPickController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMAPVETOPICKCONTROLLERIMPL_H

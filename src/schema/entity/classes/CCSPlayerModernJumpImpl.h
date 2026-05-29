@@ -79,6 +79,7 @@ public:
 };
 
 inline ICSPlayerModernJump* CCSPlayerModernJump::ToInterface() { return new CCSPlayerModernJumpImpl(this); }
+inline ICSPlayerModernJump* ICSPlayerModernJump::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerModernJump* ICSPlayerModernJump::FromOriginal(CCSPlayerModernJump* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERMODERNJUMPIMPL_H

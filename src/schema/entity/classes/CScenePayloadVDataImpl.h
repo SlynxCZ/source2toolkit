@@ -65,6 +65,7 @@ public:
 };
 
 inline IScenePayloadVData* CScenePayloadVData::ToInterface() { return new CScenePayloadVDataImpl(this); }
+inline IScenePayloadVData* IScenePayloadVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline IScenePayloadVData* IScenePayloadVData::FromOriginal(CScenePayloadVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCENEPAYLOADVDATAIMPL_H

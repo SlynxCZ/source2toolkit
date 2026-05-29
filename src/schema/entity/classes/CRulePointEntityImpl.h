@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRulePointEntity.h"
 #include "CRuleEntityImpl.h"
 
-class CRulePointEntityImpl : public CRuleEntityImpl, public IRulePointEntity
+class CRulePointEntityImpl : public CRuleEntityImpl, public virtual IRulePointEntity
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ScoreUpdated() override { Real()->m_Score.NetworkStateChanged(); }
 };
 
-inline IRulePointEntity* CRulePointEntity::ToInterface() { return new CRulePointEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRulePointEntity* CRulePointEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRulePointEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRulePointEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRulePointEntity*>(impl));
+    return impl;
+}
+inline IRulePointEntity* IRulePointEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CRulePointEntity*>(p)->ToInterface() : nullptr; }
 inline IRulePointEntity* IRulePointEntity::FromOriginal(CRulePointEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRULEPOINTENTITYIMPL_H

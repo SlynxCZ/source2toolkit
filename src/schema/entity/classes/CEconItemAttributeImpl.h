@@ -71,6 +71,7 @@ public:
 };
 
 inline IEconItemAttribute* CEconItemAttribute::ToInterface() { return new CEconItemAttributeImpl(this); }
+inline IEconItemAttribute* IEconItemAttribute::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEconItemAttribute* IEconItemAttribute::FromOriginal(CEconItemAttribute* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CECONITEMATTRIBUTEIMPL_H

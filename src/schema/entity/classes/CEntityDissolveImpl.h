@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEntityDissolve.h"
 #include "CBaseModelEntityImpl.h"
 
-class CEntityDissolveImpl : public CBaseModelEntityImpl, public IEntityDissolve
+class CEntityDissolveImpl : public CBaseModelEntityImpl, public virtual IEntityDissolve
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void MagnitudeUpdated() override { Real()->m_nMagnitude.NetworkStateChanged(); }
 };
 
-inline IEntityDissolve* CEntityDissolve::ToInterface() { return new CEntityDissolveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEntityDissolve* CEntityDissolve::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEntityDissolve*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEntityDissolveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEntityDissolve*>(impl));
+    return impl;
+}
+inline IEntityDissolve* IEntityDissolve::FromRaw(CEntityInstance* p) { return p ? static_cast<CEntityDissolve*>(p)->ToInterface() : nullptr; }
 inline IEntityDissolve* IEntityDissolve::FromOriginal(CEntityDissolve* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENTITYDISSOLVEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBreakableProp.h"
 #include "CBasePropImpl.h"
 
-class CBreakablePropImpl : public CBasePropImpl, public IBreakableProp
+class CBreakablePropImpl : public CBasePropImpl, public virtual IBreakableProp
 {
 
 public:
@@ -122,7 +122,20 @@ public:
     void OriginalBlockLOSUpdated() override { Real()->m_bOriginalBlockLOS.NetworkStateChanged(); }
 };
 
-inline IBreakableProp* CBreakableProp::ToInterface() { return new CBreakablePropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBreakableProp* CBreakableProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBreakableProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBreakablePropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBreakableProp*>(impl));
+    return impl;
+}
+inline IBreakableProp* IBreakableProp::FromRaw(CEntityInstance* p) { return p ? static_cast<CBreakableProp*>(p)->ToInterface() : nullptr; }
 inline IBreakableProp* IBreakableProp::FromOriginal(CBreakableProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBREAKABLEPROPIMPL_H

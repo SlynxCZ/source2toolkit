@@ -73,6 +73,7 @@ public:
 };
 
 inline Ilerpdata_t* lerpdata_t::ToInterface() { return new lerpdata_tImpl(this); }
+inline Ilerpdata_t* Ilerpdata_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ilerpdata_t* Ilerpdata_t::FromOriginal(lerpdata_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_LERPDATA_TIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerOnce.h"
 #include "CTriggerMultipleImpl.h"
 
-class CTriggerOnceImpl : public CTriggerMultipleImpl, public ITriggerOnce
+class CTriggerOnceImpl : public CTriggerMultipleImpl, public virtual ITriggerOnce
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTriggerOnce* GetOriginal() const override { return Real(); }
 };
 
-inline ITriggerOnce* CTriggerOnce::ToInterface() { return new CTriggerOnceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerOnce* CTriggerOnce::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerOnce*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerOnceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerOnce*>(impl));
+    return impl;
+}
+inline ITriggerOnce* ITriggerOnce::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerOnce*>(p)->ToInterface() : nullptr; }
 inline ITriggerOnce* ITriggerOnce::FromOriginal(CTriggerOnce* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERONCEIMPL_H

@@ -68,6 +68,7 @@ public:
 };
 
 inline Ithinkfunc_t* thinkfunc_t::ToInterface() { return new thinkfunc_tImpl(this); }
+inline Ithinkfunc_t* Ithinkfunc_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ithinkfunc_t* Ithinkfunc_t::FromOriginal(thinkfunc_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_THINKFUNC_TIMPL_H

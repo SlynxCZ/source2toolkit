@@ -63,6 +63,7 @@ public:
 };
 
 inline INetworkTransmitComponent* CNetworkTransmitComponent::ToInterface() { return new CNetworkTransmitComponentImpl(this); }
+inline INetworkTransmitComponent* INetworkTransmitComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline INetworkTransmitComponent* INetworkTransmitComponent::FromOriginal(CNetworkTransmitComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNETWORKTRANSMITCOMPONENTIMPL_H

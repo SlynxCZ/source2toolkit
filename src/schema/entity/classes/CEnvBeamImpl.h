@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvBeam.h"
 #include "CBeamImpl.h"
 
-class CEnvBeamImpl : public CBeamImpl, public IEnvBeam
+class CEnvBeamImpl : public CBeamImpl, public virtual IEnvBeam
 {
 
 public:
@@ -96,7 +96,20 @@ public:
     void OnTouchedByEntityUpdated() override { Real()->m_OnTouchedByEntity.NetworkStateChanged(); }
 };
 
-inline IEnvBeam* CEnvBeam::ToInterface() { return new CEnvBeamImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvBeam* CEnvBeam::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvBeam*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvBeamImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvBeam*>(impl));
+    return impl;
+}
+inline IEnvBeam* IEnvBeam::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvBeam*>(p)->ToInterface() : nullptr; }
 inline IEnvBeam* IEnvBeam::FromOriginal(CEnvBeam* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVBEAMIMPL_H

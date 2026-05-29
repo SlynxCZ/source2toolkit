@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysFixed.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysFixedImpl : public CPhysConstraintImpl, public IPhysFixed
+class CPhysFixedImpl : public CPhysConstraintImpl, public virtual IPhysFixed
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void BoneName2Updated() override { Real()->m_sBoneName2.NetworkStateChanged(); }
 };
 
-inline IPhysFixed* CPhysFixed::ToInterface() { return new CPhysFixedImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysFixed* CPhysFixed::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysFixed*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysFixedImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysFixed*>(impl));
+    return impl;
+}
+inline IPhysFixed* IPhysFixed::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysFixed*>(p)->ToInterface() : nullptr; }
 inline IPhysFixed* IPhysFixed::FromOriginal(CPhysFixed* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSFIXEDIMPL_H

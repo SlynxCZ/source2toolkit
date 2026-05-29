@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseModelEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CBaseModelEntityImpl : public CBaseEntityImpl, public IBaseModelEntity
+class CBaseModelEntityImpl : public CBaseEntityImpl, public virtual IBaseModelEntity
 {
 
 public:

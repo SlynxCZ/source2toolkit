@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CC4.h"
 #include "CCSWeaponBaseImpl.h"
 
-class CC4Impl : public CCSWeaponBaseImpl, public IC4
+class CC4Impl : public CCSWeaponBaseImpl, public virtual IC4
 {
 
 public:
@@ -79,7 +79,20 @@ public:
     void BombPlantedUpdated() override { Real()->m_bBombPlanted.NetworkStateChanged(); }
 };
 
-inline IC4* CC4::ToInterface() { return new CC4Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IC4* CC4::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IC4*>(tagIt->second.ptr_for_return);
+    auto* impl = new CC4Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IC4*>(impl));
+    return impl;
+}
+inline IC4* IC4::FromRaw(CEntityInstance* p) { return p ? static_cast<CC4*>(p)->ToInterface() : nullptr; }
 inline IC4* IC4::FromOriginal(CC4* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CC4IMPL_H

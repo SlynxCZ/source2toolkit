@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerPush.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerPushImpl : public CBaseTriggerImpl, public ITriggerPush
+class CTriggerPushImpl : public CBaseTriggerImpl, public virtual ITriggerPush
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void SplinePushTypeUpdated() override { Real()->m_splinePushType.NetworkStateChanged(); }
 };
 
-inline ITriggerPush* CTriggerPush::ToInterface() { return new CTriggerPushImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerPush* CTriggerPush::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerPush*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerPushImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerPush*>(impl));
+    return impl;
+}
+inline ITriggerPush* ITriggerPush::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerPush*>(p)->ToInterface() : nullptr; }
 inline ITriggerPush* ITriggerPush::FromOriginal(CTriggerPush* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERPUSHIMPL_H

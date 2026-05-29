@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointTemplate.h"
 #include "CLogicalEntityImpl.h"
 
-class CPointTemplateImpl : public CLogicalEntityImpl, public IPointTemplate
+class CPointTemplateImpl : public CLogicalEntityImpl, public virtual IPointTemplate
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void SpawnedEntityHandlesUpdated() override { Real()->m_SpawnedEntityHandles.NetworkStateChanged(); }
 };
 
-inline IPointTemplate* CPointTemplate::ToInterface() { return new CPointTemplateImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointTemplate* CPointTemplate::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointTemplate*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointTemplateImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointTemplate*>(impl));
+    return impl;
+}
+inline IPointTemplate* IPointTemplate::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointTemplate*>(p)->ToInterface() : nullptr; }
 inline IPointTemplate* IPointTemplate::FromOriginal(CPointTemplate* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTTEMPLATEIMPL_H

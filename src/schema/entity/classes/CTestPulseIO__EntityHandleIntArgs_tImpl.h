@@ -65,6 +65,7 @@ public:
 };
 
 inline ITestPulseIO__EntityHandleIntArgs_t* CTestPulseIO__EntityHandleIntArgs_t::ToInterface() { return new CTestPulseIO__EntityHandleIntArgs_tImpl(this); }
+inline ITestPulseIO__EntityHandleIntArgs_t* ITestPulseIO__EntityHandleIntArgs_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITestPulseIO__EntityHandleIntArgs_t* ITestPulseIO__EntityHandleIntArgs_t::FromOriginal(CTestPulseIO__EntityHandleIntArgs_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTPULSEIO__ENTITYHANDLEINTARGS_TIMPL_H

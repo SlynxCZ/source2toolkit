@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMarkupVolumeTagged.h"
 #include "CMarkupVolumeImpl.h"
 
-class CMarkupVolumeTaggedImpl : public CMarkupVolumeImpl, public IMarkupVolumeTagged
+class CMarkupVolumeTaggedImpl : public CMarkupVolumeImpl, public virtual IMarkupVolumeTagged
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void IsInGroupUpdated() override { Real()->m_bIsInGroup.NetworkStateChanged(); }
 };
 
-inline IMarkupVolumeTagged* CMarkupVolumeTagged::ToInterface() { return new CMarkupVolumeTaggedImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMarkupVolumeTagged* CMarkupVolumeTagged::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMarkupVolumeTagged*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMarkupVolumeTaggedImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMarkupVolumeTagged*>(impl));
+    return impl;
+}
+inline IMarkupVolumeTagged* IMarkupVolumeTagged::FromRaw(CEntityInstance* p) { return p ? static_cast<CMarkupVolumeTagged*>(p)->ToInterface() : nullptr; }
 inline IMarkupVolumeTagged* IMarkupVolumeTagged::FromOriginal(CMarkupVolumeTagged* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGEDIMPL_H

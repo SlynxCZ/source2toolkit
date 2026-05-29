@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvParticleGlow.h"
 #include "CParticleSystemImpl.h"
 
-class CEnvParticleGlowImpl : public CParticleSystemImpl, public IEnvParticleGlow
+class CEnvParticleGlowImpl : public CParticleSystemImpl, public virtual IEnvParticleGlow
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void TextureOverrideUpdated() override { Real()->m_hTextureOverride.NetworkStateChanged(); }
 };
 
-inline IEnvParticleGlow* CEnvParticleGlow::ToInterface() { return new CEnvParticleGlowImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvParticleGlow* CEnvParticleGlow::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvParticleGlow*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvParticleGlowImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvParticleGlow*>(impl));
+    return impl;
+}
+inline IEnvParticleGlow* IEnvParticleGlow::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvParticleGlow*>(p)->ToInterface() : nullptr; }
 inline IEnvParticleGlow* IEnvParticleGlow::FromOriginal(CEnvParticleGlow* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVPARTICLEGLOWIMPL_H

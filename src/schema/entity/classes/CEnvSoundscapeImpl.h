@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSoundscape.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvSoundscapeImpl : public CBaseEntityImpl, public IEnvSoundscape
+class CEnvSoundscapeImpl : public CBaseEntityImpl, public virtual IEnvSoundscape
 {
 
 public:
@@ -79,7 +79,20 @@ public:
     void SoundEventHashUpdated() override { Real()->m_soundEventHash.NetworkStateChanged(); }
 };
 
-inline IEnvSoundscape* CEnvSoundscape::ToInterface() { return new CEnvSoundscapeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSoundscape* CEnvSoundscape::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSoundscape*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSoundscapeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSoundscape*>(impl));
+    return impl;
+}
+inline IEnvSoundscape* IEnvSoundscape::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSoundscape*>(p)->ToInterface() : nullptr; }
 inline IEnvSoundscape* IEnvSoundscape::FromOriginal(CEnvSoundscape* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSOUNDSCAPEIMPL_H

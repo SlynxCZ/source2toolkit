@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvFade.h"
 #include "CLogicalEntityImpl.h"
 
-class CEnvFadeImpl : public CLogicalEntityImpl, public IEnvFade
+class CEnvFadeImpl : public CLogicalEntityImpl, public virtual IEnvFade
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void OnBeginFadeUpdated() override { Real()->m_OnBeginFade.NetworkStateChanged(); }
 };
 
-inline IEnvFade* CEnvFade::ToInterface() { return new CEnvFadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvFade* CEnvFade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvFade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvFadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvFade*>(impl));
+    return impl;
+}
+inline IEnvFade* IEnvFade::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvFade*>(p)->ToInterface() : nullptr; }
 inline IEnvFade* IEnvFade::FromOriginal(CEnvFade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVFADEIMPL_H

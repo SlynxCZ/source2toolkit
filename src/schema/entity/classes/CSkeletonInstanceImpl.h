@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSkeletonInstance.h"
 #include "CGameSceneNodeImpl.h"
 
-class CSkeletonInstanceImpl : public CGameSceneNodeImpl, public ISkeletonInstance
+class CSkeletonInstanceImpl : public CGameSceneNodeImpl, public virtual ISkeletonInstance
 {
 
 public:
@@ -70,6 +70,7 @@ public:
 };
 
 inline ISkeletonInstance* CSkeletonInstance::ToInterface() { return new CSkeletonInstanceImpl(this); }
+inline ISkeletonInstance* ISkeletonInstance::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISkeletonInstance* ISkeletonInstance::FromOriginal(CSkeletonInstance* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSKELETONINSTANCEIMPL_H

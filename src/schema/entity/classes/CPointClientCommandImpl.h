@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointClientCommand.h"
 #include "CPointEntityImpl.h"
 
-class CPointClientCommandImpl : public CPointEntityImpl, public IPointClientCommand
+class CPointClientCommandImpl : public CPointEntityImpl, public virtual IPointClientCommand
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPointClientCommand* GetOriginal() const override { return Real(); }
 };
 
-inline IPointClientCommand* CPointClientCommand::ToInterface() { return new CPointClientCommandImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointClientCommand* CPointClientCommand::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointClientCommand*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointClientCommandImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointClientCommand*>(impl));
+    return impl;
+}
+inline IPointClientCommand* IPointClientCommand::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointClientCommand*>(p)->ToInterface() : nullptr; }
 inline IPointClientCommand* IPointClientCommand::FromOriginal(CPointClientCommand* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCLIENTCOMMANDIMPL_H

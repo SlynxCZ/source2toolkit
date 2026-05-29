@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicAchievement.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicAchievementImpl : public CLogicalEntityImpl, public ILogicAchievement
+class CLogicAchievementImpl : public CLogicalEntityImpl, public virtual ILogicAchievement
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void OnFiredUpdated() override { Real()->m_OnFired.NetworkStateChanged(); }
 };
 
-inline ILogicAchievement* CLogicAchievement::ToInterface() { return new CLogicAchievementImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicAchievement* CLogicAchievement::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicAchievement*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicAchievementImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicAchievement*>(impl));
+    return impl;
+}
+inline ILogicAchievement* ILogicAchievement::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicAchievement*>(p)->ToInterface() : nullptr; }
 inline ILogicAchievement* ILogicAchievement::FromOriginal(CLogicAchievement* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICACHIEVEMENTIMPL_H

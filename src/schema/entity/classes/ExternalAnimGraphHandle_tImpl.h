@@ -63,6 +63,7 @@ public:
 };
 
 inline IExternalAnimGraphHandle_t* ExternalAnimGraphHandle_t::ToInterface() { return new ExternalAnimGraphHandle_tImpl(this); }
+inline IExternalAnimGraphHandle_t* IExternalAnimGraphHandle_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IExternalAnimGraphHandle_t* IExternalAnimGraphHandle_t::FromOriginal(ExternalAnimGraphHandle_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_EXTERNALANIMGRAPHHANDLE_TIMPL_H

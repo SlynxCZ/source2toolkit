@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysImpact.h"
 #include "CPointEntityImpl.h"
 
-class CPhysImpactImpl : public CPointEntityImpl, public IPhysImpact
+class CPhysImpactImpl : public CPointEntityImpl, public virtual IPhysImpact
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void DirectionEntityNameUpdated() override { Real()->m_directionEntityName.NetworkStateChanged(); }
 };
 
-inline IPhysImpact* CPhysImpact::ToInterface() { return new CPhysImpactImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysImpact* CPhysImpact::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysImpact*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysImpactImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysImpact*>(impl));
+    return impl;
+}
+inline IPhysImpact* IPhysImpact::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysImpact*>(p)->ToInterface() : nullptr; }
 inline IPhysImpact* IPhysImpact::FromOriginal(CPhysImpact* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSIMPACTIMPL_H

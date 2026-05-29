@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePropDoor.h"
 #include "CDynamicPropImpl.h"
 
-class CBasePropDoorImpl : public CDynamicPropImpl, public IBasePropDoor
+class CBasePropDoorImpl : public CDynamicPropImpl, public virtual IBasePropDoor
 {
 
 public:
@@ -133,7 +133,20 @@ public:
     void OnAjarOpenUpdated() override { Real()->m_OnAjarOpen.NetworkStateChanged(); }
 };
 
-inline IBasePropDoor* CBasePropDoor::ToInterface() { return new CBasePropDoorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBasePropDoor* CBasePropDoor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBasePropDoor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBasePropDoorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBasePropDoor*>(impl));
+    return impl;
+}
+inline IBasePropDoor* IBasePropDoor::FromRaw(CEntityInstance* p) { return p ? static_cast<CBasePropDoor*>(p)->ToInterface() : nullptr; }
 inline IBasePropDoor* IBasePropDoor::FromOriginal(CBasePropDoor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEPROPDOORIMPL_H

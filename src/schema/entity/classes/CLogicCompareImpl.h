@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicCompare.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicCompareImpl : public CLogicalEntityImpl, public ILogicCompare
+class CLogicCompareImpl : public CLogicalEntityImpl, public virtual ILogicCompare
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void CompareValueUpdated() override { Real()->m_flCompareValue.NetworkStateChanged(); }
 };
 
-inline ILogicCompare* CLogicCompare::ToInterface() { return new CLogicCompareImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicCompare* CLogicCompare::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicCompare*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicCompareImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicCompare*>(impl));
+    return impl;
+}
+inline ILogicCompare* ILogicCompare::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicCompare*>(p)->ToInterface() : nullptr; }
 inline ILogicCompare* ILogicCompare::FromOriginal(CLogicCompare* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICCOMPAREIMPL_H

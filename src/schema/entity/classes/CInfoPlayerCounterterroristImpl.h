@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoPlayerCounterterrorist.h"
 #include "SpawnPointImpl.h"
 
-class CInfoPlayerCounterterroristImpl : public SpawnPointImpl, public IInfoPlayerCounterterrorist
+class CInfoPlayerCounterterroristImpl : public SpawnPointImpl, public virtual IInfoPlayerCounterterrorist
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoPlayerCounterterrorist* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoPlayerCounterterrorist* CInfoPlayerCounterterrorist::ToInterface() { return new CInfoPlayerCounterterroristImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoPlayerCounterterrorist* CInfoPlayerCounterterrorist::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoPlayerCounterterrorist*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoPlayerCounterterroristImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoPlayerCounterterrorist*>(impl));
+    return impl;
+}
+inline IInfoPlayerCounterterrorist* IInfoPlayerCounterterrorist::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoPlayerCounterterrorist*>(p)->ToInterface() : nullptr; }
 inline IInfoPlayerCounterterrorist* IInfoPlayerCounterterrorist::FromOriginal(CInfoPlayerCounterterrorist* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOPLAYERCOUNTERTERRORISTIMPL_H

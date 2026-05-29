@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CNavSpaceInfo.h"
 #include "CPointEntityImpl.h"
 
-class CNavSpaceInfoImpl : public CPointEntityImpl, public INavSpaceInfo
+class CNavSpaceInfoImpl : public CPointEntityImpl, public virtual INavSpaceInfo
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CNavSpaceInfo* GetOriginal() const override { return Real(); }
 };
 
-inline INavSpaceInfo* CNavSpaceInfo::ToInterface() { return new CNavSpaceInfoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline INavSpaceInfo* CNavSpaceInfo::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<INavSpaceInfo*>(tagIt->second.ptr_for_return);
+    auto* impl = new CNavSpaceInfoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<INavSpaceInfo*>(impl));
+    return impl;
+}
+inline INavSpaceInfo* INavSpaceInfo::FromRaw(CEntityInstance* p) { return p ? static_cast<CNavSpaceInfo*>(p)->ToInterface() : nullptr; }
 inline INavSpaceInfo* INavSpaceInfo::FromOriginal(CNavSpaceInfo* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNAVSPACEINFOIMPL_H

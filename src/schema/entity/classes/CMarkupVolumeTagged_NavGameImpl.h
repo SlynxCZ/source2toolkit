@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMarkupVolumeTagged_NavGame.h"
 #include "CMarkupVolumeWithRefImpl.h"
 
-class CMarkupVolumeTagged_NavGameImpl : public CMarkupVolumeWithRefImpl, public IMarkupVolumeTagged_NavGame
+class CMarkupVolumeTagged_NavGameImpl : public CMarkupVolumeWithRefImpl, public virtual IMarkupVolumeTagged_NavGame
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void SplitNavSpaceUpdated() override { Real()->m_bSplitNavSpace.NetworkStateChanged(); }
 };
 
-inline IMarkupVolumeTagged_NavGame* CMarkupVolumeTagged_NavGame::ToInterface() { return new CMarkupVolumeTagged_NavGameImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMarkupVolumeTagged_NavGame* CMarkupVolumeTagged_NavGame::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMarkupVolumeTagged_NavGame*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMarkupVolumeTagged_NavGameImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMarkupVolumeTagged_NavGame*>(impl));
+    return impl;
+}
+inline IMarkupVolumeTagged_NavGame* IMarkupVolumeTagged_NavGame::FromRaw(CEntityInstance* p) { return p ? static_cast<CMarkupVolumeTagged_NavGame*>(p)->ToInterface() : nullptr; }
 inline IMarkupVolumeTagged_NavGame* IMarkupVolumeTagged_NavGame::FromOriginal(CMarkupVolumeTagged_NavGame* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAVGAMEIMPL_H

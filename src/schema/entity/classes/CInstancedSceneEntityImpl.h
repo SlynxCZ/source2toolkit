@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInstancedSceneEntity.h"
 #include "CSceneEntityImpl.h"
 
-class CInstancedSceneEntityImpl : public CSceneEntityImpl, public IInstancedSceneEntity
+class CInstancedSceneEntityImpl : public CSceneEntityImpl, public virtual IInstancedSceneEntity
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void TargetUpdated() override { Real()->m_hTarget.NetworkStateChanged(); }
 };
 
-inline IInstancedSceneEntity* CInstancedSceneEntity::ToInterface() { return new CInstancedSceneEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInstancedSceneEntity* CInstancedSceneEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInstancedSceneEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInstancedSceneEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInstancedSceneEntity*>(impl));
+    return impl;
+}
+inline IInstancedSceneEntity* IInstancedSceneEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CInstancedSceneEntity*>(p)->ToInterface() : nullptr; }
 inline IInstancedSceneEntity* IInstancedSceneEntity::FromOriginal(CInstancedSceneEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINSTANCEDSCENEENTITYIMPL_H

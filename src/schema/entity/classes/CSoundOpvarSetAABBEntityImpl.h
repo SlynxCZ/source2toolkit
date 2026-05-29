@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundOpvarSetAABBEntity.h"
 #include "CSoundOpvarSetPointEntityImpl.h"
 
-class CSoundOpvarSetAABBEntityImpl : public CSoundOpvarSetPointEntityImpl, public ISoundOpvarSetAABBEntity
+class CSoundOpvarSetAABBEntityImpl : public CSoundOpvarSetPointEntityImpl, public virtual ISoundOpvarSetAABBEntity
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void OuterMaxsUpdated() override { Real()->m_vOuterMaxs.NetworkStateChanged(); }
 };
 
-inline ISoundOpvarSetAABBEntity* CSoundOpvarSetAABBEntity::ToInterface() { return new CSoundOpvarSetAABBEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundOpvarSetAABBEntity* CSoundOpvarSetAABBEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundOpvarSetAABBEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundOpvarSetAABBEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundOpvarSetAABBEntity*>(impl));
+    return impl;
+}
+inline ISoundOpvarSetAABBEntity* ISoundOpvarSetAABBEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundOpvarSetAABBEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundOpvarSetAABBEntity* ISoundOpvarSetAABBEntity::FromOriginal(CSoundOpvarSetAABBEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDOPVARSETAABBENTITYIMPL_H

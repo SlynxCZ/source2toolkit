@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemDefuser.h"
 #include "CItemImpl.h"
 
-class CItemDefuserImpl : public CItemImpl, public IItemDefuser
+class CItemDefuserImpl : public CItemImpl, public virtual IItemDefuser
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void SpotRulesUpdated() override { Real()->m_nSpotRules.NetworkStateChanged(); }
 };
 
-inline IItemDefuser* CItemDefuser::ToInterface() { return new CItemDefuserImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemDefuser* CItemDefuser::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemDefuser*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemDefuserImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemDefuser*>(impl));
+    return impl;
+}
+inline IItemDefuser* IItemDefuser::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemDefuser*>(p)->ToInterface() : nullptr; }
 inline IItemDefuser* IItemDefuser::FromOriginal(CItemDefuser* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMDEFUSERIMPL_H

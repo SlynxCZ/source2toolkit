@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHandleDummy.h"
 #include "CBaseEntityImpl.h"
 
-class CHandleDummyImpl : public CBaseEntityImpl, public IHandleDummy
+class CHandleDummyImpl : public CBaseEntityImpl, public virtual IHandleDummy
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CHandleDummy* GetOriginal() const override { return Real(); }
 };
 
-inline IHandleDummy* CHandleDummy::ToInterface() { return new CHandleDummyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHandleDummy* CHandleDummy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHandleDummy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHandleDummyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHandleDummy*>(impl));
+    return impl;
+}
+inline IHandleDummy* IHandleDummy::FromRaw(CEntityInstance* p) { return p ? static_cast<CHandleDummy*>(p)->ToInterface() : nullptr; }
 inline IHandleDummy* IHandleDummy::FromOriginal(CHandleDummy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHANDLEDUMMYIMPL_H

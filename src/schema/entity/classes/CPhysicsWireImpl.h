@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsWire.h"
 #include "CBaseEntityImpl.h"
 
-class CPhysicsWireImpl : public CBaseEntityImpl, public IPhysicsWire
+class CPhysicsWireImpl : public CBaseEntityImpl, public virtual IPhysicsWire
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void DensityUpdated() override { Real()->m_nDensity.NetworkStateChanged(); }
 };
 
-inline IPhysicsWire* CPhysicsWire::ToInterface() { return new CPhysicsWireImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsWire* CPhysicsWire::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsWire*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsWireImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsWire*>(impl));
+    return impl;
+}
+inline IPhysicsWire* IPhysicsWire::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsWire*>(p)->ToInterface() : nullptr; }
 inline IPhysicsWire* IPhysicsWire::FromOriginal(CPhysicsWire* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSWIREIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoDynamicShadowHint.h"
 #include "CPointEntityImpl.h"
 
-class CInfoDynamicShadowHintImpl : public CPointEntityImpl, public IInfoDynamicShadowHint
+class CInfoDynamicShadowHintImpl : public CPointEntityImpl, public virtual IInfoDynamicShadowHint
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void LightUpdated() override { Real()->m_hLight.NetworkStateChanged(); }
 };
 
-inline IInfoDynamicShadowHint* CInfoDynamicShadowHint::ToInterface() { return new CInfoDynamicShadowHintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoDynamicShadowHint* CInfoDynamicShadowHint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoDynamicShadowHint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoDynamicShadowHintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoDynamicShadowHint*>(impl));
+    return impl;
+}
+inline IInfoDynamicShadowHint* IInfoDynamicShadowHint::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoDynamicShadowHint*>(p)->ToInterface() : nullptr; }
 inline IInfoDynamicShadowHint* IInfoDynamicShadowHint::FromOriginal(CInfoDynamicShadowHint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINTIMPL_H

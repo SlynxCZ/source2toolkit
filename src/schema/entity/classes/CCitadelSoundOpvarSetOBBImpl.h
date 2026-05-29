@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCitadelSoundOpvarSetOBB.h"
 #include "CBaseEntityImpl.h"
 
-class CCitadelSoundOpvarSetOBBImpl : public CBaseEntityImpl, public ICitadelSoundOpvarSetOBB
+class CCitadelSoundOpvarSetOBBImpl : public CBaseEntityImpl, public virtual ICitadelSoundOpvarSetOBB
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void AABBDirectionUpdated() override { Real()->m_nAABBDirection.NetworkStateChanged(); }
 };
 
-inline ICitadelSoundOpvarSetOBB* CCitadelSoundOpvarSetOBB::ToInterface() { return new CCitadelSoundOpvarSetOBBImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICitadelSoundOpvarSetOBB* CCitadelSoundOpvarSetOBB::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICitadelSoundOpvarSetOBB*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCitadelSoundOpvarSetOBBImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICitadelSoundOpvarSetOBB*>(impl));
+    return impl;
+}
+inline ICitadelSoundOpvarSetOBB* ICitadelSoundOpvarSetOBB::FromRaw(CEntityInstance* p) { return p ? static_cast<CCitadelSoundOpvarSetOBB*>(p)->ToInterface() : nullptr; }
 inline ICitadelSoundOpvarSetOBB* ICitadelSoundOpvarSetOBB::FromOriginal(CCitadelSoundOpvarSetOBB* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCITADELSOUNDOPVARSETOBBIMPL_H

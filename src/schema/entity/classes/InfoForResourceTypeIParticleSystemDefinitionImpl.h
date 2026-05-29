@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeIParticleSystemDefinition* InfoForResourceTypeIParticleSystemDefinition::ToInterface() { return new InfoForResourceTypeIParticleSystemDefinitionImpl(this); }
+inline IInfoForResourceTypeIParticleSystemDefinition* IInfoForResourceTypeIParticleSystemDefinition::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeIParticleSystemDefinition* IInfoForResourceTypeIParticleSystemDefinition::FromOriginal(InfoForResourceTypeIParticleSystemDefinition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPEIPARTICLESYSTEMDEFINITIONIMPL_H

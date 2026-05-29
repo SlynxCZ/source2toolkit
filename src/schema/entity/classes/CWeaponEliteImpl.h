@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponElite.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponEliteImpl : public CCSWeaponBaseGunImpl, public IWeaponElite
+class CWeaponEliteImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponElite
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponElite* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponElite* CWeaponElite::ToInterface() { return new CWeaponEliteImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponElite* CWeaponElite::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponElite*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponEliteImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponElite*>(impl));
+    return impl;
+}
+inline IWeaponElite* IWeaponElite::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponElite*>(p)->ToInterface() : nullptr; }
 inline IWeaponElite* IWeaponElite::FromOriginal(CWeaponElite* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONELITEIMPL_H

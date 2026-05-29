@@ -63,6 +63,7 @@ public:
 };
 
 inline IWeaponPurchaseTracker_t* WeaponPurchaseTracker_t::ToInterface() { return new WeaponPurchaseTracker_tImpl(this); }
+inline IWeaponPurchaseTracker_t* IWeaponPurchaseTracker_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IWeaponPurchaseTracker_t* IWeaponPurchaseTracker_t::FromOriginal(WeaponPurchaseTracker_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_WEAPONPURCHASETRACKER_TIMPL_H

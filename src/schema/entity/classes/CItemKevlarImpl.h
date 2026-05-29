@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemKevlar.h"
 #include "CItemImpl.h"
 
-class CItemKevlarImpl : public CItemImpl, public IItemKevlar
+class CItemKevlarImpl : public CItemImpl, public virtual IItemKevlar
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CItemKevlar* GetOriginal() const override { return Real(); }
 };
 
-inline IItemKevlar* CItemKevlar::ToInterface() { return new CItemKevlarImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemKevlar* CItemKevlar::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemKevlar*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemKevlarImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemKevlar*>(impl));
+    return impl;
+}
+inline IItemKevlar* IItemKevlar::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemKevlar*>(p)->ToInterface() : nullptr; }
 inline IItemKevlar* IItemKevlar::FromOriginal(CItemKevlar* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMKEVLARIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponMag7.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponMag7Impl : public CCSWeaponBaseGunImpl, public IWeaponMag7
+class CWeaponMag7Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponMag7
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponMag7* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponMag7* CWeaponMag7::ToInterface() { return new CWeaponMag7Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponMag7* CWeaponMag7::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponMag7*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponMag7Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponMag7*>(impl));
+    return impl;
+}
+inline IWeaponMag7* IWeaponMag7::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponMag7*>(p)->ToInterface() : nullptr; }
 inline IWeaponMag7* IWeaponMag7::FromOriginal(CWeaponMag7* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONMAG7IMPL_H

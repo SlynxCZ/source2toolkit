@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvWind.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvWindImpl : public CBaseEntityImpl, public IEnvWind
+class CEnvWindImpl : public CBaseEntityImpl, public virtual IEnvWind
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void EnvWindSharedUpdated() override { Real()->m_EnvWindShared.NetworkStateChanged(); }
 };
 
-inline IEnvWind* CEnvWind::ToInterface() { return new CEnvWindImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvWind* CEnvWind::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvWind*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvWindImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvWind*>(impl));
+    return impl;
+}
+inline IEnvWind* IEnvWind::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvWind*>(p)->ToInterface() : nullptr; }
 inline IEnvWind* IEnvWind::FromOriginal(CEnvWind* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVWINDIMPL_H

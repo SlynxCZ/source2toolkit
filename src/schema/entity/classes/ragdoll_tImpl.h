@@ -71,6 +71,7 @@ public:
 };
 
 inline Iragdoll_t* ragdoll_t::ToInterface() { return new ragdoll_tImpl(this); }
+inline Iragdoll_t* Iragdoll_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iragdoll_t* Iragdoll_t::FromOriginal(ragdoll_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RAGDOLL_TIMPL_H

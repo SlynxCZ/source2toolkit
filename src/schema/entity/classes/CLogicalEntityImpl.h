@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicalEntity.h"
 #include "CServerOnlyEntityImpl.h"
 
-class CLogicalEntityImpl : public CServerOnlyEntityImpl, public ILogicalEntity
+class CLogicalEntityImpl : public CServerOnlyEntityImpl, public virtual ILogicalEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLogicalEntity* GetOriginal() const override { return Real(); }
 };
 
-inline ILogicalEntity* CLogicalEntity::ToInterface() { return new CLogicalEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicalEntity* CLogicalEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicalEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicalEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicalEntity*>(impl));
+    return impl;
+}
+inline ILogicalEntity* ILogicalEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicalEntity*>(p)->ToInterface() : nullptr; }
 inline ILogicalEntity* ILogicalEntity::FromOriginal(CLogicalEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICALENTITYIMPL_H

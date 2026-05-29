@@ -69,6 +69,7 @@ public:
 };
 
 inline Iconstraint_hingeparams_t* constraint_hingeparams_t::ToInterface() { return new constraint_hingeparams_tImpl(this); }
+inline Iconstraint_hingeparams_t* Iconstraint_hingeparams_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iconstraint_hingeparams_t* Iconstraint_hingeparams_t::FromOriginal(constraint_hingeparams_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CONSTRAINT_HINGEPARAMS_TIMPL_H

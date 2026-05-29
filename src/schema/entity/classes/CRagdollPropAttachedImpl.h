@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRagdollPropAttached.h"
 #include "CRagdollPropImpl.h"
 
-class CRagdollPropAttachedImpl : public CRagdollPropImpl, public IRagdollPropAttached
+class CRagdollPropAttachedImpl : public CRagdollPropImpl, public virtual IRagdollPropAttached
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void ShouldDeleteAttachedActivationRecordUpdated() override { Real()->m_bShouldDeleteAttachedActivationRecord.NetworkStateChanged(); }
 };
 
-inline IRagdollPropAttached* CRagdollPropAttached::ToInterface() { return new CRagdollPropAttachedImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRagdollPropAttached* CRagdollPropAttached::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRagdollPropAttached*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRagdollPropAttachedImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRagdollPropAttached*>(impl));
+    return impl;
+}
+inline IRagdollPropAttached* IRagdollPropAttached::FromRaw(CEntityInstance* p) { return p ? static_cast<CRagdollPropAttached*>(p)->ToInterface() : nullptr; }
 inline IRagdollPropAttached* IRagdollPropAttached::FromOriginal(CRagdollPropAttached* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRAGDOLLPROPATTACHEDIMPL_H

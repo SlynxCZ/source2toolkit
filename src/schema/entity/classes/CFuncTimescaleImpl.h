@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTimescale.h"
 #include "CBaseEntityImpl.h"
 
-class CFuncTimescaleImpl : public CBaseEntityImpl, public IFuncTimescale
+class CFuncTimescaleImpl : public CBaseEntityImpl, public virtual IFuncTimescale
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void IsStartedUpdated() override { Real()->m_isStarted.NetworkStateChanged(); }
 };
 
-inline IFuncTimescale* CFuncTimescale::ToInterface() { return new CFuncTimescaleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTimescale* CFuncTimescale::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTimescale*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTimescaleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTimescale*>(impl));
+    return impl;
+}
+inline IFuncTimescale* IFuncTimescale::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTimescale*>(p)->ToInterface() : nullptr; }
 inline IFuncTimescale* IFuncTimescale::FromOriginal(CFuncTimescale* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTIMESCALEIMPL_H

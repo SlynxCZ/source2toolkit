@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerProximity.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerProximityImpl : public CBaseTriggerImpl, public ITriggerProximity
+class CTriggerProximityImpl : public CBaseTriggerImpl, public virtual ITriggerProximity
 {
 
 public:
@@ -58,15 +58,26 @@ public:
     CTriggerProximity* GetOriginal() const override { return Real(); }
     CHandle<CBaseEntity>& MeasureTarget() override { return Real()->m_hMeasureTarget(); }
     void MeasureTargetUpdated() override { Real()->m_hMeasureTarget.NetworkStateChanged(); }
-    CUtlSymbolLarge& MeasureTarget() override { return Real()->m_iszMeasureTarget(); }
-    void MeasureTargetUpdated() override { Real()->m_iszMeasureTarget.NetworkStateChanged(); }
     float& Radius() override { return Real()->m_fRadius(); }
     void RadiusUpdated() override { Real()->m_fRadius.NetworkStateChanged(); }
     int32_t& Touchers() override { return Real()->m_nTouchers(); }
     void TouchersUpdated() override { Real()->m_nTouchers.NetworkStateChanged(); }
 };
 
-inline ITriggerProximity* CTriggerProximity::ToInterface() { return new CTriggerProximityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerProximity* CTriggerProximity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerProximity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerProximityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerProximity*>(impl));
+    return impl;
+}
+inline ITriggerProximity* ITriggerProximity::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerProximity*>(p)->ToInterface() : nullptr; }
 inline ITriggerProximity* ITriggerProximity::FromOriginal(CTriggerProximity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERPROXIMITYIMPL_H

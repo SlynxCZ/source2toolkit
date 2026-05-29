@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRuleBrushEntity.h"
 #include "CRuleEntityImpl.h"
 
-class CRuleBrushEntityImpl : public CRuleEntityImpl, public IRuleBrushEntity
+class CRuleBrushEntityImpl : public CRuleEntityImpl, public virtual IRuleBrushEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CRuleBrushEntity* GetOriginal() const override { return Real(); }
 };
 
-inline IRuleBrushEntity* CRuleBrushEntity::ToInterface() { return new CRuleBrushEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRuleBrushEntity* CRuleBrushEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRuleBrushEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRuleBrushEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRuleBrushEntity*>(impl));
+    return impl;
+}
+inline IRuleBrushEntity* IRuleBrushEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CRuleBrushEntity*>(p)->ToInterface() : nullptr; }
 inline IRuleBrushEntity* IRuleBrushEntity::FromOriginal(CRuleBrushEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRULEBRUSHENTITYIMPL_H

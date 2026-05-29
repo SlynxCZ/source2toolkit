@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInstructorEventEntity.h"
 #include "CPointEntityImpl.h"
 
-class CInstructorEventEntityImpl : public CPointEntityImpl, public IInstructorEventEntity
+class CInstructorEventEntityImpl : public CPointEntityImpl, public virtual IInstructorEventEntity
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void TargetPlayerUpdated() override { Real()->m_hTargetPlayer.NetworkStateChanged(); }
 };
 
-inline IInstructorEventEntity* CInstructorEventEntity::ToInterface() { return new CInstructorEventEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInstructorEventEntity* CInstructorEventEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInstructorEventEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInstructorEventEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInstructorEventEntity*>(impl));
+    return impl;
+}
+inline IInstructorEventEntity* IInstructorEventEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CInstructorEventEntity*>(p)->ToInterface() : nullptr; }
 inline IInstructorEventEntity* IInstructorEventEntity::FromOriginal(CInstructorEventEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINSTRUCTOREVENTENTITYIMPL_H

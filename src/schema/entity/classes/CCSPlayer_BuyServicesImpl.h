@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_BuyServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_BuyServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_BuyServices
+class CCSPlayer_BuyServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_BuyServices
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline ICSPlayer_BuyServices* CCSPlayer_BuyServices::ToInterface() { return new CCSPlayer_BuyServicesImpl(this); }
+inline ICSPlayer_BuyServices* ICSPlayer_BuyServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_BuyServices* ICSPlayer_BuyServices::FromOriginal(CCSPlayer_BuyServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_BUYSERVICESIMPL_H

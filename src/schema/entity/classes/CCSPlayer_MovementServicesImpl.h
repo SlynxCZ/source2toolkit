@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_MovementServices.h"
 #include "CPlayer_MovementServices_HumanoidImpl.h"
 
-class CCSPlayer_MovementServicesImpl : public CPlayer_MovementServices_HumanoidImpl, public ICSPlayer_MovementServices
+class CCSPlayer_MovementServicesImpl : public CPlayer_MovementServices_HumanoidImpl, public virtual ICSPlayer_MovementServices
 {
 
 public:
@@ -163,6 +163,7 @@ public:
 };
 
 inline ICSPlayer_MovementServices* CCSPlayer_MovementServices::ToInterface() { return new CCSPlayer_MovementServicesImpl(this); }
+inline ICSPlayer_MovementServices* ICSPlayer_MovementServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_MovementServices* ICSPlayer_MovementServices::FromOriginal(CCSPlayer_MovementServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_MOVEMENTSERVICESIMPL_H

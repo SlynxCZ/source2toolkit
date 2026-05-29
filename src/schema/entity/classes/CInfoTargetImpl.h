@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoTarget.h"
 #include "CPointEntityImpl.h"
 
-class CInfoTargetImpl : public CPointEntityImpl, public IInfoTarget
+class CInfoTargetImpl : public CPointEntityImpl, public virtual IInfoTarget
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoTarget* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoTarget* CInfoTarget::ToInterface() { return new CInfoTargetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoTarget* CInfoTarget::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoTarget*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoTargetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoTarget*>(impl));
+    return impl;
+}
+inline IInfoTarget* IInfoTarget::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoTarget*>(p)->ToInterface() : nullptr; }
 inline IInfoTarget* IInfoTarget::FromOriginal(CInfoTarget* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOTARGETIMPL_H

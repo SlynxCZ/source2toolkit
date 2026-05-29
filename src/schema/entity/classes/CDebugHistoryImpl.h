@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDebugHistory.h"
 #include "CBaseEntityImpl.h"
 
-class CDebugHistoryImpl : public CBaseEntityImpl, public IDebugHistory
+class CDebugHistoryImpl : public CBaseEntityImpl, public virtual IDebugHistory
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void NpcEventsUpdated() override { Real()->m_nNpcEvents.NetworkStateChanged(); }
 };
 
-inline IDebugHistory* CDebugHistory::ToInterface() { return new CDebugHistoryImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDebugHistory* CDebugHistory::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDebugHistory*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDebugHistoryImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDebugHistory*>(impl));
+    return impl;
+}
+inline IDebugHistory* IDebugHistory::FromRaw(CEntityInstance* p) { return p ? static_cast<CDebugHistory*>(p)->ToInterface() : nullptr; }
 inline IDebugHistory* IDebugHistory::FromOriginal(CDebugHistory* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDEBUGHISTORYIMPL_H

@@ -63,6 +63,7 @@ public:
 };
 
 inline ISceneOpportunityHandle_t* SceneOpportunityHandle_t::ToInterface() { return new SceneOpportunityHandle_tImpl(this); }
+inline ISceneOpportunityHandle_t* ISceneOpportunityHandle_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISceneOpportunityHandle_t* ISceneOpportunityHandle_t::FromOriginal(SceneOpportunityHandle_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SCENEOPPORTUNITYHANDLE_TIMPL_H

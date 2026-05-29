@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMolotovProjectile.h"
 #include "CBaseCSGrenadeProjectileImpl.h"
 
-class CMolotovProjectileImpl : public CBaseCSGrenadeProjectileImpl, public IMolotovProjectile
+class CMolotovProjectileImpl : public CBaseCSGrenadeProjectileImpl, public virtual IMolotovProjectile
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void StillTimerUpdated() override { Real()->m_stillTimer.NetworkStateChanged(); }
 };
 
-inline IMolotovProjectile* CMolotovProjectile::ToInterface() { return new CMolotovProjectileImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMolotovProjectile* CMolotovProjectile::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMolotovProjectile*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMolotovProjectileImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMolotovProjectile*>(impl));
+    return impl;
+}
+inline IMolotovProjectile* IMolotovProjectile::FromRaw(CEntityInstance* p) { return p ? static_cast<CMolotovProjectile*>(p)->ToInterface() : nullptr; }
 inline IMolotovProjectile* IMolotovProjectile::FromOriginal(CMolotovProjectile* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOLOTOVPROJECTILEIMPL_H

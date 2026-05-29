@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CAmbientGeneric.h"
 #include "CPointEntityImpl.h"
 
-class CAmbientGenericImpl : public CPointEntityImpl, public IAmbientGeneric
+class CAmbientGenericImpl : public CPointEntityImpl, public virtual IAmbientGeneric
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void SoundSourceEntIndexUpdated() override { Real()->m_nSoundSourceEntIndex.NetworkStateChanged(); }
 };
 
-inline IAmbientGeneric* CAmbientGeneric::ToInterface() { return new CAmbientGenericImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IAmbientGeneric* CAmbientGeneric::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IAmbientGeneric*>(tagIt->second.ptr_for_return);
+    auto* impl = new CAmbientGenericImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IAmbientGeneric*>(impl));
+    return impl;
+}
+inline IAmbientGeneric* IAmbientGeneric::FromRaw(CEntityInstance* p) { return p ? static_cast<CAmbientGeneric*>(p)->ToInterface() : nullptr; }
 inline IAmbientGeneric* IAmbientGeneric::FromOriginal(CAmbientGeneric* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CAMBIENTGENERICIMPL_H

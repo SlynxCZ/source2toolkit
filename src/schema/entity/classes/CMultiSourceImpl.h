@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMultiSource.h"
 #include "CLogicalEntityImpl.h"
 
-class CMultiSourceImpl : public CLogicalEntityImpl, public IMultiSource
+class CMultiSourceImpl : public CLogicalEntityImpl, public virtual IMultiSource
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void GlobalstateUpdated() override { Real()->m_globalstate.NetworkStateChanged(); }
 };
 
-inline IMultiSource* CMultiSource::ToInterface() { return new CMultiSourceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMultiSource* CMultiSource::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMultiSource*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMultiSourceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMultiSource*>(impl));
+    return impl;
+}
+inline IMultiSource* IMultiSource::FromRaw(CEntityInstance* p) { return p ? static_cast<CMultiSource*>(p)->ToInterface() : nullptr; }
 inline IMultiSource* IMultiSource::FromOriginal(CMultiSource* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMULTISOURCEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBodyComponentBaseAnimGraph.h"
 #include "CBodyComponentSkeletonInstanceImpl.h"
 
-class CBodyComponentBaseAnimGraphImpl : public CBodyComponentSkeletonInstanceImpl, public IBodyComponentBaseAnimGraph
+class CBodyComponentBaseAnimGraphImpl : public CBodyComponentSkeletonInstanceImpl, public virtual IBodyComponentBaseAnimGraph
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline IBodyComponentBaseAnimGraph* CBodyComponentBaseAnimGraph::ToInterface() { return new CBodyComponentBaseAnimGraphImpl(this); }
+inline IBodyComponentBaseAnimGraph* IBodyComponentBaseAnimGraph::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBodyComponentBaseAnimGraph* IBodyComponentBaseAnimGraph::FromOriginal(CBodyComponentBaseAnimGraph* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBODYCOMPONENTBASEANIMGRAPHIMPL_H

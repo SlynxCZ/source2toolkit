@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponM249.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponM249Impl : public CCSWeaponBaseGunImpl, public IWeaponM249
+class CWeaponM249Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponM249
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponM249* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponM249* CWeaponM249::ToInterface() { return new CWeaponM249Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponM249* CWeaponM249::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponM249*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponM249Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponM249*>(impl));
+    return impl;
+}
+inline IWeaponM249* IWeaponM249::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponM249*>(p)->ToInterface() : nullptr; }
 inline IWeaponM249* IWeaponM249::FromOriginal(CWeaponM249* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONM249IMPL_H

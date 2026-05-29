@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerBombReset.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerBombResetImpl : public CBaseTriggerImpl, public ITriggerBombReset
+class CTriggerBombResetImpl : public CBaseTriggerImpl, public virtual ITriggerBombReset
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTriggerBombReset* GetOriginal() const override { return Real(); }
 };
 
-inline ITriggerBombReset* CTriggerBombReset::ToInterface() { return new CTriggerBombResetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerBombReset* CTriggerBombReset::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerBombReset*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerBombResetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerBombReset*>(impl));
+    return impl;
+}
+inline ITriggerBombReset* ITriggerBombReset::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerBombReset*>(p)->ToInterface() : nullptr; }
 inline ITriggerBombReset* ITriggerBombReset::FromOriginal(CTriggerBombReset* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERBOMBRESETIMPL_H

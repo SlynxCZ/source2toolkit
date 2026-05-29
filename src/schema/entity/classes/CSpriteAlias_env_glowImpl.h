@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSpriteAlias_env_glow.h"
 #include "CSpriteImpl.h"
 
-class CSpriteAlias_env_glowImpl : public CSpriteImpl, public ISpriteAlias_env_glow
+class CSpriteAlias_env_glowImpl : public CSpriteImpl, public virtual ISpriteAlias_env_glow
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CSpriteAlias_env_glow* GetOriginal() const override { return Real(); }
 };
 
-inline ISpriteAlias_env_glow* CSpriteAlias_env_glow::ToInterface() { return new CSpriteAlias_env_glowImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISpriteAlias_env_glow* CSpriteAlias_env_glow::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISpriteAlias_env_glow*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSpriteAlias_env_glowImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISpriteAlias_env_glow*>(impl));
+    return impl;
+}
+inline ISpriteAlias_env_glow* ISpriteAlias_env_glow::FromRaw(CEntityInstance* p) { return p ? static_cast<CSpriteAlias_env_glow*>(p)->ToInterface() : nullptr; }
 inline ISpriteAlias_env_glow* ISpriteAlias_env_glow::FromOriginal(CSpriteAlias_env_glow* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSPRITEALIAS_ENV_GLOWIMPL_H

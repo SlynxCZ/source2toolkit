@@ -63,6 +63,7 @@ public:
 };
 
 inline ISceneEventId_t* SceneEventId_t::ToInterface() { return new SceneEventId_tImpl(this); }
+inline ISceneEventId_t* ISceneEventId_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISceneEventId_t* ISceneEventId_t::FromOriginal(SceneEventId_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SCENEEVENTID_TIMPL_H

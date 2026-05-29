@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDynamicProp.h"
 #include "CBreakablePropImpl.h"
 
-class CDynamicPropImpl : public CBreakablePropImpl, public IDynamicProp
+class CDynamicPropImpl : public CBreakablePropImpl, public virtual IDynamicProp
 {
 
 public:
@@ -102,7 +102,20 @@ public:
     void GlowTeamUpdated() override { Real()->m_nGlowTeam.NetworkStateChanged(); }
 };
 
-inline IDynamicProp* CDynamicProp::ToInterface() { return new CDynamicPropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDynamicProp* CDynamicProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDynamicProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDynamicPropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDynamicProp*>(impl));
+    return impl;
+}
+inline IDynamicProp* IDynamicProp::FromRaw(CEntityInstance* p) { return p ? static_cast<CDynamicProp*>(p)->ToInterface() : nullptr; }
 inline IDynamicProp* IDynamicProp::FromOriginal(CDynamicProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDYNAMICPROPIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSimpleMarkupVolumeTagged.h"
 #include "CMarkupVolumeTaggedImpl.h"
 
-class CSimpleMarkupVolumeTaggedImpl : public CMarkupVolumeTaggedImpl, public ISimpleMarkupVolumeTagged
+class CSimpleMarkupVolumeTaggedImpl : public CMarkupVolumeTaggedImpl, public virtual ISimpleMarkupVolumeTagged
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CSimpleMarkupVolumeTagged* GetOriginal() const override { return Real(); }
 };
 
-inline ISimpleMarkupVolumeTagged* CSimpleMarkupVolumeTagged::ToInterface() { return new CSimpleMarkupVolumeTaggedImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISimpleMarkupVolumeTagged* CSimpleMarkupVolumeTagged::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISimpleMarkupVolumeTagged*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSimpleMarkupVolumeTaggedImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISimpleMarkupVolumeTagged*>(impl));
+    return impl;
+}
+inline ISimpleMarkupVolumeTagged* ISimpleMarkupVolumeTagged::FromRaw(CEntityInstance* p) { return p ? static_cast<CSimpleMarkupVolumeTagged*>(p)->ToInterface() : nullptr; }
 inline ISimpleMarkupVolumeTagged* ISimpleMarkupVolumeTagged::FromOriginal(CSimpleMarkupVolumeTagged* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSIMPLEMARKUPVOLUMETAGGEDIMPL_H

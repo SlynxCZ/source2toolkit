@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointHurt.h"
 #include "CPointEntityImpl.h"
 
-class CPointHurtImpl : public CPointEntityImpl, public IPointHurt
+class CPointHurtImpl : public CPointEntityImpl, public virtual IPointHurt
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void ActivatorUpdated() override { Real()->m_pActivator.NetworkStateChanged(); }
 };
 
-inline IPointHurt* CPointHurt::ToInterface() { return new CPointHurtImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointHurt* CPointHurt::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointHurt*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointHurtImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointHurt*>(impl));
+    return impl;
+}
+inline IPointHurt* IPointHurt::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointHurt*>(p)->ToInterface() : nullptr; }
 inline IPointHurt* IPointHurt::FromOriginal(CPointHurt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTHURTIMPL_H

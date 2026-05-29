@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGameText.h"
 #include "CRulePointEntityImpl.h"
 
-class CGameTextImpl : public CRulePointEntityImpl, public IGameText
+class CGameTextImpl : public CRulePointEntityImpl, public virtual IGameText
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void TextParmsUpdated() override { Real()->m_textParms.NetworkStateChanged(); }
 };
 
-inline IGameText* CGameText::ToInterface() { return new CGameTextImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGameText* CGameText::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGameText*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGameTextImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGameText*>(impl));
+    return impl;
+}
+inline IGameText* IGameText::FromRaw(CEntityInstance* p) { return p ? static_cast<CGameText*>(p)->ToInterface() : nullptr; }
 inline IGameText* IGameText::FromOriginal(CGameText* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMETEXTIMPL_H

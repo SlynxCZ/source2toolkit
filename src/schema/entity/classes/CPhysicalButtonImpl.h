@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicalButton.h"
 #include "CBaseButtonImpl.h"
 
-class CPhysicalButtonImpl : public CBaseButtonImpl, public IPhysicalButton
+class CPhysicalButtonImpl : public CBaseButtonImpl, public virtual IPhysicalButton
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPhysicalButton* GetOriginal() const override { return Real(); }
 };
 
-inline IPhysicalButton* CPhysicalButton::ToInterface() { return new CPhysicalButtonImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicalButton* CPhysicalButton::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicalButton*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicalButtonImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicalButton*>(impl));
+    return impl;
+}
+inline IPhysicalButton* IPhysicalButton::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicalButton*>(p)->ToInterface() : nullptr; }
 inline IPhysicalButton* IPhysicalButton::FromOriginal(CPhysicalButton* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICALBUTTONIMPL_H

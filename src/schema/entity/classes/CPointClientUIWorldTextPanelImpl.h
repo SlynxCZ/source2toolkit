@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointClientUIWorldTextPanel.h"
 #include "CPointClientUIWorldPanelImpl.h"
 
-class CPointClientUIWorldTextPanelImpl : public CPointClientUIWorldPanelImpl, public IPointClientUIWorldTextPanel
+class CPointClientUIWorldTextPanelImpl : public CPointClientUIWorldPanelImpl, public virtual IPointClientUIWorldTextPanel
 {
 
 public:
@@ -59,7 +59,20 @@ public:
     char* MessageText() override { return Real()->m_messageText(); }
 };
 
-inline IPointClientUIWorldTextPanel* CPointClientUIWorldTextPanel::ToInterface() { return new CPointClientUIWorldTextPanelImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointClientUIWorldTextPanel* CPointClientUIWorldTextPanel::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointClientUIWorldTextPanel*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointClientUIWorldTextPanelImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointClientUIWorldTextPanel*>(impl));
+    return impl;
+}
+inline IPointClientUIWorldTextPanel* IPointClientUIWorldTextPanel::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointClientUIWorldTextPanel*>(p)->ToInterface() : nullptr; }
 inline IPointClientUIWorldTextPanel* IPointClientUIWorldTextPanel::FromOriginal(CPointClientUIWorldTextPanel* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCLIENTUIWORLDTEXTPANELIMPL_H

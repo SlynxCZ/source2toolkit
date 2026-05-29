@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerFan.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerFanImpl : public CBaseTriggerImpl, public ITriggerFan
+class CTriggerFanImpl : public CBaseTriggerImpl, public virtual ITriggerFan
 {
 
 public:
@@ -82,8 +82,6 @@ public:
     void FanEndLSUpdated() override { Real()->m_vFanEndLS.NetworkStateChanged(); }
     Vector& NoiseDirectionTarget() override { return Real()->m_vNoiseDirectionTarget(); }
     void NoiseDirectionTargetUpdated() override { Real()->m_vNoiseDirectionTarget.NetworkStateChanged(); }
-    CUtlSymbolLarge& InfoFan() override { return Real()->m_iszInfoFan(); }
-    void InfoFanUpdated() override { Real()->m_iszInfoFan.NetworkStateChanged(); }
     float& RopeForceScale() override { return Real()->m_flRopeForceScale(); }
     void RopeForceScaleUpdated() override { Real()->m_flRopeForceScale.NetworkStateChanged(); }
     float& ParticleForceScale() override { return Real()->m_flParticleForceScale(); }
@@ -108,7 +106,20 @@ public:
     void ManagerFanIdxUpdated() override { Real()->m_nManagerFanIdx.NetworkStateChanged(); }
 };
 
-inline ITriggerFan* CTriggerFan::ToInterface() { return new CTriggerFanImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerFan* CTriggerFan::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerFan*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerFanImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerFan*>(impl));
+    return impl;
+}
+inline ITriggerFan* ITriggerFan::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerFan*>(p)->ToInterface() : nullptr; }
 inline ITriggerFan* ITriggerFan::FromOriginal(CTriggerFan* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERFANIMPL_H

@@ -65,6 +65,7 @@ public:
 };
 
 inline ICSPlayerLegacyJump* CCSPlayerLegacyJump::ToInterface() { return new CCSPlayerLegacyJumpImpl(this); }
+inline ICSPlayerLegacyJump* ICSPlayerLegacyJump::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerLegacyJump* ICSPlayerLegacyJump::FromOriginal(CCSPlayerLegacyJump* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERLEGACYJUMPIMPL_H

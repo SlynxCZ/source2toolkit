@@ -62,6 +62,7 @@ public:
 };
 
 inline IInButtonState* CInButtonState::ToInterface() { return new CInButtonStateImpl(this); }
+inline IInButtonState* IInButtonState::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInButtonState* IInButtonState::FromOriginal(CInButtonState* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINBUTTONSTATEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCashStack.h"
 #include "CBaseModelEntityImpl.h"
 
-class CCashStackImpl : public CBaseModelEntityImpl, public ICashStack
+class CCashStackImpl : public CBaseModelEntityImpl, public virtual ICashStack
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void CashStackValueUpdated() override { Real()->m_nCashStackValue.NetworkStateChanged(); }
 };
 
-inline ICashStack* CCashStack::ToInterface() { return new CCashStackImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICashStack* CCashStack::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICashStack*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCashStackImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICashStack*>(impl));
+    return impl;
+}
+inline ICashStack* ICashStack::FromRaw(CEntityInstance* p) { return p ? static_cast<CCashStack*>(p)->ToInterface() : nullptr; }
 inline ICashStack* ICashStack::FromOriginal(CCashStack* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCASHSTACKIMPL_H

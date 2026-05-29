@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvVolumetricFogController.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvVolumetricFogControllerImpl : public CBaseEntityImpl, public IEnvVolumetricFogController
+class CEnvVolumetricFogControllerImpl : public CBaseEntityImpl, public virtual IEnvVolumetricFogController
 {
 
 public:
@@ -130,7 +130,20 @@ public:
     void FirstTimeUpdated() override { Real()->m_bFirstTime.NetworkStateChanged(); }
 };
 
-inline IEnvVolumetricFogController* CEnvVolumetricFogController::ToInterface() { return new CEnvVolumetricFogControllerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvVolumetricFogController* CEnvVolumetricFogController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvVolumetricFogController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvVolumetricFogControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvVolumetricFogController*>(impl));
+    return impl;
+}
+inline IEnvVolumetricFogController* IEnvVolumetricFogController::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvVolumetricFogController*>(p)->ToInterface() : nullptr; }
 inline IEnvVolumetricFogController* IEnvVolumetricFogController::FromOriginal(CEnvVolumetricFogController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVVOLUMETRICFOGCONTROLLERIMPL_H

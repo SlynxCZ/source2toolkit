@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerDetectExplosion.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerDetectExplosionImpl : public CBaseTriggerImpl, public ITriggerDetectExplosion
+class CTriggerDetectExplosionImpl : public CBaseTriggerImpl, public virtual ITriggerDetectExplosion
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void OnDetectedExplosionUpdated() override { Real()->m_OnDetectedExplosion.NetworkStateChanged(); }
 };
 
-inline ITriggerDetectExplosion* CTriggerDetectExplosion::ToInterface() { return new CTriggerDetectExplosionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerDetectExplosion* CTriggerDetectExplosion::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerDetectExplosion*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerDetectExplosionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerDetectExplosion*>(impl));
+    return impl;
+}
+inline ITriggerDetectExplosion* ITriggerDetectExplosion::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerDetectExplosion*>(p)->ToInterface() : nullptr; }
 inline ITriggerDetectExplosion* ITriggerDetectExplosion::FromOriginal(CTriggerDetectExplosion* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERDETECTEXPLOSIONIMPL_H

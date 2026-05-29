@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerLook.h"
 #include "CTriggerOnceImpl.h"
 
-class CTriggerLookImpl : public CTriggerOnceImpl, public ITriggerLook
+class CTriggerLookImpl : public CTriggerOnceImpl, public virtual ITriggerLook
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void OnEndLookUpdated() override { Real()->m_OnEndLook.NetworkStateChanged(); }
 };
 
-inline ITriggerLook* CTriggerLook::ToInterface() { return new CTriggerLookImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerLook* CTriggerLook::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerLook*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerLookImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerLook*>(impl));
+    return impl;
+}
+inline ITriggerLook* ITriggerLook::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerLook*>(p)->ToInterface() : nullptr; }
 inline ITriggerLook* ITriggerLook::FromOriginal(CTriggerLook* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERLOOKIMPL_H

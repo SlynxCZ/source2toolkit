@@ -63,6 +63,7 @@ public:
 };
 
 inline IExampleSchemaVData_PolymorphicBase* CExampleSchemaVData_PolymorphicBase::ToInterface() { return new CExampleSchemaVData_PolymorphicBaseImpl(this); }
+inline IExampleSchemaVData_PolymorphicBase* IExampleSchemaVData_PolymorphicBase::FromRaw(CEntityInstance*) { return nullptr; }
 inline IExampleSchemaVData_PolymorphicBase* IExampleSchemaVData_PolymorphicBase::FromOriginal(CExampleSchemaVData_PolymorphicBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_POLYMORPHICBASEIMPL_H

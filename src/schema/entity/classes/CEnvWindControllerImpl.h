@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvWindController.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvWindControllerImpl : public CBaseEntityImpl, public IEnvWindController
+class CEnvWindControllerImpl : public CBaseEntityImpl, public virtual IEnvWindController
 {
 
 public:
@@ -80,7 +80,20 @@ public:
     void FirstTimeUpdated() override { Real()->m_bFirstTime.NetworkStateChanged(); }
 };
 
-inline IEnvWindController* CEnvWindController::ToInterface() { return new CEnvWindControllerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvWindController* CEnvWindController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvWindController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvWindControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvWindController*>(impl));
+    return impl;
+}
+inline IEnvWindController* IEnvWindController::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvWindController*>(p)->ToInterface() : nullptr; }
 inline IEnvWindController* IEnvWindController::FromOriginal(CEnvWindController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVWINDCONTROLLERIMPL_H

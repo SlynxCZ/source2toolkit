@@ -67,6 +67,7 @@ public:
 };
 
 inline INetworkViewOffsetVector* CNetworkViewOffsetVector::ToInterface() { return new CNetworkViewOffsetVectorImpl(this); }
+inline INetworkViewOffsetVector* INetworkViewOffsetVector::FromRaw(CEntityInstance*) { return nullptr; }
 inline INetworkViewOffsetVector* INetworkViewOffsetVector::FromOriginal(CNetworkViewOffsetVector* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNETWORKVIEWOFFSETVECTORIMPL_H

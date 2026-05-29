@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCS2ChickenGraphController.h"
 #include "CAnimGraphControllerBaseImpl.h"
 
-class CCS2ChickenGraphControllerImpl : public CAnimGraphControllerBaseImpl, public ICS2ChickenGraphController
+class CCS2ChickenGraphControllerImpl : public CAnimGraphControllerBaseImpl, public virtual ICS2ChickenGraphController
 {
 
 public:
@@ -63,6 +63,7 @@ public:
 };
 
 inline ICS2ChickenGraphController* CCS2ChickenGraphController::ToInterface() { return new CCS2ChickenGraphControllerImpl(this); }
+inline ICS2ChickenGraphController* ICS2ChickenGraphController::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICS2ChickenGraphController* ICS2ChickenGraphController::FromOriginal(CCS2ChickenGraphController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCS2CHICKENGRAPHCONTROLLERIMPL_H

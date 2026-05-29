@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPropDoorRotatingBreakable.h"
 #include "CPropDoorRotatingImpl.h"
 
-class CPropDoorRotatingBreakableImpl : public CPropDoorRotatingImpl, public IPropDoorRotatingBreakable
+class CPropDoorRotatingBreakableImpl : public CPropDoorRotatingImpl, public virtual IPropDoorRotatingBreakable
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void DamageStatesUpdated() override { Real()->m_damageStates.NetworkStateChanged(); }
 };
 
-inline IPropDoorRotatingBreakable* CPropDoorRotatingBreakable::ToInterface() { return new CPropDoorRotatingBreakableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPropDoorRotatingBreakable* CPropDoorRotatingBreakable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPropDoorRotatingBreakable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPropDoorRotatingBreakableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPropDoorRotatingBreakable*>(impl));
+    return impl;
+}
+inline IPropDoorRotatingBreakable* IPropDoorRotatingBreakable::FromRaw(CEntityInstance* p) { return p ? static_cast<CPropDoorRotatingBreakable*>(p)->ToInterface() : nullptr; }
 inline IPropDoorRotatingBreakable* IPropDoorRotatingBreakable::FromOriginal(CPropDoorRotatingBreakable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPROPDOORROTATINGBREAKABLEIMPL_H

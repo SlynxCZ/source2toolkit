@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSTeam.h"
 #include "CTeamImpl.h"
 
-class CCSTeamImpl : public CTeamImpl, public ICSTeam
+class CCSTeamImpl : public CTeamImpl, public virtual ICSTeam
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void LastUpdateSentAtUpdated() override { Real()->m_iLastUpdateSentAt.NetworkStateChanged(); }
 };
 
-inline ICSTeam* CCSTeam::ToInterface() { return new CCSTeamImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSTeam* CCSTeam::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSTeam*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSTeamImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSTeam*>(impl));
+    return impl;
+}
+inline ICSTeam* ICSTeam::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSTeam*>(p)->ToInterface() : nullptr; }
 inline ICSTeam* ICSTeam::FromOriginal(CCSTeam* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSTEAMIMPL_H

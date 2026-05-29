@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncConveyor.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncConveyorImpl : public CBaseModelEntityImpl, public IFuncConveyor
+class CFuncConveyorImpl : public CBaseModelEntityImpl, public virtual IFuncConveyor
 {
 
 public:
@@ -72,11 +72,22 @@ public:
     void TransitionDurationTicksUpdated() override { Real()->m_nTransitionDurationTicks.NetworkStateChanged(); }
     float& TransitionStartSpeed() override { return Real()->m_flTransitionStartSpeed(); }
     void TransitionStartSpeedUpdated() override { Real()->m_flTransitionStartSpeed.NetworkStateChanged(); }
-    CUtlVector<CHandle<CBaseEntity>>& ConveyorModels() override { return Real()->m_hConveyorModels(); }
-    void ConveyorModelsUpdated() override { Real()->m_hConveyorModels.NetworkStateChanged(); }
 };
 
-inline IFuncConveyor* CFuncConveyor::ToInterface() { return new CFuncConveyorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncConveyor* CFuncConveyor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncConveyor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncConveyorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncConveyor*>(impl));
+    return impl;
+}
+inline IFuncConveyor* IFuncConveyor::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncConveyor*>(p)->ToInterface() : nullptr; }
 inline IFuncConveyor* IFuncConveyor::FromOriginal(CFuncConveyor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCCONVEYORIMPL_H

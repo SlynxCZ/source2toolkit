@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_ItemServices.h"
 #include "CPlayer_ItemServicesImpl.h"
 
-class CCSPlayer_ItemServicesImpl : public CPlayer_ItemServicesImpl, public ICSPlayer_ItemServices
+class CCSPlayer_ItemServicesImpl : public CPlayer_ItemServicesImpl, public virtual ICSPlayer_ItemServices
 {
 
 public:

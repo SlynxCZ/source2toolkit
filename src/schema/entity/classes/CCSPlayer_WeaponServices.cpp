@@ -35,41 +35,31 @@
  * Project: Source2Toolkit
  */
 
+#include "CBasePlayerWeapon.h"
 #include "schema/entity/classes/CCSPlayer_WeaponServicesImpl.h"
+#include "source2toolkit/schema/entity/classes/IBasePlayerWeapon.h"
 
 #include "source2toolkit/utils/virtual.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
-#include "core/shared.h"
-#include "core/gameconfig.h"
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitGameConfig.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
+#include "core/gameconfig.h"
+#include "core/shared.h"
 
-void CCSPlayer_WeaponServices::DropWeapon(CBasePlayerWeapon *pWeapon, Vector *pVecTarget, Vector *pVelocity)
+void CCSPlayer_WeaponServices::DropWeapon(IBasePlayerWeapon *pWeapon, Vector *pVecTarget, Vector *pVelocity)
 {
-#ifdef SOURCE2TOOLKIT_CORE
+    auto* raw = pWeapon ? static_cast<CBasePlayerWeapon*>(pWeapon->GetOriginal()) : nullptr;
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayer_WeaponServices_DropWeapon");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayer_WeaponServices_DropWeapon");
-#endif
-    CALL_VIRTUAL(void, offset, this, pWeapon, pVecTarget, pVelocity);
+    CALL_VIRTUAL(void, offset, this, raw, pVecTarget, pVelocity);
 }
 
-void CCSPlayer_WeaponServices::SelectWeapon(CBasePlayerWeapon* pWeapon, int unk1)
+void CCSPlayer_WeaponServices::SelectWeapon(IBasePlayerWeapon* pWeapon, int unk1)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayer_WeaponServices_SelectWeapon");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayer_WeaponServices_SelectWeapon");
-#endif
-    CALL_VIRTUAL(void, offset, this, pWeapon, unk1);
+    auto* raw = pWeapon ? static_cast<CBasePlayerWeapon*>(pWeapon->GetOriginal()) : nullptr;
+    CALL_VIRTUAL(void, offset, this, raw, unk1);
 }
 ICSPlayer_WeaponServices* CCSPlayer_WeaponServices::ToInterface() { return new CCSPlayer_WeaponServicesImpl(this); }
+ICSPlayer_WeaponServices* ICSPlayer_WeaponServices::FromRaw(CEntityInstance*) { return nullptr; }
 
 ICSPlayer_WeaponServices* ICSPlayer_WeaponServices::FromOriginal(CCSPlayer_WeaponServices* p)
 { return CCSPlayer_WeaponServices::FromOriginal(p); }

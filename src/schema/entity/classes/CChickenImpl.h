@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CChicken.h"
 #include "CDynamicPropImpl.h"
 
-class CChickenImpl : public CDynamicPropImpl, public IChicken
+class CChickenImpl : public CDynamicPropImpl, public virtual IChicken
 {
 
 public:
@@ -114,7 +114,20 @@ public:
     void BlockDirectionTimerUpdated() override { Real()->m_BlockDirectionTimer.NetworkStateChanged(); }
 };
 
-inline IChicken* CChicken::ToInterface() { return new CChickenImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IChicken* CChicken::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IChicken*>(tagIt->second.ptr_for_return);
+    auto* impl = new CChickenImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IChicken*>(impl));
+    return impl;
+}
+inline IChicken* IChicken::FromRaw(CEntityInstance* p) { return p ? static_cast<CChicken*>(p)->ToInterface() : nullptr; }
 inline IChicken* IChicken::FromOriginal(CChicken* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCHICKENIMPL_H

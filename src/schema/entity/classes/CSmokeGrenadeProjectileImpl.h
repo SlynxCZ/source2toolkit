@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSmokeGrenadeProjectile.h"
 #include "CBaseCSGrenadeProjectileImpl.h"
 
-class CSmokeGrenadeProjectileImpl : public CBaseCSGrenadeProjectileImpl, public ISmokeGrenadeProjectile
+class CSmokeGrenadeProjectileImpl : public CBaseCSGrenadeProjectileImpl, public virtual ISmokeGrenadeProjectile
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void DidGroundScorchUpdated() override { Real()->m_bDidGroundScorch.NetworkStateChanged(); }
 };
 
-inline ISmokeGrenadeProjectile* CSmokeGrenadeProjectile::ToInterface() { return new CSmokeGrenadeProjectileImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISmokeGrenadeProjectile* CSmokeGrenadeProjectile::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISmokeGrenadeProjectile*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSmokeGrenadeProjectileImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISmokeGrenadeProjectile*>(impl));
+    return impl;
+}
+inline ISmokeGrenadeProjectile* ISmokeGrenadeProjectile::FromRaw(CEntityInstance* p) { return p ? static_cast<CSmokeGrenadeProjectile*>(p)->ToInterface() : nullptr; }
 inline ISmokeGrenadeProjectile* ISmokeGrenadeProjectile::FromOriginal(CSmokeGrenadeProjectile* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSMOKEGRENADEPROJECTILEIMPL_H

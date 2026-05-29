@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncPlatRot.h"
 #include "CFuncPlatImpl.h"
 
-class CFuncPlatRotImpl : public CFuncPlatImpl, public IFuncPlatRot
+class CFuncPlatRotImpl : public CFuncPlatImpl, public virtual IFuncPlatRot
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void StartUpdated() override { Real()->m_start.NetworkStateChanged(); }
 };
 
-inline IFuncPlatRot* CFuncPlatRot::ToInterface() { return new CFuncPlatRotImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncPlatRot* CFuncPlatRot::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncPlatRot*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncPlatRotImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncPlatRot*>(impl));
+    return impl;
+}
+inline IFuncPlatRot* IFuncPlatRot::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncPlatRot*>(p)->ToInterface() : nullptr; }
 inline IFuncPlatRot* IFuncPlatRot::FromOriginal(CFuncPlatRot* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCPLATROTIMPL_H

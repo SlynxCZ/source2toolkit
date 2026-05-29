@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterAttributeInt.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterAttributeIntImpl : public CBaseFilterImpl, public IFilterAttributeInt
+class CFilterAttributeIntImpl : public CBaseFilterImpl, public virtual IFilterAttributeInt
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void AttributeNameUpdated() override { Real()->m_sAttributeName.NetworkStateChanged(); }
 };
 
-inline IFilterAttributeInt* CFilterAttributeInt::ToInterface() { return new CFilterAttributeIntImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterAttributeInt* CFilterAttributeInt::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterAttributeInt*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterAttributeIntImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterAttributeInt*>(impl));
+    return impl;
+}
+inline IFilterAttributeInt* IFilterAttributeInt::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterAttributeInt*>(p)->ToInterface() : nullptr; }
 inline IFilterAttributeInt* IFilterAttributeInt::FromOriginal(CFilterAttributeInt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERATTRIBUTEINTIMPL_H

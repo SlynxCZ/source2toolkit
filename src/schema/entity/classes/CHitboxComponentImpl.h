@@ -63,6 +63,7 @@ public:
 };
 
 inline IHitboxComponent* CHitboxComponent::ToInterface() { return new CHitboxComponentImpl(this); }
+inline IHitboxComponent* IHitboxComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IHitboxComponent* IHitboxComponent::FromOriginal(CHitboxComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHITBOXCOMPONENTIMPL_H

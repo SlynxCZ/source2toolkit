@@ -203,6 +203,7 @@ public:
 };
 
 inline ILightComponent* CLightComponent::ToInterface() { return new CLightComponentImpl(this); }
+inline ILightComponent* ILightComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline ILightComponent* ILightComponent::FromOriginal(CLightComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLIGHTCOMPONENTIMPL_H

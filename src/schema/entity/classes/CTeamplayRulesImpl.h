@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTeamplayRules.h"
 #include "CMultiplayRulesImpl.h"
 
-class CTeamplayRulesImpl : public CMultiplayRulesImpl, public ITeamplayRules
+class CTeamplayRulesImpl : public CMultiplayRulesImpl, public virtual ITeamplayRules
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ITeamplayRules* CTeamplayRules::ToInterface() { return new CTeamplayRulesImpl(this); }
+inline ITeamplayRules* ITeamplayRules::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITeamplayRules* ITeamplayRules::FromOriginal(CTeamplayRules* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTEAMPLAYRULESIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponXM1014.h"
 #include "CCSWeaponBaseShotgunImpl.h"
 
-class CWeaponXM1014Impl : public CCSWeaponBaseShotgunImpl, public IWeaponXM1014
+class CWeaponXM1014Impl : public CCSWeaponBaseShotgunImpl, public virtual IWeaponXM1014
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponXM1014* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponXM1014* CWeaponXM1014::ToInterface() { return new CWeaponXM1014Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponXM1014* CWeaponXM1014::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponXM1014*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponXM1014Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponXM1014*>(impl));
+    return impl;
+}
+inline IWeaponXM1014* IWeaponXM1014::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponXM1014*>(p)->ToInterface() : nullptr; }
 inline IWeaponXM1014* IWeaponXM1014::FromOriginal(CWeaponXM1014* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONXM1014IMPL_H

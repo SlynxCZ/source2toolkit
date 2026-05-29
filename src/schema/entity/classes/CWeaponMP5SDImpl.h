@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponMP5SD.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponMP5SDImpl : public CCSWeaponBaseGunImpl, public IWeaponMP5SD
+class CWeaponMP5SDImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponMP5SD
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponMP5SD* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponMP5SD* CWeaponMP5SD::ToInterface() { return new CWeaponMP5SDImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponMP5SD* CWeaponMP5SD::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponMP5SD*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponMP5SDImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponMP5SD*>(impl));
+    return impl;
+}
+inline IWeaponMP5SD* IWeaponMP5SD::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponMP5SD*>(p)->ToInterface() : nullptr; }
 inline IWeaponMP5SD* IWeaponMP5SD::FromOriginal(CWeaponMP5SD* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONMP5SDIMPL_H

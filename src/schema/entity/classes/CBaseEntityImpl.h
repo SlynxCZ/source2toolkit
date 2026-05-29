@@ -306,6 +306,13 @@ public:
     void unk601() override { Real()->unk601(); }
     void unk602() override { Real()->unk602(); }
     SchemaMetaInfoHandle_t<CSchemaClassInfo> Schema_DynamicBinding() override { return Real()->Schema_DynamicBinding(); }
+    CEntityHandle GetRefEHandle() const override { return Real()->GetRefEHandle(); }
+    const char* GetClassname() const override { return Real()->GetClassname(); }
+    CEntityIndex GetEntityIndex() const override { return Real()->GetEntityIndex(); }
+    CUtlSymbolLarge& PrivateVScripts() override { return Real()->m_iszPrivateVScripts; }
+    CEntityIdentity*& Entity() override { return Real()->m_pEntity; }
+    CEntityKeyValues*& KeyValues() override { return Real()->m_pKeyValues; }
+    CScriptComponent*& ScriptComponent() override { return Real()->m_CScriptComponent; }
 };
 
 #endif // _INCLUDE_CBASEENTITYIMPL_H

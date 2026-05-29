@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponBaseItem.h"
 #include "CCSWeaponBaseImpl.h"
 
-class CWeaponBaseItemImpl : public CCSWeaponBaseImpl, public IWeaponBaseItem
+class CWeaponBaseItemImpl : public CCSWeaponBaseImpl, public virtual IWeaponBaseItem
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void RedrawUpdated() override { Real()->m_bRedraw.NetworkStateChanged(); }
 };
 
-inline IWeaponBaseItem* CWeaponBaseItem::ToInterface() { return new CWeaponBaseItemImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponBaseItem* CWeaponBaseItem::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponBaseItem*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponBaseItemImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponBaseItem*>(impl));
+    return impl;
+}
+inline IWeaponBaseItem* IWeaponBaseItem::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponBaseItem*>(p)->ToInterface() : nullptr; }
 inline IWeaponBaseItem* IWeaponBaseItem::FromOriginal(CWeaponBaseItem* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONBASEITEMIMPL_H

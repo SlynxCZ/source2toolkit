@@ -69,6 +69,7 @@ public:
 };
 
 inline IConstantForceController* CConstantForceController::ToInterface() { return new CConstantForceControllerImpl(this); }
+inline IConstantForceController* IConstantForceController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IConstantForceController* IConstantForceController::FromOriginal(CConstantForceController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCONSTANTFORCECONTROLLERIMPL_H

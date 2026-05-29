@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPointScriptEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CCSPointScriptEntityImpl : public CBaseEntityImpl, public ICSPointScriptEntity
+class CCSPointScriptEntityImpl : public CBaseEntityImpl, public virtual ICSPointScriptEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSPointScriptEntity* GetOriginal() const override { return Real(); }
 };
 
-inline ICSPointScriptEntity* CCSPointScriptEntity::ToInterface() { return new CCSPointScriptEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSPointScriptEntity* CCSPointScriptEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPointScriptEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPointScriptEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPointScriptEntity*>(impl));
+    return impl;
+}
+inline ICSPointScriptEntity* ICSPointScriptEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSPointScriptEntity*>(p)->ToInterface() : nullptr; }
 inline ICSPointScriptEntity* ICSPointScriptEntity::FromOriginal(CCSPointScriptEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPOINTSCRIPTENTITYIMPL_H

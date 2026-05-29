@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointPulse.h"
 #include "CBaseEntityImpl.h"
 
-class CPointPulseImpl : public CBaseEntityImpl, public IPointPulse
+class CPointPulseImpl : public CBaseEntityImpl, public virtual IPointPulse
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPointPulse* GetOriginal() const override { return Real(); }
 };
 
-inline IPointPulse* CPointPulse::ToInterface() { return new CPointPulseImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointPulse* CPointPulse::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointPulse*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointPulseImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointPulse*>(impl));
+    return impl;
+}
+inline IPointPulse* IPointPulse::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointPulse*>(p)->ToInterface() : nullptr; }
 inline IPointPulse* IPointPulse::FromOriginal(CPointPulse* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTPULSEIMPL_H

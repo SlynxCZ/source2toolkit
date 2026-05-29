@@ -65,6 +65,7 @@ public:
 };
 
 inline Iragdollhierarchyjoint_t* ragdollhierarchyjoint_t::ToInterface() { return new ragdollhierarchyjoint_tImpl(this); }
+inline Iragdollhierarchyjoint_t* Iragdollhierarchyjoint_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iragdollhierarchyjoint_t* Iragdollhierarchyjoint_t::FromOriginal(ragdollhierarchyjoint_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RAGDOLLHIERARCHYJOINT_TIMPL_H

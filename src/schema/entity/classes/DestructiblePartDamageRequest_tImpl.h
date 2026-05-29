@@ -79,6 +79,7 @@ public:
 };
 
 inline IDestructiblePartDamageRequest_t* DestructiblePartDamageRequest_t::ToInterface() { return new DestructiblePartDamageRequest_tImpl(this); }
+inline IDestructiblePartDamageRequest_t* IDestructiblePartDamageRequest_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IDestructiblePartDamageRequest_t* IDestructiblePartDamageRequest_t::FromOriginal(DestructiblePartDamageRequest_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_DESTRUCTIBLEPARTDAMAGEREQUEST_TIMPL_H

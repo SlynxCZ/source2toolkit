@@ -40,7 +40,6 @@
 
 #pragma once
 
-#include "CBaseEntity.h"
 #include "source2toolkit/schema/entity/classes/IChoreoComponent.h"
 #include "schema/entity/classes/CChoreoComponent.h"
 
@@ -71,7 +70,8 @@ public:
     void AllowResponsesEndTimeUpdated() override { Real()->m_flAllowResponsesEndTime.NetworkStateChanged(); }
 };
 
-inline IChoreoComponent* CChoreoComponent::ToInterface() { return CBaseEntity::ToInterface(); }
+inline IChoreoComponent* CChoreoComponent::ToInterface() { return new CChoreoComponentImpl(this); }
+inline IChoreoComponent* IChoreoComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IChoreoComponent* IChoreoComponent::FromOriginal(CChoreoComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCHOREOCOMPONENTIMPL_H

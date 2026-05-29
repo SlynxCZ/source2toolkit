@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_ObserverServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_ObserverServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_ObserverServices
+class CPlayer_ObserverServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_ObserverServices
 {
 
 public:
@@ -67,6 +67,7 @@ public:
 };
 
 inline IPlayer_ObserverServices* CPlayer_ObserverServices::ToInterface() { return new CPlayer_ObserverServicesImpl(this); }
+inline IPlayer_ObserverServices* IPlayer_ObserverServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_ObserverServices* IPlayer_ObserverServices::FromOriginal(CPlayer_ObserverServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_OBSERVERSERVICESIMPL_H

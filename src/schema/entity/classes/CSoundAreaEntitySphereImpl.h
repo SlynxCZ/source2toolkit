@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundAreaEntitySphere.h"
 #include "CSoundAreaEntityBaseImpl.h"
 
-class CSoundAreaEntitySphereImpl : public CSoundAreaEntityBaseImpl, public ISoundAreaEntitySphere
+class CSoundAreaEntitySphereImpl : public CSoundAreaEntityBaseImpl, public virtual ISoundAreaEntitySphere
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }
 };
 
-inline ISoundAreaEntitySphere* CSoundAreaEntitySphere::ToInterface() { return new CSoundAreaEntitySphereImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundAreaEntitySphere* CSoundAreaEntitySphere::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundAreaEntitySphere*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundAreaEntitySphereImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundAreaEntitySphere*>(impl));
+    return impl;
+}
+inline ISoundAreaEntitySphere* ISoundAreaEntitySphere::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundAreaEntitySphere*>(p)->ToInterface() : nullptr; }
 inline ISoundAreaEntitySphere* ISoundAreaEntitySphere::FromOriginal(CSoundAreaEntitySphere* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDAREAENTITYSPHEREIMPL_H

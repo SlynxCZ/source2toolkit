@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointAngularVelocitySensor.h"
 #include "CPointEntityImpl.h"
 
-class CPointAngularVelocitySensorImpl : public CPointEntityImpl, public IPointAngularVelocitySensor
+class CPointAngularVelocitySensorImpl : public CPointEntityImpl, public virtual IPointAngularVelocitySensor
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void OnEqualToUpdated() override { Real()->m_OnEqualTo.NetworkStateChanged(); }
 };
 
-inline IPointAngularVelocitySensor* CPointAngularVelocitySensor::ToInterface() { return new CPointAngularVelocitySensorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointAngularVelocitySensor* CPointAngularVelocitySensor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointAngularVelocitySensor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointAngularVelocitySensorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointAngularVelocitySensor*>(impl));
+    return impl;
+}
+inline IPointAngularVelocitySensor* IPointAngularVelocitySensor::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointAngularVelocitySensor*>(p)->ToInterface() : nullptr; }
 inline IPointAngularVelocitySensor* IPointAngularVelocitySensor::FromOriginal(CPointAngularVelocitySensor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTANGULARVELOCITYSENSORIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWorld.h"
 #include "CBaseModelEntityImpl.h"
 
-class CWorldImpl : public CBaseModelEntityImpl, public IWorld
+class CWorldImpl : public CBaseModelEntityImpl, public virtual IWorld
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWorld* GetOriginal() const override { return Real(); }
 };
 
-inline IWorld* CWorld::ToInterface() { return new CWorldImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWorld* CWorld::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWorld*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWorldImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWorld*>(impl));
+    return impl;
+}
+inline IWorld* IWorld::FromRaw(CEntityInstance* p) { return p ? static_cast<CWorld*>(p)->ToInterface() : nullptr; }
 inline IWorld* IWorld::FromOriginal(CWorld* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWORLDIMPL_H

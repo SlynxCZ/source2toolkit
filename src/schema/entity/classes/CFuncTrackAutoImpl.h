@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTrackAuto.h"
 #include "CFuncTrackChangeImpl.h"
 
-class CFuncTrackAutoImpl : public CFuncTrackChangeImpl, public IFuncTrackAuto
+class CFuncTrackAutoImpl : public CFuncTrackChangeImpl, public virtual IFuncTrackAuto
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncTrackAuto* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncTrackAuto* CFuncTrackAuto::ToInterface() { return new CFuncTrackAutoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTrackAuto* CFuncTrackAuto::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTrackAuto*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTrackAutoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTrackAuto*>(impl));
+    return impl;
+}
+inline IFuncTrackAuto* IFuncTrackAuto::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTrackAuto*>(p)->ToInterface() : nullptr; }
 inline IFuncTrackAuto* IFuncTrackAuto::FromOriginal(CFuncTrackAuto* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTRACKAUTOIMPL_H

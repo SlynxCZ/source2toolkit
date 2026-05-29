@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysHinge.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysHingeImpl : public CPhysConstraintImpl, public IPhysHinge
+class CPhysHingeImpl : public CPhysConstraintImpl, public virtual IPhysHinge
 {
 
 public:
@@ -96,7 +96,20 @@ public:
     void OnStopMovingUpdated() override { Real()->m_OnStopMoving.NetworkStateChanged(); }
 };
 
-inline IPhysHinge* CPhysHinge::ToInterface() { return new CPhysHingeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysHinge* CPhysHinge::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysHinge*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysHingeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysHinge*>(impl));
+    return impl;
+}
+inline IPhysHinge* IPhysHinge::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysHinge*>(p)->ToInterface() : nullptr; }
 inline IPhysHinge* IPhysHinge::FromOriginal(CPhysHinge* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSHINGEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerSndSosOpvar.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerSndSosOpvarImpl : public CBaseTriggerImpl, public ITriggerSndSosOpvar
+class CTriggerSndSosOpvarImpl : public CBaseTriggerImpl, public virtual ITriggerSndSosOpvar
 {
 
 public:
@@ -83,7 +83,20 @@ public:
     void NormCenterSizeUpdated() override { Real()->m_flNormCenterSize.NetworkStateChanged(); }
 };
 
-inline ITriggerSndSosOpvar* CTriggerSndSosOpvar::ToInterface() { return new CTriggerSndSosOpvarImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerSndSosOpvar* CTriggerSndSosOpvar::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerSndSosOpvar*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerSndSosOpvarImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerSndSosOpvar*>(impl));
+    return impl;
+}
+inline ITriggerSndSosOpvar* ITriggerSndSosOpvar::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerSndSosOpvar*>(p)->ToInterface() : nullptr; }
 inline ITriggerSndSosOpvar* ITriggerSndSosOpvar::FromOriginal(CTriggerSndSosOpvar* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERSNDSOSOPVARIMPL_H

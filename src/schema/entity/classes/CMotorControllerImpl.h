@@ -69,6 +69,7 @@ public:
 };
 
 inline IMotorController* CMotorController::ToInterface() { return new CMotorControllerImpl(this); }
+inline IMotorController* IMotorController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IMotorController* IMotorController::FromOriginal(CMotorController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOTORCONTROLLERIMPL_H

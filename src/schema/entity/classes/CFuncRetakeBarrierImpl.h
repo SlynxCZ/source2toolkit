@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncRetakeBarrier.h"
 #include "CDynamicPropImpl.h"
 
-class CFuncRetakeBarrierImpl : public CDynamicPropImpl, public IFuncRetakeBarrier
+class CFuncRetakeBarrierImpl : public CDynamicPropImpl, public virtual IFuncRetakeBarrier
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncRetakeBarrier* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncRetakeBarrier* CFuncRetakeBarrier::ToInterface() { return new CFuncRetakeBarrierImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncRetakeBarrier* CFuncRetakeBarrier::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncRetakeBarrier*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncRetakeBarrierImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncRetakeBarrier*>(impl));
+    return impl;
+}
+inline IFuncRetakeBarrier* IFuncRetakeBarrier::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncRetakeBarrier*>(p)->ToInterface() : nullptr; }
 inline IFuncRetakeBarrier* IFuncRetakeBarrier::FromOriginal(CFuncRetakeBarrier* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCRETAKEBARRIERIMPL_H

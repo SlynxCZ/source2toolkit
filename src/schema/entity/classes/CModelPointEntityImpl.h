@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CModelPointEntity.h"
 #include "CBaseModelEntityImpl.h"
 
-class CModelPointEntityImpl : public CBaseModelEntityImpl, public IModelPointEntity
+class CModelPointEntityImpl : public CBaseModelEntityImpl, public virtual IModelPointEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CModelPointEntity* GetOriginal() const override { return Real(); }
 };
 
-inline IModelPointEntity* CModelPointEntity::ToInterface() { return new CModelPointEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IModelPointEntity* CModelPointEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IModelPointEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CModelPointEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IModelPointEntity*>(impl));
+    return impl;
+}
+inline IModelPointEntity* IModelPointEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CModelPointEntity*>(p)->ToInterface() : nullptr; }
 inline IModelPointEntity* IModelPointEntity::FromOriginal(CModelPointEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMODELPOINTENTITYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGO_TeamSelectCounterTerroristPosition.h"
 #include "CCSGO_TeamSelectCharacterPositionImpl.h"
 
-class CCSGO_TeamSelectCounterTerroristPositionImpl : public CCSGO_TeamSelectCharacterPositionImpl, public ICSGO_TeamSelectCounterTerroristPosition
+class CCSGO_TeamSelectCounterTerroristPositionImpl : public CCSGO_TeamSelectCharacterPositionImpl, public virtual ICSGO_TeamSelectCounterTerroristPosition
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSGO_TeamSelectCounterTerroristPosition* GetOriginal() const override { return Real(); }
 };
 
-inline ICSGO_TeamSelectCounterTerroristPosition* CCSGO_TeamSelectCounterTerroristPosition::ToInterface() { return new CCSGO_TeamSelectCounterTerroristPositionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSGO_TeamSelectCounterTerroristPosition* CCSGO_TeamSelectCounterTerroristPosition::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSGO_TeamSelectCounterTerroristPosition*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSGO_TeamSelectCounterTerroristPositionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSGO_TeamSelectCounterTerroristPosition*>(impl));
+    return impl;
+}
+inline ICSGO_TeamSelectCounterTerroristPosition* ICSGO_TeamSelectCounterTerroristPosition::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSGO_TeamSelectCounterTerroristPosition*>(p)->ToInterface() : nullptr; }
 inline ICSGO_TeamSelectCounterTerroristPosition* ICSGO_TeamSelectCounterTerroristPosition::FromOriginal(CCSGO_TeamSelectCounterTerroristPosition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGO_TEAMSELECTCOUNTERTERRORISTPOSITIONIMPL_H

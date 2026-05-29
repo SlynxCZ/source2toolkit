@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvInstructorVRHint.h"
 #include "CPointEntityImpl.h"
 
-class CEnvInstructorVRHintImpl : public CPointEntityImpl, public IEnvInstructorVRHint
+class CEnvInstructorVRHintImpl : public CPointEntityImpl, public virtual IEnvInstructorVRHint
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void HeightOffsetUpdated() override { Real()->m_flHeightOffset.NetworkStateChanged(); }
 };
 
-inline IEnvInstructorVRHint* CEnvInstructorVRHint::ToInterface() { return new CEnvInstructorVRHintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvInstructorVRHint* CEnvInstructorVRHint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvInstructorVRHint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvInstructorVRHintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvInstructorVRHint*>(impl));
+    return impl;
+}
+inline IEnvInstructorVRHint* IEnvInstructorVRHint::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvInstructorVRHint*>(p)->ToInterface() : nullptr; }
 inline IEnvInstructorVRHint* IEnvInstructorVRHint::FromOriginal(CEnvInstructorVRHint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVINSTRUCTORVRHINTIMPL_H

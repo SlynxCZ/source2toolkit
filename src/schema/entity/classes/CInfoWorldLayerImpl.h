@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoWorldLayer.h"
 #include "CBaseEntityImpl.h"
 
-class CInfoWorldLayerImpl : public CBaseEntityImpl, public IInfoWorldLayer
+class CInfoWorldLayerImpl : public CBaseEntityImpl, public virtual IInfoWorldLayer
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void LayerSpawnGroupUpdated() override { Real()->m_hLayerSpawnGroup.NetworkStateChanged(); }
 };
 
-inline IInfoWorldLayer* CInfoWorldLayer::ToInterface() { return new CInfoWorldLayerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoWorldLayer* CInfoWorldLayer::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoWorldLayer*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoWorldLayerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoWorldLayer*>(impl));
+    return impl;
+}
+inline IInfoWorldLayer* IInfoWorldLayer::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoWorldLayer*>(p)->ToInterface() : nullptr; }
 inline IInfoWorldLayer* IInfoWorldLayer::FromOriginal(CInfoWorldLayer* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOWORLDLAYERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponNegev.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponNegevImpl : public CCSWeaponBaseGunImpl, public IWeaponNegev
+class CWeaponNegevImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponNegev
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponNegev* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponNegev* CWeaponNegev::ToInterface() { return new CWeaponNegevImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponNegev* CWeaponNegev::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponNegev*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponNegevImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponNegev*>(impl));
+    return impl;
+}
+inline IWeaponNegev* IWeaponNegev::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponNegev*>(p)->ToInterface() : nullptr; }
 inline IWeaponNegev* IWeaponNegev::FromOriginal(CWeaponNegev* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONNEGEVIMPL_H

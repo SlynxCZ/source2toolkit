@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerToggleSave.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerToggleSaveImpl : public CBaseTriggerImpl, public ITriggerToggleSave
+class CTriggerToggleSaveImpl : public CBaseTriggerImpl, public virtual ITriggerToggleSave
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTriggerToggleSave* GetOriginal() const override { return Real(); }
 };
 
-inline ITriggerToggleSave* CTriggerToggleSave::ToInterface() { return new CTriggerToggleSaveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerToggleSave* CTriggerToggleSave::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerToggleSave*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerToggleSaveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerToggleSave*>(impl));
+    return impl;
+}
+inline ITriggerToggleSave* ITriggerToggleSave::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerToggleSave*>(p)->ToInterface() : nullptr; }
 inline ITriggerToggleSave* ITriggerToggleSave::FromOriginal(CTriggerToggleSave* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERTOGGLESAVEIMPL_H

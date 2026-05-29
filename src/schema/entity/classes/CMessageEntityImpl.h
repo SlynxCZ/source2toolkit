@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMessageEntity.h"
 #include "CPointEntityImpl.h"
 
-class CMessageEntityImpl : public CPointEntityImpl, public IMessageEntity
+class CMessageEntityImpl : public CPointEntityImpl, public virtual IMessageEntity
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void EnabledUpdated() override { Real()->m_bEnabled.NetworkStateChanged(); }
 };
 
-inline IMessageEntity* CMessageEntity::ToInterface() { return new CMessageEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMessageEntity* CMessageEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMessageEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMessageEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMessageEntity*>(impl));
+    return impl;
+}
+inline IMessageEntity* IMessageEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CMessageEntity*>(p)->ToInterface() : nullptr; }
 inline IMessageEntity* IMessageEntity::FromOriginal(CMessageEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMESSAGEENTITYIMPL_H

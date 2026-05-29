@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMathRemap.h"
 #include "CLogicalEntityImpl.h"
 
-class CMathRemapImpl : public CLogicalEntityImpl, public IMathRemap
+class CMathRemapImpl : public CLogicalEntityImpl, public virtual IMathRemap
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void OnFellBelowMaxUpdated() override { Real()->m_OnFellBelowMax.NetworkStateChanged(); }
 };
 
-inline IMathRemap* CMathRemap::ToInterface() { return new CMathRemapImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMathRemap* CMathRemap::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMathRemap*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMathRemapImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMathRemap*>(impl));
+    return impl;
+}
+inline IMathRemap* IMathRemap::FromRaw(CEntityInstance* p) { return p ? static_cast<CMathRemap*>(p)->ToInterface() : nullptr; }
 inline IMathRemap* IMathRemap::FromOriginal(CMathRemap* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMATHREMAPIMPL_H

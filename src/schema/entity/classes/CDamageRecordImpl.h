@@ -91,6 +91,7 @@ public:
 };
 
 inline IDamageRecord* CDamageRecord::ToInterface() { return new CDamageRecordImpl(this); }
+inline IDamageRecord* IDamageRecord::FromRaw(CEntityInstance*) { return nullptr; }
 inline IDamageRecord* IDamageRecord::FromOriginal(CDamageRecord* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDAMAGERECORDIMPL_H

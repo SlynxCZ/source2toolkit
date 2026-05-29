@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_MovementServices_Humanoid.h"
 #include "CPlayer_MovementServicesImpl.h"
 
-class CPlayer_MovementServices_HumanoidImpl : public CPlayer_MovementServicesImpl, public IPlayer_MovementServices_Humanoid
+class CPlayer_MovementServices_HumanoidImpl : public CPlayer_MovementServicesImpl, public virtual IPlayer_MovementServices_Humanoid
 {
 
 public:
@@ -72,6 +72,7 @@ public:
 };
 
 inline IPlayer_MovementServices_Humanoid* CPlayer_MovementServices_Humanoid::ToInterface() { return new CPlayer_MovementServices_HumanoidImpl(this); }
+inline IPlayer_MovementServices_Humanoid* IPlayer_MovementServices_Humanoid::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_MovementServices_Humanoid* IPlayer_MovementServices_Humanoid::FromOriginal(CPlayer_MovementServices_Humanoid* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_MOVEMENTSERVICES_HUMANOIDIMPL_H

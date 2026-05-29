@@ -69,6 +69,7 @@ public:
 };
 
 inline IBaseModelEntity__OnDamageLevelChangedArgs_t* CBaseModelEntity__OnDamageLevelChangedArgs_t::ToInterface() { return new CBaseModelEntity__OnDamageLevelChangedArgs_tImpl(this); }
+inline IBaseModelEntity__OnDamageLevelChangedArgs_t* IBaseModelEntity__OnDamageLevelChangedArgs_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBaseModelEntity__OnDamageLevelChangedArgs_t* IBaseModelEntity__OnDamageLevelChangedArgs_t::FromOriginal(CBaseModelEntity__OnDamageLevelChangedArgs_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEMODELENTITY__ONDAMAGELEVELCHANGEDARGS_TIMPL_H

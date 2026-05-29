@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerVolume.h"
 #include "CBaseModelEntityImpl.h"
 
-class CTriggerVolumeImpl : public CBaseModelEntityImpl, public ITriggerVolume
+class CTriggerVolumeImpl : public CBaseModelEntityImpl, public virtual ITriggerVolume
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void FilterUpdated() override { Real()->m_hFilter.NetworkStateChanged(); }
 };
 
-inline ITriggerVolume* CTriggerVolume::ToInterface() { return new CTriggerVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerVolume* CTriggerVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerVolume*>(impl));
+    return impl;
+}
+inline ITriggerVolume* ITriggerVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerVolume*>(p)->ToInterface() : nullptr; }
 inline ITriggerVolume* ITriggerVolume::FromOriginal(CTriggerVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERVOLUMEIMPL_H

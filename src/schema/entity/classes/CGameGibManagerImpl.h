@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGameGibManager.h"
 #include "CBaseEntityImpl.h"
 
-class CGameGibManagerImpl : public CBaseEntityImpl, public IGameGibManager
+class CGameGibManagerImpl : public CBaseEntityImpl, public virtual IGameGibManager
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void LastFrameUpdated() override { Real()->m_iLastFrame.NetworkStateChanged(); }
 };
 
-inline IGameGibManager* CGameGibManager::ToInterface() { return new CGameGibManagerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGameGibManager* CGameGibManager::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGameGibManager*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGameGibManagerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGameGibManager*>(impl));
+    return impl;
+}
+inline IGameGibManager* IGameGibManager::FromRaw(CEntityInstance* p) { return p ? static_cast<CGameGibManager*>(p)->ToInterface() : nullptr; }
 inline IGameGibManager* IGameGibManager::FromOriginal(CGameGibManager* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMEGIBMANAGERIMPL_H

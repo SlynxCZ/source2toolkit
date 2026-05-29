@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPrecipitationBlocker.h"
 #include "CBaseModelEntityImpl.h"
 
-class CPrecipitationBlockerImpl : public CBaseModelEntityImpl, public IPrecipitationBlocker
+class CPrecipitationBlockerImpl : public CBaseModelEntityImpl, public virtual IPrecipitationBlocker
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPrecipitationBlocker* GetOriginal() const override { return Real(); }
 };
 
-inline IPrecipitationBlocker* CPrecipitationBlocker::ToInterface() { return new CPrecipitationBlockerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPrecipitationBlocker* CPrecipitationBlocker::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPrecipitationBlocker*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPrecipitationBlockerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPrecipitationBlocker*>(impl));
+    return impl;
+}
+inline IPrecipitationBlocker* IPrecipitationBlocker::FromRaw(CEntityInstance* p) { return p ? static_cast<CPrecipitationBlocker*>(p)->ToInterface() : nullptr; }
 inline IPrecipitationBlocker* IPrecipitationBlocker::FromOriginal(CPrecipitationBlocker* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPRECIPITATIONBLOCKERIMPL_H

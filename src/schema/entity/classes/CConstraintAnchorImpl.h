@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CConstraintAnchor.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CConstraintAnchorImpl : public CBaseAnimGraphImpl, public IConstraintAnchor
+class CConstraintAnchorImpl : public CBaseAnimGraphImpl, public virtual IConstraintAnchor
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MassScaleUpdated() override { Real()->m_massScale.NetworkStateChanged(); }
 };
 
-inline IConstraintAnchor* CConstraintAnchor::ToInterface() { return new CConstraintAnchorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IConstraintAnchor* CConstraintAnchor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IConstraintAnchor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CConstraintAnchorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IConstraintAnchor*>(impl));
+    return impl;
+}
+inline IConstraintAnchor* IConstraintAnchor::FromRaw(CEntityInstance* p) { return p ? static_cast<CConstraintAnchor*>(p)->ToInterface() : nullptr; }
 inline IConstraintAnchor* IConstraintAnchor::FromOriginal(CConstraintAnchor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCONSTRAINTANCHORIMPL_H

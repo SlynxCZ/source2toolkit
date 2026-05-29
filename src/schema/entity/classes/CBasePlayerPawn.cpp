@@ -35,42 +35,43 @@
  * Project: Source2Toolkit
  */
 
+#include "CBasePlayerWeapon.h"
 #include "schema/entity/classes/CBasePlayerPawnImpl.h"
-
+#include "source2toolkit/schema/entity/classes/IBasePlayerWeapon.h"
 #include "source2toolkit/utils/virtual.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
+#include "core/addresses.h"
 #include "core/shared.h"
 #include "core/gameconfig.h"
-#include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitGameConfig.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
 
 void CBasePlayerPawn::CommitSuicide(bool bExplode, bool bForce)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CBasePlayerPawn_CommitSuicide");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CBasePlayerPawn_CommitSuicide");
-#endif
     CALL_VIRTUAL(void, offset, this, bExplode, bForce);
 }
 
-void CBasePlayerPawn::RemovePlayerItem(CBasePlayerWeapon* pWeapon)
+void CBasePlayerPawn::RemovePlayerItem(IBasePlayerWeapon* pWeapon)
 {
     if (!pWeapon) return;
-
-#ifdef SOURCE2TOOLKIT_CORE
-    addresses::toolkitAddresses.RemovePlayerItem(this, pWeapon);
-#else
-    g_ToolkitAPI->Addresses()->CBasePlayerPawn_RemovePlayerItem()(this, pWeapon);
-#endif
+    auto* raw = static_cast<CBasePlayerWeapon*>(pWeapon->GetOriginal());
+    addresses::toolkitAddresses.RemovePlayerItem(this, raw);
 }
-IBasePlayerPawn* CBasePlayerPawn::ToInterface() { return new CBasePlayerPawnImpl(this); }
+IBasePlayerPawn* CBasePlayerPawn::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBasePlayerPawn*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBasePlayerPawnImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBasePlayerPawn*>(impl));
+    return impl;
+}
+
+IBasePlayerPawn* IBasePlayerPawn::FromRaw(CEntityInstance* p)
+{
+    return p ? static_cast<CBasePlayerPawn*>(p)->ToInterface() : nullptr;
+}
 
 IBasePlayerPawn* IBasePlayerPawn::FromOriginal(CBasePlayerPawn* p)
 { return CBasePlayerPawn::FromOriginal(p); }

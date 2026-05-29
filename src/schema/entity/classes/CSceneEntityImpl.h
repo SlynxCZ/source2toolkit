@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSceneEntity.h"
 #include "CPointEntityImpl.h"
 
-class CSceneEntityImpl : public CPointEntityImpl, public ISceneEntity
+class CSceneEntityImpl : public CPointEntityImpl, public virtual ISceneEntity
 {
 
 public:
@@ -74,22 +74,6 @@ public:
     void Target7Updated() override { Real()->m_iszTarget7.NetworkStateChanged(); }
     CUtlSymbolLarge& Target8() override { return Real()->m_iszTarget8(); }
     void Target8Updated() override { Real()->m_iszTarget8.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target1() override { return Real()->m_hTarget1(); }
-    void Target1Updated() override { Real()->m_hTarget1.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target2() override { return Real()->m_hTarget2(); }
-    void Target2Updated() override { Real()->m_hTarget2.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target3() override { return Real()->m_hTarget3(); }
-    void Target3Updated() override { Real()->m_hTarget3.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target4() override { return Real()->m_hTarget4(); }
-    void Target4Updated() override { Real()->m_hTarget4.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target5() override { return Real()->m_hTarget5(); }
-    void Target5Updated() override { Real()->m_hTarget5.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target6() override { return Real()->m_hTarget6(); }
-    void Target6Updated() override { Real()->m_hTarget6.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target7() override { return Real()->m_hTarget7(); }
-    void Target7Updated() override { Real()->m_hTarget7.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& Target8() override { return Real()->m_hTarget8(); }
-    void Target8Updated() override { Real()->m_hTarget8.NetworkStateChanged(); }
     CHandle<CBaseEntity>& LocatorOrigin() override { return Real()->m_hLocatorOrigin(); }
     void LocatorOriginUpdated() override { Real()->m_hLocatorOrigin.NetworkStateChanged(); }
     CUtlSymbolLarge& TargetAttachment() override { return Real()->m_sTargetAttachment(); }
@@ -190,7 +174,20 @@ public:
     void PlayerDeathBehaviorUpdated() override { Real()->m_iPlayerDeathBehavior.NetworkStateChanged(); }
 };
 
-inline ISceneEntity* CSceneEntity::ToInterface() { return new CSceneEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISceneEntity* CSceneEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISceneEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSceneEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISceneEntity*>(impl));
+    return impl;
+}
+inline ISceneEntity* ISceneEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSceneEntity*>(p)->ToInterface() : nullptr; }
 inline ISceneEntity* ISceneEntity::FromOriginal(CSceneEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCENEENTITYIMPL_H

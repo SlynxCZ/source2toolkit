@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSceneEntityAlias_logic_choreographed_scene.h"
 #include "CSceneEntityImpl.h"
 
-class CSceneEntityAlias_logic_choreographed_sceneImpl : public CSceneEntityImpl, public ISceneEntityAlias_logic_choreographed_scene
+class CSceneEntityAlias_logic_choreographed_sceneImpl : public CSceneEntityImpl, public virtual ISceneEntityAlias_logic_choreographed_scene
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CSceneEntityAlias_logic_choreographed_scene* GetOriginal() const override { return Real(); }
 };
 
-inline ISceneEntityAlias_logic_choreographed_scene* CSceneEntityAlias_logic_choreographed_scene::ToInterface() { return new CSceneEntityAlias_logic_choreographed_sceneImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISceneEntityAlias_logic_choreographed_scene* CSceneEntityAlias_logic_choreographed_scene::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISceneEntityAlias_logic_choreographed_scene*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSceneEntityAlias_logic_choreographed_sceneImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISceneEntityAlias_logic_choreographed_scene*>(impl));
+    return impl;
+}
+inline ISceneEntityAlias_logic_choreographed_scene* ISceneEntityAlias_logic_choreographed_scene::FromRaw(CEntityInstance* p) { return p ? static_cast<CSceneEntityAlias_logic_choreographed_scene*>(p)->ToInterface() : nullptr; }
 inline ISceneEntityAlias_logic_choreographed_scene* ISceneEntityAlias_logic_choreographed_scene::FromOriginal(CSceneEntityAlias_logic_choreographed_scene* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCENEENTITYALIAS_LOGIC_CHOREOGRAPHED_SCENEIMPL_H

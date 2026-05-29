@@ -63,6 +63,7 @@ public:
 };
 
 inline IAnimGraphControllerBase* CAnimGraphControllerBase::ToInterface() { return new CAnimGraphControllerBaseImpl(this); }
+inline IAnimGraphControllerBase* IAnimGraphControllerBase::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAnimGraphControllerBase* IAnimGraphControllerBase::FromOriginal(CAnimGraphControllerBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CANIMGRAPHCONTROLLERBASEIMPL_H

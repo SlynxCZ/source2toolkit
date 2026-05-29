@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponAug.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponAugImpl : public CCSWeaponBaseGunImpl, public IWeaponAug
+class CWeaponAugImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponAug
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponAug* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponAug* CWeaponAug::ToInterface() { return new CWeaponAugImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponAug* CWeaponAug::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponAug*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponAugImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponAug*>(impl));
+    return impl;
+}
+inline IWeaponAug* IWeaponAug::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponAug*>(p)->ToInterface() : nullptr; }
 inline IWeaponAug* IWeaponAug::FromOriginal(CWeaponAug* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONAUGIMPL_H

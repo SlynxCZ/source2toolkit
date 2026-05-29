@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncMoveLinear.h"
 #include "CBaseToggleImpl.h"
 
-class CFuncMoveLinearImpl : public CBaseToggleImpl, public IFuncMoveLinear
+class CFuncMoveLinearImpl : public CBaseToggleImpl, public virtual IFuncMoveLinear
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void CreateNavObstacleUpdated() override { Real()->m_bCreateNavObstacle.NetworkStateChanged(); }
 };
 
-inline IFuncMoveLinear* CFuncMoveLinear::ToInterface() { return new CFuncMoveLinearImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncMoveLinear* CFuncMoveLinear::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncMoveLinear*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncMoveLinearImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncMoveLinear*>(impl));
+    return impl;
+}
+inline IFuncMoveLinear* IFuncMoveLinear::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncMoveLinear*>(p)->ToInterface() : nullptr; }
 inline IFuncMoveLinear* IFuncMoveLinear::FromOriginal(CFuncMoveLinear* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCMOVELINEARIMPL_H

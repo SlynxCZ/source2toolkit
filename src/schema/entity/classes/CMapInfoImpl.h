@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMapInfo.h"
 #include "CPointEntityImpl.h"
 
-class CMapInfoImpl : public CPointEntityImpl, public IMapInfo
+class CMapInfoImpl : public CPointEntityImpl, public virtual IMapInfo
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void EnvWetnessDryingAmountUpdated() override { Real()->m_flEnvWetnessDryingAmount.NetworkStateChanged(); }
 };
 
-inline IMapInfo* CMapInfo::ToInterface() { return new CMapInfoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMapInfo* CMapInfo::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMapInfo*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMapInfoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMapInfo*>(impl));
+    return impl;
+}
+inline IMapInfo* IMapInfo::FromRaw(CEntityInstance* p) { return p ? static_cast<CMapInfo*>(p)->ToInterface() : nullptr; }
 inline IMapInfo* IMapInfo::FromOriginal(CMapInfo* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMAPINFOIMPL_H

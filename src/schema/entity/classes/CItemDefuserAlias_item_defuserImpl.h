@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemDefuserAlias_item_defuser.h"
 #include "CItemDefuserImpl.h"
 
-class CItemDefuserAlias_item_defuserImpl : public CItemDefuserImpl, public IItemDefuserAlias_item_defuser
+class CItemDefuserAlias_item_defuserImpl : public CItemDefuserImpl, public virtual IItemDefuserAlias_item_defuser
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CItemDefuserAlias_item_defuser* GetOriginal() const override { return Real(); }
 };
 
-inline IItemDefuserAlias_item_defuser* CItemDefuserAlias_item_defuser::ToInterface() { return new CItemDefuserAlias_item_defuserImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemDefuserAlias_item_defuser* CItemDefuserAlias_item_defuser::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemDefuserAlias_item_defuser*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemDefuserAlias_item_defuserImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemDefuserAlias_item_defuser*>(impl));
+    return impl;
+}
+inline IItemDefuserAlias_item_defuser* IItemDefuserAlias_item_defuser::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemDefuserAlias_item_defuser*>(p)->ToInterface() : nullptr; }
 inline IItemDefuserAlias_item_defuser* IItemDefuserAlias_item_defuser::FromOriginal(CItemDefuserAlias_item_defuser* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMDEFUSERALIAS_ITEM_DEFUSERIMPL_H

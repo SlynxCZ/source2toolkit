@@ -44,7 +44,7 @@
 #include "schema/entity/classes/COrnamentProp.h"
 #include "CDynamicPropImpl.h"
 
-class COrnamentPropImpl : public CDynamicPropImpl, public IOrnamentProp
+class COrnamentPropImpl : public CDynamicPropImpl, public virtual IOrnamentProp
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void InitialOwnerUpdated() override { Real()->m_initialOwner.NetworkStateChanged(); }
 };
 
-inline IOrnamentProp* COrnamentProp::ToInterface() { return new COrnamentPropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IOrnamentProp* COrnamentProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IOrnamentProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new COrnamentPropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IOrnamentProp*>(impl));
+    return impl;
+}
+inline IOrnamentProp* IOrnamentProp::FromRaw(CEntityInstance* p) { return p ? static_cast<COrnamentProp*>(p)->ToInterface() : nullptr; }
 inline IOrnamentProp* IOrnamentProp::FromOriginal(COrnamentProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CORNAMENTPROPIMPL_H

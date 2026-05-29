@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRagdollManager.h"
 #include "CBaseEntityImpl.h"
 
-class CRagdollManagerImpl : public CBaseEntityImpl, public IRagdollManager
+class CRagdollManagerImpl : public CBaseEntityImpl, public virtual IRagdollManager
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void CanTakeDamageUpdated() override { Real()->m_bCanTakeDamage.NetworkStateChanged(); }
 };
 
-inline IRagdollManager* CRagdollManager::ToInterface() { return new CRagdollManagerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRagdollManager* CRagdollManager::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRagdollManager*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRagdollManagerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRagdollManager*>(impl));
+    return impl;
+}
+inline IRagdollManager* IRagdollManager::FromRaw(CEntityInstance* p) { return p ? static_cast<CRagdollManager*>(p)->ToInterface() : nullptr; }
 inline IRagdollManager* IRagdollManager::FromOriginal(CRagdollManager* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRAGDOLLMANAGERIMPL_H

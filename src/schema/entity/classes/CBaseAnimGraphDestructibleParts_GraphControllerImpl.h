@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseAnimGraphDestructibleParts_GraphController.h"
 #include "CAnimGraphControllerBaseImpl.h"
 
-class CBaseAnimGraphDestructibleParts_GraphControllerImpl : public CAnimGraphControllerBaseImpl, public IBaseAnimGraphDestructibleParts_GraphController
+class CBaseAnimGraphDestructibleParts_GraphControllerImpl : public CAnimGraphControllerBaseImpl, public virtual IBaseAnimGraphDestructibleParts_GraphController
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IBaseAnimGraphDestructibleParts_GraphController* CBaseAnimGraphDestructibleParts_GraphController::ToInterface() { return new CBaseAnimGraphDestructibleParts_GraphControllerImpl(this); }
+inline IBaseAnimGraphDestructibleParts_GraphController* IBaseAnimGraphDestructibleParts_GraphController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBaseAnimGraphDestructibleParts_GraphController* IBaseAnimGraphDestructibleParts_GraphController::FromOriginal(CBaseAnimGraphDestructibleParts_GraphController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEANIMGRAPHDESTRUCTIBLEPARTS_GRAPHCONTROLLERIMPL_H

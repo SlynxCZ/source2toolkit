@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CScriptNavBlocker.h"
 #include "CFuncNavBlockerImpl.h"
 
-class CScriptNavBlockerImpl : public CFuncNavBlockerImpl, public IScriptNavBlocker
+class CScriptNavBlockerImpl : public CFuncNavBlockerImpl, public virtual IScriptNavBlocker
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ExtentUpdated() override { Real()->m_vExtent.NetworkStateChanged(); }
 };
 
-inline IScriptNavBlocker* CScriptNavBlocker::ToInterface() { return new CScriptNavBlockerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IScriptNavBlocker* CScriptNavBlocker::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IScriptNavBlocker*>(tagIt->second.ptr_for_return);
+    auto* impl = new CScriptNavBlockerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IScriptNavBlocker*>(impl));
+    return impl;
+}
+inline IScriptNavBlocker* IScriptNavBlocker::FromRaw(CEntityInstance* p) { return p ? static_cast<CScriptNavBlocker*>(p)->ToInterface() : nullptr; }
 inline IScriptNavBlocker* IScriptNavBlocker::FromOriginal(CScriptNavBlocker* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCRIPTNAVBLOCKERIMPL_H

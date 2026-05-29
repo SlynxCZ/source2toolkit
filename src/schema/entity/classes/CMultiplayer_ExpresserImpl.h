@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMultiplayer_Expresser.h"
 #include "CAI_ExpresserWithFollowupImpl.h"
 
-class CMultiplayer_ExpresserImpl : public CAI_ExpresserWithFollowupImpl, public IMultiplayer_Expresser
+class CMultiplayer_ExpresserImpl : public CAI_ExpresserWithFollowupImpl, public virtual IMultiplayer_Expresser
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline IMultiplayer_Expresser* CMultiplayer_Expresser::ToInterface() { return new CMultiplayer_ExpresserImpl(this); }
+inline IMultiplayer_Expresser* IMultiplayer_Expresser::FromRaw(CEntityInstance*) { return nullptr; }
 inline IMultiplayer_Expresser* IMultiplayer_Expresser::FromOriginal(CMultiplayer_Expresser* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMULTIPLAYER_EXPRESSERIMPL_H

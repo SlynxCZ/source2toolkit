@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerController.h"
 #include "CBasePlayerControllerImpl.h"
 
-class CCSPlayerControllerImpl : public CBasePlayerControllerImpl, public ICSPlayerController
+class CCSPlayerControllerImpl : public CBasePlayerControllerImpl, public virtual ICSPlayerController
 {
 
 public:

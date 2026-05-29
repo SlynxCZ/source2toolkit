@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlantedC4.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CPlantedC4Impl : public CBaseAnimGraphImpl, public IPlantedC4
+class CPlantedC4Impl : public CBaseAnimGraphImpl, public virtual IPlantedC4
 {
 
 public:
@@ -111,7 +111,20 @@ public:
     void LastSpinDetectionTimeUpdated() override { Real()->m_flLastSpinDetectionTime.NetworkStateChanged(); }
 };
 
-inline IPlantedC4* CPlantedC4::ToInterface() { return new CPlantedC4Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IPlantedC4* CPlantedC4::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPlantedC4*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPlantedC4Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPlantedC4*>(impl));
+    return impl;
+}
+inline IPlantedC4* IPlantedC4::FromRaw(CEntityInstance* p) { return p ? static_cast<CPlantedC4*>(p)->ToInterface() : nullptr; }
 inline IPlantedC4* IPlantedC4::FromOriginal(CPlantedC4* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLANTEDC4IMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponNOVA.h"
 #include "CCSWeaponBaseShotgunImpl.h"
 
-class CWeaponNOVAImpl : public CCSWeaponBaseShotgunImpl, public IWeaponNOVA
+class CWeaponNOVAImpl : public CCSWeaponBaseShotgunImpl, public virtual IWeaponNOVA
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponNOVA* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponNOVA* CWeaponNOVA::ToInterface() { return new CWeaponNOVAImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponNOVA* CWeaponNOVA::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponNOVA*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponNOVAImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponNOVA*>(impl));
+    return impl;
+}
+inline IWeaponNOVA* IWeaponNOVA::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponNOVA*>(p)->ToInterface() : nullptr; }
 inline IWeaponNOVA* IWeaponNOVA::FromOriginal(CWeaponNOVA* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONNOVAIMPL_H

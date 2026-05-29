@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTankTrainAI.h"
 #include "CPointEntityImpl.h"
 
-class CTankTrainAIImpl : public CPointEntityImpl, public ITankTrainAI
+class CTankTrainAIImpl : public CPointEntityImpl, public virtual ITankTrainAI
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void TargetEntityNameUpdated() override { Real()->m_targetEntityName.NetworkStateChanged(); }
 };
 
-inline ITankTrainAI* CTankTrainAI::ToInterface() { return new CTankTrainAIImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITankTrainAI* CTankTrainAI::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITankTrainAI*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTankTrainAIImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITankTrainAI*>(impl));
+    return impl;
+}
+inline ITankTrainAI* ITankTrainAI::FromRaw(CEntityInstance* p) { return p ? static_cast<CTankTrainAI*>(p)->ToInterface() : nullptr; }
 inline ITankTrainAI* ITankTrainAI::FromOriginal(CTankTrainAI* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTANKTRAINAIIMPL_H

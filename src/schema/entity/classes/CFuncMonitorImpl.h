@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncMonitor.h"
 #include "CFuncBrushImpl.h"
 
-class CFuncMonitorImpl : public CFuncBrushImpl, public IFuncMonitor
+class CFuncMonitorImpl : public CFuncBrushImpl, public virtual IFuncMonitor
 {
 
 public:
@@ -66,8 +66,6 @@ public:
     void UseUniqueColorTargetUpdated() override { Real()->m_bUseUniqueColorTarget.NetworkStateChanged(); }
     CUtlString& BrushModelName() override { return Real()->m_brushModelName(); }
     void BrushModelNameUpdated() override { Real()->m_brushModelName.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& TargetCamera() override { return Real()->m_hTargetCamera(); }
-    void TargetCameraUpdated() override { Real()->m_hTargetCamera.NetworkStateChanged(); }
     bool& Enabled() override { return Real()->m_bEnabled(); }
     void EnabledUpdated() override { Real()->m_bEnabled.NetworkStateChanged(); }
     bool& Draw3DSkybox() override { return Real()->m_bDraw3DSkybox(); }
@@ -76,7 +74,20 @@ public:
     void StartEnabledUpdated() override { Real()->m_bStartEnabled.NetworkStateChanged(); }
 };
 
-inline IFuncMonitor* CFuncMonitor::ToInterface() { return new CFuncMonitorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncMonitor* CFuncMonitor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncMonitor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncMonitorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncMonitor*>(impl));
+    return impl;
+}
+inline IFuncMonitor* IFuncMonitor::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncMonitor*>(p)->ToInterface() : nullptr; }
 inline IFuncMonitor* IFuncMonitor::FromOriginal(CFuncMonitor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCMONITORIMPL_H

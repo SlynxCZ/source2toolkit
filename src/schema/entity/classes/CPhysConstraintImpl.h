@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysConstraint.h"
 #include "CLogicalEntityImpl.h"
 
-class CPhysConstraintImpl : public CLogicalEntityImpl, public IPhysConstraint
+class CPhysConstraintImpl : public CLogicalEntityImpl, public virtual IPhysConstraint
 {
 
 public:
@@ -86,7 +86,20 @@ public:
     void OnBreakUpdated() override { Real()->m_OnBreak.NetworkStateChanged(); }
 };
 
-inline IPhysConstraint* CPhysConstraint::ToInterface() { return new CPhysConstraintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysConstraint* CPhysConstraint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysConstraint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysConstraintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysConstraint*>(impl));
+    return impl;
+}
+inline IPhysConstraint* IPhysConstraint::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysConstraint*>(p)->ToInterface() : nullptr; }
 inline IPhysConstraint* IPhysConstraint::FromOriginal(CPhysConstraint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSCONSTRAINTIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponRevolver.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponRevolverImpl : public CCSWeaponBaseGunImpl, public IWeaponRevolver
+class CWeaponRevolverImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponRevolver
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponRevolver* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponRevolver* CWeaponRevolver::ToInterface() { return new CWeaponRevolverImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponRevolver* CWeaponRevolver::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponRevolver*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponRevolverImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponRevolver*>(impl));
+    return impl;
+}
+inline IWeaponRevolver* IWeaponRevolver::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponRevolver*>(p)->ToInterface() : nullptr; }
 inline IWeaponRevolver* IWeaponRevolver::FromOriginal(CWeaponRevolver* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONREVOLVERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSky.h"
 #include "CBaseModelEntityImpl.h"
 
-class CEnvSkyImpl : public CBaseModelEntityImpl, public IEnvSky
+class CEnvSkyImpl : public CBaseModelEntityImpl, public virtual IEnvSky
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void EnabledUpdated() override { Real()->m_bEnabled.NetworkStateChanged(); }
 };
 
-inline IEnvSky* CEnvSky::ToInterface() { return new CEnvSkyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSky* CEnvSky::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSky*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSkyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSky*>(impl));
+    return impl;
+}
+inline IEnvSky* IEnvSky::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSky*>(p)->ToInterface() : nullptr; }
 inline IEnvSky* IEnvSky::FromOriginal(CEnvSky* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSKYIMPL_H

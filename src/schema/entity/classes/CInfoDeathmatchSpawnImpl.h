@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoDeathmatchSpawn.h"
 #include "SpawnPointImpl.h"
 
-class CInfoDeathmatchSpawnImpl : public SpawnPointImpl, public IInfoDeathmatchSpawn
+class CInfoDeathmatchSpawnImpl : public SpawnPointImpl, public virtual IInfoDeathmatchSpawn
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoDeathmatchSpawn* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoDeathmatchSpawn* CInfoDeathmatchSpawn::ToInterface() { return new CInfoDeathmatchSpawnImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoDeathmatchSpawn* CInfoDeathmatchSpawn::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoDeathmatchSpawn*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoDeathmatchSpawnImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoDeathmatchSpawn*>(impl));
+    return impl;
+}
+inline IInfoDeathmatchSpawn* IInfoDeathmatchSpawn::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoDeathmatchSpawn*>(p)->ToInterface() : nullptr; }
 inline IInfoDeathmatchSpawn* IInfoDeathmatchSpawn::FromOriginal(CInfoDeathmatchSpawn* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFODEATHMATCHSPAWNIMPL_H

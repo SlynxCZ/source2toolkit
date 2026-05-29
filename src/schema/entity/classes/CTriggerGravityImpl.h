@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerGravity.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerGravityImpl : public CBaseTriggerImpl, public ITriggerGravity
+class CTriggerGravityImpl : public CBaseTriggerImpl, public virtual ITriggerGravity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTriggerGravity* GetOriginal() const override { return Real(); }
 };
 
-inline ITriggerGravity* CTriggerGravity::ToInterface() { return new CTriggerGravityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerGravity* CTriggerGravity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerGravity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerGravityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerGravity*>(impl));
+    return impl;
+}
+inline ITriggerGravity* ITriggerGravity::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerGravity*>(p)->ToInterface() : nullptr; }
 inline ITriggerGravity* ITriggerGravity::FromOriginal(CTriggerGravity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERGRAVITYIMPL_H

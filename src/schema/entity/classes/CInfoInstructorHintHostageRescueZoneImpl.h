@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoInstructorHintHostageRescueZone.h"
 #include "CPointEntityImpl.h"
 
-class CInfoInstructorHintHostageRescueZoneImpl : public CPointEntityImpl, public IInfoInstructorHintHostageRescueZone
+class CInfoInstructorHintHostageRescueZoneImpl : public CPointEntityImpl, public virtual IInfoInstructorHintHostageRescueZone
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoInstructorHintHostageRescueZone* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoInstructorHintHostageRescueZone* CInfoInstructorHintHostageRescueZone::ToInterface() { return new CInfoInstructorHintHostageRescueZoneImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoInstructorHintHostageRescueZone* CInfoInstructorHintHostageRescueZone::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoInstructorHintHostageRescueZone*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoInstructorHintHostageRescueZoneImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoInstructorHintHostageRescueZone*>(impl));
+    return impl;
+}
+inline IInfoInstructorHintHostageRescueZone* IInfoInstructorHintHostageRescueZone::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoInstructorHintHostageRescueZone*>(p)->ToInterface() : nullptr; }
 inline IInfoInstructorHintHostageRescueZone* IInfoInstructorHintHostageRescueZone::FromOriginal(CInfoInstructorHintHostageRescueZone* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTHOSTAGERESCUEZONEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_CameraServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_CameraServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_CameraServices
+class CPlayer_CameraServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_CameraServices
 {
 
 public:
@@ -83,6 +83,7 @@ public:
 };
 
 inline IPlayer_CameraServices* CPlayer_CameraServices::ToInterface() { return new CPlayer_CameraServicesImpl(this); }
+inline IPlayer_CameraServices* IPlayer_CameraServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_CameraServices* IPlayer_CameraServices::FromOriginal(CPlayer_CameraServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_CAMERASERVICESIMPL_H

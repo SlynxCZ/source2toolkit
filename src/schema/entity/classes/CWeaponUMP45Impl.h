@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponUMP45.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponUMP45Impl : public CCSWeaponBaseGunImpl, public IWeaponUMP45
+class CWeaponUMP45Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponUMP45
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponUMP45* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponUMP45* CWeaponUMP45::ToInterface() { return new CWeaponUMP45Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponUMP45* CWeaponUMP45::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponUMP45*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponUMP45Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponUMP45*>(impl));
+    return impl;
+}
+inline IWeaponUMP45* IWeaponUMP45::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponUMP45*>(p)->ToInterface() : nullptr; }
 inline IWeaponUMP45* IWeaponUMP45::FromOriginal(CWeaponUMP45* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONUMP45IMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMapSharedEnvironment.h"
 #include "CLogicalEntityImpl.h"
 
-class CMapSharedEnvironmentImpl : public CLogicalEntityImpl, public IMapSharedEnvironment
+class CMapSharedEnvironmentImpl : public CLogicalEntityImpl, public virtual IMapSharedEnvironment
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void TargetMapNameUpdated() override { Real()->m_targetMapName.NetworkStateChanged(); }
 };
 
-inline IMapSharedEnvironment* CMapSharedEnvironment::ToInterface() { return new CMapSharedEnvironmentImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMapSharedEnvironment* CMapSharedEnvironment::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMapSharedEnvironment*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMapSharedEnvironmentImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMapSharedEnvironment*>(impl));
+    return impl;
+}
+inline IMapSharedEnvironment* IMapSharedEnvironment::FromRaw(CEntityInstance* p) { return p ? static_cast<CMapSharedEnvironment*>(p)->ToInterface() : nullptr; }
 inline IMapSharedEnvironment* IMapSharedEnvironment::FromOriginal(CMapSharedEnvironment* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMAPSHAREDENVIRONMENTIMPL_H

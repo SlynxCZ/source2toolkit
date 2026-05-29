@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPulseGameBlackboard.h"
 #include "CBaseEntityImpl.h"
 
-class CPulseGameBlackboardImpl : public CBaseEntityImpl, public IPulseGameBlackboard
+class CPulseGameBlackboardImpl : public CBaseEntityImpl, public virtual IPulseGameBlackboard
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void StrStateBlobUpdated() override { Real()->m_strStateBlob.NetworkStateChanged(); }
 };
 
-inline IPulseGameBlackboard* CPulseGameBlackboard::ToInterface() { return new CPulseGameBlackboardImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPulseGameBlackboard* CPulseGameBlackboard::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPulseGameBlackboard*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPulseGameBlackboardImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPulseGameBlackboard*>(impl));
+    return impl;
+}
+inline IPulseGameBlackboard* IPulseGameBlackboard::FromRaw(CEntityInstance* p) { return p ? static_cast<CPulseGameBlackboard*>(p)->ToInterface() : nullptr; }
 inline IPulseGameBlackboard* IPulseGameBlackboard::FromOriginal(CPulseGameBlackboard* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPULSEGAMEBLACKBOARDIMPL_H

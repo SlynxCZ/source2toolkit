@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoVisibilityBox.h"
 #include "CBaseEntityImpl.h"
 
-class CInfoVisibilityBoxImpl : public CBaseEntityImpl, public IInfoVisibilityBox
+class CInfoVisibilityBoxImpl : public CBaseEntityImpl, public virtual IInfoVisibilityBox
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void EnabledUpdated() override { Real()->m_bEnabled.NetworkStateChanged(); }
 };
 
-inline IInfoVisibilityBox* CInfoVisibilityBox::ToInterface() { return new CInfoVisibilityBoxImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoVisibilityBox* CInfoVisibilityBox::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoVisibilityBox*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoVisibilityBoxImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoVisibilityBox*>(impl));
+    return impl;
+}
+inline IInfoVisibilityBox* IInfoVisibilityBox::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoVisibilityBox*>(p)->ToInterface() : nullptr; }
 inline IInfoVisibilityBox* IInfoVisibilityBox::FromOriginal(CInfoVisibilityBox* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOVISIBILITYBOXIMPL_H

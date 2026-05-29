@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRagdollMagnet.h"
 #include "CPointEntityImpl.h"
 
-class CRagdollMagnetImpl : public CPointEntityImpl, public IRagdollMagnet
+class CRagdollMagnetImpl : public CPointEntityImpl, public virtual IRagdollMagnet
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void AxisUpdated() override { Real()->m_axis.NetworkStateChanged(); }
 };
 
-inline IRagdollMagnet* CRagdollMagnet::ToInterface() { return new CRagdollMagnetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRagdollMagnet* CRagdollMagnet::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRagdollMagnet*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRagdollMagnetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRagdollMagnet*>(impl));
+    return impl;
+}
+inline IRagdollMagnet* IRagdollMagnet::FromRaw(CEntityInstance* p) { return p ? static_cast<CRagdollMagnet*>(p)->ToInterface() : nullptr; }
 inline IRagdollMagnet* IRagdollMagnet::FromOriginal(CRagdollMagnet* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRAGDOLLMAGNETIMPL_H

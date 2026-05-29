@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CServerOnlyPointEntity.h"
 #include "CServerOnlyEntityImpl.h"
 
-class CServerOnlyPointEntityImpl : public CServerOnlyEntityImpl, public IServerOnlyPointEntity
+class CServerOnlyPointEntityImpl : public CServerOnlyEntityImpl, public virtual IServerOnlyPointEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CServerOnlyPointEntity* GetOriginal() const override { return Real(); }
 };
 
-inline IServerOnlyPointEntity* CServerOnlyPointEntity::ToInterface() { return new CServerOnlyPointEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IServerOnlyPointEntity* CServerOnlyPointEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IServerOnlyPointEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CServerOnlyPointEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IServerOnlyPointEntity*>(impl));
+    return impl;
+}
+inline IServerOnlyPointEntity* IServerOnlyPointEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CServerOnlyPointEntity*>(p)->ToInterface() : nullptr; }
 inline IServerOnlyPointEntity* IServerOnlyPointEntity::FromOriginal(CServerOnlyPointEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSERVERONLYPOINTENTITYIMPL_H

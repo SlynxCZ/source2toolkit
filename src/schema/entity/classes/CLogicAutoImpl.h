@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicAuto.h"
 #include "CBaseEntityImpl.h"
 
-class CLogicAutoImpl : public CBaseEntityImpl, public ILogicAuto
+class CLogicAutoImpl : public CBaseEntityImpl, public virtual ILogicAuto
 {
 
 public:
@@ -80,7 +80,20 @@ public:
     void GlobalstateUpdated() override { Real()->m_globalstate.NetworkStateChanged(); }
 };
 
-inline ILogicAuto* CLogicAuto::ToInterface() { return new CLogicAutoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicAuto* CLogicAuto::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicAuto*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicAutoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicAuto*>(impl));
+    return impl;
+}
+inline ILogicAuto* ILogicAuto::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicAuto*>(p)->ToInterface() : nullptr; }
 inline ILogicAuto* ILogicAuto::FromOriginal(CLogicAuto* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICAUTOIMPL_H

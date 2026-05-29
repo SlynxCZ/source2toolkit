@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicMeasureMovement.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicMeasureMovementImpl : public CLogicalEntityImpl, public ILogicMeasureMovement
+class CLogicMeasureMovementImpl : public CLogicalEntityImpl, public virtual ILogicMeasureMovement
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void MeasureTypeUpdated() override { Real()->m_nMeasureType.NetworkStateChanged(); }
 };
 
-inline ILogicMeasureMovement* CLogicMeasureMovement::ToInterface() { return new CLogicMeasureMovementImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicMeasureMovement* CLogicMeasureMovement::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicMeasureMovement*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicMeasureMovementImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicMeasureMovement*>(impl));
+    return impl;
+}
+inline ILogicMeasureMovement* ILogicMeasureMovement::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicMeasureMovement*>(p)->ToInterface() : nullptr; }
 inline ILogicMeasureMovement* ILogicMeasureMovement::FromOriginal(CLogicMeasureMovement* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICMEASUREMOVEMENTIMPL_H

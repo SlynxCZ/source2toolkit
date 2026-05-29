@@ -61,6 +61,7 @@ public:
 };
 
 inline IVectorExponentialMovingAverage* CVectorExponentialMovingAverage::ToInterface() { return new CVectorExponentialMovingAverageImpl(this); }
+inline IVectorExponentialMovingAverage* IVectorExponentialMovingAverage::FromRaw(CEntityInstance*) { return nullptr; }
 inline IVectorExponentialMovingAverage* IVectorExponentialMovingAverage::FromOriginal(CVectorExponentialMovingAverage* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CVECTOREXPONENTIALMOVINGAVERAGEIMPL_H

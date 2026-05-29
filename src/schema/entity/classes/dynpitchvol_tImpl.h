@@ -44,7 +44,7 @@
 #include "schema/entity/classes/dynpitchvol_t.h"
 #include "dynpitchvol_base_tImpl.h"
 
-class dynpitchvol_tImpl : public dynpitchvol_base_tImpl, public Idynpitchvol_t
+class dynpitchvol_tImpl : public dynpitchvol_base_tImpl, public virtual Idynpitchvol_t
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline Idynpitchvol_t* dynpitchvol_t::ToInterface() { return new dynpitchvol_tImpl(this); }
+inline Idynpitchvol_t* Idynpitchvol_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Idynpitchvol_t* Idynpitchvol_t::FromOriginal(dynpitchvol_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_DYNPITCHVOL_TIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterName.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterNameImpl : public CBaseFilterImpl, public IFilterName
+class CFilterNameImpl : public CBaseFilterImpl, public virtual IFilterName
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void FilterNameUpdated() override { Real()->m_iFilterName.NetworkStateChanged(); }
 };
 
-inline IFilterName* CFilterName::ToInterface() { return new CFilterNameImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterName* CFilterName::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterName*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterNameImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterName*>(impl));
+    return impl;
+}
+inline IFilterName* IFilterName::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterName*>(p)->ToInterface() : nullptr; }
 inline IFilterName* IFilterName::FromOriginal(CFilterName* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERNAMEIMPL_H

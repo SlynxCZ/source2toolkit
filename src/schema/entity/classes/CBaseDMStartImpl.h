@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseDMStart.h"
 #include "CPointEntityImpl.h"
 
-class CBaseDMStartImpl : public CPointEntityImpl, public IBaseDMStart
+class CBaseDMStartImpl : public CPointEntityImpl, public virtual IBaseDMStart
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MasterUpdated() override { Real()->m_Master.NetworkStateChanged(); }
 };
 
-inline IBaseDMStart* CBaseDMStart::ToInterface() { return new CBaseDMStartImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseDMStart* CBaseDMStart::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseDMStart*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseDMStartImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseDMStart*>(impl));
+    return impl;
+}
+inline IBaseDMStart* IBaseDMStart::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseDMStart*>(p)->ToInterface() : nullptr; }
 inline IBaseDMStart* IBaseDMStart::FromOriginal(CBaseDMStart* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEDMSTARTIMPL_H

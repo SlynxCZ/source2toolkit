@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoSpawnGroupLandmark.h"
 #include "CPointEntityImpl.h"
 
-class CInfoSpawnGroupLandmarkImpl : public CPointEntityImpl, public IInfoSpawnGroupLandmark
+class CInfoSpawnGroupLandmarkImpl : public CPointEntityImpl, public virtual IInfoSpawnGroupLandmark
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoSpawnGroupLandmark* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoSpawnGroupLandmark* CInfoSpawnGroupLandmark::ToInterface() { return new CInfoSpawnGroupLandmarkImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoSpawnGroupLandmark* CInfoSpawnGroupLandmark::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoSpawnGroupLandmark*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoSpawnGroupLandmarkImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoSpawnGroupLandmark*>(impl));
+    return impl;
+}
+inline IInfoSpawnGroupLandmark* IInfoSpawnGroupLandmark::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoSpawnGroupLandmark*>(p)->ToInterface() : nullptr; }
 inline IInfoSpawnGroupLandmark* IInfoSpawnGroupLandmark::FromOriginal(CInfoSpawnGroupLandmark* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOSPAWNGROUPLANDMARKIMPL_H

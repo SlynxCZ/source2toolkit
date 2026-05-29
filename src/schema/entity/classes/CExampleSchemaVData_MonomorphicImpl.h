@@ -65,6 +65,7 @@ public:
 };
 
 inline IExampleSchemaVData_Monomorphic* CExampleSchemaVData_Monomorphic::ToInterface() { return new CExampleSchemaVData_MonomorphicImpl(this); }
+inline IExampleSchemaVData_Monomorphic* IExampleSchemaVData_Monomorphic::FromRaw(CEntityInstance*) { return nullptr; }
 inline IExampleSchemaVData_Monomorphic* IExampleSchemaVData_Monomorphic::FromOriginal(CExampleSchemaVData_Monomorphic* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_MONOMORPHICIMPL_H

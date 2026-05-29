@@ -73,6 +73,7 @@ public:
 };
 
 inline IDecalGroupOption_t* DecalGroupOption_t::ToInterface() { return new DecalGroupOption_tImpl(this); }
+inline IDecalGroupOption_t* IDecalGroupOption_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IDecalGroupOption_t* IDecalGroupOption_t::FromOriginal(DecalGroupOption_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_DECALGROUPOPTION_TIMPL_H

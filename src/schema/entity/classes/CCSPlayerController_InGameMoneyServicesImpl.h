@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerController_InGameMoneyServices.h"
 #include "CPlayerControllerComponentImpl.h"
 
-class CCSPlayerController_InGameMoneyServicesImpl : public CPlayerControllerComponentImpl, public ICSPlayerController_InGameMoneyServices
+class CCSPlayerController_InGameMoneyServicesImpl : public CPlayerControllerComponentImpl, public virtual ICSPlayerController_InGameMoneyServices
 {
 
 public:
@@ -71,6 +71,7 @@ public:
 };
 
 inline ICSPlayerController_InGameMoneyServices* CCSPlayerController_InGameMoneyServices::ToInterface() { return new CCSPlayerController_InGameMoneyServicesImpl(this); }
+inline ICSPlayerController_InGameMoneyServices* ICSPlayerController_InGameMoneyServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerController_InGameMoneyServices* ICSPlayerController_InGameMoneyServices::FromOriginal(CCSPlayerController_InGameMoneyServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_INGAMEMONEYSERVICESIMPL_H

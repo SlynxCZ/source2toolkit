@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseClientUIEntity.h"
 #include "CBaseModelEntityImpl.h"
 
-class CBaseClientUIEntityImpl : public CBaseModelEntityImpl, public IBaseClientUIEntity
+class CBaseClientUIEntityImpl : public CBaseModelEntityImpl, public virtual IBaseClientUIEntity
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void PanelIDUpdated() override { Real()->m_PanelID.NetworkStateChanged(); }
 };
 
-inline IBaseClientUIEntity* CBaseClientUIEntity::ToInterface() { return new CBaseClientUIEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseClientUIEntity* CBaseClientUIEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseClientUIEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseClientUIEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseClientUIEntity*>(impl));
+    return impl;
+}
+inline IBaseClientUIEntity* IBaseClientUIEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseClientUIEntity*>(p)->ToInterface() : nullptr; }
 inline IBaseClientUIEntity* IBaseClientUIEntity::FromOriginal(CBaseClientUIEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASECLIENTUIENTITYIMPL_H

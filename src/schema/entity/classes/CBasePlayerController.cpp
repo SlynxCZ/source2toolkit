@@ -35,25 +35,34 @@
  * Project: Source2Toolkit
  */
 
+#include "CBasePlayerPawn.h"
 #include "schema/entity/classes/CBasePlayerControllerImpl.h"
+#include "source2toolkit/schema/entity/classes/IBasePlayerPawn.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
+#include "core/virtualhooks.h"
 
-void CBasePlayerController::SetPawn(CBasePlayerPawn* pPawn)
+void CBasePlayerController::SetPawn(IBasePlayerPawn* pPawn)
 {
-#ifdef SOURCE2TOOLKIT_CORE
-    addresses::toolkitAddresses.SetPawn(this, pPawn, true, false, false, false);
-#else
-    g_ToolkitAPI->Addresses()->CBasePlayerController_SetPawn()(this, pPawn, true, false, false, false);
-#endif
+    auto* raw = pPawn ? static_cast<CBasePlayerPawn*>(pPawn->GetOriginal()) : nullptr;
+    addresses::toolkitAddresses.SetPawn(this, raw, true, false, false, false);
 }
-IBasePlayerController* CBasePlayerController::ToInterface() { return new CBasePlayerControllerImpl(this); }
+IBasePlayerController* CBasePlayerController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBasePlayerController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBasePlayerControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBasePlayerController*>(impl));
+    return impl;
+}
+
+IBasePlayerController* IBasePlayerController::FromRaw(CEntityInstance* p)
+{
+    return p ? static_cast<CBasePlayerController*>(p)->ToInterface() : nullptr;
+}
 
 IBasePlayerController* IBasePlayerController::FromOriginal(CBasePlayerController* p)
 { return CBasePlayerController::FromOriginal(p); }

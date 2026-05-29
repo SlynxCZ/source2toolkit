@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CKnife.h"
 #include "CCSWeaponBaseImpl.h"
 
-class CKnifeImpl : public CCSWeaponBaseImpl, public IKnife
+class CKnifeImpl : public CCSWeaponBaseImpl, public virtual IKnife
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void FirstAttackUpdated() override { Real()->m_bFirstAttack.NetworkStateChanged(); }
 };
 
-inline IKnife* CKnife::ToInterface() { return new CKnifeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IKnife* CKnife::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IKnife*>(tagIt->second.ptr_for_return);
+    auto* impl = new CKnifeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IKnife*>(impl));
+    return impl;
+}
+inline IKnife* IKnife::FromRaw(CEntityInstance* p) { return p ? static_cast<CKnife*>(p)->ToInterface() : nullptr; }
 inline IKnife* IKnife::FromOriginal(CKnife* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CKNIFEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseFilter.h"
 #include "CLogicalEntityImpl.h"
 
-class CBaseFilterImpl : public CLogicalEntityImpl, public IBaseFilter
+class CBaseFilterImpl : public CLogicalEntityImpl, public virtual IBaseFilter
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void OnFailUpdated() override { Real()->m_OnFail.NetworkStateChanged(); }
 };
 
-inline IBaseFilter* CBaseFilter::ToInterface() { return new CBaseFilterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseFilter* CBaseFilter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseFilter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseFilterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseFilter*>(impl));
+    return impl;
+}
+inline IBaseFilter* IBaseFilter::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseFilter*>(p)->ToInterface() : nullptr; }
 inline IBaseFilter* IBaseFilter::FromOriginal(CBaseFilter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEFILTERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointEntityFinder.h"
 #include "CBaseEntityImpl.h"
 
-class CPointEntityFinderImpl : public CBaseEntityImpl, public IPointEntityFinder
+class CPointEntityFinderImpl : public CBaseEntityImpl, public virtual IPointEntityFinder
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void OnFoundEntityUpdated() override { Real()->m_OnFoundEntity.NetworkStateChanged(); }
 };
 
-inline IPointEntityFinder* CPointEntityFinder::ToInterface() { return new CPointEntityFinderImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointEntityFinder* CPointEntityFinder::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointEntityFinder*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointEntityFinderImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointEntityFinder*>(impl));
+    return impl;
+}
+inline IPointEntityFinder* IPointEntityFinder::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointEntityFinder*>(p)->ToInterface() : nullptr; }
 inline IPointEntityFinder* IPointEntityFinder::FromOriginal(CPointEntityFinder* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTENTITYFINDERIMPL_H

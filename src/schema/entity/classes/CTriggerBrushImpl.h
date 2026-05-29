@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerBrush.h"
 #include "CBaseModelEntityImpl.h"
 
-class CTriggerBrushImpl : public CBaseModelEntityImpl, public ITriggerBrush
+class CTriggerBrushImpl : public CBaseModelEntityImpl, public virtual ITriggerBrush
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void DontMessageParentUpdated() override { Real()->m_iDontMessageParent.NetworkStateChanged(); }
 };
 
-inline ITriggerBrush* CTriggerBrush::ToInterface() { return new CTriggerBrushImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerBrush* CTriggerBrush::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerBrush*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerBrushImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerBrush*>(impl));
+    return impl;
+}
+inline ITriggerBrush* ITriggerBrush::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerBrush*>(p)->ToInterface() : nullptr; }
 inline ITriggerBrush* ITriggerBrush::FromOriginal(CTriggerBrush* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERBRUSHIMPL_H

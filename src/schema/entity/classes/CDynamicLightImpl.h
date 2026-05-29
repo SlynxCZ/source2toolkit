@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDynamicLight.h"
 #include "CBaseModelEntityImpl.h"
 
-class CDynamicLightImpl : public CBaseModelEntityImpl, public IDynamicLight
+class CDynamicLightImpl : public CBaseModelEntityImpl, public virtual IDynamicLight
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void SpotRadiusUpdated() override { Real()->m_SpotRadius.NetworkStateChanged(); }
 };
 
-inline IDynamicLight* CDynamicLight::ToInterface() { return new CDynamicLightImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDynamicLight* CDynamicLight::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDynamicLight*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDynamicLightImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDynamicLight*>(impl));
+    return impl;
+}
+inline IDynamicLight* IDynamicLight::FromRaw(CEntityInstance* p) { return p ? static_cast<CDynamicLight*>(p)->ToInterface() : nullptr; }
 inline IDynamicLight* IDynamicLight::FromOriginal(CDynamicLight* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDYNAMICLIGHTIMPL_H

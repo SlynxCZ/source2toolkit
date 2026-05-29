@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvLaser.h"
 #include "CBeamImpl.h"
 
-class CEnvLaserImpl : public CBeamImpl, public IEnvLaser
+class CEnvLaserImpl : public CBeamImpl, public virtual IEnvLaser
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void StartFrameUpdated() override { Real()->m_flStartFrame.NetworkStateChanged(); }
 };
 
-inline IEnvLaser* CEnvLaser::ToInterface() { return new CEnvLaserImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvLaser* CEnvLaser::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvLaser*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvLaserImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvLaser*>(impl));
+    return impl;
+}
+inline IEnvLaser* IEnvLaser::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvLaser*>(p)->ToInterface() : nullptr; }
 inline IEnvLaser* IEnvLaser::FromOriginal(CEnvLaser* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVLASERIMPL_H

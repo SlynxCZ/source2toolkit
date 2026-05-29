@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItem.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CItemImpl : public CBaseAnimGraphImpl, public IItem
+class CItemImpl : public CBaseAnimGraphImpl, public virtual IItem
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void PhysStartAsleepUpdated() override { Real()->m_bPhysStartAsleep.NetworkStateChanged(); }
 };
 
-inline IItem* CItem::ToInterface() { return new CItemImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItem* CItem::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItem*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItem*>(impl));
+    return impl;
+}
+inline IItem* IItem::FromRaw(CEntityInstance* p) { return p ? static_cast<CItem*>(p)->ToInterface() : nullptr; }
 inline IItem* IItem::FromOriginal(CItem* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMIMPL_H

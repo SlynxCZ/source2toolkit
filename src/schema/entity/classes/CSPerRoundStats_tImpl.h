@@ -87,6 +87,7 @@ public:
 };
 
 inline ISPerRoundStats_t* CSPerRoundStats_t::ToInterface() { return new CSPerRoundStats_tImpl(this); }
+inline ISPerRoundStats_t* ISPerRoundStats_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISPerRoundStats_t* ISPerRoundStats_t::FromOriginal(CSPerRoundStats_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSPERROUNDSTATS_TIMPL_H

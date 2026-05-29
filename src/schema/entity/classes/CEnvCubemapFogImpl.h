@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvCubemapFog.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvCubemapFogImpl : public CBaseEntityImpl, public IEnvCubemapFog
+class CEnvCubemapFogImpl : public CBaseEntityImpl, public virtual IEnvCubemapFog
 {
 
 public:
@@ -106,7 +106,20 @@ public:
     void FirstTimeUpdated() override { Real()->m_bFirstTime.NetworkStateChanged(); }
 };
 
-inline IEnvCubemapFog* CEnvCubemapFog::ToInterface() { return new CEnvCubemapFogImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvCubemapFog* CEnvCubemapFog::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvCubemapFog*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvCubemapFogImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvCubemapFog*>(impl));
+    return impl;
+}
+inline IEnvCubemapFog* IEnvCubemapFog::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvCubemapFog*>(p)->ToInterface() : nullptr; }
 inline IEnvCubemapFog* IEnvCubemapFog::FromOriginal(CEnvCubemapFog* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVCUBEMAPFOGIMPL_H

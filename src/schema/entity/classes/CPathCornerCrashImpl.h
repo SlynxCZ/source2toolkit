@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathCornerCrash.h"
 #include "CPathCornerImpl.h"
 
-class CPathCornerCrashImpl : public CPathCornerImpl, public IPathCornerCrash
+class CPathCornerCrashImpl : public CPathCornerImpl, public virtual IPathCornerCrash
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPathCornerCrash* GetOriginal() const override { return Real(); }
 };
 
-inline IPathCornerCrash* CPathCornerCrash::ToInterface() { return new CPathCornerCrashImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathCornerCrash* CPathCornerCrash::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathCornerCrash*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathCornerCrashImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathCornerCrash*>(impl));
+    return impl;
+}
+inline IPathCornerCrash* IPathCornerCrash::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathCornerCrash*>(p)->ToInterface() : nullptr; }
 inline IPathCornerCrash* IPathCornerCrash::FromOriginal(CPathCornerCrash* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHCORNERCRASHIMPL_H

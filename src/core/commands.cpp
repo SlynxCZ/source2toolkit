@@ -41,8 +41,8 @@
 #include "pluginmanager.h"
 #include "raytrace.h"
 #include "shared.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
+#include "source2toolkit/schema/entity/classes/ICSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/ICSPlayerPawn.h"
 #include "source2toolkit/IToolkitPlugin.h"
 #include "utils/log.h"
 
@@ -209,8 +209,8 @@ namespace commands {
 
     static void HandleMenuCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
     {
-        CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot().Get());
-        if (!player || player->m_iConnected() != PlayerConnectedState::Connected)
+        ICSPlayerController* player = ICSPlayerController::FromSlot(ctx.GetPlayerSlot().Get());
+        if (!player || player->Connected() != PlayerConnectedState::Connected)
             return;
 
         if (args.ArgC() < 1)

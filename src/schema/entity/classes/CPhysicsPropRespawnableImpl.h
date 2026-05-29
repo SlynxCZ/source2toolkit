@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsPropRespawnable.h"
 #include "CPhysicsPropImpl.h"
 
-class CPhysicsPropRespawnableImpl : public CPhysicsPropImpl, public IPhysicsPropRespawnable
+class CPhysicsPropRespawnableImpl : public CPhysicsPropImpl, public virtual IPhysicsPropRespawnable
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void RespawnDurationUpdated() override { Real()->m_flRespawnDuration.NetworkStateChanged(); }
 };
 
-inline IPhysicsPropRespawnable* CPhysicsPropRespawnable::ToInterface() { return new CPhysicsPropRespawnableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsPropRespawnable* CPhysicsPropRespawnable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsPropRespawnable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsPropRespawnableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsPropRespawnable*>(impl));
+    return impl;
+}
+inline IPhysicsPropRespawnable* IPhysicsPropRespawnable::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsPropRespawnable*>(p)->ToInterface() : nullptr; }
 inline IPhysicsPropRespawnable* IPhysicsPropRespawnable::FromOriginal(CPhysicsPropRespawnable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSPROPRESPAWNABLEIMPL_H

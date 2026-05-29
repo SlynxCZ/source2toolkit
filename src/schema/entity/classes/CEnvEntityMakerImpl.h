@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvEntityMaker.h"
 #include "CPointEntityImpl.h"
 
-class CEnvEntityMakerImpl : public CPointEntityImpl, public IEnvEntityMaker
+class CEnvEntityMakerImpl : public CPointEntityImpl, public virtual IEnvEntityMaker
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void OutputOnFailedSpawnUpdated() override { Real()->m_pOutputOnFailedSpawn.NetworkStateChanged(); }
 };
 
-inline IEnvEntityMaker* CEnvEntityMaker::ToInterface() { return new CEnvEntityMakerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvEntityMaker* CEnvEntityMaker::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvEntityMaker*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvEntityMakerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvEntityMaker*>(impl));
+    return impl;
+}
+inline IEnvEntityMaker* IEnvEntityMaker::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvEntityMaker*>(p)->ToInterface() : nullptr; }
 inline IEnvEntityMaker* IEnvEntityMaker::FromOriginal(CEnvEntityMaker* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVENTITYMAKERIMPL_H

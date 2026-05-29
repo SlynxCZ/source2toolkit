@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRectLight.h"
 #include "CBarnLightImpl.h"
 
-class CRectLightImpl : public CBarnLightImpl, public IRectLight
+class CRectLightImpl : public CBarnLightImpl, public virtual IRectLight
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ShowLightUpdated() override { Real()->m_bShowLight.NetworkStateChanged(); }
 };
 
-inline IRectLight* CRectLight::ToInterface() { return new CRectLightImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRectLight* CRectLight::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRectLight*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRectLightImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRectLight*>(impl));
+    return impl;
+}
+inline IRectLight* IRectLight::FromRaw(CEntityInstance* p) { return p ? static_cast<CRectLight*>(p)->ToInterface() : nullptr; }
 inline IRectLight* IRectLight::FromOriginal(CRectLight* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRECTLIGHTIMPL_H

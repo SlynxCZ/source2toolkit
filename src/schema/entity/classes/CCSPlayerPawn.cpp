@@ -38,27 +38,42 @@
 #include "schema/entity/classes/CCSPlayerPawnImpl.h"
 #include "schema/entity/classes/CCSPlayerController.h"
 
-CCSPlayerController* CCSPlayerPawn::GetController()
+ICSPlayerController* CCSPlayerPawn::GetController()
 {
     if (auto handle = m_hController(); handle.IsValid())
-        return static_cast<CCSPlayerController*>(handle.Get());
+        return static_cast<CCSPlayerController*>(handle.Get())->ToInterface();
     return nullptr;
 }
 
-CCSPlayerController* CCSPlayerPawn::GetDefaultController()
+ICSPlayerController* CCSPlayerPawn::GetDefaultController()
 {
     if (auto handle = m_hDefaultController(); handle.IsValid())
-        return static_cast<CCSPlayerController*>(handle.Get());
+        return static_cast<CCSPlayerController*>(handle.Get())->ToInterface();
     return nullptr;
 }
 
-CCSPlayerController* CCSPlayerPawn::GetOriginalController()
+ICSPlayerController* CCSPlayerPawn::GetOriginalController()
 {
     if (auto handle = m_hOriginalController(); handle.IsValid())
-        return handle.Get();
+        return handle.Get()->ToInterface();
     return nullptr;
 }
-ICSPlayerPawn* CCSPlayerPawn::ToInterface() { return new CCSPlayerPawnImpl(this); }
+ICSPlayerPawn* CCSPlayerPawn::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPlayerPawn*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPlayerPawnImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPlayerPawn*>(impl));
+    return impl;
+}
+
+ICSPlayerPawn* ICSPlayerPawn::FromRaw(CEntityInstance* p)
+{
+    return p ? static_cast<CCSPlayerPawn*>(p)->ToInterface() : nullptr;
+}
 
 ICSPlayerPawn* ICSPlayerPawn::FromOriginal(CCSPlayerPawn* p)
 { return CCSPlayerPawn::FromOriginal(p); }

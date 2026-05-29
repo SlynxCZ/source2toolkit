@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CServerOnlyEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CServerOnlyEntityImpl : public CBaseEntityImpl, public IServerOnlyEntity
+class CServerOnlyEntityImpl : public CBaseEntityImpl, public virtual IServerOnlyEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CServerOnlyEntity* GetOriginal() const override { return Real(); }
 };
 
-inline IServerOnlyEntity* CServerOnlyEntity::ToInterface() { return new CServerOnlyEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IServerOnlyEntity* CServerOnlyEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IServerOnlyEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CServerOnlyEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IServerOnlyEntity*>(impl));
+    return impl;
+}
+inline IServerOnlyEntity* IServerOnlyEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CServerOnlyEntity*>(p)->ToInterface() : nullptr; }
 inline IServerOnlyEntity* IServerOnlyEntity::FromOriginal(CServerOnlyEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSERVERONLYENTITYIMPL_H

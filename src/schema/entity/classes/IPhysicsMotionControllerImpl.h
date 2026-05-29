@@ -61,6 +61,7 @@ public:
 };
 
 inline IIPhysicsMotionController* IPhysicsMotionController::ToInterface() { return new IPhysicsMotionControllerImpl(this); }
+inline IIPhysicsMotionController* IIPhysicsMotionController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIPhysicsMotionController* IIPhysicsMotionController::FromOriginal(IPhysicsMotionController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IPHYSICSMOTIONCONTROLLERIMPL_H

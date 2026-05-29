@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysPulley.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysPulleyImpl : public CPhysConstraintImpl, public IPhysPulley
+class CPhysPulleyImpl : public CPhysConstraintImpl, public virtual IPhysPulley
 {
 
 public:
@@ -65,7 +65,20 @@ public:
     void GearRatioUpdated() override { Real()->m_gearRatio.NetworkStateChanged(); }
 };
 
-inline IPhysPulley* CPhysPulley::ToInterface() { return new CPhysPulleyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysPulley* CPhysPulley::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysPulley*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysPulleyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysPulley*>(impl));
+    return impl;
+}
+inline IPhysPulley* IPhysPulley::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysPulley*>(p)->ToInterface() : nullptr; }
 inline IPhysPulley* IPhysPulley::FromOriginal(CPhysPulley* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSPULLEYIMPL_H

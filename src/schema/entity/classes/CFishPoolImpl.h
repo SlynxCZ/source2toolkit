@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFishPool.h"
 #include "CBaseEntityImpl.h"
 
-class CFishPoolImpl : public CBaseEntityImpl, public IFishPool
+class CFishPoolImpl : public CBaseEntityImpl, public virtual IFishPool
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void VisTimerUpdated() override { Real()->m_visTimer.NetworkStateChanged(); }
 };
 
-inline IFishPool* CFishPool::ToInterface() { return new CFishPoolImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFishPool* CFishPool::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFishPool*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFishPoolImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFishPool*>(impl));
+    return impl;
+}
+inline IFishPool* IFishPool::FromRaw(CEntityInstance* p) { return p ? static_cast<CFishPool*>(p)->ToInterface() : nullptr; }
 inline IFishPool* IFishPool::FromOriginal(CFishPool* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFISHPOOLIMPL_H

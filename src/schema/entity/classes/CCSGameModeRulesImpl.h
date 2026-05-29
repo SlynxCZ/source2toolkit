@@ -63,6 +63,7 @@ public:
 };
 
 inline ICSGameModeRules* CCSGameModeRules::ToInterface() { return new CCSGameModeRulesImpl(this); }
+inline ICSGameModeRules* ICSGameModeRules::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSGameModeRules* ICSGameModeRules::FromOriginal(CCSGameModeRules* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGAMEMODERULESIMPL_H

@@ -65,6 +65,7 @@ public:
 };
 
 inline IRotatorQueueEntry_t* RotatorQueueEntry_t::ToInterface() { return new RotatorQueueEntry_tImpl(this); }
+inline IRotatorQueueEntry_t* IRotatorQueueEntry_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IRotatorQueueEntry_t* IRotatorQueueEntry_t::FromOriginal(RotatorQueueEntry_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_ROTATORQUEUEENTRY_TIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTankTargetChange.h"
 #include "CPointEntityImpl.h"
 
-class CTankTargetChangeImpl : public CPointEntityImpl, public ITankTargetChange
+class CTankTargetChangeImpl : public CPointEntityImpl, public virtual ITankTargetChange
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void NewTargetNameUpdated() override { Real()->m_newTargetName.NetworkStateChanged(); }
 };
 
-inline ITankTargetChange* CTankTargetChange::ToInterface() { return new CTankTargetChangeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITankTargetChange* CTankTargetChange::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITankTargetChange*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTankTargetChangeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITankTargetChange*>(impl));
+    return impl;
+}
+inline ITankTargetChange* ITankTargetChange::FromRaw(CEntityInstance* p) { return p ? static_cast<CTankTargetChange*>(p)->ToInterface() : nullptr; }
 inline ITankTargetChange* ITankTargetChange::FromOriginal(CTankTargetChange* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTANKTARGETCHANGEIMPL_H

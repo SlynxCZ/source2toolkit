@@ -44,7 +44,7 @@
 #include "schema/entity/classes/FilterHealth.h"
 #include "CBaseFilterImpl.h"
 
-class FilterHealthImpl : public CBaseFilterImpl, public IFilterHealth
+class FilterHealthImpl : public CBaseFilterImpl, public virtual IFilterHealth
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void HealthMaxUpdated() override { Real()->m_iHealthMax.NetworkStateChanged(); }
 };
 
-inline IFilterHealth* FilterHealth::ToInterface() { return new FilterHealthImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterHealth* FilterHealth::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterHealth*>(tagIt->second.ptr_for_return);
+    auto* impl = new FilterHealthImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterHealth*>(impl));
+    return impl;
+}
+inline IFilterHealth* IFilterHealth::FromRaw(CEntityInstance* p) { return p ? static_cast<FilterHealth*>(p)->ToInterface() : nullptr; }
 inline IFilterHealth* IFilterHealth::FromOriginal(FilterHealth* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_FILTERHEALTHIMPL_H

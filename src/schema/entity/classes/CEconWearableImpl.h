@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEconWearable.h"
 #include "CEconEntityImpl.h"
 
-class CEconWearableImpl : public CEconEntityImpl, public IEconWearable
+class CEconWearableImpl : public CEconEntityImpl, public virtual IEconWearable
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void AlwaysAllowUpdated() override { Real()->m_bAlwaysAllow.NetworkStateChanged(); }
 };
 
-inline IEconWearable* CEconWearable::ToInterface() { return new CEconWearableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEconWearable* CEconWearable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEconWearable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEconWearableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEconWearable*>(impl));
+    return impl;
+}
+inline IEconWearable* IEconWearable::FromRaw(CEntityInstance* p) { return p ? static_cast<CEconWearable*>(p)->ToInterface() : nullptr; }
 inline IEconWearable* IEconWearable::FromOriginal(CEconWearable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CECONWEARABLEIMPL_H

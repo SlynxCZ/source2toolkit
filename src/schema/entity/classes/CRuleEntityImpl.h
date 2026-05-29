@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRuleEntity.h"
 #include "CBaseModelEntityImpl.h"
 
-class CRuleEntityImpl : public CBaseModelEntityImpl, public IRuleEntity
+class CRuleEntityImpl : public CBaseModelEntityImpl, public virtual IRuleEntity
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MasterUpdated() override { Real()->m_iszMaster.NetworkStateChanged(); }
 };
 
-inline IRuleEntity* CRuleEntity::ToInterface() { return new CRuleEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRuleEntity* CRuleEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRuleEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRuleEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRuleEntity*>(impl));
+    return impl;
+}
+inline IRuleEntity* IRuleEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CRuleEntity*>(p)->ToInterface() : nullptr; }
 inline IRuleEntity* IRuleEntity::FromOriginal(CRuleEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRULEENTITYIMPL_H

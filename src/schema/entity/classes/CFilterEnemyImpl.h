@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterEnemy.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterEnemyImpl : public CBaseFilterImpl, public IFilterEnemy
+class CFilterEnemyImpl : public CBaseFilterImpl, public virtual IFilterEnemy
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void PlayerNameUpdated() override { Real()->m_iszPlayerName.NetworkStateChanged(); }
 };
 
-inline IFilterEnemy* CFilterEnemy::ToInterface() { return new CFilterEnemyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterEnemy* CFilterEnemy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterEnemy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterEnemyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterEnemy*>(impl));
+    return impl;
+}
+inline IFilterEnemy* IFilterEnemy::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterEnemy*>(p)->ToInterface() : nullptr; }
 inline IFilterEnemy* IFilterEnemy::FromOriginal(CFilterEnemy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERENEMYIMPL_H

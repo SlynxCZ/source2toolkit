@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEmptyGraphController.h"
 #include "CAnimGraphControllerBaseImpl.h"
 
-class CEmptyGraphControllerImpl : public CAnimGraphControllerBaseImpl, public IEmptyGraphController
+class CEmptyGraphControllerImpl : public CAnimGraphControllerBaseImpl, public virtual IEmptyGraphController
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IEmptyGraphController* CEmptyGraphController::ToInterface() { return new CEmptyGraphControllerImpl(this); }
+inline IEmptyGraphController* IEmptyGraphController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEmptyGraphController* IEmptyGraphController::FromOriginal(CEmptyGraphController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CEMPTYGRAPHCONTROLLERIMPL_H

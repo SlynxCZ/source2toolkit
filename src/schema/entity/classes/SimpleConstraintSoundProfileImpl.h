@@ -71,6 +71,7 @@ public:
 };
 
 inline ISimpleConstraintSoundProfile* SimpleConstraintSoundProfile::ToInterface() { return new SimpleConstraintSoundProfileImpl(this); }
+inline ISimpleConstraintSoundProfile* ISimpleConstraintSoundProfile::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISimpleConstraintSoundProfile* ISimpleConstraintSoundProfile::FromOriginal(SimpleConstraintSoundProfile* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SIMPLECONSTRAINTSOUNDPROFILEIMPL_H

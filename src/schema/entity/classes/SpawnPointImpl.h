@@ -44,7 +44,7 @@
 #include "schema/entity/classes/SpawnPoint.h"
 #include "CServerOnlyPointEntityImpl.h"
 
-class SpawnPointImpl : public CServerOnlyPointEntityImpl, public ISpawnPoint
+class SpawnPointImpl : public CServerOnlyPointEntityImpl, public virtual ISpawnPoint
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void TypeUpdated() override { Real()->m_nType.NetworkStateChanged(); }
 };
 
-inline ISpawnPoint* SpawnPoint::ToInterface() { return new SpawnPointImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISpawnPoint* SpawnPoint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISpawnPoint*>(tagIt->second.ptr_for_return);
+    auto* impl = new SpawnPointImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISpawnPoint*>(impl));
+    return impl;
+}
+inline ISpawnPoint* ISpawnPoint::FromRaw(CEntityInstance* p) { return p ? static_cast<SpawnPoint*>(p)->ToInterface() : nullptr; }
 inline ISpawnPoint* ISpawnPoint::FromOriginal(SpawnPoint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SPAWNPOINTIMPL_H

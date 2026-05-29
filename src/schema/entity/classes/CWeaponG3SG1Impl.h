@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponG3SG1.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponG3SG1Impl : public CCSWeaponBaseGunImpl, public IWeaponG3SG1
+class CWeaponG3SG1Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponG3SG1
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponG3SG1* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponG3SG1* CWeaponG3SG1::ToInterface() { return new CWeaponG3SG1Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponG3SG1* CWeaponG3SG1::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponG3SG1*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponG3SG1Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponG3SG1*>(impl));
+    return impl;
+}
+inline IWeaponG3SG1* IWeaponG3SG1::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponG3SG1*>(p)->ToInterface() : nullptr; }
 inline IWeaponG3SG1* IWeaponG3SG1::FromOriginal(CWeaponG3SG1* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONG3SG1IMPL_H

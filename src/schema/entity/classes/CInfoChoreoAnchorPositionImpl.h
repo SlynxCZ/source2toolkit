@@ -73,6 +73,7 @@ public:
 };
 
 inline IInfoChoreoAnchorPosition* CInfoChoreoAnchorPosition::ToInterface() { return new CInfoChoreoAnchorPositionImpl(this); }
+inline IInfoChoreoAnchorPosition* IInfoChoreoAnchorPosition::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoChoreoAnchorPosition* IInfoChoreoAnchorPosition::FromOriginal(CInfoChoreoAnchorPosition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOCHOREOANCHORPOSITIONIMPL_H

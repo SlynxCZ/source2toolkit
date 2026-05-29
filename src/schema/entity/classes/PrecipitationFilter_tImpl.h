@@ -63,6 +63,7 @@ public:
 };
 
 inline IPrecipitationFilter_t* PrecipitationFilter_t::ToInterface() { return new PrecipitationFilter_tImpl(this); }
+inline IPrecipitationFilter_t* IPrecipitationFilter_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPrecipitationFilter_t* IPrecipitationFilter_t::FromOriginal(PrecipitationFilter_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_PRECIPITATIONFILTER_TIMPL_H

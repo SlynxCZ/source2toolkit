@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFootstepControl.h"
 #include "CBaseTriggerImpl.h"
 
-class CFootstepControlImpl : public CBaseTriggerImpl, public IFootstepControl
+class CFootstepControlImpl : public CBaseTriggerImpl, public virtual IFootstepControl
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void DestinationUpdated() override { Real()->m_destination.NetworkStateChanged(); }
 };
 
-inline IFootstepControl* CFootstepControl::ToInterface() { return new CFootstepControlImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFootstepControl* CFootstepControl::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFootstepControl*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFootstepControlImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFootstepControl*>(impl));
+    return impl;
+}
+inline IFootstepControl* IFootstepControl::FromRaw(CEntityInstance* p) { return p ? static_cast<CFootstepControl*>(p)->ToInterface() : nullptr; }
 inline IFootstepControl* IFootstepControl::FromOriginal(CFootstepControl* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFOOTSTEPCONTROLIMPL_H

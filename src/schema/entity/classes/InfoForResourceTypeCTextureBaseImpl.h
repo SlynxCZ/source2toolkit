@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeCTextureBase* InfoForResourceTypeCTextureBase::ToInterface() { return new InfoForResourceTypeCTextureBaseImpl(this); }
+inline IInfoForResourceTypeCTextureBase* IInfoForResourceTypeCTextureBase::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeCTextureBase* IInfoForResourceTypeCTextureBase::FromOriginal(InfoForResourceTypeCTextureBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECTEXTUREBASEIMPL_H

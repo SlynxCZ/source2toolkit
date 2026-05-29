@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerSoundscape.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerSoundscapeImpl : public CBaseTriggerImpl, public ITriggerSoundscape
+class CTriggerSoundscapeImpl : public CBaseTriggerImpl, public virtual ITriggerSoundscape
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void SpectatorsUpdated() override { Real()->m_spectators.NetworkStateChanged(); }
 };
 
-inline ITriggerSoundscape* CTriggerSoundscape::ToInterface() { return new CTriggerSoundscapeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerSoundscape* CTriggerSoundscape::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerSoundscape*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerSoundscapeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerSoundscape*>(impl));
+    return impl;
+}
+inline ITriggerSoundscape* ITriggerSoundscape::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerSoundscape*>(p)->ToInterface() : nullptr; }
 inline ITriggerSoundscape* ITriggerSoundscape::FromOriginal(CTriggerSoundscape* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERSOUNDSCAPEIMPL_H

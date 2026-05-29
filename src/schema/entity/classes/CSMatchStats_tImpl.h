@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSMatchStats_t.h"
 #include "CSPerRoundStats_tImpl.h"
 
-class CSMatchStats_tImpl : public CSPerRoundStats_tImpl, public ISMatchStats_t
+class CSMatchStats_tImpl : public CSPerRoundStats_tImpl, public virtual ISMatchStats_t
 {
 
 public:
@@ -101,6 +101,7 @@ public:
 };
 
 inline ISMatchStats_t* CSMatchStats_t::ToInterface() { return new CSMatchStats_tImpl(this); }
+inline ISMatchStats_t* ISMatchStats_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISMatchStats_t* ISMatchStats_t::FromOriginal(CSMatchStats_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSMATCHSTATS_TIMPL_H

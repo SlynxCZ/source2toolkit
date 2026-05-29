@@ -71,6 +71,7 @@ public:
 };
 
 inline IBaseIssue* CBaseIssue::ToInterface() { return new CBaseIssueImpl(this); }
+inline IBaseIssue* IBaseIssue::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBaseIssue* IBaseIssue::FromOriginal(CBaseIssue* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEISSUEIMPL_H

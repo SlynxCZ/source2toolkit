@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundOpvarSetAutoRoomEntity.h"
 #include "CSoundOpvarSetPointEntityImpl.h"
 
-class CSoundOpvarSetAutoRoomEntityImpl : public CSoundOpvarSetPointEntityImpl, public ISoundOpvarSetAutoRoomEntity
+class CSoundOpvarSetAutoRoomEntityImpl : public CSoundOpvarSetPointEntityImpl, public virtual ISoundOpvarSetAutoRoomEntity
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void SizeSqrUpdated() override { Real()->m_flSizeSqr.NetworkStateChanged(); }
 };
 
-inline ISoundOpvarSetAutoRoomEntity* CSoundOpvarSetAutoRoomEntity::ToInterface() { return new CSoundOpvarSetAutoRoomEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundOpvarSetAutoRoomEntity* CSoundOpvarSetAutoRoomEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundOpvarSetAutoRoomEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundOpvarSetAutoRoomEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundOpvarSetAutoRoomEntity*>(impl));
+    return impl;
+}
+inline ISoundOpvarSetAutoRoomEntity* ISoundOpvarSetAutoRoomEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundOpvarSetAutoRoomEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundOpvarSetAutoRoomEntity* ISoundOpvarSetAutoRoomEntity::FromOriginal(CSoundOpvarSetAutoRoomEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDOPVARSETAUTOROOMENTITYIMPL_H

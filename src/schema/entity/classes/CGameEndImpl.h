@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGameEnd.h"
 #include "CRulePointEntityImpl.h"
 
-class CGameEndImpl : public CRulePointEntityImpl, public IGameEnd
+class CGameEndImpl : public CRulePointEntityImpl, public virtual IGameEnd
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CGameEnd* GetOriginal() const override { return Real(); }
 };
 
-inline IGameEnd* CGameEnd::ToInterface() { return new CGameEndImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGameEnd* CGameEnd::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGameEnd*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGameEndImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGameEnd*>(impl));
+    return impl;
+}
+inline IGameEnd* IGameEnd::FromRaw(CEntityInstance* p) { return p ? static_cast<CGameEnd*>(p)->ToInterface() : nullptr; }
 inline IGameEnd* IGameEnd::FromOriginal(CGameEnd* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMEENDIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CParticleSystem.h"
 #include "CBaseModelEntityImpl.h"
 
-class CParticleSystemImpl : public CBaseModelEntityImpl, public IParticleSystem
+class CParticleSystemImpl : public CBaseModelEntityImpl, public virtual IParticleSystem
 {
 
 public:
@@ -97,7 +97,20 @@ public:
     void TintUpdated() override { Real()->m_clrTint.NetworkStateChanged(); }
 };
 
-inline IParticleSystem* CParticleSystem::ToInterface() { return new CParticleSystemImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IParticleSystem* CParticleSystem::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IParticleSystem*>(tagIt->second.ptr_for_return);
+    auto* impl = new CParticleSystemImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IParticleSystem*>(impl));
+    return impl;
+}
+inline IParticleSystem* IParticleSystem::FromRaw(CEntityInstance* p) { return p ? static_cast<CParticleSystem*>(p)->ToInterface() : nullptr; }
 inline IParticleSystem* IParticleSystem::FromOriginal(CParticleSystem* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPARTICLESYSTEMIMPL_H

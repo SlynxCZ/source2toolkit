@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRotatorTarget.h"
 #include "CPointEntityImpl.h"
 
-class CRotatorTargetImpl : public CPointEntityImpl, public IRotatorTarget
+class CRotatorTargetImpl : public CPointEntityImpl, public virtual IRotatorTarget
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void SpaceUpdated() override { Real()->m_eSpace.NetworkStateChanged(); }
 };
 
-inline IRotatorTarget* CRotatorTarget::ToInterface() { return new CRotatorTargetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRotatorTarget* CRotatorTarget::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRotatorTarget*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRotatorTargetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRotatorTarget*>(impl));
+    return impl;
+}
+inline IRotatorTarget* IRotatorTarget::FromRaw(CEntityInstance* p) { return p ? static_cast<CRotatorTarget*>(p)->ToInterface() : nullptr; }
 inline IRotatorTarget* IRotatorTarget::FromOriginal(CRotatorTarget* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CROTATORTARGETIMPL_H

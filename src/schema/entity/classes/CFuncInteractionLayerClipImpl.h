@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncInteractionLayerClip.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncInteractionLayerClipImpl : public CBaseModelEntityImpl, public IFuncInteractionLayerClip
+class CFuncInteractionLayerClipImpl : public CBaseModelEntityImpl, public virtual IFuncInteractionLayerClip
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void InteractsWithUpdated() override { Real()->m_iszInteractsWith.NetworkStateChanged(); }
 };
 
-inline IFuncInteractionLayerClip* CFuncInteractionLayerClip::ToInterface() { return new CFuncInteractionLayerClipImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncInteractionLayerClip* CFuncInteractionLayerClip::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncInteractionLayerClip*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncInteractionLayerClipImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncInteractionLayerClip*>(impl));
+    return impl;
+}
+inline IFuncInteractionLayerClip* IFuncInteractionLayerClip::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncInteractionLayerClip*>(p)->ToInterface() : nullptr; }
 inline IFuncInteractionLayerClip* IFuncInteractionLayerClip::FromOriginal(CFuncInteractionLayerClip* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCINTERACTIONLAYERCLIPIMPL_H

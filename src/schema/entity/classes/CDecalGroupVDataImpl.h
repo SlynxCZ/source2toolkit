@@ -65,6 +65,7 @@ public:
 };
 
 inline IDecalGroupVData* CDecalGroupVData::ToInterface() { return new CDecalGroupVDataImpl(this); }
+inline IDecalGroupVData* IDecalGroupVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline IDecalGroupVData* IDecalGroupVData::FromOriginal(CDecalGroupVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDECALGROUPVDATAIMPL_H

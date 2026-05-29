@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathSimple.h"
 #include "CBaseEntityImpl.h"
 
-class CPathSimpleImpl : public CBaseEntityImpl, public IPathSimple
+class CPathSimpleImpl : public CBaseEntityImpl, public virtual IPathSimple
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void ClosedLoopUpdated() override { Real()->m_bClosedLoop.NetworkStateChanged(); }
 };
 
-inline IPathSimple* CPathSimple::ToInterface() { return new CPathSimpleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathSimple* CPathSimple::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathSimple*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathSimpleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathSimple*>(impl));
+    return impl;
+}
+inline IPathSimple* IPathSimple::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathSimple*>(p)->ToInterface() : nullptr; }
 inline IPathSimple* IPathSimple::FromOriginal(CPathSimple* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHSIMPLEIMPL_H

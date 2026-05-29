@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePlatTrain.h"
 #include "CBaseToggleImpl.h"
 
-class CBasePlatTrainImpl : public CBaseToggleImpl, public IBasePlatTrain
+class CBasePlatTrainImpl : public CBaseToggleImpl, public virtual IBasePlatTrain
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void TLengthUpdated() override { Real()->m_flTLength.NetworkStateChanged(); }
 };
 
-inline IBasePlatTrain* CBasePlatTrain::ToInterface() { return new CBasePlatTrainImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBasePlatTrain* CBasePlatTrain::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBasePlatTrain*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBasePlatTrainImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBasePlatTrain*>(impl));
+    return impl;
+}
+inline IBasePlatTrain* IBasePlatTrain::FromRaw(CEntityInstance* p) { return p ? static_cast<CBasePlatTrain*>(p)->ToInterface() : nullptr; }
 inline IBasePlatTrain* IBasePlatTrain::FromOriginal(CBasePlatTrain* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEPLATTRAINIMPL_H

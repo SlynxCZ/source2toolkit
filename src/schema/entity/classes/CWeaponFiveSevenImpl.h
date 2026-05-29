@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponFiveSeven.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponFiveSevenImpl : public CCSWeaponBaseGunImpl, public IWeaponFiveSeven
+class CWeaponFiveSevenImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponFiveSeven
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponFiveSeven* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponFiveSeven* CWeaponFiveSeven::ToInterface() { return new CWeaponFiveSevenImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponFiveSeven* CWeaponFiveSeven::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponFiveSeven*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponFiveSevenImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponFiveSeven*>(impl));
+    return impl;
+}
+inline IWeaponFiveSeven* IWeaponFiveSeven::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponFiveSeven*>(p)->ToInterface() : nullptr; }
 inline IWeaponFiveSeven* IWeaponFiveSeven::FromOriginal(CWeaponFiveSeven* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONFIVESEVENIMPL_H

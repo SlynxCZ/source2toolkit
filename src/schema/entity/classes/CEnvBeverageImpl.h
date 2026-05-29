@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvBeverage.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvBeverageImpl : public CBaseEntityImpl, public IEnvBeverage
+class CEnvBeverageImpl : public CBaseEntityImpl, public virtual IEnvBeverage
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void BeverageTypeUpdated() override { Real()->m_nBeverageType.NetworkStateChanged(); }
 };
 
-inline IEnvBeverage* CEnvBeverage::ToInterface() { return new CEnvBeverageImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvBeverage* CEnvBeverage::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvBeverage*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvBeverageImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvBeverage*>(impl));
+    return impl;
+}
+inline IEnvBeverage* IEnvBeverage::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvBeverage*>(p)->ToInterface() : nullptr; }
 inline IEnvBeverage* IEnvBeverage::FromOriginal(CEnvBeverage* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVBEVERAGEIMPL_H

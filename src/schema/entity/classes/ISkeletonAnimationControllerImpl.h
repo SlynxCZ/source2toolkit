@@ -61,6 +61,7 @@ public:
 };
 
 inline IISkeletonAnimationController* ISkeletonAnimationController::ToInterface() { return new ISkeletonAnimationControllerImpl(this); }
+inline IISkeletonAnimationController* IISkeletonAnimationController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IISkeletonAnimationController* IISkeletonAnimationController::FromOriginal(ISkeletonAnimationController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_ISKELETONANIMATIONCONTROLLERIMPL_H

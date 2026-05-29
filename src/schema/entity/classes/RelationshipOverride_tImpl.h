@@ -44,7 +44,7 @@
 #include "schema/entity/classes/RelationshipOverride_t.h"
 #include "Relationship_tImpl.h"
 
-class RelationshipOverride_tImpl : public Relationship_tImpl, public IRelationshipOverride_t
+class RelationshipOverride_tImpl : public Relationship_tImpl, public virtual IRelationshipOverride_t
 {
 
 public:
@@ -63,6 +63,7 @@ public:
 };
 
 inline IRelationshipOverride_t* RelationshipOverride_t::ToInterface() { return new RelationshipOverride_tImpl(this); }
+inline IRelationshipOverride_t* IRelationshipOverride_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IRelationshipOverride_t* IRelationshipOverride_t::FromOriginal(RelationshipOverride_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RELATIONSHIPOVERRIDE_TIMPL_H

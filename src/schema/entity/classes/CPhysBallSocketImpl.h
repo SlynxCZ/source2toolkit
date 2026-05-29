@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysBallSocket.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysBallSocketImpl : public CPhysConstraintImpl, public IPhysBallSocket
+class CPhysBallSocketImpl : public CPhysConstraintImpl, public virtual IPhysBallSocket
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void MaxTwistAngleUpdated() override { Real()->m_flMaxTwistAngle.NetworkStateChanged(); }
 };
 
-inline IPhysBallSocket* CPhysBallSocket::ToInterface() { return new CPhysBallSocketImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysBallSocket* CPhysBallSocket::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysBallSocket*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysBallSocketImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysBallSocket*>(impl));
+    return impl;
+}
+inline IPhysBallSocket* IPhysBallSocket::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysBallSocket*>(p)->ToInterface() : nullptr; }
 inline IPhysBallSocket* IPhysBallSocket::FromOriginal(CPhysBallSocket* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSBALLSOCKETIMPL_H

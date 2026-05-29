@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathMover.h"
 #include "CPathWithDynamicNodesImpl.h"
 
-class CPathMoverImpl : public CPathWithDynamicNodesImpl, public IPathMover
+class CPathMoverImpl : public CPathWithDynamicNodesImpl, public virtual IPathMover
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void MoverSpawnerNameUpdated() override { Real()->m_iszMoverSpawnerName.NetworkStateChanged(); }
 };
 
-inline IPathMover* CPathMover::ToInterface() { return new CPathMoverImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathMover* CPathMover::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathMover*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathMoverImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathMover*>(impl));
+    return impl;
+}
+inline IPathMover* IPathMover::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathMover*>(p)->ToInterface() : nullptr; }
 inline IPathMover* IPathMover::FromOriginal(CPathMover* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHMOVERIMPL_H

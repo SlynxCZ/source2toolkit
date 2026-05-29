@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncWallToggle.h"
 #include "CFuncWallImpl.h"
 
-class CFuncWallToggleImpl : public CFuncWallImpl, public IFuncWallToggle
+class CFuncWallToggleImpl : public CFuncWallImpl, public virtual IFuncWallToggle
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncWallToggle* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncWallToggle* CFuncWallToggle::ToInterface() { return new CFuncWallToggleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncWallToggle* CFuncWallToggle::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncWallToggle*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncWallToggleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncWallToggle*>(impl));
+    return impl;
+}
+inline IFuncWallToggle* IFuncWallToggle::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncWallToggle*>(p)->ToInterface() : nullptr; }
 inline IFuncWallToggle* IFuncWallToggle::FromOriginal(CFuncWallToggle* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCWALLTOGGLEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicScript.h"
 #include "CPointEntityImpl.h"
 
-class CLogicScriptImpl : public CPointEntityImpl, public ILogicScript
+class CLogicScriptImpl : public CPointEntityImpl, public virtual ILogicScript
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLogicScript* GetOriginal() const override { return Real(); }
 };
 
-inline ILogicScript* CLogicScript::ToInterface() { return new CLogicScriptImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicScript* CLogicScript::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicScript*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicScriptImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicScript*>(impl));
+    return impl;
+}
+inline ILogicScript* ILogicScript::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicScript*>(p)->ToInterface() : nullptr; }
 inline ILogicScript* ILogicScript::FromOriginal(CLogicScript* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICSCRIPTIMPL_H

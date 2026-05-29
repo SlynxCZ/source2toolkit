@@ -82,6 +82,7 @@ public:
 };
 
 inline IBuoyancyHelper* CBuoyancyHelper::ToInterface() { return new CBuoyancyHelperImpl(this); }
+inline IBuoyancyHelper* IBuoyancyHelper::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBuoyancyHelper* IBuoyancyHelper::FromOriginal(CBuoyancyHelper* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBUOYANCYHELPERIMPL_H

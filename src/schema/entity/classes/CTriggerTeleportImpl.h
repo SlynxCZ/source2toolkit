@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerTeleport.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerTeleportImpl : public CBaseTriggerImpl, public ITriggerTeleport
+class CTriggerTeleportImpl : public CBaseTriggerImpl, public virtual ITriggerTeleport
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void CheckDestIfClearForPlayerUpdated() override { Real()->m_bCheckDestIfClearForPlayer.NetworkStateChanged(); }
 };
 
-inline ITriggerTeleport* CTriggerTeleport::ToInterface() { return new CTriggerTeleportImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerTeleport* CTriggerTeleport::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerTeleport*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerTeleportImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerTeleport*>(impl));
+    return impl;
+}
+inline ITriggerTeleport* ITriggerTeleport::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerTeleport*>(p)->ToInterface() : nullptr; }
 inline ITriggerTeleport* ITriggerTeleport::FromOriginal(CTriggerTeleport* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERTELEPORTIMPL_H

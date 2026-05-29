@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CAI_ExpresserWithFollowup.h"
 #include "CAI_ExpresserImpl.h"
 
-class CAI_ExpresserWithFollowupImpl : public CAI_ExpresserImpl, public IAI_ExpresserWithFollowup
+class CAI_ExpresserWithFollowupImpl : public CAI_ExpresserImpl, public virtual IAI_ExpresserWithFollowup
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IAI_ExpresserWithFollowup* CAI_ExpresserWithFollowup::ToInterface() { return new CAI_ExpresserWithFollowupImpl(this); }
+inline IAI_ExpresserWithFollowup* IAI_ExpresserWithFollowup::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAI_ExpresserWithFollowup* IAI_ExpresserWithFollowup::FromOriginal(CAI_ExpresserWithFollowup* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CAI_EXPRESSERWITHFOLLOWUPIMPL_H

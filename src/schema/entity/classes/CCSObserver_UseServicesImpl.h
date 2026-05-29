@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSObserver_UseServices.h"
 #include "CPlayer_UseServicesImpl.h"
 
-class CCSObserver_UseServicesImpl : public CPlayer_UseServicesImpl, public ICSObserver_UseServices
+class CCSObserver_UseServicesImpl : public CPlayer_UseServicesImpl, public virtual ICSObserver_UseServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ICSObserver_UseServices* CCSObserver_UseServices::ToInterface() { return new CCSObserver_UseServicesImpl(this); }
+inline ICSObserver_UseServices* ICSObserver_UseServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSObserver_UseServices* ICSObserver_UseServices::FromOriginal(CCSObserver_UseServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSOBSERVER_USESERVICESIMPL_H

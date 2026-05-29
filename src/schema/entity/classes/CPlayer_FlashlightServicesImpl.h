@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_FlashlightServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_FlashlightServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_FlashlightServices
+class CPlayer_FlashlightServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_FlashlightServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IPlayer_FlashlightServices* CPlayer_FlashlightServices::ToInterface() { return new CPlayer_FlashlightServicesImpl(this); }
+inline IPlayer_FlashlightServices* IPlayer_FlashlightServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_FlashlightServices* IPlayer_FlashlightServices::FromOriginal(CPlayer_FlashlightServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_FLASHLIGHTSERVICESIMPL_H

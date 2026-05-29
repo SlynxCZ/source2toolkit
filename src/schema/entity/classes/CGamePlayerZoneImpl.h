@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGamePlayerZone.h"
 #include "CRuleBrushEntityImpl.h"
 
-class CGamePlayerZoneImpl : public CRuleBrushEntityImpl, public IGamePlayerZone
+class CGamePlayerZoneImpl : public CRuleBrushEntityImpl, public virtual IGamePlayerZone
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void OnPlayerOutZoneUpdated() override { Real()->m_OnPlayerOutZone.NetworkStateChanged(); }
 };
 
-inline IGamePlayerZone* CGamePlayerZone::ToInterface() { return new CGamePlayerZoneImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGamePlayerZone* CGamePlayerZone::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGamePlayerZone*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGamePlayerZoneImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGamePlayerZone*>(impl));
+    return impl;
+}
+inline IGamePlayerZone* IGamePlayerZone::FromRaw(CEntityInstance* p) { return p ? static_cast<CGamePlayerZone*>(p)->ToInterface() : nullptr; }
 inline IGamePlayerZone* IGamePlayerZone::FromOriginal(CGamePlayerZone* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMEPLAYERZONEIMPL_H

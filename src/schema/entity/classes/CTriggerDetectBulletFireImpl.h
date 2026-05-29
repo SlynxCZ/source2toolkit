@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerDetectBulletFire.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerDetectBulletFireImpl : public CBaseTriggerImpl, public ITriggerDetectBulletFire
+class CTriggerDetectBulletFireImpl : public CBaseTriggerImpl, public virtual ITriggerDetectBulletFire
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void OnDetectedBulletFireUpdated() override { Real()->m_OnDetectedBulletFire.NetworkStateChanged(); }
 };
 
-inline ITriggerDetectBulletFire* CTriggerDetectBulletFire::ToInterface() { return new CTriggerDetectBulletFireImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerDetectBulletFire* CTriggerDetectBulletFire::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerDetectBulletFire*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerDetectBulletFireImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerDetectBulletFire*>(impl));
+    return impl;
+}
+inline ITriggerDetectBulletFire* ITriggerDetectBulletFire::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerDetectBulletFire*>(p)->ToInterface() : nullptr; }
 inline ITriggerDetectBulletFire* ITriggerDetectBulletFire::FromOriginal(CTriggerDetectBulletFire* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERDETECTBULLETFIREIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_WeaponServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_WeaponServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_WeaponServices
+class CPlayer_WeaponServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_WeaponServices
 {
 
 public:
@@ -68,6 +68,7 @@ public:
 };
 
 inline IPlayer_WeaponServices* CPlayer_WeaponServices::ToInterface() { return new CPlayer_WeaponServicesImpl(this); }
+inline IPlayer_WeaponServices* IPlayer_WeaponServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_WeaponServices* IPlayer_WeaponServices::FromOriginal(CPlayer_WeaponServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_WEAPONSERVICESIMPL_H

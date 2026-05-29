@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicActiveAutosave.h"
 #include "CLogicAutosaveImpl.h"
 
-class CLogicActiveAutosaveImpl : public CLogicAutosaveImpl, public ILogicActiveAutosave
+class CLogicActiveAutosaveImpl : public CLogicAutosaveImpl, public virtual ILogicActiveAutosave
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void DangerousTimeUpdated() override { Real()->m_flDangerousTime.NetworkStateChanged(); }
 };
 
-inline ILogicActiveAutosave* CLogicActiveAutosave::ToInterface() { return new CLogicActiveAutosaveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicActiveAutosave* CLogicActiveAutosave::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicActiveAutosave*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicActiveAutosaveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicActiveAutosave*>(impl));
+    return impl;
+}
+inline ILogicActiveAutosave* ILogicActiveAutosave::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicActiveAutosave*>(p)->ToInterface() : nullptr; }
 inline ILogicActiveAutosave* ILogicActiveAutosave::FromOriginal(CLogicActiveAutosave* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICACTIVEAUTOSAVEIMPL_H

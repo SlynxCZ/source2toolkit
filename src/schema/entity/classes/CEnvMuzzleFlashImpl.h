@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvMuzzleFlash.h"
 #include "CPointEntityImpl.h"
 
-class CEnvMuzzleFlashImpl : public CPointEntityImpl, public IEnvMuzzleFlash
+class CEnvMuzzleFlashImpl : public CPointEntityImpl, public virtual IEnvMuzzleFlash
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void ParentAttachmentUpdated() override { Real()->m_iszParentAttachment.NetworkStateChanged(); }
 };
 
-inline IEnvMuzzleFlash* CEnvMuzzleFlash::ToInterface() { return new CEnvMuzzleFlashImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvMuzzleFlash* CEnvMuzzleFlash::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvMuzzleFlash*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvMuzzleFlashImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvMuzzleFlash*>(impl));
+    return impl;
+}
+inline IEnvMuzzleFlash* IEnvMuzzleFlash::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvMuzzleFlash*>(p)->ToInterface() : nullptr; }
 inline IEnvMuzzleFlash* IEnvMuzzleFlash::FromOriginal(CEnvMuzzleFlash* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVMUZZLEFLASHIMPL_H

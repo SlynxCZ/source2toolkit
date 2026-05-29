@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFogController.h"
 #include "CBaseEntityImpl.h"
 
-class CFogControllerImpl : public CBaseEntityImpl, public IFogController
+class CFogControllerImpl : public CBaseEntityImpl, public virtual IFogController
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void ChangedVariablesUpdated() override { Real()->m_iChangedVariables.NetworkStateChanged(); }
 };
 
-inline IFogController* CFogController::ToInterface() { return new CFogControllerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFogController* CFogController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFogController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFogControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFogController*>(impl));
+    return impl;
+}
+inline IFogController* IFogController::FromRaw(CEntityInstance* p) { return p ? static_cast<CFogController*>(p)->ToInterface() : nullptr; }
 inline IFogController* IFogController::FromOriginal(CFogController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFOGCONTROLLERIMPL_H

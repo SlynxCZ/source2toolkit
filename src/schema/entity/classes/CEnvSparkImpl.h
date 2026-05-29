@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSpark.h"
 #include "CPointEntityImpl.h"
 
-class CEnvSparkImpl : public CPointEntityImpl, public IEnvSpark
+class CEnvSparkImpl : public CPointEntityImpl, public virtual IEnvSpark
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void OnSparkUpdated() override { Real()->m_OnSpark.NetworkStateChanged(); }
 };
 
-inline IEnvSpark* CEnvSpark::ToInterface() { return new CEnvSparkImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSpark* CEnvSpark::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSpark*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSparkImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSpark*>(impl));
+    return impl;
+}
+inline IEnvSpark* IEnvSpark::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSpark*>(p)->ToInterface() : nullptr; }
 inline IEnvSpark* IEnvSpark::FromOriginal(CEnvSpark* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSPARKIMPL_H

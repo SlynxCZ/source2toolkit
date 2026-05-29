@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFireCrackerBlast.h"
 #include "CInfernoImpl.h"
 
-class CFireCrackerBlastImpl : public CInfernoImpl, public IFireCrackerBlast
+class CFireCrackerBlastImpl : public CInfernoImpl, public virtual IFireCrackerBlast
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFireCrackerBlast* GetOriginal() const override { return Real(); }
 };
 
-inline IFireCrackerBlast* CFireCrackerBlast::ToInterface() { return new CFireCrackerBlastImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFireCrackerBlast* CFireCrackerBlast::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFireCrackerBlast*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFireCrackerBlastImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFireCrackerBlast*>(impl));
+    return impl;
+}
+inline IFireCrackerBlast* IFireCrackerBlast::FromRaw(CEntityInstance* p) { return p ? static_cast<CFireCrackerBlast*>(p)->ToInterface() : nullptr; }
 inline IFireCrackerBlast* IFireCrackerBlast::FromOriginal(CFireCrackerBlast* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFIRECRACKERBLASTIMPL_H

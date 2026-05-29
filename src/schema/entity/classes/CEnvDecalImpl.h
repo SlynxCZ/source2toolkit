@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvDecal.h"
 #include "CBaseModelEntityImpl.h"
 
-class CEnvDecalImpl : public CBaseModelEntityImpl, public IEnvDecal
+class CEnvDecalImpl : public CBaseModelEntityImpl, public virtual IEnvDecal
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void DepthSortBiasUpdated() override { Real()->m_flDepthSortBias.NetworkStateChanged(); }
 };
 
-inline IEnvDecal* CEnvDecal::ToInterface() { return new CEnvDecalImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvDecal* CEnvDecal::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvDecal*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvDecalImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvDecal*>(impl));
+    return impl;
+}
+inline IEnvDecal* IEnvDecal::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvDecal*>(p)->ToInterface() : nullptr; }
 inline IEnvDecal* IEnvDecal::FromOriginal(CEnvDecal* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVDECALIMPL_H

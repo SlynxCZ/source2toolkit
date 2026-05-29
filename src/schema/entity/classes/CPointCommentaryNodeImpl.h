@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointCommentaryNode.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CPointCommentaryNodeImpl : public CBaseAnimGraphImpl, public IPointCommentaryNode
+class CPointCommentaryNodeImpl : public CBaseAnimGraphImpl, public virtual IPointCommentaryNode
 {
 
 public:
@@ -64,14 +64,10 @@ public:
     void CommentaryFileUpdated() override { Real()->m_iszCommentaryFile.NetworkStateChanged(); }
     CUtlSymbolLarge& ViewTarget() override { return Real()->m_iszViewTarget(); }
     void ViewTargetUpdated() override { Real()->m_iszViewTarget.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& ViewTarget() override { return Real()->m_hViewTarget(); }
-    void ViewTargetUpdated() override { Real()->m_hViewTarget.NetworkStateChanged(); }
     CHandle<CBaseEntity>& ViewTargetAngles() override { return Real()->m_hViewTargetAngles(); }
     void ViewTargetAnglesUpdated() override { Real()->m_hViewTargetAngles.NetworkStateChanged(); }
     CUtlSymbolLarge& ViewPosition() override { return Real()->m_iszViewPosition(); }
     void ViewPositionUpdated() override { Real()->m_iszViewPosition.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& ViewPosition() override { return Real()->m_hViewPosition(); }
-    void ViewPositionUpdated() override { Real()->m_hViewPosition.NetworkStateChanged(); }
     CHandle<CBaseEntity>& ViewPositionMover() override { return Real()->m_hViewPositionMover(); }
     void ViewPositionMoverUpdated() override { Real()->m_hViewPositionMover.NetworkStateChanged(); }
     bool& PreventMovement() override { return Real()->m_bPreventMovement(); }
@@ -118,7 +114,20 @@ public:
     void ListenedToUpdated() override { Real()->m_bListenedTo.NetworkStateChanged(); }
 };
 
-inline IPointCommentaryNode* CPointCommentaryNode::ToInterface() { return new CPointCommentaryNodeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointCommentaryNode* CPointCommentaryNode::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointCommentaryNode*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointCommentaryNodeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointCommentaryNode*>(impl));
+    return impl;
+}
+inline IPointCommentaryNode* IPointCommentaryNode::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointCommentaryNode*>(p)->ToInterface() : nullptr; }
 inline IPointCommentaryNode* IPointCommentaryNode::FromOriginal(CPointCommentaryNode* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCOMMENTARYNODEIMPL_H

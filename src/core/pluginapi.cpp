@@ -35,9 +35,8 @@
  * Project: Source2Toolkit
  */
 #include "pluginapi.h"
-#include <cstring>
-#include <stdarg.h>
 
+#include "addresses.h"
 #include "commands.h"
 #include "convars.h"
 #include "entities.h"
@@ -45,6 +44,7 @@
 #include "menus.h"
 #include "mysql.h"
 #include "plugin.h"
+
 #include "source2toolkit/IToolkitPlugin.h"
 
 #include "plugin.h"
@@ -52,6 +52,9 @@
 #include "raytrace.h"
 #include "module.h"
 #include "utils/scheduler.h"
+
+#include <cstring>
+#include <stdarg.h>
 
 PluginApi pluginApi;
 

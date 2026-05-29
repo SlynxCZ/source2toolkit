@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLightSpotEntity.h"
 #include "CLightEntityImpl.h"
 
-class CLightSpotEntityImpl : public CLightEntityImpl, public ILightSpotEntity
+class CLightSpotEntityImpl : public CLightEntityImpl, public virtual ILightSpotEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLightSpotEntity* GetOriginal() const override { return Real(); }
 };
 
-inline ILightSpotEntity* CLightSpotEntity::ToInterface() { return new CLightSpotEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILightSpotEntity* CLightSpotEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILightSpotEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLightSpotEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILightSpotEntity*>(impl));
+    return impl;
+}
+inline ILightSpotEntity* ILightSpotEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CLightSpotEntity*>(p)->ToInterface() : nullptr; }
 inline ILightSpotEntity* ILightSpotEntity::FromOriginal(CLightSpotEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLIGHTSPOTENTITYIMPL_H

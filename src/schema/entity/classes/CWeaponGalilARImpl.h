@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponGalilAR.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponGalilARImpl : public CCSWeaponBaseGunImpl, public IWeaponGalilAR
+class CWeaponGalilARImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponGalilAR
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponGalilAR* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponGalilAR* CWeaponGalilAR::ToInterface() { return new CWeaponGalilARImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponGalilAR* CWeaponGalilAR::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponGalilAR*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponGalilARImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponGalilAR*>(impl));
+    return impl;
+}
+inline IWeaponGalilAR* IWeaponGalilAR::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponGalilAR*>(p)->ToInterface() : nullptr; }
 inline IWeaponGalilAR* IWeaponGalilAR::FromOriginal(CWeaponGalilAR* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONGALILARIMPL_H

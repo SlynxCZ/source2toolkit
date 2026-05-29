@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CScriptedSequence.h"
 #include "CBaseEntityImpl.h"
 
-class CScriptedSequenceImpl : public CBaseEntityImpl, public IScriptedSequence
+class CScriptedSequenceImpl : public CBaseEntityImpl, public virtual IScriptedSequence
 {
 
 public:
@@ -211,7 +211,20 @@ public:
     void SkipFadeInUpdated() override { Real()->m_bSkipFadeIn.NetworkStateChanged(); }
 };
 
-inline IScriptedSequence* CScriptedSequence::ToInterface() { return new CScriptedSequenceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IScriptedSequence* CScriptedSequence::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IScriptedSequence*>(tagIt->second.ptr_for_return);
+    auto* impl = new CScriptedSequenceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IScriptedSequence*>(impl));
+    return impl;
+}
+inline IScriptedSequence* IScriptedSequence::FromRaw(CEntityInstance* p) { return p ? static_cast<CScriptedSequence*>(p)->ToInterface() : nullptr; }
 inline IScriptedSequence* IScriptedSequence::FromOriginal(CScriptedSequence* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCRIPTEDSEQUENCEIMPL_H

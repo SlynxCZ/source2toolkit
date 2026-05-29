@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMultiLightProxy.h"
 #include "CLogicalEntityImpl.h"
 
-class CMultiLightProxyImpl : public CLogicalEntityImpl, public IMultiLightProxy
+class CMultiLightProxyImpl : public CLogicalEntityImpl, public virtual IMultiLightProxy
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void LightsUpdated() override { Real()->m_vecLights.NetworkStateChanged(); }
 };
 
-inline IMultiLightProxy* CMultiLightProxy::ToInterface() { return new CMultiLightProxyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMultiLightProxy* CMultiLightProxy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMultiLightProxy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMultiLightProxyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMultiLightProxy*>(impl));
+    return impl;
+}
+inline IMultiLightProxy* IMultiLightProxy::FromRaw(CEntityInstance* p) { return p ? static_cast<CMultiLightProxy*>(p)->ToInterface() : nullptr; }
 inline IMultiLightProxy* IMultiLightProxy::FromOriginal(CMultiLightProxy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMULTILIGHTPROXYIMPL_H

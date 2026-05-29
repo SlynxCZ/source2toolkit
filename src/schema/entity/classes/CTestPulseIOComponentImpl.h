@@ -63,6 +63,7 @@ public:
 };
 
 inline ITestPulseIOComponent* CTestPulseIOComponent::ToInterface() { return new CTestPulseIOComponentImpl(this); }
+inline ITestPulseIOComponent* ITestPulseIOComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITestPulseIOComponent* ITestPulseIOComponent::FromOriginal(CTestPulseIOComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTPULSEIOCOMPONENTIMPL_H

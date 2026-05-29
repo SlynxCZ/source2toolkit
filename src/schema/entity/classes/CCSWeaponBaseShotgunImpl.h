@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSWeaponBaseShotgun.h"
 #include "CCSWeaponBaseImpl.h"
 
-class CCSWeaponBaseShotgunImpl : public CCSWeaponBaseImpl, public ICSWeaponBaseShotgun
+class CCSWeaponBaseShotgunImpl : public CCSWeaponBaseImpl, public virtual ICSWeaponBaseShotgun
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSWeaponBaseShotgun* GetOriginal() const override { return Real(); }
 };
 
-inline ICSWeaponBaseShotgun* CCSWeaponBaseShotgun::ToInterface() { return new CCSWeaponBaseShotgunImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSWeaponBaseShotgun* CCSWeaponBaseShotgun::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSWeaponBaseShotgun*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSWeaponBaseShotgunImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSWeaponBaseShotgun*>(impl));
+    return impl;
+}
+inline ICSWeaponBaseShotgun* ICSWeaponBaseShotgun::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSWeaponBaseShotgun*>(p)->ToInterface() : nullptr; }
 inline ICSWeaponBaseShotgun* ICSWeaponBaseShotgun::FromOriginal(CCSWeaponBaseShotgun* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSWEAPONBASESHOTGUNIMPL_H

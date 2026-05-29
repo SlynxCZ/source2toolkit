@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointVelocitySensor.h"
 #include "CPointEntityImpl.h"
 
-class CPointVelocitySensorImpl : public CPointEntityImpl, public IPointVelocitySensor
+class CPointVelocitySensorImpl : public CPointEntityImpl, public virtual IPointVelocitySensor
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void AvgIntervalUpdated() override { Real()->m_flAvgInterval.NetworkStateChanged(); }
 };
 
-inline IPointVelocitySensor* CPointVelocitySensor::ToInterface() { return new CPointVelocitySensorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointVelocitySensor* CPointVelocitySensor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointVelocitySensor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointVelocitySensorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointVelocitySensor*>(impl));
+    return impl;
+}
+inline IPointVelocitySensor* IPointVelocitySensor::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointVelocitySensor*>(p)->ToInterface() : nullptr; }
 inline IPointVelocitySensor* IPointVelocitySensor::FromOriginal(CPointVelocitySensor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTVELOCITYSENSORIMPL_H

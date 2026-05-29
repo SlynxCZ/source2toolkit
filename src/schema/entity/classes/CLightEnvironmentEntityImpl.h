@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLightEnvironmentEntity.h"
 #include "CLightDirectionalEntityImpl.h"
 
-class CLightEnvironmentEntityImpl : public CLightDirectionalEntityImpl, public ILightEnvironmentEntity
+class CLightEnvironmentEntityImpl : public CLightDirectionalEntityImpl, public virtual ILightEnvironmentEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLightEnvironmentEntity* GetOriginal() const override { return Real(); }
 };
 
-inline ILightEnvironmentEntity* CLightEnvironmentEntity::ToInterface() { return new CLightEnvironmentEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILightEnvironmentEntity* CLightEnvironmentEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILightEnvironmentEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLightEnvironmentEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILightEnvironmentEntity*>(impl));
+    return impl;
+}
+inline ILightEnvironmentEntity* ILightEnvironmentEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CLightEnvironmentEntity*>(p)->ToInterface() : nullptr; }
 inline ILightEnvironmentEntity* ILightEnvironmentEntity::FromOriginal(CLightEnvironmentEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLIGHTENVIRONMENTENTITYIMPL_H

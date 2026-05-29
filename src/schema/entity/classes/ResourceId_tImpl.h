@@ -63,6 +63,7 @@ public:
 };
 
 inline IResourceId_t* ResourceId_t::ToInterface() { return new ResourceId_tImpl(this); }
+inline IResourceId_t* IResourceId_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IResourceId_t* IResourceId_t::FromOriginal(ResourceId_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RESOURCEID_TIMPL_H

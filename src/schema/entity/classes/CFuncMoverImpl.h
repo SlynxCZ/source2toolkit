@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncMover.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncMoverImpl : public CBaseModelEntityImpl, public IFuncMover
+class CFuncMoverImpl : public CBaseModelEntityImpl, public virtual IFuncMover
 {
 
 public:
@@ -238,7 +238,20 @@ public:
     void QueueStopMovingUpdated() override { Real()->m_bQueueStopMoving.NetworkStateChanged(); }
 };
 
-inline IFuncMover* CFuncMover::ToInterface() { return new CFuncMoverImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncMover* CFuncMover::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncMover*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncMoverImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncMover*>(impl));
+    return impl;
+}
+inline IFuncMover* IFuncMover::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncMover*>(p)->ToInterface() : nullptr; }
 inline IFuncMover* IFuncMover::FromOriginal(CFuncMover* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCMOVERIMPL_H

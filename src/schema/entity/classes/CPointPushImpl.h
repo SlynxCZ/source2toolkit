@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointPush.h"
 #include "CPointEntityImpl.h"
 
-class CPointPushImpl : public CPointEntityImpl, public IPointPush
+class CPointPushImpl : public CPointEntityImpl, public virtual IPointPush
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void FilterUpdated() override { Real()->m_hFilter.NetworkStateChanged(); }
 };
 
-inline IPointPush* CPointPush::ToInterface() { return new CPointPushImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointPush* CPointPush::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointPush*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointPushImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointPush*>(impl));
+    return impl;
+}
+inline IPointPush* IPointPush::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointPush*>(p)->ToInterface() : nullptr; }
 inline IPointPush* IPointPush::FromOriginal(CPointPush* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTPUSHIMPL_H

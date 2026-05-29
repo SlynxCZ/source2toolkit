@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayerPing.h"
 #include "CBaseEntityImpl.h"
 
-class CPlayerPingImpl : public CBaseEntityImpl, public IPlayerPing
+class CPlayerPingImpl : public CBaseEntityImpl, public virtual IPlayerPing
 {
 
 public:
@@ -67,7 +67,20 @@ public:
     char* PlaceName() override { return Real()->m_szPlaceName(); }
 };
 
-inline IPlayerPing* CPlayerPing::ToInterface() { return new CPlayerPingImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPlayerPing* CPlayerPing::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPlayerPing*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPlayerPingImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPlayerPing*>(impl));
+    return impl;
+}
+inline IPlayerPing* IPlayerPing::FromRaw(CEntityInstance* p) { return p ? static_cast<CPlayerPing*>(p)->ToInterface() : nullptr; }
 inline IPlayerPing* IPlayerPing::FromOriginal(CPlayerPing* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYERPINGIMPL_H

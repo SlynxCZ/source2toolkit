@@ -61,6 +61,7 @@ public:
 };
 
 inline IPathQueryComponent* CPathQueryComponent::ToInterface() { return new CPathQueryComponentImpl(this); }
+inline IPathQueryComponent* IPathQueryComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPathQueryComponent* IPathQueryComponent::FromOriginal(CPathQueryComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHQUERYCOMPONENTIMPL_H

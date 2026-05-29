@@ -67,6 +67,7 @@ public:
 };
 
 inline IVelocitySampler* VelocitySampler::ToInterface() { return new VelocitySamplerImpl(this); }
+inline IVelocitySampler* IVelocitySampler::FromRaw(CEntityInstance*) { return nullptr; }
 inline IVelocitySampler* IVelocitySampler::FromOriginal(VelocitySampler* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_VELOCITYSAMPLERIMPL_H

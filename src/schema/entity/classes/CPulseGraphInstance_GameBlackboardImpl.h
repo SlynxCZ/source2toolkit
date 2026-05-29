@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPulseGraphInstance_GameBlackboard.h"
 #include "CPulseGraphInstance_ServerEntityImpl.h"
 
-class CPulseGraphInstance_GameBlackboardImpl : public CPulseGraphInstance_ServerEntityImpl, public IPulseGraphInstance_GameBlackboard
+class CPulseGraphInstance_GameBlackboardImpl : public CPulseGraphInstance_ServerEntityImpl, public virtual IPulseGraphInstance_GameBlackboard
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IPulseGraphInstance_GameBlackboard* CPulseGraphInstance_GameBlackboard::ToInterface() { return new CPulseGraphInstance_GameBlackboardImpl(this); }
+inline IPulseGraphInstance_GameBlackboard* IPulseGraphInstance_GameBlackboard::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPulseGraphInstance_GameBlackboard* IPulseGraphInstance_GameBlackboard::FromOriginal(CPulseGraphInstance_GameBlackboard* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPULSEGRAPHINSTANCE_GAMEBLACKBOARDIMPL_H

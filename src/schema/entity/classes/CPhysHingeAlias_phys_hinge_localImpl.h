@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysHingeAlias_phys_hinge_local.h"
 #include "CPhysHingeImpl.h"
 
-class CPhysHingeAlias_phys_hinge_localImpl : public CPhysHingeImpl, public IPhysHingeAlias_phys_hinge_local
+class CPhysHingeAlias_phys_hinge_localImpl : public CPhysHingeImpl, public virtual IPhysHingeAlias_phys_hinge_local
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPhysHingeAlias_phys_hinge_local* GetOriginal() const override { return Real(); }
 };
 
-inline IPhysHingeAlias_phys_hinge_local* CPhysHingeAlias_phys_hinge_local::ToInterface() { return new CPhysHingeAlias_phys_hinge_localImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysHingeAlias_phys_hinge_local* CPhysHingeAlias_phys_hinge_local::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysHingeAlias_phys_hinge_local*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysHingeAlias_phys_hinge_localImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysHingeAlias_phys_hinge_local*>(impl));
+    return impl;
+}
+inline IPhysHingeAlias_phys_hinge_local* IPhysHingeAlias_phys_hinge_local::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysHingeAlias_phys_hinge_local*>(p)->ToInterface() : nullptr; }
 inline IPhysHingeAlias_phys_hinge_local* IPhysHingeAlias_phys_hinge_local::FromOriginal(CPhysHingeAlias_phys_hinge_local* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSHINGEALIAS_PHYS_HINGE_LOCALIMPL_H

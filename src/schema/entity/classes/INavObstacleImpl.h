@@ -63,6 +63,7 @@ public:
 };
 
 inline IINavObstacle* INavObstacle::ToInterface() { return new INavObstacleImpl(this); }
+inline IINavObstacle* IINavObstacle::FromRaw(CEntityInstance*) { return nullptr; }
 inline IINavObstacle* IINavObstacle::FromOriginal(INavObstacle* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INAVOBSTACLEIMPL_H

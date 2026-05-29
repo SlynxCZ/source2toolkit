@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerPawnBase.h"
 #include "CBasePlayerPawnImpl.h"
 
-class CCSPlayerPawnBaseImpl : public CBasePlayerPawnImpl, public ICSPlayerPawnBase
+class CCSPlayerPawnBaseImpl : public CBasePlayerPawnImpl, public virtual ICSPlayerPawnBase
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void OriginalControllerUpdated() override { Real()->m_hOriginalController.NetworkStateChanged(); }
 };
 
-inline ICSPlayerPawnBase* CCSPlayerPawnBase::ToInterface() { return new CCSPlayerPawnBaseImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSPlayerPawnBase* CCSPlayerPawnBase::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPlayerPawnBase*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPlayerPawnBaseImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPlayerPawnBase*>(impl));
+    return impl;
+}
+inline ICSPlayerPawnBase* ICSPlayerPawnBase::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSPlayerPawnBase*>(p)->ToInterface() : nullptr; }
 inline ICSPlayerPawnBase* ICSPlayerPawnBase::FromOriginal(CCSPlayerPawnBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERPAWNBASEIMPL_H

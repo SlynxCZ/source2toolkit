@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CShower.h"
 #include "CModelPointEntityImpl.h"
 
-class CShowerImpl : public CModelPointEntityImpl, public IShower
+class CShowerImpl : public CModelPointEntityImpl, public virtual IShower
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CShower* GetOriginal() const override { return Real(); }
 };
 
-inline IShower* CShower::ToInterface() { return new CShowerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IShower* CShower::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IShower*>(tagIt->second.ptr_for_return);
+    auto* impl = new CShowerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IShower*>(impl));
+    return impl;
+}
+inline IShower* IShower::FromRaw(CEntityInstance* p) { return p ? static_cast<CShower*>(p)->ToInterface() : nullptr; }
 inline IShower* IShower::FromOriginal(CShower* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSHOWERIMPL_H

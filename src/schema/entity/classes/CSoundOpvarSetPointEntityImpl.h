@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundOpvarSetPointEntity.h"
 #include "CSoundOpvarSetPointBaseImpl.h"
 
-class CSoundOpvarSetPointEntityImpl : public CSoundOpvarSetPointBaseImpl, public ISoundOpvarSetPointEntity
+class CSoundOpvarSetPointEntityImpl : public CSoundOpvarSetPointBaseImpl, public virtual ISoundOpvarSetPointEntity
 {
 
 public:
@@ -106,7 +106,20 @@ public:
     void PathingSourceIndexUpdated() override { Real()->m_nPathingSourceIndex.NetworkStateChanged(); }
 };
 
-inline ISoundOpvarSetPointEntity* CSoundOpvarSetPointEntity::ToInterface() { return new CSoundOpvarSetPointEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundOpvarSetPointEntity* CSoundOpvarSetPointEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundOpvarSetPointEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundOpvarSetPointEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundOpvarSetPointEntity*>(impl));
+    return impl;
+}
+inline ISoundOpvarSetPointEntity* ISoundOpvarSetPointEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundOpvarSetPointEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundOpvarSetPointEntity* ISoundOpvarSetPointEntity::FromOriginal(CSoundOpvarSetPointEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTENTITYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEntityBlocker.h"
 #include "CBaseModelEntityImpl.h"
 
-class CEntityBlockerImpl : public CBaseModelEntityImpl, public IEntityBlocker
+class CEntityBlockerImpl : public CBaseModelEntityImpl, public virtual IEntityBlocker
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEntityBlocker* GetOriginal() const override { return Real(); }
 };
 
-inline IEntityBlocker* CEntityBlocker::ToInterface() { return new CEntityBlockerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEntityBlocker* CEntityBlocker::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEntityBlocker*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEntityBlockerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEntityBlocker*>(impl));
+    return impl;
+}
+inline IEntityBlocker* IEntityBlocker::FromRaw(CEntityInstance* p) { return p ? static_cast<CEntityBlocker*>(p)->ToInterface() : nullptr; }
 inline IEntityBlocker* IEntityBlocker::FromOriginal(CEntityBlocker* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENTITYBLOCKERIMPL_H

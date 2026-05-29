@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDecoyProjectile.h"
 #include "CBaseCSGrenadeProjectileImpl.h"
 
-class CDecoyProjectileImpl : public CBaseCSGrenadeProjectileImpl, public IDecoyProjectile
+class CDecoyProjectileImpl : public CBaseCSGrenadeProjectileImpl, public virtual IDecoyProjectile
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void DecoyWeaponDefIndexUpdated() override { Real()->m_decoyWeaponDefIndex.NetworkStateChanged(); }
 };
 
-inline IDecoyProjectile* CDecoyProjectile::ToInterface() { return new CDecoyProjectileImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDecoyProjectile* CDecoyProjectile::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDecoyProjectile*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDecoyProjectileImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDecoyProjectile*>(impl));
+    return impl;
+}
+inline IDecoyProjectile* IDecoyProjectile::FromRaw(CEntityInstance* p) { return p ? static_cast<CDecoyProjectile*>(p)->ToInterface() : nullptr; }
 inline IDecoyProjectile* IDecoyProjectile::FromOriginal(CDecoyProjectile* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDECOYPROJECTILEIMPL_H

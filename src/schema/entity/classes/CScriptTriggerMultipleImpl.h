@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CScriptTriggerMultiple.h"
 #include "CTriggerMultipleImpl.h"
 
-class CScriptTriggerMultipleImpl : public CTriggerMultipleImpl, public IScriptTriggerMultiple
+class CScriptTriggerMultipleImpl : public CTriggerMultipleImpl, public virtual IScriptTriggerMultiple
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ExtentUpdated() override { Real()->m_vExtent.NetworkStateChanged(); }
 };
 
-inline IScriptTriggerMultiple* CScriptTriggerMultiple::ToInterface() { return new CScriptTriggerMultipleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IScriptTriggerMultiple* CScriptTriggerMultiple::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IScriptTriggerMultiple*>(tagIt->second.ptr_for_return);
+    auto* impl = new CScriptTriggerMultipleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IScriptTriggerMultiple*>(impl));
+    return impl;
+}
+inline IScriptTriggerMultiple* IScriptTriggerMultiple::FromRaw(CEntityInstance* p) { return p ? static_cast<CScriptTriggerMultiple*>(p)->ToInterface() : nullptr; }
 inline IScriptTriggerMultiple* IScriptTriggerMultiple::FromOriginal(CScriptTriggerMultiple* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCRIPTTRIGGERMULTIPLEIMPL_H

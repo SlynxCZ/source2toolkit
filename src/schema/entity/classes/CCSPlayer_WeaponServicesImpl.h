@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_WeaponServices.h"
 #include "CPlayer_WeaponServicesImpl.h"
 
-class CCSPlayer_WeaponServicesImpl : public CPlayer_WeaponServicesImpl, public ICSPlayer_WeaponServices
+class CCSPlayer_WeaponServicesImpl : public CPlayer_WeaponServicesImpl, public virtual ICSPlayer_WeaponServices
 {
 
 public:

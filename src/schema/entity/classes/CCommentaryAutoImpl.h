@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCommentaryAuto.h"
 #include "CBaseEntityImpl.h"
 
-class CCommentaryAutoImpl : public CBaseEntityImpl, public ICommentaryAuto
+class CCommentaryAutoImpl : public CBaseEntityImpl, public virtual ICommentaryAuto
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void OnCommentaryMultiplayerSpawnUpdated() override { Real()->m_OnCommentaryMultiplayerSpawn.NetworkStateChanged(); }
 };
 
-inline ICommentaryAuto* CCommentaryAuto::ToInterface() { return new CCommentaryAutoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICommentaryAuto* CCommentaryAuto::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICommentaryAuto*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCommentaryAutoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICommentaryAuto*>(impl));
+    return impl;
+}
+inline ICommentaryAuto* ICommentaryAuto::FromRaw(CEntityInstance* p) { return p ? static_cast<CCommentaryAuto*>(p)->ToInterface() : nullptr; }
 inline ICommentaryAuto* ICommentaryAuto::FromOriginal(CCommentaryAuto* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCOMMENTARYAUTOIMPL_H

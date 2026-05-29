@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSWeaponBaseGun.h"
 #include "CCSWeaponBaseImpl.h"
 
-class CCSWeaponBaseGunImpl : public CCSWeaponBaseImpl, public ICSWeaponBaseGun
+class CCSWeaponBaseGunImpl : public CCSWeaponBaseImpl, public virtual ICSWeaponBaseGun
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void SkillBoltLiftedFireKeyUpdated() override { Real()->m_bSkillBoltLiftedFireKey.NetworkStateChanged(); }
 };
 
-inline ICSWeaponBaseGun* CCSWeaponBaseGun::ToInterface() { return new CCSWeaponBaseGunImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSWeaponBaseGun* CCSWeaponBaseGun::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSWeaponBaseGun*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSWeaponBaseGunImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSWeaponBaseGun*>(impl));
+    return impl;
+}
+inline ICSWeaponBaseGun* ICSWeaponBaseGun::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSWeaponBaseGun*>(p)->ToInterface() : nullptr; }
 inline ICSWeaponBaseGun* ICSWeaponBaseGun::FromOriginal(CCSWeaponBaseGun* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSWEAPONBASEGUNIMPL_H

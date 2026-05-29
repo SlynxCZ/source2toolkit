@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSpotlightEnd.h"
 #include "CBaseModelEntityImpl.h"
 
-class CSpotlightEndImpl : public CBaseModelEntityImpl, public ISpotlightEnd
+class CSpotlightEndImpl : public CBaseModelEntityImpl, public virtual ISpotlightEnd
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void SpotlightOrgUpdated() override { Real()->m_vSpotlightOrg.NetworkStateChanged(); }
 };
 
-inline ISpotlightEnd* CSpotlightEnd::ToInterface() { return new CSpotlightEndImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISpotlightEnd* CSpotlightEnd::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISpotlightEnd*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSpotlightEndImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISpotlightEnd*>(impl));
+    return impl;
+}
+inline ISpotlightEnd* ISpotlightEnd::FromRaw(CEntityInstance* p) { return p ? static_cast<CSpotlightEnd*>(p)->ToInterface() : nullptr; }
 inline ISpotlightEnd* ISpotlightEnd::FromOriginal(CSpotlightEnd* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSPOTLIGHTENDIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSkyboxReference.h"
 #include "CBaseEntityImpl.h"
 
-class CSkyboxReferenceImpl : public CBaseEntityImpl, public ISkyboxReference
+class CSkyboxReferenceImpl : public CBaseEntityImpl, public virtual ISkyboxReference
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void SkyCameraUpdated() override { Real()->m_hSkyCamera.NetworkStateChanged(); }
 };
 
-inline ISkyboxReference* CSkyboxReference::ToInterface() { return new CSkyboxReferenceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISkyboxReference* CSkyboxReference::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISkyboxReference*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSkyboxReferenceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISkyboxReference*>(impl));
+    return impl;
+}
+inline ISkyboxReference* ISkyboxReference::FromRaw(CEntityInstance* p) { return p ? static_cast<CSkyboxReference*>(p)->ToInterface() : nullptr; }
 inline ISkyboxReference* ISkyboxReference::FromOriginal(CSkyboxReference* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSKYBOXREFERENCEIMPL_H

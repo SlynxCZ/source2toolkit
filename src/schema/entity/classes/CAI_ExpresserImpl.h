@@ -83,6 +83,7 @@ public:
 };
 
 inline IAI_Expresser* CAI_Expresser::ToInterface() { return new CAI_ExpresserImpl(this); }
+inline IAI_Expresser* IAI_Expresser::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAI_Expresser* IAI_Expresser::FromOriginal(CAI_Expresser* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CAI_EXPRESSERIMPL_H

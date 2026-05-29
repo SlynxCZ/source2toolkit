@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerMultiple.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerMultipleImpl : public CBaseTriggerImpl, public ITriggerMultiple
+class CTriggerMultipleImpl : public CBaseTriggerImpl, public virtual ITriggerMultiple
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void OnTriggerUpdated() override { Real()->m_OnTrigger.NetworkStateChanged(); }
 };
 
-inline ITriggerMultiple* CTriggerMultiple::ToInterface() { return new CTriggerMultipleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerMultiple* CTriggerMultiple::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerMultiple*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerMultipleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerMultiple*>(impl));
+    return impl;
+}
+inline ITriggerMultiple* ITriggerMultiple::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerMultiple*>(p)->ToInterface() : nullptr; }
 inline ITriggerMultiple* ITriggerMultiple::FromOriginal(CTriggerMultiple* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERMULTIPLEIMPL_H

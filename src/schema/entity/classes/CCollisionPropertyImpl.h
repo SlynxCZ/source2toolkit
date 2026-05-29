@@ -95,6 +95,7 @@ public:
 };
 
 inline ICollisionProperty* CCollisionProperty::ToInterface() { return new CCollisionPropertyImpl(this); }
+inline ICollisionProperty* ICollisionProperty::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICollisionProperty* ICollisionProperty::FromOriginal(CCollisionProperty* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCOLLISIONPROPERTYIMPL_H

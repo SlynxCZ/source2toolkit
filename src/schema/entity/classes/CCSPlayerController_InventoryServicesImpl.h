@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerController_InventoryServices.h"
 #include "CPlayerControllerComponentImpl.h"
 
-class CCSPlayerController_InventoryServicesImpl : public CPlayerControllerComponentImpl, public ICSPlayerController_InventoryServices
+class CCSPlayerController_InventoryServicesImpl : public CPlayerControllerComponentImpl, public virtual ICSPlayerController_InventoryServices
 {
 
 public:
@@ -77,6 +77,7 @@ public:
 };
 
 inline ICSPlayerController_InventoryServices* CCSPlayerController_InventoryServices::ToInterface() { return new CCSPlayerController_InventoryServicesImpl(this); }
+inline ICSPlayerController_InventoryServices* ICSPlayerController_InventoryServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerController_InventoryServices* ICSPlayerController_InventoryServices::FromOriginal(CCSPlayerController_InventoryServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_INVENTORYSERVICESIMPL_H

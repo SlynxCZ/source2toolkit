@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFish.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CFishImpl : public CBaseAnimGraphImpl, public IFish
+class CFishImpl : public CBaseAnimGraphImpl, public virtual IFish
 {
 
 public:
@@ -106,7 +106,20 @@ public:
     void VisibleUpdated() override { Real()->m_visible.NetworkStateChanged(); }
 };
 
-inline IFish* CFish::ToInterface() { return new CFishImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFish* CFish::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFish*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFishImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFish*>(impl));
+    return impl;
+}
+inline IFish* IFish::FromRaw(CEntityInstance* p) { return p ? static_cast<CFish*>(p)->ToInterface() : nullptr; }
 inline IFish* IFish::FromOriginal(CFish* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFISHIMPL_H

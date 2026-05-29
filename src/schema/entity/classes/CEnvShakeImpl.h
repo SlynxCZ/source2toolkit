@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvShake.h"
 #include "CPointEntityImpl.h"
 
-class CEnvShakeImpl : public CPointEntityImpl, public IEnvShake
+class CEnvShakeImpl : public CPointEntityImpl, public virtual IEnvShake
 {
 
 public:
@@ -80,7 +80,20 @@ public:
     void ShakeCallbackUpdated() override { Real()->m_shakeCallback.NetworkStateChanged(); }
 };
 
-inline IEnvShake* CEnvShake::ToInterface() { return new CEnvShakeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvShake* CEnvShake::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvShake*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvShakeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvShake*>(impl));
+    return impl;
+}
+inline IEnvShake* IEnvShake::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvShake*>(p)->ToInterface() : nullptr; }
 inline IEnvShake* IEnvShake::FromOriginal(CEnvShake* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSHAKEIMPL_H

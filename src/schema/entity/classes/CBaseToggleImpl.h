@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseToggle.h"
 #include "CBaseModelEntityImpl.h"
 
-class CBaseToggleImpl : public CBaseModelEntityImpl, public IBaseToggle
+class CBaseToggleImpl : public CBaseModelEntityImpl, public virtual IBaseToggle
 {
 
 public:
@@ -90,7 +90,20 @@ public:
     void MasterUpdated() override { Real()->m_sMaster.NetworkStateChanged(); }
 };
 
-inline IBaseToggle* CBaseToggle::ToInterface() { return new CBaseToggleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseToggle* CBaseToggle::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseToggle*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseToggleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseToggle*>(impl));
+    return impl;
+}
+inline IBaseToggle* IBaseToggle::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseToggle*>(p)->ToInterface() : nullptr; }
 inline IBaseToggle* IBaseToggle::FromOriginal(CBaseToggle* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASETOGGLEIMPL_H

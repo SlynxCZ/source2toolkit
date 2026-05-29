@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysSlideConstraint.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysSlideConstraintImpl : public CPhysConstraintImpl, public IPhysSlideConstraint
+class CPhysSlideConstraintImpl : public CPhysConstraintImpl, public virtual IPhysSlideConstraint
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void SoundInfoUpdated() override { Real()->m_soundInfo.NetworkStateChanged(); }
 };
 
-inline IPhysSlideConstraint* CPhysSlideConstraint::ToInterface() { return new CPhysSlideConstraintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysSlideConstraint* CPhysSlideConstraint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysSlideConstraint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysSlideConstraintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysSlideConstraint*>(impl));
+    return impl;
+}
+inline IPhysSlideConstraint* IPhysSlideConstraint::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysSlideConstraint*>(p)->ToInterface() : nullptr; }
 inline IPhysSlideConstraint* IPhysSlideConstraint::FromOriginal(CPhysSlideConstraint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSSLIDECONSTRAINTIMPL_H

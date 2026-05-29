@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicGameEventListener.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicGameEventListenerImpl : public CLogicalEntityImpl, public ILogicGameEventListener
+class CLogicGameEventListenerImpl : public CLogicalEntityImpl, public virtual ILogicGameEventListener
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void StartDisabledUpdated() override { Real()->m_bStartDisabled.NetworkStateChanged(); }
 };
 
-inline ILogicGameEventListener* CLogicGameEventListener::ToInterface() { return new CLogicGameEventListenerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicGameEventListener* CLogicGameEventListener::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicGameEventListener*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicGameEventListenerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicGameEventListener*>(impl));
+    return impl;
+}
+inline ILogicGameEventListener* ILogicGameEventListener::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicGameEventListener*>(p)->ToInterface() : nullptr; }
 inline ILogicGameEventListener* ILogicGameEventListener::FromOriginal(CLogicGameEventListener* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICGAMEEVENTLISTENERIMPL_H

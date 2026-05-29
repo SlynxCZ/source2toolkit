@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CServerRagdollTrigger.h"
 #include "CBaseTriggerImpl.h"
 
-class CServerRagdollTriggerImpl : public CBaseTriggerImpl, public IServerRagdollTrigger
+class CServerRagdollTriggerImpl : public CBaseTriggerImpl, public virtual IServerRagdollTrigger
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CServerRagdollTrigger* GetOriginal() const override { return Real(); }
 };
 
-inline IServerRagdollTrigger* CServerRagdollTrigger::ToInterface() { return new CServerRagdollTriggerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IServerRagdollTrigger* CServerRagdollTrigger::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IServerRagdollTrigger*>(tagIt->second.ptr_for_return);
+    auto* impl = new CServerRagdollTriggerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IServerRagdollTrigger*>(impl));
+    return impl;
+}
+inline IServerRagdollTrigger* IServerRagdollTrigger::FromRaw(CEntityInstance* p) { return p ? static_cast<CServerRagdollTrigger*>(p)->ToInterface() : nullptr; }
 inline IServerRagdollTrigger* IServerRagdollTrigger::FromOriginal(CServerRagdollTrigger* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSERVERRAGDOLLTRIGGERIMPL_H

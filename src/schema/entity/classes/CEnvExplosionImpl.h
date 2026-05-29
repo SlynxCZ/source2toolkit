@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvExplosion.h"
 #include "CModelPointEntityImpl.h"
 
-class CEnvExplosionImpl : public CModelPointEntityImpl, public IEnvExplosion
+class CEnvExplosionImpl : public CModelPointEntityImpl, public virtual IEnvExplosion
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void EntityIgnoreUpdated() override { Real()->m_hEntityIgnore.NetworkStateChanged(); }
 };
 
-inline IEnvExplosion* CEnvExplosion::ToInterface() { return new CEnvExplosionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvExplosion* CEnvExplosion::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvExplosion*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvExplosionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvExplosion*>(impl));
+    return impl;
+}
+inline IEnvExplosion* IEnvExplosion::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvExplosion*>(p)->ToInterface() : nullptr; }
 inline IEnvExplosion* IEnvExplosion::FromOriginal(CEnvExplosion* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVEXPLOSIONIMPL_H

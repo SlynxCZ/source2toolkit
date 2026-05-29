@@ -36,44 +36,53 @@
  */
 
 #include "schema/entity/classes/CCSGameRulesImpl.h"
-
 #include "schema/entity/classes/CCSPlayerController.h"
 #include "schema/entity/classes/CCSPlayerPawn.h"
-#include "source2toolkit/schema/entities.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
-#include "core/shared.h"
-#include "core/gameconfig.h"
+#include "source2toolkit/schema/entity/classes/ICSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/ICSPlayerPawn.h"
+
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitGameConfig.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
+#include "core/entities.h"
+#include "core/gameconfig.h"
+#include "core/shared.h"
+#include "core/virtualhooks.h"
 
 void CCSGameRules::TerminateRound(float flDelay, int32_t eRoundEndReason)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     addresses::toolkitAddresses.TerminateRound(this, flDelay, eRoundEndReason, 0, 0);
-#else
-    g_ToolkitAPI->Addresses()->CGameRules_TerminateRound()(this, flDelay, eRoundEndReason, 0, 0);
-#endif
 }
 
-CBaseEntity* CCSGameRules::FindPickerEntity(CBasePlayerController* pPlayer)
+IBaseEntity* CCSGameRules::FindPickerEntity(IBasePlayerController* pPlayer)
 {
-    return UTIL_FindPickerEntity(pPlayer, this);
+    return entities::entitiesManager.FindPickerEntity(pPlayer, this->ToInterface());
 }
 
-CCSPlayerController* CCSGameRules::GetClientAimTarget(CCSPlayerController* pPlayer)
+ICSPlayerController* CCSGameRules::GetClientAimTarget(ICSPlayerController* pPlayer)
 {
-    auto* pPawn = static_cast<CCSPlayerPawn*>(UTIL_FindPickerEntity(pPlayer, this));
-    if (!pPawn) return nullptr;
+    auto* pEntity = FindPickerEntity(pPlayer);
+    if (!pEntity || V_strcmp(pEntity->GetClassname(), "player") != 0) return nullptr;
 
-    return V_strcmp(pPawn->GetClassname(), "player") == 0 ? pPawn->m_hOriginalController().Get() : nullptr;
+    auto* pPawn = static_cast<CCSPlayerPawn*>(pEntity->GetOriginal());
+    auto* pController = static_cast<CCSPlayerController*>(pPawn->m_hController().Get());
+    return pController ? pController->ToInterface() : nullptr;
 }
-ICSGameRules* CCSGameRules::ToInterface() { return new CCSGameRulesImpl(this); }
+ICSGameRules* CCSGameRules::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSGameRules*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSGameRulesImpl(this);
+    byTag[&s_tag] = { static_cast<IEntityInstance*>(impl), static_cast<ICSGameRules*>(impl) };
+    return impl;
+}
+
+ICSGameRules* ICSGameRules::FromRaw(CEntityInstance* p)
+{
+    return p ? reinterpret_cast<CCSGameRules*>(p)->ToInterface() : nullptr;
+}
 
 ICSGameRules* ICSGameRules::FromOriginal(CCSGameRules* p)
 { return CCSGameRules::FromOriginal(p); }

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMarkupVolumeWithRef.h"
 #include "CMarkupVolumeTaggedImpl.h"
 
-class CMarkupVolumeWithRefImpl : public CMarkupVolumeTaggedImpl, public IMarkupVolumeWithRef
+class CMarkupVolumeWithRefImpl : public CMarkupVolumeTaggedImpl, public virtual IMarkupVolumeWithRef
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void RefDotUpdated() override { Real()->m_flRefDot.NetworkStateChanged(); }
 };
 
-inline IMarkupVolumeWithRef* CMarkupVolumeWithRef::ToInterface() { return new CMarkupVolumeWithRefImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMarkupVolumeWithRef* CMarkupVolumeWithRef::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMarkupVolumeWithRef*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMarkupVolumeWithRefImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMarkupVolumeWithRef*>(impl));
+    return impl;
+}
+inline IMarkupVolumeWithRef* IMarkupVolumeWithRef::FromRaw(CEntityInstance* p) { return p ? static_cast<CMarkupVolumeWithRef*>(p)->ToInterface() : nullptr; }
 inline IMarkupVolumeWithRef* IMarkupVolumeWithRef::FromOriginal(CMarkupVolumeWithRef* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMARKUPVOLUMEWITHREFIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponBizon.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponBizonImpl : public CCSWeaponBaseGunImpl, public IWeaponBizon
+class CWeaponBizonImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponBizon
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponBizon* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponBizon* CWeaponBizon::ToInterface() { return new CWeaponBizonImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponBizon* CWeaponBizon::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponBizon*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponBizonImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponBizon*>(impl));
+    return impl;
+}
+inline IWeaponBizon* IWeaponBizon::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponBizon*>(p)->ToInterface() : nullptr; }
 inline IWeaponBizon* IWeaponBizon::FromOriginal(CWeaponBizon* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONBIZONIMPL_H

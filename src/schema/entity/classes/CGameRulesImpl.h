@@ -76,6 +76,7 @@ public:
 };
 
 inline IGameRules* CGameRules::ToInterface() { return new CGameRulesImpl(this); }
+inline IGameRules* IGameRules::FromRaw(CEntityInstance*) { return nullptr; }
 inline IGameRules* IGameRules::FromOriginal(CGameRules* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMERULESIMPL_H

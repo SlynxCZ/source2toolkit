@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponM4A1Silencer.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponM4A1SilencerImpl : public CCSWeaponBaseGunImpl, public IWeaponM4A1Silencer
+class CWeaponM4A1SilencerImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponM4A1Silencer
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponM4A1Silencer* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponM4A1Silencer* CWeaponM4A1Silencer::ToInterface() { return new CWeaponM4A1SilencerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponM4A1Silencer* CWeaponM4A1Silencer::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponM4A1Silencer*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponM4A1SilencerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponM4A1Silencer*>(impl));
+    return impl;
+}
+inline IWeaponM4A1Silencer* IWeaponM4A1Silencer::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponM4A1Silencer*>(p)->ToInterface() : nullptr; }
 inline IWeaponM4A1Silencer* IWeaponM4A1Silencer::FromOriginal(CWeaponM4A1Silencer* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONM4A1SILENCERIMPL_H

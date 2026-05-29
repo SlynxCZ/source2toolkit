@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointWorldText.h"
 #include "CModelPointEntityImpl.h"
 
-class CPointWorldTextImpl : public CModelPointEntityImpl, public IPointWorldText
+class CPointWorldTextImpl : public CModelPointEntityImpl, public virtual IPointWorldText
 {
 
 public:
@@ -87,7 +87,20 @@ public:
     void ReorientModeUpdated() override { Real()->m_nReorientMode.NetworkStateChanged(); }
 };
 
-inline IPointWorldText* CPointWorldText::ToInterface() { return new CPointWorldTextImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointWorldText* CPointWorldText::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointWorldText*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointWorldTextImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointWorldText*>(impl));
+    return impl;
+}
+inline IPointWorldText* IPointWorldText::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointWorldText*>(p)->ToInterface() : nullptr; }
 inline IPointWorldText* IPointWorldText::FromOriginal(CPointWorldText* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTWORLDTEXTIMPL_H

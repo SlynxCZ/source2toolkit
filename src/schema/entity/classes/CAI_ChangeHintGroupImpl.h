@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CAI_ChangeHintGroup.h"
 #include "CBaseEntityImpl.h"
 
-class CAI_ChangeHintGroupImpl : public CBaseEntityImpl, public IAI_ChangeHintGroup
+class CAI_ChangeHintGroupImpl : public CBaseEntityImpl, public virtual IAI_ChangeHintGroup
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }
 };
 
-inline IAI_ChangeHintGroup* CAI_ChangeHintGroup::ToInterface() { return new CAI_ChangeHintGroupImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IAI_ChangeHintGroup* CAI_ChangeHintGroup::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IAI_ChangeHintGroup*>(tagIt->second.ptr_for_return);
+    auto* impl = new CAI_ChangeHintGroupImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IAI_ChangeHintGroup*>(impl));
+    return impl;
+}
+inline IAI_ChangeHintGroup* IAI_ChangeHintGroup::FromRaw(CEntityInstance* p) { return p ? static_cast<CAI_ChangeHintGroup*>(p)->ToInterface() : nullptr; }
 inline IAI_ChangeHintGroup* IAI_ChangeHintGroup::FromOriginal(CAI_ChangeHintGroup* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CAI_CHANGEHINTGROUPIMPL_H

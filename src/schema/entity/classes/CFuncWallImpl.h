@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncWall.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncWallImpl : public CBaseModelEntityImpl, public IFuncWall
+class CFuncWallImpl : public CBaseModelEntityImpl, public virtual IFuncWall
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void StateUpdated() override { Real()->m_nState.NetworkStateChanged(); }
 };
 
-inline IFuncWall* CFuncWall::ToInterface() { return new CFuncWallImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncWall* CFuncWall::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncWall*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncWallImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncWall*>(impl));
+    return impl;
+}
+inline IFuncWall* IFuncWall::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncWall*>(p)->ToInterface() : nullptr; }
 inline IFuncWall* IFuncWall::FromOriginal(CFuncWall* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCWALLIMPL_H

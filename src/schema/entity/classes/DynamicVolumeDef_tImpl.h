@@ -77,6 +77,7 @@ public:
 };
 
 inline IDynamicVolumeDef_t* DynamicVolumeDef_t::ToInterface() { return new DynamicVolumeDef_tImpl(this); }
+inline IDynamicVolumeDef_t* IDynamicVolumeDef_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IDynamicVolumeDef_t* IDynamicVolumeDef_t::FromOriginal(DynamicVolumeDef_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_DYNAMICVOLUMEDEF_TIMPL_H

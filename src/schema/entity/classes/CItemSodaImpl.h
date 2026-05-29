@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemSoda.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CItemSodaImpl : public CBaseAnimGraphImpl, public IItemSoda
+class CItemSodaImpl : public CBaseAnimGraphImpl, public virtual IItemSoda
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CItemSoda* GetOriginal() const override { return Real(); }
 };
 
-inline IItemSoda* CItemSoda::ToInterface() { return new CItemSodaImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemSoda* CItemSoda::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemSoda*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemSodaImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemSoda*>(impl));
+    return impl;
+}
+inline IItemSoda* IItemSoda::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemSoda*>(p)->ToInterface() : nullptr; }
 inline IItemSoda* IItemSoda::FromOriginal(CItemSoda* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMSODAIMPL_H

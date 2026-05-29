@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponP250.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponP250Impl : public CCSWeaponBaseGunImpl, public IWeaponP250
+class CWeaponP250Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponP250
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponP250* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponP250* CWeaponP250::ToInterface() { return new CWeaponP250Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponP250* CWeaponP250::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponP250*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponP250Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponP250*>(impl));
+    return impl;
+}
+inline IWeaponP250* IWeaponP250::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponP250*>(p)->ToInterface() : nullptr; }
 inline IWeaponP250* IWeaponP250::FromOriginal(CWeaponP250* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONP250IMPL_H

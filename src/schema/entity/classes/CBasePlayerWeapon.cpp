@@ -38,9 +38,9 @@
 #include "schema/entity/classes/CBasePlayerWeaponImpl.h"
 #include "strtools.h"
 
-CCSWeaponBaseVData* CBasePlayerWeapon::GetWeaponVData()
+ICSWeaponBaseVData* CBasePlayerWeapon::GetWeaponVData()
 {
-    return (CCSWeaponBaseVData*)GetVData();
+    return (ICSWeaponBaseVData*)GetVData();
 }
 
 const char* CBasePlayerWeapon::GetWeaponClassname()
@@ -71,7 +71,15 @@ const char* CBasePlayerWeapon::GetWeaponClassname()
         return pszClassname;
     }
 }
-IBasePlayerWeapon* CBasePlayerWeapon::ToInterface() { return new CBasePlayerWeaponImpl(this); }
+IBasePlayerWeapon* CBasePlayerWeapon::ToInterface()
+{
+    auto it = virtualhooks::entityInterfaces.find(this);
+    if (it != virtualhooks::entityInterfaces.end())
+        return static_cast<IBasePlayerWeapon*>(it->second);
+    auto* impl = new CBasePlayerWeaponImpl(this);
+    virtualhooks::entityInterfaces[this] = impl;
+    return impl;
+}
 
 IBasePlayerWeapon* IBasePlayerWeapon::FromOriginal(CBasePlayerWeapon* p)
 { return CBasePlayerWeapon::FromOriginal(p); }

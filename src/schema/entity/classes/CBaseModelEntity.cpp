@@ -40,13 +40,8 @@
 #include "schema/entity/classes/CBodyComponent.h"
 #include "schema/entity/classes/CSkeletonInstance.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
+#include "core/virtualhooks.h"
 
 CUtlSymbolLarge CBaseModelEntity::GetModelName()
 {
@@ -68,13 +63,24 @@ Vector CBaseModelEntity::GetEyePosition()
 }
 
 void CBaseModelEntity::SetModel(const char* pszModel) {
-#ifdef SOURCE2TOOLKIT_CORE
     addresses::toolkitAddresses.SetModel(this, pszModel);
-#else
-    g_ToolkitAPI->Addresses()->CBaseModelEntity_SetModel()(this, pszModel);
-#endif
 }
-IBaseModelEntity* CBaseModelEntity::ToInterface() { return new CBaseModelEntityImpl(this); }
+IBaseModelEntity* CBaseModelEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseModelEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseModelEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseModelEntity*>(impl));
+    return impl;
+}
+
+IBaseModelEntity* IBaseModelEntity::FromRaw(CEntityInstance* p)
+{
+    return p ? static_cast<CBaseModelEntity*>(p)->ToInterface() : nullptr;
+}
 
 IBaseModelEntity* IBaseModelEntity::FromOriginal(CBaseModelEntity* p)
 { return CBaseModelEntity::FromOriginal(p); }

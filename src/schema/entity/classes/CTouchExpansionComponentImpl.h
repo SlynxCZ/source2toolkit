@@ -61,6 +61,7 @@ public:
 };
 
 inline ITouchExpansionComponent* CTouchExpansionComponent::ToInterface() { return new CTouchExpansionComponentImpl(this); }
+inline ITouchExpansionComponent* ITouchExpansionComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITouchExpansionComponent* ITouchExpansionComponent::FromOriginal(CTouchExpansionComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTOUCHEXPANSIONCOMPONENTIMPL_H

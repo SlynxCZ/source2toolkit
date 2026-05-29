@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicNPCCounter.h"
 #include "CBaseEntityImpl.h"
 
-class CLogicNPCCounterImpl : public CBaseEntityImpl, public ILogicNPCCounter
+class CLogicNPCCounterImpl : public CBaseEntityImpl, public virtual ILogicNPCCounter
 {
 
 public:
@@ -138,7 +138,20 @@ public:
     void DefaultDist_3Updated() override { Real()->m_flDefaultDist_3.NetworkStateChanged(); }
 };
 
-inline ILogicNPCCounter* CLogicNPCCounter::ToInterface() { return new CLogicNPCCounterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicNPCCounter* CLogicNPCCounter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicNPCCounter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicNPCCounterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicNPCCounter*>(impl));
+    return impl;
+}
+inline ILogicNPCCounter* ILogicNPCCounter::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicNPCCounter*>(p)->ToInterface() : nullptr; }
 inline ILogicNPCCounter* ILogicNPCCounter::FromOriginal(CLogicNPCCounter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICNPCCOUNTERIMPL_H

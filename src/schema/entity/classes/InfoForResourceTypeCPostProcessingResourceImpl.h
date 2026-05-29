@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeCPostProcessingResource* InfoForResourceTypeCPostProcessingResource::ToInterface() { return new InfoForResourceTypeCPostProcessingResourceImpl(this); }
+inline IInfoForResourceTypeCPostProcessingResource* IInfoForResourceTypeCPostProcessingResource::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeCPostProcessingResource* IInfoForResourceTypeCPostProcessingResource::FromOriginal(InfoForResourceTypeCPostProcessingResource* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECPOSTPROCESSINGRESOURCEIMPL_H

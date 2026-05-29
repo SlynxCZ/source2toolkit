@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicNavigation.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicNavigationImpl : public CLogicalEntityImpl, public ILogicNavigation
+class CLogicNavigationImpl : public CLogicalEntityImpl, public virtual ILogicNavigation
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void NavPropertyUpdated() override { Real()->m_navProperty.NetworkStateChanged(); }
 };
 
-inline ILogicNavigation* CLogicNavigation::ToInterface() { return new CLogicNavigationImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicNavigation* CLogicNavigation::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicNavigation*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicNavigationImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicNavigation*>(impl));
+    return impl;
+}
+inline ILogicNavigation* ILogicNavigation::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicNavigation*>(p)->ToInterface() : nullptr; }
 inline ILogicNavigation* ILogicNavigation::FromOriginal(CLogicNavigation* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICNAVIGATIONIMPL_H

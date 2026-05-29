@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDynamicNavConnectionsVolume.h"
 #include "CTriggerMultipleImpl.h"
 
-class CDynamicNavConnectionsVolumeImpl : public CTriggerMultipleImpl, public IDynamicNavConnectionsVolume
+class CDynamicNavConnectionsVolumeImpl : public CTriggerMultipleImpl, public virtual IDynamicNavConnectionsVolume
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void MaxConnectionDistanceUpdated() override { Real()->m_flMaxConnectionDistance.NetworkStateChanged(); }
 };
 
-inline IDynamicNavConnectionsVolume* CDynamicNavConnectionsVolume::ToInterface() { return new CDynamicNavConnectionsVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDynamicNavConnectionsVolume* CDynamicNavConnectionsVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDynamicNavConnectionsVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDynamicNavConnectionsVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDynamicNavConnectionsVolume*>(impl));
+    return impl;
+}
+inline IDynamicNavConnectionsVolume* IDynamicNavConnectionsVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CDynamicNavConnectionsVolume*>(p)->ToInterface() : nullptr; }
 inline IDynamicNavConnectionsVolume* IDynamicNavConnectionsVolume::FromOriginal(CDynamicNavConnectionsVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDYNAMICNAVCONNECTIONSVOLUMEIMPL_H

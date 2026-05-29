@@ -111,6 +111,7 @@ public:
 };
 
 inline Ifogparams_t* fogparams_t::ToInterface() { return new fogparams_tImpl(this); }
+inline Ifogparams_t* Ifogparams_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ifogparams_t* Ifogparams_t::FromOriginal(fogparams_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_FOGPARAMS_TIMPL_H

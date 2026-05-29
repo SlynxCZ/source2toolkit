@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicEventListener.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicEventListenerImpl : public CLogicalEntityImpl, public ILogicEventListener
+class CLogicEventListenerImpl : public CLogicalEntityImpl, public virtual ILogicEventListener
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void TeamUpdated() override { Real()->m_nTeam.NetworkStateChanged(); }
 };
 
-inline ILogicEventListener* CLogicEventListener::ToInterface() { return new CLogicEventListenerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicEventListener* CLogicEventListener::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicEventListener*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicEventListenerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicEventListener*>(impl));
+    return impl;
+}
+inline ILogicEventListener* ILogicEventListener::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicEventListener*>(p)->ToInterface() : nullptr; }
 inline ILogicEventListener* ILogicEventListener::FromOriginal(CLogicEventListener* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICEVENTLISTENERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTrainControls.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncTrainControlsImpl : public CBaseModelEntityImpl, public IFuncTrainControls
+class CFuncTrainControlsImpl : public CBaseModelEntityImpl, public virtual IFuncTrainControls
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncTrainControls* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncTrainControls* CFuncTrainControls::ToInterface() { return new CFuncTrainControlsImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTrainControls* CFuncTrainControls::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTrainControls*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTrainControlsImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTrainControls*>(impl));
+    return impl;
+}
+inline IFuncTrainControls* IFuncTrainControls::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTrainControls*>(p)->ToInterface() : nullptr; }
 inline IFuncTrainControls* IFuncTrainControls::FromOriginal(CFuncTrainControls* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTRAINCONTROLSIMPL_H

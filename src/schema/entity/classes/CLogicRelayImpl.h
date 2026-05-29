@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicRelay.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicRelayImpl : public CLogicalEntityImpl, public ILogicRelay
+class CLogicRelayImpl : public CLogicalEntityImpl, public virtual ILogicRelay
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void PassthoughCallerUpdated() override { Real()->m_bPassthoughCaller.NetworkStateChanged(); }
 };
 
-inline ILogicRelay* CLogicRelay::ToInterface() { return new CLogicRelayImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicRelay* CLogicRelay::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicRelay*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicRelayImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicRelay*>(impl));
+    return impl;
+}
+inline ILogicRelay* ILogicRelay::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicRelay*>(p)->ToInterface() : nullptr; }
 inline ILogicRelay* ILogicRelay::FromOriginal(CLogicRelay* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICRELAYIMPL_H

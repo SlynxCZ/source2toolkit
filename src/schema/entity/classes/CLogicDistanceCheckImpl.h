@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicDistanceCheck.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicDistanceCheckImpl : public CLogicalEntityImpl, public ILogicDistanceCheck
+class CLogicDistanceCheckImpl : public CLogicalEntityImpl, public virtual ILogicDistanceCheck
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void InZone3Updated() override { Real()->m_InZone3.NetworkStateChanged(); }
 };
 
-inline ILogicDistanceCheck* CLogicDistanceCheck::ToInterface() { return new CLogicDistanceCheckImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicDistanceCheck* CLogicDistanceCheck::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicDistanceCheck*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicDistanceCheckImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicDistanceCheck*>(impl));
+    return impl;
+}
+inline ILogicDistanceCheck* ILogicDistanceCheck::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicDistanceCheck*>(p)->ToInterface() : nullptr; }
 inline ILogicDistanceCheck* ILogicDistanceCheck::FromOriginal(CLogicDistanceCheck* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICDISTANCECHECKIMPL_H

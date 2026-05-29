@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSBot.h"
 #include "CBotImpl.h"
 
-class CCSBotImpl : public CBotImpl, public ICSBot
+class CCSBotImpl : public CBotImpl, public virtual ICSBot
 {
 
 public:
@@ -336,6 +336,7 @@ public:
 };
 
 inline ICSBot* CCSBot::ToInterface() { return new CCSBotImpl(this); }
+inline ICSBot* ICSBot::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSBot* ICSBot::FromOriginal(CCSBot* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSBOTIMPL_H

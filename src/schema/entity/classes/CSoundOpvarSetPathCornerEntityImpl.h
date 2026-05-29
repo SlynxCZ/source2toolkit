@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundOpvarSetPathCornerEntity.h"
 #include "CSoundOpvarSetPointEntityImpl.h"
 
-class CSoundOpvarSetPathCornerEntityImpl : public CSoundOpvarSetPointEntityImpl, public ISoundOpvarSetPathCornerEntity
+class CSoundOpvarSetPathCornerEntityImpl : public CSoundOpvarSetPointEntityImpl, public virtual ISoundOpvarSetPathCornerEntity
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void PathCornerEntityNameUpdated() override { Real()->m_iszPathCornerEntityName.NetworkStateChanged(); }
 };
 
-inline ISoundOpvarSetPathCornerEntity* CSoundOpvarSetPathCornerEntity::ToInterface() { return new CSoundOpvarSetPathCornerEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundOpvarSetPathCornerEntity* CSoundOpvarSetPathCornerEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundOpvarSetPathCornerEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundOpvarSetPathCornerEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundOpvarSetPathCornerEntity*>(impl));
+    return impl;
+}
+inline ISoundOpvarSetPathCornerEntity* ISoundOpvarSetPathCornerEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundOpvarSetPathCornerEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundOpvarSetPathCornerEntity* ISoundOpvarSetPathCornerEntity::FromOriginal(CSoundOpvarSetPathCornerEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDOPVARSETPATHCORNERENTITYIMPL_H

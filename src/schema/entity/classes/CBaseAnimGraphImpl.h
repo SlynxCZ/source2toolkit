@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseAnimGraph.h"
 #include "CBaseModelEntityImpl.h"
 
-class CBaseAnimGraphImpl : public CBaseModelEntityImpl, public IBaseAnimGraph
+class CBaseAnimGraphImpl : public CBaseModelEntityImpl, public virtual IBaseAnimGraph
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void XParentedRagdollRootInEntitySpaceUpdated() override { Real()->m_xParentedRagdollRootInEntitySpace.NetworkStateChanged(); }
 };
 
-inline IBaseAnimGraph* CBaseAnimGraph::ToInterface() { return new CBaseAnimGraphImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseAnimGraph* CBaseAnimGraph::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseAnimGraph*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseAnimGraphImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseAnimGraph*>(impl));
+    return impl;
+}
+inline IBaseAnimGraph* IBaseAnimGraph::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseAnimGraph*>(p)->ToInterface() : nullptr; }
 inline IBaseAnimGraph* IBaseAnimGraph::FromOriginal(CBaseAnimGraph* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEANIMGRAPHIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerController_ActionTrackingServices.h"
 #include "CPlayerControllerComponentImpl.h"
 
-class CCSPlayerController_ActionTrackingServicesImpl : public CPlayerControllerComponentImpl, public ICSPlayerController_ActionTrackingServices
+class CCSPlayerController_ActionTrackingServicesImpl : public CPlayerControllerComponentImpl, public virtual ICSPlayerController_ActionTrackingServices
 {
 
 public:
@@ -69,6 +69,7 @@ public:
 };
 
 inline ICSPlayerController_ActionTrackingServices* CCSPlayerController_ActionTrackingServices::ToInterface() { return new CCSPlayerController_ActionTrackingServicesImpl(this); }
+inline ICSPlayerController_ActionTrackingServices* ICSPlayerController_ActionTrackingServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerController_ActionTrackingServices* ICSPlayerController_ActionTrackingServices::FromOriginal(CCSPlayerController_ActionTrackingServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_ACTIONTRACKINGSERVICESIMPL_H

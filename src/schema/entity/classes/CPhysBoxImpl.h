@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysBox.h"
 #include "CBreakableImpl.h"
 
-class CPhysBoxImpl : public CBreakableImpl, public IPhysBox
+class CPhysBoxImpl : public CBreakableImpl, public virtual IPhysBox
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void CarryingPlayerUpdated() override { Real()->m_hCarryingPlayer.NetworkStateChanged(); }
 };
 
-inline IPhysBox* CPhysBox::ToInterface() { return new CPhysBoxImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysBox* CPhysBox::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysBox*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysBoxImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysBox*>(impl));
+    return impl;
+}
+inline IPhysBox* IPhysBox::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysBox*>(p)->ToInterface() : nullptr; }
 inline IPhysBox* IPhysBox::FromOriginal(CPhysBox* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSBOXIMPL_H

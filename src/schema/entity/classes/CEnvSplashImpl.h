@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSplash.h"
 #include "CPointEntityImpl.h"
 
-class CEnvSplashImpl : public CPointEntityImpl, public IEnvSplash
+class CEnvSplashImpl : public CPointEntityImpl, public virtual IEnvSplash
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ScaleUpdated() override { Real()->m_flScale.NetworkStateChanged(); }
 };
 
-inline IEnvSplash* CEnvSplash::ToInterface() { return new CEnvSplashImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSplash* CEnvSplash::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSplash*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSplashImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSplash*>(impl));
+    return impl;
+}
+inline IEnvSplash* IEnvSplash::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSplash*>(p)->ToInterface() : nullptr; }
 inline IEnvSplash* IEnvSplash::FromOriginal(CEnvSplash* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSPLASHIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseMoveBehavior.h"
 #include "CPathKeyFrameImpl.h"
 
-class CBaseMoveBehaviorImpl : public CPathKeyFrameImpl, public IBaseMoveBehavior
+class CBaseMoveBehaviorImpl : public CPathKeyFrameImpl, public virtual IBaseMoveBehavior
 {
 
 public:
@@ -80,7 +80,20 @@ public:
     void DirectionUpdated() override { Real()->m_iDirection.NetworkStateChanged(); }
 };
 
-inline IBaseMoveBehavior* CBaseMoveBehavior::ToInterface() { return new CBaseMoveBehaviorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseMoveBehavior* CBaseMoveBehavior::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseMoveBehavior*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseMoveBehaviorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseMoveBehavior*>(impl));
+    return impl;
+}
+inline IBaseMoveBehavior* IBaseMoveBehavior::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseMoveBehavior*>(p)->ToInterface() : nullptr; }
 inline IBaseMoveBehavior* IBaseMoveBehavior::FromOriginal(CBaseMoveBehavior* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEMOVEBEHAVIORIMPL_H

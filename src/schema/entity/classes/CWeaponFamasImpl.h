@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponFamas.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponFamasImpl : public CCSWeaponBaseGunImpl, public IWeaponFamas
+class CWeaponFamasImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponFamas
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponFamas* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponFamas* CWeaponFamas::ToInterface() { return new CWeaponFamasImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponFamas* CWeaponFamas::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponFamas*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponFamasImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponFamas*>(impl));
+    return impl;
+}
+inline IWeaponFamas* IWeaponFamas::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponFamas*>(p)->ToInterface() : nullptr; }
 inline IWeaponFamas* IWeaponFamas::FromOriginal(CWeaponFamas* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONFAMASIMPL_H

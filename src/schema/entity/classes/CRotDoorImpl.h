@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRotDoor.h"
 #include "CBaseDoorImpl.h"
 
-class CRotDoorImpl : public CBaseDoorImpl, public IRotDoor
+class CRotDoorImpl : public CBaseDoorImpl, public virtual IRotDoor
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void SolidBspUpdated() override { Real()->m_bSolidBsp.NetworkStateChanged(); }
 };
 
-inline IRotDoor* CRotDoor::ToInterface() { return new CRotDoorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRotDoor* CRotDoor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRotDoor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRotDoorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRotDoor*>(impl));
+    return impl;
+}
+inline IRotDoor* IRotDoor::FromRaw(CEntityInstance* p) { return p ? static_cast<CRotDoor*>(p)->ToInterface() : nullptr; }
 inline IRotDoor* IRotDoor::FromOriginal(CRotDoor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CROTDOORIMPL_H

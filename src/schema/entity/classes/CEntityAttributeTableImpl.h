@@ -61,6 +61,7 @@ public:
 };
 
 inline IEntityAttributeTable* CEntityAttributeTable::ToInterface() { return new CEntityAttributeTableImpl(this); }
+inline IEntityAttributeTable* IEntityAttributeTable::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEntityAttributeTable* IEntityAttributeTable::FromOriginal(CEntityAttributeTable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENTITYATTRIBUTETABLEIMPL_H

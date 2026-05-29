@@ -62,6 +62,7 @@ public:
 };
 
 inline ISkillFloat* CSkillFloat::ToInterface() { return new CSkillFloatImpl(this); }
+inline ISkillFloat* ISkillFloat::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISkillFloat* ISkillFloat::FromOriginal(CSkillFloat* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSKILLFLOATIMPL_H

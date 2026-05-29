@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemAssaultSuit.h"
 #include "CItemImpl.h"
 
-class CItemAssaultSuitImpl : public CItemImpl, public IItemAssaultSuit
+class CItemAssaultSuitImpl : public CItemImpl, public virtual IItemAssaultSuit
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CItemAssaultSuit* GetOriginal() const override { return Real(); }
 };
 
-inline IItemAssaultSuit* CItemAssaultSuit::ToInterface() { return new CItemAssaultSuitImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemAssaultSuit* CItemAssaultSuit::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemAssaultSuit*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemAssaultSuitImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemAssaultSuit*>(impl));
+    return impl;
+}
+inline IItemAssaultSuit* IItemAssaultSuit::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemAssaultSuit*>(p)->ToInterface() : nullptr; }
 inline IItemAssaultSuit* IItemAssaultSuit::FromOriginal(CItemAssaultSuit* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMASSAULTSUITIMPL_H

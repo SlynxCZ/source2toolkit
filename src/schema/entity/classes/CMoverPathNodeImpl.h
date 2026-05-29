@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMoverPathNode.h"
 #include "CPathNodeImpl.h"
 
-class CMoverPathNodeImpl : public CPathNodeImpl, public IMoverPathNode
+class CMoverPathNodeImpl : public CPathNodeImpl, public virtual IMoverPathNode
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CMoverPathNode* GetOriginal() const override { return Real(); }
 };
 
-inline IMoverPathNode* CMoverPathNode::ToInterface() { return new CMoverPathNodeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMoverPathNode* CMoverPathNode::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMoverPathNode*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMoverPathNodeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMoverPathNode*>(impl));
+    return impl;
+}
+inline IMoverPathNode* IMoverPathNode::FromRaw(CEntityInstance* p) { return p ? static_cast<CMoverPathNode*>(p)->ToInterface() : nullptr; }
 inline IMoverPathNode* IMoverPathNode::FromOriginal(CMoverPathNode* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOVERPATHNODEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHostageRescueZoneShim.h"
 #include "CBaseTriggerImpl.h"
 
-class CHostageRescueZoneShimImpl : public CBaseTriggerImpl, public IHostageRescueZoneShim
+class CHostageRescueZoneShimImpl : public CBaseTriggerImpl, public virtual IHostageRescueZoneShim
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CHostageRescueZoneShim* GetOriginal() const override { return Real(); }
 };
 
-inline IHostageRescueZoneShim* CHostageRescueZoneShim::ToInterface() { return new CHostageRescueZoneShimImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHostageRescueZoneShim* CHostageRescueZoneShim::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHostageRescueZoneShim*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHostageRescueZoneShimImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHostageRescueZoneShim*>(impl));
+    return impl;
+}
+inline IHostageRescueZoneShim* IHostageRescueZoneShim::FromRaw(CEntityInstance* p) { return p ? static_cast<CHostageRescueZoneShim*>(p)->ToInterface() : nullptr; }
 inline IHostageRescueZoneShim* IHostageRescueZoneShim::FromOriginal(CHostageRescueZoneShim* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHOSTAGERESCUEZONESHIMIMPL_H

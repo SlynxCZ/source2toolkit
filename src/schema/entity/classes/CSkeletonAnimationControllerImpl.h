@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSkeletonAnimationController.h"
 #include "ISkeletonAnimationControllerImpl.h"
 
-class CSkeletonAnimationControllerImpl : public ISkeletonAnimationControllerImpl, public ISkeletonAnimationController
+class CSkeletonAnimationControllerImpl : public ISkeletonAnimationControllerImpl, public virtual ISkeletonAnimationController
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline ISkeletonAnimationController* CSkeletonAnimationController::ToInterface() { return new CSkeletonAnimationControllerImpl(this); }
+inline ISkeletonAnimationController* ISkeletonAnimationController::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISkeletonAnimationController* ISkeletonAnimationController::FromOriginal(CSkeletonAnimationController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSKELETONANIMATIONCONTROLLERIMPL_H

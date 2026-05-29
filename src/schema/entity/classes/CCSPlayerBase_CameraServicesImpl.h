@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerBase_CameraServices.h"
 #include "CPlayer_CameraServicesImpl.h"
 
-class CCSPlayerBase_CameraServicesImpl : public CPlayer_CameraServicesImpl, public ICSPlayerBase_CameraServices
+class CCSPlayerBase_CameraServicesImpl : public CPlayer_CameraServicesImpl, public virtual ICSPlayerBase_CameraServices
 {
 
 public:
@@ -73,6 +73,7 @@ public:
 };
 
 inline ICSPlayerBase_CameraServices* CCSPlayerBase_CameraServices::ToInterface() { return new CCSPlayerBase_CameraServicesImpl(this); }
+inline ICSPlayerBase_CameraServices* ICSPlayerBase_CameraServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerBase_CameraServices* ICSPlayerBase_CameraServices::FromOriginal(CCSPlayerBase_CameraServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERBASE_CAMERASERVICESIMPL_H

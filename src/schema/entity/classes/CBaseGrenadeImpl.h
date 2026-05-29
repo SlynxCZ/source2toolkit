@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseGrenade.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CBaseGrenadeImpl : public CBaseAnimGraphImpl, public IBaseGrenade
+class CBaseGrenadeImpl : public CBaseAnimGraphImpl, public virtual IBaseGrenade
 {
 
 public:
@@ -86,7 +86,20 @@ public:
     void OriginalThrowerUpdated() override { Real()->m_hOriginalThrower.NetworkStateChanged(); }
 };
 
-inline IBaseGrenade* CBaseGrenade::ToInterface() { return new CBaseGrenadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseGrenade* CBaseGrenade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseGrenade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseGrenadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseGrenade*>(impl));
+    return impl;
+}
+inline IBaseGrenade* IBaseGrenade::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseGrenade*>(p)->ToInterface() : nullptr; }
 inline IBaseGrenade* IBaseGrenade::FromOriginal(CBaseGrenade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEGRENADEIMPL_H

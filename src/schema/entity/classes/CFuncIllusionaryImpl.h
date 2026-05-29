@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncIllusionary.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncIllusionaryImpl : public CBaseModelEntityImpl, public IFuncIllusionary
+class CFuncIllusionaryImpl : public CBaseModelEntityImpl, public virtual IFuncIllusionary
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncIllusionary* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncIllusionary* CFuncIllusionary::ToInterface() { return new CFuncIllusionaryImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncIllusionary* CFuncIllusionary::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncIllusionary*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncIllusionaryImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncIllusionary*>(impl));
+    return impl;
+}
+inline IFuncIllusionary* IFuncIllusionary::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncIllusionary*>(p)->ToInterface() : nullptr; }
 inline IFuncIllusionary* IFuncIllusionary::FromOriginal(CFuncIllusionary* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCILLUSIONARYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysMagnet.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CPhysMagnetImpl : public CBaseAnimGraphImpl, public IPhysMagnet
+class CPhysMagnetImpl : public CBaseAnimGraphImpl, public virtual IPhysMagnet
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void MaxObjectsAttachedUpdated() override { Real()->m_iMaxObjectsAttached.NetworkStateChanged(); }
 };
 
-inline IPhysMagnet* CPhysMagnet::ToInterface() { return new CPhysMagnetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysMagnet* CPhysMagnet::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysMagnet*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysMagnetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysMagnet*>(impl));
+    return impl;
+}
+inline IPhysMagnet* IPhysMagnet::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysMagnet*>(p)->ToInterface() : nullptr; }
 inline IPhysMagnet* IPhysMagnet::FromOriginal(CPhysMagnet* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSMAGNETIMPL_H

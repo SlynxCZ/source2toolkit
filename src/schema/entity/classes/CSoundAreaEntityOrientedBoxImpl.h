@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundAreaEntityOrientedBox.h"
 #include "CSoundAreaEntityBaseImpl.h"
 
-class CSoundAreaEntityOrientedBoxImpl : public CSoundAreaEntityBaseImpl, public ISoundAreaEntityOrientedBox
+class CSoundAreaEntityOrientedBoxImpl : public CSoundAreaEntityBaseImpl, public virtual ISoundAreaEntityOrientedBox
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void MaxUpdated() override { Real()->m_vMax.NetworkStateChanged(); }
 };
 
-inline ISoundAreaEntityOrientedBox* CSoundAreaEntityOrientedBox::ToInterface() { return new CSoundAreaEntityOrientedBoxImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundAreaEntityOrientedBox* CSoundAreaEntityOrientedBox::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundAreaEntityOrientedBox*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundAreaEntityOrientedBoxImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundAreaEntityOrientedBox*>(impl));
+    return impl;
+}
+inline ISoundAreaEntityOrientedBox* ISoundAreaEntityOrientedBox::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundAreaEntityOrientedBox*>(p)->ToInterface() : nullptr; }
 inline ISoundAreaEntityOrientedBox* ISoundAreaEntityOrientedBox::FromOriginal(CSoundAreaEntityOrientedBox* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDAREAENTITYORIENTEDBOXIMPL_H

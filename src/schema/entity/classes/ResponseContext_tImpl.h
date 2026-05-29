@@ -67,6 +67,7 @@ public:
 };
 
 inline IResponseContext_t* ResponseContext_t::ToInterface() { return new ResponseContext_tImpl(this); }
+inline IResponseContext_t* IResponseContext_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IResponseContext_t* IResponseContext_t::FromOriginal(ResponseContext_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RESPONSECONTEXT_TIMPL_H

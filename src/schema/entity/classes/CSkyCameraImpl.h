@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSkyCamera.h"
 #include "CBaseEntityImpl.h"
 
-class CSkyCameraImpl : public CBaseEntityImpl, public ISkyCamera
+class CSkyCameraImpl : public CBaseEntityImpl, public virtual ISkyCamera
 {
 
 public:
@@ -65,7 +65,20 @@ public:
     void NextUpdated() override { Real()->m_pNext.NetworkStateChanged(); }
 };
 
-inline ISkyCamera* CSkyCamera::ToInterface() { return new CSkyCameraImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISkyCamera* CSkyCamera::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISkyCamera*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSkyCameraImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISkyCamera*>(impl));
+    return impl;
+}
+inline ISkyCamera* ISkyCamera::FromRaw(CEntityInstance* p) { return p ? static_cast<CSkyCamera*>(p)->ToInterface() : nullptr; }
 inline ISkyCamera* ISkyCamera::FromOriginal(CSkyCamera* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSKYCAMERAIMPL_H

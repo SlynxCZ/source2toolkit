@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGameChoreoServices.h"
 #include "IChoreoServicesImpl.h"
 
-class CGameChoreoServicesImpl : public IChoreoServicesImpl, public IGameChoreoServices
+class CGameChoreoServicesImpl : public IChoreoServicesImpl, public virtual IGameChoreoServices
 {
 
 public:
@@ -69,6 +69,7 @@ public:
 };
 
 inline IGameChoreoServices* CGameChoreoServices::ToInterface() { return new CGameChoreoServicesImpl(this); }
+inline IGameChoreoServices* IGameChoreoServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IGameChoreoServices* IGameChoreoServices::FromOriginal(CGameChoreoServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMECHOREOSERVICESIMPL_H

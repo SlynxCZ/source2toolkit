@@ -67,6 +67,7 @@ public:
 };
 
 inline ISoundOpvarTraceResult_t* SoundOpvarTraceResult_t::ToInterface() { return new SoundOpvarTraceResult_tImpl(this); }
+inline ISoundOpvarTraceResult_t* ISoundOpvarTraceResult_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISoundOpvarTraceResult_t* ISoundOpvarTraceResult_t::FromOriginal(SoundOpvarTraceResult_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SOUNDOPVARTRACERESULT_TIMPL_H

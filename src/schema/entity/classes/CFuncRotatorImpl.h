@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncRotator.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncRotatorImpl : public CBaseModelEntityImpl, public IFuncRotator
+class CFuncRotatorImpl : public CBaseModelEntityImpl, public virtual IFuncRotator
 {
 
 public:
@@ -130,8 +130,6 @@ public:
     void SolidTypeUpdated() override { Real()->m_eSolidType.NetworkStateChanged(); }
     CHandle<CFuncMover>& SpeedFromMover() override { return Real()->m_hSpeedFromMover(); }
     void SpeedFromMoverUpdated() override { Real()->m_hSpeedFromMover.NetworkStateChanged(); }
-    CUtlSymbolLarge& SpeedFromMover() override { return Real()->m_iszSpeedFromMover(); }
-    void SpeedFromMoverUpdated() override { Real()->m_iszSpeedFromMover.NetworkStateChanged(); }
     float& SpeedScale() override { return Real()->m_flSpeedScale(); }
     void SpeedScaleUpdated() override { Real()->m_flSpeedScale.NetworkStateChanged(); }
     float& MinYawRotation() override { return Real()->m_flMinYawRotation(); }
@@ -140,7 +138,20 @@ public:
     void MaxYawRotationUpdated() override { Real()->m_flMaxYawRotation.NetworkStateChanged(); }
 };
 
-inline IFuncRotator* CFuncRotator::ToInterface() { return new CFuncRotatorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncRotator* CFuncRotator::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncRotator*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncRotatorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncRotator*>(impl));
+    return impl;
+}
+inline IFuncRotator* IFuncRotator::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncRotator*>(p)->ToInterface() : nullptr; }
 inline IFuncRotator* IFuncRotator::FromOriginal(CFuncRotator* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCROTATORIMPL_H

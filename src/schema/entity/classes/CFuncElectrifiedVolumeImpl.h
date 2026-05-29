@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncElectrifiedVolume.h"
 #include "CFuncBrushImpl.h"
 
-class CFuncElectrifiedVolumeImpl : public CFuncBrushImpl, public IFuncElectrifiedVolume
+class CFuncElectrifiedVolumeImpl : public CFuncBrushImpl, public virtual IFuncElectrifiedVolume
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void EffectSourceUpdated() override { Real()->m_iszEffectSource.NetworkStateChanged(); }
 };
 
-inline IFuncElectrifiedVolume* CFuncElectrifiedVolume::ToInterface() { return new CFuncElectrifiedVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncElectrifiedVolume* CFuncElectrifiedVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncElectrifiedVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncElectrifiedVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncElectrifiedVolume*>(impl));
+    return impl;
+}
+inline IFuncElectrifiedVolume* IFuncElectrifiedVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncElectrifiedVolume*>(p)->ToInterface() : nullptr; }
 inline IFuncElectrifiedVolume* IFuncElectrifiedVolume::FromOriginal(CFuncElectrifiedVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCELECTRIFIEDVOLUMEIMPL_H

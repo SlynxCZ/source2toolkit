@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponHKP2000.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponHKP2000Impl : public CCSWeaponBaseGunImpl, public IWeaponHKP2000
+class CWeaponHKP2000Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponHKP2000
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponHKP2000* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponHKP2000* CWeaponHKP2000::ToInterface() { return new CWeaponHKP2000Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponHKP2000* CWeaponHKP2000::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponHKP2000*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponHKP2000Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponHKP2000*>(impl));
+    return impl;
+}
+inline IWeaponHKP2000* IWeaponHKP2000::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponHKP2000*>(p)->ToInterface() : nullptr; }
 inline IWeaponHKP2000* IWeaponHKP2000::FromOriginal(CWeaponHKP2000* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONHKP2000IMPL_H

@@ -65,6 +65,7 @@ public:
 };
 
 inline IMovementStatsProperty* CMovementStatsProperty::ToInterface() { return new CMovementStatsPropertyImpl(this); }
+inline IMovementStatsProperty* IMovementStatsProperty::FromRaw(CEntityInstance*) { return nullptr; }
 inline IMovementStatsProperty* IMovementStatsProperty::FromOriginal(CMovementStatsProperty* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOVEMENTSTATSPROPERTYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTrackTrain.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncTrackTrainImpl : public CBaseModelEntityImpl, public IFuncTrackTrain
+class CFuncTrackTrainImpl : public CBaseModelEntityImpl, public virtual IFuncTrackTrain
 {
 
 public:
@@ -132,7 +132,20 @@ public:
     void NextMPSoundTimeUpdated() override { Real()->m_flNextMPSoundTime.NetworkStateChanged(); }
 };
 
-inline IFuncTrackTrain* CFuncTrackTrain::ToInterface() { return new CFuncTrackTrainImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTrackTrain* CFuncTrackTrain::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTrackTrain*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTrackTrainImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTrackTrain*>(impl));
+    return impl;
+}
+inline IFuncTrackTrain* IFuncTrackTrain::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTrackTrain*>(p)->ToInterface() : nullptr; }
 inline IFuncTrackTrain* IFuncTrackTrain::FromOriginal(CFuncTrackTrain* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTRACKTRAINIMPL_H

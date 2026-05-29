@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTrackChange.h"
 #include "CFuncPlatRotImpl.h"
 
-class CFuncTrackChangeImpl : public CFuncPlatRotImpl, public IFuncTrackChange
+class CFuncTrackChangeImpl : public CFuncPlatRotImpl, public virtual IFuncTrackChange
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void UseUpdated() override { Real()->m_use.NetworkStateChanged(); }
 };
 
-inline IFuncTrackChange* CFuncTrackChange::ToInterface() { return new CFuncTrackChangeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTrackChange* CFuncTrackChange::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTrackChange*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTrackChangeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTrackChange*>(impl));
+    return impl;
+}
+inline IFuncTrackChange* IFuncTrackChange::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTrackChange*>(p)->ToInterface() : nullptr; }
 inline IFuncTrackChange* IFuncTrackChange::FromOriginal(CFuncTrackChange* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTRACKCHANGEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSplineConstraint.h"
 #include "CPhysConstraintImpl.h"
 
-class CSplineConstraintImpl : public CPhysConstraintImpl, public ISplineConstraint
+class CSplineConstraintImpl : public CPhysConstraintImpl, public virtual ISplineConstraint
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void TangentSpaceAnchorAtTransitionStartUpdated() override { Real()->m_vTangentSpaceAnchorAtTransitionStart.NetworkStateChanged(); }
 };
 
-inline ISplineConstraint* CSplineConstraint::ToInterface() { return new CSplineConstraintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISplineConstraint* CSplineConstraint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISplineConstraint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSplineConstraintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISplineConstraint*>(impl));
+    return impl;
+}
+inline ISplineConstraint* ISplineConstraint::FromRaw(CEntityInstance* p) { return p ? static_cast<CSplineConstraint*>(p)->ToInterface() : nullptr; }
 inline ISplineConstraint* ISplineConstraint::FromOriginal(CSplineConstraint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSPLINECONSTRAINTIMPL_H

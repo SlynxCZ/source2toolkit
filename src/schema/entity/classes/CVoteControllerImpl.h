@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CVoteController.h"
 #include "CBaseEntityImpl.h"
 
-class CVoteControllerImpl : public CBaseEntityImpl, public IVoteController
+class CVoteControllerImpl : public CBaseEntityImpl, public virtual IVoteController
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void VoteOptionsUpdated() override { Real()->m_VoteOptions.NetworkStateChanged(); }
 };
 
-inline IVoteController* CVoteController::ToInterface() { return new CVoteControllerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IVoteController* CVoteController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IVoteController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CVoteControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IVoteController*>(impl));
+    return impl;
+}
+inline IVoteController* IVoteController::FromRaw(CEntityInstance* p) { return p ? static_cast<CVoteController*>(p)->ToInterface() : nullptr; }
 inline IVoteController* IVoteController::FromOriginal(CVoteController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CVOTECONTROLLERIMPL_H

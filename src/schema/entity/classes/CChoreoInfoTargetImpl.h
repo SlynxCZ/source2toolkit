@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CChoreoInfoTarget.h"
 #include "CPointEntityImpl.h"
 
-class CChoreoInfoTargetImpl : public CPointEntityImpl, public IChoreoInfoTarget
+class CChoreoInfoTargetImpl : public CPointEntityImpl, public virtual IChoreoInfoTarget
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CChoreoInfoTarget* GetOriginal() const override { return Real(); }
 };
 
-inline IChoreoInfoTarget* CChoreoInfoTarget::ToInterface() { return new CChoreoInfoTargetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IChoreoInfoTarget* CChoreoInfoTarget::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IChoreoInfoTarget*>(tagIt->second.ptr_for_return);
+    auto* impl = new CChoreoInfoTargetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IChoreoInfoTarget*>(impl));
+    return impl;
+}
+inline IChoreoInfoTarget* IChoreoInfoTarget::FromRaw(CEntityInstance* p) { return p ? static_cast<CChoreoInfoTarget*>(p)->ToInterface() : nullptr; }
 inline IChoreoInfoTarget* IChoreoInfoTarget::FromOriginal(CChoreoInfoTarget* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCHOREOINFOTARGETIMPL_H

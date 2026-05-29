@@ -44,7 +44,7 @@
 #include "schema/entity/classes/COmniLight.h"
 #include "CBarnLightImpl.h"
 
-class COmniLightImpl : public CBarnLightImpl, public IOmniLight
+class COmniLightImpl : public CBarnLightImpl, public virtual IOmniLight
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void ShowLightUpdated() override { Real()->m_bShowLight.NetworkStateChanged(); }
 };
 
-inline IOmniLight* COmniLight::ToInterface() { return new COmniLightImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IOmniLight* COmniLight::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IOmniLight*>(tagIt->second.ptr_for_return);
+    auto* impl = new COmniLightImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IOmniLight*>(impl));
+    return impl;
+}
+inline IOmniLight* IOmniLight::FromRaw(CEntityInstance* p) { return p ? static_cast<COmniLight*>(p)->ToInterface() : nullptr; }
 inline IOmniLight* IOmniLight::FromOriginal(COmniLight* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_COMNILIGHTIMPL_H

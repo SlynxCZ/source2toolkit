@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGO_WingmanIntroCharacterPosition.h"
 #include "CCSGO_TeamIntroCharacterPositionImpl.h"
 
-class CCSGO_WingmanIntroCharacterPositionImpl : public CCSGO_TeamIntroCharacterPositionImpl, public ICSGO_WingmanIntroCharacterPosition
+class CCSGO_WingmanIntroCharacterPositionImpl : public CCSGO_TeamIntroCharacterPositionImpl, public virtual ICSGO_WingmanIntroCharacterPosition
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSGO_WingmanIntroCharacterPosition* GetOriginal() const override { return Real(); }
 };
 
-inline ICSGO_WingmanIntroCharacterPosition* CCSGO_WingmanIntroCharacterPosition::ToInterface() { return new CCSGO_WingmanIntroCharacterPositionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSGO_WingmanIntroCharacterPosition* CCSGO_WingmanIntroCharacterPosition::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSGO_WingmanIntroCharacterPosition*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSGO_WingmanIntroCharacterPositionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSGO_WingmanIntroCharacterPosition*>(impl));
+    return impl;
+}
+inline ICSGO_WingmanIntroCharacterPosition* ICSGO_WingmanIntroCharacterPosition::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSGO_WingmanIntroCharacterPosition*>(p)->ToInterface() : nullptr; }
 inline ICSGO_WingmanIntroCharacterPosition* ICSGO_WingmanIntroCharacterPosition::FromOriginal(CCSGO_WingmanIntroCharacterPosition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGO_WINGMANINTROCHARACTERPOSITIONIMPL_H

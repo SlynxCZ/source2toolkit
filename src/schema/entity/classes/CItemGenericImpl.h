@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemGeneric.h"
 #include "CItemImpl.h"
 
-class CItemGenericImpl : public CItemImpl, public IItemGeneric
+class CItemGenericImpl : public CItemImpl, public virtual IItemGeneric
 {
 
 public:
@@ -122,7 +122,20 @@ public:
     void TriggerHelperUpdated() override { Real()->m_hTriggerHelper.NetworkStateChanged(); }
 };
 
-inline IItemGeneric* CItemGeneric::ToInterface() { return new CItemGenericImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemGeneric* CItemGeneric::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemGeneric*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemGenericImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemGeneric*>(impl));
+    return impl;
+}
+inline IItemGeneric* IItemGeneric::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemGeneric*>(p)->ToInterface() : nullptr; }
 inline IItemGeneric* IItemGeneric::FromOriginal(CItemGeneric* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMGENERICIMPL_H

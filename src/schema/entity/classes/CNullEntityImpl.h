@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CNullEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CNullEntityImpl : public CBaseEntityImpl, public INullEntity
+class CNullEntityImpl : public CBaseEntityImpl, public virtual INullEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CNullEntity* GetOriginal() const override { return Real(); }
 };
 
-inline INullEntity* CNullEntity::ToInterface() { return new CNullEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline INullEntity* CNullEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<INullEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CNullEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<INullEntity*>(impl));
+    return impl;
+}
+inline INullEntity* INullEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CNullEntity*>(p)->ToInterface() : nullptr; }
 inline INullEntity* INullEntity::FromOriginal(CNullEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNULLENTITYIMPL_H

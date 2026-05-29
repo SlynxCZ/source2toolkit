@@ -73,6 +73,7 @@ public:
 };
 
 inline IAttributeManager* CAttributeManager::ToInterface() { return new CAttributeManagerImpl(this); }
+inline IAttributeManager* IAttributeManager::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAttributeManager* IAttributeManager::FromOriginal(CAttributeManager* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CATTRIBUTEMANAGERIMPL_H

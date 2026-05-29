@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSObserverPawn.h"
 #include "CCSPlayerPawnBaseImpl.h"
 
-class CCSObserverPawnImpl : public CCSPlayerPawnBaseImpl, public ICSObserverPawn
+class CCSObserverPawnImpl : public CCSPlayerPawnBaseImpl, public virtual ICSObserverPawn
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSObserverPawn* GetOriginal() const override { return Real(); }
 };
 
-inline ICSObserverPawn* CCSObserverPawn::ToInterface() { return new CCSObserverPawnImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSObserverPawn* CCSObserverPawn::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSObserverPawn*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSObserverPawnImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSObserverPawn*>(impl));
+    return impl;
+}
+inline ICSObserverPawn* ICSObserverPawn::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSObserverPawn*>(p)->ToInterface() : nullptr; }
 inline ICSObserverPawn* ICSObserverPawn::FromOriginal(CCSObserverPawn* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSOBSERVERPAWNIMPL_H

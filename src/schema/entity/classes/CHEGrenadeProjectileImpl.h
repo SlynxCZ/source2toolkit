@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHEGrenadeProjectile.h"
 #include "CBaseCSGrenadeProjectileImpl.h"
 
-class CHEGrenadeProjectileImpl : public CBaseCSGrenadeProjectileImpl, public IHEGrenadeProjectile
+class CHEGrenadeProjectileImpl : public CBaseCSGrenadeProjectileImpl, public virtual IHEGrenadeProjectile
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CHEGrenadeProjectile* GetOriginal() const override { return Real(); }
 };
 
-inline IHEGrenadeProjectile* CHEGrenadeProjectile::ToInterface() { return new CHEGrenadeProjectileImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHEGrenadeProjectile* CHEGrenadeProjectile::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHEGrenadeProjectile*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHEGrenadeProjectileImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHEGrenadeProjectile*>(impl));
+    return impl;
+}
+inline IHEGrenadeProjectile* IHEGrenadeProjectile::FromRaw(CEntityInstance* p) { return p ? static_cast<CHEGrenadeProjectile*>(p)->ToInterface() : nullptr; }
 inline IHEGrenadeProjectile* IHEGrenadeProjectile::FromOriginal(CHEGrenadeProjectile* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHEGRENADEPROJECTILEIMPL_H

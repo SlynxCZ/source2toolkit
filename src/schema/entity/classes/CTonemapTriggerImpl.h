@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTonemapTrigger.h"
 #include "CBaseTriggerImpl.h"
 
-class CTonemapTriggerImpl : public CBaseTriggerImpl, public ITonemapTrigger
+class CTonemapTriggerImpl : public CBaseTriggerImpl, public virtual ITonemapTrigger
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void TonemapControllerUpdated() override { Real()->m_hTonemapController.NetworkStateChanged(); }
 };
 
-inline ITonemapTrigger* CTonemapTrigger::ToInterface() { return new CTonemapTriggerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITonemapTrigger* CTonemapTrigger::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITonemapTrigger*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTonemapTriggerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITonemapTrigger*>(impl));
+    return impl;
+}
+inline ITonemapTrigger* ITonemapTrigger::FromRaw(CEntityInstance* p) { return p ? static_cast<CTonemapTrigger*>(p)->ToInterface() : nullptr; }
 inline ITonemapTrigger* ITonemapTrigger::FromOriginal(CTonemapTrigger* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTONEMAPTRIGGERIMPL_H

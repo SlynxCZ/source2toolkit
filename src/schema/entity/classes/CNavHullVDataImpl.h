@@ -91,6 +91,7 @@ public:
 };
 
 inline INavHullVData* CNavHullVData::ToInterface() { return new CNavHullVDataImpl(this); }
+inline INavHullVData* INavHullVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline INavHullVData* INavHullVData::FromOriginal(CNavHullVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNAVHULLVDATAIMPL_H

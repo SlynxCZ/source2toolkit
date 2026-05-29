@@ -36,28 +36,18 @@
  */
 
 #include "schema/entity/classes/CCSPlayerControllerImpl.h"
-
 #include "schema/entity/classes/CCSPlayerPawn.h"
 #include "schema/entity/classes/CCSObserverPawn.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
-#include "core/shared.h"
-#include "core/gameconfig.h"
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitGameConfig.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
+#include "core/gameconfig.h"
+#include "core/shared.h"
 
-#include "source2toolkit/schema/entities.h"
 #include "source2toolkit/schema/takedamageinfo.h"
+#include "source2toolkit/utils/virtual.h"
 
 #include "networksystem/inetworkmessages.h"
 #include "usermessages.pb.h"
-
-#include "source2toolkit/utils/virtual.h"
 
 enum class HudDestination
 {
@@ -86,17 +76,20 @@ static void ClientPrint(int slot, int hudDestination, const char* message)
     delete data;
 }
 
-CCSPlayerController *CCSPlayerController::FromPawn(CCSPlayerPawn* pPawn)
+ICSPlayerController *CCSPlayerController::FromPawn(ICSPlayerPawn* pPawn)
 {
-    return static_cast<CCSPlayerController*>(pPawn->m_hController().Get());
+    if (!pPawn) return nullptr;
+    auto* raw = static_cast<CCSPlayerController*>(static_cast<CCSPlayerPawn*>(pPawn->GetOriginal())->m_hController().Get());
+    return raw ? raw->ToInterface() : nullptr;
 }
 
-CCSPlayerController *CCSPlayerController::FromSlot(int iSlot)
+ICSPlayerController *CCSPlayerController::FromSlot(int iSlot)
 {
-    return static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(iSlot + 1)));
+    auto* raw = static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(iSlot + 1)));
+    return raw ? raw->ToInterface() : nullptr;
 }
 
-CCSPlayerController *CCSPlayerController::FromSlot(CPlayerSlot slot)
+ICSPlayerController *CCSPlayerController::FromSlot(CPlayerSlot slot)
 {
     if (!slot.IsValid())
         return nullptr;
@@ -104,38 +97,38 @@ CCSPlayerController *CCSPlayerController::FromSlot(CPlayerSlot slot)
     return FromSlot(slot.Get());
 }
 
-CCSPlayerController *CCSPlayerController::FromUserId(int iUserId)
+ICSPlayerController *CCSPlayerController::FromUserId(int iUserId)
 {
     for (int i = 0; i < GetGlobalVars()->maxClients; ++i)
     {
-        CCSPlayerController* controller = FromSlot(i);
-        if (!controller)
+        auto* raw = static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(i + 1)));
+        if (!raw)
             continue;
 
-        if (iUserId == GetEngineServer()->GetPlayerUserId(i).Get()) return controller;
+        if (iUserId == GetEngineServer()->GetPlayerUserId(i).Get()) return raw->ToInterface();
     }
     return nullptr;
 }
 
-CCSPlayerController *CCSPlayerController::FromUserId(CPlayerUserId userId)
+ICSPlayerController *CCSPlayerController::FromUserId(CPlayerUserId userId)
 {
     return FromUserId(userId.Get());
 }
 
-CCSPlayerController *CCSPlayerController::FromSteamId(uint64 uSteamId)
+ICSPlayerController *CCSPlayerController::FromSteamId(uint64 uSteamId)
 {
     for (int i = 0; i < GetGlobalVars()->maxClients; ++i)
     {
-        CCSPlayerController* controller = FromSlot(i);
-        if (!controller)
+        auto* raw = static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(i + 1)));
+        if (!raw)
             continue;
 
-        if (uSteamId == controller->m_steamID()) return controller;
+        if (uSteamId == raw->m_steamID()) return raw->ToInterface();
     }
     return nullptr;
 }
 
-CCSPlayerController *CCSPlayerController::FromSteamId(CSteamID steamId)
+ICSPlayerController *CCSPlayerController::FromSteamId(CSteamID steamId)
 {
     return FromSteamId(steamId.ConvertToUint64());
 }
@@ -173,15 +166,16 @@ void CCSPlayerController::PrintToCenterHtml(const char* pszMessage, int iDuratio
     FireEventToClient(event);
 }
 
-void CCSPlayerController::TakeDamage(CCSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType)
+void CCSPlayerController::TakeDamage(ICSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType)
 {
-    if (!m_bPawnIsAlive || m_iConnected() != PlayerConnectedState::Connected || !pAttacker || pAttacker->m_iConnected() != PlayerConnectedState::Connected)
+    auto* rawAttacker = pAttacker ? static_cast<CCSPlayerController*>(pAttacker->GetOriginal()) : nullptr;
+    if (!m_bPawnIsAlive || m_iConnected() != PlayerConnectedState::Connected || !rawAttacker || rawAttacker->m_iConnected() != PlayerConnectedState::Connected)
         return;
 
-    CCSPlayerPawn* pVictimPawn = GetPlayerPawn();
+    CCSPlayerPawn* pVictimPawn = static_cast<CCSPlayerPawn*>(GetPlayerPawn()->GetOriginal());
     if (!pVictimPawn) return;
 
-    CCSPlayerPawn* pAttackerPawn = pAttacker->GetPlayerPawn();
+    CCSPlayerPawn* pAttackerPawn = static_cast<CCSPlayerPawn*>(rawAttacker->GetPlayerPawn()->GetOriginal());
     if (!pAttackerPawn) return;
 
     auto flDamage = static_cast<float>(iDamage);
@@ -189,11 +183,7 @@ void CCSPlayerController::TakeDamage(CCSPlayerController* pAttacker, int iDamage
     CTakeDamageInfo info(pVictimPawn, pAttackerPawn, nullptr, flDamage, bitsDamageType);
     info.m_nDamageFlags = static_cast<TakeDamageFlags_t>(static_cast<int>(info.m_nDamageFlags) | static_cast<int>(TakeDamageFlags_t::DFLAG_SUPPRESS_DAMAGE_MODIFICATION));
 
-#ifdef SOURCE2TOOLKIT_CORE
     addresses::toolkitAddresses.TakeDamageOld(this, &info, nullptr);
-#else
-    g_ToolkitAPI->Addresses()->CBaseEntity_TakeDamageOld()(this, &info, nullptr);
-#endif
 }
 
 void CCSPlayerController::Respawn()
@@ -201,31 +191,19 @@ void CCSPlayerController::Respawn()
     if (!m_hPlayerPawn()) return;
 
     // The Call To Arms update appears to have invalidated the need for CCSPlayerPawn_Respawn.
-    SetPawn(m_hPlayerPawn());
-#ifdef SOURCE2TOOLKIT_CORE
+    SetPawn(m_hPlayerPawn().Get() ? static_cast<CBasePlayerPawn*>(m_hPlayerPawn().Get())->ToInterface() : nullptr);
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayerController_Respawn");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayerController_Respawn");
-#endif
     CALL_VIRTUAL(void, offset, this);
 }
 
 void CCSPlayerController::SwitchTeam(int nTeam)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     addresses::toolkitAddresses.SwitchTeam(this, static_cast<unsigned char>(nTeam));
-#else
-    g_ToolkitAPI->Addresses()->CCSPlayerController_SwitchTeam()(this, static_cast<unsigned char>(nTeam));
-#endif
 }
 
 void CCSPlayerController::ChangeTeam(int nTeam)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayerController_ChangeTeam");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayerController_ChangeTeam");
-#endif
     CALL_VIRTUAL(void, offset, this, nTeam);
 }
 
@@ -257,24 +235,24 @@ void CCSPlayerController::ExecuteClientCommandFromServer(const char* pszCommand)
     GetCVar()->DispatchConCommand(handle, context, args);
 }
 
-CCSPlayerPawn* CCSPlayerController::GetPawn()
+ICSPlayerPawn* CCSPlayerController::GetPawn()
 {
     if (auto handle = m_hPawn(); handle.IsValid())
-        return static_cast<CCSPlayerPawn*>(handle.Get());
+        return static_cast<CCSPlayerPawn*>(handle.Get())->ToInterface();
     return nullptr;
 }
 
-CCSPlayerPawn* CCSPlayerController::GetPlayerPawn()
+ICSPlayerPawn* CCSPlayerController::GetPlayerPawn()
 {
     if (auto handle = m_hPlayerPawn(); handle.IsValid())
-        return handle.Get();
+        return handle.Get()->ToInterface();
     return nullptr;
 }
 
-CCSObserverPawn* CCSPlayerController::GetObserverPawn()
+ICSObserverPawn* CCSPlayerController::GetObserverPawn()
 {
     if (auto handle = m_hObserverPawn(); handle.IsValid())
-        return handle.Get();
+        return handle.Get()->ToInterface();
     return nullptr;
 }
 
@@ -369,16 +347,27 @@ void CCSPlayerController::FireEventToClient(IGameEvent* pEvent)
 {
     if (!pEvent) return;
 
-#ifdef SOURCE2TOOLKIT_CORE
     IGameEventListener2* pListener = addresses::toolkitAddresses.LegacyGameEventListener(GetPlayerSlot());
-#else
-    IGameEventListener2* pListener = g_ToolkitAPI->Addresses()->CCSPlayerController_LegacyGameEventListener()(GetPlayerSlot());
-#endif
     if (!pListener) return;
 
     pListener->FireGameEvent(pEvent);
 }
-ICSPlayerController* CCSPlayerController::ToInterface() { return new CCSPlayerControllerImpl(this); }
+ICSPlayerController* CCSPlayerController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPlayerController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPlayerControllerImpl(this);
+    byTag[&s_tag] = { static_cast<IEntityInstance*>(impl), static_cast<ICSPlayerController*>(impl) };
+    return impl;
+}
+
+ICSPlayerController* ICSPlayerController::FromRaw(CEntityInstance* p)
+{
+    return p ? static_cast<CCSPlayerController*>(p)->ToInterface() : nullptr;
+}
 
 ICSPlayerController* ICSPlayerController::FromOriginal(CCSPlayerController* p)
 { return CCSPlayerController::FromOriginal(p); }

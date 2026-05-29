@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponTaser.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponTaserImpl : public CCSWeaponBaseGunImpl, public IWeaponTaser
+class CWeaponTaserImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponTaser
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void LastAttackTickUpdated() override { Real()->m_nLastAttackTick.NetworkStateChanged(); }
 };
 
-inline IWeaponTaser* CWeaponTaser::ToInterface() { return new CWeaponTaserImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponTaser* CWeaponTaser::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponTaser*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponTaserImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponTaser*>(impl));
+    return impl;
+}
+inline IWeaponTaser* IWeaponTaser::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponTaser*>(p)->ToInterface() : nullptr; }
 inline IWeaponTaser* IWeaponTaser::FromOriginal(CWeaponTaser* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONTASERIMPL_H

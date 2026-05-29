@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDecoyGrenade.h"
 #include "CBaseCSGrenadeImpl.h"
 
-class CDecoyGrenadeImpl : public CBaseCSGrenadeImpl, public IDecoyGrenade
+class CDecoyGrenadeImpl : public CBaseCSGrenadeImpl, public virtual IDecoyGrenade
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CDecoyGrenade* GetOriginal() const override { return Real(); }
 };
 
-inline IDecoyGrenade* CDecoyGrenade::ToInterface() { return new CDecoyGrenadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDecoyGrenade* CDecoyGrenade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDecoyGrenade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDecoyGrenadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDecoyGrenade*>(impl));
+    return impl;
+}
+inline IDecoyGrenade* IDecoyGrenade::FromRaw(CEntityInstance* p) { return p ? static_cast<CDecoyGrenade*>(p)->ToInterface() : nullptr; }
 inline IDecoyGrenade* IDecoyGrenade::FromOriginal(CDecoyGrenade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDECOYGRENADEIMPL_H

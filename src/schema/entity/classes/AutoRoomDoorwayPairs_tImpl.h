@@ -65,6 +65,7 @@ public:
 };
 
 inline IAutoRoomDoorwayPairs_t* AutoRoomDoorwayPairs_t::ToInterface() { return new AutoRoomDoorwayPairs_tImpl(this); }
+inline IAutoRoomDoorwayPairs_t* IAutoRoomDoorwayPairs_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAutoRoomDoorwayPairs_t* IAutoRoomDoorwayPairs_t::FromOriginal(AutoRoomDoorwayPairs_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_AUTOROOMDOORWAYPAIRS_TIMPL_H

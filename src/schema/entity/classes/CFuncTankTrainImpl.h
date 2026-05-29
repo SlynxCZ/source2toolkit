@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTankTrain.h"
 #include "CFuncTrackTrainImpl.h"
 
-class CFuncTankTrainImpl : public CFuncTrackTrainImpl, public IFuncTankTrain
+class CFuncTankTrainImpl : public CFuncTrackTrainImpl, public virtual IFuncTankTrain
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void OnDeathUpdated() override { Real()->m_OnDeath.NetworkStateChanged(); }
 };
 
-inline IFuncTankTrain* CFuncTankTrain::ToInterface() { return new CFuncTankTrainImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTankTrain* CFuncTankTrain::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTankTrain*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTankTrainImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTankTrain*>(impl));
+    return impl;
+}
+inline IFuncTankTrain* IFuncTankTrain::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTankTrain*>(p)->ToInterface() : nullptr; }
 inline IFuncTankTrain* IFuncTankTrain::FromOriginal(CFuncTankTrain* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTANKTRAINIMPL_H

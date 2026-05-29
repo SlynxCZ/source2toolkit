@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathKeyFrame.h"
 #include "CLogicalEntityImpl.h"
 
-class CPathKeyFrameImpl : public CLogicalEntityImpl, public IPathKeyFrame
+class CPathKeyFrameImpl : public CLogicalEntityImpl, public virtual IPathKeyFrame
 {
 
 public:
@@ -66,15 +66,26 @@ public:
     void NextKeyUpdated() override { Real()->m_iNextKey.NetworkStateChanged(); }
     float& NextTime() override { return Real()->m_flNextTime(); }
     void NextTimeUpdated() override { Real()->m_flNextTime.NetworkStateChanged(); }
-    CHandle<CPathKeyFrame>& NextKey() override { return Real()->m_pNextKey(); }
-    void NextKeyUpdated() override { Real()->m_pNextKey.NetworkStateChanged(); }
     CHandle<CPathKeyFrame>& PrevKey() override { return Real()->m_pPrevKey(); }
     void PrevKeyUpdated() override { Real()->m_pPrevKey.NetworkStateChanged(); }
     float& MoveSpeed() override { return Real()->m_flMoveSpeed(); }
     void MoveSpeedUpdated() override { Real()->m_flMoveSpeed.NetworkStateChanged(); }
 };
 
-inline IPathKeyFrame* CPathKeyFrame::ToInterface() { return new CPathKeyFrameImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathKeyFrame* CPathKeyFrame::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathKeyFrame*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathKeyFrameImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathKeyFrame*>(impl));
+    return impl;
+}
+inline IPathKeyFrame* IPathKeyFrame::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathKeyFrame*>(p)->ToInterface() : nullptr; }
 inline IPathKeyFrame* IPathKeyFrame::FromOriginal(CPathKeyFrame* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHKEYFRAMEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGunTarget.h"
 #include "CBaseToggleImpl.h"
 
-class CGunTargetImpl : public CBaseToggleImpl, public IGunTarget
+class CGunTargetImpl : public CBaseToggleImpl, public virtual IGunTarget
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void OnDeathUpdated() override { Real()->m_OnDeath.NetworkStateChanged(); }
 };
 
-inline IGunTarget* CGunTarget::ToInterface() { return new CGunTargetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGunTarget* CGunTarget::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGunTarget*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGunTargetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGunTarget*>(impl));
+    return impl;
+}
+inline IGunTarget* IGunTarget::FromRaw(CEntityInstance* p) { return p ? static_cast<CGunTarget*>(p)->ToInterface() : nullptr; }
 inline IGunTarget* IGunTarget::FromOriginal(CGunTarget* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGUNTARGETIMPL_H

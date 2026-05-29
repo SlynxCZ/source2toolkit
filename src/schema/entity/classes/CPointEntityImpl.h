@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CPointEntityImpl : public CBaseEntityImpl, public IPointEntity
+class CPointEntityImpl : public CBaseEntityImpl, public virtual IPointEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPointEntity* GetOriginal() const override { return Real(); }
 };
 
-inline IPointEntity* CPointEntity::ToInterface() { return new CPointEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointEntity* CPointEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointEntity*>(impl));
+    return impl;
+}
+inline IPointEntity* IPointEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointEntity*>(p)->ToInterface() : nullptr; }
 inline IPointEntity* IPointEntity::FromOriginal(CPointEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTENTITYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterMassGreater.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterMassGreaterImpl : public CBaseFilterImpl, public IFilterMassGreater
+class CFilterMassGreaterImpl : public CBaseFilterImpl, public virtual IFilterMassGreater
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void FilterMassUpdated() override { Real()->m_fFilterMass.NetworkStateChanged(); }
 };
 
-inline IFilterMassGreater* CFilterMassGreater::ToInterface() { return new CFilterMassGreaterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterMassGreater* CFilterMassGreater::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterMassGreater*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterMassGreaterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterMassGreater*>(impl));
+    return impl;
+}
+inline IFilterMassGreater* IFilterMassGreater::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterMassGreater*>(p)->ToInterface() : nullptr; }
 inline IFilterMassGreater* IFilterMassGreater::FromOriginal(CFilterMassGreater* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERMASSGREATERIMPL_H

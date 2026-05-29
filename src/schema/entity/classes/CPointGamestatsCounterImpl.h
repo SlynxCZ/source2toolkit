@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointGamestatsCounter.h"
 #include "CPointEntityImpl.h"
 
-class CPointGamestatsCounterImpl : public CPointEntityImpl, public IPointGamestatsCounter
+class CPointGamestatsCounterImpl : public CPointEntityImpl, public virtual IPointGamestatsCounter
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }
 };
 
-inline IPointGamestatsCounter* CPointGamestatsCounter::ToInterface() { return new CPointGamestatsCounterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointGamestatsCounter* CPointGamestatsCounter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointGamestatsCounter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointGamestatsCounterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointGamestatsCounter*>(impl));
+    return impl;
+}
+inline IPointGamestatsCounter* IPointGamestatsCounter::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointGamestatsCounter*>(p)->ToInterface() : nullptr; }
 inline IPointGamestatsCounter* IPointGamestatsCounter::FromOriginal(CPointGamestatsCounter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTGAMESTATSCOUNTERIMPL_H

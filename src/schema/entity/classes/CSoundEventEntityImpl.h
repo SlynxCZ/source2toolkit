@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CSoundEventEntityImpl : public CBaseEntityImpl, public ISoundEventEntity
+class CSoundEventEntityImpl : public CBaseEntityImpl, public virtual ISoundEventEntity
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void EntityIndexSelectionUpdated() override { Real()->m_nEntityIndexSelection.NetworkStateChanged(); }
 };
 
-inline ISoundEventEntity* CSoundEventEntity::ToInterface() { return new CSoundEventEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventEntity* CSoundEventEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventEntity*>(impl));
+    return impl;
+}
+inline ISoundEventEntity* ISoundEventEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundEventEntity* ISoundEventEntity::FromOriginal(CSoundEventEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTENTITYIMPL_H

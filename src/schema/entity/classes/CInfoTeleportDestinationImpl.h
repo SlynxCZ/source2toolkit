@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoTeleportDestination.h"
 #include "CPointEntityImpl.h"
 
-class CInfoTeleportDestinationImpl : public CPointEntityImpl, public IInfoTeleportDestination
+class CInfoTeleportDestinationImpl : public CPointEntityImpl, public virtual IInfoTeleportDestination
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoTeleportDestination* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoTeleportDestination* CInfoTeleportDestination::ToInterface() { return new CInfoTeleportDestinationImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoTeleportDestination* CInfoTeleportDestination::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoTeleportDestination*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoTeleportDestinationImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoTeleportDestination*>(impl));
+    return impl;
+}
+inline IInfoTeleportDestination* IInfoTeleportDestination::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoTeleportDestination*>(p)->ToInterface() : nullptr; }
 inline IInfoTeleportDestination* IInfoTeleportDestination::FromOriginal(CInfoTeleportDestination* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOTELEPORTDESTINATIONIMPL_H

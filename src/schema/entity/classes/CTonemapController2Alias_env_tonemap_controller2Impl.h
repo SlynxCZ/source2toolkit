@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTonemapController2Alias_env_tonemap_controller2.h"
 #include "CTonemapController2Impl.h"
 
-class CTonemapController2Alias_env_tonemap_controller2Impl : public CTonemapController2Impl, public ITonemapController2Alias_env_tonemap_controller2
+class CTonemapController2Alias_env_tonemap_controller2Impl : public CTonemapController2Impl, public virtual ITonemapController2Alias_env_tonemap_controller2
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTonemapController2Alias_env_tonemap_controller2* GetOriginal() const override { return Real(); }
 };
 
-inline ITonemapController2Alias_env_tonemap_controller2* CTonemapController2Alias_env_tonemap_controller2::ToInterface() { return new CTonemapController2Alias_env_tonemap_controller2Impl(this); }
+#include "core/virtualhooks.h"
+
+inline ITonemapController2Alias_env_tonemap_controller2* CTonemapController2Alias_env_tonemap_controller2::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITonemapController2Alias_env_tonemap_controller2*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTonemapController2Alias_env_tonemap_controller2Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITonemapController2Alias_env_tonemap_controller2*>(impl));
+    return impl;
+}
+inline ITonemapController2Alias_env_tonemap_controller2* ITonemapController2Alias_env_tonemap_controller2::FromRaw(CEntityInstance* p) { return p ? static_cast<CTonemapController2Alias_env_tonemap_controller2*>(p)->ToInterface() : nullptr; }
 inline ITonemapController2Alias_env_tonemap_controller2* ITonemapController2Alias_env_tonemap_controller2::FromOriginal(CTonemapController2Alias_env_tonemap_controller2* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTONEMAPCONTROLLER2ALIAS_ENV_TONEMAP_CONTROLLER2IMPL_H

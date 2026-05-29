@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsPropMultiplayer.h"
 #include "CPhysicsPropImpl.h"
 
-class CPhysicsPropMultiplayerImpl : public CPhysicsPropImpl, public IPhysicsPropMultiplayer
+class CPhysicsPropMultiplayerImpl : public CPhysicsPropImpl, public virtual IPhysicsPropMultiplayer
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPhysicsPropMultiplayer* GetOriginal() const override { return Real(); }
 };
 
-inline IPhysicsPropMultiplayer* CPhysicsPropMultiplayer::ToInterface() { return new CPhysicsPropMultiplayerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsPropMultiplayer* CPhysicsPropMultiplayer::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsPropMultiplayer*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsPropMultiplayerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsPropMultiplayer*>(impl));
+    return impl;
+}
+inline IPhysicsPropMultiplayer* IPhysicsPropMultiplayer::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsPropMultiplayer*>(p)->ToInterface() : nullptr; }
 inline IPhysicsPropMultiplayer* IPhysicsPropMultiplayer::FromOriginal(CPhysicsPropMultiplayer* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSPROPMULTIPLAYERIMPL_H

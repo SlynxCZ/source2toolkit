@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPrecipitationVData.h"
 #include "CEntitySubclassVDataBaseImpl.h"
 
-class CPrecipitationVDataImpl : public CEntitySubclassVDataBaseImpl, public IPrecipitationVData
+class CPrecipitationVDataImpl : public CEntitySubclassVDataBaseImpl, public virtual IPrecipitationVData
 {
 
 public:
@@ -75,6 +75,7 @@ public:
 };
 
 inline IPrecipitationVData* CPrecipitationVData::ToInterface() { return new CPrecipitationVDataImpl(this); }
+inline IPrecipitationVData* IPrecipitationVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPrecipitationVData* IPrecipitationVData::FromOriginal(CPrecipitationVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPRECIPITATIONVDATAIMPL_H

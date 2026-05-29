@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerPawn.h"
 #include "CCSPlayerPawnBaseImpl.h"
 
-class CCSPlayerPawnImpl : public CCSPlayerPawnBaseImpl, public ICSPlayerPawn
+class CCSPlayerPawnImpl : public CCSPlayerPawnBaseImpl, public virtual ICSPlayerPawn
 {
 
 public:

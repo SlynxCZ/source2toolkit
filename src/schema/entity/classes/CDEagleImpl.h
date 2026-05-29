@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDEagle.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CDEagleImpl : public CCSWeaponBaseGunImpl, public IDEagle
+class CDEagleImpl : public CCSWeaponBaseGunImpl, public virtual IDEagle
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CDEagle* GetOriginal() const override { return Real(); }
 };
 
-inline IDEagle* CDEagle::ToInterface() { return new CDEagleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDEagle* CDEagle::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDEagle*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDEagleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDEagle*>(impl));
+    return impl;
+}
+inline IDEagle* IDEagle::FromRaw(CEntityInstance* p) { return p ? static_cast<CDEagle*>(p)->ToInterface() : nullptr; }
 inline IDEagle* IDEagle::FromOriginal(CDEagle* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDEAGLEIMPL_H

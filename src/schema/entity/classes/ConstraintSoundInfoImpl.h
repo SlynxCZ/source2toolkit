@@ -81,6 +81,7 @@ public:
 };
 
 inline IConstraintSoundInfo* ConstraintSoundInfo::ToInterface() { return new ConstraintSoundInfoImpl(this); }
+inline IConstraintSoundInfo* IConstraintSoundInfo::FromRaw(CEntityInstance*) { return nullptr; }
 inline IConstraintSoundInfo* IConstraintSoundInfo::FromOriginal(ConstraintSoundInfo* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CONSTRAINTSOUNDINFOIMPL_H

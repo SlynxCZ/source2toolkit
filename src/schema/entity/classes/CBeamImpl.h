@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBeam.h"
 #include "CBaseModelEntityImpl.h"
 
-class CBeamImpl : public CBaseModelEntityImpl, public IBeam
+class CBeamImpl : public CBaseModelEntityImpl, public virtual IBeam
 {
 
 public:
@@ -103,7 +103,20 @@ public:
     void DissolveTypeUpdated() override { Real()->m_nDissolveType.NetworkStateChanged(); }
 };
 
-inline IBeam* CBeam::ToInterface() { return new CBeamImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBeam* CBeam::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBeam*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBeamImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBeam*>(impl));
+    return impl;
+}
+inline IBeam* IBeam::FromRaw(CEntityInstance* p) { return p ? static_cast<CBeam*>(p)->ToInterface() : nullptr; }
 inline IBeam* IBeam::FromOriginal(CBeam* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBEAMIMPL_H

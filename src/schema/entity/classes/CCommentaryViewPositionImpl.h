@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCommentaryViewPosition.h"
 #include "CSpriteImpl.h"
 
-class CCommentaryViewPositionImpl : public CSpriteImpl, public ICommentaryViewPosition
+class CCommentaryViewPositionImpl : public CSpriteImpl, public virtual ICommentaryViewPosition
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCommentaryViewPosition* GetOriginal() const override { return Real(); }
 };
 
-inline ICommentaryViewPosition* CCommentaryViewPosition::ToInterface() { return new CCommentaryViewPositionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICommentaryViewPosition* CCommentaryViewPosition::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICommentaryViewPosition*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCommentaryViewPositionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICommentaryViewPosition*>(impl));
+    return impl;
+}
+inline ICommentaryViewPosition* ICommentaryViewPosition::FromRaw(CEntityInstance* p) { return p ? static_cast<CCommentaryViewPosition*>(p)->ToInterface() : nullptr; }
 inline ICommentaryViewPosition* ICommentaryViewPosition::FromOriginal(CCommentaryViewPosition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCOMMENTARYVIEWPOSITIONIMPL_H

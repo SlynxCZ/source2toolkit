@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerImpact.h"
 #include "CTriggerMultipleImpl.h"
 
-class CTriggerImpactImpl : public CTriggerMultipleImpl, public ITriggerImpact
+class CTriggerImpactImpl : public CTriggerMultipleImpl, public virtual ITriggerImpact
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void ViewkickUpdated() override { Real()->m_flViewkick.NetworkStateChanged(); }
 };
 
-inline ITriggerImpact* CTriggerImpact::ToInterface() { return new CTriggerImpactImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerImpact* CTriggerImpact::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerImpact*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerImpactImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerImpact*>(impl));
+    return impl;
+}
+inline ITriggerImpact* ITriggerImpact::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerImpact*>(p)->ToInterface() : nullptr; }
 inline ITriggerImpact* ITriggerImpact::FromOriginal(CTriggerImpact* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERIMPACTIMPL_H

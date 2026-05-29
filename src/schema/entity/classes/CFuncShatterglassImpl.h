@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncShatterglass.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncShatterglassImpl : public CBaseModelEntityImpl, public IFuncShatterglass
+class CFuncShatterglassImpl : public CBaseModelEntityImpl, public virtual IFuncShatterglass
 {
 
 public:
@@ -110,7 +110,20 @@ public:
     void MaterialDamageBaseUpdated() override { Real()->m_hMaterialDamageBase.NetworkStateChanged(); }
 };
 
-inline IFuncShatterglass* CFuncShatterglass::ToInterface() { return new CFuncShatterglassImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncShatterglass* CFuncShatterglass::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncShatterglass*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncShatterglassImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncShatterglass*>(impl));
+    return impl;
+}
+inline IFuncShatterglass* IFuncShatterglass::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncShatterglass*>(p)->ToInterface() : nullptr; }
 inline IFuncShatterglass* IFuncShatterglass::FromOriginal(CFuncShatterglass* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCSHATTERGLASSIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicDistanceAutosave.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicDistanceAutosaveImpl : public CLogicalEntityImpl, public ILogicDistanceAutosave
+class CLogicDistanceAutosaveImpl : public CLogicalEntityImpl, public virtual ILogicDistanceAutosave
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void DangerousTimeUpdated() override { Real()->m_flDangerousTime.NetworkStateChanged(); }
 };
 
-inline ILogicDistanceAutosave* CLogicDistanceAutosave::ToInterface() { return new CLogicDistanceAutosaveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicDistanceAutosave* CLogicDistanceAutosave::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicDistanceAutosave*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicDistanceAutosaveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicDistanceAutosave*>(impl));
+    return impl;
+}
+inline ILogicDistanceAutosave* ILogicDistanceAutosave::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicDistanceAutosave*>(p)->ToInterface() : nullptr; }
 inline ILogicDistanceAutosave* ILogicDistanceAutosave::FromOriginal(CLogicDistanceAutosave* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICDISTANCEAUTOSAVEIMPL_H

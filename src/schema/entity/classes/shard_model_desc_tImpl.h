@@ -86,6 +86,7 @@ public:
 };
 
 inline Ishard_model_desc_t* shard_model_desc_t::ToInterface() { return new shard_model_desc_tImpl(this); }
+inline Ishard_model_desc_t* Ishard_model_desc_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ishard_model_desc_t* Ishard_model_desc_t::FromOriginal(shard_model_desc_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SHARD_MODEL_DESC_TIMPL_H

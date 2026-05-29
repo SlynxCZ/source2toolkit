@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_MovementServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_MovementServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_MovementServices
+class CPlayer_MovementServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_MovementServices
 {
 
 public:
@@ -93,6 +93,7 @@ public:
 };
 
 inline IPlayer_MovementServices* CPlayer_MovementServices::ToInterface() { return new CPlayer_MovementServicesImpl(this); }
+inline IPlayer_MovementServices* IPlayer_MovementServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_MovementServices* IPlayer_MovementServices::FromOriginal(CPlayer_MovementServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_MOVEMENTSERVICESIMPL_H

@@ -67,6 +67,7 @@ public:
 };
 
 inline IAttributeManager__cached_attribute_float_t* CAttributeManager__cached_attribute_float_t::ToInterface() { return new CAttributeManager__cached_attribute_float_tImpl(this); }
+inline IAttributeManager__cached_attribute_float_t* IAttributeManager__cached_attribute_float_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAttributeManager__cached_attribute_float_t* IAttributeManager__cached_attribute_float_t::FromOriginal(CAttributeManager__cached_attribute_float_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CATTRIBUTEMANAGER__CACHED_ATTRIBUTE_FLOAT_TIMPL_H

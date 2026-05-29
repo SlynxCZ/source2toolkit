@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysLength.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysLengthImpl : public CPhysConstraintImpl, public IPhysLength
+class CPhysLengthImpl : public CPhysConstraintImpl, public virtual IPhysLength
 {
 
 public:
@@ -67,7 +67,20 @@ public:
     void TotalLengthUpdated() override { Real()->m_totalLength.NetworkStateChanged(); }
 };
 
-inline IPhysLength* CPhysLength::ToInterface() { return new CPhysLengthImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysLength* CPhysLength::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysLength*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysLengthImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysLength*>(impl));
+    return impl;
+}
+inline IPhysLength* IPhysLength::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysLength*>(p)->ToInterface() : nullptr; }
 inline IPhysLength* IPhysLength::FromOriginal(CPhysLength* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSLENGTHIMPL_H

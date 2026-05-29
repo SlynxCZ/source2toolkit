@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysTorque.h"
 #include "CPhysForceImpl.h"
 
-class CPhysTorqueImpl : public CPhysForceImpl, public IPhysTorque
+class CPhysTorqueImpl : public CPhysForceImpl, public virtual IPhysTorque
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void AxisUpdated() override { Real()->m_axis.NetworkStateChanged(); }
 };
 
-inline IPhysTorque* CPhysTorque::ToInterface() { return new CPhysTorqueImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysTorque* CPhysTorque::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysTorque*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysTorqueImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysTorque*>(impl));
+    return impl;
+}
+inline IPhysTorque* IPhysTorque::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysTorque*>(p)->ToInterface() : nullptr; }
 inline IPhysTorque* IPhysTorque::FromOriginal(CPhysTorque* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSTORQUEIMPL_H

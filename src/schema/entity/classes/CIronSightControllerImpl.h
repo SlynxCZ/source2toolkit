@@ -69,6 +69,7 @@ public:
 };
 
 inline IIronSightController* CIronSightController::ToInterface() { return new CIronSightControllerImpl(this); }
+inline IIronSightController* IIronSightController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIronSightController* IIronSightController::FromOriginal(CIronSightController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CIRONSIGHTCONTROLLERIMPL_H

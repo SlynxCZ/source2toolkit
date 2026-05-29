@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHostage.h"
 #include "CHostageExpresserShimImpl.h"
 
-class CHostageImpl : public CHostageExpresserShimImpl, public IHostage
+class CHostageImpl : public CHostageExpresserShimImpl, public virtual IHostage
 {
 
 public:
@@ -136,7 +136,20 @@ public:
     void HostageResetPositionUpdated() override { Real()->m_vecHostageResetPosition.NetworkStateChanged(); }
 };
 
-inline IHostage* CHostage::ToInterface() { return new CHostageImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHostage* CHostage::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHostage*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHostageImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHostage*>(impl));
+    return impl;
+}
+inline IHostage* IHostage::FromRaw(CEntityInstance* p) { return p ? static_cast<CHostage*>(p)->ToInterface() : nullptr; }
 inline IHostage* IHostage::FromOriginal(CHostage* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHOSTAGEIMPL_H

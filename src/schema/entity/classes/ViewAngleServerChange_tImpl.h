@@ -67,6 +67,7 @@ public:
 };
 
 inline IViewAngleServerChange_t* ViewAngleServerChange_t::ToInterface() { return new ViewAngleServerChange_tImpl(this); }
+inline IViewAngleServerChange_t* IViewAngleServerChange_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IViewAngleServerChange_t* IViewAngleServerChange_t::FromOriginal(ViewAngleServerChange_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_VIEWANGLESERVERCHANGE_TIMPL_H

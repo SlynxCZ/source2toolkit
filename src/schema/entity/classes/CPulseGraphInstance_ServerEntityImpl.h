@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPulseGraphInstance_ServerEntity.h"
 #include "CBasePulseGraphInstanceImpl.h"
 
-class CPulseGraphInstance_ServerEntityImpl : public CBasePulseGraphInstanceImpl, public IPulseGraphInstance_ServerEntity
+class CPulseGraphInstance_ServerEntityImpl : public CBasePulseGraphInstanceImpl, public virtual IPulseGraphInstance_ServerEntity
 {
 
 public:
@@ -71,6 +71,7 @@ public:
 };
 
 inline IPulseGraphInstance_ServerEntity* CPulseGraphInstance_ServerEntity::ToInterface() { return new CPulseGraphInstance_ServerEntityImpl(this); }
+inline IPulseGraphInstance_ServerEntity* IPulseGraphInstance_ServerEntity::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPulseGraphInstance_ServerEntity* IPulseGraphInstance_ServerEntity::FromOriginal(CPulseGraphInstance_ServerEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPULSEGRAPHINSTANCE_SERVERENTITYIMPL_H

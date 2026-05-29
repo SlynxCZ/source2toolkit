@@ -39,10 +39,11 @@
 
 #include "schema/entity/classes/CCSPlayerPawn.h"
 
-CCSPlayerPawn* CPlayerPawnComponent::GetPlayerPawn() {
-    return static_cast<CCSPlayerPawn*>(__m_pChainEntity());
+ICSPlayerPawn* CPlayerPawnComponent::GetPlayerPawn() {
+    return static_cast<CCSPlayerPawn*>(__m_pChainEntity())->ToInterface();
 }
 IPlayerPawnComponent* CPlayerPawnComponent::ToInterface() { return new CPlayerPawnComponentImpl(this); }
+IPlayerPawnComponent* IPlayerPawnComponent::FromRaw(CEntityInstance*) { return nullptr; }
 
 IPlayerPawnComponent* IPlayerPawnComponent::FromOriginal(CPlayerPawnComponent* p)
 { return CPlayerPawnComponent::FromOriginal(p); }

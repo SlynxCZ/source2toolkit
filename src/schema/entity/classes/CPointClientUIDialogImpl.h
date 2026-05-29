@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointClientUIDialog.h"
 #include "CBaseClientUIEntityImpl.h"
 
-class CPointClientUIDialogImpl : public CBaseClientUIEntityImpl, public IPointClientUIDialog
+class CPointClientUIDialogImpl : public CBaseClientUIEntityImpl, public virtual IPointClientUIDialog
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void StartEnabledUpdated() override { Real()->m_bStartEnabled.NetworkStateChanged(); }
 };
 
-inline IPointClientUIDialog* CPointClientUIDialog::ToInterface() { return new CPointClientUIDialogImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointClientUIDialog* CPointClientUIDialog::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointClientUIDialog*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointClientUIDialogImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointClientUIDialog*>(impl));
+    return impl;
+}
+inline IPointClientUIDialog* IPointClientUIDialog::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointClientUIDialog*>(p)->ToInterface() : nullptr; }
 inline IPointClientUIDialog* IPointClientUIDialog::FromOriginal(CPointClientUIDialog* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCLIENTUIDIALOGIMPL_H

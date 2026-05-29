@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointGiveAmmo.h"
 #include "CPointEntityImpl.h"
 
-class CPointGiveAmmoImpl : public CPointEntityImpl, public IPointGiveAmmo
+class CPointGiveAmmoImpl : public CPointEntityImpl, public virtual IPointGiveAmmo
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ActivatorUpdated() override { Real()->m_pActivator.NetworkStateChanged(); }
 };
 
-inline IPointGiveAmmo* CPointGiveAmmo::ToInterface() { return new CPointGiveAmmoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointGiveAmmo* CPointGiveAmmo::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointGiveAmmo*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointGiveAmmoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointGiveAmmo*>(impl));
+    return impl;
+}
+inline IPointGiveAmmo* IPointGiveAmmo::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointGiveAmmo*>(p)->ToInterface() : nullptr; }
 inline IPointGiveAmmo* IPointGiveAmmo::FromOriginal(CPointGiveAmmo* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTGIVEAMMOIMPL_H

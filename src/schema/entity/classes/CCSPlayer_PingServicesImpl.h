@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_PingServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_PingServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_PingServices
+class CCSPlayer_PingServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_PingServices
 {
 
 public:
@@ -62,6 +62,7 @@ public:
 };
 
 inline ICSPlayer_PingServices* CCSPlayer_PingServices::ToInterface() { return new CCSPlayer_PingServicesImpl(this); }
+inline ICSPlayer_PingServices* ICSPlayer_PingServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_PingServices* ICSPlayer_PingServices::FromOriginal(CCSPlayer_PingServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_PINGSERVICESIMPL_H

@@ -69,6 +69,7 @@ public:
 };
 
 inline Iconstraint_axislimit_t* constraint_axislimit_t::ToInterface() { return new constraint_axislimit_tImpl(this); }
+inline Iconstraint_axislimit_t* Iconstraint_axislimit_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iconstraint_axislimit_t* Iconstraint_axislimit_t::FromOriginal(constraint_axislimit_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CONSTRAINT_AXISLIMIT_TIMPL_H

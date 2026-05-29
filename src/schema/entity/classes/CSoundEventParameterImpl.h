@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventParameter.h"
 #include "CBaseEntityImpl.h"
 
-class CSoundEventParameterImpl : public CBaseEntityImpl, public ISoundEventParameter
+class CSoundEventParameterImpl : public CBaseEntityImpl, public virtual ISoundEventParameter
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void FloatValueUpdated() override { Real()->m_flFloatValue.NetworkStateChanged(); }
 };
 
-inline ISoundEventParameter* CSoundEventParameter::ToInterface() { return new CSoundEventParameterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventParameter* CSoundEventParameter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventParameter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventParameterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventParameter*>(impl));
+    return impl;
+}
+inline ISoundEventParameter* ISoundEventParameter::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventParameter*>(p)->ToInterface() : nullptr; }
 inline ISoundEventParameter* ISoundEventParameter::FromOriginal(CSoundEventParameter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTPARAMETERIMPL_H

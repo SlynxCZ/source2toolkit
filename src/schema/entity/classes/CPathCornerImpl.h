@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathCorner.h"
 #include "CPointEntityImpl.h"
 
-class CPathCornerImpl : public CPointEntityImpl, public IPathCorner
+class CPathCornerImpl : public CPointEntityImpl, public virtual IPathCorner
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void OnPassUpdated() override { Real()->m_OnPass.NetworkStateChanged(); }
 };
 
-inline IPathCorner* CPathCorner::ToInterface() { return new CPathCornerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathCorner* CPathCorner::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathCorner*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathCornerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathCorner*>(impl));
+    return impl;
+}
+inline IPathCorner* IPathCorner::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathCorner*>(p)->ToInterface() : nullptr; }
 inline IPathCorner* IPathCorner::FromOriginal(CPathCorner* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHCORNERIMPL_H

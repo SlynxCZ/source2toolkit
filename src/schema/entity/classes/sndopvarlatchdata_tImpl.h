@@ -71,6 +71,7 @@ public:
 };
 
 inline Isndopvarlatchdata_t* sndopvarlatchdata_t::ToInterface() { return new sndopvarlatchdata_tImpl(this); }
+inline Isndopvarlatchdata_t* Isndopvarlatchdata_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Isndopvarlatchdata_t* Isndopvarlatchdata_t::FromOriginal(sndopvarlatchdata_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SNDOPVARLATCHDATA_TIMPL_H

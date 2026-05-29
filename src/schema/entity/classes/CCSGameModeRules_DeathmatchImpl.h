@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGameModeRules_Deathmatch.h"
 #include "CCSGameModeRulesImpl.h"
 
-class CCSGameModeRules_DeathmatchImpl : public CCSGameModeRulesImpl, public ICSGameModeRules_Deathmatch
+class CCSGameModeRules_DeathmatchImpl : public CCSGameModeRulesImpl, public virtual ICSGameModeRules_Deathmatch
 {
 
 public:
@@ -65,6 +65,7 @@ public:
 };
 
 inline ICSGameModeRules_Deathmatch* CCSGameModeRules_Deathmatch::ToInterface() { return new CCSGameModeRules_DeathmatchImpl(this); }
+inline ICSGameModeRules_Deathmatch* ICSGameModeRules_Deathmatch::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSGameModeRules_Deathmatch* ICSGameModeRules_Deathmatch::FromOriginal(CCSGameModeRules_Deathmatch* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGAMEMODERULES_DEATHMATCHIMPL_H

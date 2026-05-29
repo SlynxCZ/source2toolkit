@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerHostageReset.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerHostageResetImpl : public CBaseTriggerImpl, public ITriggerHostageReset
+class CTriggerHostageResetImpl : public CBaseTriggerImpl, public virtual ITriggerHostageReset
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTriggerHostageReset* GetOriginal() const override { return Real(); }
 };
 
-inline ITriggerHostageReset* CTriggerHostageReset::ToInterface() { return new CTriggerHostageResetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerHostageReset* CTriggerHostageReset::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerHostageReset*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerHostageResetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerHostageReset*>(impl));
+    return impl;
+}
+inline ITriggerHostageReset* ITriggerHostageReset::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerHostageReset*>(p)->ToInterface() : nullptr; }
 inline ITriggerHostageReset* ITriggerHostageReset::FromOriginal(CTriggerHostageReset* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERHOSTAGERESETIMPL_H

@@ -93,6 +93,7 @@ public:
 };
 
 inline ICSPlayerAnimationState* CCSPlayerAnimationState::ToInterface() { return new CCSPlayerAnimationStateImpl(this); }
+inline ICSPlayerAnimationState* ICSPlayerAnimationState::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerAnimationState* ICSPlayerAnimationState::FromOriginal(CCSPlayerAnimationState* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERANIMATIONSTATEIMPL_H

@@ -55,7 +55,7 @@ namespace virtualhooks
 {
     Virtuals virtuals;
     CEntityListener entityListener;
-    std::unordered_map<void*, void*> entityInterfaces;
+    std::unordered_map<void*, EntityImplsByTag> entityInterfaces;
 
     static std::vector<IGameEvent*> eventStack;
 
@@ -310,7 +310,8 @@ namespace virtualhooks
         auto it = entityInterfaces.find(pEntity);
         if (it != entityInterfaces.end())
         {
-            delete static_cast<IBaseEntity*>(it->second);
+            for (auto& [tag, entry] : it->second)
+                delete entry.ptr_for_delete;
             entityInterfaces.erase(it);
         }
     }

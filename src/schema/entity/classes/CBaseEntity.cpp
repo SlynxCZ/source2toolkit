@@ -37,7 +37,6 @@
 
 #include "core/entities.h"
 #include "schema/entity/classes/CBaseEntityImpl.h"
-
 #include "schema/entity/classes/CBodyComponent.h"
 #include "schema/entity/classes/CCollisionProperty.h"
 #include "schema/entity/classes/CEntitySubclassVDataBase.h"
@@ -45,17 +44,9 @@
 
 #include "source2toolkit/utils/virtual.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
 #include "core/shared.h"
 #include "core/gameconfig.h"
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitGameConfig.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
-
 #include "core/virtualhooks.h"
 
 IBaseEntity* CBaseEntity::CreateEntityByName(const char* pszClassName)
@@ -86,12 +77,19 @@ IEntityInstance* IEntityInstance::FromOriginal(CEntityInstance* p)
 
 IBaseEntity* CBaseEntity::ToInterface()
 {
-    auto it = virtualhooks::entityInterfaces.find(this);
-    if (it != virtualhooks::entityInterfaces.end())
-        return static_cast<IBaseEntity*>(it->second);
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseEntity*>(tagIt->second.ptr_for_return);
     auto* impl = new CBaseEntityImpl(this);
-    virtualhooks::entityInterfaces[this] = impl;
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseEntity*>(impl));
     return impl;
+}
+
+IBaseEntity* IBaseEntity::FromRaw(CEntityInstance* p)
+{
+    return p ? static_cast<CBaseEntity*>(p)->ToInterface() : nullptr;
 }
 
 void CBaseEntity::AcceptInput(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
@@ -173,20 +171,12 @@ CEntitySubclassVDataBase* CBaseEntity::GetVData()
 
 void CBaseEntity::DispatchSpawn(CEntityKeyValues* pEntityKeyValues)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     addresses::toolkitAddresses.DispatchSpawn(this, pEntityKeyValues);
-#else
-    g_ToolkitAPI->Addresses()->CBaseEntity_DispatchSpawn()(this, pEntityKeyValues);
-#endif
 }
 
 void CBaseEntity::Teleport(const Vector* pPosition, const QAngle* pAngles, const Vector* pVelocity)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CBaseEntity_Teleport");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CBaseEntity_Teleport");
-#endif
     CALL_VIRTUAL(void, offset, this, pPosition, pAngles, pVelocity);
 }
 
@@ -216,11 +206,7 @@ void CBaseEntity::SetCollisionGroup(uint8 nCollisionGroup)
 
 void CBaseEntity::CollisionRulesChanged()
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CBaseEntity_CollisionRulesChanged");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CBaseEntity_CollisionRulesChanged");
-#endif
     CALL_VIRTUAL(void, offset, this);
 }
 

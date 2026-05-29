@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundAreaEntityBase.h"
 #include "CBaseEntityImpl.h"
 
-class CSoundAreaEntityBaseImpl : public CBaseEntityImpl, public ISoundAreaEntityBase
+class CSoundAreaEntityBaseImpl : public CBaseEntityImpl, public virtual ISoundAreaEntityBase
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void PosUpdated() override { Real()->m_vPos.NetworkStateChanged(); }
 };
 
-inline ISoundAreaEntityBase* CSoundAreaEntityBase::ToInterface() { return new CSoundAreaEntityBaseImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundAreaEntityBase* CSoundAreaEntityBase::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundAreaEntityBase*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundAreaEntityBaseImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundAreaEntityBase*>(impl));
+    return impl;
+}
+inline ISoundAreaEntityBase* ISoundAreaEntityBase::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundAreaEntityBase*>(p)->ToInterface() : nullptr; }
 inline ISoundAreaEntityBase* ISoundAreaEntityBase::FromOriginal(CSoundAreaEntityBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDAREAENTITYBASEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFogVolume.h"
 #include "CServerOnlyModelEntityImpl.h"
 
-class CFogVolumeImpl : public CServerOnlyModelEntityImpl, public IFogVolume
+class CFogVolumeImpl : public CServerOnlyModelEntityImpl, public virtual IFogVolume
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void InFogVolumesListUpdated() override { Real()->m_bInFogVolumesList.NetworkStateChanged(); }
 };
 
-inline IFogVolume* CFogVolume::ToInterface() { return new CFogVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFogVolume* CFogVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFogVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFogVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFogVolume*>(impl));
+    return impl;
+}
+inline IFogVolume* IFogVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CFogVolume*>(p)->ToInterface() : nullptr; }
 inline IFogVolume* IFogVolume::FromOriginal(CFogVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFOGVOLUMEIMPL_H

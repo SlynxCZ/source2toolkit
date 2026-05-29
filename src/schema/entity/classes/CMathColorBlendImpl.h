@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMathColorBlend.h"
 #include "CLogicalEntityImpl.h"
 
-class CMathColorBlendImpl : public CLogicalEntityImpl, public IMathColorBlend
+class CMathColorBlendImpl : public CLogicalEntityImpl, public virtual IMathColorBlend
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void OutColor2Updated() override { Real()->m_OutColor2.NetworkStateChanged(); }
 };
 
-inline IMathColorBlend* CMathColorBlend::ToInterface() { return new CMathColorBlendImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMathColorBlend* CMathColorBlend::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMathColorBlend*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMathColorBlendImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMathColorBlend*>(impl));
+    return impl;
+}
+inline IMathColorBlend* IMathColorBlend::FromRaw(CEntityInstance* p) { return p ? static_cast<CMathColorBlend*>(p)->ToInterface() : nullptr; }
 inline IMathColorBlend* IMathColorBlend::FromOriginal(CMathColorBlend* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMATHCOLORBLENDIMPL_H

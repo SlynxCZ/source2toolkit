@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMultiplayRules.h"
 #include "CGameRulesImpl.h"
 
-class CMultiplayRulesImpl : public CGameRulesImpl, public IMultiplayRules
+class CMultiplayRulesImpl : public CGameRulesImpl, public virtual IMultiplayRules
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IMultiplayRules* CMultiplayRules::ToInterface() { return new CMultiplayRulesImpl(this); }
+inline IMultiplayRules* IMultiplayRules::FromRaw(CEntityInstance*) { return nullptr; }
 inline IMultiplayRules* IMultiplayRules::FromOriginal(CMultiplayRules* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMULTIPLAYRULESIMPL_H

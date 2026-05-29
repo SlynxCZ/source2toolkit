@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSWeaponBase.h"
 #include "CBasePlayerWeaponImpl.h"
 
-class CCSWeaponBaseImpl : public CBasePlayerWeaponImpl, public ICSWeaponBase
+class CCSWeaponBaseImpl : public CBasePlayerWeaponImpl, public virtual ICSWeaponBase
 {
 
 public:
@@ -94,8 +94,6 @@ public:
     void AccuracySmoothedForZoomUpdated() override { Real()->m_fAccuracySmoothedForZoom.NetworkStateChanged(); }
     int32_t& RecoilIndex() override { return Real()->m_iRecoilIndex(); }
     void RecoilIndexUpdated() override { Real()->m_iRecoilIndex.NetworkStateChanged(); }
-    float& RecoilIndex() override { return Real()->m_flRecoilIndex(); }
-    void RecoilIndexUpdated() override { Real()->m_flRecoilIndex.NetworkStateChanged(); }
     bool& BurstMode() override { return Real()->m_bBurstMode(); }
     void BurstModeUpdated() override { Real()->m_bBurstMode.NetworkStateChanged(); }
     int32_t& PostponeFireReadyTicks() override { return Real()->m_nPostponeFireReadyTicks(); }
@@ -162,7 +160,20 @@ public:
     void LastShakeTimeUpdated() override { Real()->m_flLastShakeTime.NetworkStateChanged(); }
 };
 
-inline ICSWeaponBase* CCSWeaponBase::ToInterface() { return new CCSWeaponBaseImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSWeaponBase* CCSWeaponBase::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSWeaponBase*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSWeaponBaseImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSWeaponBase*>(impl));
+    return impl;
+}
+inline ICSWeaponBase* ICSWeaponBase::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSWeaponBase*>(p)->ToInterface() : nullptr; }
 inline ICSWeaponBase* ICSWeaponBase::FromOriginal(CCSWeaponBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSWEAPONBASEIMPL_H

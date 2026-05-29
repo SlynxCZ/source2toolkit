@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CShatterGlassShardPhysics.h"
 #include "CPhysicsPropImpl.h"
 
-class CShatterGlassShardPhysicsImpl : public CPhysicsPropImpl, public IShatterGlassShardPhysics
+class CShatterGlassShardPhysicsImpl : public CPhysicsPropImpl, public virtual IShatterGlassShardPhysics
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void ShardDescUpdated() override { Real()->m_ShardDesc.NetworkStateChanged(); }
 };
 
-inline IShatterGlassShardPhysics* CShatterGlassShardPhysics::ToInterface() { return new CShatterGlassShardPhysicsImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IShatterGlassShardPhysics* CShatterGlassShardPhysics::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IShatterGlassShardPhysics*>(tagIt->second.ptr_for_return);
+    auto* impl = new CShatterGlassShardPhysicsImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IShatterGlassShardPhysics*>(impl));
+    return impl;
+}
+inline IShatterGlassShardPhysics* IShatterGlassShardPhysics::FromRaw(CEntityInstance* p) { return p ? static_cast<CShatterGlassShardPhysics*>(p)->ToInterface() : nullptr; }
 inline IShatterGlassShardPhysics* IShatterGlassShardPhysics::FromOriginal(CShatterGlassShardPhysics* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSHATTERGLASSSHARDPHYSICSIMPL_H

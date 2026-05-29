@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_DamageReactServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_DamageReactServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_DamageReactServices
+class CCSPlayer_DamageReactServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_DamageReactServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ICSPlayer_DamageReactServices* CCSPlayer_DamageReactServices::ToInterface() { return new CCSPlayer_DamageReactServicesImpl(this); }
+inline ICSPlayer_DamageReactServices* ICSPlayer_DamageReactServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_DamageReactServices* ICSPlayer_DamageReactServices::FromOriginal(CCSPlayer_DamageReactServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_DAMAGEREACTSERVICESIMPL_H

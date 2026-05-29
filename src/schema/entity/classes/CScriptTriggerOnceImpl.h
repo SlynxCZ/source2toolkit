@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CScriptTriggerOnce.h"
 #include "CTriggerOnceImpl.h"
 
-class CScriptTriggerOnceImpl : public CTriggerOnceImpl, public IScriptTriggerOnce
+class CScriptTriggerOnceImpl : public CTriggerOnceImpl, public virtual IScriptTriggerOnce
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ExtentUpdated() override { Real()->m_vExtent.NetworkStateChanged(); }
 };
 
-inline IScriptTriggerOnce* CScriptTriggerOnce::ToInterface() { return new CScriptTriggerOnceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IScriptTriggerOnce* CScriptTriggerOnce::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IScriptTriggerOnce*>(tagIt->second.ptr_for_return);
+    auto* impl = new CScriptTriggerOnceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IScriptTriggerOnce*>(impl));
+    return impl;
+}
+inline IScriptTriggerOnce* IScriptTriggerOnce::FromRaw(CEntityInstance* p) { return p ? static_cast<CScriptTriggerOnce*>(p)->ToInterface() : nullptr; }
 inline IScriptTriggerOnce* IScriptTriggerOnce::FromOriginal(CScriptTriggerOnce* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCRIPTTRIGGERONCEIMPL_H

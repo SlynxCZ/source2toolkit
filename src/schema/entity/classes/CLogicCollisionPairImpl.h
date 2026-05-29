@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicCollisionPair.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicCollisionPairImpl : public CLogicalEntityImpl, public ILogicCollisionPair
+class CLogicCollisionPairImpl : public CLogicalEntityImpl, public virtual ILogicCollisionPair
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void SucceededUpdated() override { Real()->m_succeeded.NetworkStateChanged(); }
 };
 
-inline ILogicCollisionPair* CLogicCollisionPair::ToInterface() { return new CLogicCollisionPairImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicCollisionPair* CLogicCollisionPair::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicCollisionPair*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicCollisionPairImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicCollisionPair*>(impl));
+    return impl;
+}
+inline ILogicCollisionPair* ILogicCollisionPair::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicCollisionPair*>(p)->ToInterface() : nullptr; }
 inline ILogicCollisionPair* ILogicCollisionPair::FromOriginal(CLogicCollisionPair* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICCOLLISIONPAIRIMPL_H

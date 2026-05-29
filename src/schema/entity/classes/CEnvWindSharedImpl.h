@@ -95,6 +95,7 @@ public:
 };
 
 inline IEnvWindShared* CEnvWindShared::ToInterface() { return new CEnvWindSharedImpl(this); }
+inline IEnvWindShared* IEnvWindShared::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEnvWindShared* IEnvWindShared::FromOriginal(CEnvWindShared* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVWINDSHAREDIMPL_H

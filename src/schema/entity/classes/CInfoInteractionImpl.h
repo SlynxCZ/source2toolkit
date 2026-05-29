@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoInteraction.h"
 #include "CPointEntityImpl.h"
 
-class CInfoInteractionImpl : public CPointEntityImpl, public IInfoInteraction
+class CInfoInteractionImpl : public CPointEntityImpl, public virtual IInfoInteraction
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void DisableOnExitUpdated() override { Real()->m_bDisableOnExit.NetworkStateChanged(); }
 };
 
-inline IInfoInteraction* CInfoInteraction::ToInterface() { return new CInfoInteractionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoInteraction* CInfoInteraction::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoInteraction*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoInteractionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoInteraction*>(impl));
+    return impl;
+}
+inline IInfoInteraction* IInfoInteraction::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoInteraction*>(p)->ToInterface() : nullptr; }
 inline IInfoInteraction* IInfoInteraction::FromOriginal(CInfoInteraction* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOINTERACTIONIMPL_H

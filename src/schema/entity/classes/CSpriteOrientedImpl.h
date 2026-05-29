@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSpriteOriented.h"
 #include "CSpriteImpl.h"
 
-class CSpriteOrientedImpl : public CSpriteImpl, public ISpriteOriented
+class CSpriteOrientedImpl : public CSpriteImpl, public virtual ISpriteOriented
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CSpriteOriented* GetOriginal() const override { return Real(); }
 };
 
-inline ISpriteOriented* CSpriteOriented::ToInterface() { return new CSpriteOrientedImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISpriteOriented* CSpriteOriented::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISpriteOriented*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSpriteOrientedImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISpriteOriented*>(impl));
+    return impl;
+}
+inline ISpriteOriented* ISpriteOriented::FromRaw(CEntityInstance* p) { return p ? static_cast<CSpriteOriented*>(p)->ToInterface() : nullptr; }
 inline ISpriteOriented* ISpriteOriented::FromOriginal(CSpriteOriented* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSPRITEORIENTEDIMPL_H

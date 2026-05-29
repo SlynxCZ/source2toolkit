@@ -62,6 +62,7 @@ public:
 };
 
 inline IFiringModeInt* CFiringModeInt::ToInterface() { return new CFiringModeIntImpl(this); }
+inline IFiringModeInt* IFiringModeInt::FromRaw(CEntityInstance*) { return nullptr; }
 inline IFiringModeInt* IFiringModeInt::FromOriginal(CFiringModeInt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFIRINGMODEINTIMPL_H

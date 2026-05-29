@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePlayerVData.h"
 #include "CEntitySubclassVDataBaseImpl.h"
 
-class CBasePlayerVDataImpl : public CEntitySubclassVDataBaseImpl, public IBasePlayerVData
+class CBasePlayerVDataImpl : public CEntitySubclassVDataBaseImpl, public virtual IBasePlayerVData
 {
 
 public:
@@ -85,6 +85,7 @@ public:
 };
 
 inline IBasePlayerVData* CBasePlayerVData::ToInterface() { return new CBasePlayerVDataImpl(this); }
+inline IBasePlayerVData* IBasePlayerVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBasePlayerVData* IBasePlayerVData::FromOriginal(CBasePlayerVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEPLAYERVDATAIMPL_H

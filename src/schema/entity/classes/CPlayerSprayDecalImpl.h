@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayerSprayDecal.h"
 #include "CModelPointEntityImpl.h"
 
-class CPlayerSprayDecalImpl : public CModelPointEntityImpl, public IPlayerSprayDecal
+class CPlayerSprayDecalImpl : public CModelPointEntityImpl, public virtual IPlayerSprayDecal
 {
 
 public:
@@ -87,7 +87,20 @@ public:
     uint8_t* Signature() override { return Real()->m_ubSignature(); }
 };
 
-inline IPlayerSprayDecal* CPlayerSprayDecal::ToInterface() { return new CPlayerSprayDecalImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPlayerSprayDecal* CPlayerSprayDecal::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPlayerSprayDecal*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPlayerSprayDecalImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPlayerSprayDecal*>(impl));
+    return impl;
+}
+inline IPlayerSprayDecal* IPlayerSprayDecal::FromRaw(CEntityInstance* p) { return p ? static_cast<CPlayerSprayDecal*>(p)->ToInterface() : nullptr; }
 inline IPlayerSprayDecal* IPlayerSprayDecal::FromOriginal(CPlayerSprayDecal* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYERSPRAYDECALIMPL_H

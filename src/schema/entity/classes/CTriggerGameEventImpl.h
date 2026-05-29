@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerGameEvent.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerGameEventImpl : public CBaseTriggerImpl, public ITriggerGameEvent
+class CTriggerGameEventImpl : public CBaseTriggerImpl, public virtual ITriggerGameEvent
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void StrTriggerIDUpdated() override { Real()->m_strTriggerID.NetworkStateChanged(); }
 };
 
-inline ITriggerGameEvent* CTriggerGameEvent::ToInterface() { return new CTriggerGameEventImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerGameEvent* CTriggerGameEvent::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerGameEvent*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerGameEventImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerGameEvent*>(impl));
+    return impl;
+}
+inline ITriggerGameEvent* ITriggerGameEvent::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerGameEvent*>(p)->ToInterface() : nullptr; }
 inline ITriggerGameEvent* ITriggerGameEvent::FromOriginal(CTriggerGameEvent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERGAMEEVENTIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGamePlayerEquip.h"
 #include "CRulePointEntityImpl.h"
 
-class CGamePlayerEquipImpl : public CRulePointEntityImpl, public IGamePlayerEquip
+class CGamePlayerEquipImpl : public CRulePointEntityImpl, public virtual IGamePlayerEquip
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CGamePlayerEquip* GetOriginal() const override { return Real(); }
 };
 
-inline IGamePlayerEquip* CGamePlayerEquip::ToInterface() { return new CGamePlayerEquipImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGamePlayerEquip* CGamePlayerEquip::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGamePlayerEquip*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGamePlayerEquipImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGamePlayerEquip*>(impl));
+    return impl;
+}
+inline IGamePlayerEquip* IGamePlayerEquip::FromRaw(CEntityInstance* p) { return p ? static_cast<CGamePlayerEquip*>(p)->ToInterface() : nullptr; }
 inline IGamePlayerEquip* IGamePlayerEquip::FromOriginal(CGamePlayerEquip* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMEPLAYEREQUIPIMPL_H

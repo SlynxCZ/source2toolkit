@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicBranchList.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicBranchListImpl : public CLogicalEntityImpl, public ILogicBranchList
+class CLogicBranchListImpl : public CLogicalEntityImpl, public virtual ILogicBranchList
 {
 
 public:
@@ -69,7 +69,20 @@ public:
     void OnMixedUpdated() override { Real()->m_OnMixed.NetworkStateChanged(); }
 };
 
-inline ILogicBranchList* CLogicBranchList::ToInterface() { return new CLogicBranchListImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicBranchList* CLogicBranchList::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicBranchList*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicBranchListImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicBranchList*>(impl));
+    return impl;
+}
+inline ILogicBranchList* ILogicBranchList::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicBranchList*>(p)->ToInterface() : nullptr; }
 inline ILogicBranchList* ILogicBranchList::FromOriginal(CLogicBranchList* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICBRANCHLISTIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_RadioServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_RadioServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_RadioServices
+class CCSPlayer_RadioServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_RadioServices
 {
 
 public:
@@ -68,6 +68,7 @@ public:
 };
 
 inline ICSPlayer_RadioServices* CCSPlayer_RadioServices::ToInterface() { return new CCSPlayer_RadioServicesImpl(this); }
+inline ICSPlayer_RadioServices* ICSPlayer_RadioServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_RadioServices* ICSPlayer_RadioServices::FromOriginal(CCSPlayer_RadioServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_RADIOSERVICESIMPL_H

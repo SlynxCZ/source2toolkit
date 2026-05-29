@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncMoveLinearAlias_momentary_door.h"
 #include "CFuncMoveLinearImpl.h"
 
-class CFuncMoveLinearAlias_momentary_doorImpl : public CFuncMoveLinearImpl, public IFuncMoveLinearAlias_momentary_door
+class CFuncMoveLinearAlias_momentary_doorImpl : public CFuncMoveLinearImpl, public virtual IFuncMoveLinearAlias_momentary_door
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncMoveLinearAlias_momentary_door* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncMoveLinearAlias_momentary_door* CFuncMoveLinearAlias_momentary_door::ToInterface() { return new CFuncMoveLinearAlias_momentary_doorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncMoveLinearAlias_momentary_door* CFuncMoveLinearAlias_momentary_door::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncMoveLinearAlias_momentary_door*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncMoveLinearAlias_momentary_doorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncMoveLinearAlias_momentary_door*>(impl));
+    return impl;
+}
+inline IFuncMoveLinearAlias_momentary_door* IFuncMoveLinearAlias_momentary_door::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncMoveLinearAlias_momentary_door*>(p)->ToInterface() : nullptr; }
 inline IFuncMoveLinearAlias_momentary_door* IFuncMoveLinearAlias_momentary_door::FromOriginal(CFuncMoveLinearAlias_momentary_door* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCMOVELINEARALIAS_MOMENTARY_DOORIMPL_H

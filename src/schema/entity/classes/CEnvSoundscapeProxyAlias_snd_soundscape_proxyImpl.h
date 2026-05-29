@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSoundscapeProxyAlias_snd_soundscape_proxy.h"
 #include "CEnvSoundscapeProxyImpl.h"
 
-class CEnvSoundscapeProxyAlias_snd_soundscape_proxyImpl : public CEnvSoundscapeProxyImpl, public IEnvSoundscapeProxyAlias_snd_soundscape_proxy
+class CEnvSoundscapeProxyAlias_snd_soundscape_proxyImpl : public CEnvSoundscapeProxyImpl, public virtual IEnvSoundscapeProxyAlias_snd_soundscape_proxy
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEnvSoundscapeProxyAlias_snd_soundscape_proxy* GetOriginal() const override { return Real(); }
 };
 
-inline IEnvSoundscapeProxyAlias_snd_soundscape_proxy* CEnvSoundscapeProxyAlias_snd_soundscape_proxy::ToInterface() { return new CEnvSoundscapeProxyAlias_snd_soundscape_proxyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSoundscapeProxyAlias_snd_soundscape_proxy* CEnvSoundscapeProxyAlias_snd_soundscape_proxy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSoundscapeProxyAlias_snd_soundscape_proxy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSoundscapeProxyAlias_snd_soundscape_proxyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSoundscapeProxyAlias_snd_soundscape_proxy*>(impl));
+    return impl;
+}
+inline IEnvSoundscapeProxyAlias_snd_soundscape_proxy* IEnvSoundscapeProxyAlias_snd_soundscape_proxy::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSoundscapeProxyAlias_snd_soundscape_proxy*>(p)->ToInterface() : nullptr; }
 inline IEnvSoundscapeProxyAlias_snd_soundscape_proxy* IEnvSoundscapeProxyAlias_snd_soundscape_proxy::FromOriginal(CEnvSoundscapeProxyAlias_snd_soundscape_proxy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSOUNDSCAPEPROXYALIAS_SND_SOUNDSCAPE_PROXYIMPL_H

@@ -67,6 +67,7 @@ public:
 };
 
 inline INetworkVelocityVector* CNetworkVelocityVector::ToInterface() { return new CNetworkVelocityVectorImpl(this); }
+inline INetworkVelocityVector* INetworkVelocityVector::FromRaw(CEntityInstance*) { return nullptr; }
 inline INetworkVelocityVector* INetworkVelocityVector::FromOriginal(CNetworkVelocityVector* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNETWORKVELOCITYVECTORIMPL_H

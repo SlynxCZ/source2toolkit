@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointCamera.h"
 #include "CBaseEntityImpl.h"
 
-class CPointCameraImpl : public CBaseEntityImpl, public IPointCamera
+class CPointCameraImpl : public CBaseEntityImpl, public virtual IPointCamera
 {
 
 public:
@@ -110,7 +110,20 @@ public:
     void NextUpdated() override { Real()->m_pNext.NetworkStateChanged(); }
 };
 
-inline IPointCamera* CPointCamera::ToInterface() { return new CPointCameraImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointCamera* CPointCamera::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointCamera*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointCameraImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointCamera*>(impl));
+    return impl;
+}
+inline IPointCamera* IPointCamera::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointCamera*>(p)->ToInterface() : nullptr; }
 inline IPointCamera* IPointCamera::FromOriginal(CPointCamera* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCAMERAIMPL_H

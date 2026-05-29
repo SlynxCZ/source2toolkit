@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRagdollConstraint.h"
 #include "CPhysConstraintImpl.h"
 
-class CRagdollConstraintImpl : public CPhysConstraintImpl, public IRagdollConstraint
+class CRagdollConstraintImpl : public CPhysConstraintImpl, public virtual IRagdollConstraint
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void ZfrictionUpdated() override { Real()->m_zfriction.NetworkStateChanged(); }
 };
 
-inline IRagdollConstraint* CRagdollConstraint::ToInterface() { return new CRagdollConstraintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRagdollConstraint* CRagdollConstraint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRagdollConstraint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRagdollConstraintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRagdollConstraint*>(impl));
+    return impl;
+}
+inline IRagdollConstraint* IRagdollConstraint::FromRaw(CEntityInstance* p) { return p ? static_cast<CRagdollConstraint*>(p)->ToInterface() : nullptr; }
 inline IRagdollConstraint* IRagdollConstraint::FromOriginal(CRagdollConstraint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRAGDOLLCONSTRAINTIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_AimPunchServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_AimPunchServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_AimPunchServices
+class CCSPlayer_AimPunchServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_AimPunchServices
 {
 
 public:
@@ -71,6 +71,7 @@ public:
 };
 
 inline ICSPlayer_AimPunchServices* CCSPlayer_AimPunchServices::ToInterface() { return new CCSPlayer_AimPunchServicesImpl(this); }
+inline ICSPlayer_AimPunchServices* ICSPlayer_AimPunchServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_AimPunchServices* ICSPlayer_AimPunchServices::FromOriginal(CCSPlayer_AimPunchServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_AIMPUNCHSERVICESIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePlayerWeaponVData.h"
 #include "CEntitySubclassVDataBaseImpl.h"
 
-class CBasePlayerWeaponVDataImpl : public CEntitySubclassVDataBaseImpl, public IBasePlayerWeaponVData
+class CBasePlayerWeaponVDataImpl : public CEntitySubclassVDataBaseImpl, public virtual IBasePlayerWeaponVData
 {
 
 public:
@@ -109,6 +109,7 @@ public:
 };
 
 inline IBasePlayerWeaponVData* CBasePlayerWeaponVData::ToInterface() { return new CBasePlayerWeaponVDataImpl(this); }
+inline IBasePlayerWeaponVData* IBasePlayerWeaponVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBasePlayerWeaponVData* IBasePlayerWeaponVData::FromOriginal(CBasePlayerWeaponVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEPLAYERWEAPONVDATAIMPL_H

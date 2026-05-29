@@ -61,6 +61,7 @@ public:
 };
 
 inline IIChoreoServices* IChoreoServices::ToInterface() { return new IChoreoServicesImpl(this); }
+inline IIChoreoServices* IIChoreoServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIChoreoServices* IIChoreoServices::FromOriginal(IChoreoServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_ICHOREOSERVICESIMPL_H

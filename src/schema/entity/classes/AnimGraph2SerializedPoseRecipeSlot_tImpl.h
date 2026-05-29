@@ -63,6 +63,7 @@ public:
 };
 
 inline IAnimGraph2SerializedPoseRecipeSlot_t* AnimGraph2SerializedPoseRecipeSlot_t::ToInterface() { return new AnimGraph2SerializedPoseRecipeSlot_tImpl(this); }
+inline IAnimGraph2SerializedPoseRecipeSlot_t* IAnimGraph2SerializedPoseRecipeSlot_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAnimGraph2SerializedPoseRecipeSlot_t* IAnimGraph2SerializedPoseRecipeSlot_t::FromOriginal(AnimGraph2SerializedPoseRecipeSlot_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_ANIMGRAPH2SERIALIZEDPOSERECIPESLOT_TIMPL_H

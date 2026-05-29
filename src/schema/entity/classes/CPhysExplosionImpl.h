@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysExplosion.h"
 #include "CPointEntityImpl.h"
 
-class CPhysExplosionImpl : public CPointEntityImpl, public IPhysExplosion
+class CPhysExplosionImpl : public CPointEntityImpl, public virtual IPhysExplosion
 {
 
 public:
@@ -80,7 +80,20 @@ public:
     void OnPushedPlayerUpdated() override { Real()->m_OnPushedPlayer.NetworkStateChanged(); }
 };
 
-inline IPhysExplosion* CPhysExplosion::ToInterface() { return new CPhysExplosionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysExplosion* CPhysExplosion::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysExplosion*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysExplosionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysExplosion*>(impl));
+    return impl;
+}
+inline IPhysExplosion* IPhysExplosion::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysExplosion*>(p)->ToInterface() : nullptr; }
 inline IPhysExplosion* IPhysExplosion::FromOriginal(CPhysExplosion* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSEXPLOSIONIMPL_H

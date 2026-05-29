@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeCVDataItemDefs* InfoForResourceTypeCVDataItemDefs::ToInterface() { return new InfoForResourceTypeCVDataItemDefsImpl(this); }
+inline IInfoForResourceTypeCVDataItemDefs* IInfoForResourceTypeCVDataItemDefs::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeCVDataItemDefs* IInfoForResourceTypeCVDataItemDefs::FromOriginal(InfoForResourceTypeCVDataItemDefs* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECVDATAITEMDEFSIMPL_H

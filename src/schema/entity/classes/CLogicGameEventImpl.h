@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicGameEvent.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicGameEventImpl : public CLogicalEntityImpl, public ILogicGameEvent
+class CLogicGameEventImpl : public CLogicalEntityImpl, public virtual ILogicGameEvent
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void EventNameUpdated() override { Real()->m_iszEventName.NetworkStateChanged(); }
 };
 
-inline ILogicGameEvent* CLogicGameEvent::ToInterface() { return new CLogicGameEventImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicGameEvent* CLogicGameEvent::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicGameEvent*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicGameEventImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicGameEvent*>(impl));
+    return impl;
+}
+inline ILogicGameEvent* ILogicGameEvent::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicGameEvent*>(p)->ToInterface() : nullptr; }
 inline ILogicGameEvent* ILogicGameEvent::FromOriginal(CLogicGameEvent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICGAMEEVENTIMPL_H

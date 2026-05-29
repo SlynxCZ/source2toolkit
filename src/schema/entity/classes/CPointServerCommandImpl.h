@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointServerCommand.h"
 #include "CPointEntityImpl.h"
 
-class CPointServerCommandImpl : public CPointEntityImpl, public IPointServerCommand
+class CPointServerCommandImpl : public CPointEntityImpl, public virtual IPointServerCommand
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPointServerCommand* GetOriginal() const override { return Real(); }
 };
 
-inline IPointServerCommand* CPointServerCommand::ToInterface() { return new CPointServerCommandImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointServerCommand* CPointServerCommand::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointServerCommand*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointServerCommandImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointServerCommand*>(impl));
+    return impl;
+}
+inline IPointServerCommand* IPointServerCommand::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointServerCommand*>(p)->ToInterface() : nullptr; }
 inline IPointServerCommand* IPointServerCommand::FromOriginal(CPointServerCommand* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTSERVERCOMMANDIMPL_H

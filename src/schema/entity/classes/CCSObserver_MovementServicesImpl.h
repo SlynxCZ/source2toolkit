@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSObserver_MovementServices.h"
 #include "CPlayer_MovementServicesImpl.h"
 
-class CCSObserver_MovementServicesImpl : public CPlayer_MovementServicesImpl, public ICSObserver_MovementServices
+class CCSObserver_MovementServicesImpl : public CPlayer_MovementServicesImpl, public virtual ICSObserver_MovementServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ICSObserver_MovementServices* CCSObserver_MovementServices::ToInterface() { return new CCSObserver_MovementServicesImpl(this); }
+inline ICSObserver_MovementServices* ICSObserver_MovementServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSObserver_MovementServices* ICSObserver_MovementServices::FromOriginal(CCSObserver_MovementServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSOBSERVER_MOVEMENTSERVICESIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSoundscapeProxy.h"
 #include "CEnvSoundscapeImpl.h"
 
-class CEnvSoundscapeProxyImpl : public CEnvSoundscapeImpl, public IEnvSoundscapeProxy
+class CEnvSoundscapeProxyImpl : public CEnvSoundscapeImpl, public virtual IEnvSoundscapeProxy
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MainSoundscapeNameUpdated() override { Real()->m_MainSoundscapeName.NetworkStateChanged(); }
 };
 
-inline IEnvSoundscapeProxy* CEnvSoundscapeProxy::ToInterface() { return new CEnvSoundscapeProxyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSoundscapeProxy* CEnvSoundscapeProxy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSoundscapeProxy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSoundscapeProxyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSoundscapeProxy*>(impl));
+    return impl;
+}
+inline IEnvSoundscapeProxy* IEnvSoundscapeProxy::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSoundscapeProxy*>(p)->ToInterface() : nullptr; }
 inline IEnvSoundscapeProxy* IEnvSoundscapeProxy::FromOriginal(CEnvSoundscapeProxy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSOUNDSCAPEPROXYIMPL_H

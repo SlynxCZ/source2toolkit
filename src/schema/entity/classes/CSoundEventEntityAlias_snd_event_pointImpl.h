@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventEntityAlias_snd_event_point.h"
 #include "CSoundEventEntityImpl.h"
 
-class CSoundEventEntityAlias_snd_event_pointImpl : public CSoundEventEntityImpl, public ISoundEventEntityAlias_snd_event_point
+class CSoundEventEntityAlias_snd_event_pointImpl : public CSoundEventEntityImpl, public virtual ISoundEventEntityAlias_snd_event_point
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CSoundEventEntityAlias_snd_event_point* GetOriginal() const override { return Real(); }
 };
 
-inline ISoundEventEntityAlias_snd_event_point* CSoundEventEntityAlias_snd_event_point::ToInterface() { return new CSoundEventEntityAlias_snd_event_pointImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventEntityAlias_snd_event_point* CSoundEventEntityAlias_snd_event_point::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventEntityAlias_snd_event_point*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventEntityAlias_snd_event_pointImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventEntityAlias_snd_event_point*>(impl));
+    return impl;
+}
+inline ISoundEventEntityAlias_snd_event_point* ISoundEventEntityAlias_snd_event_point::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventEntityAlias_snd_event_point*>(p)->ToInterface() : nullptr; }
 inline ISoundEventEntityAlias_snd_event_point* ISoundEventEntityAlias_snd_event_point::FromOriginal(CSoundEventEntityAlias_snd_event_point* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTENTITYALIAS_SND_EVENT_POINTIMPL_H

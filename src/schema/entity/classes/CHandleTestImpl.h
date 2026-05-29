@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHandleTest.h"
 #include "CBaseEntityImpl.h"
 
-class CHandleTestImpl : public CBaseEntityImpl, public IHandleTest
+class CHandleTestImpl : public CBaseEntityImpl, public virtual IHandleTest
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void SendHandleUpdated() override { Real()->m_bSendHandle.NetworkStateChanged(); }
 };
 
-inline IHandleTest* CHandleTest::ToInterface() { return new CHandleTestImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHandleTest* CHandleTest::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHandleTest*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHandleTestImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHandleTest*>(impl));
+    return impl;
+}
+inline IHandleTest* IHandleTest::FromRaw(CEntityInstance* p) { return p ? static_cast<CHandleTest*>(p)->ToInterface() : nullptr; }
 inline IHandleTest* IHandleTest::FromOriginal(CHandleTest* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHANDLETESTIMPL_H

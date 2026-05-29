@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoInstructorHintBombTargetA.h"
 #include "CPointEntityImpl.h"
 
-class CInfoInstructorHintBombTargetAImpl : public CPointEntityImpl, public IInfoInstructorHintBombTargetA
+class CInfoInstructorHintBombTargetAImpl : public CPointEntityImpl, public virtual IInfoInstructorHintBombTargetA
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoInstructorHintBombTargetA* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoInstructorHintBombTargetA* CInfoInstructorHintBombTargetA::ToInterface() { return new CInfoInstructorHintBombTargetAImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoInstructorHintBombTargetA* CInfoInstructorHintBombTargetA::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoInstructorHintBombTargetA*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoInstructorHintBombTargetAImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoInstructorHintBombTargetA*>(impl));
+    return impl;
+}
+inline IInfoInstructorHintBombTargetA* IInfoInstructorHintBombTargetA::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoInstructorHintBombTargetA*>(p)->ToInterface() : nullptr; }
 inline IInfoInstructorHintBombTargetA* IInfoInstructorHintBombTargetA::FromOriginal(CInfoInstructorHintBombTargetA* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTBOMBTARGETAIMPL_H

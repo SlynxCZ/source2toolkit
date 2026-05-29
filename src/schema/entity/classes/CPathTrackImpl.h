@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathTrack.h"
 #include "CPointEntityImpl.h"
 
-class CPathTrackImpl : public CPointEntityImpl, public IPathTrack
+class CPathTrackImpl : public CPointEntityImpl, public virtual IPathTrack
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void OnPassUpdated() override { Real()->m_OnPass.NetworkStateChanged(); }
 };
 
-inline IPathTrack* CPathTrack::ToInterface() { return new CPathTrackImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathTrack* CPathTrack::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathTrack*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathTrackImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathTrack*>(impl));
+    return impl;
+}
+inline IPathTrack* IPathTrack::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathTrack*>(p)->ToInterface() : nullptr; }
 inline IPathTrack* IPathTrack::FromOriginal(CPathTrack* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHTRACKIMPL_H

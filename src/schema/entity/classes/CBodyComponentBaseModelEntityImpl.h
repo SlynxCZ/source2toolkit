@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBodyComponentBaseModelEntity.h"
 #include "CBodyComponentSkeletonInstanceImpl.h"
 
-class CBodyComponentBaseModelEntityImpl : public CBodyComponentSkeletonInstanceImpl, public IBodyComponentBaseModelEntity
+class CBodyComponentBaseModelEntityImpl : public CBodyComponentSkeletonInstanceImpl, public virtual IBodyComponentBaseModelEntity
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IBodyComponentBaseModelEntity* CBodyComponentBaseModelEntity::ToInterface() { return new CBodyComponentBaseModelEntityImpl(this); }
+inline IBodyComponentBaseModelEntity* IBodyComponentBaseModelEntity::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBodyComponentBaseModelEntity* IBodyComponentBaseModelEntity::FromOriginal(CBodyComponentBaseModelEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBODYCOMPONENTBASEMODELENTITYIMPL_H

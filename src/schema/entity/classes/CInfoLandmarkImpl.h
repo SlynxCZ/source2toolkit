@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoLandmark.h"
 #include "CPointEntityImpl.h"
 
-class CInfoLandmarkImpl : public CPointEntityImpl, public IInfoLandmark
+class CInfoLandmarkImpl : public CPointEntityImpl, public virtual IInfoLandmark
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoLandmark* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoLandmark* CInfoLandmark::ToInterface() { return new CInfoLandmarkImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoLandmark* CInfoLandmark::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoLandmark*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoLandmarkImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoLandmark*>(impl));
+    return impl;
+}
+inline IInfoLandmark* IInfoLandmark::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoLandmark*>(p)->ToInterface() : nullptr; }
 inline IInfoLandmark* IInfoLandmark::FromOriginal(CInfoLandmark* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOLANDMARKIMPL_H

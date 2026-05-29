@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoPlayerStart.h"
 #include "CPointEntityImpl.h"
 
-class CInfoPlayerStartImpl : public CPointEntityImpl, public IInfoPlayerStart
+class CInfoPlayerStartImpl : public CPointEntityImpl, public virtual IInfoPlayerStart
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void PawnSubclassUpdated() override { Real()->m_pPawnSubclass.NetworkStateChanged(); }
 };
 
-inline IInfoPlayerStart* CInfoPlayerStart::ToInterface() { return new CInfoPlayerStartImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoPlayerStart* CInfoPlayerStart::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoPlayerStart*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoPlayerStartImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoPlayerStart*>(impl));
+    return impl;
+}
+inline IInfoPlayerStart* IInfoPlayerStart::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoPlayerStart*>(p)->ToInterface() : nullptr; }
 inline IInfoPlayerStart* IInfoPlayerStart::FromOriginal(CInfoPlayerStart* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOPLAYERSTARTIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointCameraVFOV.h"
 #include "CPointCameraImpl.h"
 
-class CPointCameraVFOVImpl : public CPointCameraImpl, public IPointCameraVFOV
+class CPointCameraVFOVImpl : public CPointCameraImpl, public virtual IPointCameraVFOV
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void VerticalFOVUpdated() override { Real()->m_flVerticalFOV.NetworkStateChanged(); }
 };
 
-inline IPointCameraVFOV* CPointCameraVFOV::ToInterface() { return new CPointCameraVFOVImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointCameraVFOV* CPointCameraVFOV::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointCameraVFOV*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointCameraVFOVImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointCameraVFOV*>(impl));
+    return impl;
+}
+inline IPointCameraVFOV* IPointCameraVFOV::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointCameraVFOV*>(p)->ToInterface() : nullptr; }
 inline IPointCameraVFOV* IPointCameraVFOV::FromOriginal(CPointCameraVFOV* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCAMERAVFOVIMPL_H

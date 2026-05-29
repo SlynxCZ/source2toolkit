@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointTeleport.h"
 #include "CServerOnlyPointEntityImpl.h"
 
-class CPointTeleportImpl : public CServerOnlyPointEntityImpl, public IPointTeleport
+class CPointTeleportImpl : public CServerOnlyPointEntityImpl, public virtual IPointTeleport
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void TeleportUseCurrentAngleUpdated() override { Real()->m_bTeleportUseCurrentAngle.NetworkStateChanged(); }
 };
 
-inline IPointTeleport* CPointTeleport::ToInterface() { return new CPointTeleportImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointTeleport* CPointTeleport::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointTeleport*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointTeleportImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointTeleport*>(impl));
+    return impl;
+}
+inline IPointTeleport* IPointTeleport::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointTeleport*>(p)->ToInterface() : nullptr; }
 inline IPointTeleport* IPointTeleport::FromOriginal(CPointTeleport* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTTELEPORTIMPL_H

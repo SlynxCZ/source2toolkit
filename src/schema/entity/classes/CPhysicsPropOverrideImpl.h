@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsPropOverride.h"
 #include "CPhysicsPropImpl.h"
 
-class CPhysicsPropOverrideImpl : public CPhysicsPropImpl, public IPhysicsPropOverride
+class CPhysicsPropOverrideImpl : public CPhysicsPropImpl, public virtual IPhysicsPropOverride
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPhysicsPropOverride* GetOriginal() const override { return Real(); }
 };
 
-inline IPhysicsPropOverride* CPhysicsPropOverride::ToInterface() { return new CPhysicsPropOverrideImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsPropOverride* CPhysicsPropOverride::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsPropOverride*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsPropOverrideImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsPropOverride*>(impl));
+    return impl;
+}
+inline IPhysicsPropOverride* IPhysicsPropOverride::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsPropOverride*>(p)->ToInterface() : nullptr; }
 inline IPhysicsPropOverride* IPhysicsPropOverride::FromOriginal(CPhysicsPropOverride* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSPROPOVERRIDEIMPL_H

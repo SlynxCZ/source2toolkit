@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable.h"
 #include "CEnvSoundscapeTriggerableImpl.h"
 
-class CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerableImpl : public CEnvSoundscapeTriggerableImpl, public IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable
+class CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerableImpl : public CEnvSoundscapeTriggerableImpl, public virtual IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* GetOriginal() const override { return Real(); }
 };
 
-inline IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable::ToInterface() { return new CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable*>(impl));
+    return impl;
+}
+inline IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable*>(p)->ToInterface() : nullptr; }
 inline IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* IEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable::FromOriginal(CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLEALIAS_SND_SOUNDSCAPE_TRIGGERABLEIMPL_H

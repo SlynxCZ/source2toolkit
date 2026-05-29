@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvDetailController.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvDetailControllerImpl : public CBaseEntityImpl, public IEnvDetailController
+class CEnvDetailControllerImpl : public CBaseEntityImpl, public virtual IEnvDetailController
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void FadeEndDistUpdated() override { Real()->m_flFadeEndDist.NetworkStateChanged(); }
 };
 
-inline IEnvDetailController* CEnvDetailController::ToInterface() { return new CEnvDetailControllerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvDetailController* CEnvDetailController::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvDetailController*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvDetailControllerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvDetailController*>(impl));
+    return impl;
+}
+inline IEnvDetailController* IEnvDetailController::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvDetailController*>(p)->ToInterface() : nullptr; }
 inline IEnvDetailController* IEnvDetailController::FromOriginal(CEnvDetailController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVDETAILCONTROLLERIMPL_H

@@ -43,6 +43,7 @@ ICSPlayerController* CPlayerControllerComponent::GetPlayerController() {
     return static_cast<CCSPlayerController*>(__m_pChainEntity())->ToInterface();
 }
 IPlayerControllerComponent* CPlayerControllerComponent::ToInterface() { return new CPlayerControllerComponentImpl(this); }
+IPlayerControllerComponent* IPlayerControllerComponent::FromRaw(CEntityInstance*) { return nullptr; }
 
 IPlayerControllerComponent* IPlayerControllerComponent::FromOriginal(CPlayerControllerComponent* p)
 { return CPlayerControllerComponent::FromOriginal(p); }

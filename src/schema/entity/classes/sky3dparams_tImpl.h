@@ -73,6 +73,7 @@ public:
 };
 
 inline Isky3dparams_t* sky3dparams_t::ToInterface() { return new sky3dparams_tImpl(this); }
+inline Isky3dparams_t* Isky3dparams_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Isky3dparams_t* Isky3dparams_t::FromOriginal(sky3dparams_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SKY3DPARAMS_TIMPL_H

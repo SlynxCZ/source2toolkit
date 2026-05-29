@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CColorCorrectionVolume.h"
 #include "CBaseTriggerImpl.h"
 
-class CColorCorrectionVolumeImpl : public CBaseTriggerImpl, public IColorCorrectionVolume
+class CColorCorrectionVolumeImpl : public CBaseTriggerImpl, public virtual IColorCorrectionVolume
 {
 
 public:
@@ -73,7 +73,20 @@ public:
     void LastExitTimeUpdated() override { Real()->m_LastExitTime.NetworkStateChanged(); }
 };
 
-inline IColorCorrectionVolume* CColorCorrectionVolume::ToInterface() { return new CColorCorrectionVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IColorCorrectionVolume* CColorCorrectionVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IColorCorrectionVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CColorCorrectionVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IColorCorrectionVolume*>(impl));
+    return impl;
+}
+inline IColorCorrectionVolume* IColorCorrectionVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CColorCorrectionVolume*>(p)->ToInterface() : nullptr; }
 inline IColorCorrectionVolume* IColorCorrectionVolume::FromOriginal(CColorCorrectionVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCOLORCORRECTIONVOLUMEIMPL_H

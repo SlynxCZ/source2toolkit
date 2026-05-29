@@ -45,7 +45,6 @@
 #include "dynlibutils/module.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
-#include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
 
 namespace inlinehooks
 {
@@ -71,7 +70,6 @@ namespace inlinehooks
 
     void Inlines::DestructListeners()
     {
-        // TODO: Check if deleting pointer disables hook without SIGSEGV
         delete m_pFireOutputInternal;
         delete m_pPlatDebug;
     }

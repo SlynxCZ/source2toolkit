@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFogTrigger.h"
 #include "CBaseTriggerImpl.h"
 
-class CFogTriggerImpl : public CBaseTriggerImpl, public IFogTrigger
+class CFogTriggerImpl : public CBaseTriggerImpl, public virtual IFogTrigger
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void FogUpdated() override { Real()->m_fog.NetworkStateChanged(); }
 };
 
-inline IFogTrigger* CFogTrigger::ToInterface() { return new CFogTriggerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFogTrigger* CFogTrigger::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFogTrigger*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFogTriggerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFogTrigger*>(impl));
+    return impl;
+}
+inline IFogTrigger* IFogTrigger::FromRaw(CEntityInstance* p) { return p ? static_cast<CFogTrigger*>(p)->ToInterface() : nullptr; }
 inline IFogTrigger* IFogTrigger::FromOriginal(CFogTrigger* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFOGTRIGGERIMPL_H

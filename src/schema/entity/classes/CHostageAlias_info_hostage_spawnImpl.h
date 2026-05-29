@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHostageAlias_info_hostage_spawn.h"
 #include "CHostageImpl.h"
 
-class CHostageAlias_info_hostage_spawnImpl : public CHostageImpl, public IHostageAlias_info_hostage_spawn
+class CHostageAlias_info_hostage_spawnImpl : public CHostageImpl, public virtual IHostageAlias_info_hostage_spawn
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CHostageAlias_info_hostage_spawn* GetOriginal() const override { return Real(); }
 };
 
-inline IHostageAlias_info_hostage_spawn* CHostageAlias_info_hostage_spawn::ToInterface() { return new CHostageAlias_info_hostage_spawnImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHostageAlias_info_hostage_spawn* CHostageAlias_info_hostage_spawn::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHostageAlias_info_hostage_spawn*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHostageAlias_info_hostage_spawnImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHostageAlias_info_hostage_spawn*>(impl));
+    return impl;
+}
+inline IHostageAlias_info_hostage_spawn* IHostageAlias_info_hostage_spawn::FromRaw(CEntityInstance* p) { return p ? static_cast<CHostageAlias_info_hostage_spawn*>(p)->ToInterface() : nullptr; }
 inline IHostageAlias_info_hostage_spawn* IHostageAlias_info_hostage_spawn::FromOriginal(CHostageAlias_info_hostage_spawn* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHOSTAGEALIAS_INFO_HOSTAGE_SPAWNIMPL_H

@@ -65,6 +65,7 @@ public:
 };
 
 inline IAttributeList* CAttributeList::ToInterface() { return new CAttributeListImpl(this); }
+inline IAttributeList* IAttributeList::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAttributeList* IAttributeList::FromOriginal(CAttributeList* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CATTRIBUTELISTIMPL_H

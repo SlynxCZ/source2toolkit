@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterProximity.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterProximityImpl : public CBaseFilterImpl, public IFilterProximity
+class CFilterProximityImpl : public CBaseFilterImpl, public virtual IFilterProximity
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }
 };
 
-inline IFilterProximity* CFilterProximity::ToInterface() { return new CFilterProximityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterProximity* CFilterProximity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterProximity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterProximityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterProximity*>(impl));
+    return impl;
+}
+inline IFilterProximity* IFilterProximity::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterProximity*>(p)->ToInterface() : nullptr; }
 inline IFilterProximity* IFilterProximity::FromOriginal(CFilterProximity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERPROXIMITYIMPL_H

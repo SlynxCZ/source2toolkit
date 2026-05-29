@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventPathCornerEntity.h"
 #include "CSoundEventEntityImpl.h"
 
-class CSoundEventPathCornerEntityImpl : public CSoundEventEntityImpl, public ISoundEventPathCornerEntity
+class CSoundEventPathCornerEntityImpl : public CSoundEventEntityImpl, public virtual ISoundEventPathCornerEntity
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void PlayingUpdated() override { Real()->m_bPlaying.NetworkStateChanged(); }
 };
 
-inline ISoundEventPathCornerEntity* CSoundEventPathCornerEntity::ToInterface() { return new CSoundEventPathCornerEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventPathCornerEntity* CSoundEventPathCornerEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventPathCornerEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventPathCornerEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventPathCornerEntity*>(impl));
+    return impl;
+}
+inline ISoundEventPathCornerEntity* ISoundEventPathCornerEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventPathCornerEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundEventPathCornerEntity* ISoundEventPathCornerEntity::FromOriginal(CSoundEventPathCornerEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTPATHCORNERENTITYIMPL_H

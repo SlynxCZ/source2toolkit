@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHostageCarriableProp.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CHostageCarriablePropImpl : public CBaseAnimGraphImpl, public IHostageCarriableProp
+class CHostageCarriablePropImpl : public CBaseAnimGraphImpl, public virtual IHostageCarriableProp
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CHostageCarriableProp* GetOriginal() const override { return Real(); }
 };
 
-inline IHostageCarriableProp* CHostageCarriableProp::ToInterface() { return new CHostageCarriablePropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHostageCarriableProp* CHostageCarriableProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHostageCarriableProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHostageCarriablePropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHostageCarriableProp*>(impl));
+    return impl;
+}
+inline IHostageCarriableProp* IHostageCarriableProp::FromRaw(CEntityInstance* p) { return p ? static_cast<CHostageCarriableProp*>(p)->ToInterface() : nullptr; }
 inline IHostageCarriableProp* IHostageCarriableProp::FromOriginal(CHostageCarriableProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHOSTAGECARRIABLEPROPIMPL_H

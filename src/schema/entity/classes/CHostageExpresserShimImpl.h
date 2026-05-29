@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHostageExpresserShim.h"
 #include "CBaseCombatCharacterImpl.h"
 
-class CHostageExpresserShimImpl : public CBaseCombatCharacterImpl, public IHostageExpresserShim
+class CHostageExpresserShimImpl : public CBaseCombatCharacterImpl, public virtual IHostageExpresserShim
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ExpresserUpdated() override { Real()->m_pExpresser.NetworkStateChanged(); }
 };
 
-inline IHostageExpresserShim* CHostageExpresserShim::ToInterface() { return new CHostageExpresserShimImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHostageExpresserShim* CHostageExpresserShim::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHostageExpresserShim*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHostageExpresserShimImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHostageExpresserShim*>(impl));
+    return impl;
+}
+inline IHostageExpresserShim* IHostageExpresserShim::FromRaw(CEntityInstance* p) { return p ? static_cast<CHostageExpresserShim*>(p)->ToInterface() : nullptr; }
 inline IHostageExpresserShim* IHostageExpresserShim::FromOriginal(CHostageExpresserShim* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHOSTAGEEXPRESSERSHIMIMPL_H

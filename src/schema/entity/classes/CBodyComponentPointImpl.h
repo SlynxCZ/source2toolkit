@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBodyComponentPoint.h"
 #include "CBodyComponentImpl.h"
 
-class CBodyComponentPointImpl : public CBodyComponentImpl, public IBodyComponentPoint
+class CBodyComponentPointImpl : public CBodyComponentImpl, public virtual IBodyComponentPoint
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline IBodyComponentPoint* CBodyComponentPoint::ToInterface() { return new CBodyComponentPointImpl(this); }
+inline IBodyComponentPoint* IBodyComponentPoint::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBodyComponentPoint* IBodyComponentPoint::FromOriginal(CBodyComponentPoint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBODYCOMPONENTPOINTIMPL_H

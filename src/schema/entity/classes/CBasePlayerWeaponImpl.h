@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePlayerWeapon.h"
 #include "CEconEntityImpl.h"
 
-class CBasePlayerWeaponImpl : public CEconEntityImpl, public IBasePlayerWeapon
+class CBasePlayerWeaponImpl : public CEconEntityImpl, public virtual IBasePlayerWeapon
 {
 
 public:

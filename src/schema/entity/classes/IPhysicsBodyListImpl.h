@@ -61,6 +61,7 @@ public:
 };
 
 inline IIPhysicsBodyList* IPhysicsBodyList::ToInterface() { return new IPhysicsBodyListImpl(this); }
+inline IIPhysicsBodyList* IIPhysicsBodyList::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIPhysicsBodyList* IIPhysicsBodyList::FromOriginal(IPhysicsBodyList* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IPHYSICSBODYLISTIMPL_H

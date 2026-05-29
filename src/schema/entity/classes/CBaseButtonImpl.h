@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseButton.h"
 #include "CBaseToggleImpl.h"
 
-class CBaseButtonImpl : public CBaseToggleImpl, public IBaseButton
+class CBaseButtonImpl : public CBaseToggleImpl, public virtual IBaseButton
 {
 
 public:
@@ -100,15 +100,26 @@ public:
     void ForceNpcExcludeUpdated() override { Real()->m_bForceNpcExclude.NetworkStateChanged(); }
     CUtlSymbolLarge& GlowEntity() override { return Real()->m_sGlowEntity(); }
     void GlowEntityUpdated() override { Real()->m_sGlowEntity.NetworkStateChanged(); }
-    CHandle<CBaseModelEntity>& GlowEntity() override { return Real()->m_glowEntity(); }
-    void GlowEntityUpdated() override { Real()->m_glowEntity.NetworkStateChanged(); }
     bool& Usable() override { return Real()->m_usable(); }
     void UsableUpdated() override { Real()->m_usable.NetworkStateChanged(); }
     CUtlSymbolLarge& DisplayText() override { return Real()->m_szDisplayText(); }
     void DisplayTextUpdated() override { Real()->m_szDisplayText.NetworkStateChanged(); }
 };
 
-inline IBaseButton* CBaseButton::ToInterface() { return new CBaseButtonImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseButton* CBaseButton::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseButton*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseButtonImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseButton*>(impl));
+    return impl;
+}
+inline IBaseButton* IBaseButton::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseButton*>(p)->ToInterface() : nullptr; }
 inline IBaseButton* IBaseButton::FromOriginal(CBaseButton* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEBUTTONIMPL_H

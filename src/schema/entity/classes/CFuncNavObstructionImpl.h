@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncNavObstruction.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncNavObstructionImpl : public CBaseModelEntityImpl, public IFuncNavObstruction
+class CFuncNavObstructionImpl : public CBaseModelEntityImpl, public virtual IFuncNavObstruction
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void UseAsyncObstacleUpdateUpdated() override { Real()->m_bUseAsyncObstacleUpdate.NetworkStateChanged(); }
 };
 
-inline IFuncNavObstruction* CFuncNavObstruction::ToInterface() { return new CFuncNavObstructionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncNavObstruction* CFuncNavObstruction::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncNavObstruction*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncNavObstructionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncNavObstruction*>(impl));
+    return impl;
+}
+inline IFuncNavObstruction* IFuncNavObstruction::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncNavObstruction*>(p)->ToInterface() : nullptr; }
 inline IFuncNavObstruction* IFuncNavObstruction::FromOriginal(CFuncNavObstruction* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCNAVOBSTRUCTIONIMPL_H

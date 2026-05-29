@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicAutosave.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicAutosaveImpl : public CLogicalEntityImpl, public ILogicAutosave
+class CLogicAutosaveImpl : public CLogicalEntityImpl, public virtual ILogicAutosave
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void MinHitPointsToCommitUpdated() override { Real()->m_minHitPointsToCommit.NetworkStateChanged(); }
 };
 
-inline ILogicAutosave* CLogicAutosave::ToInterface() { return new CLogicAutosaveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicAutosave* CLogicAutosave::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicAutosave*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicAutosaveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicAutosave*>(impl));
+    return impl;
+}
+inline ILogicAutosave* ILogicAutosave::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicAutosave*>(p)->ToInterface() : nullptr; }
 inline ILogicAutosave* ILogicAutosave::FromOriginal(CLogicAutosave* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICAUTOSAVEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerLerpObject.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerLerpObjectImpl : public CBaseTriggerImpl, public ITriggerLerpObject
+class CTriggerLerpObjectImpl : public CBaseTriggerImpl, public virtual ITriggerLerpObject
 {
 
 public:
@@ -58,8 +58,6 @@ public:
     CTriggerLerpObject* GetOriginal() const override { return Real(); }
     CUtlSymbolLarge& LerpTarget() override { return Real()->m_iszLerpTarget(); }
     void LerpTargetUpdated() override { Real()->m_iszLerpTarget.NetworkStateChanged(); }
-    CHandle<CBaseEntity>& LerpTarget() override { return Real()->m_hLerpTarget(); }
-    void LerpTargetUpdated() override { Real()->m_hLerpTarget.NetworkStateChanged(); }
     CUtlSymbolLarge& LerpTargetAttachment() override { return Real()->m_iszLerpTargetAttachment(); }
     void LerpTargetAttachmentUpdated() override { Real()->m_iszLerpTargetAttachment.NetworkStateChanged(); }
     float& LerpDuration() override { return Real()->m_flLerpDuration(); }
@@ -88,7 +86,20 @@ public:
     void OnDetachedUpdated() override { Real()->m_OnDetached.NetworkStateChanged(); }
 };
 
-inline ITriggerLerpObject* CTriggerLerpObject::ToInterface() { return new CTriggerLerpObjectImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerLerpObject* CTriggerLerpObject::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerLerpObject*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerLerpObjectImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerLerpObject*>(impl));
+    return impl;
+}
+inline ITriggerLerpObject* ITriggerLerpObject::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerLerpObject*>(p)->ToInterface() : nullptr; }
 inline ITriggerLerpObject* ITriggerLerpObject::FromOriginal(CTriggerLerpObject* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERLERPOBJECTIMPL_H

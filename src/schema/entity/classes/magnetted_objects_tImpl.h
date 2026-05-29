@@ -63,6 +63,7 @@ public:
 };
 
 inline Imagnetted_objects_t* magnetted_objects_t::ToInterface() { return new magnetted_objects_tImpl(this); }
+inline Imagnetted_objects_t* Imagnetted_objects_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Imagnetted_objects_t* Imagnetted_objects_t::FromOriginal(magnetted_objects_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_MAGNETTED_OBJECTS_TIMPL_H

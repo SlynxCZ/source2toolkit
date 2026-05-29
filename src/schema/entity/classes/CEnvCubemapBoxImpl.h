@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvCubemapBox.h"
 #include "CEnvCubemapImpl.h"
 
-class CEnvCubemapBoxImpl : public CEnvCubemapImpl, public IEnvCubemapBox
+class CEnvCubemapBoxImpl : public CEnvCubemapImpl, public virtual IEnvCubemapBox
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEnvCubemapBox* GetOriginal() const override { return Real(); }
 };
 
-inline IEnvCubemapBox* CEnvCubemapBox::ToInterface() { return new CEnvCubemapBoxImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvCubemapBox* CEnvCubemapBox::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvCubemapBox*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvCubemapBoxImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvCubemapBox*>(impl));
+    return impl;
+}
+inline IEnvCubemapBox* IEnvCubemapBox::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvCubemapBox*>(p)->ToInterface() : nullptr; }
 inline IEnvCubemapBox* IEnvCubemapBox::FromOriginal(CEnvCubemapBox* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVCUBEMAPBOXIMPL_H

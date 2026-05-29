@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoChoreoAnchor.h"
 #include "CPointEntityImpl.h"
 
-class CInfoChoreoAnchorImpl : public CPointEntityImpl, public IInfoChoreoAnchor
+class CInfoChoreoAnchorImpl : public CPointEntityImpl, public virtual IInfoChoreoAnchor
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void TargetWarpsUpdated() override { Real()->m_vecTargetWarps.NetworkStateChanged(); }
 };
 
-inline IInfoChoreoAnchor* CInfoChoreoAnchor::ToInterface() { return new CInfoChoreoAnchorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoChoreoAnchor* CInfoChoreoAnchor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoChoreoAnchor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoChoreoAnchorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoChoreoAnchor*>(impl));
+    return impl;
+}
+inline IInfoChoreoAnchor* IInfoChoreoAnchor::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoChoreoAnchor*>(p)->ToInterface() : nullptr; }
 inline IInfoChoreoAnchor* IInfoChoreoAnchor::FromOriginal(CInfoChoreoAnchor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOCHOREOANCHORIMPL_H

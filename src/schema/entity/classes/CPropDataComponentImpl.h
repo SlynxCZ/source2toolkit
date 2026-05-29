@@ -81,6 +81,7 @@ public:
 };
 
 inline IPropDataComponent* CPropDataComponent::ToInterface() { return new CPropDataComponentImpl(this); }
+inline IPropDataComponent* IPropDataComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPropDataComponent* IPropDataComponent::FromOriginal(CPropDataComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPROPDATACOMPONENTIMPL_H

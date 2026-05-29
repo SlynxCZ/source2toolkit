@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGenericConstraint.h"
 #include "CPhysConstraintImpl.h"
 
-class CGenericConstraintImpl : public CPhysConstraintImpl, public IGenericConstraint
+class CGenericConstraintImpl : public CPhysConstraintImpl, public virtual IGenericConstraint
 {
 
 public:
@@ -156,7 +156,20 @@ public:
     void NotifyForceReachedZUpdated() override { Real()->m_NotifyForceReachedZ.NetworkStateChanged(); }
 };
 
-inline IGenericConstraint* CGenericConstraint::ToInterface() { return new CGenericConstraintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGenericConstraint* CGenericConstraint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGenericConstraint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGenericConstraintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGenericConstraint*>(impl));
+    return impl;
+}
+inline IGenericConstraint* IGenericConstraint::FromRaw(CEntityInstance* p) { return p ? static_cast<CGenericConstraint*>(p)->ToInterface() : nullptr; }
 inline IGenericConstraint* IGenericConstraint::FromOriginal(CGenericConstraint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGENERICCONSTRAINTIMPL_H

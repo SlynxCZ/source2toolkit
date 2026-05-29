@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CColorCorrection.h"
 #include "CBaseEntityImpl.h"
 
-class CColorCorrectionImpl : public CBaseEntityImpl, public IColorCorrection
+class CColorCorrectionImpl : public CBaseEntityImpl, public virtual IColorCorrection
 {
 
 public:
@@ -91,7 +91,20 @@ public:
     void LookupFilenameUpdated() override { Real()->m_lookupFilename.NetworkStateChanged(); }
 };
 
-inline IColorCorrection* CColorCorrection::ToInterface() { return new CColorCorrectionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IColorCorrection* CColorCorrection::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IColorCorrection*>(tagIt->second.ptr_for_return);
+    auto* impl = new CColorCorrectionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IColorCorrection*>(impl));
+    return impl;
+}
+inline IColorCorrection* IColorCorrection::FromRaw(CEntityInstance* p) { return p ? static_cast<CColorCorrection*>(p)->ToInterface() : nullptr; }
 inline IColorCorrection* IColorCorrection::FromOriginal(CColorCorrection* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCOLORCORRECTIONIMPL_H

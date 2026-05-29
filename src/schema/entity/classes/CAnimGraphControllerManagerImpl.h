@@ -65,6 +65,7 @@ public:
 };
 
 inline IAnimGraphControllerManager* CAnimGraphControllerManager::ToInterface() { return new CAnimGraphControllerManagerImpl(this); }
+inline IAnimGraphControllerManager* IAnimGraphControllerManager::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAnimGraphControllerManager* IAnimGraphControllerManager::FromOriginal(CAnimGraphControllerManager* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CANIMGRAPHCONTROLLERMANAGERIMPL_H

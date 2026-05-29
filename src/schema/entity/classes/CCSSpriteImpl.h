@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSSprite.h"
 #include "CSpriteImpl.h"
 
-class CCSSpriteImpl : public CSpriteImpl, public ICSSprite
+class CCSSpriteImpl : public CSpriteImpl, public virtual ICSSprite
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSSprite* GetOriginal() const override { return Real(); }
 };
 
-inline ICSSprite* CCSSprite::ToInterface() { return new CCSSpriteImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSSprite* CCSSprite::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSSprite*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSSpriteImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSSprite*>(impl));
+    return impl;
+}
+inline ICSSprite* ICSSprite::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSSprite*>(p)->ToInterface() : nullptr; }
 inline ICSSprite* ICSSprite::FromOriginal(CCSSprite* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSSPRITEIMPL_H

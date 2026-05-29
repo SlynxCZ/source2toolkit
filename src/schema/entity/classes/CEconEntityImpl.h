@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEconEntity.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CEconEntityImpl : public CBaseAnimGraphImpl, public IEconEntity
+class CEconEntityImpl : public CBaseAnimGraphImpl, public virtual IEconEntity
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void OldOwnerClassUpdated() override { Real()->m_iOldOwnerClass.NetworkStateChanged(); }
 };
 
-inline IEconEntity* CEconEntity::ToInterface() { return new CEconEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEconEntity* CEconEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEconEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEconEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEconEntity*>(impl));
+    return impl;
+}
+inline IEconEntity* IEconEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CEconEntity*>(p)->ToInterface() : nullptr; }
 inline IEconEntity* IEconEntity::FromOriginal(CEconEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CECONENTITYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEntityFlame.h"
 #include "CBaseEntityImpl.h"
 
-class CEntityFlameImpl : public CBaseEntityImpl, public IEntityFlame
+class CEntityFlameImpl : public CBaseEntityImpl, public virtual IEntityFlame
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void CustomDamageTypeUpdated() override { Real()->m_iCustomDamageType.NetworkStateChanged(); }
 };
 
-inline IEntityFlame* CEntityFlame::ToInterface() { return new CEntityFlameImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEntityFlame* CEntityFlame::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEntityFlame*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEntityFlameImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEntityFlame*>(impl));
+    return impl;
+}
+inline IEntityFlame* IEntityFlame::FromRaw(CEntityInstance* p) { return p ? static_cast<CEntityFlame*>(p)->ToInterface() : nullptr; }
 inline IEntityFlame* IEntityFlame::FromOriginal(CEntityFlame* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENTITYFLAMEIMPL_H

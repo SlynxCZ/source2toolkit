@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvSoundscapeTriggerable.h"
 #include "CEnvSoundscapeImpl.h"
 
-class CEnvSoundscapeTriggerableImpl : public CEnvSoundscapeImpl, public IEnvSoundscapeTriggerable
+class CEnvSoundscapeTriggerableImpl : public CEnvSoundscapeImpl, public virtual IEnvSoundscapeTriggerable
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEnvSoundscapeTriggerable* GetOriginal() const override { return Real(); }
 };
 
-inline IEnvSoundscapeTriggerable* CEnvSoundscapeTriggerable::ToInterface() { return new CEnvSoundscapeTriggerableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvSoundscapeTriggerable* CEnvSoundscapeTriggerable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvSoundscapeTriggerable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvSoundscapeTriggerableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvSoundscapeTriggerable*>(impl));
+    return impl;
+}
+inline IEnvSoundscapeTriggerable* IEnvSoundscapeTriggerable::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvSoundscapeTriggerable*>(p)->ToInterface() : nullptr; }
 inline IEnvSoundscapeTriggerable* IEnvSoundscapeTriggerable::FromOriginal(CEnvSoundscapeTriggerable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLEIMPL_H

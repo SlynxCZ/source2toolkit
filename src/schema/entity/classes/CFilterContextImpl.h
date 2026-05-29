@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterContext.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterContextImpl : public CBaseFilterImpl, public IFilterContext
+class CFilterContextImpl : public CBaseFilterImpl, public virtual IFilterContext
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void FilterContextUpdated() override { Real()->m_iFilterContext.NetworkStateChanged(); }
 };
 
-inline IFilterContext* CFilterContext::ToInterface() { return new CFilterContextImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterContext* CFilterContext::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterContext*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterContextImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterContext*>(impl));
+    return impl;
+}
+inline IFilterContext* IFilterContext::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterContext*>(p)->ToInterface() : nullptr; }
 inline IFilterContext* IFilterContext::FromOriginal(CFilterContext* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERCONTEXTIMPL_H

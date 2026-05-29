@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvCubemap.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvCubemapImpl : public CBaseEntityImpl, public IEnvCubemap
+class CEnvCubemapImpl : public CBaseEntityImpl, public virtual IEnvCubemap
 {
 
 public:
@@ -94,7 +94,20 @@ public:
     void Entity_bEnabledUpdated() override { Real()->m_Entity_bEnabled.NetworkStateChanged(); }
 };
 
-inline IEnvCubemap* CEnvCubemap::ToInterface() { return new CEnvCubemapImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvCubemap* CEnvCubemap::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvCubemap*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvCubemapImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvCubemap*>(impl));
+    return impl;
+}
+inline IEnvCubemap* IEnvCubemap::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvCubemap*>(p)->ToInterface() : nullptr; }
 inline IEnvCubemap* IEnvCubemap::FromOriginal(CEnvCubemap* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVCUBEMAPIMPL_H

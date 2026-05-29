@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_AutoaimServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_AutoaimServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_AutoaimServices
+class CPlayer_AutoaimServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_AutoaimServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IPlayer_AutoaimServices* CPlayer_AutoaimServices::ToInterface() { return new CPlayer_AutoaimServicesImpl(this); }
+inline IPlayer_AutoaimServices* IPlayer_AutoaimServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_AutoaimServices* IPlayer_AutoaimServices::FromOriginal(CPlayer_AutoaimServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_AUTOAIMSERVICESIMPL_H

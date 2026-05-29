@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerRemove.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerRemoveImpl : public CBaseTriggerImpl, public ITriggerRemove
+class CTriggerRemoveImpl : public CBaseTriggerImpl, public virtual ITriggerRemove
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void OnRemoveUpdated() override { Real()->m_OnRemove.NetworkStateChanged(); }
 };
 
-inline ITriggerRemove* CTriggerRemove::ToInterface() { return new CTriggerRemoveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerRemove* CTriggerRemove::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerRemove*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerRemoveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerRemove*>(impl));
+    return impl;
+}
+inline ITriggerRemove* ITriggerRemove::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerRemove*>(p)->ToInterface() : nullptr; }
 inline ITriggerRemove* ITriggerRemove::FromOriginal(CTriggerRemove* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERREMOVEIMPL_H

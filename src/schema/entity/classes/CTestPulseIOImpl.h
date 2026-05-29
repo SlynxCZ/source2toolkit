@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTestPulseIO.h"
 #include "CLogicalEntityImpl.h"
 
-class CTestPulseIOImpl : public CLogicalEntityImpl, public ITestPulseIO
+class CTestPulseIOImpl : public CLogicalEntityImpl, public virtual ITestPulseIO
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void OnInternalTestVoidUpdated() override { Real()->m_OnInternalTestVoid.NetworkStateChanged(); }
 };
 
-inline ITestPulseIO* CTestPulseIO::ToInterface() { return new CTestPulseIOImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITestPulseIO* CTestPulseIO::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITestPulseIO*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTestPulseIOImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITestPulseIO*>(impl));
+    return impl;
+}
+inline ITestPulseIO* ITestPulseIO::FromRaw(CEntityInstance* p) { return p ? static_cast<CTestPulseIO*>(p)->ToInterface() : nullptr; }
 inline ITestPulseIO* ITestPulseIO::FromOriginal(CTestPulseIO* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTPULSEIOIMPL_H

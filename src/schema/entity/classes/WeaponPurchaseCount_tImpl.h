@@ -65,6 +65,7 @@ public:
 };
 
 inline IWeaponPurchaseCount_t* WeaponPurchaseCount_t::ToInterface() { return new WeaponPurchaseCount_tImpl(this); }
+inline IWeaponPurchaseCount_t* IWeaponPurchaseCount_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IWeaponPurchaseCount_t* IWeaponPurchaseCount_t::FromOriginal(WeaponPurchaseCount_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_WEAPONPURCHASECOUNT_TIMPL_H

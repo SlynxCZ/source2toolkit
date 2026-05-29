@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CIncendiaryGrenade.h"
 #include "CMolotovGrenadeImpl.h"
 
-class CIncendiaryGrenadeImpl : public CMolotovGrenadeImpl, public IIncendiaryGrenade
+class CIncendiaryGrenadeImpl : public CMolotovGrenadeImpl, public virtual IIncendiaryGrenade
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CIncendiaryGrenade* GetOriginal() const override { return Real(); }
 };
 
-inline IIncendiaryGrenade* CIncendiaryGrenade::ToInterface() { return new CIncendiaryGrenadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IIncendiaryGrenade* CIncendiaryGrenade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IIncendiaryGrenade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CIncendiaryGrenadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IIncendiaryGrenade*>(impl));
+    return impl;
+}
+inline IIncendiaryGrenade* IIncendiaryGrenade::FromRaw(CEntityInstance* p) { return p ? static_cast<CIncendiaryGrenade*>(p)->ToInterface() : nullptr; }
 inline IIncendiaryGrenade* IIncendiaryGrenade::FromOriginal(CIncendiaryGrenade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINCENDIARYGRENADEIMPL_H

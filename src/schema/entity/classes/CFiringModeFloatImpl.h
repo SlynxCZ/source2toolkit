@@ -62,6 +62,7 @@ public:
 };
 
 inline IFiringModeFloat* CFiringModeFloat::ToInterface() { return new CFiringModeFloatImpl(this); }
+inline IFiringModeFloat* IFiringModeFloat::FromRaw(CEntityInstance*) { return nullptr; }
 inline IFiringModeFloat* IFiringModeFloat::FromOriginal(CFiringModeFloat* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFIRINGMODEFLOATIMPL_H

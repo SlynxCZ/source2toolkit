@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDynamicPropAlias_prop_dynamic_override.h"
 #include "CDynamicPropImpl.h"
 
-class CDynamicPropAlias_prop_dynamic_overrideImpl : public CDynamicPropImpl, public IDynamicPropAlias_prop_dynamic_override
+class CDynamicPropAlias_prop_dynamic_overrideImpl : public CDynamicPropImpl, public virtual IDynamicPropAlias_prop_dynamic_override
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CDynamicPropAlias_prop_dynamic_override* GetOriginal() const override { return Real(); }
 };
 
-inline IDynamicPropAlias_prop_dynamic_override* CDynamicPropAlias_prop_dynamic_override::ToInterface() { return new CDynamicPropAlias_prop_dynamic_overrideImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDynamicPropAlias_prop_dynamic_override* CDynamicPropAlias_prop_dynamic_override::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDynamicPropAlias_prop_dynamic_override*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDynamicPropAlias_prop_dynamic_overrideImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDynamicPropAlias_prop_dynamic_override*>(impl));
+    return impl;
+}
+inline IDynamicPropAlias_prop_dynamic_override* IDynamicPropAlias_prop_dynamic_override::FromRaw(CEntityInstance* p) { return p ? static_cast<CDynamicPropAlias_prop_dynamic_override*>(p)->ToInterface() : nullptr; }
 inline IDynamicPropAlias_prop_dynamic_override* IDynamicPropAlias_prop_dynamic_override::FromOriginal(CDynamicPropAlias_prop_dynamic_override* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDYNAMICPROPALIAS_PROP_DYNAMIC_OVERRIDEIMPL_H

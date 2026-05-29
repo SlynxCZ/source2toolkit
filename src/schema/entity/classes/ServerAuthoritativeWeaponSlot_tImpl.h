@@ -67,6 +67,7 @@ public:
 };
 
 inline IServerAuthoritativeWeaponSlot_t* ServerAuthoritativeWeaponSlot_t::ToInterface() { return new ServerAuthoritativeWeaponSlot_tImpl(this); }
+inline IServerAuthoritativeWeaponSlot_t* IServerAuthoritativeWeaponSlot_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IServerAuthoritativeWeaponSlot_t* IServerAuthoritativeWeaponSlot_t::FromOriginal(ServerAuthoritativeWeaponSlot_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SERVERAUTHORITATIVEWEAPONSLOT_TIMPL_H

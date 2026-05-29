@@ -83,6 +83,7 @@ public:
 };
 
 inline IVPhysicsCollisionAttribute_t* VPhysicsCollisionAttribute_t::ToInterface() { return new VPhysicsCollisionAttribute_tImpl(this); }
+inline IVPhysicsCollisionAttribute_t* IVPhysicsCollisionAttribute_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IVPhysicsCollisionAttribute_t* IVPhysicsCollisionAttribute_t::FromOriginal(VPhysicsCollisionAttribute_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_VPHYSICSCOLLISIONATTRIBUTE_TIMPL_H

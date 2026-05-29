@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseAnimGraphController.h"
 #include "CSkeletonAnimationControllerImpl.h"
 
-class CBaseAnimGraphControllerImpl : public CSkeletonAnimationControllerImpl, public IBaseAnimGraphController
+class CBaseAnimGraphControllerImpl : public CSkeletonAnimationControllerImpl, public virtual IBaseAnimGraphController
 {
 
 public:
@@ -121,6 +121,7 @@ public:
 };
 
 inline IBaseAnimGraphController* CBaseAnimGraphController::ToInterface() { return new CBaseAnimGraphControllerImpl(this); }
+inline IBaseAnimGraphController* IBaseAnimGraphController::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBaseAnimGraphController* IBaseAnimGraphController::FromOriginal(CBaseAnimGraphController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEANIMGRAPHCONTROLLERIMPL_H

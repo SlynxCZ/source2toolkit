@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvEntityIgniter.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvEntityIgniterImpl : public CBaseEntityImpl, public IEnvEntityIgniter
+class CEnvEntityIgniterImpl : public CBaseEntityImpl, public virtual IEnvEntityIgniter
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void LifetimeUpdated() override { Real()->m_flLifetime.NetworkStateChanged(); }
 };
 
-inline IEnvEntityIgniter* CEnvEntityIgniter::ToInterface() { return new CEnvEntityIgniterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvEntityIgniter* CEnvEntityIgniter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvEntityIgniter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvEntityIgniterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvEntityIgniter*>(impl));
+    return impl;
+}
+inline IEnvEntityIgniter* IEnvEntityIgniter::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvEntityIgniter*>(p)->ToInterface() : nullptr; }
 inline IEnvEntityIgniter* IEnvEntityIgniter::FromOriginal(CEnvEntityIgniter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVENTITYIGNITERIMPL_H

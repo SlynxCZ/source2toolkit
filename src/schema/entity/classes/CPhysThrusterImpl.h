@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysThruster.h"
 #include "CPhysForceImpl.h"
 
-class CPhysThrusterImpl : public CPhysForceImpl, public IPhysThruster
+class CPhysThrusterImpl : public CPhysForceImpl, public virtual IPhysThruster
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void LocalOriginUpdated() override { Real()->m_localOrigin.NetworkStateChanged(); }
 };
 
-inline IPhysThruster* CPhysThruster::ToInterface() { return new CPhysThrusterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysThruster* CPhysThruster::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysThruster*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysThrusterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysThruster*>(impl));
+    return impl;
+}
+inline IPhysThruster* IPhysThruster::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysThruster*>(p)->ToInterface() : nullptr; }
 inline IPhysThruster* IPhysThruster::FromOriginal(CPhysThruster* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSTHRUSTERIMPL_H

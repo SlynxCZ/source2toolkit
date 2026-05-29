@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvViewPunch.h"
 #include "CPointEntityImpl.h"
 
-class CEnvViewPunchImpl : public CPointEntityImpl, public IEnvViewPunch
+class CEnvViewPunchImpl : public CPointEntityImpl, public virtual IEnvViewPunch
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void ViewPunchUpdated() override { Real()->m_angViewPunch.NetworkStateChanged(); }
 };
 
-inline IEnvViewPunch* CEnvViewPunch::ToInterface() { return new CEnvViewPunchImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvViewPunch* CEnvViewPunch::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvViewPunch*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvViewPunchImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvViewPunch*>(impl));
+    return impl;
+}
+inline IEnvViewPunch* IEnvViewPunch::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvViewPunch*>(p)->ToInterface() : nullptr; }
 inline IEnvViewPunch* IEnvViewPunch::FromOriginal(CEnvViewPunch* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVVIEWPUNCHIMPL_H

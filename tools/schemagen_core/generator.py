@@ -858,10 +858,14 @@ def to_pascal_case(field_name: str) -> str:
     m = _HUNGARIAN_RE.match(name)
     if m:
         name = name[len(m.group(1)):]
-    # Strip Valve's C-prefix for class-instance members (m_CBodyComponent -> BodyComponent).
-    # Avoids method name clashing with the class type of the same name.
-    if len(name) > 1 and name[0] == 'C' and name[1].isupper():
-        name = name[1:]
+        # A Hungarian prefix was already stripped (e.g. m_bCTCantBuy -> CTCantBuy).
+        # The remaining C is part of the field name itself, NOT a class-instance prefix —
+        # do NOT strip it further.
+    else:
+        # No Hungarian prefix: strip Valve's C-prefix for class-instance members
+        # (m_CBodyComponent -> BodyComponent) to avoid method name clashing with the type.
+        if len(name) > 1 and name[0] == 'C' and name[1].isupper():
+            name = name[1:]
     if name and name[0].islower():
         name = name[0].upper() + name[1:]
     return name
@@ -1260,6 +1264,13 @@ _CENTITYINSTANCE_OVERRIDES: list[str] = [
     "    void unk601() override { Real()->unk601(); }",
     "    void unk602() override { Real()->unk602(); }",
     "    SchemaMetaInfoHandle_t<CSchemaClassInfo> Schema_DynamicBinding() override { return Real()->Schema_DynamicBinding(); }",
+    "    CEntityHandle GetRefEHandle() const override { return Real()->GetRefEHandle(); }",
+    "    const char* GetClassname() const override { return Real()->GetClassname(); }",
+    "    CEntityIndex GetEntityIndex() const override { return Real()->GetEntityIndex(); }",
+    "    CUtlSymbolLarge& PrivateVScripts() override { return Real()->m_iszPrivateVScripts; }",
+    "    CEntityIdentity*& Entity() override { return Real()->m_pEntity; }",
+    "    CEntityKeyValues*& KeyValues() override { return Real()->m_pKeyValues; }",
+    "    CScriptComponent*& ScriptComponent() override { return Real()->m_CScriptComponent; }",
 ]
 
 
@@ -1307,7 +1318,7 @@ def write_impl_class(
 
     if parent_impl:
         lines.append(
-            f"class {impl_name} : public {parent_impl}, public {iface_name}"
+            f"class {impl_name} : public {parent_impl}, public virtual {iface_name}"
         )
     else:
         lines.append(f"class {impl_name} : public virtual {iface_name}")
@@ -1342,6 +1353,7 @@ def write_impl_class(
 
     # Schema field overrides
     _skips = FIELD_SKIPS.get(class_name, set())
+    _seen_methods: set[str] = set()
     for f in schema_class.fields:
         if f.name in _skips:
             continue
@@ -1353,6 +1365,10 @@ def write_impl_class(
             continue
 
         method_name = to_pascal_case(f.name)
+        if method_name in _seen_methods:
+            continue  # two fields produce the same accessor name (e.g. m_totalRoundsPlayed + m_iTotalRoundsPlayed) — keep first
+        _seen_methods.add(method_name)
+
         is_ptr = (
             f.type.category == SchemaTypeCategory.FixedArray
             or f.type.name == "CUtlStringToken"
@@ -1410,11 +1426,34 @@ def write_impl_class(
     # inline here (after the impl class so CXxxImpl is fully declared).
     # MANUAL_METHODS classes define these in their .cpp files instead.
     if class_name not in MANUAL_METHODS:
-        lines += [
-            f"inline {iface_name}* {class_name}::ToInterface() {{ return new {impl_name}(this); }}",
-            f"inline {iface_name}* {iface_name}::FromOriginal({class_name}* p) {{ return p ? p->ToInterface() : nullptr; }}",
-            "",
-        ]
+        is_entity = inherits_from_base_entity(class_name, all_classes)
+        if is_entity:
+            lines += [
+                '#include "core/virtualhooks.h"',
+                "",
+                f"inline {iface_name}* {class_name}::ToInterface()",
+                "{",
+                "    static const char s_tag = 0;",
+                "    auto& byTag = virtualhooks::entityInterfaces[this];",
+                "    auto tagIt = byTag.find(&s_tag);",
+                "    if (tagIt != byTag.end())",
+                f"        return static_cast<{iface_name}*>(tagIt->second.ptr_for_return);",
+                f"    auto* impl = new {impl_name}(this);",
+                f"    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<{iface_name}*>(impl));",
+                "    return impl;",
+                "}",
+                f"inline {iface_name}* {iface_name}::FromRaw(CEntityInstance* p) {{ return p ? static_cast<{class_name}*>(p)->ToInterface() : nullptr; }}",
+                f"inline {iface_name}* {iface_name}::FromOriginal({class_name}* p) {{ return p ? p->ToInterface() : nullptr; }}",
+                "",
+            ]
+        else:
+            # Non-entity component classes: simple allocation, no cache.
+            lines += [
+                f"inline {iface_name}* {class_name}::ToInterface() {{ return new {impl_name}(this); }}",
+                f"inline {iface_name}* {iface_name}::FromRaw(CEntityInstance*) {{ return nullptr; }}",
+                f"inline {iface_name}* {iface_name}::FromOriginal({class_name}* p) {{ return p ? p->ToInterface() : nullptr; }}",
+                "",
+            ]
 
     lines += [
         f"#endif // {guard}",

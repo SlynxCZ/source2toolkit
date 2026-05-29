@@ -64,6 +64,7 @@ public:
 };
 
 inline IEntitySpottedState_t* EntitySpottedState_t::ToInterface() { return new EntitySpottedState_tImpl(this); }
+inline IEntitySpottedState_t* IEntitySpottedState_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEntitySpottedState_t* IEntitySpottedState_t::FromOriginal(EntitySpottedState_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_ENTITYSPOTTEDSTATE_TIMPL_H

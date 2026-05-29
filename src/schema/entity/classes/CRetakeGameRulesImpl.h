@@ -73,6 +73,7 @@ public:
 };
 
 inline IRetakeGameRules* CRetakeGameRules::ToInterface() { return new CRetakeGameRulesImpl(this); }
+inline IRetakeGameRules* IRetakeGameRules::FromRaw(CEntityInstance*) { return nullptr; }
 inline IRetakeGameRules* IRetakeGameRules::FromOriginal(CRetakeGameRules* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRETAKEGAMERULESIMPL_H

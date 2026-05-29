@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointBroadcastClientCommand.h"
 #include "CPointEntityImpl.h"
 
-class CPointBroadcastClientCommandImpl : public CPointEntityImpl, public IPointBroadcastClientCommand
+class CPointBroadcastClientCommandImpl : public CPointEntityImpl, public virtual IPointBroadcastClientCommand
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPointBroadcastClientCommand* GetOriginal() const override { return Real(); }
 };
 
-inline IPointBroadcastClientCommand* CPointBroadcastClientCommand::ToInterface() { return new CPointBroadcastClientCommandImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointBroadcastClientCommand* CPointBroadcastClientCommand::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointBroadcastClientCommand*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointBroadcastClientCommandImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointBroadcastClientCommand*>(impl));
+    return impl;
+}
+inline IPointBroadcastClientCommand* IPointBroadcastClientCommand::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointBroadcastClientCommand*>(p)->ToInterface() : nullptr; }
 inline IPointBroadcastClientCommand* IPointBroadcastClientCommand::FromOriginal(CPointBroadcastClientCommand* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTBROADCASTCLIENTCOMMANDIMPL_H

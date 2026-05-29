@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysWheelConstraint.h"
 #include "CPhysConstraintImpl.h"
 
-class CPhysWheelConstraintImpl : public CPhysConstraintImpl, public IPhysWheelConstraint
+class CPhysWheelConstraintImpl : public CPhysConstraintImpl, public virtual IPhysWheelConstraint
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void SteeringMimicsEntityUpdated() override { Real()->m_hSteeringMimicsEntity.NetworkStateChanged(); }
 };
 
-inline IPhysWheelConstraint* CPhysWheelConstraint::ToInterface() { return new CPhysWheelConstraintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysWheelConstraint* CPhysWheelConstraint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysWheelConstraint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysWheelConstraintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysWheelConstraint*>(impl));
+    return impl;
+}
+inline IPhysWheelConstraint* IPhysWheelConstraint::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysWheelConstraint*>(p)->ToInterface() : nullptr; }
 inline IPhysWheelConstraint* IPhysWheelConstraint::FromOriginal(CPhysWheelConstraint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSWHEELCONSTRAINTIMPL_H

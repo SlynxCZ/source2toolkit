@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRevertSaved.h"
 #include "CModelPointEntityImpl.h"
 
-class CRevertSavedImpl : public CModelPointEntityImpl, public IRevertSaved
+class CRevertSavedImpl : public CModelPointEntityImpl, public virtual IRevertSaved
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void HoldTimeUpdated() override { Real()->m_HoldTime.NetworkStateChanged(); }
 };
 
-inline IRevertSaved* CRevertSaved::ToInterface() { return new CRevertSavedImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRevertSaved* CRevertSaved::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRevertSaved*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRevertSavedImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRevertSaved*>(impl));
+    return impl;
+}
+inline IRevertSaved* IRevertSaved::FromRaw(CEntityInstance* p) { return p ? static_cast<CRevertSaved*>(p)->ToInterface() : nullptr; }
 inline IRevertSaved* IRevertSaved::FromOriginal(CRevertSaved* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CREVERTSAVEDIMPL_H

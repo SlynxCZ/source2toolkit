@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRagdollProp.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CRagdollPropImpl : public CBaseAnimGraphImpl, public IRagdollProp
+class CRagdollPropImpl : public CBaseAnimGraphImpl, public virtual IRagdollProp
 {
 
 public:
@@ -120,7 +120,20 @@ public:
     void NavObstaclesUpdated() override { Real()->m_vecNavObstacles.NetworkStateChanged(); }
 };
 
-inline IRagdollProp* CRagdollProp::ToInterface() { return new CRagdollPropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRagdollProp* CRagdollProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRagdollProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRagdollPropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRagdollProp*>(impl));
+    return impl;
+}
+inline IRagdollProp* IRagdollProp::FromRaw(CEntityInstance* p) { return p ? static_cast<CRagdollProp*>(p)->ToInterface() : nullptr; }
 inline IRagdollProp* IRagdollProp::FromOriginal(CRagdollProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRAGDOLLPROPIMPL_H

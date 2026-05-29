@@ -77,6 +77,7 @@ public:
 };
 
 inline IFuncMoverMovementSummary_t* FuncMoverMovementSummary_t::ToInterface() { return new FuncMoverMovementSummary_tImpl(this); }
+inline IFuncMoverMovementSummary_t* IFuncMoverMovementSummary_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IFuncMoverMovementSummary_t* IFuncMoverMovementSummary_t::FromOriginal(FuncMoverMovementSummary_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_FUNCMOVERMOVEMENTSUMMARY_TIMPL_H

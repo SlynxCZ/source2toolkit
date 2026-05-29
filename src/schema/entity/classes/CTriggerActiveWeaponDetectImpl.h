@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerActiveWeaponDetect.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerActiveWeaponDetectImpl : public CBaseTriggerImpl, public ITriggerActiveWeaponDetect
+class CTriggerActiveWeaponDetectImpl : public CBaseTriggerImpl, public virtual ITriggerActiveWeaponDetect
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void WeaponClassNameUpdated() override { Real()->m_iszWeaponClassName.NetworkStateChanged(); }
 };
 
-inline ITriggerActiveWeaponDetect* CTriggerActiveWeaponDetect::ToInterface() { return new CTriggerActiveWeaponDetectImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerActiveWeaponDetect* CTriggerActiveWeaponDetect::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerActiveWeaponDetect*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerActiveWeaponDetectImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerActiveWeaponDetect*>(impl));
+    return impl;
+}
+inline ITriggerActiveWeaponDetect* ITriggerActiveWeaponDetect::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerActiveWeaponDetect*>(p)->ToInterface() : nullptr; }
 inline ITriggerActiveWeaponDetect* ITriggerActiveWeaponDetect::FromOriginal(CTriggerActiveWeaponDetect* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERACTIVEWEAPONDETECTIMPL_H

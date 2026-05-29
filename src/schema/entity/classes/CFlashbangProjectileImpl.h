@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFlashbangProjectile.h"
 #include "CBaseCSGrenadeProjectileImpl.h"
 
-class CFlashbangProjectileImpl : public CBaseCSGrenadeProjectileImpl, public IFlashbangProjectile
+class CFlashbangProjectileImpl : public CBaseCSGrenadeProjectileImpl, public virtual IFlashbangProjectile
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void NumTeammatesHitUpdated() override { Real()->m_numTeammatesHit.NetworkStateChanged(); }
 };
 
-inline IFlashbangProjectile* CFlashbangProjectile::ToInterface() { return new CFlashbangProjectileImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFlashbangProjectile* CFlashbangProjectile::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFlashbangProjectile*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFlashbangProjectileImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFlashbangProjectile*>(impl));
+    return impl;
+}
+inline IFlashbangProjectile* IFlashbangProjectile::FromRaw(CEntityInstance* p) { return p ? static_cast<CFlashbangProjectile*>(p)->ToInterface() : nullptr; }
 inline IFlashbangProjectile* IFlashbangProjectile::FromOriginal(CFlashbangProjectile* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFLASHBANGPROJECTILEIMPL_H

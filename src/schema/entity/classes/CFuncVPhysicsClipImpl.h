@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncVPhysicsClip.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncVPhysicsClipImpl : public CBaseModelEntityImpl, public IFuncVPhysicsClip
+class CFuncVPhysicsClipImpl : public CBaseModelEntityImpl, public virtual IFuncVPhysicsClip
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }
 };
 
-inline IFuncVPhysicsClip* CFuncVPhysicsClip::ToInterface() { return new CFuncVPhysicsClipImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncVPhysicsClip* CFuncVPhysicsClip::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncVPhysicsClip*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncVPhysicsClipImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncVPhysicsClip*>(impl));
+    return impl;
+}
+inline IFuncVPhysicsClip* IFuncVPhysicsClip::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncVPhysicsClip*>(p)->ToInterface() : nullptr; }
 inline IFuncVPhysicsClip* IFuncVPhysicsClip::FromOriginal(CFuncVPhysicsClip* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCVPHYSICSCLIPIMPL_H

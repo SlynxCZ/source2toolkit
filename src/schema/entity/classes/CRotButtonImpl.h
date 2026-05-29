@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRotButton.h"
 #include "CBaseButtonImpl.h"
 
-class CRotButtonImpl : public CBaseButtonImpl, public IRotButton
+class CRotButtonImpl : public CBaseButtonImpl, public virtual IRotButton
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CRotButton* GetOriginal() const override { return Real(); }
 };
 
-inline IRotButton* CRotButton::ToInterface() { return new CRotButtonImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRotButton* CRotButton::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRotButton*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRotButtonImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRotButton*>(impl));
+    return impl;
+}
+inline IRotButton* IRotButton::FromRaw(CEntityInstance* p) { return p ? static_cast<CRotButton*>(p)->ToInterface() : nullptr; }
 inline IRotButton* IRotButton::FromOriginal(CRotButton* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CROTBUTTONIMPL_H

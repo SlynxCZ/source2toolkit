@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponCZ75a.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponCZ75aImpl : public CCSWeaponBaseGunImpl, public IWeaponCZ75a
+class CWeaponCZ75aImpl : public CCSWeaponBaseGunImpl, public virtual IWeaponCZ75a
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MagazineRemovedUpdated() override { Real()->m_bMagazineRemoved.NetworkStateChanged(); }
 };
 
-inline IWeaponCZ75a* CWeaponCZ75a::ToInterface() { return new CWeaponCZ75aImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponCZ75a* CWeaponCZ75a::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponCZ75a*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponCZ75aImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponCZ75a*>(impl));
+    return impl;
+}
+inline IWeaponCZ75a* IWeaponCZ75a::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponCZ75a*>(p)->ToInterface() : nullptr; }
 inline IWeaponCZ75a* IWeaponCZ75a::FromOriginal(CWeaponCZ75a* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONCZ75AIMPL_H

@@ -70,6 +70,7 @@ public:
 };
 
 inline Iaudioparams_t* audioparams_t::ToInterface() { return new audioparams_tImpl(this); }
+inline Iaudioparams_t* Iaudioparams_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iaudioparams_t* Iaudioparams_t::FromOriginal(audioparams_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_AUDIOPARAMS_TIMPL_H

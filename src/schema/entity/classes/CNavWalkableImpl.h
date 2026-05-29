@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CNavWalkable.h"
 #include "CPointEntityImpl.h"
 
-class CNavWalkableImpl : public CPointEntityImpl, public INavWalkable
+class CNavWalkableImpl : public CPointEntityImpl, public virtual INavWalkable
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CNavWalkable* GetOriginal() const override { return Real(); }
 };
 
-inline INavWalkable* CNavWalkable::ToInterface() { return new CNavWalkableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline INavWalkable* CNavWalkable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<INavWalkable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CNavWalkableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<INavWalkable*>(impl));
+    return impl;
+}
+inline INavWalkable* INavWalkable::FromRaw(CEntityInstance* p) { return p ? static_cast<CNavWalkable*>(p)->ToInterface() : nullptr; }
 inline INavWalkable* INavWalkable::FromOriginal(CNavWalkable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNAVWALKABLEIMPL_H

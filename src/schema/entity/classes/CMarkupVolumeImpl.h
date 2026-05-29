@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMarkupVolume.h"
 #include "CBaseModelEntityImpl.h"
 
-class CMarkupVolumeImpl : public CBaseModelEntityImpl, public IMarkupVolume
+class CMarkupVolumeImpl : public CBaseModelEntityImpl, public virtual IMarkupVolume
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }
 };
 
-inline IMarkupVolume* CMarkupVolume::ToInterface() { return new CMarkupVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMarkupVolume* CMarkupVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMarkupVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMarkupVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMarkupVolume*>(impl));
+    return impl;
+}
+inline IMarkupVolume* IMarkupVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CMarkupVolume*>(p)->ToInterface() : nullptr; }
 inline IMarkupVolume* IMarkupVolume::FromOriginal(CMarkupVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMARKUPVOLUMEIMPL_H

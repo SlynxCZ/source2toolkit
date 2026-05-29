@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeCModel* InfoForResourceTypeCModel::ToInterface() { return new InfoForResourceTypeCModelImpl(this); }
+inline IInfoForResourceTypeCModel* IInfoForResourceTypeCModel::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeCModel* IInfoForResourceTypeCModel::FromOriginal(InfoForResourceTypeCModel* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECMODELIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CAK47.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CAK47Impl : public CCSWeaponBaseGunImpl, public IAK47
+class CAK47Impl : public CCSWeaponBaseGunImpl, public virtual IAK47
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CAK47* GetOriginal() const override { return Real(); }
 };
 
-inline IAK47* CAK47::ToInterface() { return new CAK47Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IAK47* CAK47::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IAK47*>(tagIt->second.ptr_for_return);
+    auto* impl = new CAK47Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IAK47*>(impl));
+    return impl;
+}
+inline IAK47* IAK47::FromRaw(CEntityInstance* p) { return p ? static_cast<CAK47*>(p)->ToInterface() : nullptr; }
 inline IAK47* IAK47::FromOriginal(CAK47* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CAK47IMPL_H

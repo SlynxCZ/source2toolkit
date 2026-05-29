@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayer_ItemServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CPlayer_ItemServicesImpl : public CPlayerPawnComponentImpl, public IPlayer_ItemServices
+class CPlayer_ItemServicesImpl : public CPlayerPawnComponentImpl, public virtual IPlayer_ItemServices
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline IPlayer_ItemServices* CPlayer_ItemServices::ToInterface() { return new CPlayer_ItemServicesImpl(this); }
+inline IPlayer_ItemServices* IPlayer_ItemServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPlayer_ItemServices* IPlayer_ItemServices::FromOriginal(CPlayer_ItemServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYER_ITEMSERVICESIMPL_H

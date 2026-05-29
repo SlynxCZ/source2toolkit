@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlace.h"
 #include "CServerOnlyModelEntityImpl.h"
 
-class CCSPlaceImpl : public CServerOnlyModelEntityImpl, public ICSPlace
+class CCSPlaceImpl : public CServerOnlyModelEntityImpl, public virtual ICSPlace
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void NameUpdated() override { Real()->m_name.NetworkStateChanged(); }
 };
 
-inline ICSPlace* CCSPlace::ToInterface() { return new CCSPlaceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSPlace* CCSPlace::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPlace*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPlaceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPlace*>(impl));
+    return impl;
+}
+inline ICSPlace* ICSPlace::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSPlace*>(p)->ToInterface() : nullptr; }
 inline ICSPlace* ICSPlace::FromOriginal(CCSPlace* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLACEIMPL_H

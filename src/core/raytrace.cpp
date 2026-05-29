@@ -55,7 +55,7 @@ namespace raytrace
 
     TraceResult RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, IBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
-        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity->GetOriginal()) : CTraceFilterEx();
+        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity->GetOriginal())) : CTraceFilterEx();
 
         filter.m_nInteractsAs = CONTENTS_EMPTY;
         filter.m_nInteractsWith = MASK_ALL;
@@ -88,7 +88,7 @@ namespace raytrace
 
     TraceResult RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, IBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
-        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity->GetOriginal()) : CTraceFilterEx();
+        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity->GetOriginal())) : CTraceFilterEx();
 
         filter.m_nInteractsAs = CONTENTS_EMPTY;
         filter.m_nInteractsWith = MASK_ALL;
@@ -113,7 +113,7 @@ namespace raytrace
 
     TraceResult RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, IBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
-        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity->GetOriginal()) : CTraceFilterEx();
+        CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(static_cast<CBaseEntity*>(pIgnoreEntity->GetOriginal())) : CTraceFilterEx();
 
         filter.m_nInteractsAs = CONTENTS_EMPTY;
         filter.m_nInteractsWith = MASK_ALL;
@@ -173,7 +173,7 @@ namespace raytrace
             return false;
         }
 
-        return INavPhysicsInterface::CheckAreaOverlappingEntity(rArea, rEntity->GetOriginal(), bExtrudeHullHeight);
+        return INavPhysicsInterface::CheckAreaOverlappingEntity(rArea, static_cast<CBaseEntity*>(rEntity->GetOriginal()), bExtrudeHullHeight);
     }
 
     void RayTrace::GetEntityWorldSpaceAABB(const IBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut)
@@ -184,6 +184,6 @@ namespace raytrace
             return;
         }
 
-        INavPhysicsInterface::GetEntityWorldSpaceAABB(rEntity->GetOriginal(), pMinsOut, pMaxsOut);
+        INavPhysicsInterface::GetEntityWorldSpaceAABB(static_cast<CBaseEntity*>(rEntity->GetOriginal()), pMinsOut, pMaxsOut);
     }
 }

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathWithDynamicNodes.h"
 #include "CPathSimpleImpl.h"
 
-class CPathWithDynamicNodesImpl : public CPathSimpleImpl, public IPathWithDynamicNodes
+class CPathWithDynamicNodesImpl : public CPathSimpleImpl, public virtual IPathWithDynamicNodes
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void XInitialPathWorldToLocalUpdated() override { Real()->m_xInitialPathWorldToLocal.NetworkStateChanged(); }
 };
 
-inline IPathWithDynamicNodes* CPathWithDynamicNodes::ToInterface() { return new CPathWithDynamicNodesImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathWithDynamicNodes* CPathWithDynamicNodes::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathWithDynamicNodes*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathWithDynamicNodesImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathWithDynamicNodes*>(impl));
+    return impl;
+}
+inline IPathWithDynamicNodes* IPathWithDynamicNodes::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathWithDynamicNodes*>(p)->ToInterface() : nullptr; }
 inline IPathWithDynamicNodes* IPathWithDynamicNodes::FromOriginal(CPathWithDynamicNodes* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHWITHDYNAMICNODESIMPL_H

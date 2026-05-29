@@ -65,6 +65,7 @@ public:
 };
 
 inline IRelationship_t* Relationship_t::ToInterface() { return new Relationship_tImpl(this); }
+inline IRelationship_t* IRelationship_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IRelationship_t* IRelationship_t::FromOriginal(Relationship_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RELATIONSHIP_TIMPL_H

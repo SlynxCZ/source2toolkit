@@ -61,6 +61,7 @@ public:
 };
 
 inline IBasePulseGraphInstance* CBasePulseGraphInstance::ToInterface() { return new CBasePulseGraphInstanceImpl(this); }
+inline IBasePulseGraphInstance* IBasePulseGraphInstance::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBasePulseGraphInstance* IBasePulseGraphInstance::FromOriginal(CBasePulseGraphInstance* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEPULSEGRAPHINSTANCEIMPL_H

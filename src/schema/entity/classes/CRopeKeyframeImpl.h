@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRopeKeyframe.h"
 #include "CBaseModelEntityImpl.h"
 
-class CRopeKeyframeImpl : public CBaseModelEntityImpl, public IRopeKeyframe
+class CRopeKeyframeImpl : public CBaseModelEntityImpl, public virtual IRopeKeyframe
 {
 
 public:
@@ -96,7 +96,20 @@ public:
     void EndPointUpdated() override { Real()->m_hEndPoint.NetworkStateChanged(); }
 };
 
-inline IRopeKeyframe* CRopeKeyframe::ToInterface() { return new CRopeKeyframeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRopeKeyframe* CRopeKeyframe::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRopeKeyframe*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRopeKeyframeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRopeKeyframe*>(impl));
+    return impl;
+}
+inline IRopeKeyframe* IRopeKeyframe::FromRaw(CEntityInstance* p) { return p ? static_cast<CRopeKeyframe*>(p)->ToInterface() : nullptr; }
 inline IRopeKeyframe* IRopeKeyframe::FromOriginal(CRopeKeyframe* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CROPEKEYFRAMEIMPL_H

@@ -83,6 +83,7 @@ public:
 };
 
 inline IGlowProperty* CGlowProperty::ToInterface() { return new CGlowPropertyImpl(this); }
+inline IGlowProperty* IGlowProperty::FromRaw(CEntityInstance*) { return nullptr; }
 inline IGlowProperty* IGlowProperty::FromOriginal(CGlowProperty* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGLOWPROPERTYIMPL_H

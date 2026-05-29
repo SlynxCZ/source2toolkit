@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSceneListManager.h"
 #include "CLogicalEntityImpl.h"
 
-class CSceneListManagerImpl : public CLogicalEntityImpl, public ISceneListManager
+class CSceneListManagerImpl : public CLogicalEntityImpl, public virtual ISceneListManager
 {
 
 public:
@@ -59,10 +59,22 @@ public:
     CUtlVector<CHandle<CSceneListManager>>& ListManagers() override { return Real()->m_hListManagers(); }
     void ListManagersUpdated() override { Real()->m_hListManagers.NetworkStateChanged(); }
     CUtlSymbolLarge* Scenes() override { return Real()->m_iszScenes(); }
-    CHandle<CBaseEntity>* Scenes() override { return Real()->m_hScenes(); }
 };
 
-inline ISceneListManager* CSceneListManager::ToInterface() { return new CSceneListManagerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISceneListManager* CSceneListManager::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISceneListManager*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSceneListManagerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISceneListManager*>(impl));
+    return impl;
+}
+inline ISceneListManager* ISceneListManager::FromRaw(CEntityInstance* p) { return p ? static_cast<CSceneListManager*>(p)->ToInterface() : nullptr; }
 inline ISceneListManager* ISceneListManager::FromOriginal(CSceneListManager* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCENELISTMANAGERIMPL_H

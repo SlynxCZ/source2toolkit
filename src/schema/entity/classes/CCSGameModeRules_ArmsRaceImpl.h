@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGameModeRules_ArmsRace.h"
 #include "CCSGameModeRulesImpl.h"
 
-class CCSGameModeRules_ArmsRaceImpl : public CCSGameModeRulesImpl, public ICSGameModeRules_ArmsRace
+class CCSGameModeRules_ArmsRaceImpl : public CCSGameModeRulesImpl, public virtual ICSGameModeRules_ArmsRace
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline ICSGameModeRules_ArmsRace* CCSGameModeRules_ArmsRace::ToInterface() { return new CCSGameModeRules_ArmsRaceImpl(this); }
+inline ICSGameModeRules_ArmsRace* ICSGameModeRules_ArmsRace::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSGameModeRules_ArmsRace* ICSGameModeRules_ArmsRace::FromOriginal(CCSGameModeRules_ArmsRace* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGAMEMODERULES_ARMSRACEIMPL_H

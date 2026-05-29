@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMomentaryRotButton.h"
 #include "CRotButtonImpl.h"
 
-class CMomentaryRotButtonImpl : public CRotButtonImpl, public IMomentaryRotButton
+class CMomentaryRotButtonImpl : public CRotButtonImpl, public virtual IMomentaryRotButton
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void StartPositionUpdated() override { Real()->m_flStartPosition.NetworkStateChanged(); }
 };
 
-inline IMomentaryRotButton* CMomentaryRotButton::ToInterface() { return new CMomentaryRotButtonImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMomentaryRotButton* CMomentaryRotButton::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMomentaryRotButton*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMomentaryRotButtonImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMomentaryRotButton*>(impl));
+    return impl;
+}
+inline IMomentaryRotButton* IMomentaryRotButton::FromRaw(CEntityInstance* p) { return p ? static_cast<CMomentaryRotButton*>(p)->ToInterface() : nullptr; }
 inline IMomentaryRotButton* IMomentaryRotButton::FromOriginal(CMomentaryRotButton* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOMENTARYROTBUTTONIMPL_H

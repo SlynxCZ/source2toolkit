@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundOpvarSetEntity.h"
 #include "CBaseEntityImpl.h"
 
-class CSoundOpvarSetEntityImpl : public CBaseEntityImpl, public ISoundOpvarSetEntity
+class CSoundOpvarSetEntityImpl : public CBaseEntityImpl, public virtual ISoundOpvarSetEntity
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void SetOnSpawnUpdated() override { Real()->m_bSetOnSpawn.NetworkStateChanged(); }
 };
 
-inline ISoundOpvarSetEntity* CSoundOpvarSetEntity::ToInterface() { return new CSoundOpvarSetEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundOpvarSetEntity* CSoundOpvarSetEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundOpvarSetEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundOpvarSetEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundOpvarSetEntity*>(impl));
+    return impl;
+}
+inline ISoundOpvarSetEntity* ISoundOpvarSetEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundOpvarSetEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundOpvarSetEntity* ISoundOpvarSetEntity::FromOriginal(CSoundOpvarSetEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDOPVARSETENTITYIMPL_H

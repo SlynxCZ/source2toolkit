@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_HostageServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_HostageServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_HostageServices
+class CCSPlayer_HostageServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_HostageServices
 {
 
 public:
@@ -63,6 +63,7 @@ public:
 };
 
 inline ICSPlayer_HostageServices* CCSPlayer_HostageServices::ToInterface() { return new CCSPlayer_HostageServicesImpl(this); }
+inline ICSPlayer_HostageServices* ICSPlayer_HostageServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_HostageServices* ICSPlayer_HostageServices::FromOriginal(CCSPlayer_HostageServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_HOSTAGESERVICESIMPL_H

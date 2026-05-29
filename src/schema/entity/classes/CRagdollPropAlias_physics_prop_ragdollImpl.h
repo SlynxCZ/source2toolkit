@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRagdollPropAlias_physics_prop_ragdoll.h"
 #include "CRagdollPropImpl.h"
 
-class CRagdollPropAlias_physics_prop_ragdollImpl : public CRagdollPropImpl, public IRagdollPropAlias_physics_prop_ragdoll
+class CRagdollPropAlias_physics_prop_ragdollImpl : public CRagdollPropImpl, public virtual IRagdollPropAlias_physics_prop_ragdoll
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CRagdollPropAlias_physics_prop_ragdoll* GetOriginal() const override { return Real(); }
 };
 
-inline IRagdollPropAlias_physics_prop_ragdoll* CRagdollPropAlias_physics_prop_ragdoll::ToInterface() { return new CRagdollPropAlias_physics_prop_ragdollImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRagdollPropAlias_physics_prop_ragdoll* CRagdollPropAlias_physics_prop_ragdoll::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRagdollPropAlias_physics_prop_ragdoll*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRagdollPropAlias_physics_prop_ragdollImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRagdollPropAlias_physics_prop_ragdoll*>(impl));
+    return impl;
+}
+inline IRagdollPropAlias_physics_prop_ragdoll* IRagdollPropAlias_physics_prop_ragdoll::FromRaw(CEntityInstance* p) { return p ? static_cast<CRagdollPropAlias_physics_prop_ragdoll*>(p)->ToInterface() : nullptr; }
 inline IRagdollPropAlias_physics_prop_ragdoll* IRagdollPropAlias_physics_prop_ragdoll::FromOriginal(CRagdollPropAlias_physics_prop_ragdoll* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRAGDOLLPROPALIAS_PHYSICS_PROP_RAGDOLLIMPL_H

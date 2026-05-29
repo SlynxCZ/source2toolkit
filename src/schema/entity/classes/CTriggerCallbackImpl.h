@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerCallback.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerCallbackImpl : public CBaseTriggerImpl, public ITriggerCallback
+class CTriggerCallbackImpl : public CBaseTriggerImpl, public virtual ITriggerCallback
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CTriggerCallback* GetOriginal() const override { return Real(); }
 };
 
-inline ITriggerCallback* CTriggerCallback::ToInterface() { return new CTriggerCallbackImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerCallback* CTriggerCallback::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerCallback*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerCallbackImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerCallback*>(impl));
+    return impl;
+}
+inline ITriggerCallback* ITriggerCallback::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerCallback*>(p)->ToInterface() : nullptr; }
 inline ITriggerCallback* ITriggerCallback::FromOriginal(CTriggerCallback* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERCALLBACKIMPL_H

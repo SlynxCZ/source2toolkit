@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsSpring.h"
 #include "CBaseEntityImpl.h"
 
-class CPhysicsSpringImpl : public CBaseEntityImpl, public IPhysicsSpring
+class CPhysicsSpringImpl : public CBaseEntityImpl, public virtual IPhysicsSpring
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void TeleportTickUpdated() override { Real()->m_teleportTick.NetworkStateChanged(); }
 };
 
-inline IPhysicsSpring* CPhysicsSpring::ToInterface() { return new CPhysicsSpringImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsSpring* CPhysicsSpring::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsSpring*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsSpringImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsSpring*>(impl));
+    return impl;
+}
+inline IPhysicsSpring* IPhysicsSpring::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsSpring*>(p)->ToInterface() : nullptr; }
 inline IPhysicsSpring* IPhysicsSpring::FromOriginal(CPhysicsSpring* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSSPRINGIMPL_H

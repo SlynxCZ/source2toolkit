@@ -35,49 +35,34 @@
  * Project: Source2Toolkit
  */
 
+#include "CBasePlayerWeapon.h"
 #include "schema/entity/classes/CCSPlayer_ItemServicesImpl.h"
+#include "source2toolkit/schema/entity/classes/IBasePlayerWeapon.h"
 
 #include "source2toolkit/utils/virtual.h"
 
-#ifdef SOURCE2TOOLKIT_CORE
 #include "core/shared.h"
 #include "core/gameconfig.h"
 #include "core/addresses.h"
-#else
-#include "source2toolkit/IToolkitAddresses.h"
-#include "source2toolkit/IToolkitGameConfig.h"
-#include "source2toolkit/IToolkitApi.h"
-#include "source2toolkit/IToolkitPlugin.h"
-#endif
 
-void CCSPlayer_ItemServices::DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon)
+void CCSPlayer_ItemServices::DropActivePlayerWeapon(IBasePlayerWeapon* pActiveWeapon)
 {
-#ifdef SOURCE2TOOLKIT_CORE
+    auto* raw = pActiveWeapon ? static_cast<CBasePlayerWeapon*>(pActiveWeapon->GetOriginal()) : nullptr;
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayer_ItemServices_DropActivePlayerWeapon");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayer_ItemServices_DropActivePlayerWeapon");
-#endif
-    CALL_VIRTUAL(void, offset, this, pActiveWeapon);
+    CALL_VIRTUAL(void, offset, this, raw);
 }
 
 void CCSPlayer_ItemServices::RemoveWeapons()
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayer_ItemServices_RemoveWeapons");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayer_ItemServices_RemoveWeapons");
-#endif
     CALL_VIRTUAL(void, offset, this);
 }
 
-CBasePlayerWeapon* CCSPlayer_ItemServices::GiveNamedItem(const char* pszItem)
+IBasePlayerWeapon* CCSPlayer_ItemServices::GiveNamedItem(const char* pszItem)
 {
-#ifdef SOURCE2TOOLKIT_CORE
     static int offset = shared::g_pGameConfig->GetOffset("CCSPlayer_ItemServices_GiveNamedItem");
-#else
-    static int offset = g_ToolkitAPI->GameConfig()->GetOffset("CCSPlayer_ItemServices_GiveNamedItem");
-#endif
-    return CALL_VIRTUAL(CBasePlayerWeapon*, offset, this, pszItem);
+    auto* raw = CALL_VIRTUAL(CBasePlayerWeapon*, offset, this, pszItem);
+    return raw ? raw->ToInterface() : nullptr;
 }
 ICSPlayer_ItemServices* CCSPlayer_ItemServices::ToInterface() { return new CCSPlayer_ItemServicesImpl(this); }
 

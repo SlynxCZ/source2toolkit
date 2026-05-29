@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointOrient.h"
 #include "CBaseEntityImpl.h"
 
-class CPointOrientImpl : public CBaseEntityImpl, public IPointOrient
+class CPointOrientImpl : public CBaseEntityImpl, public virtual IPointOrient
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void LastGameTimeUpdated() override { Real()->m_flLastGameTime.NetworkStateChanged(); }
 };
 
-inline IPointOrient* CPointOrient::ToInterface() { return new CPointOrientImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointOrient* CPointOrient::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointOrient*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointOrientImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointOrient*>(impl));
+    return impl;
+}
+inline IPointOrient* IPointOrient::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointOrient*>(p)->ToInterface() : nullptr; }
 inline IPointOrient* IPointOrient::FromOriginal(CPointOrient* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTORIENTIMPL_H

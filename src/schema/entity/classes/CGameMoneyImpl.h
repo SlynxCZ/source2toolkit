@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGameMoney.h"
 #include "CRulePointEntityImpl.h"
 
-class CGameMoneyImpl : public CRulePointEntityImpl, public IGameMoney
+class CGameMoneyImpl : public CRulePointEntityImpl, public virtual IGameMoney
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void StrAwardTextUpdated() override { Real()->m_strAwardText.NetworkStateChanged(); }
 };
 
-inline IGameMoney* CGameMoney::ToInterface() { return new CGameMoneyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGameMoney* CGameMoney::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGameMoney*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGameMoneyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGameMoney*>(impl));
+    return impl;
+}
+inline IGameMoney* IGameMoney::FromRaw(CEntityInstance* p) { return p ? static_cast<CGameMoney*>(p)->ToInterface() : nullptr; }
 inline IGameMoney* IGameMoney::FromOriginal(CGameMoney* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMEMONEYIMPL_H

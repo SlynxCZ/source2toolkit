@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncLadder.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncLadderImpl : public CBaseModelEntityImpl, public IFuncLadder
+class CFuncLadderImpl : public CBaseModelEntityImpl, public virtual IFuncLadder
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void OnPlayerGotOffLadderUpdated() override { Real()->m_OnPlayerGotOffLadder.NetworkStateChanged(); }
 };
 
-inline IFuncLadder* CFuncLadder::ToInterface() { return new CFuncLadderImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncLadder* CFuncLadder::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncLadder*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncLadderImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncLadder*>(impl));
+    return impl;
+}
+inline IFuncLadder* IFuncLadder::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncLadder*>(p)->ToInterface() : nullptr; }
 inline IFuncLadder* IFuncLadder::FromOriginal(CFuncLadder* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCLADDERIMPL_H

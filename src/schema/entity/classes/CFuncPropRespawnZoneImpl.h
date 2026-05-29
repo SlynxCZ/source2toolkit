@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncPropRespawnZone.h"
 #include "CBaseEntityImpl.h"
 
-class CFuncPropRespawnZoneImpl : public CBaseEntityImpl, public IFuncPropRespawnZone
+class CFuncPropRespawnZoneImpl : public CBaseEntityImpl, public virtual IFuncPropRespawnZone
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncPropRespawnZone* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncPropRespawnZone* CFuncPropRespawnZone::ToInterface() { return new CFuncPropRespawnZoneImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncPropRespawnZone* CFuncPropRespawnZone::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncPropRespawnZone*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncPropRespawnZoneImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncPropRespawnZone*>(impl));
+    return impl;
+}
+inline IFuncPropRespawnZone* IFuncPropRespawnZone::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncPropRespawnZone*>(p)->ToInterface() : nullptr; }
 inline IFuncPropRespawnZone* IFuncPropRespawnZone::FromOriginal(CFuncPropRespawnZone* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCPROPRESPAWNZONEIMPL_H

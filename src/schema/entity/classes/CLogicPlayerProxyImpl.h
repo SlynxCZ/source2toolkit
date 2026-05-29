@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicPlayerProxy.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicPlayerProxyImpl : public CLogicalEntityImpl, public ILogicPlayerProxy
+class CLogicPlayerProxyImpl : public CLogicalEntityImpl, public virtual ILogicPlayerProxy
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void PlayerUpdated() override { Real()->m_hPlayer.NetworkStateChanged(); }
 };
 
-inline ILogicPlayerProxy* CLogicPlayerProxy::ToInterface() { return new CLogicPlayerProxyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicPlayerProxy* CLogicPlayerProxy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicPlayerProxy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicPlayerProxyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicPlayerProxy*>(impl));
+    return impl;
+}
+inline ILogicPlayerProxy* ILogicPlayerProxy::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicPlayerProxy*>(p)->ToInterface() : nullptr; }
 inline ILogicPlayerProxy* ILogicPlayerProxy::FromOriginal(CLogicPlayerProxy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICPLAYERPROXYIMPL_H

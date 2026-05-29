@@ -61,6 +61,7 @@ public:
 };
 
 inline IIPhysicsRagdollControl* IPhysicsRagdollControl::ToInterface() { return new IPhysicsRagdollControlImpl(this); }
+inline IIPhysicsRagdollControl* IIPhysicsRagdollControl::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIPhysicsRagdollControl* IIPhysicsRagdollControl::FromOriginal(IPhysicsRagdollControl* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IPHYSICSRAGDOLLCONTROLIMPL_H

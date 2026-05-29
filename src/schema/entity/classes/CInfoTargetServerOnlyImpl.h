@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoTargetServerOnly.h"
 #include "CServerOnlyPointEntityImpl.h"
 
-class CInfoTargetServerOnlyImpl : public CServerOnlyPointEntityImpl, public IInfoTargetServerOnly
+class CInfoTargetServerOnlyImpl : public CServerOnlyPointEntityImpl, public virtual IInfoTargetServerOnly
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoTargetServerOnly* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoTargetServerOnly* CInfoTargetServerOnly::ToInterface() { return new CInfoTargetServerOnlyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoTargetServerOnly* CInfoTargetServerOnly::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoTargetServerOnly*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoTargetServerOnlyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoTargetServerOnly*>(impl));
+    return impl;
+}
+inline IInfoTargetServerOnly* IInfoTargetServerOnly::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoTargetServerOnly*>(p)->ToInterface() : nullptr; }
 inline IInfoTargetServerOnly* IInfoTargetServerOnly::FromOriginal(CInfoTargetServerOnly* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOTARGETSERVERONLYIMPL_H

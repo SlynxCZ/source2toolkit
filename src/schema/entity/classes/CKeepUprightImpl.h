@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CKeepUpright.h"
 #include "CPointEntityImpl.h"
 
-class CKeepUprightImpl : public CPointEntityImpl, public IKeepUpright
+class CKeepUprightImpl : public CPointEntityImpl, public virtual IKeepUpright
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void DampAllRotationUpdated() override { Real()->m_bDampAllRotation.NetworkStateChanged(); }
 };
 
-inline IKeepUpright* CKeepUpright::ToInterface() { return new CKeepUprightImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IKeepUpright* CKeepUpright::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IKeepUpright*>(tagIt->second.ptr_for_return);
+    auto* impl = new CKeepUprightImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IKeepUpright*>(impl));
+    return impl;
+}
+inline IKeepUpright* IKeepUpright::FromRaw(CEntityInstance* p) { return p ? static_cast<CKeepUpright*>(p)->ToInterface() : nullptr; }
 inline IKeepUpright* IKeepUpright::FromOriginal(CKeepUpright* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CKEEPUPRIGHTIMPL_H

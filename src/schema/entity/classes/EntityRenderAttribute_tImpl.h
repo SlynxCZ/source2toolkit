@@ -64,6 +64,7 @@ public:
 };
 
 inline IEntityRenderAttribute_t* EntityRenderAttribute_t::ToInterface() { return new EntityRenderAttribute_tImpl(this); }
+inline IEntityRenderAttribute_t* IEntityRenderAttribute_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEntityRenderAttribute_t* IEntityRenderAttribute_t::FromOriginal(EntityRenderAttribute_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_ENTITYRENDERATTRIBUTE_TIMPL_H

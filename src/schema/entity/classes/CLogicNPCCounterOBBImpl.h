@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicNPCCounterOBB.h"
 #include "CLogicNPCCounterAABBImpl.h"
 
-class CLogicNPCCounterOBBImpl : public CLogicNPCCounterAABBImpl, public ILogicNPCCounterOBB
+class CLogicNPCCounterOBBImpl : public CLogicNPCCounterAABBImpl, public virtual ILogicNPCCounterOBB
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLogicNPCCounterOBB* GetOriginal() const override { return Real(); }
 };
 
-inline ILogicNPCCounterOBB* CLogicNPCCounterOBB::ToInterface() { return new CLogicNPCCounterOBBImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicNPCCounterOBB* CLogicNPCCounterOBB::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicNPCCounterOBB*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicNPCCounterOBBImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicNPCCounterOBB*>(impl));
+    return impl;
+}
+inline ILogicNPCCounterOBB* ILogicNPCCounterOBB::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicNPCCounterOBB*>(p)->ToInterface() : nullptr; }
 inline ILogicNPCCounterOBB* ILogicNPCCounterOBB::FromOriginal(CLogicNPCCounterOBB* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICNPCCOUNTEROBBIMPL_H

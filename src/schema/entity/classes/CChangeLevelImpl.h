@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CChangeLevel.h"
 #include "CBaseTriggerImpl.h"
 
-class CChangeLevelImpl : public CBaseTriggerImpl, public IChangeLevel
+class CChangeLevelImpl : public CBaseTriggerImpl, public virtual IChangeLevel
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void OnChangeLevelFiredUpdated() override { Real()->m_bOnChangeLevelFired.NetworkStateChanged(); }
 };
 
-inline IChangeLevel* CChangeLevel::ToInterface() { return new CChangeLevelImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IChangeLevel* CChangeLevel::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IChangeLevel*>(tagIt->second.ptr_for_return);
+    auto* impl = new CChangeLevelImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IChangeLevel*>(impl));
+    return impl;
+}
+inline IChangeLevel* IChangeLevel::FromRaw(CEntityInstance* p) { return p ? static_cast<CChangeLevel*>(p)->ToInterface() : nullptr; }
 inline IChangeLevel* IChangeLevel::FromOriginal(CChangeLevel* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCHANGELEVELIMPL_H

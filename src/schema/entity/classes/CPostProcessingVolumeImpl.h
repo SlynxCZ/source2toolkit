@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPostProcessingVolume.h"
 #include "CBaseTriggerImpl.h"
 
-class CPostProcessingVolumeImpl : public CBaseTriggerImpl, public IPostProcessingVolume
+class CPostProcessingVolumeImpl : public CBaseTriggerImpl, public virtual IPostProcessingVolume
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void ExposureControlUpdated() override { Real()->m_bExposureControl.NetworkStateChanged(); }
 };
 
-inline IPostProcessingVolume* CPostProcessingVolume::ToInterface() { return new CPostProcessingVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPostProcessingVolume* CPostProcessingVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPostProcessingVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPostProcessingVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPostProcessingVolume*>(impl));
+    return impl;
+}
+inline IPostProcessingVolume* IPostProcessingVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CPostProcessingVolume*>(p)->ToInterface() : nullptr; }
 inline IPostProcessingVolume* IPostProcessingVolume::FromOriginal(CPostProcessingVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOSTPROCESSINGVOLUMEIMPL_H

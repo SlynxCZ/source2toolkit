@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItem_Healthshot.h"
 #include "CWeaponBaseItemImpl.h"
 
-class CItem_HealthshotImpl : public CWeaponBaseItemImpl, public IItem_Healthshot
+class CItem_HealthshotImpl : public CWeaponBaseItemImpl, public virtual IItem_Healthshot
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CItem_Healthshot* GetOriginal() const override { return Real(); }
 };
 
-inline IItem_Healthshot* CItem_Healthshot::ToInterface() { return new CItem_HealthshotImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItem_Healthshot* CItem_Healthshot::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItem_Healthshot*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItem_HealthshotImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItem_Healthshot*>(impl));
+    return impl;
+}
+inline IItem_Healthshot* IItem_Healthshot::FromRaw(CEntityInstance* p) { return p ? static_cast<CItem_Healthshot*>(p)->ToInterface() : nullptr; }
 inline IItem_Healthshot* IItem_Healthshot::FromOriginal(CItem_Healthshot* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEM_HEALTHSHOTIMPL_H

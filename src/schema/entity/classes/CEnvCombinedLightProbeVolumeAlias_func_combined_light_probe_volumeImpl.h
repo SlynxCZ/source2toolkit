@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume.h"
 #include "CEnvCombinedLightProbeVolumeImpl.h"
 
-class CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volumeImpl : public CEnvCombinedLightProbeVolumeImpl, public IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume
+class CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volumeImpl : public CEnvCombinedLightProbeVolumeImpl, public virtual IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* GetOriginal() const override { return Real(); }
 };
 
-inline IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume::ToInterface() { return new CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume*>(impl));
+    return impl;
+}
+inline IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume*>(p)->ToInterface() : nullptr; }
 inline IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume::FromOriginal(CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVCOMBINEDLIGHTPROBEVOLUMEALIAS_FUNC_COMBINED_LIGHT_PROBE_VOLUMEIMPL_H

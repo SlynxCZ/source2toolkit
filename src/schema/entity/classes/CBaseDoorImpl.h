@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseDoor.h"
 #include "CBaseToggleImpl.h"
 
-class CBaseDoorImpl : public CBaseToggleImpl, public IBaseDoor
+class CBaseDoorImpl : public CBaseToggleImpl, public virtual IBaseDoor
 {
 
 public:
@@ -114,7 +114,20 @@ public:
     void IsUsableUpdated() override { Real()->m_bIsUsable.NetworkStateChanged(); }
 };
 
-inline IBaseDoor* CBaseDoor::ToInterface() { return new CBaseDoorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseDoor* CBaseDoor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseDoor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseDoorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseDoor*>(impl));
+    return impl;
+}
+inline IBaseDoor* IBaseDoor::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseDoor*>(p)->ToInterface() : nullptr; }
 inline IBaseDoor* IBaseDoor::FromOriginal(CBaseDoor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEDOORIMPL_H

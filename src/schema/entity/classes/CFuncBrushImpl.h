@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncBrush.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncBrushImpl : public CBaseModelEntityImpl, public IFuncBrush
+class CFuncBrushImpl : public CBaseModelEntityImpl, public virtual IFuncBrush
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void ScriptedMovementUpdated() override { Real()->m_bScriptedMovement.NetworkStateChanged(); }
 };
 
-inline IFuncBrush* CFuncBrush::ToInterface() { return new CFuncBrushImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncBrush* CFuncBrush::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncBrush*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncBrushImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncBrush*>(impl));
+    return impl;
+}
+inline IFuncBrush* IFuncBrush::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncBrush*>(p)->ToInterface() : nullptr; }
 inline IFuncBrush* IFuncBrush::FromOriginal(CFuncBrush* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCBRUSHIMPL_H

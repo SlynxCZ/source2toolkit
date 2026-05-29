@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvVolumetricFogVolume.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvVolumetricFogVolumeImpl : public CBaseEntityImpl, public IEnvVolumetricFogVolume
+class CEnvVolumetricFogVolumeImpl : public CBaseEntityImpl, public virtual IEnvVolumetricFogVolume
 {
 
 public:
@@ -94,7 +94,20 @@ public:
     void OverrideNoiseStrengthUpdated() override { Real()->m_bOverrideNoiseStrength.NetworkStateChanged(); }
 };
 
-inline IEnvVolumetricFogVolume* CEnvVolumetricFogVolume::ToInterface() { return new CEnvVolumetricFogVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvVolumetricFogVolume* CEnvVolumetricFogVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvVolumetricFogVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvVolumetricFogVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvVolumetricFogVolume*>(impl));
+    return impl;
+}
+inline IEnvVolumetricFogVolume* IEnvVolumetricFogVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvVolumetricFogVolume*>(p)->ToInterface() : nullptr; }
 inline IEnvVolumetricFogVolume* IEnvVolumetricFogVolume::FromOriginal(CEnvVolumetricFogVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVVOLUMETRICFOGVOLUMEIMPL_H

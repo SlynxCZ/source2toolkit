@@ -71,6 +71,7 @@ public:
 };
 
 inline ISellbackPurchaseEntry_t* SellbackPurchaseEntry_t::ToInterface() { return new SellbackPurchaseEntry_tImpl(this); }
+inline ISellbackPurchaseEntry_t* ISellbackPurchaseEntry_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISellbackPurchaseEntry_t* ISellbackPurchaseEntry_t::FromOriginal(SellbackPurchaseEntry_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SELLBACKPURCHASEENTRY_TIMPL_H

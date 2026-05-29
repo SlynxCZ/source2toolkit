@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CDynamicPropAlias_cable_dynamic.h"
 #include "CDynamicPropImpl.h"
 
-class CDynamicPropAlias_cable_dynamicImpl : public CDynamicPropImpl, public IDynamicPropAlias_cable_dynamic
+class CDynamicPropAlias_cable_dynamicImpl : public CDynamicPropImpl, public virtual IDynamicPropAlias_cable_dynamic
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CDynamicPropAlias_cable_dynamic* GetOriginal() const override { return Real(); }
 };
 
-inline IDynamicPropAlias_cable_dynamic* CDynamicPropAlias_cable_dynamic::ToInterface() { return new CDynamicPropAlias_cable_dynamicImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IDynamicPropAlias_cable_dynamic* CDynamicPropAlias_cable_dynamic::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IDynamicPropAlias_cable_dynamic*>(tagIt->second.ptr_for_return);
+    auto* impl = new CDynamicPropAlias_cable_dynamicImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IDynamicPropAlias_cable_dynamic*>(impl));
+    return impl;
+}
+inline IDynamicPropAlias_cable_dynamic* IDynamicPropAlias_cable_dynamic::FromRaw(CEntityInstance* p) { return p ? static_cast<CDynamicPropAlias_cable_dynamic*>(p)->ToInterface() : nullptr; }
 inline IDynamicPropAlias_cable_dynamic* IDynamicPropAlias_cable_dynamic::FromOriginal(CDynamicPropAlias_cable_dynamic* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDYNAMICPROPALIAS_CABLE_DYNAMICIMPL_H

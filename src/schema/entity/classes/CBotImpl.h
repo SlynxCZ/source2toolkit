@@ -87,6 +87,7 @@ public:
 };
 
 inline IBot* CBot::ToInterface() { return new CBotImpl(this); }
+inline IBot* IBot::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBot* IBot::FromOriginal(CBot* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBOTIMPL_H

@@ -63,6 +63,7 @@ public:
 };
 
 inline ISceneRequestHandle_t* SceneRequestHandle_t::ToInterface() { return new SceneRequestHandle_tImpl(this); }
+inline ISceneRequestHandle_t* ISceneRequestHandle_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISceneRequestHandle_t* ISceneRequestHandle_t::FromOriginal(SceneRequestHandle_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_SCENEREQUESTHANDLE_TIMPL_H

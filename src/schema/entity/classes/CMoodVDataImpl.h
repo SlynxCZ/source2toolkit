@@ -63,6 +63,7 @@ public:
 };
 
 inline IMoodVData* CMoodVData::ToInterface() { return new CMoodVDataImpl(this); }
+inline IMoodVData* IMoodVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline IMoodVData* IMoodVData::FromOriginal(CMoodVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOODVDATAIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBlood.h"
 #include "CPointEntityImpl.h"
 
-class CBloodImpl : public CPointEntityImpl, public IBlood
+class CBloodImpl : public CPointEntityImpl, public virtual IBlood
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void ColorUpdated() override { Real()->m_Color.NetworkStateChanged(); }
 };
 
-inline IBlood* CBlood::ToInterface() { return new CBloodImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBlood* CBlood::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBlood*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBloodImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBlood*>(impl));
+    return impl;
+}
+inline IBlood* IBlood::FromRaw(CEntityInstance* p) { return p ? static_cast<CBlood*>(p)->ToInterface() : nullptr; }
 inline IBlood* IBlood::FromOriginal(CBlood* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBLOODIMPL_H

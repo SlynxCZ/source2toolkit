@@ -63,6 +63,7 @@ public:
 };
 
 inline INavHullPresetVData* CNavHullPresetVData::ToInterface() { return new CNavHullPresetVDataImpl(this); }
+inline INavHullPresetVData* INavHullPresetVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline INavHullPresetVData* INavHullPresetVData::FromOriginal(CNavHullPresetVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNAVHULLPRESETVDATAIMPL_H

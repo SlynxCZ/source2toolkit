@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEconItemView.h"
 #include "IEconItemInterfaceImpl.h"
 
-class CEconItemViewImpl : public IEconItemInterfaceImpl, public IEconItemView
+class CEconItemViewImpl : public IEconItemInterfaceImpl, public virtual IEconItemView
 {
 
 public:
@@ -83,6 +83,7 @@ public:
 };
 
 inline IEconItemView* CEconItemView::ToInterface() { return new CEconItemViewImpl(this); }
+inline IEconItemView* IEconItemView::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEconItemView* IEconItemView::FromOriginal(CEconItemView* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CECONITEMVIEWIMPL_H

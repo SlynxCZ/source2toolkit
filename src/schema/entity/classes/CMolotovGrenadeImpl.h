@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMolotovGrenade.h"
 #include "CBaseCSGrenadeImpl.h"
 
-class CMolotovGrenadeImpl : public CBaseCSGrenadeImpl, public IMolotovGrenade
+class CMolotovGrenadeImpl : public CBaseCSGrenadeImpl, public virtual IMolotovGrenade
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CMolotovGrenade* GetOriginal() const override { return Real(); }
 };
 
-inline IMolotovGrenade* CMolotovGrenade::ToInterface() { return new CMolotovGrenadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMolotovGrenade* CMolotovGrenade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMolotovGrenade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMolotovGrenadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMolotovGrenade*>(impl));
+    return impl;
+}
+inline IMolotovGrenade* IMolotovGrenade::FromRaw(CEntityInstance* p) { return p ? static_cast<CMolotovGrenade*>(p)->ToInterface() : nullptr; }
 inline IMolotovGrenade* IMolotovGrenade::FromOriginal(CMolotovGrenade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMOLOTOVGRENADEIMPL_H

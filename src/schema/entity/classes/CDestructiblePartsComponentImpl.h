@@ -69,6 +69,7 @@ public:
 };
 
 inline IDestructiblePartsComponent* CDestructiblePartsComponent::ToInterface() { return new CDestructiblePartsComponentImpl(this); }
+inline IDestructiblePartsComponent* IDestructiblePartsComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IDestructiblePartsComponent* IDestructiblePartsComponent::FromOriginal(CDestructiblePartsComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CDESTRUCTIBLEPARTSCOMPONENTIMPL_H

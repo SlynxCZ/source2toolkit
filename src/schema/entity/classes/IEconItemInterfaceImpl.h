@@ -61,6 +61,7 @@ public:
 };
 
 inline IIEconItemInterface* IEconItemInterface::ToInterface() { return new IEconItemInterfaceImpl(this); }
+inline IIEconItemInterface* IIEconItemInterface::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIEconItemInterface* IIEconItemInterface::FromOriginal(IEconItemInterface* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IECONITEMINTERFACEIMPL_H

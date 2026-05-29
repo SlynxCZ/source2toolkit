@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicLineToEntity.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicLineToEntityImpl : public CLogicalEntityImpl, public ILogicLineToEntity
+class CLogicLineToEntityImpl : public CLogicalEntityImpl, public virtual ILogicLineToEntity
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void EndEntityUpdated() override { Real()->m_EndEntity.NetworkStateChanged(); }
 };
 
-inline ILogicLineToEntity* CLogicLineToEntity::ToInterface() { return new CLogicLineToEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicLineToEntity* CLogicLineToEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicLineToEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicLineToEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicLineToEntity*>(impl));
+    return impl;
+}
+inline ILogicLineToEntity* ILogicLineToEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicLineToEntity*>(p)->ToInterface() : nullptr; }
 inline ILogicLineToEntity* ILogicLineToEntity::FromOriginal(CLogicLineToEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICLINETOENTITYIMPL_H

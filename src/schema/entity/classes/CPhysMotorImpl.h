@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysMotor.h"
 #include "CLogicalEntityImpl.h"
 
-class CPhysMotorImpl : public CLogicalEntityImpl, public IPhysMotor
+class CPhysMotorImpl : public CLogicalEntityImpl, public virtual IPhysMotor
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void MotorUpdated() override { Real()->m_motor.NetworkStateChanged(); }
 };
 
-inline IPhysMotor* CPhysMotor::ToInterface() { return new CPhysMotorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysMotor* CPhysMotor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysMotor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysMotorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysMotor*>(impl));
+    return impl;
+}
+inline IPhysMotor* IPhysMotor::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysMotor*>(p)->ToInterface() : nullptr; }
 inline IPhysMotor* IPhysMotor::FromOriginal(CPhysMotor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSMOTORIMPL_H

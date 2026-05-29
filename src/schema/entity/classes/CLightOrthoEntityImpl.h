@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLightOrthoEntity.h"
 #include "CLightEntityImpl.h"
 
-class CLightOrthoEntityImpl : public CLightEntityImpl, public ILightOrthoEntity
+class CLightOrthoEntityImpl : public CLightEntityImpl, public virtual ILightOrthoEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLightOrthoEntity* GetOriginal() const override { return Real(); }
 };
 
-inline ILightOrthoEntity* CLightOrthoEntity::ToInterface() { return new CLightOrthoEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILightOrthoEntity* CLightOrthoEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILightOrthoEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLightOrthoEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILightOrthoEntity*>(impl));
+    return impl;
+}
+inline ILightOrthoEntity* ILightOrthoEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CLightOrthoEntity*>(p)->ToInterface() : nullptr; }
 inline ILightOrthoEntity* ILightOrthoEntity::FromOriginal(CLightOrthoEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLIGHTORTHOENTITYIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CScriptTriggerHurt.h"
 #include "CTriggerHurtImpl.h"
 
-class CScriptTriggerHurtImpl : public CTriggerHurtImpl, public IScriptTriggerHurt
+class CScriptTriggerHurtImpl : public CTriggerHurtImpl, public virtual IScriptTriggerHurt
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void ExtentUpdated() override { Real()->m_vExtent.NetworkStateChanged(); }
 };
 
-inline IScriptTriggerHurt* CScriptTriggerHurt::ToInterface() { return new CScriptTriggerHurtImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IScriptTriggerHurt* CScriptTriggerHurt::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IScriptTriggerHurt*>(tagIt->second.ptr_for_return);
+    auto* impl = new CScriptTriggerHurtImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IScriptTriggerHurt*>(impl));
+    return impl;
+}
+inline IScriptTriggerHurt* IScriptTriggerHurt::FromRaw(CEntityInstance* p) { return p ? static_cast<CScriptTriggerHurt*>(p)->ToInterface() : nullptr; }
 inline IScriptTriggerHurt* IScriptTriggerHurt::FromOriginal(CScriptTriggerHurt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCRIPTTRIGGERHURTIMPL_H

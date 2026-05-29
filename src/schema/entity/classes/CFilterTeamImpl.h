@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterTeam.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterTeamImpl : public CBaseFilterImpl, public IFilterTeam
+class CFilterTeamImpl : public CBaseFilterImpl, public virtual IFilterTeam
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void FilterTeamUpdated() override { Real()->m_iFilterTeam.NetworkStateChanged(); }
 };
 
-inline IFilterTeam* CFilterTeam::ToInterface() { return new CFilterTeamImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterTeam* CFilterTeam::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterTeam*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterTeamImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterTeam*>(impl));
+    return impl;
+}
+inline IFilterTeam* IFilterTeam::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterTeam*>(p)->ToInterface() : nullptr; }
 inline IFilterTeam* IFilterTeam::FromOriginal(CFilterTeam* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERTEAMIMPL_H

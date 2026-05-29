@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointClientUIWorldPanel.h"
 #include "CBaseClientUIEntityImpl.h"
 
-class CPointClientUIWorldPanelImpl : public CBaseClientUIEntityImpl, public IPointClientUIWorldPanel
+class CPointClientUIWorldPanelImpl : public CBaseClientUIEntityImpl, public virtual IPointClientUIWorldPanel
 {
 
 public:
@@ -82,8 +82,8 @@ public:
     void OrientationUpdated() override { Real()->m_unOrientation.NetworkStateChanged(); }
     bool& AllowInteractionFromAllSceneWorlds() override { return Real()->m_bAllowInteractionFromAllSceneWorlds(); }
     void AllowInteractionFromAllSceneWorldsUpdated() override { Real()->m_bAllowInteractionFromAllSceneWorlds.NetworkStateChanged(); }
-    CUtlVector<CUtlSymbolLarge>& SSClasses() override { return Real()->m_vecCSSClasses(); }
-    void SSClassesUpdated() override { Real()->m_vecCSSClasses.NetworkStateChanged(); }
+    CUtlVector<CUtlSymbolLarge>& CSSClasses() override { return Real()->m_vecCSSClasses(); }
+    void CSSClassesUpdated() override { Real()->m_vecCSSClasses.NetworkStateChanged(); }
     bool& Opaque() override { return Real()->m_bOpaque(); }
     void OpaqueUpdated() override { Real()->m_bOpaque.NetworkStateChanged(); }
     bool& NoDepth() override { return Real()->m_bNoDepth(); }
@@ -106,7 +106,20 @@ public:
     void ExplicitImageLayoutUpdated() override { Real()->m_nExplicitImageLayout.NetworkStateChanged(); }
 };
 
-inline IPointClientUIWorldPanel* CPointClientUIWorldPanel::ToInterface() { return new CPointClientUIWorldPanelImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointClientUIWorldPanel* CPointClientUIWorldPanel::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointClientUIWorldPanel*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointClientUIWorldPanelImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointClientUIWorldPanel*>(impl));
+    return impl;
+}
+inline IPointClientUIWorldPanel* IPointClientUIWorldPanel::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointClientUIWorldPanel*>(p)->ToInterface() : nullptr; }
 inline IPointClientUIWorldPanel* IPointClientUIWorldPanel::FromOriginal(CPointClientUIWorldPanel* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCLIENTUIWORLDPANELIMPL_H

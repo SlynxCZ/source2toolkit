@@ -69,6 +69,7 @@ public:
 };
 
 inline ICountdownTimer* CountdownTimer::ToInterface() { return new CountdownTimerImpl(this); }
+inline ICountdownTimer* ICountdownTimer::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICountdownTimer* ICountdownTimer::FromOriginal(CountdownTimer* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_COUNTDOWNTIMERIMPL_H

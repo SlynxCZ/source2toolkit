@@ -73,6 +73,7 @@ public:
 };
 
 inline INmTarget* CNmTarget::ToInterface() { return new CNmTargetImpl(this); }
+inline INmTarget* INmTarget::FromRaw(CEntityInstance*) { return nullptr; }
 inline INmTarget* INmTarget::FromOriginal(CNmTarget* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNMTARGETIMPL_H

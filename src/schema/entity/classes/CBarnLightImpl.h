@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBarnLight.h"
 #include "CBaseModelEntityImpl.h"
 
-class CBarnLightImpl : public CBaseModelEntityImpl, public IBarnLight
+class CBarnLightImpl : public CBaseModelEntityImpl, public virtual IBarnLight
 {
 
 public:
@@ -211,7 +211,20 @@ public:
     void VisClustersUpdated() override { Real()->m_VisClusters.NetworkStateChanged(); }
 };
 
-inline IBarnLight* CBarnLight::ToInterface() { return new CBarnLightImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBarnLight* CBarnLight::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBarnLight*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBarnLightImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBarnLight*>(impl));
+    return impl;
+}
+inline IBarnLight* IBarnLight::FromRaw(CEntityInstance* p) { return p ? static_cast<CBarnLight*>(p)->ToInterface() : nullptr; }
 inline IBarnLight* IBarnLight::FromOriginal(CBarnLight* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBARNLIGHTIMPL_H

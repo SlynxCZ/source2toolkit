@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseTrigger.h"
 #include "CBaseToggleImpl.h"
 
-class CBaseTriggerImpl : public CBaseToggleImpl, public IBaseTrigger
+class CBaseTriggerImpl : public CBaseToggleImpl, public virtual IBaseTrigger
 {
 
 public:
@@ -82,7 +82,20 @@ public:
     void UseAsyncQueriesUpdated() override { Real()->m_bUseAsyncQueries.NetworkStateChanged(); }
 };
 
-inline IBaseTrigger* CBaseTrigger::ToInterface() { return new CBaseTriggerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseTrigger* CBaseTrigger::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseTrigger*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseTriggerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseTrigger*>(impl));
+    return impl;
+}
+inline IBaseTrigger* IBaseTrigger::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseTrigger*>(p)->ToInterface() : nullptr; }
 inline IBaseTrigger* IBaseTrigger::FromOriginal(CBaseTrigger* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASETRIGGERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointPrefab.h"
 #include "CServerOnlyPointEntityImpl.h"
 
-class CPointPrefabImpl : public CServerOnlyPointEntityImpl, public IPointPrefab
+class CPointPrefabImpl : public CServerOnlyPointEntityImpl, public virtual IPointPrefab
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void ProceduralRelaySourcesUpdated() override { Real()->m_ProceduralRelaySources.NetworkStateChanged(); }
 };
 
-inline IPointPrefab* CPointPrefab::ToInterface() { return new CPointPrefabImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointPrefab* CPointPrefab::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointPrefab*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointPrefabImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointPrefab*>(impl));
+    return impl;
+}
+inline IPointPrefab* IPointPrefab::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointPrefab*>(p)->ToInterface() : nullptr; }
 inline IPointPrefab* IPointPrefab::FromOriginal(CPointPrefab* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTPREFABIMPL_H

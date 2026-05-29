@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoData.h"
 #include "CServerOnlyEntityImpl.h"
 
-class CInfoDataImpl : public CServerOnlyEntityImpl, public IInfoData
+class CInfoDataImpl : public CServerOnlyEntityImpl, public virtual IInfoData
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoData* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoData* CInfoData::ToInterface() { return new CInfoDataImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoData* CInfoData::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoData*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoDataImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoData*>(impl));
+    return impl;
+}
+inline IInfoData* IInfoData::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoData*>(p)->ToInterface() : nullptr; }
 inline IInfoData* IInfoData::FromOriginal(CInfoData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFODATAIMPL_H

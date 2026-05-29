@@ -89,6 +89,7 @@ public:
 };
 
 inline IModelState* CModelState::ToInterface() { return new CModelStateImpl(this); }
+inline IModelState* IModelState::FromRaw(CEntityInstance*) { return nullptr; }
 inline IModelState* IModelState::FromOriginal(CModelState* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMODELSTATEIMPL_H

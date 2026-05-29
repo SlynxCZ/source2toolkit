@@ -61,6 +61,7 @@ public:
 };
 
 inline INmGraphInstance* CNmGraphInstance::ToInterface() { return new CNmGraphInstanceImpl(this); }
+inline INmGraphInstance* INmGraphInstance::FromRaw(CEntityInstance*) { return nullptr; }
 inline INmGraphInstance* INmGraphInstance::FromOriginal(CNmGraphInstance* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNMGRAPHINSTANCEIMPL_H

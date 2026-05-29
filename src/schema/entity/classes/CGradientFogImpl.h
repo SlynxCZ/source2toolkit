@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGradientFog.h"
 #include "CBaseEntityImpl.h"
 
-class CGradientFogImpl : public CBaseEntityImpl, public IGradientFog
+class CGradientFogImpl : public CBaseEntityImpl, public virtual IGradientFog
 {
 
 public:
@@ -90,7 +90,20 @@ public:
     void GradientFogNeedsTexturesUpdated() override { Real()->m_bGradientFogNeedsTextures.NetworkStateChanged(); }
 };
 
-inline IGradientFog* CGradientFog::ToInterface() { return new CGradientFogImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGradientFog* CGradientFog::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGradientFog*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGradientFogImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGradientFog*>(impl));
+    return impl;
+}
+inline IGradientFog* IGradientFog::FromRaw(CEntityInstance* p) { return p ? static_cast<CGradientFog*>(p)->ToInterface() : nullptr; }
 inline IGradientFog* IGradientFog::FromOriginal(CGradientFog* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGRADIENTFOGIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysForce.h"
 #include "CPointEntityImpl.h"
 
-class CPhysForceImpl : public CPointEntityImpl, public IPhysForce
+class CPhysForceImpl : public CPointEntityImpl, public virtual IPhysForce
 {
 
 public:
@@ -72,7 +72,20 @@ public:
     void IntegratorUpdated() override { Real()->m_integrator.NetworkStateChanged(); }
 };
 
-inline IPhysForce* CPhysForce::ToInterface() { return new CPhysForceImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysForce* CPhysForce::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysForce*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysForceImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysForce*>(impl));
+    return impl;
+}
+inline IPhysForce* IPhysForce::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysForce*>(p)->ToInterface() : nullptr; }
 inline IPhysForce* IPhysForce::FromOriginal(CPhysForce* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSFORCEIMPL_H

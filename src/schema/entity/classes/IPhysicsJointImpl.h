@@ -61,6 +61,7 @@ public:
 };
 
 inline IIPhysicsJoint* IPhysicsJoint::ToInterface() { return new IPhysicsJointImpl(this); }
+inline IIPhysicsJoint* IIPhysicsJoint::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIPhysicsJoint* IIPhysicsJoint::FromOriginal(IPhysicsJoint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IPHYSICSJOINTIMPL_H

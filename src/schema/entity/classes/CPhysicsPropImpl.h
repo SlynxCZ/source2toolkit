@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsProp.h"
 #include "CBreakablePropImpl.h"
 
-class CPhysicsPropImpl : public CBreakablePropImpl, public IPhysicsProp
+class CPhysicsPropImpl : public CBreakablePropImpl, public virtual IPhysicsProp
 {
 
 public:
@@ -140,7 +140,20 @@ public:
     void AttachedToReferenceFrameUpdated() override { Real()->m_bAttachedToReferenceFrame.NetworkStateChanged(); }
 };
 
-inline IPhysicsProp* CPhysicsProp::ToInterface() { return new CPhysicsPropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsProp* CPhysicsProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsPropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsProp*>(impl));
+    return impl;
+}
+inline IPhysicsProp* IPhysicsProp::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsProp*>(p)->ToInterface() : nullptr; }
 inline IPhysicsProp* IPhysicsProp::FromOriginal(CPhysicsProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSPROPIMPL_H

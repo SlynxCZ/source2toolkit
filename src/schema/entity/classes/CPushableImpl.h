@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPushable.h"
 #include "CBreakableImpl.h"
 
-class CPushableImpl : public CBreakableImpl, public IPushable
+class CPushableImpl : public CBreakableImpl, public virtual IPushable
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPushable* GetOriginal() const override { return Real(); }
 };
 
-inline IPushable* CPushable::ToInterface() { return new CPushableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPushable* CPushable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPushable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPushableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPushable*>(impl));
+    return impl;
+}
+inline IPushable* IPushable::FromRaw(CEntityInstance* p) { return p ? static_cast<CPushable*>(p)->ToInterface() : nullptr; }
 inline IPushable* IPushable::FromOriginal(CPushable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPUSHABLEIMPL_H

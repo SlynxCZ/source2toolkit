@@ -67,6 +67,7 @@ public:
 };
 
 inline Ilocksound_t* locksound_t::ToInterface() { return new locksound_tImpl(this); }
+inline Ilocksound_t* Ilocksound_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ilocksound_t* Ilocksound_t::FromOriginal(locksound_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_LOCKSOUND_TIMPL_H

@@ -62,6 +62,7 @@ public:
 };
 
 inline ISkillInt* CSkillInt::ToInterface() { return new CSkillIntImpl(this); }
+inline ISkillInt* ISkillInt::FromRaw(CEntityInstance*) { return nullptr; }
 inline ISkillInt* ISkillInt::FromOriginal(CSkillInt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSKILLINTIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/IPhysAggregateInstance.h"
 #include "IPhysicsBodyListImpl.h"
 
-class IPhysAggregateInstanceImpl : public IPhysicsBodyListImpl, public IIPhysAggregateInstance
+class IPhysAggregateInstanceImpl : public IPhysicsBodyListImpl, public virtual IIPhysAggregateInstance
 {
 
 public:
@@ -63,6 +63,7 @@ public:
 };
 
 inline IIPhysAggregateInstance* IPhysAggregateInstance::ToInterface() { return new IPhysAggregateInstanceImpl(this); }
+inline IIPhysAggregateInstance* IIPhysAggregateInstance::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIPhysAggregateInstance* IIPhysAggregateInstance::FromOriginal(IPhysAggregateInstance* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IPHYSAGGREGATEINSTANCEIMPL_H

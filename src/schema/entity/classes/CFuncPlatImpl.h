@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncPlat.h"
 #include "CBasePlatTrainImpl.h"
 
-class CFuncPlatImpl : public CBasePlatTrainImpl, public IFuncPlat
+class CFuncPlatImpl : public CBasePlatTrainImpl, public virtual IFuncPlat
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void NoiseUpdated() override { Real()->m_sNoise.NetworkStateChanged(); }
 };
 
-inline IFuncPlat* CFuncPlat::ToInterface() { return new CFuncPlatImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncPlat* CFuncPlat::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncPlat*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncPlatImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncPlat*>(impl));
+    return impl;
+}
+inline IFuncPlat* IFuncPlat::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncPlat*>(p)->ToInterface() : nullptr; }
 inline IFuncPlat* IFuncPlat::FromOriginal(CFuncPlat* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCPLATIMPL_H

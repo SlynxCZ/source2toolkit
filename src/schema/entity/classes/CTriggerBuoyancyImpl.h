@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerBuoyancy.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerBuoyancyImpl : public CBaseTriggerImpl, public ITriggerBuoyancy
+class CTriggerBuoyancyImpl : public CBaseTriggerImpl, public virtual ITriggerBuoyancy
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void FluidDensityUpdated() override { Real()->m_flFluidDensity.NetworkStateChanged(); }
 };
 
-inline ITriggerBuoyancy* CTriggerBuoyancy::ToInterface() { return new CTriggerBuoyancyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerBuoyancy* CTriggerBuoyancy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerBuoyancy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerBuoyancyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerBuoyancy*>(impl));
+    return impl;
+}
+inline ITriggerBuoyancy* ITriggerBuoyancy::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerBuoyancy*>(p)->ToInterface() : nullptr; }
 inline ITriggerBuoyancy* ITriggerBuoyancy::FromOriginal(CTriggerBuoyancy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERBUOYANCYIMPL_H

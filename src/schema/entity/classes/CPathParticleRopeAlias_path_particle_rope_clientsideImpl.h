@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathParticleRopeAlias_path_particle_rope_clientside.h"
 #include "CPathParticleRopeImpl.h"
 
-class CPathParticleRopeAlias_path_particle_rope_clientsideImpl : public CPathParticleRopeImpl, public IPathParticleRopeAlias_path_particle_rope_clientside
+class CPathParticleRopeAlias_path_particle_rope_clientsideImpl : public CPathParticleRopeImpl, public virtual IPathParticleRopeAlias_path_particle_rope_clientside
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPathParticleRopeAlias_path_particle_rope_clientside* GetOriginal() const override { return Real(); }
 };
 
-inline IPathParticleRopeAlias_path_particle_rope_clientside* CPathParticleRopeAlias_path_particle_rope_clientside::ToInterface() { return new CPathParticleRopeAlias_path_particle_rope_clientsideImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathParticleRopeAlias_path_particle_rope_clientside* CPathParticleRopeAlias_path_particle_rope_clientside::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathParticleRopeAlias_path_particle_rope_clientside*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathParticleRopeAlias_path_particle_rope_clientsideImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathParticleRopeAlias_path_particle_rope_clientside*>(impl));
+    return impl;
+}
+inline IPathParticleRopeAlias_path_particle_rope_clientside* IPathParticleRopeAlias_path_particle_rope_clientside::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathParticleRopeAlias_path_particle_rope_clientside*>(p)->ToInterface() : nullptr; }
 inline IPathParticleRopeAlias_path_particle_rope_clientside* IPathParticleRopeAlias_path_particle_rope_clientside::FromOriginal(CPathParticleRopeAlias_path_particle_rope_clientside* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHPARTICLEROPEALIAS_PATH_PARTICLE_ROPE_CLIENTSIDEIMPL_H

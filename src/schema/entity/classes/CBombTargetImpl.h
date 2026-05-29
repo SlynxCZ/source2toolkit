@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBombTarget.h"
 #include "CBaseTriggerImpl.h"
 
-class CBombTargetImpl : public CBaseTriggerImpl, public IBombTarget
+class CBombTargetImpl : public CBaseTriggerImpl, public virtual IBombTarget
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void BombSiteDesignationUpdated() override { Real()->m_nBombSiteDesignation.NetworkStateChanged(); }
 };
 
-inline IBombTarget* CBombTarget::ToInterface() { return new CBombTargetImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBombTarget* CBombTarget::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBombTarget*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBombTargetImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBombTarget*>(impl));
+    return impl;
+}
+inline IBombTarget* IBombTarget::FromRaw(CEntityInstance* p) { return p ? static_cast<CBombTarget*>(p)->ToInterface() : nullptr; }
 inline IBombTarget* IBombTarget::FromOriginal(CBombTarget* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBOMBTARGETIMPL_H

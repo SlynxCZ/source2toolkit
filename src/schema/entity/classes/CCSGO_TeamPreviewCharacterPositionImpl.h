@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGO_TeamPreviewCharacterPosition.h"
 #include "CBaseEntityImpl.h"
 
-class CCSGO_TeamPreviewCharacterPositionImpl : public CBaseEntityImpl, public ICSGO_TeamPreviewCharacterPosition
+class CCSGO_TeamPreviewCharacterPositionImpl : public CBaseEntityImpl, public virtual ICSGO_TeamPreviewCharacterPosition
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void WeaponItemUpdated() override { Real()->m_weaponItem.NetworkStateChanged(); }
 };
 
-inline ICSGO_TeamPreviewCharacterPosition* CCSGO_TeamPreviewCharacterPosition::ToInterface() { return new CCSGO_TeamPreviewCharacterPositionImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSGO_TeamPreviewCharacterPosition* CCSGO_TeamPreviewCharacterPosition::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSGO_TeamPreviewCharacterPosition*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSGO_TeamPreviewCharacterPositionImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSGO_TeamPreviewCharacterPosition*>(impl));
+    return impl;
+}
+inline ICSGO_TeamPreviewCharacterPosition* ICSGO_TeamPreviewCharacterPosition::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSGO_TeamPreviewCharacterPosition*>(p)->ToInterface() : nullptr; }
 inline ICSGO_TeamPreviewCharacterPosition* ICSGO_TeamPreviewCharacterPosition::FromOriginal(CCSGO_TeamPreviewCharacterPosition* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGO_TEAMPREVIEWCHARACTERPOSITIONIMPL_H

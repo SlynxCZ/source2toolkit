@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlatTrigger.h"
 #include "CBaseModelEntityImpl.h"
 
-class CPlatTriggerImpl : public CBaseModelEntityImpl, public IPlatTrigger
+class CPlatTriggerImpl : public CBaseModelEntityImpl, public virtual IPlatTrigger
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void PlatformUpdated() override { Real()->m_pPlatform.NetworkStateChanged(); }
 };
 
-inline IPlatTrigger* CPlatTrigger::ToInterface() { return new CPlatTriggerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPlatTrigger* CPlatTrigger::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPlatTrigger*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPlatTriggerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPlatTrigger*>(impl));
+    return impl;
+}
+inline IPlatTrigger* IPlatTrigger::FromRaw(CEntityInstance* p) { return p ? static_cast<CPlatTrigger*>(p)->ToInterface() : nullptr; }
 inline IPlatTrigger* IPlatTrigger::FromOriginal(CPlatTrigger* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLATTRIGGERIMPL_H

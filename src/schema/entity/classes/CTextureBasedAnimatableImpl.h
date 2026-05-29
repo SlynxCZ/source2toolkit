@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTextureBasedAnimatable.h"
 #include "CBaseModelEntityImpl.h"
 
-class CTextureBasedAnimatableImpl : public CBaseModelEntityImpl, public ITextureBasedAnimatable
+class CTextureBasedAnimatableImpl : public CBaseModelEntityImpl, public virtual ITextureBasedAnimatable
 {
 
 public:
@@ -74,7 +74,20 @@ public:
     void StartFrameUpdated() override { Real()->m_flStartFrame.NetworkStateChanged(); }
 };
 
-inline ITextureBasedAnimatable* CTextureBasedAnimatable::ToInterface() { return new CTextureBasedAnimatableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITextureBasedAnimatable* CTextureBasedAnimatable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITextureBasedAnimatable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTextureBasedAnimatableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITextureBasedAnimatable*>(impl));
+    return impl;
+}
+inline ITextureBasedAnimatable* ITextureBasedAnimatable::FromRaw(CEntityInstance* p) { return p ? static_cast<CTextureBasedAnimatable*>(p)->ToInterface() : nullptr; }
 inline ITextureBasedAnimatable* ITextureBasedAnimatable::FromOriginal(CTextureBasedAnimatable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTEXTUREBASEDANIMATABLEIMPL_H

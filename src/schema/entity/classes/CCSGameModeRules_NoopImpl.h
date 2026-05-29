@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGameModeRules_Noop.h"
 #include "CCSGameModeRulesImpl.h"
 
-class CCSGameModeRules_NoopImpl : public CCSGameModeRulesImpl, public ICSGameModeRules_Noop
+class CCSGameModeRules_NoopImpl : public CCSGameModeRulesImpl, public virtual ICSGameModeRules_Noop
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ICSGameModeRules_Noop* CCSGameModeRules_Noop::ToInterface() { return new CCSGameModeRules_NoopImpl(this); }
+inline ICSGameModeRules_Noop* ICSGameModeRules_Noop::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSGameModeRules_Noop* ICSGameModeRules_Noop::FromOriginal(CCSGameModeRules_Noop* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGAMEMODERULES_NOOPIMPL_H

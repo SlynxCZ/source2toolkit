@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathNode.h"
 #include "CPointEntityImpl.h"
 
-class CPathNodeImpl : public CPointEntityImpl, public IPathNode
+class CPathNodeImpl : public CPointEntityImpl, public virtual IPathNode
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void PathUpdated() override { Real()->m_hPath.NetworkStateChanged(); }
 };
 
-inline IPathNode* CPathNode::ToInterface() { return new CPathNodeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathNode* CPathNode::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathNode*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathNodeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathNode*>(impl));
+    return impl;
+}
+inline IPathNode* IPathNode::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathNode*>(p)->ToInterface() : nullptr; }
 inline IPathNode* IPathNode::FromOriginal(CPathNode* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHNODEIMPL_H

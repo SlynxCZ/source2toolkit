@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointValueRemapper.h"
 #include "CBaseEntityImpl.h"
 
-class CPointValueRemapperImpl : public CBaseEntityImpl, public IPointValueRemapper
+class CPointValueRemapperImpl : public CBaseEntityImpl, public virtual IPointValueRemapper
 {
 
 public:
@@ -142,7 +142,20 @@ public:
     void OnDisengageUpdated() override { Real()->m_OnDisengage.NetworkStateChanged(); }
 };
 
-inline IPointValueRemapper* CPointValueRemapper::ToInterface() { return new CPointValueRemapperImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointValueRemapper* CPointValueRemapper::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointValueRemapper*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointValueRemapperImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointValueRemapper*>(impl));
+    return impl;
+}
+inline IPointValueRemapper* IPointValueRemapper::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointValueRemapper*>(p)->ToInterface() : nullptr; }
 inline IPointValueRemapper* IPointValueRemapper::FromOriginal(CPointValueRemapper* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTVALUEREMAPPERIMPL_H

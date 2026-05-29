@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPlayerVisibility.h"
 #include "CBaseEntityImpl.h"
 
-class CPlayerVisibilityImpl : public CBaseEntityImpl, public IPlayerVisibility
+class CPlayerVisibilityImpl : public CBaseEntityImpl, public virtual IPlayerVisibility
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void IsEnabledUpdated() override { Real()->m_bIsEnabled.NetworkStateChanged(); }
 };
 
-inline IPlayerVisibility* CPlayerVisibility::ToInterface() { return new CPlayerVisibilityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPlayerVisibility* CPlayerVisibility::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPlayerVisibility*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPlayerVisibilityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPlayerVisibility*>(impl));
+    return impl;
+}
+inline IPlayerVisibility* IPlayerVisibility::FromRaw(CEntityInstance* p) { return p ? static_cast<CPlayerVisibility*>(p)->ToInterface() : nullptr; }
 inline IPlayerVisibility* IPlayerVisibility::FromOriginal(CPlayerVisibility* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPLAYERVISIBILITYIMPL_H

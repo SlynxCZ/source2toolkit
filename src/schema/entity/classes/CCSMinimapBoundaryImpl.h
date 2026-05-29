@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSMinimapBoundary.h"
 #include "CBaseEntityImpl.h"
 
-class CCSMinimapBoundaryImpl : public CBaseEntityImpl, public ICSMinimapBoundary
+class CCSMinimapBoundaryImpl : public CBaseEntityImpl, public virtual ICSMinimapBoundary
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSMinimapBoundary* GetOriginal() const override { return Real(); }
 };
 
-inline ICSMinimapBoundary* CCSMinimapBoundary::ToInterface() { return new CCSMinimapBoundaryImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSMinimapBoundary* CCSMinimapBoundary::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSMinimapBoundary*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSMinimapBoundaryImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSMinimapBoundary*>(impl));
+    return impl;
+}
+inline ICSMinimapBoundary* ICSMinimapBoundary::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSMinimapBoundary*>(p)->ToInterface() : nullptr; }
 inline ICSMinimapBoundary* ICSMinimapBoundary::FromOriginal(CCSMinimapBoundary* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSMINIMAPBOUNDARYIMPL_H

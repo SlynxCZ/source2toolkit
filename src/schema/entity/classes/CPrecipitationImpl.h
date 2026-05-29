@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPrecipitation.h"
 #include "CBaseTriggerImpl.h"
 
-class CPrecipitationImpl : public CBaseTriggerImpl, public IPrecipitation
+class CPrecipitationImpl : public CBaseTriggerImpl, public virtual IPrecipitation
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CPrecipitation* GetOriginal() const override { return Real(); }
 };
 
-inline IPrecipitation* CPrecipitation::ToInterface() { return new CPrecipitationImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPrecipitation* CPrecipitation::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPrecipitation*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPrecipitationImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPrecipitation*>(impl));
+    return impl;
+}
+inline IPrecipitation* IPrecipitation::FromRaw(CEntityInstance* p) { return p ? static_cast<CPrecipitation*>(p)->ToInterface() : nullptr; }
 inline IPrecipitation* IPrecipitation::FromOriginal(CPrecipitation* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPRECIPITATIONIMPL_H

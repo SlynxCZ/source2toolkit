@@ -61,6 +61,7 @@ public:
 };
 
 inline IInfoForResourceTypeIMaterial2* InfoForResourceTypeIMaterial2::ToInterface() { return new InfoForResourceTypeIMaterial2Impl(this); }
+inline IInfoForResourceTypeIMaterial2* IInfoForResourceTypeIMaterial2::FromRaw(CEntityInstance*) { return nullptr; }
 inline IInfoForResourceTypeIMaterial2* IInfoForResourceTypeIMaterial2::FromOriginal(InfoForResourceTypeIMaterial2* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_INFOFORRESOURCETYPEIMATERIAL2IMPL_H

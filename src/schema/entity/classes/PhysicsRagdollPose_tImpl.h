@@ -67,6 +67,7 @@ public:
 };
 
 inline IPhysicsRagdollPose_t* PhysicsRagdollPose_t::ToInterface() { return new PhysicsRagdollPose_tImpl(this); }
+inline IPhysicsRagdollPose_t* IPhysicsRagdollPose_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPhysicsRagdollPose_t* IPhysicsRagdollPose_t::FromOriginal(PhysicsRagdollPose_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_PHYSICSRAGDOLLPOSE_TIMPL_H

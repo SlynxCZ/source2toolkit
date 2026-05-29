@@ -65,6 +65,7 @@ public:
 };
 
 inline IBodyComponent* CBodyComponent::ToInterface() { return new CBodyComponentImpl(this); }
+inline IBodyComponent* IBodyComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IBodyComponent* IBodyComponent::FromOriginal(CBodyComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBODYCOMPONENTIMPL_H

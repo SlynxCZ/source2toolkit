@@ -63,6 +63,7 @@ public:
 };
 
 inline IPhysicsShake* CPhysicsShake::ToInterface() { return new CPhysicsShakeImpl(this); }
+inline IPhysicsShake* IPhysicsShake::FromRaw(CEntityInstance*) { return nullptr; }
 inline IPhysicsShake* IPhysicsShake::FromOriginal(CPhysicsShake* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSSHAKEIMPL_H

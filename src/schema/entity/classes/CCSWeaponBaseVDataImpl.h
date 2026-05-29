@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSWeaponBaseVData.h"
 #include "CBasePlayerWeaponVDataImpl.h"
 
-class CCSWeaponBaseVDataImpl : public CBasePlayerWeaponVDataImpl, public ICSWeaponBaseVData
+class CCSWeaponBaseVDataImpl : public CBasePlayerWeaponVDataImpl, public virtual ICSWeaponBaseVData
 {
 
 public:
@@ -223,6 +223,7 @@ public:
 };
 
 inline ICSWeaponBaseVData* CCSWeaponBaseVData::ToInterface() { return new CCSWeaponBaseVDataImpl(this); }
+inline ICSWeaponBaseVData* ICSWeaponBaseVData::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSWeaponBaseVData* ICSWeaponBaseVData::FromOriginal(CCSWeaponBaseVData* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSWEAPONBASEVDATAIMPL_H

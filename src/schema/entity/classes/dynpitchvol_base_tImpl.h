@@ -111,6 +111,7 @@ public:
 };
 
 inline Idynpitchvol_base_t* dynpitchvol_base_t::ToInterface() { return new dynpitchvol_base_tImpl(this); }
+inline Idynpitchvol_base_t* Idynpitchvol_base_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Idynpitchvol_base_t* Idynpitchvol_base_t::FromOriginal(dynpitchvol_base_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_DYNPITCHVOL_BASE_TIMPL_H

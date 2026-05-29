@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoOffscreenPanoramaTexture.h"
 #include "CPointEntityImpl.h"
 
-class CInfoOffscreenPanoramaTextureImpl : public CPointEntityImpl, public IInfoOffscreenPanoramaTexture
+class CInfoOffscreenPanoramaTextureImpl : public CPointEntityImpl, public virtual IInfoOffscreenPanoramaTexture
 {
 
 public:
@@ -72,15 +72,28 @@ public:
     void TargetEntitiesUpdated() override { Real()->m_TargetEntities.NetworkStateChanged(); }
     int32_t& TargetChangeCount() override { return Real()->m_nTargetChangeCount(); }
     void TargetChangeCountUpdated() override { Real()->m_nTargetChangeCount.NetworkStateChanged(); }
-    CUtlVector<CUtlSymbolLarge>& SSClasses() override { return Real()->m_vecCSSClasses(); }
-    void SSClassesUpdated() override { Real()->m_vecCSSClasses.NetworkStateChanged(); }
+    CUtlVector<CUtlSymbolLarge>& CSSClasses() override { return Real()->m_vecCSSClasses(); }
+    void CSSClassesUpdated() override { Real()->m_vecCSSClasses.NetworkStateChanged(); }
     CUtlSymbolLarge& TargetsName() override { return Real()->m_szTargetsName(); }
     void TargetsNameUpdated() override { Real()->m_szTargetsName.NetworkStateChanged(); }
     CUtlVector<CHandle<CBaseModelEntity>>& AdditionalTargetEntities() override { return Real()->m_AdditionalTargetEntities(); }
     void AdditionalTargetEntitiesUpdated() override { Real()->m_AdditionalTargetEntities.NetworkStateChanged(); }
 };
 
-inline IInfoOffscreenPanoramaTexture* CInfoOffscreenPanoramaTexture::ToInterface() { return new CInfoOffscreenPanoramaTextureImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoOffscreenPanoramaTexture* CInfoOffscreenPanoramaTexture::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoOffscreenPanoramaTexture*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoOffscreenPanoramaTextureImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoOffscreenPanoramaTexture*>(impl));
+    return impl;
+}
+inline IInfoOffscreenPanoramaTexture* IInfoOffscreenPanoramaTexture::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoOffscreenPanoramaTexture*>(p)->ToInterface() : nullptr; }
 inline IInfoOffscreenPanoramaTexture* IInfoOffscreenPanoramaTexture::FromOriginal(CInfoOffscreenPanoramaTexture* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOOFFSCREENPANORAMATEXTUREIMPL_H

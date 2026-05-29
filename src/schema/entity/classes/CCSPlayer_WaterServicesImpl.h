@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_WaterServices.h"
 #include "CPlayer_WaterServicesImpl.h"
 
-class CCSPlayer_WaterServicesImpl : public CPlayer_WaterServicesImpl, public ICSPlayer_WaterServices
+class CCSPlayer_WaterServicesImpl : public CPlayer_WaterServicesImpl, public virtual ICSPlayer_WaterServices
 {
 
 public:
@@ -71,6 +71,7 @@ public:
 };
 
 inline ICSPlayer_WaterServices* CCSPlayer_WaterServices::ToInterface() { return new CCSPlayer_WaterServicesImpl(this); }
+inline ICSPlayer_WaterServices* ICSPlayer_WaterServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_WaterServices* ICSPlayer_WaterServices::FromOriginal(CCSPlayer_WaterServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_WATERSERVICESIMPL_H

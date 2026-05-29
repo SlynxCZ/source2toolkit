@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CScriptItem.h"
 #include "CItemImpl.h"
 
-class CScriptItemImpl : public CItemImpl, public IScriptItem
+class CScriptItemImpl : public CItemImpl, public virtual IScriptItem
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MoveTypeOverrideUpdated() override { Real()->m_MoveTypeOverride.NetworkStateChanged(); }
 };
 
-inline IScriptItem* CScriptItem::ToInterface() { return new CScriptItemImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IScriptItem* CScriptItem::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IScriptItem*>(tagIt->second.ptr_for_return);
+    auto* impl = new CScriptItemImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IScriptItem*>(impl));
+    return impl;
+}
+inline IScriptItem* IScriptItem::FromRaw(CEntityInstance* p) { return p ? static_cast<CScriptItem*>(p)->ToInterface() : nullptr; }
 inline IScriptItem* IScriptItem::FromOriginal(CScriptItem* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSCRIPTITEMIMPL_H

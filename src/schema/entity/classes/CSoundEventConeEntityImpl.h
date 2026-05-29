@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventConeEntity.h"
 #include "CSoundEventEntityImpl.h"
 
-class CSoundEventConeEntityImpl : public CSoundEventEntityImpl, public ISoundEventConeEntity
+class CSoundEventConeEntityImpl : public CSoundEventEntityImpl, public virtual ISoundEventConeEntity
 {
 
 public:
@@ -68,7 +68,20 @@ public:
     void ParameterNameUpdated() override { Real()->m_iszParameterName.NetworkStateChanged(); }
 };
 
-inline ISoundEventConeEntity* CSoundEventConeEntity::ToInterface() { return new CSoundEventConeEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventConeEntity* CSoundEventConeEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventConeEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventConeEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventConeEntity*>(impl));
+    return impl;
+}
+inline ISoundEventConeEntity* ISoundEventConeEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventConeEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundEventConeEntity* ISoundEventConeEntity::FromOriginal(CSoundEventConeEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTCONEENTITYIMPL_H

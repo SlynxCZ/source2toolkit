@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTestEffect.h"
 #include "CBaseEntityImpl.h"
 
-class CTestEffectImpl : public CBaseEntityImpl, public ITestEffect
+class CTestEffectImpl : public CBaseEntityImpl, public virtual ITestEffect
 {
 
 public:
@@ -60,13 +60,25 @@ public:
     void LoopUpdated() override { Real()->m_iLoop.NetworkStateChanged(); }
     int32_t& Beam() override { return Real()->m_iBeam(); }
     void BeamUpdated() override { Real()->m_iBeam.NetworkStateChanged(); }
-    CHandle<CBeam>* Beam() override { return Real()->m_pBeam(); }
     float* BeamTime() override { return Real()->m_flBeamTime(); }
     float& StartTime() override { return Real()->m_flStartTime(); }
     void StartTimeUpdated() override { Real()->m_flStartTime.NetworkStateChanged(); }
 };
 
-inline ITestEffect* CTestEffect::ToInterface() { return new CTestEffectImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITestEffect* CTestEffect::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITestEffect*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTestEffectImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITestEffect*>(impl));
+    return impl;
+}
+inline ITestEffect* ITestEffect::FromRaw(CEntityInstance* p) { return p ? static_cast<CTestEffect*>(p)->ToInterface() : nullptr; }
 inline ITestEffect* ITestEffect::FromOriginal(CTestEffect* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTEFFECTIMPL_H

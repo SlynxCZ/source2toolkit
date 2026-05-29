@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncNavBlocker.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncNavBlockerImpl : public CBaseModelEntityImpl, public IFuncNavBlocker
+class CFuncNavBlockerImpl : public CBaseModelEntityImpl, public virtual IFuncNavBlocker
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void BlockedTeamNumberUpdated() override { Real()->m_nBlockedTeamNumber.NetworkStateChanged(); }
 };
 
-inline IFuncNavBlocker* CFuncNavBlocker::ToInterface() { return new CFuncNavBlockerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncNavBlocker* CFuncNavBlocker::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncNavBlocker*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncNavBlockerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncNavBlocker*>(impl));
+    return impl;
+}
+inline IFuncNavBlocker* IFuncNavBlocker::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncNavBlocker*>(p)->ToInterface() : nullptr; }
 inline IFuncNavBlocker* IFuncNavBlocker::FromOriginal(CFuncNavBlocker* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCNAVBLOCKERIMPL_H

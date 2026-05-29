@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicCase.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicCaseImpl : public CLogicalEntityImpl, public ILogicCase
+class CLogicCaseImpl : public CLogicalEntityImpl, public virtual ILogicCase
 {
 
 public:
@@ -65,7 +65,20 @@ public:
     CEntityIOOutput* OnCase() override { return Real()->m_OnCase(); }
 };
 
-inline ILogicCase* CLogicCase::ToInterface() { return new CLogicCaseImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicCase* CLogicCase::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicCase*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicCaseImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicCase*>(impl));
+    return impl;
+}
+inline ILogicCase* ILogicCase::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicCase*>(p)->ToInterface() : nullptr; }
 inline ILogicCase* ILogicCase::FromOriginal(CLogicCase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICCASEIMPL_H

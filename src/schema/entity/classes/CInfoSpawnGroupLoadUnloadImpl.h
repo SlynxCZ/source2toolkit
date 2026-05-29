@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoSpawnGroupLoadUnload.h"
 #include "CLogicalEntityImpl.h"
 
-class CInfoSpawnGroupLoadUnloadImpl : public CLogicalEntityImpl, public IInfoSpawnGroupLoadUnload
+class CInfoSpawnGroupLoadUnloadImpl : public CLogicalEntityImpl, public virtual IInfoSpawnGroupLoadUnload
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void QueueFinishLoadingUpdated() override { Real()->m_bQueueFinishLoading.NetworkStateChanged(); }
 };
 
-inline IInfoSpawnGroupLoadUnload* CInfoSpawnGroupLoadUnload::ToInterface() { return new CInfoSpawnGroupLoadUnloadImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoSpawnGroupLoadUnload* CInfoSpawnGroupLoadUnload::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoSpawnGroupLoadUnload*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoSpawnGroupLoadUnloadImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoSpawnGroupLoadUnload*>(impl));
+    return impl;
+}
+inline IInfoSpawnGroupLoadUnload* IInfoSpawnGroupLoadUnload::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoSpawnGroupLoadUnload*>(p)->ToInterface() : nullptr; }
 inline IInfoSpawnGroupLoadUnload* IInfoSpawnGroupLoadUnload::FromOriginal(CInfoSpawnGroupLoadUnload* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOSPAWNGROUPLOADUNLOADIMPL_H

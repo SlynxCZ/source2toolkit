@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerSave.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerSaveImpl : public CBaseTriggerImpl, public ITriggerSave
+class CTriggerSaveImpl : public CBaseTriggerImpl, public virtual ITriggerSave
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void MinHitPointsUpdated() override { Real()->m_minHitPoints.NetworkStateChanged(); }
 };
 
-inline ITriggerSave* CTriggerSave::ToInterface() { return new CTriggerSaveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerSave* CTriggerSave::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerSave*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerSaveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerSave*>(impl));
+    return impl;
+}
+inline ITriggerSave* ITriggerSave::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerSave*>(p)->ToInterface() : nullptr; }
 inline ITriggerSave* ITriggerSave::FromOriginal(CTriggerSave* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERSAVEIMPL_H

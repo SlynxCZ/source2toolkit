@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCredits.h"
 #include "CPointEntityImpl.h"
 
-class CCreditsImpl : public CPointEntityImpl, public ICredits
+class CCreditsImpl : public CPointEntityImpl, public virtual ICredits
 {
 
 public:
@@ -64,7 +64,20 @@ public:
     void LogoLengthUpdated() override { Real()->m_flLogoLength.NetworkStateChanged(); }
 };
 
-inline ICredits* CCredits::ToInterface() { return new CCreditsImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICredits* CCredits::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICredits*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCreditsImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICredits*>(impl));
+    return impl;
+}
+inline ICredits* ICredits::FromRaw(CEntityInstance* p) { return p ? static_cast<CCredits*>(p)->ToInterface() : nullptr; }
 inline ICredits* ICredits::FromOriginal(CCredits* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCREDITSIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBreakable.h"
 #include "CBaseModelEntityImpl.h"
 
-class CBreakableImpl : public CBaseModelEntityImpl, public IBreakable
+class CBreakableImpl : public CBaseModelEntityImpl, public virtual IBreakable
 {
 
 public:
@@ -88,7 +88,20 @@ public:
     void LastPhysicsInfluenceTimeUpdated() override { Real()->m_flLastPhysicsInfluenceTime.NetworkStateChanged(); }
 };
 
-inline IBreakable* CBreakable::ToInterface() { return new CBreakableImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBreakable* CBreakable::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBreakable*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBreakableImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBreakable*>(impl));
+    return impl;
+}
+inline IBreakable* IBreakable::FromRaw(CEntityInstance* p) { return p ? static_cast<CBreakable*>(p)->ToInterface() : nullptr; }
 inline IBreakable* IBreakable::FromOriginal(CBreakable* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBREAKABLEIMPL_H

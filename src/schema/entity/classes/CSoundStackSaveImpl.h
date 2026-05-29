@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundStackSave.h"
 #include "CLogicalEntityImpl.h"
 
-class CSoundStackSaveImpl : public CLogicalEntityImpl, public ISoundStackSave
+class CSoundStackSaveImpl : public CLogicalEntityImpl, public virtual ISoundStackSave
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void StackNameUpdated() override { Real()->m_iszStackName.NetworkStateChanged(); }
 };
 
-inline ISoundStackSave* CSoundStackSave::ToInterface() { return new CSoundStackSaveImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundStackSave* CSoundStackSave::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundStackSave*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundStackSaveImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundStackSave*>(impl));
+    return impl;
+}
+inline ISoundStackSave* ISoundStackSave::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundStackSave*>(p)->ToInterface() : nullptr; }
 inline ISoundStackSave* ISoundStackSave::FromOriginal(CSoundStackSave* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDSTACKSAVEIMPL_H

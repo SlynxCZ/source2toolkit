@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePlayerController.h"
 #include "CBaseEntityImpl.h"
 
-class CBasePlayerControllerImpl : public CBaseEntityImpl, public IBasePlayerController
+class CBasePlayerControllerImpl : public CBaseEntityImpl, public virtual IBasePlayerController
 {
 
 public:

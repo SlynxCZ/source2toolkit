@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CExampleSchemaVData_PolymorphicDerivedB.h"
 #include "CExampleSchemaVData_PolymorphicBaseImpl.h"
 
-class CExampleSchemaVData_PolymorphicDerivedBImpl : public CExampleSchemaVData_PolymorphicBaseImpl, public IExampleSchemaVData_PolymorphicDerivedB
+class CExampleSchemaVData_PolymorphicDerivedBImpl : public CExampleSchemaVData_PolymorphicBaseImpl, public virtual IExampleSchemaVData_PolymorphicDerivedB
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline IExampleSchemaVData_PolymorphicDerivedB* CExampleSchemaVData_PolymorphicDerivedB::ToInterface() { return new CExampleSchemaVData_PolymorphicDerivedBImpl(this); }
+inline IExampleSchemaVData_PolymorphicDerivedB* IExampleSchemaVData_PolymorphicDerivedB::FromRaw(CEntityInstance*) { return nullptr; }
 inline IExampleSchemaVData_PolymorphicDerivedB* IExampleSchemaVData_PolymorphicDerivedB::FromOriginal(CExampleSchemaVData_PolymorphicDerivedB* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_POLYMORPHICDERIVEDBIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseProp.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CBasePropImpl : public CBaseAnimGraphImpl, public IBaseProp
+class CBasePropImpl : public CBaseAnimGraphImpl, public virtual IBaseProp
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void MPreferredCatchTransformUpdated() override { Real()->m_mPreferredCatchTransform.NetworkStateChanged(); }
 };
 
-inline IBaseProp* CBaseProp::ToInterface() { return new CBasePropImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseProp* CBaseProp::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseProp*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBasePropImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseProp*>(impl));
+    return impl;
+}
+inline IBaseProp* IBaseProp::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseProp*>(p)->ToInterface() : nullptr; }
 inline IBaseProp* IBaseProp::FromOriginal(CBaseProp* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASEPROPIMPL_H

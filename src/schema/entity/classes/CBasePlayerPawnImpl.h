@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBasePlayerPawn.h"
 #include "CBaseCombatCharacterImpl.h"
 
-class CBasePlayerPawnImpl : public CBaseCombatCharacterImpl, public IBasePlayerPawn
+class CBasePlayerPawnImpl : public CBaseCombatCharacterImpl, public virtual IBasePlayerPawn
 {
 
 public:

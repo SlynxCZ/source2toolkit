@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoDynamicShadowHintBox.h"
 #include "CInfoDynamicShadowHintImpl.h"
 
-class CInfoDynamicShadowHintBoxImpl : public CInfoDynamicShadowHintImpl, public IInfoDynamicShadowHintBox
+class CInfoDynamicShadowHintBoxImpl : public CInfoDynamicShadowHintImpl, public virtual IInfoDynamicShadowHintBox
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void BoxMaxsUpdated() override { Real()->m_vBoxMaxs.NetworkStateChanged(); }
 };
 
-inline IInfoDynamicShadowHintBox* CInfoDynamicShadowHintBox::ToInterface() { return new CInfoDynamicShadowHintBoxImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoDynamicShadowHintBox* CInfoDynamicShadowHintBox::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoDynamicShadowHintBox*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoDynamicShadowHintBoxImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoDynamicShadowHintBox*>(impl));
+    return impl;
+}
+inline IInfoDynamicShadowHintBox* IInfoDynamicShadowHintBox::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoDynamicShadowHintBox*>(p)->ToInterface() : nullptr; }
 inline IInfoDynamicShadowHintBox* IInfoDynamicShadowHintBox::FromOriginal(CInfoDynamicShadowHintBox* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINTBOXIMPL_H

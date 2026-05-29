@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPathMoverEntitySpawner.h"
 #include "CLogicalEntityImpl.h"
 
-class CPathMoverEntitySpawnerImpl : public CLogicalEntityImpl, public IPathMoverEntitySpawner
+class CPathMoverEntitySpawnerImpl : public CLogicalEntityImpl, public virtual IPathMoverEntitySpawner
 {
 
 public:
@@ -83,7 +83,20 @@ public:
     void OnTemplateGroupSpawnedUpdated() override { Real()->m_OnTemplateGroupSpawned.NetworkStateChanged(); }
 };
 
-inline IPathMoverEntitySpawner* CPathMoverEntitySpawner::ToInterface() { return new CPathMoverEntitySpawnerImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPathMoverEntitySpawner* CPathMoverEntitySpawner::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPathMoverEntitySpawner*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPathMoverEntitySpawnerImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPathMoverEntitySpawner*>(impl));
+    return impl;
+}
+inline IPathMoverEntitySpawner* IPathMoverEntitySpawner::FromRaw(CEntityInstance* p) { return p ? static_cast<CPathMoverEntitySpawner*>(p)->ToInterface() : nullptr; }
 inline IPathMoverEntitySpawner* IPathMoverEntitySpawner::FromOriginal(CPathMoverEntitySpawner* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPATHMOVERENTITYSPAWNERIMPL_H

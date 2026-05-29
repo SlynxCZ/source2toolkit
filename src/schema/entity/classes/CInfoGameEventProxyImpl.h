@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoGameEventProxy.h"
 #include "CPointEntityImpl.h"
 
-class CInfoGameEventProxyImpl : public CPointEntityImpl, public IInfoGameEventProxy
+class CInfoGameEventProxyImpl : public CPointEntityImpl, public virtual IInfoGameEventProxy
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void RangeUpdated() override { Real()->m_flRange.NetworkStateChanged(); }
 };
 
-inline IInfoGameEventProxy* CInfoGameEventProxy::ToInterface() { return new CInfoGameEventProxyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoGameEventProxy* CInfoGameEventProxy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoGameEventProxy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoGameEventProxyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoGameEventProxy*>(impl));
+    return impl;
+}
+inline IInfoGameEventProxy* IInfoGameEventProxy::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoGameEventProxy*>(p)->ToInterface() : nullptr; }
 inline IInfoGameEventProxy* IInfoGameEventProxy::FromOriginal(CInfoGameEventProxy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOGAMEEVENTPROXYIMPL_H

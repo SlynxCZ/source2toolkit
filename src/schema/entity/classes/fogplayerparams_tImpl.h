@@ -89,6 +89,7 @@ public:
 };
 
 inline Ifogplayerparams_t* fogplayerparams_t::ToInterface() { return new fogplayerparams_tImpl(this); }
+inline Ifogplayerparams_t* Ifogplayerparams_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ifogplayerparams_t* Ifogplayerparams_t::FromOriginal(fogplayerparams_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_FOGPLAYERPARAMS_TIMPL_H

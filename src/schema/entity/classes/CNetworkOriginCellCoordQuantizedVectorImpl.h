@@ -75,6 +75,7 @@ public:
 };
 
 inline INetworkOriginCellCoordQuantizedVector* CNetworkOriginCellCoordQuantizedVector::ToInterface() { return new CNetworkOriginCellCoordQuantizedVectorImpl(this); }
+inline INetworkOriginCellCoordQuantizedVector* INetworkOriginCellCoordQuantizedVector::FromRaw(CEntityInstance*) { return nullptr; }
 inline INetworkOriginCellCoordQuantizedVector* INetworkOriginCellCoordQuantizedVector::FromOriginal(CNetworkOriginCellCoordQuantizedVector* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CNETWORKORIGINCELLCOORDQUANTIZEDVECTORIMPL_H

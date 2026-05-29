@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvTilt.h"
 #include "CPointEntityImpl.h"
 
-class CEnvTiltImpl : public CPointEntityImpl, public IEnvTilt
+class CEnvTiltImpl : public CPointEntityImpl, public virtual IEnvTilt
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void StopTimeUpdated() override { Real()->m_stopTime.NetworkStateChanged(); }
 };
 
-inline IEnvTilt* CEnvTilt::ToInterface() { return new CEnvTiltImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvTilt* CEnvTilt::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvTilt*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvTiltImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvTilt*>(impl));
+    return impl;
+}
+inline IEnvTilt* IEnvTilt::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvTilt*>(p)->ToInterface() : nullptr; }
 inline IEnvTilt* IEnvTilt::FromOriginal(CEnvTilt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVTILTIMPL_H

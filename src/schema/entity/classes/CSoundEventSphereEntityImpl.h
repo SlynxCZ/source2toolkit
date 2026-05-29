@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventSphereEntity.h"
 #include "CSoundEventEntityImpl.h"
 
-class CSoundEventSphereEntityImpl : public CSoundEventEntityImpl, public ISoundEventSphereEntity
+class CSoundEventSphereEntityImpl : public CSoundEventEntityImpl, public virtual ISoundEventSphereEntity
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }
 };
 
-inline ISoundEventSphereEntity* CSoundEventSphereEntity::ToInterface() { return new CSoundEventSphereEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventSphereEntity* CSoundEventSphereEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventSphereEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventSphereEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventSphereEntity*>(impl));
+    return impl;
+}
+inline ISoundEventSphereEntity* ISoundEventSphereEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventSphereEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundEventSphereEntity* ISoundEventSphereEntity::FromOriginal(CSoundEventSphereEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTSPHEREENTITYIMPL_H

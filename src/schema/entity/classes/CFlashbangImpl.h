@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFlashbang.h"
 #include "CBaseCSGrenadeImpl.h"
 
-class CFlashbangImpl : public CBaseCSGrenadeImpl, public IFlashbang
+class CFlashbangImpl : public CBaseCSGrenadeImpl, public virtual IFlashbang
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFlashbang* GetOriginal() const override { return Real(); }
 };
 
-inline IFlashbang* CFlashbang::ToInterface() { return new CFlashbangImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFlashbang* CFlashbang::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFlashbang*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFlashbangImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFlashbang*>(impl));
+    return impl;
+}
+inline IFlashbang* IFlashbang::FromRaw(CEntityInstance* p) { return p ? static_cast<CFlashbang*>(p)->ToInterface() : nullptr; }
 inline IFlashbang* IFlashbang::FromOriginal(CFlashbang* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFLASHBANGIMPL_H

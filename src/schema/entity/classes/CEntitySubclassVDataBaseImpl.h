@@ -61,6 +61,7 @@ public:
 };
 
 inline IEntitySubclassVDataBase* CEntitySubclassVDataBase::ToInterface() { return new CEntitySubclassVDataBaseImpl(this); }
+inline IEntitySubclassVDataBase* IEntitySubclassVDataBase::FromRaw(CEntityInstance*) { return nullptr; }
 inline IEntitySubclassVDataBase* IEntitySubclassVDataBase::FromOriginal(CEntitySubclassVDataBase* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENTITYSUBCLASSVDATABASEIMPL_H

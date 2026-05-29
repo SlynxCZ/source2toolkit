@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CMathCounter.h"
 #include "CLogicalEntityImpl.h"
 
-class CMathCounterImpl : public CLogicalEntityImpl, public IMathCounter
+class CMathCounterImpl : public CLogicalEntityImpl, public virtual IMathCounter
 {
 
 public:
@@ -76,7 +76,20 @@ public:
     void OnChangedFromMaxUpdated() override { Real()->m_OnChangedFromMax.NetworkStateChanged(); }
 };
 
-inline IMathCounter* CMathCounter::ToInterface() { return new CMathCounterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IMathCounter* CMathCounter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IMathCounter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CMathCounterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IMathCounter*>(impl));
+    return impl;
+}
+inline IMathCounter* IMathCounter::FromRaw(CEntityInstance* p) { return p ? static_cast<CMathCounter*>(p)->ToInterface() : nullptr; }
 inline IMathCounter* IMathCounter::FromOriginal(CMathCounter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CMATHCOUNTERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncWater.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncWaterImpl : public CBaseModelEntityImpl, public IFuncWater
+class CFuncWaterImpl : public CBaseModelEntityImpl, public virtual IFuncWater
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void BuoyancyHelperUpdated() override { Real()->m_BuoyancyHelper.NetworkStateChanged(); }
 };
 
-inline IFuncWater* CFuncWater::ToInterface() { return new CFuncWaterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncWater* CFuncWater::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncWater*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncWaterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncWater*>(impl));
+    return impl;
+}
+inline IFuncWater* IFuncWater::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncWater*>(p)->ToInterface() : nullptr; }
 inline IFuncWater* IFuncWater::FromOriginal(CFuncWater* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCWATERIMPL_H

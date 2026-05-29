@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSoundEventAABBEntity.h"
 #include "CSoundEventEntityImpl.h"
 
-class CSoundEventAABBEntityImpl : public CSoundEventEntityImpl, public ISoundEventAABBEntity
+class CSoundEventAABBEntityImpl : public CSoundEventEntityImpl, public virtual ISoundEventAABBEntity
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void MaxsUpdated() override { Real()->m_vMaxs.NetworkStateChanged(); }
 };
 
-inline ISoundEventAABBEntity* CSoundEventAABBEntity::ToInterface() { return new CSoundEventAABBEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISoundEventAABBEntity* CSoundEventAABBEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISoundEventAABBEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSoundEventAABBEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISoundEventAABBEntity*>(impl));
+    return impl;
+}
+inline ISoundEventAABBEntity* ISoundEventAABBEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CSoundEventAABBEntity*>(p)->ToInterface() : nullptr; }
 inline ISoundEventAABBEntity* ISoundEventAABBEntity::FromOriginal(CSoundEventAABBEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSOUNDEVENTAABBENTITYIMPL_H

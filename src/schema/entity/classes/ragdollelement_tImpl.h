@@ -69,6 +69,7 @@ public:
 };
 
 inline Iragdollelement_t* ragdollelement_t::ToInterface() { return new ragdollelement_tImpl(this); }
+inline Iragdollelement_t* Iragdollelement_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iragdollelement_t* Iragdollelement_t::FromOriginal(ragdollelement_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_RAGDOLLELEMENT_TIMPL_H

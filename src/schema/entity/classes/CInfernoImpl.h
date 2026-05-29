@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInferno.h"
 #include "CBaseModelEntityImpl.h"
 
-class CInfernoImpl : public CBaseModelEntityImpl, public IInferno
+class CInfernoImpl : public CBaseModelEntityImpl, public virtual IInferno
 {
 
 public:
@@ -102,7 +102,20 @@ public:
     void SourceItemDefIndexUpdated() override { Real()->m_nSourceItemDefIndex.NetworkStateChanged(); }
 };
 
-inline IInferno* CInferno::ToInterface() { return new CInfernoImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInferno* CInferno::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInferno*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfernoImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInferno*>(impl));
+    return impl;
+}
+inline IInferno* IInferno::FromRaw(CEntityInstance* p) { return p ? static_cast<CInferno*>(p)->ToInterface() : nullptr; }
 inline IInferno* IInferno::FromOriginal(CInferno* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFERNOIMPL_H

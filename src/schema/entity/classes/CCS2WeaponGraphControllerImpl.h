@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCS2WeaponGraphController.h"
 #include "CAnimGraphControllerBaseImpl.h"
 
-class CCS2WeaponGraphControllerImpl : public CAnimGraphControllerBaseImpl, public ICS2WeaponGraphController
+class CCS2WeaponGraphControllerImpl : public CAnimGraphControllerBaseImpl, public virtual ICS2WeaponGraphController
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ICS2WeaponGraphController* CCS2WeaponGraphController::ToInterface() { return new CCS2WeaponGraphControllerImpl(this); }
+inline ICS2WeaponGraphController* ICS2WeaponGraphController::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICS2WeaponGraphController* ICS2WeaponGraphController::FromOriginal(CCS2WeaponGraphController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCS2WEAPONGRAPHCONTROLLERIMPL_H

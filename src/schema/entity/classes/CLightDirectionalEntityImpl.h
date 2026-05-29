@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLightDirectionalEntity.h"
 #include "CLightEntityImpl.h"
 
-class CLightDirectionalEntityImpl : public CLightEntityImpl, public ILightDirectionalEntity
+class CLightDirectionalEntityImpl : public CLightEntityImpl, public virtual ILightDirectionalEntity
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CLightDirectionalEntity* GetOriginal() const override { return Real(); }
 };
 
-inline ILightDirectionalEntity* CLightDirectionalEntity::ToInterface() { return new CLightDirectionalEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILightDirectionalEntity* CLightDirectionalEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILightDirectionalEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLightDirectionalEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILightDirectionalEntity*>(impl));
+    return impl;
+}
+inline ILightDirectionalEntity* ILightDirectionalEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CLightDirectionalEntity*>(p)->ToInterface() : nullptr; }
 inline ILightDirectionalEntity* ILightDirectionalEntity::FromOriginal(CLightDirectionalEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLIGHTDIRECTIONALENTITYIMPL_H

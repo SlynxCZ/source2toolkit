@@ -70,6 +70,7 @@ public:
 };
 
 inline Iconstraint_breakableparams_t* constraint_breakableparams_t::ToInterface() { return new constraint_breakableparams_tImpl(this); }
+inline Iconstraint_breakableparams_t* Iconstraint_breakableparams_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Iconstraint_breakableparams_t* Iconstraint_breakableparams_t::FromOriginal(constraint_breakableparams_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CONSTRAINT_BREAKABLEPARAMS_TIMPL_H

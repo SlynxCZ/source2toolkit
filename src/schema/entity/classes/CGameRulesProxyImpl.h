@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CGameRulesProxy.h"
 #include "CBaseEntityImpl.h"
 
-class CGameRulesProxyImpl : public CBaseEntityImpl, public IGameRulesProxy
+class CGameRulesProxyImpl : public CBaseEntityImpl, public virtual IGameRulesProxy
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CGameRulesProxy* GetOriginal() const override { return Real(); }
 };
 
-inline IGameRulesProxy* CGameRulesProxy::ToInterface() { return new CGameRulesProxyImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IGameRulesProxy* CGameRulesProxy::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IGameRulesProxy*>(tagIt->second.ptr_for_return);
+    auto* impl = new CGameRulesProxyImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IGameRulesProxy*>(impl));
+    return impl;
+}
+inline IGameRulesProxy* IGameRulesProxy::FromRaw(CEntityInstance* p) { return p ? static_cast<CGameRulesProxy*>(p)->ToInterface() : nullptr; }
 inline IGameRulesProxy* IGameRulesProxy::FromOriginal(CGameRulesProxy* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMERULESPROXYIMPL_H

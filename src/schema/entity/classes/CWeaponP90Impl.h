@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponP90.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponP90Impl : public CCSWeaponBaseGunImpl, public IWeaponP90
+class CWeaponP90Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponP90
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponP90* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponP90* CWeaponP90::ToInterface() { return new CWeaponP90Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponP90* CWeaponP90::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponP90*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponP90Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponP90*>(impl));
+    return impl;
+}
+inline IWeaponP90* IWeaponP90::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponP90*>(p)->ToInterface() : nullptr; }
 inline IWeaponP90* IWeaponP90::FromOriginal(CWeaponP90* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONP90IMPL_H

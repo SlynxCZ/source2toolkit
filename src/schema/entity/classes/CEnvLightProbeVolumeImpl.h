@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvLightProbeVolume.h"
 #include "CBaseEntityImpl.h"
 
-class CEnvLightProbeVolumeImpl : public CBaseEntityImpl, public IEnvLightProbeVolume
+class CEnvLightProbeVolumeImpl : public CBaseEntityImpl, public virtual IEnvLightProbeVolume
 {
 
 public:
@@ -102,7 +102,20 @@ public:
     void Entity_bEnabledUpdated() override { Real()->m_Entity_bEnabled.NetworkStateChanged(); }
 };
 
-inline IEnvLightProbeVolume* CEnvLightProbeVolume::ToInterface() { return new CEnvLightProbeVolumeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvLightProbeVolume* CEnvLightProbeVolume::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvLightProbeVolume*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvLightProbeVolumeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvLightProbeVolume*>(impl));
+    return impl;
+}
+inline IEnvLightProbeVolume* IEnvLightProbeVolume::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvLightProbeVolume*>(p)->ToInterface() : nullptr; }
 inline IEnvLightProbeVolume* IEnvLightProbeVolume::FromOriginal(CEnvLightProbeVolume* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVLIGHTPROBEVOLUMEIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSprite.h"
 #include "CBaseModelEntityImpl.h"
 
-class CSpriteImpl : public CBaseModelEntityImpl, public ISprite
+class CSpriteImpl : public CBaseModelEntityImpl, public virtual ISprite
 {
 
 public:
@@ -102,7 +102,20 @@ public:
     void SpriteHeightUpdated() override { Real()->m_nSpriteHeight.NetworkStateChanged(); }
 };
 
-inline ISprite* CSprite::ToInterface() { return new CSpriteImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISprite* CSprite::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISprite*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSpriteImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISprite*>(impl));
+    return impl;
+}
+inline ISprite* ISprite::FromRaw(CEntityInstance* p) { return p ? static_cast<CSprite*>(p)->ToInterface() : nullptr; }
 inline ISprite* ISprite::FromOriginal(CSprite* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSPRITEIMPL_H

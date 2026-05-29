@@ -67,6 +67,7 @@ public:
 };
 
 inline ITestPulseIO__ThreeStringArgs_t* CTestPulseIO__ThreeStringArgs_t::ToInterface() { return new CTestPulseIO__ThreeStringArgs_tImpl(this); }
+inline ITestPulseIO__ThreeStringArgs_t* ITestPulseIO__ThreeStringArgs_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITestPulseIO__ThreeStringArgs_t* ITestPulseIO__ThreeStringArgs_t::FromOriginal(CTestPulseIO__ThreeStringArgs_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTPULSEIO__THREESTRINGARGS_TIMPL_H

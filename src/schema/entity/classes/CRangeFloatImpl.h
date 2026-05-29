@@ -62,6 +62,7 @@ public:
 };
 
 inline IRangeFloat* CRangeFloat::ToInterface() { return new CRangeFloatImpl(this); }
+inline IRangeFloat* IRangeFloat::FromRaw(CEntityInstance*) { return nullptr; }
 inline IRangeFloat* IRangeFloat::FromOriginal(CRangeFloat* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRANGEFLOATIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCS2PawnGraphController.h"
 #include "CCS2WeaponGraphControllerImpl.h"
 
-class CCS2PawnGraphControllerImpl : public CCS2WeaponGraphControllerImpl, public ICS2PawnGraphController
+class CCS2PawnGraphControllerImpl : public CCS2WeaponGraphControllerImpl, public virtual ICS2PawnGraphController
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ICS2PawnGraphController* CCS2PawnGraphController::ToInterface() { return new CCS2PawnGraphControllerImpl(this); }
+inline ICS2PawnGraphController* ICS2PawnGraphController::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICS2PawnGraphController* ICS2PawnGraphController::FromOriginal(CCS2PawnGraphController* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCS2PAWNGRAPHCONTROLLERIMPL_H

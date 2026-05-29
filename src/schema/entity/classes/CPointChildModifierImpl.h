@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointChildModifier.h"
 #include "CPointEntityImpl.h"
 
-class CPointChildModifierImpl : public CPointEntityImpl, public IPointChildModifier
+class CPointChildModifierImpl : public CPointEntityImpl, public virtual IPointChildModifier
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void OrphanInsteadOfDeletingChildrenOnRemoveUpdated() override { Real()->m_bOrphanInsteadOfDeletingChildrenOnRemove.NetworkStateChanged(); }
 };
 
-inline IPointChildModifier* CPointChildModifier::ToInterface() { return new CPointChildModifierImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointChildModifier* CPointChildModifier::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointChildModifier*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointChildModifierImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointChildModifier*>(impl));
+    return impl;
+}
+inline IPointChildModifier* IPointChildModifier::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointChildModifier*>(p)->ToInterface() : nullptr; }
 inline IPointChildModifier* IPointChildModifier::FromOriginal(CPointChildModifier* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTCHILDMODIFIERIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTimerEntity.h"
 #include "CLogicalEntityImpl.h"
 
-class CTimerEntityImpl : public CLogicalEntityImpl, public ITimerEntity
+class CTimerEntityImpl : public CLogicalEntityImpl, public virtual ITimerEntity
 {
 
 public:
@@ -84,7 +84,20 @@ public:
     void PausedUpdated() override { Real()->m_bPaused.NetworkStateChanged(); }
 };
 
-inline ITimerEntity* CTimerEntity::ToInterface() { return new CTimerEntityImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITimerEntity* CTimerEntity::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITimerEntity*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTimerEntityImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITimerEntity*>(impl));
+    return impl;
+}
+inline ITimerEntity* ITimerEntity::FromRaw(CEntityInstance* p) { return p ? static_cast<CTimerEntity*>(p)->ToInterface() : nullptr; }
 inline ITimerEntity* ITimerEntity::FromOriginal(CTimerEntity* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTIMERENTITYIMPL_H

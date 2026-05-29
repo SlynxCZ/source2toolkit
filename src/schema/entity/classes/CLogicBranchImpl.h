@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CLogicBranch.h"
 #include "CLogicalEntityImpl.h"
 
-class CLogicBranchImpl : public CLogicalEntityImpl, public ILogicBranch
+class CLogicBranchImpl : public CLogicalEntityImpl, public virtual ILogicBranch
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void OnFalseUpdated() override { Real()->m_OnFalse.NetworkStateChanged(); }
 };
 
-inline ILogicBranch* CLogicBranch::ToInterface() { return new CLogicBranchImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ILogicBranch* CLogicBranch::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ILogicBranch*>(tagIt->second.ptr_for_return);
+    auto* impl = new CLogicBranchImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ILogicBranch*>(impl));
+    return impl;
+}
+inline ILogicBranch* ILogicBranch::FromRaw(CEntityInstance* p) { return p ? static_cast<CLogicBranch*>(p)->ToInterface() : nullptr; }
 inline ILogicBranch* ILogicBranch::FromOriginal(CLogicBranch* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CLOGICBRANCHIMPL_H

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncTrain.h"
 #include "CBasePlatTrainImpl.h"
 
-class CFuncTrainImpl : public CBasePlatTrainImpl, public IFuncTrain
+class CFuncTrainImpl : public CBasePlatTrainImpl, public virtual IFuncTrain
 {
 
 public:
@@ -70,7 +70,20 @@ public:
     void LastTargetUpdated() override { Real()->m_iszLastTarget.NetworkStateChanged(); }
 };
 
-inline IFuncTrain* CFuncTrain::ToInterface() { return new CFuncTrainImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncTrain* CFuncTrain::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncTrain*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncTrainImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncTrain*>(impl));
+    return impl;
+}
+inline IFuncTrain* IFuncTrain::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncTrain*>(p)->ToInterface() : nullptr; }
 inline IFuncTrain* IFuncTrain::FromOriginal(CFuncTrain* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCTRAINIMPL_H

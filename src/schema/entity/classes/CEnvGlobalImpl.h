@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvGlobal.h"
 #include "CLogicalEntityImpl.h"
 
-class CEnvGlobalImpl : public CLogicalEntityImpl, public IEnvGlobal
+class CEnvGlobalImpl : public CLogicalEntityImpl, public virtual IEnvGlobal
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void CounterUpdated() override { Real()->m_counter.NetworkStateChanged(); }
 };
 
-inline IEnvGlobal* CEnvGlobal::ToInterface() { return new CEnvGlobalImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvGlobal* CEnvGlobal::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvGlobal*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvGlobalImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvGlobal*>(impl));
+    return impl;
+}
+inline IEnvGlobal* IEnvGlobal::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvGlobal*>(p)->ToInterface() : nullptr; }
 inline IEnvGlobal* IEnvGlobal::FromOriginal(CEnvGlobal* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVGLOBALIMPL_H

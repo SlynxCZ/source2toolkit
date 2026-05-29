@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGO_EndOfMatchLineupEndpoint.h"
 #include "CBaseEntityImpl.h"
 
-class CCSGO_EndOfMatchLineupEndpointImpl : public CBaseEntityImpl, public ICSGO_EndOfMatchLineupEndpoint
+class CCSGO_EndOfMatchLineupEndpointImpl : public CBaseEntityImpl, public virtual ICSGO_EndOfMatchLineupEndpoint
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSGO_EndOfMatchLineupEndpoint* GetOriginal() const override { return Real(); }
 };
 
-inline ICSGO_EndOfMatchLineupEndpoint* CCSGO_EndOfMatchLineupEndpoint::ToInterface() { return new CCSGO_EndOfMatchLineupEndpointImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSGO_EndOfMatchLineupEndpoint* CCSGO_EndOfMatchLineupEndpoint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSGO_EndOfMatchLineupEndpoint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSGO_EndOfMatchLineupEndpointImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSGO_EndOfMatchLineupEndpoint*>(impl));
+    return impl;
+}
+inline ICSGO_EndOfMatchLineupEndpoint* ICSGO_EndOfMatchLineupEndpoint::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSGO_EndOfMatchLineupEndpoint*>(p)->ToInterface() : nullptr; }
 inline ICSGO_EndOfMatchLineupEndpoint* ICSGO_EndOfMatchLineupEndpoint::FromOriginal(CCSGO_EndOfMatchLineupEndpoint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSGO_ENDOFMATCHLINEUPENDPOINTIMPL_H

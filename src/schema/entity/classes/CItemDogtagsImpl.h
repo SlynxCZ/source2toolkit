@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CItemDogtags.h"
 #include "CItemImpl.h"
 
-class CItemDogtagsImpl : public CItemImpl, public IItemDogtags
+class CItemDogtagsImpl : public CItemImpl, public virtual IItemDogtags
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void KillingPlayerUpdated() override { Real()->m_KillingPlayer.NetworkStateChanged(); }
 };
 
-inline IItemDogtags* CItemDogtags::ToInterface() { return new CItemDogtagsImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IItemDogtags* CItemDogtags::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IItemDogtags*>(tagIt->second.ptr_for_return);
+    auto* impl = new CItemDogtagsImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IItemDogtags*>(impl));
+    return impl;
+}
+inline IItemDogtags* IItemDogtags::FromRaw(CEntityInstance* p) { return p ? static_cast<CItemDogtags*>(p)->ToInterface() : nullptr; }
 inline IItemDogtags* IItemDogtags::FromOriginal(CItemDogtags* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CITEMDOGTAGSIMPL_H

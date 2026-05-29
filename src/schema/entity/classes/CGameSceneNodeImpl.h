@@ -103,6 +103,7 @@ public:
 };
 
 inline IGameSceneNode* CGameSceneNode::ToInterface() { return new CGameSceneNodeImpl(this); }
+inline IGameSceneNode* IGameSceneNode::FromRaw(CEntityInstance*) { return nullptr; }
 inline IGameSceneNode* IGameSceneNode::FromOriginal(CGameSceneNode* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CGAMESCENENODEIMPL_H

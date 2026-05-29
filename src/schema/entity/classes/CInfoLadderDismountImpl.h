@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoLadderDismount.h"
 #include "CBaseEntityImpl.h"
 
-class CInfoLadderDismountImpl : public CBaseEntityImpl, public IInfoLadderDismount
+class CInfoLadderDismountImpl : public CBaseEntityImpl, public virtual IInfoLadderDismount
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CInfoLadderDismount* GetOriginal() const override { return Real(); }
 };
 
-inline IInfoLadderDismount* CInfoLadderDismount::ToInterface() { return new CInfoLadderDismountImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoLadderDismount* CInfoLadderDismount::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoLadderDismount*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoLadderDismountImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoLadderDismount*>(impl));
+    return impl;
+}
+inline IInfoLadderDismount* IInfoLadderDismount::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoLadderDismount*>(p)->ToInterface() : nullptr; }
 inline IInfoLadderDismount* IInfoLadderDismount::FromOriginal(CInfoLadderDismount* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOLADDERDISMOUNTIMPL_H

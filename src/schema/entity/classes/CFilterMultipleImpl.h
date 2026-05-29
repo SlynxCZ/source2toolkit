@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFilterMultiple.h"
 #include "CBaseFilterImpl.h"
 
-class CFilterMultipleImpl : public CBaseFilterImpl, public IFilterMultiple
+class CFilterMultipleImpl : public CBaseFilterImpl, public virtual IFilterMultiple
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     CHandle<CBaseEntity>* Filter() override { return Real()->m_hFilter(); }
 };
 
-inline IFilterMultiple* CFilterMultiple::ToInterface() { return new CFilterMultipleImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFilterMultiple* CFilterMultiple::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFilterMultiple*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFilterMultipleImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFilterMultiple*>(impl));
+    return impl;
+}
+inline IFilterMultiple* IFilterMultiple::FromRaw(CEntityInstance* p) { return p ? static_cast<CFilterMultiple*>(p)->ToInterface() : nullptr; }
 inline IFilterMultiple* IFilterMultiple::FromOriginal(CFilterMultiple* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFILTERMULTIPLEIMPL_H

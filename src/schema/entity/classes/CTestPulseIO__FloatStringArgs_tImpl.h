@@ -65,6 +65,7 @@ public:
 };
 
 inline ITestPulseIO__FloatStringArgs_t* CTestPulseIO__FloatStringArgs_t::ToInterface() { return new CTestPulseIO__FloatStringArgs_tImpl(this); }
+inline ITestPulseIO__FloatStringArgs_t* ITestPulseIO__FloatStringArgs_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITestPulseIO__FloatStringArgs_t* ITestPulseIO__FloatStringArgs_t::FromOriginal(CTestPulseIO__FloatStringArgs_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTPULSEIO__FLOATSTRINGARGS_TIMPL_H

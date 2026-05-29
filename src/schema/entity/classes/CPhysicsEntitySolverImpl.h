@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPhysicsEntitySolver.h"
 #include "CLogicalEntityImpl.h"
 
-class CPhysicsEntitySolverImpl : public CLogicalEntityImpl, public IPhysicsEntitySolver
+class CPhysicsEntitySolverImpl : public CLogicalEntityImpl, public virtual IPhysicsEntitySolver
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void CancelTimeUpdated() override { Real()->m_cancelTime.NetworkStateChanged(); }
 };
 
-inline IPhysicsEntitySolver* CPhysicsEntitySolver::ToInterface() { return new CPhysicsEntitySolverImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPhysicsEntitySolver* CPhysicsEntitySolver::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPhysicsEntitySolver*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPhysicsEntitySolverImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPhysicsEntitySolver*>(impl));
+    return impl;
+}
+inline IPhysicsEntitySolver* IPhysicsEntitySolver::FromRaw(CEntityInstance* p) { return p ? static_cast<CPhysicsEntitySolver*>(p)->ToInterface() : nullptr; }
 inline IPhysicsEntitySolver* IPhysicsEntitySolver::FromOriginal(CPhysicsEntitySolver* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPHYSICSENTITYSOLVERIMPL_H

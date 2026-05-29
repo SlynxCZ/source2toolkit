@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvHudHint.h"
 #include "CPointEntityImpl.h"
 
-class CEnvHudHintImpl : public CPointEntityImpl, public IEnvHudHint
+class CEnvHudHintImpl : public CPointEntityImpl, public virtual IEnvHudHint
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void MessageUpdated() override { Real()->m_iszMessage.NetworkStateChanged(); }
 };
 
-inline IEnvHudHint* CEnvHudHint::ToInterface() { return new CEnvHudHintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvHudHint* CEnvHudHint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvHudHint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvHudHintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvHudHint*>(impl));
+    return impl;
+}
+inline IEnvHudHint* IEnvHudHint::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvHudHint*>(p)->ToInterface() : nullptr; }
 inline IEnvHudHint* IEnvHudHint::FromOriginal(CEnvHudHint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVHUDHINTIMPL_H

@@ -71,6 +71,7 @@ public:
 };
 
 inline IRenderComponent* CRenderComponent::ToInterface() { return new CRenderComponentImpl(this); }
+inline IRenderComponent* IRenderComponent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IRenderComponent* IRenderComponent::FromOriginal(CRenderComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CRENDERCOMPONENTIMPL_H

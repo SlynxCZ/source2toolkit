@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CAttributeContainer.h"
 #include "CAttributeManagerImpl.h"
 
-class CAttributeContainerImpl : public CAttributeManagerImpl, public IAttributeContainer
+class CAttributeContainerImpl : public CAttributeManagerImpl, public virtual IAttributeContainer
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline IAttributeContainer* CAttributeContainer::ToInterface() { return new CAttributeContainerImpl(this); }
+inline IAttributeContainer* IAttributeContainer::FromRaw(CEntityInstance*) { return nullptr; }
 inline IAttributeContainer* IAttributeContainer::FromOriginal(CAttributeContainer* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CATTRIBUTECONTAINERIMPL_H

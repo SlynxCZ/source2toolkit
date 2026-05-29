@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CSmokeGrenade.h"
 #include "CBaseCSGrenadeImpl.h"
 
-class CSmokeGrenadeImpl : public CBaseCSGrenadeImpl, public ISmokeGrenade
+class CSmokeGrenadeImpl : public CBaseCSGrenadeImpl, public virtual ISmokeGrenade
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CSmokeGrenade* GetOriginal() const override { return Real(); }
 };
 
-inline ISmokeGrenade* CSmokeGrenade::ToInterface() { return new CSmokeGrenadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ISmokeGrenade* CSmokeGrenade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ISmokeGrenade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CSmokeGrenadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ISmokeGrenade*>(impl));
+    return impl;
+}
+inline ISmokeGrenade* ISmokeGrenade::FromRaw(CEntityInstance* p) { return p ? static_cast<CSmokeGrenade*>(p)->ToInterface() : nullptr; }
 inline ISmokeGrenade* ISmokeGrenade::FromOriginal(CSmokeGrenade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CSMOKEGRENADEIMPL_H

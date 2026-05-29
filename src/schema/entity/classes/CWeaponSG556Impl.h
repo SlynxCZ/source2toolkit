@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CWeaponSG556.h"
 #include "CCSWeaponBaseGunImpl.h"
 
-class CWeaponSG556Impl : public CCSWeaponBaseGunImpl, public IWeaponSG556
+class CWeaponSG556Impl : public CCSWeaponBaseGunImpl, public virtual IWeaponSG556
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CWeaponSG556* GetOriginal() const override { return Real(); }
 };
 
-inline IWeaponSG556* CWeaponSG556::ToInterface() { return new CWeaponSG556Impl(this); }
+#include "core/virtualhooks.h"
+
+inline IWeaponSG556* CWeaponSG556::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IWeaponSG556*>(tagIt->second.ptr_for_return);
+    auto* impl = new CWeaponSG556Impl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IWeaponSG556*>(impl));
+    return impl;
+}
+inline IWeaponSG556* IWeaponSG556::FromRaw(CEntityInstance* p) { return p ? static_cast<CWeaponSG556*>(p)->ToInterface() : nullptr; }
 inline IWeaponSG556* IWeaponSG556::FromOriginal(CWeaponSG556* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CWEAPONSG556IMPL_H

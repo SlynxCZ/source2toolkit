@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTestPulseIOComponent_Derived.h"
 #include "CTestPulseIOComponentImpl.h"
 
-class CTestPulseIOComponent_DerivedImpl : public CTestPulseIOComponentImpl, public ITestPulseIOComponent_Derived
+class CTestPulseIOComponent_DerivedImpl : public CTestPulseIOComponentImpl, public virtual ITestPulseIOComponent_Derived
 {
 
 public:
@@ -59,6 +59,7 @@ public:
 };
 
 inline ITestPulseIOComponent_Derived* CTestPulseIOComponent_Derived::ToInterface() { return new CTestPulseIOComponent_DerivedImpl(this); }
+inline ITestPulseIOComponent_Derived* ITestPulseIOComponent_Derived::FromRaw(CEntityInstance*) { return nullptr; }
 inline ITestPulseIOComponent_Derived* ITestPulseIOComponent_Derived::FromOriginal(CTestPulseIOComponent_Derived* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTESTPULSEIOCOMPONENT_DERIVEDIMPL_H

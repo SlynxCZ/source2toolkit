@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncVehicleClip.h"
 #include "CBaseModelEntityImpl.h"
 
-class CFuncVehicleClipImpl : public CBaseModelEntityImpl, public IFuncVehicleClip
+class CFuncVehicleClipImpl : public CBaseModelEntityImpl, public virtual IFuncVehicleClip
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncVehicleClip* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncVehicleClip* CFuncVehicleClip::ToInterface() { return new CFuncVehicleClipImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncVehicleClip* CFuncVehicleClip::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncVehicleClip*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncVehicleClipImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncVehicleClip*>(impl));
+    return impl;
+}
+inline IFuncVehicleClip* IFuncVehicleClip::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncVehicleClip*>(p)->ToInterface() : nullptr; }
 inline IFuncVehicleClip* IFuncVehicleClip::FromOriginal(CFuncVehicleClip* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCVEHICLECLIPIMPL_H

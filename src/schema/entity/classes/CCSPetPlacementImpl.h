@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPetPlacement.h"
 #include "CBaseEntityImpl.h"
 
-class CCSPetPlacementImpl : public CBaseEntityImpl, public ICSPetPlacement
+class CCSPetPlacementImpl : public CBaseEntityImpl, public virtual ICSPetPlacement
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CCSPetPlacement* GetOriginal() const override { return Real(); }
 };
 
-inline ICSPetPlacement* CCSPetPlacement::ToInterface() { return new CCSPetPlacementImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ICSPetPlacement* CCSPetPlacement::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ICSPetPlacement*>(tagIt->second.ptr_for_return);
+    auto* impl = new CCSPetPlacementImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPetPlacement*>(impl));
+    return impl;
+}
+inline ICSPetPlacement* ICSPetPlacement::FromRaw(CEntityInstance* p) { return p ? static_cast<CCSPetPlacement*>(p)->ToInterface() : nullptr; }
 inline ICSPetPlacement* ICSPetPlacement::FromOriginal(CCSPetPlacement* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPETPLACEMENTIMPL_H

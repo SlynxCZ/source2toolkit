@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayerController_DamageServices.h"
 #include "CPlayerControllerComponentImpl.h"
 
-class CCSPlayerController_DamageServicesImpl : public CPlayerControllerComponentImpl, public ICSPlayerController_DamageServices
+class CCSPlayerController_DamageServicesImpl : public CPlayerControllerComponentImpl, public virtual ICSPlayerController_DamageServices
 {
 
 public:
@@ -63,6 +63,7 @@ public:
 };
 
 inline ICSPlayerController_DamageServices* CCSPlayerController_DamageServices::ToInterface() { return new CCSPlayerController_DamageServicesImpl(this); }
+inline ICSPlayerController_DamageServices* ICSPlayerController_DamageServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayerController_DamageServices* ICSPlayerController_DamageServices::FromOriginal(CCSPlayerController_DamageServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_DAMAGESERVICESIMPL_H

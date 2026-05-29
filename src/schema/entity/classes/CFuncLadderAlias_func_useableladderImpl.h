@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CFuncLadderAlias_func_useableladder.h"
 #include "CFuncLadderImpl.h"
 
-class CFuncLadderAlias_func_useableladderImpl : public CFuncLadderImpl, public IFuncLadderAlias_func_useableladder
+class CFuncLadderAlias_func_useableladderImpl : public CFuncLadderImpl, public virtual IFuncLadderAlias_func_useableladder
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CFuncLadderAlias_func_useableladder* GetOriginal() const override { return Real(); }
 };
 
-inline IFuncLadderAlias_func_useableladder* CFuncLadderAlias_func_useableladder::ToInterface() { return new CFuncLadderAlias_func_useableladderImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IFuncLadderAlias_func_useableladder* CFuncLadderAlias_func_useableladder::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IFuncLadderAlias_func_useableladder*>(tagIt->second.ptr_for_return);
+    auto* impl = new CFuncLadderAlias_func_useableladderImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IFuncLadderAlias_func_useableladder*>(impl));
+    return impl;
+}
+inline IFuncLadderAlias_func_useableladder* IFuncLadderAlias_func_useableladder::FromRaw(CEntityInstance* p) { return p ? static_cast<CFuncLadderAlias_func_useableladder*>(p)->ToInterface() : nullptr; }
 inline IFuncLadderAlias_func_useableladder* IFuncLadderAlias_func_useableladder::FromOriginal(CFuncLadderAlias_func_useableladder* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CFUNCLADDERALIAS_FUNC_USEABLELADDERIMPL_H

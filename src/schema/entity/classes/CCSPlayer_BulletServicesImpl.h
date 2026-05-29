@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSPlayer_BulletServices.h"
 #include "CPlayerPawnComponentImpl.h"
 
-class CCSPlayer_BulletServicesImpl : public CPlayerPawnComponentImpl, public ICSPlayer_BulletServices
+class CCSPlayer_BulletServicesImpl : public CPlayerPawnComponentImpl, public virtual ICSPlayer_BulletServices
 {
 
 public:
@@ -61,6 +61,7 @@ public:
 };
 
 inline ICSPlayer_BulletServices* CCSPlayer_BulletServices::ToInterface() { return new CCSPlayer_BulletServicesImpl(this); }
+inline ICSPlayer_BulletServices* ICSPlayer_BulletServices::FromRaw(CEntityInstance*) { return nullptr; }
 inline ICSPlayer_BulletServices* ICSPlayer_BulletServices::FromOriginal(CCSPlayer_BulletServices* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCSPLAYER_BULLETSERVICESIMPL_H

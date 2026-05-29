@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTriggerHurt.h"
 #include "CBaseTriggerImpl.h"
 
-class CTriggerHurtImpl : public CBaseTriggerImpl, public ITriggerHurt
+class CTriggerHurtImpl : public CBaseTriggerImpl, public virtual ITriggerHurt
 {
 
 public:
@@ -86,7 +86,20 @@ public:
     void HurtEntitiesUpdated() override { Real()->m_hurtEntities.NetworkStateChanged(); }
 };
 
-inline ITriggerHurt* CTriggerHurt::ToInterface() { return new CTriggerHurtImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITriggerHurt* CTriggerHurt::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITriggerHurt*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTriggerHurtImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITriggerHurt*>(impl));
+    return impl;
+}
+inline ITriggerHurt* ITriggerHurt::FromRaw(CEntityInstance* p) { return p ? static_cast<CTriggerHurt*>(p)->ToInterface() : nullptr; }
 inline ITriggerHurt* ITriggerHurt::FromOriginal(CTriggerHurt* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTRIGGERHURTIMPL_H

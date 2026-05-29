@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnvInstructorHint.h"
 #include "CPointEntityImpl.h"
 
-class CEnvInstructorHintImpl : public CPointEntityImpl, public IEnvInstructorHint
+class CEnvInstructorHintImpl : public CPointEntityImpl, public virtual IEnvInstructorHint
 {
 
 public:
@@ -106,7 +106,20 @@ public:
     void LocalPlayerOnlyUpdated() override { Real()->m_bLocalPlayerOnly.NetworkStateChanged(); }
 };
 
-inline IEnvInstructorHint* CEnvInstructorHint::ToInterface() { return new CEnvInstructorHintImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnvInstructorHint* CEnvInstructorHint::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnvInstructorHint*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnvInstructorHintImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnvInstructorHint*>(impl));
+    return impl;
+}
+inline IEnvInstructorHint* IEnvInstructorHint::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnvInstructorHint*>(p)->ToInterface() : nullptr; }
 inline IEnvInstructorHint* IEnvInstructorHint::FromOriginal(CEnvInstructorHint* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENVINSTRUCTORHINTIMPL_H

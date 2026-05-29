@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CRopeKeyframeAlias_move_rope.h"
 #include "CRopeKeyframeImpl.h"
 
-class CRopeKeyframeAlias_move_ropeImpl : public CRopeKeyframeImpl, public IRopeKeyframeAlias_move_rope
+class CRopeKeyframeAlias_move_ropeImpl : public CRopeKeyframeImpl, public virtual IRopeKeyframeAlias_move_rope
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CRopeKeyframeAlias_move_rope* GetOriginal() const override { return Real(); }
 };
 
-inline IRopeKeyframeAlias_move_rope* CRopeKeyframeAlias_move_rope::ToInterface() { return new CRopeKeyframeAlias_move_ropeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IRopeKeyframeAlias_move_rope* CRopeKeyframeAlias_move_rope::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IRopeKeyframeAlias_move_rope*>(tagIt->second.ptr_for_return);
+    auto* impl = new CRopeKeyframeAlias_move_ropeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IRopeKeyframeAlias_move_rope*>(impl));
+    return impl;
+}
+inline IRopeKeyframeAlias_move_rope* IRopeKeyframeAlias_move_rope::FromRaw(CEntityInstance* p) { return p ? static_cast<CRopeKeyframeAlias_move_rope*>(p)->ToInterface() : nullptr; }
 inline IRopeKeyframeAlias_move_rope* IRopeKeyframeAlias_move_rope::FromOriginal(CRopeKeyframeAlias_move_rope* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CROPEKEYFRAMEALIAS_MOVE_ROPEIMPL_H

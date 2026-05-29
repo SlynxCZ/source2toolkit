@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CHEGrenade.h"
 #include "CBaseCSGrenadeImpl.h"
 
-class CHEGrenadeImpl : public CBaseCSGrenadeImpl, public IHEGrenade
+class CHEGrenadeImpl : public CBaseCSGrenadeImpl, public virtual IHEGrenade
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CHEGrenade* GetOriginal() const override { return Real(); }
 };
 
-inline IHEGrenade* CHEGrenade::ToInterface() { return new CHEGrenadeImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IHEGrenade* CHEGrenade::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IHEGrenade*>(tagIt->second.ptr_for_return);
+    auto* impl = new CHEGrenadeImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IHEGrenade*>(impl));
+    return impl;
+}
+inline IHEGrenade* IHEGrenade::FromRaw(CEntityInstance* p) { return p ? static_cast<CHEGrenade*>(p)->ToInterface() : nullptr; }
 inline IHEGrenade* IHEGrenade::FromOriginal(CHEGrenade* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CHEGRENADEIMPL_H

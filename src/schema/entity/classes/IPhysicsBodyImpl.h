@@ -61,6 +61,7 @@ public:
 };
 
 inline IIPhysicsBody* IPhysicsBody::ToInterface() { return new IPhysicsBodyImpl(this); }
+inline IIPhysicsBody* IIPhysicsBody::FromRaw(CEntityInstance*) { return nullptr; }
 inline IIPhysicsBody* IIPhysicsBody::FromOriginal(IPhysicsBody* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_IPHYSICSBODYIMPL_H

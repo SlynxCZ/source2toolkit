@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointProximitySensor.h"
 #include "CPointEntityImpl.h"
 
-class CPointProximitySensorImpl : public CPointEntityImpl, public IPointProximitySensor
+class CPointProximitySensorImpl : public CPointEntityImpl, public virtual IPointProximitySensor
 {
 
 public:
@@ -62,7 +62,20 @@ public:
     void TargetEntityUpdated() override { Real()->m_hTargetEntity.NetworkStateChanged(); }
 };
 
-inline IPointProximitySensor* CPointProximitySensor::ToInterface() { return new CPointProximitySensorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointProximitySensor* CPointProximitySensor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointProximitySensor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointProximitySensorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointProximitySensor*>(impl));
+    return impl;
+}
+inline IPointProximitySensor* IPointProximitySensor::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointProximitySensor*>(p)->ToInterface() : nullptr; }
 inline IPointProximitySensor* IPointProximitySensor::FromOriginal(CPointProximitySensor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTPROXIMITYSENSORIMPL_H

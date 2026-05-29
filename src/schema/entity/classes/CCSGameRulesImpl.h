@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CCSGameRules.h"
 #include "CTeamplayRulesImpl.h"
 
-class CCSGameRulesImpl : public CTeamplayRulesImpl, public ICSGameRules
+class CCSGameRulesImpl : public CTeamplayRulesImpl, public virtual ICSGameRules
 {
 
 public:
@@ -66,16 +66,16 @@ public:
     void WarmupPeriodStartUpdated() override { Real()->m_fWarmupPeriodStart.NetworkStateChanged(); }
     bool& TerroristTimeOutActive() override { return Real()->m_bTerroristTimeOutActive(); }
     void TerroristTimeOutActiveUpdated() override { Real()->m_bTerroristTimeOutActive.NetworkStateChanged(); }
-    bool& TTimeOutActive() override { return Real()->m_bCTTimeOutActive(); }
-    void TTimeOutActiveUpdated() override { Real()->m_bCTTimeOutActive.NetworkStateChanged(); }
+    bool& CTTimeOutActive() override { return Real()->m_bCTTimeOutActive(); }
+    void CTTimeOutActiveUpdated() override { Real()->m_bCTTimeOutActive.NetworkStateChanged(); }
     float& TerroristTimeOutRemaining() override { return Real()->m_flTerroristTimeOutRemaining(); }
     void TerroristTimeOutRemainingUpdated() override { Real()->m_flTerroristTimeOutRemaining.NetworkStateChanged(); }
-    float& TTimeOutRemaining() override { return Real()->m_flCTTimeOutRemaining(); }
-    void TTimeOutRemainingUpdated() override { Real()->m_flCTTimeOutRemaining.NetworkStateChanged(); }
+    float& CTTimeOutRemaining() override { return Real()->m_flCTTimeOutRemaining(); }
+    void CTTimeOutRemainingUpdated() override { Real()->m_flCTTimeOutRemaining.NetworkStateChanged(); }
     int32_t& TerroristTimeOuts() override { return Real()->m_nTerroristTimeOuts(); }
     void TerroristTimeOutsUpdated() override { Real()->m_nTerroristTimeOuts.NetworkStateChanged(); }
-    int32_t& TTimeOuts() override { return Real()->m_nCTTimeOuts(); }
-    void TTimeOutsUpdated() override { Real()->m_nCTTimeOuts.NetworkStateChanged(); }
+    int32_t& CTTimeOuts() override { return Real()->m_nCTTimeOuts(); }
+    void CTTimeOutsUpdated() override { Real()->m_nCTTimeOuts.NetworkStateChanged(); }
     bool& TechnicalTimeOut() override { return Real()->m_bTechnicalTimeOut(); }
     void TechnicalTimeOutUpdated() override { Real()->m_bTechnicalTimeOut.NetworkStateChanged(); }
     bool& MatchWaitingForResume() override { return Real()->m_bMatchWaitingForResume(); }
@@ -138,10 +138,10 @@ public:
     char* TournamentPredictionsTxt() override { return Real()->m_szTournamentPredictionsTxt(); }
     int32_t& TournamentPredictionsPct() override { return Real()->m_nTournamentPredictionsPct(); }
     void TournamentPredictionsPctUpdated() override { Real()->m_nTournamentPredictionsPct.NetworkStateChanged(); }
-    float& MMItemDropRevealStartTime() override { return Real()->m_flCMMItemDropRevealStartTime(); }
-    void MMItemDropRevealStartTimeUpdated() override { Real()->m_flCMMItemDropRevealStartTime.NetworkStateChanged(); }
-    float& MMItemDropRevealEndTime() override { return Real()->m_flCMMItemDropRevealEndTime(); }
-    void MMItemDropRevealEndTimeUpdated() override { Real()->m_flCMMItemDropRevealEndTime.NetworkStateChanged(); }
+    float& CMMItemDropRevealStartTime() override { return Real()->m_flCMMItemDropRevealStartTime(); }
+    void CMMItemDropRevealStartTimeUpdated() override { Real()->m_flCMMItemDropRevealStartTime.NetworkStateChanged(); }
+    float& CMMItemDropRevealEndTime() override { return Real()->m_flCMMItemDropRevealEndTime(); }
+    void CMMItemDropRevealEndTimeUpdated() override { Real()->m_flCMMItemDropRevealEndTime.NetworkStateChanged(); }
     bool& IsDroppingItems() override { return Real()->m_bIsDroppingItems(); }
     void IsDroppingItemsUpdated() override { Real()->m_bIsDroppingItems.NetworkStateChanged(); }
     bool& IsQuestEligible() override { return Real()->m_bIsQuestEligible(); }
@@ -164,8 +164,8 @@ public:
     void RoundWinReasonUpdated() override { Real()->m_eRoundWinReason.NetworkStateChanged(); }
     bool& TCantBuy() override { return Real()->m_bTCantBuy(); }
     void TCantBuyUpdated() override { Real()->m_bTCantBuy.NetworkStateChanged(); }
-    bool& TCantBuy() override { return Real()->m_bCTCantBuy(); }
-    void TCantBuyUpdated() override { Real()->m_bCTCantBuy.NetworkStateChanged(); }
+    bool& CTCantBuy() override { return Real()->m_bCTCantBuy(); }
+    void CTCantBuyUpdated() override { Real()->m_bCTCantBuy.NetworkStateChanged(); }
     int32_t* MatchStats_RoundResults() override { return Real()->m_iMatchStats_RoundResults(); }
     int32_t* MatchStats_PlayersAlive_CT() override { return Real()->m_iMatchStats_PlayersAlive_CT(); }
     int32_t* MatchStats_PlayersAlive_T() override { return Real()->m_iMatchStats_PlayersAlive_T(); }
@@ -194,8 +194,6 @@ public:
     void IntermissionEndTimeUpdated() override { Real()->m_flIntermissionEndTime.NetworkStateChanged(); }
     bool& LevelInitialized() override { return Real()->m_bLevelInitialized(); }
     void LevelInitializedUpdated() override { Real()->m_bLevelInitialized.NetworkStateChanged(); }
-    int32_t& TotalRoundsPlayed() override { return Real()->m_iTotalRoundsPlayed(); }
-    void TotalRoundsPlayedUpdated() override { Real()->m_iTotalRoundsPlayed.NetworkStateChanged(); }
     int32_t& UnBalancedRounds() override { return Real()->m_iUnBalancedRounds(); }
     void UnBalancedRoundsUpdated() override { Real()->m_iUnBalancedRounds.NetworkStateChanged(); }
     bool& EndMatchOnRoundReset() override { return Real()->m_endMatchOnRoundReset(); }
@@ -242,8 +240,8 @@ public:
     void NumSpectatorsCountMaxTVUpdated() override { Real()->m_numSpectatorsCountMaxTV.NetworkStateChanged(); }
     uint32_t& NumSpectatorsCountMaxLnk() override { return Real()->m_numSpectatorsCountMaxLnk(); }
     void NumSpectatorsCountMaxLnkUpdated() override { Real()->m_numSpectatorsCountMaxLnk.NetworkStateChanged(); }
-    int32_t& TsAliveAtFreezetimeEnd() override { return Real()->m_nCTsAliveAtFreezetimeEnd(); }
-    void TsAliveAtFreezetimeEndUpdated() override { Real()->m_nCTsAliveAtFreezetimeEnd.NetworkStateChanged(); }
+    int32_t& CTsAliveAtFreezetimeEnd() override { return Real()->m_nCTsAliveAtFreezetimeEnd(); }
+    void CTsAliveAtFreezetimeEndUpdated() override { Real()->m_nCTsAliveAtFreezetimeEnd.NetworkStateChanged(); }
     int32_t& TerroristsAliveAtFreezetimeEnd() override { return Real()->m_nTerroristsAliveAtFreezetimeEnd(); }
     void TerroristsAliveAtFreezetimeEndUpdated() override { Real()->m_nTerroristsAliveAtFreezetimeEnd.NetworkStateChanged(); }
     bool& ForceTeamChangeSilent() override { return Real()->m_bForceTeamChangeSilent(); }
@@ -328,8 +326,8 @@ public:
     void RespawningAllRespawnablePlayersUpdated() override { Real()->m_bRespawningAllRespawnablePlayers.NetworkStateChanged(); }
     int32_t& NextCTSpawnPoint() override { return Real()->m_iNextCTSpawnPoint(); }
     void NextCTSpawnPointUpdated() override { Real()->m_iNextCTSpawnPoint.NetworkStateChanged(); }
-    float& TSpawnPointUsedTime() override { return Real()->m_flCTSpawnPointUsedTime(); }
-    void TSpawnPointUsedTimeUpdated() override { Real()->m_flCTSpawnPointUsedTime.NetworkStateChanged(); }
+    float& CTSpawnPointUsedTime() override { return Real()->m_flCTSpawnPointUsedTime(); }
+    void CTSpawnPointUsedTimeUpdated() override { Real()->m_flCTSpawnPointUsedTime.NetworkStateChanged(); }
     int32_t& NextTerroristSpawnPoint() override { return Real()->m_iNextTerroristSpawnPoint(); }
     void NextTerroristSpawnPointUpdated() override { Real()->m_iNextTerroristSpawnPoint.NetworkStateChanged(); }
     float& TerroristSpawnPointUsedTime() override { return Real()->m_flTerroristSpawnPointUsedTime(); }
@@ -374,8 +372,8 @@ public:
     void MatchEndCountUpdated() override { Real()->m_nMatchEndCount.NetworkStateChanged(); }
     int32_t& TTeamIntroVariant() override { return Real()->m_nTTeamIntroVariant(); }
     void TTeamIntroVariantUpdated() override { Real()->m_nTTeamIntroVariant.NetworkStateChanged(); }
-    int32_t& TTeamIntroVariant() override { return Real()->m_nCTTeamIntroVariant(); }
-    void TTeamIntroVariantUpdated() override { Real()->m_nCTTeamIntroVariant.NetworkStateChanged(); }
+    int32_t& CTTeamIntroVariant() override { return Real()->m_nCTTeamIntroVariant(); }
+    void CTTeamIntroVariantUpdated() override { Real()->m_nCTTeamIntroVariant.NetworkStateChanged(); }
     bool& TeamIntroPeriod() override { return Real()->m_bTeamIntroPeriod(); }
     void TeamIntroPeriodUpdated() override { Real()->m_bTeamIntroPeriod.NetworkStateChanged(); }
     float& TeamIntroPeriodEnd() override { return Real()->m_fTeamIntroPeriodEnd(); }

@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CEnableMotionFixup.h"
 #include "CBaseEntityImpl.h"
 
-class CEnableMotionFixupImpl : public CBaseEntityImpl, public IEnableMotionFixup
+class CEnableMotionFixupImpl : public CBaseEntityImpl, public virtual IEnableMotionFixup
 {
 
 public:
@@ -58,7 +58,20 @@ public:
     CEnableMotionFixup* GetOriginal() const override { return Real(); }
 };
 
-inline IEnableMotionFixup* CEnableMotionFixup::ToInterface() { return new CEnableMotionFixupImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IEnableMotionFixup* CEnableMotionFixup::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IEnableMotionFixup*>(tagIt->second.ptr_for_return);
+    auto* impl = new CEnableMotionFixupImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IEnableMotionFixup*>(impl));
+    return impl;
+}
+inline IEnableMotionFixup* IEnableMotionFixup::FromRaw(CEntityInstance* p) { return p ? static_cast<CEnableMotionFixup*>(p)->ToInterface() : nullptr; }
 inline IEnableMotionFixup* IEnableMotionFixup::FromOriginal(CEnableMotionFixup* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CENABLEMOTIONFIXUPIMPL_H

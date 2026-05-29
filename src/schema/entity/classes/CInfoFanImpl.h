@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CInfoFan.h"
 #include "CPointEntityImpl.h"
 
-class CInfoFanImpl : public CPointEntityImpl, public IInfoFan
+class CInfoFanImpl : public CPointEntityImpl, public virtual IInfoFan
 {
 
 public:
@@ -66,7 +66,20 @@ public:
     void FanForceCurveStringUpdated() override { Real()->m_FanForceCurveString.NetworkStateChanged(); }
 };
 
-inline IInfoFan* CInfoFan::ToInterface() { return new CInfoFanImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IInfoFan* CInfoFan::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IInfoFan*>(tagIt->second.ptr_for_return);
+    auto* impl = new CInfoFanImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IInfoFan*>(impl));
+    return impl;
+}
+inline IInfoFan* IInfoFan::FromRaw(CEntityInstance* p) { return p ? static_cast<CInfoFan*>(p)->ToInterface() : nullptr; }
 inline IInfoFan* IInfoFan::FromOriginal(CInfoFan* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CINFOFANIMPL_H

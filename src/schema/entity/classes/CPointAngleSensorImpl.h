@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPointAngleSensor.h"
 #include "CPointEntityImpl.h"
 
-class CPointAngleSensorImpl : public CPointEntityImpl, public IPointAngleSensor
+class CPointAngleSensorImpl : public CPointEntityImpl, public virtual IPointAngleSensor
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void OnNotFacingLookatUpdated() override { Real()->m_OnNotFacingLookat.NetworkStateChanged(); }
 };
 
-inline IPointAngleSensor* CPointAngleSensor::ToInterface() { return new CPointAngleSensorImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPointAngleSensor* CPointAngleSensor::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPointAngleSensor*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPointAngleSensorImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPointAngleSensor*>(impl));
+    return impl;
+}
+inline IPointAngleSensor* IPointAngleSensor::FromRaw(CEntityInstance* p) { return p ? static_cast<CPointAngleSensor*>(p)->ToInterface() : nullptr; }
 inline IPointAngleSensor* IPointAngleSensor::FromOriginal(CPointAngleSensor* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPOINTANGLESENSORIMPL_H

@@ -65,6 +65,7 @@ public:
 };
 
 inline IExtent* Extent::ToInterface() { return new ExtentImpl(this); }
+inline IExtent* IExtent::FromRaw(CEntityInstance*) { return nullptr; }
 inline IExtent* IExtent::FromOriginal(Extent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_EXTENTIMPL_H

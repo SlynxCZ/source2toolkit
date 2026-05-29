@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBaseCombatCharacter.h"
 #include "CBaseAnimGraphImpl.h"
 
-class CBaseCombatCharacterImpl : public CBaseAnimGraphImpl, public IBaseCombatCharacter
+class CBaseCombatCharacterImpl : public CBaseAnimGraphImpl, public virtual IBaseCombatCharacter
 {
 
 public:
@@ -78,7 +78,20 @@ public:
     void MovementStatsUpdated() override { Real()->m_movementStats.NetworkStateChanged(); }
 };
 
-inline IBaseCombatCharacter* CBaseCombatCharacter::ToInterface() { return new CBaseCombatCharacterImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBaseCombatCharacter* CBaseCombatCharacter::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBaseCombatCharacter*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBaseCombatCharacterImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBaseCombatCharacter*>(impl));
+    return impl;
+}
+inline IBaseCombatCharacter* IBaseCombatCharacter::FromRaw(CEntityInstance* p) { return p ? static_cast<CBaseCombatCharacter*>(p)->ToInterface() : nullptr; }
 inline IBaseCombatCharacter* IBaseCombatCharacter::FromOriginal(CBaseCombatCharacter* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBASECOMBATCHARACTERIMPL_H

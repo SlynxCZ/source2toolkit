@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CBuyZone.h"
 #include "CBaseTriggerImpl.h"
 
-class CBuyZoneImpl : public CBaseTriggerImpl, public IBuyZone
+class CBuyZoneImpl : public CBaseTriggerImpl, public virtual IBuyZone
 {
 
 public:
@@ -60,7 +60,20 @@ public:
     void LegacyTeamNumUpdated() override { Real()->m_LegacyTeamNum.NetworkStateChanged(); }
 };
 
-inline IBuyZone* CBuyZone::ToInterface() { return new CBuyZoneImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IBuyZone* CBuyZone::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBuyZone*>(tagIt->second.ptr_for_return);
+    auto* impl = new CBuyZoneImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IBuyZone*>(impl));
+    return impl;
+}
+inline IBuyZone* IBuyZone::FromRaw(CEntityInstance* p) { return p ? static_cast<CBuyZone*>(p)->ToInterface() : nullptr; }
 inline IBuyZone* IBuyZone::FromOriginal(CBuyZone* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CBUYZONEIMPL_H

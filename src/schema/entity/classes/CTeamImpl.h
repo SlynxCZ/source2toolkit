@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CTeam.h"
 #include "CBaseEntityImpl.h"
 
-class CTeamImpl : public CBaseEntityImpl, public ITeam
+class CTeamImpl : public CBaseEntityImpl, public virtual ITeam
 {
 
 public:
@@ -65,7 +65,20 @@ public:
     char* Teamname() override { return Real()->m_szTeamname(); }
 };
 
-inline ITeam* CTeam::ToInterface() { return new CTeamImpl(this); }
+#include "core/virtualhooks.h"
+
+inline ITeam* CTeam::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<ITeam*>(tagIt->second.ptr_for_return);
+    auto* impl = new CTeamImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ITeam*>(impl));
+    return impl;
+}
+inline ITeam* ITeam::FromRaw(CEntityInstance* p) { return p ? static_cast<CTeam*>(p)->ToInterface() : nullptr; }
 inline ITeam* ITeam::FromOriginal(CTeam* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CTEAMIMPL_H

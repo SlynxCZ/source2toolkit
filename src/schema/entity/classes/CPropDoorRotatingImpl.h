@@ -44,7 +44,7 @@
 #include "schema/entity/classes/CPropDoorRotating.h"
 #include "CBasePropDoorImpl.h"
 
-class CPropDoorRotatingImpl : public CBasePropDoorImpl, public IPropDoorRotating
+class CPropDoorRotatingImpl : public CBasePropDoorImpl, public virtual IPropDoorRotating
 {
 
 public:
@@ -94,7 +94,20 @@ public:
     void EntityBlockerUpdated() override { Real()->m_hEntityBlocker.NetworkStateChanged(); }
 };
 
-inline IPropDoorRotating* CPropDoorRotating::ToInterface() { return new CPropDoorRotatingImpl(this); }
+#include "core/virtualhooks.h"
+
+inline IPropDoorRotating* CPropDoorRotating::ToInterface()
+{
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IPropDoorRotating*>(tagIt->second.ptr_for_return);
+    auto* impl = new CPropDoorRotatingImpl(this);
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<IPropDoorRotating*>(impl));
+    return impl;
+}
+inline IPropDoorRotating* IPropDoorRotating::FromRaw(CEntityInstance* p) { return p ? static_cast<CPropDoorRotating*>(p)->ToInterface() : nullptr; }
 inline IPropDoorRotating* IPropDoorRotating::FromOriginal(CPropDoorRotating* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CPROPDOORROTATINGIMPL_H

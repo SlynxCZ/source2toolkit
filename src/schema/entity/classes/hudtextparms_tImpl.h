@@ -73,6 +73,7 @@ public:
 };
 
 inline Ihudtextparms_t* hudtextparms_t::ToInterface() { return new hudtextparms_tImpl(this); }
+inline Ihudtextparms_t* Ihudtextparms_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline Ihudtextparms_t* Ihudtextparms_t::FromOriginal(hudtextparms_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_HUDTEXTPARMS_TIMPL_H

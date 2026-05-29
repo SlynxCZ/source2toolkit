@@ -63,6 +63,7 @@ public:
 };
 
 inline IParticleIndex_t* ParticleIndex_t::ToInterface() { return new ParticleIndex_tImpl(this); }
+inline IParticleIndex_t* IParticleIndex_t::FromRaw(CEntityInstance*) { return nullptr; }
 inline IParticleIndex_t* IParticleIndex_t::FromOriginal(ParticleIndex_t* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_PARTICLEINDEX_TIMPL_H
