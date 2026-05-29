@@ -146,17 +146,17 @@ public:
     void RemoveActorListUpdated() override { Real()->m_hRemoveActorList.NetworkStateChanged(); }
     uint16_t& SceneStringIndex() override { return Real()->m_nSceneStringIndex(); }
     void SceneStringIndexUpdated() override { Real()->m_nSceneStringIndex.NetworkStateChanged(); }
-    CEntityIOOutput& OnStart() override { return Real()->m_OnStart(); }
+    ::CEntityIOOutput& OnStart() override { return Real()->m_OnStart(); }
     void OnStartUpdated() override { Real()->m_OnStart.NetworkStateChanged(); }
-    CEntityIOOutput& OnCompletion() override { return Real()->m_OnCompletion(); }
+    ::CEntityIOOutput& OnCompletion() override { return Real()->m_OnCompletion(); }
     void OnCompletionUpdated() override { Real()->m_OnCompletion.NetworkStateChanged(); }
-    CEntityIOOutput& OnCanceled() override { return Real()->m_OnCanceled(); }
+    ::CEntityIOOutput& OnCanceled() override { return Real()->m_OnCanceled(); }
     void OnCanceledUpdated() override { Real()->m_OnCanceled.NetworkStateChanged(); }
-    CEntityIOOutput& OnPaused() override { return Real()->m_OnPaused(); }
+    ::CEntityIOOutput& OnPaused() override { return Real()->m_OnPaused(); }
     void OnPausedUpdated() override { Real()->m_OnPaused.NetworkStateChanged(); }
-    CEntityIOOutput& OnResumed() override { return Real()->m_OnResumed(); }
+    ::CEntityIOOutput& OnResumed() override { return Real()->m_OnResumed(); }
     void OnResumedUpdated() override { Real()->m_OnResumed.NetworkStateChanged(); }
-    CEntityIOOutput& OnPulseRequirement() override { return Real()->m_OnPulseRequirement(); }
+    ::CEntityIOOutput& OnPulseRequirement() override { return Real()->m_OnPulseRequirement(); }
     void OnPulseRequirementUpdated() override { Real()->m_OnPulseRequirement.NetworkStateChanged(); }
     CHandle<CSceneEntity>& InterruptScene() override { return Real()->m_hInterruptScene(); }
     void InterruptSceneUpdated() override { Real()->m_hInterruptScene.NetworkStateChanged(); }
@@ -186,7 +186,7 @@ public:
     void ActivatorUpdated() override { Real()->m_hActivator.NetworkStateChanged(); }
     int32_t& BusyActor() override { return Real()->m_BusyActor(); }
     void BusyActorUpdated() override { Real()->m_BusyActor.NetworkStateChanged(); }
-    SceneOnPlayerDeath_t& PlayerDeathBehavior() override { return Real()->m_iPlayerDeathBehavior(); }
+    ::SceneOnPlayerDeath_t& PlayerDeathBehavior() override { return Real()->m_iPlayerDeathBehavior(); }
     void PlayerDeathBehaviorUpdated() override { Real()->m_iPlayerDeathBehavior.NetworkStateChanged(); }
 };
 

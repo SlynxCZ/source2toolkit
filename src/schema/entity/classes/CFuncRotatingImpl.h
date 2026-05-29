@@ -56,11 +56,11 @@ private:
 
 public:
     CFuncRotating* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnStopped() override { return Real()->m_OnStopped(); }
+    ::CEntityIOOutput& OnStopped() override { return Real()->m_OnStopped(); }
     void OnStoppedUpdated() override { Real()->m_OnStopped.NetworkStateChanged(); }
-    CEntityIOOutput& OnStarted() override { return Real()->m_OnStarted(); }
+    ::CEntityIOOutput& OnStarted() override { return Real()->m_OnStarted(); }
     void OnStartedUpdated() override { Real()->m_OnStarted.NetworkStateChanged(); }
-    CEntityIOOutput& OnReachedStart() override { return Real()->m_OnReachedStart(); }
+    ::CEntityIOOutput& OnReachedStart() override { return Real()->m_OnReachedStart(); }
     void OnReachedStartUpdated() override { Real()->m_OnReachedStart.NetworkStateChanged(); }
     RotationVector& LocalRotationVector() override { return Real()->m_localRotationVector(); }
     void LocalRotationVectorUpdated() override { Real()->m_localRotationVector.NetworkStateChanged(); }

@@ -99,7 +99,6 @@ public:
     SCHEMA_FIELD(CUtlVector<EntityRenderAttribute_t>, m_vecRenderAttributes);
     SCHEMA_FIELD(bool, m_bRenderToCubemaps);
     SCHEMA_FIELD(bool, m_bNoInterpolate);
-    SCHEMA_FIELD(CCollisionProperty, m_Collision);
     SCHEMA_FIELD(CGlowProperty, m_Glow);
     SCHEMA_FIELD(float, m_flGlowBackfaceMult);
     SCHEMA_FIELD(float, m_fadeMinDist);

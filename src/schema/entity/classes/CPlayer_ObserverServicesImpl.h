@@ -60,7 +60,7 @@ public:
     void ObserverModeUpdated() override { Real()->m_iObserverMode.NetworkStateChanged(); }
     CHandle<CBaseEntity>& ObserverTarget() override { return Real()->m_hObserverTarget(); }
     void ObserverTargetUpdated() override { Real()->m_hObserverTarget.NetworkStateChanged(); }
-    ObserverMode_t& ObserverLastMode() override { return Real()->m_iObserverLastMode(); }
+    ::ObserverMode_t& ObserverLastMode() override { return Real()->m_iObserverLastMode(); }
     void ObserverLastModeUpdated() override { Real()->m_iObserverLastMode.NetworkStateChanged(); }
     bool& ForcedObserverMode() override { return Real()->m_bForcedObserverMode(); }
     void ForcedObserverModeUpdated() override { Real()->m_bForcedObserverMode.NetworkStateChanged(); }

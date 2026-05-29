@@ -60,7 +60,7 @@ public:
     void WaitUpdated() override { Real()->m_flWait.NetworkStateChanged(); }
     float& Radius() override { return Real()->m_flRadius(); }
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }
-    CEntityIOOutput& OnPass() override { return Real()->m_OnPass(); }
+    ::CEntityIOOutput& OnPass() override { return Real()->m_OnPass(); }
     void OnPassUpdated() override { Real()->m_OnPass.NetworkStateChanged(); }
 };
 

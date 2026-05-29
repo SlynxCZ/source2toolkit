@@ -79,11 +79,11 @@ public:
     void BackgroundWorldToUVUpdated() override { Real()->m_flBackgroundWorldToUV.NetworkStateChanged(); }
     Color& Color() override { return Real()->m_Color(); }
     void ColorUpdated() override { Real()->m_Color.NetworkStateChanged(); }
-    PointWorldTextJustifyHorizontal_t& JustifyHorizontal() override { return Real()->m_nJustifyHorizontal(); }
+    ::PointWorldTextJustifyHorizontal_t& JustifyHorizontal() override { return Real()->m_nJustifyHorizontal(); }
     void JustifyHorizontalUpdated() override { Real()->m_nJustifyHorizontal.NetworkStateChanged(); }
-    PointWorldTextJustifyVertical_t& JustifyVertical() override { return Real()->m_nJustifyVertical(); }
+    ::PointWorldTextJustifyVertical_t& JustifyVertical() override { return Real()->m_nJustifyVertical(); }
     void JustifyVerticalUpdated() override { Real()->m_nJustifyVertical.NetworkStateChanged(); }
-    PointWorldTextReorientMode_t& ReorientMode() override { return Real()->m_nReorientMode(); }
+    ::PointWorldTextReorientMode_t& ReorientMode() override { return Real()->m_nReorientMode(); }
     void ReorientModeUpdated() override { Real()->m_nReorientMode.NetworkStateChanged(); }
 };
 

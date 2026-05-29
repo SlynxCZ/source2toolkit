@@ -58,7 +58,7 @@ public:
     CPointHurt* GetOriginal() const override { return Real(); }
     int32_t& Damage() override { return Real()->m_nDamage(); }
     void DamageUpdated() override { Real()->m_nDamage.NetworkStateChanged(); }
-    DamageTypes_t& BitsDamageType() override { return Real()->m_bitsDamageType(); }
+    ::DamageTypes_t& BitsDamageType() override { return Real()->m_bitsDamageType(); }
     void BitsDamageTypeUpdated() override { Real()->m_bitsDamageType.NetworkStateChanged(); }
     float& Radius() override { return Real()->m_flRadius(); }
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }

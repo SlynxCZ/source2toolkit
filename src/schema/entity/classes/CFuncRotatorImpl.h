@@ -82,33 +82,33 @@ public:
     void LSInitUpdated() override { Real()->m_qLSInit.NetworkStateChanged(); }
     Quaternion& LSOrientation() override { return Real()->m_qLSOrientation(); }
     void LSOrientationUpdated() override { Real()->m_qLSOrientation.NetworkStateChanged(); }
-    CEntityIOOutput& OnRotationStarted() override { return Real()->m_OnRotationStarted(); }
+    ::CEntityIOOutput& OnRotationStarted() override { return Real()->m_OnRotationStarted(); }
     void OnRotationStartedUpdated() override { Real()->m_OnRotationStarted.NetworkStateChanged(); }
-    CEntityIOOutput& OnRotationCompleted() override { return Real()->m_OnRotationCompleted(); }
+    ::CEntityIOOutput& OnRotationCompleted() override { return Real()->m_OnRotationCompleted(); }
     void OnRotationCompletedUpdated() override { Real()->m_OnRotationCompleted.NetworkStateChanged(); }
-    CEntityIOOutput& OnOscillate() override { return Real()->m_OnOscillate(); }
+    ::CEntityIOOutput& OnOscillate() override { return Real()->m_OnOscillate(); }
     void OnOscillateUpdated() override { Real()->m_OnOscillate.NetworkStateChanged(); }
-    CEntityIOOutput& OnOscillateStartArrive() override { return Real()->m_OnOscillateStartArrive(); }
+    ::CEntityIOOutput& OnOscillateStartArrive() override { return Real()->m_OnOscillateStartArrive(); }
     void OnOscillateStartArriveUpdated() override { Real()->m_OnOscillateStartArrive.NetworkStateChanged(); }
-    CEntityIOOutput& OnOscillateStartDepart() override { return Real()->m_OnOscillateStartDepart(); }
+    ::CEntityIOOutput& OnOscillateStartDepart() override { return Real()->m_OnOscillateStartDepart(); }
     void OnOscillateStartDepartUpdated() override { Real()->m_OnOscillateStartDepart.NetworkStateChanged(); }
-    CEntityIOOutput& OnOscillateEndArrive() override { return Real()->m_OnOscillateEndArrive(); }
+    ::CEntityIOOutput& OnOscillateEndArrive() override { return Real()->m_OnOscillateEndArrive(); }
     void OnOscillateEndArriveUpdated() override { Real()->m_OnOscillateEndArrive.NetworkStateChanged(); }
-    CEntityIOOutput& OnOscillateEndDepart() override { return Real()->m_OnOscillateEndDepart(); }
+    ::CEntityIOOutput& OnOscillateEndDepart() override { return Real()->m_OnOscillateEndDepart(); }
     void OnOscillateEndDepartUpdated() override { Real()->m_OnOscillateEndDepart.NetworkStateChanged(); }
     bool& OscillateDepart() override { return Real()->m_bOscillateDepart(); }
     void OscillateDepartUpdated() override { Real()->m_bOscillateDepart.NetworkStateChanged(); }
     int32_t& OscillateCount() override { return Real()->m_nOscillateCount(); }
     void OscillateCountUpdated() override { Real()->m_nOscillateCount.NetworkStateChanged(); }
-    CFuncRotator__Rotate_t& RotateType() override { return Real()->m_eRotateType(); }
+    ::CFuncRotator__Rotate_t& RotateType() override { return Real()->m_eRotateType(); }
     void RotateTypeUpdated() override { Real()->m_eRotateType.NetworkStateChanged(); }
-    CFuncRotator__Rotate_t& PrevRotateType() override { return Real()->m_ePrevRotateType(); }
+    ::CFuncRotator__Rotate_t& PrevRotateType() override { return Real()->m_ePrevRotateType(); }
     void PrevRotateTypeUpdated() override { Real()->m_ePrevRotateType.NetworkStateChanged(); }
     bool& HasTargetOverride() override { return Real()->m_bHasTargetOverride(); }
     void HasTargetOverrideUpdated() override { Real()->m_bHasTargetOverride.NetworkStateChanged(); }
     Quaternion& OrientationOverride() override { return Real()->m_qOrientationOverride(); }
     void OrientationOverrideUpdated() override { Real()->m_qOrientationOverride.NetworkStateChanged(); }
-    RotatorTargetSpace_t& SpaceOverride() override { return Real()->m_eSpaceOverride(); }
+    ::RotatorTargetSpace_t& SpaceOverride() override { return Real()->m_eSpaceOverride(); }
     void SpaceOverrideUpdated() override { Real()->m_eSpaceOverride.NetworkStateChanged(); }
     QAngle& AngularVelocity() override { return Real()->m_qAngularVelocity(); }
     void AngularVelocityUpdated() override { Real()->m_qAngularVelocity.NetworkStateChanged(); }
@@ -126,7 +126,7 @@ public:
     void RotatorQueueUpdated() override { Real()->m_vecRotatorQueue.NetworkStateChanged(); }
     CUtlVector<RotatorHistoryEntry_t>& RotatorQueueHistory() override { return Real()->m_vecRotatorQueueHistory(); }
     void RotatorQueueHistoryUpdated() override { Real()->m_vecRotatorQueueHistory.NetworkStateChanged(); }
-    SolidType_t& SolidType() override { return Real()->m_eSolidType(); }
+    ::SolidType_t& SolidType() override { return Real()->m_eSolidType(); }
     void SolidTypeUpdated() override { Real()->m_eSolidType.NetworkStateChanged(); }
     CHandle<CFuncMover>& SpeedFromMover() override { return Real()->m_hSpeedFromMover(); }
     void SpeedFromMoverUpdated() override { Real()->m_hSpeedFromMover.NetworkStateChanged(); }

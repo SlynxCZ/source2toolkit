@@ -56,7 +56,7 @@ private:
 
 public:
     CBodyComponentSkeletonInstance* GetOriginal() const override { return Real(); }
-    CSkeletonInstance& SkeletonInstance() override { return Real()->m_skeletonInstance(); }
+    ::CSkeletonInstance& SkeletonInstance() override { return Real()->m_skeletonInstance(); }
     void SkeletonInstanceUpdated() override { Real()->m_skeletonInstance.NetworkStateChanged(); }
 };
 

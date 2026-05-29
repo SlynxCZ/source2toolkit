@@ -66,7 +66,7 @@ public:
     void OuterUpdated() override { Real()->m_hOuter.NetworkStateChanged(); }
     bool& PreventLoopback() override { return Real()->m_bPreventLoopback(); }
     void PreventLoopbackUpdated() override { Real()->m_bPreventLoopback.NetworkStateChanged(); }
-    attributeprovidertypes_t& ProviderType() override { return Real()->m_ProviderType(); }
+    ::attributeprovidertypes_t& ProviderType() override { return Real()->m_ProviderType(); }
     void ProviderTypeUpdated() override { Real()->m_ProviderType.NetworkStateChanged(); }
     CUtlVector<CAttributeManager__cached_attribute_float_t>& CachedResults() override { return Real()->m_CachedResults(); }
     void CachedResultsUpdated() override { Real()->m_CachedResults.NetworkStateChanged(); }

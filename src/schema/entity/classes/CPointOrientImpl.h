@@ -62,9 +62,9 @@ public:
     void TargetUpdated() override { Real()->m_hTarget.NetworkStateChanged(); }
     bool& Active() override { return Real()->m_bActive(); }
     void ActiveUpdated() override { Real()->m_bActive.NetworkStateChanged(); }
-    PointOrientGoalDirectionType_t& GoalDirection() override { return Real()->m_nGoalDirection(); }
+    ::PointOrientGoalDirectionType_t& GoalDirection() override { return Real()->m_nGoalDirection(); }
     void GoalDirectionUpdated() override { Real()->m_nGoalDirection.NetworkStateChanged(); }
-    PointOrientConstraint_t& Constraint() override { return Real()->m_nConstraint(); }
+    ::PointOrientConstraint_t& Constraint() override { return Real()->m_nConstraint(); }
     void ConstraintUpdated() override { Real()->m_nConstraint.NetworkStateChanged(); }
     float& MaxTurnRate() override { return Real()->m_flMaxTurnRate(); }
     void MaxTurnRateUpdated() override { Real()->m_flMaxTurnRate.NetworkStateChanged(); }

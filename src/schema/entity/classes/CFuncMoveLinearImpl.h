@@ -56,7 +56,7 @@ private:
 
 public:
     CFuncMoveLinear* GetOriginal() const override { return Real(); }
-    MoveLinearAuthoredPos_t& AuthoredPosition() override { return Real()->m_authoredPosition(); }
+    ::MoveLinearAuthoredPos_t& AuthoredPosition() override { return Real()->m_authoredPosition(); }
     void AuthoredPositionUpdated() override { Real()->m_authoredPosition.NetworkStateChanged(); }
     QAngle& MoveEntitySpace() override { return Real()->m_angMoveEntitySpace(); }
     void MoveEntitySpaceUpdated() override { Real()->m_angMoveEntitySpace.NetworkStateChanged(); }
@@ -72,9 +72,9 @@ public:
     void BlockDamageUpdated() override { Real()->m_flBlockDamage.NetworkStateChanged(); }
     float& StartPosition() override { return Real()->m_flStartPosition(); }
     void StartPositionUpdated() override { Real()->m_flStartPosition.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
+    ::CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
     void OnFullyOpenUpdated() override { Real()->m_OnFullyOpen.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
+    ::CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
     void OnFullyClosedUpdated() override { Real()->m_OnFullyClosed.NetworkStateChanged(); }
     bool& CreateMovableNavMesh() override { return Real()->m_bCreateMovableNavMesh(); }
     void CreateMovableNavMeshUpdated() override { Real()->m_bCreateMovableNavMesh.NetworkStateChanged(); }

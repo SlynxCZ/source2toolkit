@@ -56,11 +56,11 @@ private:
 
 public:
     CLogicPlayerProxy* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& PlayerHasAmmo() override { return Real()->m_PlayerHasAmmo(); }
+    ::CEntityIOOutput& PlayerHasAmmo() override { return Real()->m_PlayerHasAmmo(); }
     void PlayerHasAmmoUpdated() override { Real()->m_PlayerHasAmmo.NetworkStateChanged(); }
-    CEntityIOOutput& PlayerHasNoAmmo() override { return Real()->m_PlayerHasNoAmmo(); }
+    ::CEntityIOOutput& PlayerHasNoAmmo() override { return Real()->m_PlayerHasNoAmmo(); }
     void PlayerHasNoAmmoUpdated() override { Real()->m_PlayerHasNoAmmo.NetworkStateChanged(); }
-    CEntityIOOutput& PlayerDied() override { return Real()->m_PlayerDied(); }
+    ::CEntityIOOutput& PlayerDied() override { return Real()->m_PlayerDied(); }
     void PlayerDiedUpdated() override { Real()->m_PlayerDied.NetworkStateChanged(); }
     CHandle<CBaseEntity>& Player() override { return Real()->m_hPlayer(); }
     void PlayerUpdated() override { Real()->m_hPlayer.NetworkStateChanged(); }

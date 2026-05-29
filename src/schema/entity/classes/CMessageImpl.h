@@ -66,7 +66,7 @@ public:
     void RadiusUpdated() override { Real()->m_Radius.NetworkStateChanged(); }
     CUtlSymbolLarge& Noise() override { return Real()->m_sNoise(); }
     void NoiseUpdated() override { Real()->m_sNoise.NetworkStateChanged(); }
-    CEntityIOOutput& OnShowMessage() override { return Real()->m_OnShowMessage(); }
+    ::CEntityIOOutput& OnShowMessage() override { return Real()->m_OnShowMessage(); }
     void OnShowMessageUpdated() override { Real()->m_OnShowMessage.NetworkStateChanged(); }
 };
 

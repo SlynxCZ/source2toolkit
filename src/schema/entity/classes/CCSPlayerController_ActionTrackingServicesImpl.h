@@ -58,7 +58,7 @@ public:
     CCSPlayerController_ActionTrackingServices* GetOriginal() const override { return Real(); }
     CUtlVector<CSPerRoundStats_t>& PerRoundStats() override { return Real()->m_perRoundStats(); }
     void PerRoundStatsUpdated() override { Real()->m_perRoundStats.NetworkStateChanged(); }
-    CSMatchStats_t& MatchStats() override { return Real()->m_matchStats(); }
+    ::CSMatchStats_t& MatchStats() override { return Real()->m_matchStats(); }
     void MatchStatsUpdated() override { Real()->m_matchStats.NetworkStateChanged(); }
     int32_t& NumRoundKills() override { return Real()->m_iNumRoundKills(); }
     void NumRoundKillsUpdated() override { Real()->m_iNumRoundKills.NetworkStateChanged(); }

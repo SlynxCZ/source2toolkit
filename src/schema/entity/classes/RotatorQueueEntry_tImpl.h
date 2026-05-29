@@ -60,7 +60,7 @@ public:
     RotatorQueueEntry_t* GetOriginal() const override { return Real(); }
     Quaternion& Target() override { return Real()->qTarget(); }
     void TargetUpdated() override { Real()->qTarget.NetworkStateChanged(); }
-    RotatorTargetSpace_t& Space() override { return Real()->eSpace(); }
+    ::RotatorTargetSpace_t& Space() override { return Real()->eSpace(); }
     void SpaceUpdated() override { Real()->eSpace.NetworkStateChanged(); }
 };
 

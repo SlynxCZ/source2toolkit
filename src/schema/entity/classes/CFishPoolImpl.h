@@ -68,7 +68,7 @@ public:
     void IsDormantUpdated() override { Real()->m_isDormant.NetworkStateChanged(); }
     CUtlVector<CHandle<CFish>>& Fishes() override { return Real()->m_fishes(); }
     void FishesUpdated() override { Real()->m_fishes.NetworkStateChanged(); }
-    CountdownTimer& VisTimer() override { return Real()->m_visTimer(); }
+    ::CountdownTimer& VisTimer() override { return Real()->m_visTimer(); }
     void VisTimerUpdated() override { Real()->m_visTimer.NetworkStateChanged(); }
 };
 

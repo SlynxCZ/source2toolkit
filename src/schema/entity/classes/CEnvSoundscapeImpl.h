@@ -56,7 +56,7 @@ private:
 
 public:
     CEnvSoundscape* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnPlay() override { return Real()->m_OnPlay(); }
+    ::CEntityIOOutput& OnPlay() override { return Real()->m_OnPlay(); }
     void OnPlayUpdated() override { Real()->m_OnPlay.NetworkStateChanged(); }
     float& Radius() override { return Real()->m_flRadius(); }
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }

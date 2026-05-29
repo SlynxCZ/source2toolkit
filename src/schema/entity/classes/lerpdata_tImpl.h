@@ -60,7 +60,7 @@ public:
     lerpdata_t* GetOriginal() const override { return Real(); }
     CHandle<CBaseEntity>& Ent() override { return Real()->m_hEnt(); }
     void EntUpdated() override { Real()->m_hEnt.NetworkStateChanged(); }
-    MoveType_t& MoveType() override { return Real()->m_MoveType(); }
+    ::MoveType_t& MoveType() override { return Real()->m_MoveType(); }
     void MoveTypeUpdated() override { Real()->m_MoveType.NetworkStateChanged(); }
     float& StartTime() override { return Real()->m_flStartTime(); }
     void StartTimeUpdated() override { Real()->m_flStartTime.NetworkStateChanged(); }
@@ -68,7 +68,7 @@ public:
     void StartOriginUpdated() override { Real()->m_vecStartOrigin.NetworkStateChanged(); }
     Quaternion& StartRot() override { return Real()->m_qStartRot(); }
     void StartRotUpdated() override { Real()->m_qStartRot.NetworkStateChanged(); }
-    ParticleIndex_t& FXIndex() override { return Real()->m_nFXIndex(); }
+    ::ParticleIndex_t& FXIndex() override { return Real()->m_nFXIndex(); }
     void FXIndexUpdated() override { Real()->m_nFXIndex.NetworkStateChanged(); }
 };
 

@@ -106,15 +106,15 @@ public:
     void MoveSoundMinPitchUpdated() override { Real()->m_flMoveSoundMinPitch.NetworkStateChanged(); }
     float& MoveSoundMaxPitch() override { return Real()->m_flMoveSoundMaxPitch(); }
     void MoveSoundMaxPitchUpdated() override { Real()->m_flMoveSoundMaxPitch.NetworkStateChanged(); }
-    TrainOrientationType_t& OrientationType() override { return Real()->m_eOrientationType(); }
+    ::TrainOrientationType_t& OrientationType() override { return Real()->m_eOrientationType(); }
     void OrientationTypeUpdated() override { Real()->m_eOrientationType.NetworkStateChanged(); }
-    TrainVelocityType_t& VelocityType() override { return Real()->m_eVelocityType(); }
+    ::TrainVelocityType_t& VelocityType() override { return Real()->m_eVelocityType(); }
     void VelocityTypeUpdated() override { Real()->m_eVelocityType.NetworkStateChanged(); }
-    CEntityIOOutput& OnStart() override { return Real()->m_OnStart(); }
+    ::CEntityIOOutput& OnStart() override { return Real()->m_OnStart(); }
     void OnStartUpdated() override { Real()->m_OnStart.NetworkStateChanged(); }
-    CEntityIOOutput& OnNext() override { return Real()->m_OnNext(); }
+    ::CEntityIOOutput& OnNext() override { return Real()->m_OnNext(); }
     void OnNextUpdated() override { Real()->m_OnNext.NetworkStateChanged(); }
-    CEntityIOOutput& OnArrivedAtDestinationNode() override { return Real()->m_OnArrivedAtDestinationNode(); }
+    ::CEntityIOOutput& OnArrivedAtDestinationNode() override { return Real()->m_OnArrivedAtDestinationNode(); }
     void OnArrivedAtDestinationNodeUpdated() override { Real()->m_OnArrivedAtDestinationNode.NetworkStateChanged(); }
     bool& ManualSpeedChanges() override { return Real()->m_bManualSpeedChanges(); }
     void ManualSpeedChangesUpdated() override { Real()->m_bManualSpeedChanges.NetworkStateChanged(); }

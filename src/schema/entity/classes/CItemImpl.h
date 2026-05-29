@@ -56,15 +56,15 @@ private:
 
 public:
     CItem* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnPlayerTouch() override { return Real()->m_OnPlayerTouch(); }
+    ::CEntityIOOutput& OnPlayerTouch() override { return Real()->m_OnPlayerTouch(); }
     void OnPlayerTouchUpdated() override { Real()->m_OnPlayerTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
+    ::CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
     void OnPlayerPickupUpdated() override { Real()->m_OnPlayerPickup.NetworkStateChanged(); }
     bool& ActivateWhenAtRest() override { return Real()->m_bActivateWhenAtRest(); }
     void ActivateWhenAtRestUpdated() override { Real()->m_bActivateWhenAtRest.NetworkStateChanged(); }
-    CEntityIOOutput& OnCacheInteraction() override { return Real()->m_OnCacheInteraction(); }
+    ::CEntityIOOutput& OnCacheInteraction() override { return Real()->m_OnCacheInteraction(); }
     void OnCacheInteractionUpdated() override { Real()->m_OnCacheInteraction.NetworkStateChanged(); }
-    CEntityIOOutput& OnGlovePulled() override { return Real()->m_OnGlovePulled(); }
+    ::CEntityIOOutput& OnGlovePulled() override { return Real()->m_OnGlovePulled(); }
     void OnGlovePulledUpdated() override { Real()->m_OnGlovePulled.NetworkStateChanged(); }
     Vector& OriginalSpawnOrigin() override { return Real()->m_vOriginalSpawnOrigin(); }
     void OriginalSpawnOriginUpdated() override { Real()->m_vOriginalSpawnOrigin.NetworkStateChanged(); }

@@ -74,7 +74,7 @@ public:
     void MotorDampingRatioUpdated() override { Real()->m_flMotorDampingRatio.NetworkStateChanged(); }
     bool& UseEntityPivot() override { return Real()->m_bUseEntityPivot(); }
     void UseEntityPivotUpdated() override { Real()->m_bUseEntityPivot.NetworkStateChanged(); }
-    ConstraintSoundInfo& SoundInfo() override { return Real()->m_soundInfo(); }
+    ::ConstraintSoundInfo& SoundInfo() override { return Real()->m_soundInfo(); }
     void SoundInfoUpdated() override { Real()->m_soundInfo.NetworkStateChanged(); }
 };
 

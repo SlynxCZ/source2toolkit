@@ -56,7 +56,7 @@ private:
 
 public:
     CTriggerMultiple* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnTrigger() override { return Real()->m_OnTrigger(); }
+    ::CEntityIOOutput& OnTrigger() override { return Real()->m_OnTrigger(); }
     void OnTriggerUpdated() override { Real()->m_OnTrigger.NetworkStateChanged(); }
 };
 

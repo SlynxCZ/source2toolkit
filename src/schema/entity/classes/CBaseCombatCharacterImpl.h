@@ -70,11 +70,11 @@ public:
     void VecRelationshipsUpdated() override { Real()->m_pVecRelationships.NetworkStateChanged(); }
     CUtlSymbolLarge& StrRelationships() override { return Real()->m_strRelationships(); }
     void StrRelationshipsUpdated() override { Real()->m_strRelationships.NetworkStateChanged(); }
-    Hull_t& Hull() override { return Real()->m_eHull(); }
+    ::Hull_t& Hull() override { return Real()->m_eHull(); }
     void HullUpdated() override { Real()->m_eHull.NetworkStateChanged(); }
     uint32_t& NavHullIdx() override { return Real()->m_nNavHullIdx(); }
     void NavHullIdxUpdated() override { Real()->m_nNavHullIdx.NetworkStateChanged(); }
-    CMovementStatsProperty& MovementStats() override { return Real()->m_movementStats(); }
+    ::CMovementStatsProperty& MovementStats() override { return Real()->m_movementStats(); }
     void MovementStatsUpdated() override { Real()->m_movementStats.NetworkStateChanged(); }
 };
 

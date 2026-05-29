@@ -72,9 +72,9 @@ public:
     void FacingTimeUpdated() override { Real()->m_flFacingTime.NetworkStateChanged(); }
     bool& Fired() override { return Real()->m_bFired(); }
     void FiredUpdated() override { Real()->m_bFired.NetworkStateChanged(); }
-    CEntityIOOutput& OnFacingLookat() override { return Real()->m_OnFacingLookat(); }
+    ::CEntityIOOutput& OnFacingLookat() override { return Real()->m_OnFacingLookat(); }
     void OnFacingLookatUpdated() override { Real()->m_OnFacingLookat.NetworkStateChanged(); }
-    CEntityIOOutput& OnNotFacingLookat() override { return Real()->m_OnNotFacingLookat(); }
+    ::CEntityIOOutput& OnNotFacingLookat() override { return Real()->m_OnNotFacingLookat(); }
     void OnNotFacingLookatUpdated() override { Real()->m_OnNotFacingLookat.NetworkStateChanged(); }
 };
 

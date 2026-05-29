@@ -76,9 +76,9 @@ public:
     void PostSpawnUseAnglesUpdated() override { Real()->m_bPostSpawnUseAngles.NetworkStateChanged(); }
     CUtlSymbolLarge& Template() override { return Real()->m_iszTemplate(); }
     void TemplateUpdated() override { Real()->m_iszTemplate.NetworkStateChanged(); }
-    CEntityIOOutput& OutputOnSpawned() override { return Real()->m_pOutputOnSpawned(); }
+    ::CEntityIOOutput& OutputOnSpawned() override { return Real()->m_pOutputOnSpawned(); }
     void OutputOnSpawnedUpdated() override { Real()->m_pOutputOnSpawned.NetworkStateChanged(); }
-    CEntityIOOutput& OutputOnFailedSpawn() override { return Real()->m_pOutputOnFailedSpawn(); }
+    ::CEntityIOOutput& OutputOnFailedSpawn() override { return Real()->m_pOutputOnFailedSpawn(); }
     void OutputOnFailedSpawnUpdated() override { Real()->m_pOutputOnFailedSpawn.NetworkStateChanged(); }
 };
 

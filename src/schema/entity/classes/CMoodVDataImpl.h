@@ -58,7 +58,7 @@ private:
 
 public:
     CMoodVData* GetOriginal() const override { return Real(); }
-    MoodType_t& MoodType() override { return Real()->m_nMoodType(); }
+    ::MoodType_t& MoodType() override { return Real()->m_nMoodType(); }
     void MoodTypeUpdated() override { Real()->m_nMoodType.NetworkStateChanged(); }
 };
 

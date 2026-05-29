@@ -56,7 +56,7 @@ private:
 
 public:
     CTriggerBuoyancy* GetOriginal() const override { return Real(); }
-    CBuoyancyHelper& BuoyancyHelper() override { return Real()->m_BuoyancyHelper(); }
+    ::CBuoyancyHelper& BuoyancyHelper() override { return Real()->m_BuoyancyHelper(); }
     void BuoyancyHelperUpdated() override { Real()->m_BuoyancyHelper.NetworkStateChanged(); }
     float& FluidDensity() override { return Real()->m_flFluidDensity(); }
     void FluidDensityUpdated() override { Real()->m_flFluidDensity.NetworkStateChanged(); }

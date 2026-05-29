@@ -56,17 +56,17 @@ private:
 
 public:
     CPhysHinge* GetOriginal() const override { return Real(); }
-    ConstraintSoundInfo& SoundInfo() override { return Real()->m_soundInfo(); }
+    ::ConstraintSoundInfo& SoundInfo() override { return Real()->m_soundInfo(); }
     void SoundInfoUpdated() override { Real()->m_soundInfo.NetworkStateChanged(); }
-    CEntityIOOutput& NotifyMinLimitReached() override { return Real()->m_NotifyMinLimitReached(); }
+    ::CEntityIOOutput& NotifyMinLimitReached() override { return Real()->m_NotifyMinLimitReached(); }
     void NotifyMinLimitReachedUpdated() override { Real()->m_NotifyMinLimitReached.NetworkStateChanged(); }
-    CEntityIOOutput& NotifyMaxLimitReached() override { return Real()->m_NotifyMaxLimitReached(); }
+    ::CEntityIOOutput& NotifyMaxLimitReached() override { return Real()->m_NotifyMaxLimitReached(); }
     void NotifyMaxLimitReachedUpdated() override { Real()->m_NotifyMaxLimitReached.NetworkStateChanged(); }
     bool& AtMinLimit() override { return Real()->m_bAtMinLimit(); }
     void AtMinLimitUpdated() override { Real()->m_bAtMinLimit.NetworkStateChanged(); }
     bool& AtMaxLimit() override { return Real()->m_bAtMaxLimit(); }
     void AtMaxLimitUpdated() override { Real()->m_bAtMaxLimit.NetworkStateChanged(); }
-    constraint_hingeparams_t& Hinge() override { return Real()->m_hinge(); }
+    ::constraint_hingeparams_t& Hinge() override { return Real()->m_hinge(); }
     void HingeUpdated() override { Real()->m_hinge.NetworkStateChanged(); }
     float& HingeFriction() override { return Real()->m_hingeFriction(); }
     void HingeFrictionUpdated() override { Real()->m_hingeFriction.NetworkStateChanged(); }
@@ -90,9 +90,9 @@ public:
     void AngleSpeedThresholdUpdated() override { Real()->m_flAngleSpeedThreshold.NetworkStateChanged(); }
     float& LimitsDebugVisRotation() override { return Real()->m_flLimitsDebugVisRotation(); }
     void LimitsDebugVisRotationUpdated() override { Real()->m_flLimitsDebugVisRotation.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartMoving() override { return Real()->m_OnStartMoving(); }
+    ::CEntityIOOutput& OnStartMoving() override { return Real()->m_OnStartMoving(); }
     void OnStartMovingUpdated() override { Real()->m_OnStartMoving.NetworkStateChanged(); }
-    CEntityIOOutput& OnStopMoving() override { return Real()->m_OnStopMoving(); }
+    ::CEntityIOOutput& OnStopMoving() override { return Real()->m_OnStopMoving(); }
     void OnStopMovingUpdated() override { Real()->m_OnStopMoving.NetworkStateChanged(); }
 };
 

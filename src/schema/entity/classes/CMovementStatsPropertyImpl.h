@@ -60,7 +60,7 @@ public:
     CMovementStatsProperty* GetOriginal() const override { return Real(); }
     int32_t& UseCounter() override { return Real()->m_nUseCounter(); }
     void UseCounterUpdated() override { Real()->m_nUseCounter.NetworkStateChanged(); }
-    CVectorExponentialMovingAverage& EmaMovementDirection() override { return Real()->m_emaMovementDirection(); }
+    ::CVectorExponentialMovingAverage& EmaMovementDirection() override { return Real()->m_emaMovementDirection(); }
     void EmaMovementDirectionUpdated() override { Real()->m_emaMovementDirection.NetworkStateChanged(); }
 };
 

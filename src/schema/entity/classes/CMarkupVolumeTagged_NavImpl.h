@@ -56,7 +56,7 @@ private:
 
 public:
     CMarkupVolumeTagged_Nav* GetOriginal() const override { return Real(); }
-    NavScopeFlags_t& Scopes() override { return Real()->m_nScopes(); }
+    ::NavScopeFlags_t& Scopes() override { return Real()->m_nScopes(); }
     void ScopesUpdated() override { Real()->m_nScopes.NetworkStateChanged(); }
 };
 

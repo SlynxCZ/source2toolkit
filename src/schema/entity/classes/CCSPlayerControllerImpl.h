@@ -124,7 +124,7 @@ public:
     void ActiveQuestIdUpdated() override { Real()->m_unActiveQuestId.NetworkStateChanged(); }
     uint32_t& RtActiveMissionPeriod() override { return Real()->m_rtActiveMissionPeriod(); }
     void RtActiveMissionPeriodUpdated() override { Real()->m_rtActiveMissionPeriod.NetworkStateChanged(); }
-    QuestProgress__Reason& QuestProgressReason() override { return Real()->m_nQuestProgressReason(); }
+    ::QuestProgress__Reason& QuestProgressReason() override { return Real()->m_nQuestProgressReason(); }
     void QuestProgressReasonUpdated() override { Real()->m_nQuestProgressReason.NetworkStateChanged(); }
     uint32_t& PlayerTvControlFlags() override { return Real()->m_unPlayerTvControlFlags(); }
     void PlayerTvControlFlagsUpdated() override { Real()->m_unPlayerTvControlFlags.NetworkStateChanged(); }
@@ -213,7 +213,7 @@ public:
     void UpdateCounterUpdated() override { Real()->m_nUpdateCounter.NetworkStateChanged(); }
     float& SmoothedPing() override { return Real()->m_flSmoothedPing(); }
     void SmoothedPingUpdated() override { Real()->m_flSmoothedPing.NetworkStateChanged(); }
-    IntervalTimer& LastHeldVoteTimer() override { return Real()->m_lastHeldVoteTimer(); }
+    ::IntervalTimer& LastHeldVoteTimer() override { return Real()->m_lastHeldVoteTimer(); }
     void LastHeldVoteTimerUpdated() override { Real()->m_lastHeldVoteTimer.NetworkStateChanged(); }
     bool& ShowHints() override { return Real()->m_bShowHints(); }
     void ShowHintsUpdated() override { Real()->m_bShowHints.NetworkStateChanged(); }

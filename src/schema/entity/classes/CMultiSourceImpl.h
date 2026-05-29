@@ -58,7 +58,7 @@ public:
     CMultiSource* GetOriginal() const override { return Real(); }
     CHandle<CBaseEntity>* RgEntities() override { return Real()->m_rgEntities(); }
     int32_t* RgTriggered() override { return Real()->m_rgTriggered(); }
-    CEntityIOOutput& OnTrigger() override { return Real()->m_OnTrigger(); }
+    ::CEntityIOOutput& OnTrigger() override { return Real()->m_OnTrigger(); }
     void OnTriggerUpdated() override { Real()->m_OnTrigger.NetworkStateChanged(); }
     int32_t& Total() override { return Real()->m_iTotal(); }
     void TotalUpdated() override { Real()->m_iTotal.NetworkStateChanged(); }

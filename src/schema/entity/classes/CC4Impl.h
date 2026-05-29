@@ -70,7 +70,7 @@ public:
     void BombPlacedAnimationUpdated() override { Real()->m_bBombPlacedAnimation.NetworkStateChanged(); }
     bool& IsPlantingViaUse() override { return Real()->m_bIsPlantingViaUse(); }
     void IsPlantingViaUseUpdated() override { Real()->m_bIsPlantingViaUse.NetworkStateChanged(); }
-    EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
+    ::EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
     void EntitySpottedStateUpdated() override { Real()->m_entitySpottedState.NetworkStateChanged(); }
     int32_t& SpotRules() override { return Real()->m_nSpotRules(); }
     void SpotRulesUpdated() override { Real()->m_nSpotRules.NetworkStateChanged(); }

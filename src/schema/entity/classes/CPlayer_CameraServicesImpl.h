@@ -62,7 +62,7 @@ public:
     void CsViewPunchAngleTickUpdated() override { Real()->m_nCsViewPunchAngleTick.NetworkStateChanged(); }
     float& CsViewPunchAngleTickRatio() override { return Real()->m_flCsViewPunchAngleTickRatio(); }
     void CsViewPunchAngleTickRatioUpdated() override { Real()->m_flCsViewPunchAngleTickRatio.NetworkStateChanged(); }
-    fogplayerparams_t& PlayerFog() override { return Real()->m_PlayerFog(); }
+    ::fogplayerparams_t& PlayerFog() override { return Real()->m_PlayerFog(); }
     void PlayerFogUpdated() override { Real()->m_PlayerFog.NetworkStateChanged(); }
     CHandle<CColorCorrection>& ColorCorrectionCtrl() override { return Real()->m_hColorCorrectionCtrl(); }
     void ColorCorrectionCtrlUpdated() override { Real()->m_hColorCorrectionCtrl.NetworkStateChanged(); }
@@ -70,7 +70,7 @@ public:
     void ViewEntityUpdated() override { Real()->m_hViewEntity.NetworkStateChanged(); }
     CHandle<CTonemapController2>& TonemapController() override { return Real()->m_hTonemapController(); }
     void TonemapControllerUpdated() override { Real()->m_hTonemapController.NetworkStateChanged(); }
-    audioparams_t& Audio() override { return Real()->m_audio(); }
+    ::audioparams_t& Audio() override { return Real()->m_audio(); }
     void AudioUpdated() override { Real()->m_audio.NetworkStateChanged(); }
     CUtlVector<CHandle<CPostProcessingVolume>>& PostProcessingVolumes() override { return Real()->m_PostProcessingVolumes(); }
     void PostProcessingVolumesUpdated() override { Real()->m_PostProcessingVolumes.NetworkStateChanged(); }

@@ -56,7 +56,7 @@ private:
 
 public:
     CTriggerDetectExplosion* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnDetectedExplosion() override { return Real()->m_OnDetectedExplosion(); }
+    ::CEntityIOOutput& OnDetectedExplosion() override { return Real()->m_OnDetectedExplosion(); }
     void OnDetectedExplosionUpdated() override { Real()->m_OnDetectedExplosion.NetworkStateChanged(); }
 };
 

@@ -56,7 +56,7 @@ private:
 
 public:
     CRagdollProp* GetOriginal() const override { return Real(); }
-    ragdoll_t& Ragdoll() override { return Real()->m_ragdoll(); }
+    ::ragdoll_t& Ragdoll() override { return Real()->m_ragdoll(); }
     void RagdollUpdated() override { Real()->m_ragdoll.NetworkStateChanged(); }
     bool& StartDisabled() override { return Real()->m_bStartDisabled(); }
     void StartDisabledUpdated() override { Real()->m_bStartDisabled.NetworkStateChanged(); }
@@ -72,7 +72,7 @@ public:
     void AllAsleepUpdated() override { Real()->m_allAsleep.NetworkStateChanged(); }
     bool& FirstCollisionAfterLaunch() override { return Real()->m_bFirstCollisionAfterLaunch(); }
     void FirstCollisionAfterLaunchUpdated() override { Real()->m_bFirstCollisionAfterLaunch.NetworkStateChanged(); }
-    INavObstacle__NavObstacleType_t& NavObstacleType() override { return Real()->m_nNavObstacleType(); }
+    ::INavObstacle__NavObstacleType_t& NavObstacleType() override { return Real()->m_nNavObstacleType(); }
     void NavObstacleTypeUpdated() override { Real()->m_nNavObstacleType.NetworkStateChanged(); }
     bool& UpdateNavWhenMoving() override { return Real()->m_bUpdateNavWhenMoving(); }
     void UpdateNavWhenMovingUpdated() override { Real()->m_bUpdateNavWhenMoving.NetworkStateChanged(); }

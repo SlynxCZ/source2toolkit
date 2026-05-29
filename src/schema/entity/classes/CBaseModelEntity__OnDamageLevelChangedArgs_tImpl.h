@@ -58,7 +58,7 @@ private:
 
 public:
     CBaseModelEntity__OnDamageLevelChangedArgs_t* GetOriginal() const override { return Real(); }
-    HitGroup_t& HitGroup() override { return Real()->nHitGroup(); }
+    ::HitGroup_t& HitGroup() override { return Real()->nHitGroup(); }
     void HitGroupUpdated() override { Real()->nHitGroup.NetworkStateChanged(); }
     int32_t& DamageLevel() override { return Real()->nDamageLevel(); }
     void DamageLevelUpdated() override { Real()->nDamageLevel.NetworkStateChanged(); }

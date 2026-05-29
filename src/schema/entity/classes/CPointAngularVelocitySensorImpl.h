@@ -76,15 +76,15 @@ public:
     void AxisUpdated() override { Real()->m_vecAxis.NetworkStateChanged(); }
     bool& UseHelper() override { return Real()->m_bUseHelper(); }
     void UseHelperUpdated() override { Real()->m_bUseHelper.NetworkStateChanged(); }
-    CEntityIOOutput& OnLessThan() override { return Real()->m_OnLessThan(); }
+    ::CEntityIOOutput& OnLessThan() override { return Real()->m_OnLessThan(); }
     void OnLessThanUpdated() override { Real()->m_OnLessThan.NetworkStateChanged(); }
-    CEntityIOOutput& OnLessThanOrEqualTo() override { return Real()->m_OnLessThanOrEqualTo(); }
+    ::CEntityIOOutput& OnLessThanOrEqualTo() override { return Real()->m_OnLessThanOrEqualTo(); }
     void OnLessThanOrEqualToUpdated() override { Real()->m_OnLessThanOrEqualTo.NetworkStateChanged(); }
-    CEntityIOOutput& OnGreaterThan() override { return Real()->m_OnGreaterThan(); }
+    ::CEntityIOOutput& OnGreaterThan() override { return Real()->m_OnGreaterThan(); }
     void OnGreaterThanUpdated() override { Real()->m_OnGreaterThan.NetworkStateChanged(); }
-    CEntityIOOutput& OnGreaterThanOrEqualTo() override { return Real()->m_OnGreaterThanOrEqualTo(); }
+    ::CEntityIOOutput& OnGreaterThanOrEqualTo() override { return Real()->m_OnGreaterThanOrEqualTo(); }
     void OnGreaterThanOrEqualToUpdated() override { Real()->m_OnGreaterThanOrEqualTo.NetworkStateChanged(); }
-    CEntityIOOutput& OnEqualTo() override { return Real()->m_OnEqualTo(); }
+    ::CEntityIOOutput& OnEqualTo() override { return Real()->m_OnEqualTo(); }
     void OnEqualToUpdated() override { Real()->m_OnEqualTo.NetworkStateChanged(); }
 };
 

@@ -76,7 +76,7 @@ public:
     void MaxForceUpdated() override { Real()->m_maxForce.NetworkStateChanged(); }
     IPhysicsMotionController*& ShakeController() override { return Real()->m_pShakeController(); }
     void ShakeControllerUpdated() override { Real()->m_pShakeController.NetworkStateChanged(); }
-    CPhysicsShake& ShakeCallback() override { return Real()->m_shakeCallback(); }
+    ::CPhysicsShake& ShakeCallback() override { return Real()->m_shakeCallback(); }
     void ShakeCallbackUpdated() override { Real()->m_shakeCallback.NetworkStateChanged(); }
 };
 

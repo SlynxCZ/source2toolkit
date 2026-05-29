@@ -60,9 +60,9 @@ public:
     void RadiusUpdated() override { Real()->m_radius.NetworkStateChanged(); }
     float& MaxRadius() override { return Real()->m_flMaxRadius(); }
     void MaxRadiusUpdated() override { Real()->m_flMaxRadius.NetworkStateChanged(); }
-    soundlevel_t& SoundLevel() override { return Real()->m_iSoundLevel(); }
+    ::soundlevel_t& SoundLevel() override { return Real()->m_iSoundLevel(); }
     void SoundLevelUpdated() override { Real()->m_iSoundLevel.NetworkStateChanged(); }
-    dynpitchvol_t& Dpv() override { return Real()->m_dpv(); }
+    ::dynpitchvol_t& Dpv() override { return Real()->m_dpv(); }
     void DpvUpdated() override { Real()->m_dpv.NetworkStateChanged(); }
     bool& Active() override { return Real()->m_fActive(); }
     void ActiveUpdated() override { Real()->m_fActive.NetworkStateChanged(); }

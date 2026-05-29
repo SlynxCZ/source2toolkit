@@ -56,13 +56,13 @@ private:
 
 public:
     CBreakableProp* GetOriginal() const override { return Real(); }
-    CPropDataComponent& PropDataComponent() override { return Real()->m_CPropDataComponent(); }
+    ::CPropDataComponent& PropDataComponent() override { return Real()->m_CPropDataComponent(); }
     void PropDataComponentUpdated() override { Real()->m_CPropDataComponent.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartDeath() override { return Real()->m_OnStartDeath(); }
+    ::CEntityIOOutput& OnStartDeath() override { return Real()->m_OnStartDeath(); }
     void OnStartDeathUpdated() override { Real()->m_OnStartDeath.NetworkStateChanged(); }
-    CEntityIOOutput& OnBreak() override { return Real()->m_OnBreak(); }
+    ::CEntityIOOutput& OnBreak() override { return Real()->m_OnBreak(); }
     void OnBreakUpdated() override { Real()->m_OnBreak.NetworkStateChanged(); }
-    CEntityIOOutput& OnTakeDamage() override { return Real()->m_OnTakeDamage(); }
+    ::CEntityIOOutput& OnTakeDamage() override { return Real()->m_OnTakeDamage(); }
     void OnTakeDamageUpdated() override { Real()->m_OnTakeDamage.NetworkStateChanged(); }
     float& ImpactEnergyScale() override { return Real()->m_impactEnergyScale(); }
     void ImpactEnergyScaleUpdated() override { Real()->m_impactEnergyScale.NetworkStateChanged(); }
@@ -78,11 +78,11 @@ public:
     void DefBurstOffsetUpdated() override { Real()->m_vDefBurstOffset.NetworkStateChanged(); }
     CHandle<CBaseEntity>& Breaker() override { return Real()->m_hBreaker(); }
     void BreakerUpdated() override { Real()->m_hBreaker.NetworkStateChanged(); }
-    PerformanceMode_t& PerformanceMode() override { return Real()->m_PerformanceMode(); }
+    ::PerformanceMode_t& PerformanceMode() override { return Real()->m_PerformanceMode(); }
     void PerformanceModeUpdated() override { Real()->m_PerformanceMode.NetworkStateChanged(); }
     float& PreventDamageBeforeTime() override { return Real()->m_flPreventDamageBeforeTime(); }
     void PreventDamageBeforeTimeUpdated() override { Real()->m_flPreventDamageBeforeTime.NetworkStateChanged(); }
-    BreakableContentsType_t& BreakableContentsType() override { return Real()->m_BreakableContentsType(); }
+    ::BreakableContentsType_t& BreakableContentsType() override { return Real()->m_BreakableContentsType(); }
     void BreakableContentsTypeUpdated() override { Real()->m_BreakableContentsType.NetworkStateChanged(); }
     CUtlString& StrBreakableContentsPropGroupOverride() override { return Real()->m_strBreakableContentsPropGroupOverride(); }
     void StrBreakableContentsPropGroupOverrideUpdated() override { Real()->m_strBreakableContentsPropGroupOverride.NetworkStateChanged(); }

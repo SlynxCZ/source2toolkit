@@ -77,9 +77,9 @@ public:
     void DestroyMoverOnArrivedAtEndUpdated() override { Real()->m_bDestroyMoverOnArrivedAtEnd.NetworkStateChanged(); }
     CUtlVector<CHandle<CFuncMover>>& QueuedRemovals() override { return Real()->m_vecQueuedRemovals(); }
     void QueuedRemovalsUpdated() override { Real()->m_vecQueuedRemovals.NetworkStateChanged(); }
-    CEntityIOOutput& OnTemplateSpawned() override { return Real()->m_OnTemplateSpawned(); }
+    ::CEntityIOOutput& OnTemplateSpawned() override { return Real()->m_OnTemplateSpawned(); }
     void OnTemplateSpawnedUpdated() override { Real()->m_OnTemplateSpawned.NetworkStateChanged(); }
-    CEntityIOOutput& OnTemplateGroupSpawned() override { return Real()->m_OnTemplateGroupSpawned(); }
+    ::CEntityIOOutput& OnTemplateGroupSpawned() override { return Real()->m_OnTemplateGroupSpawned(); }
     void OnTemplateGroupSpawnedUpdated() override { Real()->m_OnTemplateGroupSpawned.NetworkStateChanged(); }
 };
 

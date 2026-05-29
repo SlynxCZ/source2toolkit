@@ -60,7 +60,7 @@ public:
     void IsIncGrenadeUpdated() override { Real()->m_bIsIncGrenade.NetworkStateChanged(); }
     bool& Detonated() override { return Real()->m_bDetonated(); }
     void DetonatedUpdated() override { Real()->m_bDetonated.NetworkStateChanged(); }
-    IntervalTimer& StillTimer() override { return Real()->m_stillTimer(); }
+    ::IntervalTimer& StillTimer() override { return Real()->m_stillTimer(); }
     void StillTimerUpdated() override { Real()->m_stillTimer.NetworkStateChanged(); }
 };
 

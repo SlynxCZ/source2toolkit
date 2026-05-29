@@ -56,7 +56,7 @@ private:
 
 public:
     CEnvWindController* GetOriginal() const override { return Real(); }
-    CEnvWindShared& EnvWindShared() override { return Real()->m_EnvWindShared(); }
+    ::CEnvWindShared& EnvWindShared() override { return Real()->m_EnvWindShared(); }
     void EnvWindSharedUpdated() override { Real()->m_EnvWindShared.NetworkStateChanged(); }
     float& DirectionVariation() override { return Real()->m_fDirectionVariation(); }
     void DirectionVariationUpdated() override { Real()->m_fDirectionVariation.NetworkStateChanged(); }

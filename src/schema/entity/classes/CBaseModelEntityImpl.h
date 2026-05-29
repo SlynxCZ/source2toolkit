@@ -58,19 +58,19 @@ public:
     CBaseModelEntity* GetOriginal() const override { return Real(); }
     CRenderComponent*& RenderComponent() override { return Real()->m_CRenderComponent(); }
     void RenderComponentUpdated() override { Real()->m_CRenderComponent.NetworkStateChanged(); }
-    CHitboxComponent& HitboxComponent() override { return Real()->m_CHitboxComponent(); }
+    ::CHitboxComponent& HitboxComponent() override { return Real()->m_CHitboxComponent(); }
     void HitboxComponentUpdated() override { Real()->m_CHitboxComponent.NetworkStateChanged(); }
     CChoreoComponent*& ChoreoComponent() override { return Real()->m_pChoreoComponent(); }
     void ChoreoComponentUpdated() override { Real()->m_pChoreoComponent.NetworkStateChanged(); }
-    HitGroup_t& DestructiblePartInitialStateDestructed0() override { return Real()->m_nDestructiblePartInitialStateDestructed0(); }
+    ::HitGroup_t& DestructiblePartInitialStateDestructed0() override { return Real()->m_nDestructiblePartInitialStateDestructed0(); }
     void DestructiblePartInitialStateDestructed0Updated() override { Real()->m_nDestructiblePartInitialStateDestructed0.NetworkStateChanged(); }
-    HitGroup_t& DestructiblePartInitialStateDestructed1() override { return Real()->m_nDestructiblePartInitialStateDestructed1(); }
+    ::HitGroup_t& DestructiblePartInitialStateDestructed1() override { return Real()->m_nDestructiblePartInitialStateDestructed1(); }
     void DestructiblePartInitialStateDestructed1Updated() override { Real()->m_nDestructiblePartInitialStateDestructed1.NetworkStateChanged(); }
-    HitGroup_t& DestructiblePartInitialStateDestructed2() override { return Real()->m_nDestructiblePartInitialStateDestructed2(); }
+    ::HitGroup_t& DestructiblePartInitialStateDestructed2() override { return Real()->m_nDestructiblePartInitialStateDestructed2(); }
     void DestructiblePartInitialStateDestructed2Updated() override { Real()->m_nDestructiblePartInitialStateDestructed2.NetworkStateChanged(); }
-    HitGroup_t& DestructiblePartInitialStateDestructed3() override { return Real()->m_nDestructiblePartInitialStateDestructed3(); }
+    ::HitGroup_t& DestructiblePartInitialStateDestructed3() override { return Real()->m_nDestructiblePartInitialStateDestructed3(); }
     void DestructiblePartInitialStateDestructed3Updated() override { Real()->m_nDestructiblePartInitialStateDestructed3.NetworkStateChanged(); }
-    HitGroup_t& DestructiblePartInitialStateDestructed4() override { return Real()->m_nDestructiblePartInitialStateDestructed4(); }
+    ::HitGroup_t& DestructiblePartInitialStateDestructed4() override { return Real()->m_nDestructiblePartInitialStateDestructed4(); }
     void DestructiblePartInitialStateDestructed4Updated() override { Real()->m_nDestructiblePartInitialStateDestructed4.NetworkStateChanged(); }
     int32_t& DestructiblePartInitialStateDestructed0_PartIndex() override { return Real()->m_nDestructiblePartInitialStateDestructed0_PartIndex(); }
     void DestructiblePartInitialStateDestructed0_PartIndexUpdated() override { Real()->m_nDestructiblePartInitialStateDestructed0_PartIndex.NetworkStateChanged(); }
@@ -96,11 +96,11 @@ public:
     void DestructiblePartsSystemComponentUpdated() override { Real()->m_pDestructiblePartsSystemComponent.NetworkStateChanged(); }
     float& DissolveStartTime() override { return Real()->m_flDissolveStartTime(); }
     void DissolveStartTimeUpdated() override { Real()->m_flDissolveStartTime.NetworkStateChanged(); }
-    CEntityIOOutput& OnIgnite() override { return Real()->m_OnIgnite(); }
+    ::CEntityIOOutput& OnIgnite() override { return Real()->m_OnIgnite(); }
     void OnIgniteUpdated() override { Real()->m_OnIgnite.NetworkStateChanged(); }
-    RenderMode_t& RenderMode() override { return Real()->m_nRenderMode(); }
+    ::RenderMode_t& RenderMode() override { return Real()->m_nRenderMode(); }
     void RenderModeUpdated() override { Real()->m_nRenderMode.NetworkStateChanged(); }
-    RenderFx_t& RenderFX() override { return Real()->m_nRenderFX(); }
+    ::RenderFx_t& RenderFX() override { return Real()->m_nRenderFX(); }
     void RenderFXUpdated() override { Real()->m_nRenderFX.NetworkStateChanged(); }
     bool& AllowFadeInView() override { return Real()->m_bAllowFadeInView(); }
     void AllowFadeInViewUpdated() override { Real()->m_bAllowFadeInView.NetworkStateChanged(); }
@@ -112,9 +112,7 @@ public:
     void RenderToCubemapsUpdated() override { Real()->m_bRenderToCubemaps.NetworkStateChanged(); }
     bool& NoInterpolate() override { return Real()->m_bNoInterpolate(); }
     void NoInterpolateUpdated() override { Real()->m_bNoInterpolate.NetworkStateChanged(); }
-    CCollisionProperty& Collision() override { return Real()->m_Collision(); }
-    void CollisionUpdated() override { Real()->m_Collision.NetworkStateChanged(); }
-    CGlowProperty& Glow() override { return Real()->m_Glow(); }
+    ::CGlowProperty& Glow() override { return Real()->m_Glow(); }
     void GlowUpdated() override { Real()->m_Glow.NetworkStateChanged(); }
     float& GlowBackfaceMult() override { return Real()->m_flGlowBackfaceMult(); }
     void GlowBackfaceMultUpdated() override { Real()->m_flGlowBackfaceMult.NetworkStateChanged(); }
@@ -128,7 +126,7 @@ public:
     void ShadowStrengthUpdated() override { Real()->m_flShadowStrength.NetworkStateChanged(); }
     uint8_t& ObjectCulling() override { return Real()->m_nObjectCulling(); }
     void ObjectCullingUpdated() override { Real()->m_nObjectCulling.NetworkStateChanged(); }
-    CNetworkViewOffsetVector& ViewOffset() override { return Real()->m_vecViewOffset(); }
+    ::CNetworkViewOffsetVector& ViewOffset() override { return Real()->m_vecViewOffset(); }
     void ViewOffsetUpdated() override { Real()->m_vecViewOffset.NetworkStateChanged(); }
     uint32_t* DisabledHitGroups() override { return Real()->m_bvDisabledHitGroups(); }
 

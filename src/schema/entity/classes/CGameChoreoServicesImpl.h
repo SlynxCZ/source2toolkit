@@ -60,9 +60,9 @@ public:
     void OwnerUpdated() override { Real()->m_hOwner.NetworkStateChanged(); }
     CHandle<CScriptedSequence>& ScriptedSequence() override { return Real()->m_hScriptedSequence(); }
     void ScriptedSequenceUpdated() override { Real()->m_hScriptedSequence.NetworkStateChanged(); }
-    IChoreoServices__ScriptState_t& ScriptState() override { return Real()->m_scriptState(); }
+    ::IChoreoServices__ScriptState_t& ScriptState() override { return Real()->m_scriptState(); }
     void ScriptStateUpdated() override { Real()->m_scriptState.NetworkStateChanged(); }
-    IChoreoServices__ChoreoState_t& ChoreoState() override { return Real()->m_choreoState(); }
+    ::IChoreoServices__ChoreoState_t& ChoreoState() override { return Real()->m_choreoState(); }
     void ChoreoStateUpdated() override { Real()->m_choreoState.NetworkStateChanged(); }
     float& TimeStartedState() override { return Real()->m_flTimeStartedState(); }
     void TimeStartedStateUpdated() override { Real()->m_flTimeStartedState.NetworkStateChanged(); }

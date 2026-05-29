@@ -56,7 +56,7 @@ private:
 
 public:
     CFuncTankTrain* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnDeath() override { return Real()->m_OnDeath(); }
+    ::CEntityIOOutput& OnDeath() override { return Real()->m_OnDeath(); }
     void OnDeathUpdated() override { Real()->m_OnDeath.NetworkStateChanged(); }
 };
 

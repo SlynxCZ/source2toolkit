@@ -72,11 +72,11 @@ public:
     void InPostEffectTimeUpdated() override { Real()->m_bInPostEffectTime.NetworkStateChanged(); }
     bool& WasCreatedInSmoke() override { return Real()->m_bWasCreatedInSmoke(); }
     void WasCreatedInSmokeUpdated() override { Real()->m_bWasCreatedInSmoke.NetworkStateChanged(); }
-    Extent& Extent() override { return Real()->m_extent(); }
+    ::Extent& Extent() override { return Real()->m_extent(); }
     void ExtentUpdated() override { Real()->m_extent.NetworkStateChanged(); }
-    CountdownTimer& DamageTimer() override { return Real()->m_damageTimer(); }
+    ::CountdownTimer& DamageTimer() override { return Real()->m_damageTimer(); }
     void DamageTimerUpdated() override { Real()->m_damageTimer.NetworkStateChanged(); }
-    CountdownTimer& DamageRampTimer() override { return Real()->m_damageRampTimer(); }
+    ::CountdownTimer& DamageRampTimer() override { return Real()->m_damageRampTimer(); }
     void DamageRampTimerUpdated() override { Real()->m_damageRampTimer.NetworkStateChanged(); }
     Vector& SplashVelocity() override { return Real()->m_splashVelocity(); }
     void SplashVelocityUpdated() override { Real()->m_splashVelocity.NetworkStateChanged(); }
@@ -86,7 +86,7 @@ public:
     void StartPosUpdated() override { Real()->m_startPos.NetworkStateChanged(); }
     Vector& OriginalSpawnLocation() override { return Real()->m_vecOriginalSpawnLocation(); }
     void OriginalSpawnLocationUpdated() override { Real()->m_vecOriginalSpawnLocation.NetworkStateChanged(); }
-    IntervalTimer& ActiveTimer() override { return Real()->m_activeTimer(); }
+    ::IntervalTimer& ActiveTimer() override { return Real()->m_activeTimer(); }
     void ActiveTimerUpdated() override { Real()->m_activeTimer.NetworkStateChanged(); }
     int32_t& FireSpawnOffset() override { return Real()->m_fireSpawnOffset(); }
     void FireSpawnOffsetUpdated() override { Real()->m_fireSpawnOffset.NetworkStateChanged(); }
@@ -94,9 +94,9 @@ public:
     void MaxFlamesUpdated() override { Real()->m_nMaxFlames.NetworkStateChanged(); }
     int32_t& SpreadCount() override { return Real()->m_nSpreadCount(); }
     void SpreadCountUpdated() override { Real()->m_nSpreadCount.NetworkStateChanged(); }
-    CountdownTimer& BookkeepingTimer() override { return Real()->m_BookkeepingTimer(); }
+    ::CountdownTimer& BookkeepingTimer() override { return Real()->m_BookkeepingTimer(); }
     void BookkeepingTimerUpdated() override { Real()->m_BookkeepingTimer.NetworkStateChanged(); }
-    CountdownTimer& NextSpreadTimer() override { return Real()->m_NextSpreadTimer(); }
+    ::CountdownTimer& NextSpreadTimer() override { return Real()->m_NextSpreadTimer(); }
     void NextSpreadTimerUpdated() override { Real()->m_NextSpreadTimer.NetworkStateChanged(); }
     uint16_t& SourceItemDefIndex() override { return Real()->m_nSourceItemDefIndex(); }
     void SourceItemDefIndexUpdated() override { Real()->m_nSourceItemDefIndex.NetworkStateChanged(); }

@@ -68,13 +68,13 @@ public:
     void OldInValueUpdated() override { Real()->m_flOldInValue.NetworkStateChanged(); }
     bool& Enabled() override { return Real()->m_bEnabled(); }
     void EnabledUpdated() override { Real()->m_bEnabled.NetworkStateChanged(); }
-    CEntityIOOutput& OnRoseAboveMin() override { return Real()->m_OnRoseAboveMin(); }
+    ::CEntityIOOutput& OnRoseAboveMin() override { return Real()->m_OnRoseAboveMin(); }
     void OnRoseAboveMinUpdated() override { Real()->m_OnRoseAboveMin.NetworkStateChanged(); }
-    CEntityIOOutput& OnRoseAboveMax() override { return Real()->m_OnRoseAboveMax(); }
+    ::CEntityIOOutput& OnRoseAboveMax() override { return Real()->m_OnRoseAboveMax(); }
     void OnRoseAboveMaxUpdated() override { Real()->m_OnRoseAboveMax.NetworkStateChanged(); }
-    CEntityIOOutput& OnFellBelowMin() override { return Real()->m_OnFellBelowMin(); }
+    ::CEntityIOOutput& OnFellBelowMin() override { return Real()->m_OnFellBelowMin(); }
     void OnFellBelowMinUpdated() override { Real()->m_OnFellBelowMin.NetworkStateChanged(); }
-    CEntityIOOutput& OnFellBelowMax() override { return Real()->m_OnFellBelowMax(); }
+    ::CEntityIOOutput& OnFellBelowMax() override { return Real()->m_OnFellBelowMax(); }
     void OnFellBelowMaxUpdated() override { Real()->m_OnFellBelowMax.NetworkStateChanged(); }
 };
 

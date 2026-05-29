@@ -58,15 +58,15 @@ private:
 
 public:
     DestructiblePartDamageRequest_t* GetOriginal() const override { return Real(); }
-    HitGroup_t& HitGroup() override { return Real()->m_nHitGroup(); }
+    ::HitGroup_t& HitGroup() override { return Real()->m_nHitGroup(); }
     void HitGroupUpdated() override { Real()->m_nHitGroup.NetworkStateChanged(); }
     int32_t& DamageLevel() override { return Real()->m_nDamageLevel(); }
     void DamageLevelUpdated() override { Real()->m_nDamageLevel.NetworkStateChanged(); }
     uint16_t& DesiredHealth() override { return Real()->m_nDesiredHealth(); }
     void DesiredHealthUpdated() override { Real()->m_nDesiredHealth.NetworkStateChanged(); }
-    EDestructibleParts_DestroyParameterFlags& DestroyFlags() override { return Real()->m_nDestroyFlags(); }
+    ::EDestructibleParts_DestroyParameterFlags& DestroyFlags() override { return Real()->m_nDestroyFlags(); }
     void DestroyFlagsUpdated() override { Real()->m_nDestroyFlags.NetworkStateChanged(); }
-    DamageTypes_t& DamageType() override { return Real()->m_nDamageType(); }
+    ::DamageTypes_t& DamageType() override { return Real()->m_nDamageType(); }
     void DamageTypeUpdated() override { Real()->m_nDamageType.NetworkStateChanged(); }
     float& BreakDamage() override { return Real()->m_flBreakDamage(); }
     void BreakDamageUpdated() override { Real()->m_flBreakDamage.NetworkStateChanged(); }

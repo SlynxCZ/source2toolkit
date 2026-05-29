@@ -64,7 +64,7 @@ public:
     void MaterialBaseUpdated() override { Real()->m_hMaterialBase.NetworkStateChanged(); }
     CStrongHandle<InfoForResourceTypeIMaterial2>& MaterialDamageOverlay() override { return Real()->m_hMaterialDamageOverlay(); }
     void MaterialDamageOverlayUpdated() override { Real()->m_hMaterialDamageOverlay.NetworkStateChanged(); }
-    ShardSolid_t& Solid() override { return Real()->m_solid(); }
+    ::ShardSolid_t& Solid() override { return Real()->m_solid(); }
     void SolidUpdated() override { Real()->m_solid.NetworkStateChanged(); }
     Vector2D& PanelSize() override { return Real()->m_vecPanelSize(); }
     void PanelSizeUpdated() override { Real()->m_vecPanelSize.NetworkStateChanged(); }

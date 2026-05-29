@@ -366,7 +366,7 @@ public:
     void GameModeRulesUpdated() override { Real()->m_pGameModeRules.NetworkStateChanged(); }
     CHandle<CBaseEntity>& PlayerResource() override { return Real()->m_hPlayerResource(); }
     void PlayerResourceUpdated() override { Real()->m_hPlayerResource.NetworkStateChanged(); }
-    CRetakeGameRules& RetakeRules() override { return Real()->m_RetakeRules(); }
+    ::CRetakeGameRules& RetakeRules() override { return Real()->m_RetakeRules(); }
     void RetakeRulesUpdated() override { Real()->m_RetakeRules.NetworkStateChanged(); }
     CUtlVector<int32_t>* TeamUniqueKillWeaponsMatch() override { return Real()->m_arrTeamUniqueKillWeaponsMatch(); }
     bool* TeamLastKillUsedUniqueWeaponMatch() override { return Real()->m_bTeamLastKillUsedUniqueWeaponMatch(); }

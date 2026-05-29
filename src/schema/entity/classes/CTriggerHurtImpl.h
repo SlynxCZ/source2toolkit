@@ -66,7 +66,7 @@ public:
     void LastDmgTimeUpdated() override { Real()->m_flLastDmgTime.NetworkStateChanged(); }
     float& ForgivenessDelay() override { return Real()->m_flForgivenessDelay(); }
     void ForgivenessDelayUpdated() override { Real()->m_flForgivenessDelay.NetworkStateChanged(); }
-    DamageTypes_t& BitsDamageInflict() override { return Real()->m_bitsDamageInflict(); }
+    ::DamageTypes_t& BitsDamageInflict() override { return Real()->m_bitsDamageInflict(); }
     void BitsDamageInflictUpdated() override { Real()->m_bitsDamageInflict.NetworkStateChanged(); }
     int32_t& DamageModel() override { return Real()->m_damageModel(); }
     void DamageModelUpdated() override { Real()->m_damageModel.NetworkStateChanged(); }
@@ -78,9 +78,9 @@ public:
     void ThinkAlwaysUpdated() override { Real()->m_thinkAlways.NetworkStateChanged(); }
     float& HurtThinkPeriod() override { return Real()->m_hurtThinkPeriod(); }
     void HurtThinkPeriodUpdated() override { Real()->m_hurtThinkPeriod.NetworkStateChanged(); }
-    CEntityIOOutput& OnHurt() override { return Real()->m_OnHurt(); }
+    ::CEntityIOOutput& OnHurt() override { return Real()->m_OnHurt(); }
     void OnHurtUpdated() override { Real()->m_OnHurt.NetworkStateChanged(); }
-    CEntityIOOutput& OnHurtPlayer() override { return Real()->m_OnHurtPlayer(); }
+    ::CEntityIOOutput& OnHurtPlayer() override { return Real()->m_OnHurtPlayer(); }
     void OnHurtPlayerUpdated() override { Real()->m_OnHurtPlayer.NetworkStateChanged(); }
     CUtlVector<CHandle<CBaseEntity>>& HurtEntities() override { return Real()->m_hurtEntities(); }
     void HurtEntitiesUpdated() override { Real()->m_hurtEntities.NetworkStateChanged(); }

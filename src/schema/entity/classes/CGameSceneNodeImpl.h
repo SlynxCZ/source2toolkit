@@ -68,7 +68,7 @@ public:
     void ChildUpdated() override { Real()->m_pChild.NetworkStateChanged(); }
     CGameSceneNode*& NextSibling() override { return Real()->m_pNextSibling(); }
     void NextSiblingUpdated() override { Real()->m_pNextSibling.NetworkStateChanged(); }
-    CNetworkOriginCellCoordQuantizedVector& Origin() override { return Real()->m_vecOrigin(); }
+    ::CNetworkOriginCellCoordQuantizedVector& Origin() override { return Real()->m_vecOrigin(); }
     void OriginUpdated() override { Real()->m_vecOrigin.NetworkStateChanged(); }
     QAngle& Rotation() override { return Real()->m_angRotation(); }
     void RotationUpdated() override { Real()->m_angRotation.NetworkStateChanged(); }

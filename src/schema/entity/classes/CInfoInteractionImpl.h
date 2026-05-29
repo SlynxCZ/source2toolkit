@@ -56,9 +56,9 @@ private:
 
 public:
     CInfoInteraction* GetOriginal() const override { return Real(); }
-    SceneRequestHandle_t& SceneRequest() override { return Real()->m_hSceneRequest(); }
+    ::SceneRequestHandle_t& SceneRequest() override { return Real()->m_hSceneRequest(); }
     void SceneRequestUpdated() override { Real()->m_hSceneRequest.NetworkStateChanged(); }
-    SceneOpportunityHandle_t& SceneOpportunity() override { return Real()->m_hSceneOpportunity(); }
+    ::SceneOpportunityHandle_t& SceneOpportunity() override { return Real()->m_hSceneOpportunity(); }
     void SceneOpportunityUpdated() override { Real()->m_hSceneOpportunity.NetworkStateChanged(); }
     bool& Enabled() override { return Real()->m_bEnabled(); }
     void EnabledUpdated() override { Real()->m_bEnabled.NetworkStateChanged(); }

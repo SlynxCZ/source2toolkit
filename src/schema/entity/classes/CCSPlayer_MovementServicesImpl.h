@@ -56,7 +56,7 @@ private:
 
 public:
     CCSPlayer_MovementServices* GetOriginal() const override { return Real(); }
-    CCSPlayerAnimationState& AnimationState() override { return Real()->m_AnimationState(); }
+    ::CCSPlayerAnimationState& AnimationState() override { return Real()->m_AnimationState(); }
     void AnimationStateUpdated() override { Real()->m_AnimationState.NetworkStateChanged(); }
     bool& UsingGroundTopologyOffset() override { return Real()->m_bUsingGroundTopologyOffset(); }
     void UsingGroundTopologyOffsetUpdated() override { Real()->m_bUsingGroundTopologyOffset.NetworkStateChanged(); }
@@ -140,9 +140,9 @@ public:
     void VelMulAtJumpStartUpdated() override { Real()->m_flVelMulAtJumpStart.NetworkStateChanged(); }
     float& AccumulatedJumpError() override { return Real()->m_flAccumulatedJumpError(); }
     void AccumulatedJumpErrorUpdated() override { Real()->m_flAccumulatedJumpError.NetworkStateChanged(); }
-    CCSPlayerLegacyJump& LegacyJump() override { return Real()->m_LegacyJump(); }
+    ::CCSPlayerLegacyJump& LegacyJump() override { return Real()->m_LegacyJump(); }
     void LegacyJumpUpdated() override { Real()->m_LegacyJump.NetworkStateChanged(); }
-    CCSPlayerModernJump& ModernJump() override { return Real()->m_ModernJump(); }
+    ::CCSPlayerModernJump& ModernJump() override { return Real()->m_ModernJump(); }
     void ModernJumpUpdated() override { Real()->m_ModernJump.NetworkStateChanged(); }
     int32_t& LastJumpTick() override { return Real()->m_nLastJumpTick(); }
     void LastJumpTickUpdated() override { Real()->m_nLastJumpTick.NetworkStateChanged(); }

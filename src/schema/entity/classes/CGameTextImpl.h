@@ -58,7 +58,7 @@ public:
     CGameText* GetOriginal() const override { return Real(); }
     CUtlSymbolLarge& Message() override { return Real()->m_iszMessage(); }
     void MessageUpdated() override { Real()->m_iszMessage.NetworkStateChanged(); }
-    hudtextparms_t& TextParms() override { return Real()->m_textParms(); }
+    ::hudtextparms_t& TextParms() override { return Real()->m_textParms(); }
     void TextParmsUpdated() override { Real()->m_textParms.NetworkStateChanged(); }
 };
 

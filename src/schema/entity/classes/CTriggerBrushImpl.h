@@ -56,11 +56,11 @@ private:
 
 public:
     CTriggerBrush* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnStartTouch() override { return Real()->m_OnStartTouch(); }
+    ::CEntityIOOutput& OnStartTouch() override { return Real()->m_OnStartTouch(); }
     void OnStartTouchUpdated() override { Real()->m_OnStartTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnEndTouch() override { return Real()->m_OnEndTouch(); }
+    ::CEntityIOOutput& OnEndTouch() override { return Real()->m_OnEndTouch(); }
     void OnEndTouchUpdated() override { Real()->m_OnEndTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnUse() override { return Real()->m_OnUse(); }
+    ::CEntityIOOutput& OnUse() override { return Real()->m_OnUse(); }
     void OnUseUpdated() override { Real()->m_OnUse.NetworkStateChanged(); }
     int32_t& InputFilter() override { return Real()->m_iInputFilter(); }
     void InputFilterUpdated() override { Real()->m_iInputFilter.NetworkStateChanged(); }

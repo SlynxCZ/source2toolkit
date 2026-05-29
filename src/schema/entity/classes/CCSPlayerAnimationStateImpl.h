@@ -58,13 +58,13 @@ private:
 
 public:
     CCSPlayerAnimationState* GetOriginal() const override { return Real(); }
-    CCSPlayerAnimationState__MoveType_t& CurrentMoveType() override { return Real()->m_currentMoveType(); }
+    ::CCSPlayerAnimationState__MoveType_t& CurrentMoveType() override { return Real()->m_currentMoveType(); }
     void CurrentMoveTypeUpdated() override { Real()->m_currentMoveType.NetworkStateChanged(); }
-    CCSPlayerAnimationState__GroundMoveState_t& GroundMoveState() override { return Real()->m_groundMoveState(); }
+    ::CCSPlayerAnimationState__GroundMoveState_t& GroundMoveState() override { return Real()->m_groundMoveState(); }
     void GroundMoveStateUpdated() override { Real()->m_groundMoveState.NetworkStateChanged(); }
-    CCSPlayerAnimationState__Direction_t& GroundActionDirection() override { return Real()->m_groundActionDirection(); }
+    ::CCSPlayerAnimationState__Direction_t& GroundActionDirection() override { return Real()->m_groundActionDirection(); }
     void GroundActionDirectionUpdated() override { Real()->m_groundActionDirection.NetworkStateChanged(); }
-    CCSPlayerAnimationState__AirAction_t& AirAction() override { return Real()->m_airAction(); }
+    ::CCSPlayerAnimationState__AirAction_t& AirAction() override { return Real()->m_airAction(); }
     void AirActionUpdated() override { Real()->m_airAction.NetworkStateChanged(); }
     bool& WasOnGroundLastUpdate() override { return Real()->m_bWasOnGroundLastUpdate(); }
     void WasOnGroundLastUpdateUpdated() override { Real()->m_bWasOnGroundLastUpdate.NetworkStateChanged(); }

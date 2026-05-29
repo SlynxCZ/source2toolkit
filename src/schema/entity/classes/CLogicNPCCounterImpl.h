@@ -56,21 +56,21 @@ private:
 
 public:
     CLogicNPCCounter* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnMinCountAll() override { return Real()->m_OnMinCountAll(); }
+    ::CEntityIOOutput& OnMinCountAll() override { return Real()->m_OnMinCountAll(); }
     void OnMinCountAllUpdated() override { Real()->m_OnMinCountAll.NetworkStateChanged(); }
-    CEntityIOOutput& OnMaxCountAll() override { return Real()->m_OnMaxCountAll(); }
+    ::CEntityIOOutput& OnMaxCountAll() override { return Real()->m_OnMaxCountAll(); }
     void OnMaxCountAllUpdated() override { Real()->m_OnMaxCountAll.NetworkStateChanged(); }
-    CEntityIOOutput& OnMinCount_1() override { return Real()->m_OnMinCount_1(); }
+    ::CEntityIOOutput& OnMinCount_1() override { return Real()->m_OnMinCount_1(); }
     void OnMinCount_1Updated() override { Real()->m_OnMinCount_1.NetworkStateChanged(); }
-    CEntityIOOutput& OnMaxCount_1() override { return Real()->m_OnMaxCount_1(); }
+    ::CEntityIOOutput& OnMaxCount_1() override { return Real()->m_OnMaxCount_1(); }
     void OnMaxCount_1Updated() override { Real()->m_OnMaxCount_1.NetworkStateChanged(); }
-    CEntityIOOutput& OnMinCount_2() override { return Real()->m_OnMinCount_2(); }
+    ::CEntityIOOutput& OnMinCount_2() override { return Real()->m_OnMinCount_2(); }
     void OnMinCount_2Updated() override { Real()->m_OnMinCount_2.NetworkStateChanged(); }
-    CEntityIOOutput& OnMaxCount_2() override { return Real()->m_OnMaxCount_2(); }
+    ::CEntityIOOutput& OnMaxCount_2() override { return Real()->m_OnMaxCount_2(); }
     void OnMaxCount_2Updated() override { Real()->m_OnMaxCount_2.NetworkStateChanged(); }
-    CEntityIOOutput& OnMinCount_3() override { return Real()->m_OnMinCount_3(); }
+    ::CEntityIOOutput& OnMinCount_3() override { return Real()->m_OnMinCount_3(); }
     void OnMinCount_3Updated() override { Real()->m_OnMinCount_3.NetworkStateChanged(); }
-    CEntityIOOutput& OnMaxCount_3() override { return Real()->m_OnMaxCount_3(); }
+    ::CEntityIOOutput& OnMaxCount_3() override { return Real()->m_OnMaxCount_3(); }
     void OnMaxCount_3Updated() override { Real()->m_OnMaxCount_3.NetworkStateChanged(); }
     CEntityHandle& Source() override { return Real()->m_hSource(); }
     void SourceUpdated() override { Real()->m_hSource.NetworkStateChanged(); }

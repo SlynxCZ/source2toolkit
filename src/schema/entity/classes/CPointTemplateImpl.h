@@ -66,9 +66,9 @@ public:
     void TimeoutIntervalUpdated() override { Real()->m_flTimeoutInterval.NetworkStateChanged(); }
     bool& AsynchronouslySpawnEntities() override { return Real()->m_bAsynchronouslySpawnEntities(); }
     void AsynchronouslySpawnEntitiesUpdated() override { Real()->m_bAsynchronouslySpawnEntities.NetworkStateChanged(); }
-    PointTemplateClientOnlyEntityBehavior_t& ClientOnlyEntityBehavior() override { return Real()->m_clientOnlyEntityBehavior(); }
+    ::PointTemplateClientOnlyEntityBehavior_t& ClientOnlyEntityBehavior() override { return Real()->m_clientOnlyEntityBehavior(); }
     void ClientOnlyEntityBehaviorUpdated() override { Real()->m_clientOnlyEntityBehavior.NetworkStateChanged(); }
-    PointTemplateOwnerSpawnGroupType_t& OwnerSpawnGroupType() override { return Real()->m_ownerSpawnGroupType(); }
+    ::PointTemplateOwnerSpawnGroupType_t& OwnerSpawnGroupType() override { return Real()->m_ownerSpawnGroupType(); }
     void OwnerSpawnGroupTypeUpdated() override { Real()->m_ownerSpawnGroupType.NetworkStateChanged(); }
     CUtlVector<uint32_t>& CreatedSpawnGroupHandles() override { return Real()->m_createdSpawnGroupHandles(); }
     void CreatedSpawnGroupHandlesUpdated() override { Real()->m_createdSpawnGroupHandles.NetworkStateChanged(); }

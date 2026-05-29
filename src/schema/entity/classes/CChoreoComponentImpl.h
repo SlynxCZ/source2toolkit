@@ -40,6 +40,7 @@
 
 #pragma once
 
+#include "CBaseEntity.h"
 #include "source2toolkit/schema/entity/classes/IChoreoComponent.h"
 #include "schema/entity/classes/CChoreoComponent.h"
 
@@ -58,11 +59,11 @@ private:
 
 public:
     CChoreoComponent* GetOriginal() const override { return Real(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
     CHandle<CBaseModelEntity>& Owner() override { return Real()->m_hOwner(); }
     void OwnerUpdated() override { Real()->m_hOwner.NetworkStateChanged(); }
-    SceneEventId_t& NextSceneEventId() override { return Real()->m_nNextSceneEventId(); }
+    ::SceneEventId_t& NextSceneEventId() override { return Real()->m_nNextSceneEventId(); }
     void NextSceneEventIdUpdated() override { Real()->m_nNextSceneEventId.NetworkStateChanged(); }
     bool& UpdateLayerPriorities() override { return Real()->m_bUpdateLayerPriorities(); }
     void UpdateLayerPrioritiesUpdated() override { Real()->m_bUpdateLayerPriorities.NetworkStateChanged(); }
@@ -70,7 +71,7 @@ public:
     void AllowResponsesEndTimeUpdated() override { Real()->m_flAllowResponsesEndTime.NetworkStateChanged(); }
 };
 
-inline IChoreoComponent* CChoreoComponent::ToInterface() { return new CChoreoComponentImpl(this); }
+inline IChoreoComponent* CChoreoComponent::ToInterface() { return CBaseEntity::ToInterface(); }
 inline IChoreoComponent* IChoreoComponent::FromOriginal(CChoreoComponent* p) { return p ? p->ToInterface() : nullptr; }
 
 #endif // _INCLUDE_CCHOREOCOMPONENTIMPL_H

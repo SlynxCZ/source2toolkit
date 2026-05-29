@@ -58,9 +58,9 @@ public:
     CBaseFilter* GetOriginal() const override { return Real(); }
     bool& Negated() override { return Real()->m_bNegated(); }
     void NegatedUpdated() override { Real()->m_bNegated.NetworkStateChanged(); }
-    CEntityIOOutput& OnPass() override { return Real()->m_OnPass(); }
+    ::CEntityIOOutput& OnPass() override { return Real()->m_OnPass(); }
     void OnPassUpdated() override { Real()->m_OnPass.NetworkStateChanged(); }
-    CEntityIOOutput& OnFail() override { return Real()->m_OnFail(); }
+    ::CEntityIOOutput& OnFail() override { return Real()->m_OnFail(); }
     void OnFailUpdated() override { Real()->m_OnFail.NetworkStateChanged(); }
 };
 

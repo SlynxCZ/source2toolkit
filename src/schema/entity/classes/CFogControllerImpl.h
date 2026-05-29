@@ -56,7 +56,7 @@ private:
 
 public:
     CFogController* GetOriginal() const override { return Real(); }
-    fogparams_t& Fog() override { return Real()->m_fog(); }
+    ::fogparams_t& Fog() override { return Real()->m_fog(); }
     void FogUpdated() override { Real()->m_fog.NetworkStateChanged(); }
     bool& UseAngles() override { return Real()->m_bUseAngles(); }
     void UseAnglesUpdated() override { Real()->m_bUseAngles.NetworkStateChanged(); }

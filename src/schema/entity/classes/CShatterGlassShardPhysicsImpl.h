@@ -60,7 +60,7 @@ public:
     void DebrisUpdated() override { Real()->m_bDebris.NetworkStateChanged(); }
     uint32_t& ParentShard() override { return Real()->m_hParentShard(); }
     void ParentShardUpdated() override { Real()->m_hParentShard.NetworkStateChanged(); }
-    shard_model_desc_t& ShardDesc() override { return Real()->m_ShardDesc(); }
+    ::shard_model_desc_t& ShardDesc() override { return Real()->m_ShardDesc(); }
     void ShardDescUpdated() override { Real()->m_ShardDesc.NetworkStateChanged(); }
 };
 

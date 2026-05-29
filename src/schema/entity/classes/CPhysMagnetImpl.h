@@ -56,9 +56,9 @@ private:
 
 public:
     CPhysMagnet* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnMagnetAttach() override { return Real()->m_OnMagnetAttach(); }
+    ::CEntityIOOutput& OnMagnetAttach() override { return Real()->m_OnMagnetAttach(); }
     void OnMagnetAttachUpdated() override { Real()->m_OnMagnetAttach.NetworkStateChanged(); }
-    CEntityIOOutput& OnMagnetDetach() override { return Real()->m_OnMagnetDetach(); }
+    ::CEntityIOOutput& OnMagnetDetach() override { return Real()->m_OnMagnetDetach(); }
     void OnMagnetDetachUpdated() override { Real()->m_OnMagnetDetach.NetworkStateChanged(); }
     float& MassScale() override { return Real()->m_massScale(); }
     void MassScaleUpdated() override { Real()->m_massScale.NetworkStateChanged(); }

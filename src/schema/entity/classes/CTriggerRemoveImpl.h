@@ -56,7 +56,7 @@ private:
 
 public:
     CTriggerRemove* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnRemove() override { return Real()->m_OnRemove(); }
+    ::CEntityIOOutput& OnRemove() override { return Real()->m_OnRemove(); }
     void OnRemoveUpdated() override { Real()->m_OnRemove.NetworkStateChanged(); }
 };
 

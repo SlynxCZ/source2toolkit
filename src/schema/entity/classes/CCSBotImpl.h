@@ -63,7 +63,7 @@ public:
     void CombatRangeUpdated() override { Real()->m_combatRange.NetworkStateChanged(); }
     bool& IsRogue() override { return Real()->m_isRogue(); }
     void IsRogueUpdated() override { Real()->m_isRogue.NetworkStateChanged(); }
-    CountdownTimer& RogueTimer() override { return Real()->m_rogueTimer(); }
+    ::CountdownTimer& RogueTimer() override { return Real()->m_rogueTimer(); }
     void RogueTimerUpdated() override { Real()->m_rogueTimer.NetworkStateChanged(); }
     bool& DiedLastRound() override { return Real()->m_diedLastRound(); }
     void DiedLastRoundUpdated() override { Real()->m_diedLastRound.NetworkStateChanged(); }
@@ -73,7 +73,7 @@ public:
     void WasSafeUpdated() override { Real()->m_wasSafe.NetworkStateChanged(); }
     bool& BlindFire() override { return Real()->m_blindFire(); }
     void BlindFireUpdated() override { Real()->m_blindFire.NetworkStateChanged(); }
-    CountdownTimer& SurpriseTimer() override { return Real()->m_surpriseTimer(); }
+    ::CountdownTimer& SurpriseTimer() override { return Real()->m_surpriseTimer(); }
     void SurpriseTimerUpdated() override { Real()->m_surpriseTimer.NetworkStateChanged(); }
     bool& AllowActive() override { return Real()->m_bAllowActive(); }
     void AllowActiveUpdated() override { Real()->m_bAllowActive.NetworkStateChanged(); }
@@ -85,13 +85,13 @@ public:
     void FollowTimestampUpdated() override { Real()->m_followTimestamp.NetworkStateChanged(); }
     float& AllowAutoFollowTime() override { return Real()->m_allowAutoFollowTime(); }
     void AllowAutoFollowTimeUpdated() override { Real()->m_allowAutoFollowTime.NetworkStateChanged(); }
-    CountdownTimer& HurryTimer() override { return Real()->m_hurryTimer(); }
+    ::CountdownTimer& HurryTimer() override { return Real()->m_hurryTimer(); }
     void HurryTimerUpdated() override { Real()->m_hurryTimer.NetworkStateChanged(); }
-    CountdownTimer& AlertTimer() override { return Real()->m_alertTimer(); }
+    ::CountdownTimer& AlertTimer() override { return Real()->m_alertTimer(); }
     void AlertTimerUpdated() override { Real()->m_alertTimer.NetworkStateChanged(); }
-    CountdownTimer& SneakTimer() override { return Real()->m_sneakTimer(); }
+    ::CountdownTimer& SneakTimer() override { return Real()->m_sneakTimer(); }
     void SneakTimerUpdated() override { Real()->m_sneakTimer.NetworkStateChanged(); }
-    CountdownTimer& PanicTimer() override { return Real()->m_panicTimer(); }
+    ::CountdownTimer& PanicTimer() override { return Real()->m_panicTimer(); }
     void PanicTimerUpdated() override { Real()->m_panicTimer.NetworkStateChanged(); }
     float& StateTimestamp() override { return Real()->m_stateTimestamp(); }
     void StateTimestampUpdated() override { Real()->m_stateTimestamp.NetworkStateChanged(); }
@@ -113,7 +113,7 @@ public:
     void IsStoppingUpdated() override { Real()->m_isStopping.NetworkStateChanged(); }
     bool& HasVisitedEnemySpawn() override { return Real()->m_hasVisitedEnemySpawn(); }
     void HasVisitedEnemySpawnUpdated() override { Real()->m_hasVisitedEnemySpawn.NetworkStateChanged(); }
-    IntervalTimer& StillTimer() override { return Real()->m_stillTimer(); }
+    ::IntervalTimer& StillTimer() override { return Real()->m_stillTimer(); }
     void StillTimerUpdated() override { Real()->m_stillTimer.NetworkStateChanged(); }
     bool& EyeAnglesUnderPathFinderControl() override { return Real()->m_bEyeAnglesUnderPathFinderControl(); }
     void EyeAnglesUnderPathFinderControlUpdated() override { Real()->m_bEyeAnglesUnderPathFinderControl.NetworkStateChanged(); }
@@ -121,23 +121,23 @@ public:
     void PathIndexUpdated() override { Real()->m_pathIndex.NetworkStateChanged(); }
     float& AreaEnteredTimestamp() override { return Real()->m_areaEnteredTimestamp(); }
     void AreaEnteredTimestampUpdated() override { Real()->m_areaEnteredTimestamp.NetworkStateChanged(); }
-    CountdownTimer& RepathTimer() override { return Real()->m_repathTimer(); }
+    ::CountdownTimer& RepathTimer() override { return Real()->m_repathTimer(); }
     void RepathTimerUpdated() override { Real()->m_repathTimer.NetworkStateChanged(); }
-    CountdownTimer& AvoidFriendTimer() override { return Real()->m_avoidFriendTimer(); }
+    ::CountdownTimer& AvoidFriendTimer() override { return Real()->m_avoidFriendTimer(); }
     void AvoidFriendTimerUpdated() override { Real()->m_avoidFriendTimer.NetworkStateChanged(); }
     bool& IsFriendInTheWay() override { return Real()->m_isFriendInTheWay(); }
     void IsFriendInTheWayUpdated() override { Real()->m_isFriendInTheWay.NetworkStateChanged(); }
-    CountdownTimer& PoliteTimer() override { return Real()->m_politeTimer(); }
+    ::CountdownTimer& PoliteTimer() override { return Real()->m_politeTimer(); }
     void PoliteTimerUpdated() override { Real()->m_politeTimer.NetworkStateChanged(); }
     bool& IsWaitingBehindFriend() override { return Real()->m_isWaitingBehindFriend(); }
     void IsWaitingBehindFriendUpdated() override { Real()->m_isWaitingBehindFriend.NetworkStateChanged(); }
     float& PathLadderEnd() override { return Real()->m_pathLadderEnd(); }
     void PathLadderEndUpdated() override { Real()->m_pathLadderEnd.NetworkStateChanged(); }
-    CountdownTimer& MustRunTimer() override { return Real()->m_mustRunTimer(); }
+    ::CountdownTimer& MustRunTimer() override { return Real()->m_mustRunTimer(); }
     void MustRunTimerUpdated() override { Real()->m_mustRunTimer.NetworkStateChanged(); }
-    CountdownTimer& WaitTimer() override { return Real()->m_waitTimer(); }
+    ::CountdownTimer& WaitTimer() override { return Real()->m_waitTimer(); }
     void WaitTimerUpdated() override { Real()->m_waitTimer.NetworkStateChanged(); }
-    CountdownTimer& UpdateTravelDistanceTimer() override { return Real()->m_updateTravelDistanceTimer(); }
+    ::CountdownTimer& UpdateTravelDistanceTimer() override { return Real()->m_updateTravelDistanceTimer(); }
     void UpdateTravelDistanceTimerUpdated() override { Real()->m_updateTravelDistanceTimer.NetworkStateChanged(); }
     float* PlayerTravelDistance() override { return Real()->m_playerTravelDistance(); }
     uint8_t& TravelDistancePhase() override { return Real()->m_travelDistancePhase(); }
@@ -152,9 +152,9 @@ public:
     void HasJoinedUpdated() override { Real()->m_hasJoined.NetworkStateChanged(); }
     bool& IsWaitingForHostage() override { return Real()->m_isWaitingForHostage(); }
     void IsWaitingForHostageUpdated() override { Real()->m_isWaitingForHostage.NetworkStateChanged(); }
-    CountdownTimer& InhibitWaitingForHostageTimer() override { return Real()->m_inhibitWaitingForHostageTimer(); }
+    ::CountdownTimer& InhibitWaitingForHostageTimer() override { return Real()->m_inhibitWaitingForHostageTimer(); }
     void InhibitWaitingForHostageTimerUpdated() override { Real()->m_inhibitWaitingForHostageTimer.NetworkStateChanged(); }
-    CountdownTimer& WaitForHostageTimer() override { return Real()->m_waitForHostageTimer(); }
+    ::CountdownTimer& WaitForHostageTimer() override { return Real()->m_waitForHostageTimer(); }
     void WaitForHostageTimerUpdated() override { Real()->m_waitForHostageTimer.NetworkStateChanged(); }
     Vector& NoisePosition() override { return Real()->m_noisePosition(); }
     void NoisePositionUpdated() override { Real()->m_noisePosition.NetworkStateChanged(); }
@@ -164,7 +164,7 @@ public:
     void NoiseTimestampUpdated() override { Real()->m_noiseTimestamp.NetworkStateChanged(); }
     CCSPlayerPawn*& NoiseSource() override { return Real()->m_noiseSource(); }
     void NoiseSourceUpdated() override { Real()->m_noiseSource.NetworkStateChanged(); }
-    CountdownTimer& NoiseBendTimer() override { return Real()->m_noiseBendTimer(); }
+    ::CountdownTimer& NoiseBendTimer() override { return Real()->m_noiseBendTimer(); }
     void NoiseBendTimerUpdated() override { Real()->m_noiseBendTimer.NetworkStateChanged(); }
     Vector& BentNoisePosition() override { return Real()->m_bentNoisePosition(); }
     void BentNoisePositionUpdated() override { Real()->m_bentNoisePosition.NetworkStateChanged(); }
@@ -200,11 +200,11 @@ public:
     void ApproachPointCountUpdated() override { Real()->m_approachPointCount.NetworkStateChanged(); }
     Vector& ApproachPointViewPosition() override { return Real()->m_approachPointViewPosition(); }
     void ApproachPointViewPositionUpdated() override { Real()->m_approachPointViewPosition.NetworkStateChanged(); }
-    IntervalTimer& ViewSteadyTimer() override { return Real()->m_viewSteadyTimer(); }
+    ::IntervalTimer& ViewSteadyTimer() override { return Real()->m_viewSteadyTimer(); }
     void ViewSteadyTimerUpdated() override { Real()->m_viewSteadyTimer.NetworkStateChanged(); }
-    CountdownTimer& TossGrenadeTimer() override { return Real()->m_tossGrenadeTimer(); }
+    ::CountdownTimer& TossGrenadeTimer() override { return Real()->m_tossGrenadeTimer(); }
     void TossGrenadeTimerUpdated() override { Real()->m_tossGrenadeTimer.NetworkStateChanged(); }
-    CountdownTimer& IsAvoidingGrenade() override { return Real()->m_isAvoidingGrenade(); }
+    ::CountdownTimer& IsAvoidingGrenade() override { return Real()->m_isAvoidingGrenade(); }
     void IsAvoidingGrenadeUpdated() override { Real()->m_isAvoidingGrenade.NetworkStateChanged(); }
     float& SpotCheckTimestamp() override { return Real()->m_spotCheckTimestamp(); }
     void SpotCheckTimestampUpdated() override { Real()->m_spotCheckTimestamp.NetworkStateChanged(); }
@@ -236,7 +236,7 @@ public:
     void AimFocusIntervalUpdated() override { Real()->m_aimFocusInterval.NetworkStateChanged(); }
     float& AimFocusNextUpdate() override { return Real()->m_aimFocusNextUpdate(); }
     void AimFocusNextUpdateUpdated() override { Real()->m_aimFocusNextUpdate.NetworkStateChanged(); }
-    CountdownTimer& IgnoreEnemiesTimer() override { return Real()->m_ignoreEnemiesTimer(); }
+    ::CountdownTimer& IgnoreEnemiesTimer() override { return Real()->m_ignoreEnemiesTimer(); }
     void IgnoreEnemiesTimerUpdated() override { Real()->m_ignoreEnemiesTimer.NetworkStateChanged(); }
     CHandle<CCSPlayerPawn>& Enemy() override { return Real()->m_enemy(); }
     void EnemyUpdated() override { Real()->m_enemy.NetworkStateChanged(); }
@@ -268,13 +268,13 @@ public:
     void ClosestVisibleFriendUpdated() override { Real()->m_closestVisibleFriend.NetworkStateChanged(); }
     CHandle<CCSPlayerPawn>& ClosestVisibleHumanFriend() override { return Real()->m_closestVisibleHumanFriend(); }
     void ClosestVisibleHumanFriendUpdated() override { Real()->m_closestVisibleHumanFriend.NetworkStateChanged(); }
-    IntervalTimer& AttentionInterval() override { return Real()->m_attentionInterval(); }
+    ::IntervalTimer& AttentionInterval() override { return Real()->m_attentionInterval(); }
     void AttentionIntervalUpdated() override { Real()->m_attentionInterval.NetworkStateChanged(); }
     CHandle<CCSPlayerPawn>& Attacker() override { return Real()->m_attacker(); }
     void AttackerUpdated() override { Real()->m_attacker.NetworkStateChanged(); }
     float& AttackedTimestamp() override { return Real()->m_attackedTimestamp(); }
     void AttackedTimestampUpdated() override { Real()->m_attackedTimestamp.NetworkStateChanged(); }
-    IntervalTimer& BurnedByFlamesTimer() override { return Real()->m_burnedByFlamesTimer(); }
+    ::IntervalTimer& BurnedByFlamesTimer() override { return Real()->m_burnedByFlamesTimer(); }
     void BurnedByFlamesTimerUpdated() override { Real()->m_burnedByFlamesTimer.NetworkStateChanged(); }
     int32_t& LastVictimID() override { return Real()->m_lastVictimID(); }
     void LastVictimIDUpdated() override { Real()->m_lastVictimID.NetworkStateChanged(); }
@@ -282,19 +282,19 @@ public:
     void IsAimingAtEnemyUpdated() override { Real()->m_isAimingAtEnemy.NetworkStateChanged(); }
     bool& IsRapidFiring() override { return Real()->m_isRapidFiring(); }
     void IsRapidFiringUpdated() override { Real()->m_isRapidFiring.NetworkStateChanged(); }
-    IntervalTimer& EquipTimer() override { return Real()->m_equipTimer(); }
+    ::IntervalTimer& EquipTimer() override { return Real()->m_equipTimer(); }
     void EquipTimerUpdated() override { Real()->m_equipTimer.NetworkStateChanged(); }
-    CountdownTimer& ZoomTimer() override { return Real()->m_zoomTimer(); }
+    ::CountdownTimer& ZoomTimer() override { return Real()->m_zoomTimer(); }
     void ZoomTimerUpdated() override { Real()->m_zoomTimer.NetworkStateChanged(); }
     float& FireWeaponTimestamp() override { return Real()->m_fireWeaponTimestamp(); }
     void FireWeaponTimestampUpdated() override { Real()->m_fireWeaponTimestamp.NetworkStateChanged(); }
-    CountdownTimer& LookForWeaponsOnGroundTimer() override { return Real()->m_lookForWeaponsOnGroundTimer(); }
+    ::CountdownTimer& LookForWeaponsOnGroundTimer() override { return Real()->m_lookForWeaponsOnGroundTimer(); }
     void LookForWeaponsOnGroundTimerUpdated() override { Real()->m_lookForWeaponsOnGroundTimer.NetworkStateChanged(); }
     bool& IsSleeping() override { return Real()->m_bIsSleeping(); }
     void IsSleepingUpdated() override { Real()->m_bIsSleeping.NetworkStateChanged(); }
     bool& IsEnemySniperVisible() override { return Real()->m_isEnemySniperVisible(); }
     void IsEnemySniperVisibleUpdated() override { Real()->m_isEnemySniperVisible.NetworkStateChanged(); }
-    CountdownTimer& SawEnemySniperTimer() override { return Real()->m_sawEnemySniperTimer(); }
+    ::CountdownTimer& SawEnemySniperTimer() override { return Real()->m_sawEnemySniperTimer(); }
     void SawEnemySniperTimerUpdated() override { Real()->m_sawEnemySniperTimer.NetworkStateChanged(); }
     uint8_t& EnemyQueueIndex() override { return Real()->m_enemyQueueIndex(); }
     void EnemyQueueIndexUpdated() override { Real()->m_enemyQueueIndex.NetworkStateChanged(); }
@@ -308,9 +308,9 @@ public:
     void StuckTimestampUpdated() override { Real()->m_stuckTimestamp.NetworkStateChanged(); }
     Vector& StuckSpot() override { return Real()->m_stuckSpot(); }
     void StuckSpotUpdated() override { Real()->m_stuckSpot.NetworkStateChanged(); }
-    CountdownTimer& WiggleTimer() override { return Real()->m_wiggleTimer(); }
+    ::CountdownTimer& WiggleTimer() override { return Real()->m_wiggleTimer(); }
     void WiggleTimerUpdated() override { Real()->m_wiggleTimer.NetworkStateChanged(); }
-    CountdownTimer& StuckJumpTimer() override { return Real()->m_stuckJumpTimer(); }
+    ::CountdownTimer& StuckJumpTimer() override { return Real()->m_stuckJumpTimer(); }
     void StuckJumpTimerUpdated() override { Real()->m_stuckJumpTimer.NetworkStateChanged(); }
     float& NextCleanupCheckTimestamp() override { return Real()->m_nextCleanupCheckTimestamp(); }
     void NextCleanupCheckTimestampUpdated() override { Real()->m_nextCleanupCheckTimestamp.NetworkStateChanged(); }

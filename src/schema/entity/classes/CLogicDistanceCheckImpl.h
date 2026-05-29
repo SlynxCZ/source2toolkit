@@ -64,11 +64,11 @@ public:
     void Zone1DistanceUpdated() override { Real()->m_flZone1Distance.NetworkStateChanged(); }
     float& Zone2Distance() override { return Real()->m_flZone2Distance(); }
     void Zone2DistanceUpdated() override { Real()->m_flZone2Distance.NetworkStateChanged(); }
-    CEntityIOOutput& InZone1() override { return Real()->m_InZone1(); }
+    ::CEntityIOOutput& InZone1() override { return Real()->m_InZone1(); }
     void InZone1Updated() override { Real()->m_InZone1.NetworkStateChanged(); }
-    CEntityIOOutput& InZone2() override { return Real()->m_InZone2(); }
+    ::CEntityIOOutput& InZone2() override { return Real()->m_InZone2(); }
     void InZone2Updated() override { Real()->m_InZone2.NetworkStateChanged(); }
-    CEntityIOOutput& InZone3() override { return Real()->m_InZone3(); }
+    ::CEntityIOOutput& InZone3() override { return Real()->m_InZone3(); }
     void InZone3Updated() override { Real()->m_InZone3.NetworkStateChanged(); }
 };
 

@@ -56,7 +56,7 @@ private:
 
 public:
     CFogTrigger* GetOriginal() const override { return Real(); }
-    fogparams_t& Fog() override { return Real()->m_fog(); }
+    ::fogparams_t& Fog() override { return Real()->m_fog(); }
     void FogUpdated() override { Real()->m_fog.NetworkStateChanged(); }
 };
 

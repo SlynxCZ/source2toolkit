@@ -84,7 +84,7 @@ public:
     void FixedWorldBodyUpdated() override { Real()->m_pFixedWorldBody.NetworkStateChanged(); }
     IPhysicsJoint*& MotorJoint() override { return Real()->m_pMotorJoint(); }
     void MotorJointUpdated() override { Real()->m_pMotorJoint.NetworkStateChanged(); }
-    CMotorController& Motor() override { return Real()->m_motor(); }
+    ::CMotorController& Motor() override { return Real()->m_motor(); }
     void MotorUpdated() override { Real()->m_motor.NetworkStateChanged(); }
 };
 

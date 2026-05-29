@@ -56,19 +56,19 @@ private:
 
 public:
     CBaseTrigger* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnStartTouch() override { return Real()->m_OnStartTouch(); }
+    ::CEntityIOOutput& OnStartTouch() override { return Real()->m_OnStartTouch(); }
     void OnStartTouchUpdated() override { Real()->m_OnStartTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartTouchAll() override { return Real()->m_OnStartTouchAll(); }
+    ::CEntityIOOutput& OnStartTouchAll() override { return Real()->m_OnStartTouchAll(); }
     void OnStartTouchAllUpdated() override { Real()->m_OnStartTouchAll.NetworkStateChanged(); }
-    CEntityIOOutput& OnEndTouch() override { return Real()->m_OnEndTouch(); }
+    ::CEntityIOOutput& OnEndTouch() override { return Real()->m_OnEndTouch(); }
     void OnEndTouchUpdated() override { Real()->m_OnEndTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnEndTouchAll() override { return Real()->m_OnEndTouchAll(); }
+    ::CEntityIOOutput& OnEndTouchAll() override { return Real()->m_OnEndTouchAll(); }
     void OnEndTouchAllUpdated() override { Real()->m_OnEndTouchAll.NetworkStateChanged(); }
-    CEntityIOOutput& OnTouching() override { return Real()->m_OnTouching(); }
+    ::CEntityIOOutput& OnTouching() override { return Real()->m_OnTouching(); }
     void OnTouchingUpdated() override { Real()->m_OnTouching.NetworkStateChanged(); }
-    CEntityIOOutput& OnTouchingEachEntity() override { return Real()->m_OnTouchingEachEntity(); }
+    ::CEntityIOOutput& OnTouchingEachEntity() override { return Real()->m_OnTouchingEachEntity(); }
     void OnTouchingEachEntityUpdated() override { Real()->m_OnTouchingEachEntity.NetworkStateChanged(); }
-    CEntityIOOutput& OnNotTouching() override { return Real()->m_OnNotTouching(); }
+    ::CEntityIOOutput& OnNotTouching() override { return Real()->m_OnNotTouching(); }
     void OnNotTouchingUpdated() override { Real()->m_OnNotTouching.NetworkStateChanged(); }
     CUtlVector<CHandle<CBaseEntity>>& TouchingEntities() override { return Real()->m_hTouchingEntities(); }
     void TouchingEntitiesUpdated() override { Real()->m_hTouchingEntities.NetworkStateChanged(); }

@@ -68,7 +68,7 @@ public:
     void TrackBottomNameUpdated() override { Real()->m_trackBottomName.NetworkStateChanged(); }
     CUtlSymbolLarge& TrainName() override { return Real()->m_trainName(); }
     void TrainNameUpdated() override { Real()->m_trainName.NetworkStateChanged(); }
-    TRAIN_CODE& Code() override { return Real()->m_code(); }
+    ::TRAIN_CODE& Code() override { return Real()->m_code(); }
     void CodeUpdated() override { Real()->m_code.NetworkStateChanged(); }
     int32_t& TargetState() override { return Real()->m_targetState(); }
     void TargetStateUpdated() override { Real()->m_targetState.NetworkStateChanged(); }

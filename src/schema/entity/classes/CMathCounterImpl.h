@@ -66,13 +66,13 @@ public:
     void HitMaxUpdated() override { Real()->m_bHitMax.NetworkStateChanged(); }
     bool& Disabled() override { return Real()->m_bDisabled(); }
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }
-    CEntityIOOutput& OnHitMin() override { return Real()->m_OnHitMin(); }
+    ::CEntityIOOutput& OnHitMin() override { return Real()->m_OnHitMin(); }
     void OnHitMinUpdated() override { Real()->m_OnHitMin.NetworkStateChanged(); }
-    CEntityIOOutput& OnHitMax() override { return Real()->m_OnHitMax(); }
+    ::CEntityIOOutput& OnHitMax() override { return Real()->m_OnHitMax(); }
     void OnHitMaxUpdated() override { Real()->m_OnHitMax.NetworkStateChanged(); }
-    CEntityIOOutput& OnChangedFromMin() override { return Real()->m_OnChangedFromMin(); }
+    ::CEntityIOOutput& OnChangedFromMin() override { return Real()->m_OnChangedFromMin(); }
     void OnChangedFromMinUpdated() override { Real()->m_OnChangedFromMin.NetworkStateChanged(); }
-    CEntityIOOutput& OnChangedFromMax() override { return Real()->m_OnChangedFromMax(); }
+    ::CEntityIOOutput& OnChangedFromMax() override { return Real()->m_OnChangedFromMax(); }
     void OnChangedFromMaxUpdated() override { Real()->m_OnChangedFromMax.NetworkStateChanged(); }
 };
 

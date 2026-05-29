@@ -56,25 +56,25 @@ private:
 
 public:
     CLogicAuto* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnMapSpawn() override { return Real()->m_OnMapSpawn(); }
+    ::CEntityIOOutput& OnMapSpawn() override { return Real()->m_OnMapSpawn(); }
     void OnMapSpawnUpdated() override { Real()->m_OnMapSpawn.NetworkStateChanged(); }
-    CEntityIOOutput& OnDemoMapSpawn() override { return Real()->m_OnDemoMapSpawn(); }
+    ::CEntityIOOutput& OnDemoMapSpawn() override { return Real()->m_OnDemoMapSpawn(); }
     void OnDemoMapSpawnUpdated() override { Real()->m_OnDemoMapSpawn.NetworkStateChanged(); }
-    CEntityIOOutput& OnNewGame() override { return Real()->m_OnNewGame(); }
+    ::CEntityIOOutput& OnNewGame() override { return Real()->m_OnNewGame(); }
     void OnNewGameUpdated() override { Real()->m_OnNewGame.NetworkStateChanged(); }
-    CEntityIOOutput& OnLoadGame() override { return Real()->m_OnLoadGame(); }
+    ::CEntityIOOutput& OnLoadGame() override { return Real()->m_OnLoadGame(); }
     void OnLoadGameUpdated() override { Real()->m_OnLoadGame.NetworkStateChanged(); }
-    CEntityIOOutput& OnMapTransition() override { return Real()->m_OnMapTransition(); }
+    ::CEntityIOOutput& OnMapTransition() override { return Real()->m_OnMapTransition(); }
     void OnMapTransitionUpdated() override { Real()->m_OnMapTransition.NetworkStateChanged(); }
-    CEntityIOOutput& OnBackgroundMap() override { return Real()->m_OnBackgroundMap(); }
+    ::CEntityIOOutput& OnBackgroundMap() override { return Real()->m_OnBackgroundMap(); }
     void OnBackgroundMapUpdated() override { Real()->m_OnBackgroundMap.NetworkStateChanged(); }
-    CEntityIOOutput& OnMultiNewMap() override { return Real()->m_OnMultiNewMap(); }
+    ::CEntityIOOutput& OnMultiNewMap() override { return Real()->m_OnMultiNewMap(); }
     void OnMultiNewMapUpdated() override { Real()->m_OnMultiNewMap.NetworkStateChanged(); }
-    CEntityIOOutput& OnMultiNewRound() override { return Real()->m_OnMultiNewRound(); }
+    ::CEntityIOOutput& OnMultiNewRound() override { return Real()->m_OnMultiNewRound(); }
     void OnMultiNewRoundUpdated() override { Real()->m_OnMultiNewRound.NetworkStateChanged(); }
-    CEntityIOOutput& OnVREnabled() override { return Real()->m_OnVREnabled(); }
+    ::CEntityIOOutput& OnVREnabled() override { return Real()->m_OnVREnabled(); }
     void OnVREnabledUpdated() override { Real()->m_OnVREnabled.NetworkStateChanged(); }
-    CEntityIOOutput& OnVRNotEnabled() override { return Real()->m_OnVRNotEnabled(); }
+    ::CEntityIOOutput& OnVRNotEnabled() override { return Real()->m_OnVRNotEnabled(); }
     void OnVRNotEnabledUpdated() override { Real()->m_OnVRNotEnabled.NetworkStateChanged(); }
     CUtlSymbolLarge& Globalstate() override { return Real()->m_globalstate(); }
     void GlobalstateUpdated() override { Real()->m_globalstate.NetworkStateChanged(); }

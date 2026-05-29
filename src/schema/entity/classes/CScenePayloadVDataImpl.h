@@ -58,9 +58,9 @@ private:
 
 public:
     CScenePayloadVData* GetOriginal() const override { return Real(); }
-    ENPCBehaviorOverride_t& NPCBehavior() override { return Real()->m_eNPCBehavior(); }
+    ::ENPCBehaviorOverride_t& NPCBehavior() override { return Real()->m_eNPCBehavior(); }
     void NPCBehaviorUpdated() override { Real()->m_eNPCBehavior.NetworkStateChanged(); }
-    InteractionPriority_t& Priority() override { return Real()->m_ePriority(); }
+    ::InteractionPriority_t& Priority() override { return Real()->m_ePriority(); }
     void PriorityUpdated() override { Real()->m_ePriority.NetworkStateChanged(); }
 };
 

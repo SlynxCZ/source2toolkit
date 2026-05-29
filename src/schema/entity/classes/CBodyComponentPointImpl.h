@@ -56,7 +56,7 @@ private:
 
 public:
     CBodyComponentPoint* GetOriginal() const override { return Real(); }
-    CGameSceneNode& SceneNode() override { return Real()->m_sceneNode(); }
+    ::CGameSceneNode& SceneNode() override { return Real()->m_sceneNode(); }
     void SceneNodeUpdated() override { Real()->m_sceneNode.NetworkStateChanged(); }
 };
 

@@ -56,19 +56,19 @@ private:
 
 public:
     CPhysicsProp* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& MotionEnabled() override { return Real()->m_MotionEnabled(); }
+    ::CEntityIOOutput& MotionEnabled() override { return Real()->m_MotionEnabled(); }
     void MotionEnabledUpdated() override { Real()->m_MotionEnabled.NetworkStateChanged(); }
-    CEntityIOOutput& OnAwakened() override { return Real()->m_OnAwakened(); }
+    ::CEntityIOOutput& OnAwakened() override { return Real()->m_OnAwakened(); }
     void OnAwakenedUpdated() override { Real()->m_OnAwakened.NetworkStateChanged(); }
-    CEntityIOOutput& OnAwake() override { return Real()->m_OnAwake(); }
+    ::CEntityIOOutput& OnAwake() override { return Real()->m_OnAwake(); }
     void OnAwakeUpdated() override { Real()->m_OnAwake.NetworkStateChanged(); }
-    CEntityIOOutput& OnAsleep() override { return Real()->m_OnAsleep(); }
+    ::CEntityIOOutput& OnAsleep() override { return Real()->m_OnAsleep(); }
     void OnAsleepUpdated() override { Real()->m_OnAsleep.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
+    ::CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
     void OnPlayerUseUpdated() override { Real()->m_OnPlayerUse.NetworkStateChanged(); }
-    CEntityIOOutput& OnOutOfWorld() override { return Real()->m_OnOutOfWorld(); }
+    ::CEntityIOOutput& OnOutOfWorld() override { return Real()->m_OnOutOfWorld(); }
     void OnOutOfWorldUpdated() override { Real()->m_OnOutOfWorld.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
+    ::CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
     void OnPlayerPickupUpdated() override { Real()->m_OnPlayerPickup.NetworkStateChanged(); }
     bool& ForceNavIgnore() override { return Real()->m_bForceNavIgnore(); }
     void ForceNavIgnoreUpdated() override { Real()->m_bForceNavIgnore.NetworkStateChanged(); }
@@ -100,7 +100,7 @@ public:
     void IsOverridePropUpdated() override { Real()->m_bIsOverrideProp.NetworkStateChanged(); }
     float& LastBurn() override { return Real()->m_flLastBurn(); }
     void LastBurnUpdated() override { Real()->m_flLastBurn.NetworkStateChanged(); }
-    DynamicContinuousContactBehavior_t& DynamicContinuousContactBehavior() override { return Real()->m_nDynamicContinuousContactBehavior(); }
+    ::DynamicContinuousContactBehavior_t& DynamicContinuousContactBehavior() override { return Real()->m_nDynamicContinuousContactBehavior(); }
     void DynamicContinuousContactBehaviorUpdated() override { Real()->m_nDynamicContinuousContactBehavior.NetworkStateChanged(); }
     float& NextCheckDisableMotionContactsTime() override { return Real()->m_fNextCheckDisableMotionContactsTime(); }
     void NextCheckDisableMotionContactsTimeUpdated() override { Real()->m_fNextCheckDisableMotionContactsTime.NetworkStateChanged(); }
@@ -116,7 +116,7 @@ public:
     void ShouldAutoConvertBackFromDebrisUpdated() override { Real()->m_bShouldAutoConvertBackFromDebris.NetworkStateChanged(); }
     bool& MuteImpactEffects() override { return Real()->m_bMuteImpactEffects(); }
     void MuteImpactEffectsUpdated() override { Real()->m_bMuteImpactEffects.NetworkStateChanged(); }
-    INavObstacle__NavObstacleType_t& NavObstacleType() override { return Real()->m_nNavObstacleType(); }
+    ::INavObstacle__NavObstacleType_t& NavObstacleType() override { return Real()->m_nNavObstacleType(); }
     void NavObstacleTypeUpdated() override { Real()->m_nNavObstacleType.NetworkStateChanged(); }
     bool& UpdateNavWhenMoving() override { return Real()->m_bUpdateNavWhenMoving(); }
     void UpdateNavWhenMovingUpdated() override { Real()->m_bUpdateNavWhenMoving.NetworkStateChanged(); }
@@ -128,7 +128,7 @@ public:
     void AcceptDamageFromHeldObjectsUpdated() override { Real()->m_bAcceptDamageFromHeldObjects.NetworkStateChanged(); }
     bool& EnableUseOutput() override { return Real()->m_bEnableUseOutput(); }
     void EnableUseOutputUpdated() override { Real()->m_bEnableUseOutput.NetworkStateChanged(); }
-    CPhysicsProp__CrateType_t& CrateType() override { return Real()->m_CrateType(); }
+    ::CPhysicsProp__CrateType_t& CrateType() override { return Real()->m_CrateType(); }
     void CrateTypeUpdated() override { Real()->m_CrateType.NetworkStateChanged(); }
     CUtlSymbolLarge* StrItemClass() override { return Real()->m_strItemClass(); }
     int32_t* ItemCount() override { return Real()->m_nItemCount(); }

@@ -56,13 +56,13 @@ private:
 
 public:
     CMomentaryRotButton* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnUnpressed() override { return Real()->m_OnUnpressed(); }
+    ::CEntityIOOutput& OnUnpressed() override { return Real()->m_OnUnpressed(); }
     void OnUnpressedUpdated() override { Real()->m_OnUnpressed.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
+    ::CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
     void OnFullyOpenUpdated() override { Real()->m_OnFullyOpen.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
+    ::CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
     void OnFullyClosedUpdated() override { Real()->m_OnFullyClosed.NetworkStateChanged(); }
-    CEntityIOOutput& OnReachedPosition() override { return Real()->m_OnReachedPosition(); }
+    ::CEntityIOOutput& OnReachedPosition() override { return Real()->m_OnReachedPosition(); }
     void OnReachedPositionUpdated() override { Real()->m_OnReachedPosition.NetworkStateChanged(); }
     int32_t& LastUsed() override { return Real()->m_lastUsed(); }
     void LastUsedUpdated() override { Real()->m_lastUsed.NetworkStateChanged(); }

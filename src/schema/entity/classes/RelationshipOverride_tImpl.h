@@ -58,7 +58,7 @@ public:
     RelationshipOverride_t* GetOriginal() const override { return Real(); }
     CHandle<CBaseEntity>& Entity() override { return Real()->entity(); }
     void EntityUpdated() override { Real()->entity.NetworkStateChanged(); }
-    Class_T& ClassType() override { return Real()->classType(); }
+    ::Class_T& ClassType() override { return Real()->classType(); }
     void ClassTypeUpdated() override { Real()->classType.NetworkStateChanged(); }
 };
 

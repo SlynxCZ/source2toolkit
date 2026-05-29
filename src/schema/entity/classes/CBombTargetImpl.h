@@ -56,11 +56,11 @@ private:
 
 public:
     CBombTarget* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnBombExplode() override { return Real()->m_OnBombExplode(); }
+    ::CEntityIOOutput& OnBombExplode() override { return Real()->m_OnBombExplode(); }
     void OnBombExplodeUpdated() override { Real()->m_OnBombExplode.NetworkStateChanged(); }
-    CEntityIOOutput& OnBombPlanted() override { return Real()->m_OnBombPlanted(); }
+    ::CEntityIOOutput& OnBombPlanted() override { return Real()->m_OnBombPlanted(); }
     void OnBombPlantedUpdated() override { Real()->m_OnBombPlanted.NetworkStateChanged(); }
-    CEntityIOOutput& OnBombDefused() override { return Real()->m_OnBombDefused(); }
+    ::CEntityIOOutput& OnBombDefused() override { return Real()->m_OnBombDefused(); }
     void OnBombDefusedUpdated() override { Real()->m_OnBombDefused.NetworkStateChanged(); }
     bool& IsBombSiteB() override { return Real()->m_bIsBombSiteB(); }
     void IsBombSiteBUpdated() override { Real()->m_bIsBombSiteB.NetworkStateChanged(); }

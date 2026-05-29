@@ -58,7 +58,7 @@ private:
 
 public:
     CLightComponent* GetOriginal() const override { return Real(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
     Color& Color() override { return Real()->m_Color(); }
     void ColorUpdated() override { Real()->m_Color.NetworkStateChanged(); }

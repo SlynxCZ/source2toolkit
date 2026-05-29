@@ -58,7 +58,7 @@ private:
 
 public:
     ViewAngleServerChange_t* GetOriginal() const override { return Real(); }
-    FixAngleSet_t& Type() override { return Real()->nType(); }
+    ::FixAngleSet_t& Type() override { return Real()->nType(); }
     void TypeUpdated() override { Real()->nType.NetworkStateChanged(); }
     QAngle& Angle() override { return Real()->qAngle(); }
     void AngleUpdated() override { Real()->qAngle.NetworkStateChanged(); }

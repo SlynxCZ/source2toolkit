@@ -60,13 +60,13 @@ public:
     void AxisUpdated() override { Real()->m_vecAxis.NetworkStateChanged(); }
     float& Distance() override { return Real()->m_flDistance(); }
     void DistanceUpdated() override { Real()->m_flDistance.NetworkStateChanged(); }
-    PropDoorRotatingSpawnPos_t& SpawnPosition() override { return Real()->m_eSpawnPosition(); }
+    ::PropDoorRotatingSpawnPos_t& SpawnPosition() override { return Real()->m_eSpawnPosition(); }
     void SpawnPositionUpdated() override { Real()->m_eSpawnPosition.NetworkStateChanged(); }
-    PropDoorRotatingOpenDirection_e& OpenDirection() override { return Real()->m_eOpenDirection(); }
+    ::PropDoorRotatingOpenDirection_e& OpenDirection() override { return Real()->m_eOpenDirection(); }
     void OpenDirectionUpdated() override { Real()->m_eOpenDirection.NetworkStateChanged(); }
-    PropDoorRotatingOpenDirection_e& CurrentOpenDirection() override { return Real()->m_eCurrentOpenDirection(); }
+    ::PropDoorRotatingOpenDirection_e& CurrentOpenDirection() override { return Real()->m_eCurrentOpenDirection(); }
     void CurrentOpenDirectionUpdated() override { Real()->m_eCurrentOpenDirection.NetworkStateChanged(); }
-    doorCheck_e& DefaultCheckDirection() override { return Real()->m_eDefaultCheckDirection(); }
+    ::doorCheck_e& DefaultCheckDirection() override { return Real()->m_eDefaultCheckDirection(); }
     void DefaultCheckDirectionUpdated() override { Real()->m_eDefaultCheckDirection.NetworkStateChanged(); }
     float& AjarAngle() override { return Real()->m_flAjarAngle(); }
     void AjarAngleUpdated() override { Real()->m_flAjarAngle.NetworkStateChanged(); }

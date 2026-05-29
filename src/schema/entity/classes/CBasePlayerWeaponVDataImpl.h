@@ -72,7 +72,7 @@ public:
     void GenerateMuzzleLightUpdated() override { Real()->m_bGenerateMuzzleLight.NetworkStateChanged(); }
     bool& LinkedCooldowns() override { return Real()->m_bLinkedCooldowns(); }
     void LinkedCooldownsUpdated() override { Real()->m_bLinkedCooldowns.NetworkStateChanged(); }
-    ItemFlagTypes_t& Flags() override { return Real()->m_iFlags(); }
+    ::ItemFlagTypes_t& Flags() override { return Real()->m_iFlags(); }
     void FlagsUpdated() override { Real()->m_iFlags.NetworkStateChanged(); }
     int32_t& Weight() override { return Real()->m_iWeight(); }
     void WeightUpdated() override { Real()->m_iWeight.NetworkStateChanged(); }
@@ -98,7 +98,7 @@ public:
     void TreatAsSingleClipUpdated() override { Real()->m_bTreatAsSingleClip.NetworkStateChanged(); }
     bool& KeepLoadedAmmo() override { return Real()->m_bKeepLoadedAmmo(); }
     void KeepLoadedAmmoUpdated() override { Real()->m_bKeepLoadedAmmo.NetworkStateChanged(); }
-    RumbleEffect_t& RumbleEffect() override { return Real()->m_iRumbleEffect(); }
+    ::RumbleEffect_t& RumbleEffect() override { return Real()->m_iRumbleEffect(); }
     void RumbleEffectUpdated() override { Real()->m_iRumbleEffect.NetworkStateChanged(); }
     float& DropSpeed() override { return Real()->m_flDropSpeed(); }
     void DropSpeedUpdated() override { Real()->m_flDropSpeed.NetworkStateChanged(); }

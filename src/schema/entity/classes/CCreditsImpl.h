@@ -56,7 +56,7 @@ private:
 
 public:
     CCredits* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnCreditsDone() override { return Real()->m_OnCreditsDone(); }
+    ::CEntityIOOutput& OnCreditsDone() override { return Real()->m_OnCreditsDone(); }
     void OnCreditsDoneUpdated() override { Real()->m_OnCreditsDone.NetworkStateChanged(); }
     bool& RolledOutroCredits() override { return Real()->m_bRolledOutroCredits(); }
     void RolledOutroCreditsUpdated() override { Real()->m_bRolledOutroCredits.NetworkStateChanged(); }

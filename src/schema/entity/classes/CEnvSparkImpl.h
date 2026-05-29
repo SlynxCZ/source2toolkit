@@ -64,7 +64,7 @@ public:
     void TrailLengthUpdated() override { Real()->m_nTrailLength.NetworkStateChanged(); }
     int32_t& Type() override { return Real()->m_nType(); }
     void TypeUpdated() override { Real()->m_nType.NetworkStateChanged(); }
-    CEntityIOOutput& OnSpark() override { return Real()->m_OnSpark(); }
+    ::CEntityIOOutput& OnSpark() override { return Real()->m_OnSpark(); }
     void OnSparkUpdated() override { Real()->m_OnSpark.NetworkStateChanged(); }
 };
 

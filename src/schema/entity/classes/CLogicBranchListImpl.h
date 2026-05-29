@@ -59,13 +59,13 @@ public:
     CUtlSymbolLarge* LogicBranchNames() override { return Real()->m_nLogicBranchNames(); }
     CUtlVector<CHandle<CBaseEntity>>& LogicBranchList() override { return Real()->m_LogicBranchList(); }
     void LogicBranchListUpdated() override { Real()->m_LogicBranchList.NetworkStateChanged(); }
-    CLogicBranchList__LogicBranchListenerLastState_t& LastState() override { return Real()->m_eLastState(); }
+    ::CLogicBranchList__LogicBranchListenerLastState_t& LastState() override { return Real()->m_eLastState(); }
     void LastStateUpdated() override { Real()->m_eLastState.NetworkStateChanged(); }
-    CEntityIOOutput& OnAllTrue() override { return Real()->m_OnAllTrue(); }
+    ::CEntityIOOutput& OnAllTrue() override { return Real()->m_OnAllTrue(); }
     void OnAllTrueUpdated() override { Real()->m_OnAllTrue.NetworkStateChanged(); }
-    CEntityIOOutput& OnAllFalse() override { return Real()->m_OnAllFalse(); }
+    ::CEntityIOOutput& OnAllFalse() override { return Real()->m_OnAllFalse(); }
     void OnAllFalseUpdated() override { Real()->m_OnAllFalse.NetworkStateChanged(); }
-    CEntityIOOutput& OnMixed() override { return Real()->m_OnMixed(); }
+    ::CEntityIOOutput& OnMixed() override { return Real()->m_OnMixed(); }
     void OnMixedUpdated() override { Real()->m_OnMixed.NetworkStateChanged(); }
 };
 

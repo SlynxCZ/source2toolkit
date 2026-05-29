@@ -58,7 +58,7 @@ private:
 
 public:
     CGameRules* GetOriginal() const override { return Real(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
     char* QuestName() override { return Real()->m_szQuestName(); }
     int32_t& QuestPhase() override { return Real()->m_nQuestPhase(); }

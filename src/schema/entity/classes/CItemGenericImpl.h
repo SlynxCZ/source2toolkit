@@ -94,15 +94,15 @@ public:
     void PickupFilterNameUpdated() override { Real()->m_pPickupFilterName.NetworkStateChanged(); }
     CHandle<CBaseFilter>& PickupFilter() override { return Real()->m_hPickupFilter(); }
     void PickupFilterUpdated() override { Real()->m_hPickupFilter.NetworkStateChanged(); }
-    CEntityIOOutput& OnPickup() override { return Real()->m_OnPickup(); }
+    ::CEntityIOOutput& OnPickup() override { return Real()->m_OnPickup(); }
     void OnPickupUpdated() override { Real()->m_OnPickup.NetworkStateChanged(); }
-    CEntityIOOutput& OnTimeout() override { return Real()->m_OnTimeout(); }
+    ::CEntityIOOutput& OnTimeout() override { return Real()->m_OnTimeout(); }
     void OnTimeoutUpdated() override { Real()->m_OnTimeout.NetworkStateChanged(); }
-    CEntityIOOutput& OnTriggerStartTouch() override { return Real()->m_OnTriggerStartTouch(); }
+    ::CEntityIOOutput& OnTriggerStartTouch() override { return Real()->m_OnTriggerStartTouch(); }
     void OnTriggerStartTouchUpdated() override { Real()->m_OnTriggerStartTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnTriggerTouch() override { return Real()->m_OnTriggerTouch(); }
+    ::CEntityIOOutput& OnTriggerTouch() override { return Real()->m_OnTriggerTouch(); }
     void OnTriggerTouchUpdated() override { Real()->m_OnTriggerTouch.NetworkStateChanged(); }
-    CEntityIOOutput& OnTriggerEndTouch() override { return Real()->m_OnTriggerEndTouch(); }
+    ::CEntityIOOutput& OnTriggerEndTouch() override { return Real()->m_OnTriggerEndTouch(); }
     void OnTriggerEndTouchUpdated() override { Real()->m_OnTriggerEndTouch.NetworkStateChanged(); }
     CUtlSymbolLarge& AllowPickupScriptFunction() override { return Real()->m_pAllowPickupScriptFunction(); }
     void AllowPickupScriptFunctionUpdated() override { Real()->m_pAllowPickupScriptFunction.NetworkStateChanged(); }

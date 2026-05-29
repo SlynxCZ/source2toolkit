@@ -66,9 +66,9 @@ public:
     void RefNameUpdated() override { Real()->m_iRefName.NetworkStateChanged(); }
     CHandle<CBaseEntity>& Reference() override { return Real()->m_hReference(); }
     void ReferenceUpdated() override { Real()->m_hReference.NetworkStateChanged(); }
-    EntFinderMethod_t& FindMethod() override { return Real()->m_FindMethod(); }
+    ::EntFinderMethod_t& FindMethod() override { return Real()->m_FindMethod(); }
     void FindMethodUpdated() override { Real()->m_FindMethod.NetworkStateChanged(); }
-    CEntityIOOutput& OnFoundEntity() override { return Real()->m_OnFoundEntity(); }
+    ::CEntityIOOutput& OnFoundEntity() override { return Real()->m_OnFoundEntity(); }
     void OnFoundEntityUpdated() override { Real()->m_OnFoundEntity.NetworkStateChanged(); }
 };
 

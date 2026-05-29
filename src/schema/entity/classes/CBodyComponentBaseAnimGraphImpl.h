@@ -56,7 +56,7 @@ private:
 
 public:
     CBodyComponentBaseAnimGraph* GetOriginal() const override { return Real(); }
-    CBaseAnimGraphController& AnimationController() override { return Real()->m_animationController(); }
+    ::CBaseAnimGraphController& AnimationController() override { return Real()->m_animationController(); }
     void AnimationControllerUpdated() override { Real()->m_animationController.NetworkStateChanged(); }
 };
 

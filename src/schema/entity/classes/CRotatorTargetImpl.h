@@ -56,9 +56,9 @@ private:
 
 public:
     CRotatorTarget* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnArrivedAt() override { return Real()->m_OnArrivedAt(); }
+    ::CEntityIOOutput& OnArrivedAt() override { return Real()->m_OnArrivedAt(); }
     void OnArrivedAtUpdated() override { Real()->m_OnArrivedAt.NetworkStateChanged(); }
-    RotatorTargetSpace_t& Space() override { return Real()->m_eSpace(); }
+    ::RotatorTargetSpace_t& Space() override { return Real()->m_eSpace(); }
     void SpaceUpdated() override { Real()->m_eSpace.NetworkStateChanged(); }
 };
 

@@ -88,19 +88,19 @@ public:
     void PanicSpeedUpdated() override { Real()->m_panicSpeed.NetworkStateChanged(); }
     float& AvoidRange() override { return Real()->m_avoidRange(); }
     void AvoidRangeUpdated() override { Real()->m_avoidRange.NetworkStateChanged(); }
-    CountdownTimer& TurnTimer() override { return Real()->m_turnTimer(); }
+    ::CountdownTimer& TurnTimer() override { return Real()->m_turnTimer(); }
     void TurnTimerUpdated() override { Real()->m_turnTimer.NetworkStateChanged(); }
     bool& TurnClockwise() override { return Real()->m_turnClockwise(); }
     void TurnClockwiseUpdated() override { Real()->m_turnClockwise.NetworkStateChanged(); }
-    CountdownTimer& GoTimer() override { return Real()->m_goTimer(); }
+    ::CountdownTimer& GoTimer() override { return Real()->m_goTimer(); }
     void GoTimerUpdated() override { Real()->m_goTimer.NetworkStateChanged(); }
-    CountdownTimer& MoveTimer() override { return Real()->m_moveTimer(); }
+    ::CountdownTimer& MoveTimer() override { return Real()->m_moveTimer(); }
     void MoveTimerUpdated() override { Real()->m_moveTimer.NetworkStateChanged(); }
-    CountdownTimer& PanicTimer() override { return Real()->m_panicTimer(); }
+    ::CountdownTimer& PanicTimer() override { return Real()->m_panicTimer(); }
     void PanicTimerUpdated() override { Real()->m_panicTimer.NetworkStateChanged(); }
-    CountdownTimer& DisperseTimer() override { return Real()->m_disperseTimer(); }
+    ::CountdownTimer& DisperseTimer() override { return Real()->m_disperseTimer(); }
     void DisperseTimerUpdated() override { Real()->m_disperseTimer.NetworkStateChanged(); }
-    CountdownTimer& ProximityTimer() override { return Real()->m_proximityTimer(); }
+    ::CountdownTimer& ProximityTimer() override { return Real()->m_proximityTimer(); }
     void ProximityTimerUpdated() override { Real()->m_proximityTimer.NetworkStateChanged(); }
     CUtlVector<CFish*>& Visible() override { return Real()->m_visible(); }
     void VisibleUpdated() override { Real()->m_visible.NetworkStateChanged(); }

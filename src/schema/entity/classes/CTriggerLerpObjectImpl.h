@@ -80,11 +80,11 @@ public:
     void AttachTouchingObjectUpdated() override { Real()->m_bAttachTouchingObject.NetworkStateChanged(); }
     CHandle<CBaseEntity>& EntityToWaitForDisconnect() override { return Real()->m_hEntityToWaitForDisconnect(); }
     void EntityToWaitForDisconnectUpdated() override { Real()->m_hEntityToWaitForDisconnect.NetworkStateChanged(); }
-    CEntityIOOutput& OnLerpStarted() override { return Real()->m_OnLerpStarted(); }
+    ::CEntityIOOutput& OnLerpStarted() override { return Real()->m_OnLerpStarted(); }
     void OnLerpStartedUpdated() override { Real()->m_OnLerpStarted.NetworkStateChanged(); }
-    CEntityIOOutput& OnLerpFinished() override { return Real()->m_OnLerpFinished(); }
+    ::CEntityIOOutput& OnLerpFinished() override { return Real()->m_OnLerpFinished(); }
     void OnLerpFinishedUpdated() override { Real()->m_OnLerpFinished.NetworkStateChanged(); }
-    CEntityIOOutput& OnDetached() override { return Real()->m_OnDetached(); }
+    ::CEntityIOOutput& OnDetached() override { return Real()->m_OnDetached(); }
     void OnDetachedUpdated() override { Real()->m_OnDetached.NetworkStateChanged(); }
 };
 

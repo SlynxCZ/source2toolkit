@@ -60,9 +60,9 @@ public:
     void LastWeaponBeforeC4AutoSwitchUpdated() override { Real()->m_hLastWeaponBeforeC4AutoSwitch.NetworkStateChanged(); }
     bool& IsRescuing() override { return Real()->m_bIsRescuing(); }
     void IsRescuingUpdated() override { Real()->m_bIsRescuing.NetworkStateChanged(); }
-    WeaponPurchaseTracker_t& WeaponPurchasesThisMatch() override { return Real()->m_weaponPurchasesThisMatch(); }
+    ::WeaponPurchaseTracker_t& WeaponPurchasesThisMatch() override { return Real()->m_weaponPurchasesThisMatch(); }
     void WeaponPurchasesThisMatchUpdated() override { Real()->m_weaponPurchasesThisMatch.NetworkStateChanged(); }
-    WeaponPurchaseTracker_t& WeaponPurchasesThisRound() override { return Real()->m_weaponPurchasesThisRound(); }
+    ::WeaponPurchaseTracker_t& WeaponPurchasesThisRound() override { return Real()->m_weaponPurchasesThisRound(); }
     void WeaponPurchasesThisRoundUpdated() override { Real()->m_weaponPurchasesThisRound.NetworkStateChanged(); }
 };
 

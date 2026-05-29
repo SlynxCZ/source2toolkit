@@ -56,9 +56,9 @@ private:
 
 public:
     CGameMoney* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnMoneySpent() override { return Real()->m_OnMoneySpent(); }
+    ::CEntityIOOutput& OnMoneySpent() override { return Real()->m_OnMoneySpent(); }
     void OnMoneySpentUpdated() override { Real()->m_OnMoneySpent.NetworkStateChanged(); }
-    CEntityIOOutput& OnMoneySpentFail() override { return Real()->m_OnMoneySpentFail(); }
+    ::CEntityIOOutput& OnMoneySpentFail() override { return Real()->m_OnMoneySpentFail(); }
     void OnMoneySpentFailUpdated() override { Real()->m_OnMoneySpentFail.NetworkStateChanged(); }
     int32_t& Money() override { return Real()->m_nMoney(); }
     void MoneyUpdated() override { Real()->m_nMoney.NetworkStateChanged(); }

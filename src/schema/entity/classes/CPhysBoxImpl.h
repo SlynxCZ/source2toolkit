@@ -70,19 +70,19 @@ public:
     void NotSolidToWorldUpdated() override { Real()->m_bNotSolidToWorld.NetworkStateChanged(); }
     bool& EnableUseOutput() override { return Real()->m_bEnableUseOutput(); }
     void EnableUseOutputUpdated() override { Real()->m_bEnableUseOutput.NetworkStateChanged(); }
-    HoverPoseFlags_t& HoverPoseFlags() override { return Real()->m_nHoverPoseFlags(); }
+    ::HoverPoseFlags_t& HoverPoseFlags() override { return Real()->m_nHoverPoseFlags(); }
     void HoverPoseFlagsUpdated() override { Real()->m_nHoverPoseFlags.NetworkStateChanged(); }
     float& TouchOutputPerEntityDelay() override { return Real()->m_flTouchOutputPerEntityDelay(); }
     void TouchOutputPerEntityDelayUpdated() override { Real()->m_flTouchOutputPerEntityDelay.NetworkStateChanged(); }
-    CEntityIOOutput& OnDamaged() override { return Real()->m_OnDamaged(); }
+    ::CEntityIOOutput& OnDamaged() override { return Real()->m_OnDamaged(); }
     void OnDamagedUpdated() override { Real()->m_OnDamaged.NetworkStateChanged(); }
-    CEntityIOOutput& OnAwakened() override { return Real()->m_OnAwakened(); }
+    ::CEntityIOOutput& OnAwakened() override { return Real()->m_OnAwakened(); }
     void OnAwakenedUpdated() override { Real()->m_OnAwakened.NetworkStateChanged(); }
-    CEntityIOOutput& OnMotionEnabled() override { return Real()->m_OnMotionEnabled(); }
+    ::CEntityIOOutput& OnMotionEnabled() override { return Real()->m_OnMotionEnabled(); }
     void OnMotionEnabledUpdated() override { Real()->m_OnMotionEnabled.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
+    ::CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
     void OnPlayerUseUpdated() override { Real()->m_OnPlayerUse.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartTouch() override { return Real()->m_OnStartTouch(); }
+    ::CEntityIOOutput& OnStartTouch() override { return Real()->m_OnStartTouch(); }
     void OnStartTouchUpdated() override { Real()->m_OnStartTouch.NetworkStateChanged(); }
     CHandle<CBasePlayerPawn>& CarryingPlayer() override { return Real()->m_hCarryingPlayer(); }
     void CarryingPlayerUpdated() override { Real()->m_hCarryingPlayer.NetworkStateChanged(); }

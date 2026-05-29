@@ -60,7 +60,7 @@ public:
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }
     bool& UpdateOnClient() override { return Real()->m_bUpdateOnClient(); }
     void UpdateOnClientUpdated() override { Real()->m_bUpdateOnClient.NetworkStateChanged(); }
-    ValueRemapperInputType_t& InputType() override { return Real()->m_nInputType(); }
+    ::ValueRemapperInputType_t& InputType() override { return Real()->m_nInputType(); }
     void InputTypeUpdated() override { Real()->m_nInputType.NetworkStateChanged(); }
     CUtlSymbolLarge& RemapLineStartName() override { return Real()->m_iszRemapLineStartName(); }
     void RemapLineStartNameUpdated() override { Real()->m_iszRemapLineStartName.NetworkStateChanged(); }
@@ -78,7 +78,7 @@ public:
     void EngageDistanceUpdated() override { Real()->m_flEngageDistance.NetworkStateChanged(); }
     bool& RequiresUseKey() override { return Real()->m_bRequiresUseKey(); }
     void RequiresUseKeyUpdated() override { Real()->m_bRequiresUseKey.NetworkStateChanged(); }
-    ValueRemapperOutputType_t& OutputType() override { return Real()->m_nOutputType(); }
+    ::ValueRemapperOutputType_t& OutputType() override { return Real()->m_nOutputType(); }
     void OutputTypeUpdated() override { Real()->m_nOutputType.NetworkStateChanged(); }
     CUtlSymbolLarge& OutputEntityName() override { return Real()->m_iszOutputEntityName(); }
     void OutputEntityNameUpdated() override { Real()->m_iszOutputEntityName.NetworkStateChanged(); }
@@ -90,9 +90,9 @@ public:
     void OutputEntity4NameUpdated() override { Real()->m_iszOutputEntity4Name.NetworkStateChanged(); }
     CUtlVector<CHandle<CBaseEntity>>& OutputEntities() override { return Real()->m_hOutputEntities(); }
     void OutputEntitiesUpdated() override { Real()->m_hOutputEntities.NetworkStateChanged(); }
-    ValueRemapperHapticsType_t& HapticsType() override { return Real()->m_nHapticsType(); }
+    ::ValueRemapperHapticsType_t& HapticsType() override { return Real()->m_nHapticsType(); }
     void HapticsTypeUpdated() override { Real()->m_nHapticsType.NetworkStateChanged(); }
-    ValueRemapperMomentumType_t& MomentumType() override { return Real()->m_nMomentumType(); }
+    ::ValueRemapperMomentumType_t& MomentumType() override { return Real()->m_nMomentumType(); }
     void MomentumTypeUpdated() override { Real()->m_nMomentumType.NetworkStateChanged(); }
     float& MomentumModifier() override { return Real()->m_flMomentumModifier(); }
     void MomentumModifierUpdated() override { Real()->m_flMomentumModifier.NetworkStateChanged(); }
@@ -100,7 +100,7 @@ public:
     void SnapValueUpdated() override { Real()->m_flSnapValue.NetworkStateChanged(); }
     float& CurrentMomentum() override { return Real()->m_flCurrentMomentum(); }
     void CurrentMomentumUpdated() override { Real()->m_flCurrentMomentum.NetworkStateChanged(); }
-    ValueRemapperRatchetType_t& RatchetType() override { return Real()->m_nRatchetType(); }
+    ::ValueRemapperRatchetType_t& RatchetType() override { return Real()->m_nRatchetType(); }
     void RatchetTypeUpdated() override { Real()->m_nRatchetType.NetworkStateChanged(); }
     float& RatchetOffset() override { return Real()->m_flRatchetOffset(); }
     void RatchetOffsetUpdated() override { Real()->m_flRatchetOffset.NetworkStateChanged(); }
@@ -130,15 +130,15 @@ public:
     void SoundReachedValueOneUpdated() override { Real()->m_iszSoundReachedValueOne.NetworkStateChanged(); }
     CUtlSymbolLarge& SoundMovingLoop() override { return Real()->m_iszSoundMovingLoop(); }
     void SoundMovingLoopUpdated() override { Real()->m_iszSoundMovingLoop.NetworkStateChanged(); }
-    CEntityIOOutput& OnReachedValueZero() override { return Real()->m_OnReachedValueZero(); }
+    ::CEntityIOOutput& OnReachedValueZero() override { return Real()->m_OnReachedValueZero(); }
     void OnReachedValueZeroUpdated() override { Real()->m_OnReachedValueZero.NetworkStateChanged(); }
-    CEntityIOOutput& OnReachedValueOne() override { return Real()->m_OnReachedValueOne(); }
+    ::CEntityIOOutput& OnReachedValueOne() override { return Real()->m_OnReachedValueOne(); }
     void OnReachedValueOneUpdated() override { Real()->m_OnReachedValueOne.NetworkStateChanged(); }
-    CEntityIOOutput& OnReachedValueCustom() override { return Real()->m_OnReachedValueCustom(); }
+    ::CEntityIOOutput& OnReachedValueCustom() override { return Real()->m_OnReachedValueCustom(); }
     void OnReachedValueCustomUpdated() override { Real()->m_OnReachedValueCustom.NetworkStateChanged(); }
-    CEntityIOOutput& OnEngage() override { return Real()->m_OnEngage(); }
+    ::CEntityIOOutput& OnEngage() override { return Real()->m_OnEngage(); }
     void OnEngageUpdated() override { Real()->m_OnEngage.NetworkStateChanged(); }
-    CEntityIOOutput& OnDisengage() override { return Real()->m_OnDisengage(); }
+    ::CEntityIOOutput& OnDisengage() override { return Real()->m_OnDisengage(); }
     void OnDisengageUpdated() override { Real()->m_OnDisengage.NetworkStateChanged(); }
 };
 

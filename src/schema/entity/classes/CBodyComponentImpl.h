@@ -60,7 +60,7 @@ public:
     CBodyComponent* GetOriginal() const override { return Real(); }
     CGameSceneNode*& SceneNode() override { return Real()->m_pSceneNode(); }
     void SceneNodeUpdated() override { Real()->m_pSceneNode.NetworkStateChanged(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
 };
 

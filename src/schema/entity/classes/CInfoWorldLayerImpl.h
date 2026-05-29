@@ -56,7 +56,7 @@ private:
 
 public:
     CInfoWorldLayer* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OutputOnEntitiesSpawned() override { return Real()->m_pOutputOnEntitiesSpawned(); }
+    ::CEntityIOOutput& OutputOnEntitiesSpawned() override { return Real()->m_pOutputOnEntitiesSpawned(); }
     void OutputOnEntitiesSpawnedUpdated() override { Real()->m_pOutputOnEntitiesSpawned.NetworkStateChanged(); }
     CUtlSymbolLarge& WorldName() override { return Real()->m_worldName(); }
     void WorldNameUpdated() override { Real()->m_worldName.NetworkStateChanged(); }

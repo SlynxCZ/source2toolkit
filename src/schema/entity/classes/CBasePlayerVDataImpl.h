@@ -56,15 +56,15 @@ private:
 
 public:
     CBasePlayerVData* GetOriginal() const override { return Real(); }
-    CSkillFloat& HeadDamageMultiplier() override { return Real()->m_flHeadDamageMultiplier(); }
+    ::CSkillFloat& HeadDamageMultiplier() override { return Real()->m_flHeadDamageMultiplier(); }
     void HeadDamageMultiplierUpdated() override { Real()->m_flHeadDamageMultiplier.NetworkStateChanged(); }
-    CSkillFloat& ChestDamageMultiplier() override { return Real()->m_flChestDamageMultiplier(); }
+    ::CSkillFloat& ChestDamageMultiplier() override { return Real()->m_flChestDamageMultiplier(); }
     void ChestDamageMultiplierUpdated() override { Real()->m_flChestDamageMultiplier.NetworkStateChanged(); }
-    CSkillFloat& StomachDamageMultiplier() override { return Real()->m_flStomachDamageMultiplier(); }
+    ::CSkillFloat& StomachDamageMultiplier() override { return Real()->m_flStomachDamageMultiplier(); }
     void StomachDamageMultiplierUpdated() override { Real()->m_flStomachDamageMultiplier.NetworkStateChanged(); }
-    CSkillFloat& ArmDamageMultiplier() override { return Real()->m_flArmDamageMultiplier(); }
+    ::CSkillFloat& ArmDamageMultiplier() override { return Real()->m_flArmDamageMultiplier(); }
     void ArmDamageMultiplierUpdated() override { Real()->m_flArmDamageMultiplier.NetworkStateChanged(); }
-    CSkillFloat& LegDamageMultiplier() override { return Real()->m_flLegDamageMultiplier(); }
+    ::CSkillFloat& LegDamageMultiplier() override { return Real()->m_flLegDamageMultiplier(); }
     void LegDamageMultiplierUpdated() override { Real()->m_flLegDamageMultiplier.NetworkStateChanged(); }
     float& HoldBreathTime() override { return Real()->m_flHoldBreathTime(); }
     void HoldBreathTimeUpdated() override { Real()->m_flHoldBreathTime.NetworkStateChanged(); }

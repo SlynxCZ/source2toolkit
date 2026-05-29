@@ -56,11 +56,11 @@ private:
 
 public:
     CCommentaryAuto* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnCommentaryNewGame() override { return Real()->m_OnCommentaryNewGame(); }
+    ::CEntityIOOutput& OnCommentaryNewGame() override { return Real()->m_OnCommentaryNewGame(); }
     void OnCommentaryNewGameUpdated() override { Real()->m_OnCommentaryNewGame.NetworkStateChanged(); }
-    CEntityIOOutput& OnCommentaryMidGame() override { return Real()->m_OnCommentaryMidGame(); }
+    ::CEntityIOOutput& OnCommentaryMidGame() override { return Real()->m_OnCommentaryMidGame(); }
     void OnCommentaryMidGameUpdated() override { Real()->m_OnCommentaryMidGame.NetworkStateChanged(); }
-    CEntityIOOutput& OnCommentaryMultiplayerSpawn() override { return Real()->m_OnCommentaryMultiplayerSpawn(); }
+    ::CEntityIOOutput& OnCommentaryMultiplayerSpawn() override { return Real()->m_OnCommentaryMultiplayerSpawn(); }
     void OnCommentaryMultiplayerSpawnUpdated() override { Real()->m_OnCommentaryMultiplayerSpawn.NetworkStateChanged(); }
 };
 

@@ -66,17 +66,17 @@ public:
     void SourceSoundscapeHashUpdated() override { Real()->m_nSourceSoundscapeHash.NetworkStateChanged(); }
     bool& AbortDetonationBecauseWorldIsFrozen() override { return Real()->m_bAbortDetonationBecauseWorldIsFrozen(); }
     void AbortDetonationBecauseWorldIsFrozenUpdated() override { Real()->m_bAbortDetonationBecauseWorldIsFrozen.NetworkStateChanged(); }
-    CAttributeContainer& AttributeManager() override { return Real()->m_AttributeManager(); }
+    ::CAttributeContainer& AttributeManager() override { return Real()->m_AttributeManager(); }
     void AttributeManagerUpdated() override { Real()->m_AttributeManager.NetworkStateChanged(); }
-    CEntityIOOutput& OnBombDefused() override { return Real()->m_OnBombDefused(); }
+    ::CEntityIOOutput& OnBombDefused() override { return Real()->m_OnBombDefused(); }
     void OnBombDefusedUpdated() override { Real()->m_OnBombDefused.NetworkStateChanged(); }
-    CEntityIOOutput& OnBombBeginDefuse() override { return Real()->m_OnBombBeginDefuse(); }
+    ::CEntityIOOutput& OnBombBeginDefuse() override { return Real()->m_OnBombBeginDefuse(); }
     void OnBombBeginDefuseUpdated() override { Real()->m_OnBombBeginDefuse.NetworkStateChanged(); }
-    CEntityIOOutput& OnBombDefuseAborted() override { return Real()->m_OnBombDefuseAborted(); }
+    ::CEntityIOOutput& OnBombDefuseAborted() override { return Real()->m_OnBombDefuseAborted(); }
     void OnBombDefuseAbortedUpdated() override { Real()->m_OnBombDefuseAborted.NetworkStateChanged(); }
     bool& CannotBeDefused() override { return Real()->m_bCannotBeDefused(); }
     void CannotBeDefusedUpdated() override { Real()->m_bCannotBeDefused.NetworkStateChanged(); }
-    EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
+    ::EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
     void EntitySpottedStateUpdated() override { Real()->m_entitySpottedState.NetworkStateChanged(); }
     int32_t& SpotRules() override { return Real()->m_nSpotRules(); }
     void SpotRulesUpdated() override { Real()->m_nSpotRules.NetworkStateChanged(); }

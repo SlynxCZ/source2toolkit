@@ -56,7 +56,7 @@ private:
 
 public:
     CTriggerActiveWeaponDetect* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnTouchedActiveWeapon() override { return Real()->m_OnTouchedActiveWeapon(); }
+    ::CEntityIOOutput& OnTouchedActiveWeapon() override { return Real()->m_OnTouchedActiveWeapon(); }
     void OnTouchedActiveWeaponUpdated() override { Real()->m_OnTouchedActiveWeapon.NetworkStateChanged(); }
     CUtlSymbolLarge& WeaponClassName() override { return Real()->m_iszWeaponClassName(); }
     void WeaponClassNameUpdated() override { Real()->m_iszWeaponClassName.NetworkStateChanged(); }

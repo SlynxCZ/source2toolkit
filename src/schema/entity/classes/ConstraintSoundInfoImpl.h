@@ -58,9 +58,9 @@ private:
 
 public:
     ConstraintSoundInfo* GetOriginal() const override { return Real(); }
-    VelocitySampler& Sampler() override { return Real()->m_vSampler(); }
+    ::VelocitySampler& Sampler() override { return Real()->m_vSampler(); }
     void SamplerUpdated() override { Real()->m_vSampler.NetworkStateChanged(); }
-    SimpleConstraintSoundProfile& SoundProfile() override { return Real()->m_soundProfile(); }
+    ::SimpleConstraintSoundProfile& SoundProfile() override { return Real()->m_soundProfile(); }
     void SoundProfileUpdated() override { Real()->m_soundProfile.NetworkStateChanged(); }
     Vector& ForwardAxis() override { return Real()->m_forwardAxis(); }
     void ForwardAxisUpdated() override { Real()->m_forwardAxis.NetworkStateChanged(); }

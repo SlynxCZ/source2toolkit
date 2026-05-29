@@ -56,13 +56,13 @@ private:
 
 public:
     CTestPulseIO* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnVariantVoid() override { return Real()->m_OnVariantVoid(); }
+    ::CEntityIOOutput& OnVariantVoid() override { return Real()->m_OnVariantVoid(); }
     void OnVariantVoidUpdated() override { Real()->m_OnVariantVoid.NetworkStateChanged(); }
     bool& AllowEmptyInputs() override { return Real()->m_bAllowEmptyInputs(); }
     void AllowEmptyInputsUpdated() override { Real()->m_bAllowEmptyInputs.NetworkStateChanged(); }
-    CTestPulseIOComponent_Derived& TestComponent() override { return Real()->m_TestComponent(); }
+    ::CTestPulseIOComponent_Derived& TestComponent() override { return Real()->m_TestComponent(); }
     void TestComponentUpdated() override { Real()->m_TestComponent.NetworkStateChanged(); }
-    CEntityIOOutput& OnInternalTestVoid() override { return Real()->m_OnInternalTestVoid(); }
+    ::CEntityIOOutput& OnInternalTestVoid() override { return Real()->m_OnInternalTestVoid(); }
     void OnInternalTestVoidUpdated() override { Real()->m_OnInternalTestVoid.NetworkStateChanged(); }
 };
 

@@ -56,7 +56,7 @@ private:
 
 public:
     CFuncBrush* GetOriginal() const override { return Real(); }
-    BrushSolidities_e& Solidity() override { return Real()->m_iSolidity(); }
+    ::BrushSolidities_e& Solidity() override { return Real()->m_iSolidity(); }
     void SolidityUpdated() override { Real()->m_iSolidity.NetworkStateChanged(); }
     int32_t& Disabled() override { return Real()->m_iDisabled(); }
     void DisabledUpdated() override { Real()->m_iDisabled.NetworkStateChanged(); }

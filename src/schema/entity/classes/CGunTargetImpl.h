@@ -60,7 +60,7 @@ public:
     void OnUpdated() override { Real()->m_on.NetworkStateChanged(); }
     CHandle<CBaseEntity>& TargetEnt() override { return Real()->m_hTargetEnt(); }
     void TargetEntUpdated() override { Real()->m_hTargetEnt.NetworkStateChanged(); }
-    CEntityIOOutput& OnDeath() override { return Real()->m_OnDeath(); }
+    ::CEntityIOOutput& OnDeath() override { return Real()->m_OnDeath(); }
     void OnDeathUpdated() override { Real()->m_OnDeath.NetworkStateChanged(); }
 };
 

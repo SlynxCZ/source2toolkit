@@ -56,15 +56,15 @@ private:
 
 public:
     CHostage* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnHostageBeginGrab() override { return Real()->m_OnHostageBeginGrab(); }
+    ::CEntityIOOutput& OnHostageBeginGrab() override { return Real()->m_OnHostageBeginGrab(); }
     void OnHostageBeginGrabUpdated() override { Real()->m_OnHostageBeginGrab.NetworkStateChanged(); }
-    CEntityIOOutput& OnFirstPickedUp() override { return Real()->m_OnFirstPickedUp(); }
+    ::CEntityIOOutput& OnFirstPickedUp() override { return Real()->m_OnFirstPickedUp(); }
     void OnFirstPickedUpUpdated() override { Real()->m_OnFirstPickedUp.NetworkStateChanged(); }
-    CEntityIOOutput& OnDroppedNotRescued() override { return Real()->m_OnDroppedNotRescued(); }
+    ::CEntityIOOutput& OnDroppedNotRescued() override { return Real()->m_OnDroppedNotRescued(); }
     void OnDroppedNotRescuedUpdated() override { Real()->m_OnDroppedNotRescued.NetworkStateChanged(); }
-    CEntityIOOutput& OnRescued() override { return Real()->m_OnRescued(); }
+    ::CEntityIOOutput& OnRescued() override { return Real()->m_OnRescued(); }
     void OnRescuedUpdated() override { Real()->m_OnRescued.NetworkStateChanged(); }
-    EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
+    ::EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
     void EntitySpottedStateUpdated() override { Real()->m_entitySpottedState.NetworkStateChanged(); }
     int32_t& SpotRules() override { return Real()->m_nSpotRules(); }
     void SpotRulesUpdated() override { Real()->m_nSpotRules.NetworkStateChanged(); }
@@ -86,7 +86,7 @@ public:
     void LeaderUpdated() override { Real()->m_leader.NetworkStateChanged(); }
     CHandle<CCSPlayerPawnBase>& LastLeader() override { return Real()->m_lastLeader(); }
     void LastLeaderUpdated() override { Real()->m_lastLeader.NetworkStateChanged(); }
-    CountdownTimer& ReuseTimer() override { return Real()->m_reuseTimer(); }
+    ::CountdownTimer& ReuseTimer() override { return Real()->m_reuseTimer(); }
     void ReuseTimerUpdated() override { Real()->m_reuseTimer.NetworkStateChanged(); }
     bool& HasBeenUsed() override { return Real()->m_hasBeenUsed(); }
     void HasBeenUsedUpdated() override { Real()->m_hasBeenUsed.NetworkStateChanged(); }
@@ -96,17 +96,17 @@ public:
     void IsRunningUpdated() override { Real()->m_isRunning.NetworkStateChanged(); }
     bool& IsCrouching() override { return Real()->m_isCrouching(); }
     void IsCrouchingUpdated() override { Real()->m_isCrouching.NetworkStateChanged(); }
-    CountdownTimer& JumpTimer() override { return Real()->m_jumpTimer(); }
+    ::CountdownTimer& JumpTimer() override { return Real()->m_jumpTimer(); }
     void JumpTimerUpdated() override { Real()->m_jumpTimer.NetworkStateChanged(); }
     bool& IsWaitingForLeader() override { return Real()->m_isWaitingForLeader(); }
     void IsWaitingForLeaderUpdated() override { Real()->m_isWaitingForLeader.NetworkStateChanged(); }
-    CountdownTimer& RepathTimer() override { return Real()->m_repathTimer(); }
+    ::CountdownTimer& RepathTimer() override { return Real()->m_repathTimer(); }
     void RepathTimerUpdated() override { Real()->m_repathTimer.NetworkStateChanged(); }
-    CountdownTimer& InhibitDoorTimer() override { return Real()->m_inhibitDoorTimer(); }
+    ::CountdownTimer& InhibitDoorTimer() override { return Real()->m_inhibitDoorTimer(); }
     void InhibitDoorTimerUpdated() override { Real()->m_inhibitDoorTimer.NetworkStateChanged(); }
-    CountdownTimer& InhibitObstacleAvoidanceTimer() override { return Real()->m_inhibitObstacleAvoidanceTimer(); }
+    ::CountdownTimer& InhibitObstacleAvoidanceTimer() override { return Real()->m_inhibitObstacleAvoidanceTimer(); }
     void InhibitObstacleAvoidanceTimerUpdated() override { Real()->m_inhibitObstacleAvoidanceTimer.NetworkStateChanged(); }
-    CountdownTimer& WiggleTimer() override { return Real()->m_wiggleTimer(); }
+    ::CountdownTimer& WiggleTimer() override { return Real()->m_wiggleTimer(); }
     void WiggleTimerUpdated() override { Real()->m_wiggleTimer.NetworkStateChanged(); }
     bool& IsAdjusted() override { return Real()->m_isAdjusted(); }
     void IsAdjustedUpdated() override { Real()->m_isAdjusted.NetworkStateChanged(); }

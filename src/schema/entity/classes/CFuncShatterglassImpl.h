@@ -102,7 +102,7 @@ public:
     void ExtraDamagePositionsUpdated() override { Real()->m_vExtraDamagePositions.NetworkStateChanged(); }
     CUtlVector<Vector4D>& InitialPanelVertices() override { return Real()->m_vInitialPanelVertices(); }
     void InitialPanelVerticesUpdated() override { Real()->m_vInitialPanelVertices.NetworkStateChanged(); }
-    CEntityIOOutput& OnBroken() override { return Real()->m_OnBroken(); }
+    ::CEntityIOOutput& OnBroken() override { return Real()->m_OnBroken(); }
     void OnBrokenUpdated() override { Real()->m_OnBroken.NetworkStateChanged(); }
     uint8_t& SurfaceType() override { return Real()->m_iSurfaceType(); }
     void SurfaceTypeUpdated() override { Real()->m_iSurfaceType.NetworkStateChanged(); }

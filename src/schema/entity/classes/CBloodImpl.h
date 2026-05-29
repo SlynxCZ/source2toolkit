@@ -62,7 +62,7 @@ public:
     void SprayDirUpdated() override { Real()->m_vecSprayDir.NetworkStateChanged(); }
     float& Amount() override { return Real()->m_flAmount(); }
     void AmountUpdated() override { Real()->m_flAmount.NetworkStateChanged(); }
-    BloodType& Color() override { return Real()->m_Color(); }
+    ::BloodType& Color() override { return Real()->m_Color(); }
     void ColorUpdated() override { Real()->m_Color.NetworkStateChanged(); }
 };
 

@@ -58,11 +58,11 @@ public:
     CGenericConstraint* GetOriginal() const override { return Real(); }
     bool& PlaceAnchorsAtConstraintTransform() override { return Real()->m_bPlaceAnchorsAtConstraintTransform(); }
     void PlaceAnchorsAtConstraintTransformUpdated() override { Real()->m_bPlaceAnchorsAtConstraintTransform.NetworkStateChanged(); }
-    JointMotion_t& LinearMotionX() override { return Real()->m_nLinearMotionX(); }
+    ::JointMotion_t& LinearMotionX() override { return Real()->m_nLinearMotionX(); }
     void LinearMotionXUpdated() override { Real()->m_nLinearMotionX.NetworkStateChanged(); }
-    JointMotion_t& LinearMotionY() override { return Real()->m_nLinearMotionY(); }
+    ::JointMotion_t& LinearMotionY() override { return Real()->m_nLinearMotionY(); }
     void LinearMotionYUpdated() override { Real()->m_nLinearMotionY.NetworkStateChanged(); }
-    JointMotion_t& LinearMotionZ() override { return Real()->m_nLinearMotionZ(); }
+    ::JointMotion_t& LinearMotionZ() override { return Real()->m_nLinearMotionZ(); }
     void LinearMotionZUpdated() override { Real()->m_nLinearMotionZ.NetworkStateChanged(); }
     float& LinearFrequencyX() override { return Real()->m_flLinearFrequencyX(); }
     void LinearFrequencyXUpdated() override { Real()->m_flLinearFrequencyX.NetworkStateChanged(); }
@@ -124,11 +124,11 @@ public:
     void AxisNotifiedYUpdated() override { Real()->m_bAxisNotifiedY.NetworkStateChanged(); }
     bool& AxisNotifiedZ() override { return Real()->m_bAxisNotifiedZ(); }
     void AxisNotifiedZUpdated() override { Real()->m_bAxisNotifiedZ.NetworkStateChanged(); }
-    JointMotion_t& AngularMotionX() override { return Real()->m_nAngularMotionX(); }
+    ::JointMotion_t& AngularMotionX() override { return Real()->m_nAngularMotionX(); }
     void AngularMotionXUpdated() override { Real()->m_nAngularMotionX.NetworkStateChanged(); }
-    JointMotion_t& AngularMotionY() override { return Real()->m_nAngularMotionY(); }
+    ::JointMotion_t& AngularMotionY() override { return Real()->m_nAngularMotionY(); }
     void AngularMotionYUpdated() override { Real()->m_nAngularMotionY.NetworkStateChanged(); }
-    JointMotion_t& AngularMotionZ() override { return Real()->m_nAngularMotionZ(); }
+    ::JointMotion_t& AngularMotionZ() override { return Real()->m_nAngularMotionZ(); }
     void AngularMotionZUpdated() override { Real()->m_nAngularMotionZ.NetworkStateChanged(); }
     float& AngularFrequencyX() override { return Real()->m_flAngularFrequencyX(); }
     void AngularFrequencyXUpdated() override { Real()->m_flAngularFrequencyX.NetworkStateChanged(); }
@@ -148,11 +148,11 @@ public:
     void MaxAngularImpulseYUpdated() override { Real()->m_flMaxAngularImpulseY.NetworkStateChanged(); }
     float& MaxAngularImpulseZ() override { return Real()->m_flMaxAngularImpulseZ(); }
     void MaxAngularImpulseZUpdated() override { Real()->m_flMaxAngularImpulseZ.NetworkStateChanged(); }
-    CEntityIOOutput& NotifyForceReachedX() override { return Real()->m_NotifyForceReachedX(); }
+    ::CEntityIOOutput& NotifyForceReachedX() override { return Real()->m_NotifyForceReachedX(); }
     void NotifyForceReachedXUpdated() override { Real()->m_NotifyForceReachedX.NetworkStateChanged(); }
-    CEntityIOOutput& NotifyForceReachedY() override { return Real()->m_NotifyForceReachedY(); }
+    ::CEntityIOOutput& NotifyForceReachedY() override { return Real()->m_NotifyForceReachedY(); }
     void NotifyForceReachedYUpdated() override { Real()->m_NotifyForceReachedY.NetworkStateChanged(); }
-    CEntityIOOutput& NotifyForceReachedZ() override { return Real()->m_NotifyForceReachedZ(); }
+    ::CEntityIOOutput& NotifyForceReachedZ() override { return Real()->m_NotifyForceReachedZ(); }
     void NotifyForceReachedZUpdated() override { Real()->m_NotifyForceReachedZ.NetworkStateChanged(); }
 };
 

@@ -66,11 +66,11 @@ public:
     void WeaponNameUpdated() override { Real()->m_sWeaponName.NetworkStateChanged(); }
     uint64_t& Xuid() override { return Real()->m_xuid(); }
     void XuidUpdated() override { Real()->m_xuid.NetworkStateChanged(); }
-    CEconItemView& AgentItem() override { return Real()->m_agentItem(); }
+    ::CEconItemView& AgentItem() override { return Real()->m_agentItem(); }
     void AgentItemUpdated() override { Real()->m_agentItem.NetworkStateChanged(); }
-    CEconItemView& GlovesItem() override { return Real()->m_glovesItem(); }
+    ::CEconItemView& GlovesItem() override { return Real()->m_glovesItem(); }
     void GlovesItemUpdated() override { Real()->m_glovesItem.NetworkStateChanged(); }
-    CEconItemView& WeaponItem() override { return Real()->m_weaponItem(); }
+    ::CEconItemView& WeaponItem() override { return Real()->m_weaponItem(); }
     void WeaponItemUpdated() override { Real()->m_weaponItem.NetworkStateChanged(); }
 };
 

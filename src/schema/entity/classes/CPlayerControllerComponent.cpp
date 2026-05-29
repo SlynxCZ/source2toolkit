@@ -39,8 +39,8 @@
 
 #include "schema/entity/classes/CCSPlayerController.h"
 
-CCSPlayerController* CPlayerControllerComponent::GetPlayerController() {
-    return static_cast<CCSPlayerController*>(__m_pChainEntity());
+ICSPlayerController* CPlayerControllerComponent::GetPlayerController() {
+    return static_cast<CCSPlayerController*>(__m_pChainEntity())->ToInterface();
 }
 IPlayerControllerComponent* CPlayerControllerComponent::ToInterface() { return new CPlayerControllerComponentImpl(this); }
 

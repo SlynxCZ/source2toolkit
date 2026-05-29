@@ -86,7 +86,7 @@ public:
     void LastBulletUpdateUpdated() override { Real()->m_iLastBulletUpdate.NetworkStateChanged(); }
     bool& IsOtherEnemy() override { return Real()->m_bIsOtherEnemy(); }
     void IsOtherEnemyUpdated() override { Real()->m_bIsOtherEnemy.NetworkStateChanged(); }
-    EKillTypes_t& KillType() override { return Real()->m_killType(); }
+    ::EKillTypes_t& KillType() override { return Real()->m_killType(); }
     void KillTypeUpdated() override { Real()->m_killType.NetworkStateChanged(); }
 };
 

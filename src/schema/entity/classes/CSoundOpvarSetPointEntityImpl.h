@@ -56,9 +56,9 @@ private:
 
 public:
     CSoundOpvarSetPointEntity* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnEnter() override { return Real()->m_OnEnter(); }
+    ::CEntityIOOutput& OnEnter() override { return Real()->m_OnEnter(); }
     void OnEnterUpdated() override { Real()->m_OnEnter.NetworkStateChanged(); }
-    CEntityIOOutput& OnExit() override { return Real()->m_OnExit(); }
+    ::CEntityIOOutput& OnExit() override { return Real()->m_OnExit(); }
     void OnExitUpdated() override { Real()->m_OnExit.NetworkStateChanged(); }
     bool& AutoDisable() override { return Real()->m_bAutoDisable(); }
     void AutoDisableUpdated() override { Real()->m_bAutoDisable.NetworkStateChanged(); }

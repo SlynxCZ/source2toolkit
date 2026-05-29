@@ -76,9 +76,9 @@ public:
     void HasSlackUpdated() override { Real()->m_bHasSlack.NetworkStateChanged(); }
     CUtlSymbolLarge& SurfacePropName() override { return Real()->m_surfacePropName(); }
     void SurfacePropNameUpdated() override { Real()->m_surfacePropName.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerGotOnLadder() override { return Real()->m_OnPlayerGotOnLadder(); }
+    ::CEntityIOOutput& OnPlayerGotOnLadder() override { return Real()->m_OnPlayerGotOnLadder(); }
     void OnPlayerGotOnLadderUpdated() override { Real()->m_OnPlayerGotOnLadder.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerGotOffLadder() override { return Real()->m_OnPlayerGotOffLadder(); }
+    ::CEntityIOOutput& OnPlayerGotOffLadder() override { return Real()->m_OnPlayerGotOffLadder(); }
     void OnPlayerGotOffLadderUpdated() override { Real()->m_OnPlayerGotOffLadder.NetworkStateChanged(); }
 };
 

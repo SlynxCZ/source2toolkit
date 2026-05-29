@@ -70,9 +70,9 @@ public:
     void AltNameUpdated() override { Real()->m_altName.NetworkStateChanged(); }
     int32_t& IterVal() override { return Real()->m_nIterVal(); }
     void IterValUpdated() override { Real()->m_nIterVal.NetworkStateChanged(); }
-    TrackOrientationType_t& OrientationType() override { return Real()->m_eOrientationType(); }
+    ::TrackOrientationType_t& OrientationType() override { return Real()->m_eOrientationType(); }
     void OrientationTypeUpdated() override { Real()->m_eOrientationType.NetworkStateChanged(); }
-    CEntityIOOutput& OnPass() override { return Real()->m_OnPass(); }
+    ::CEntityIOOutput& OnPass() override { return Real()->m_OnPass(); }
     void OnPassUpdated() override { Real()->m_OnPass.NetworkStateChanged(); }
 };
 

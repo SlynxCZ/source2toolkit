@@ -65,11 +65,11 @@ public:
     void PotentialVotesUpdated() override { Real()->m_nPotentialVotes.NetworkStateChanged(); }
     bool& IsYesNoVote() override { return Real()->m_bIsYesNoVote(); }
     void IsYesNoVoteUpdated() override { Real()->m_bIsYesNoVote.NetworkStateChanged(); }
-    CountdownTimer& AcceptingVotesTimer() override { return Real()->m_acceptingVotesTimer(); }
+    ::CountdownTimer& AcceptingVotesTimer() override { return Real()->m_acceptingVotesTimer(); }
     void AcceptingVotesTimerUpdated() override { Real()->m_acceptingVotesTimer.NetworkStateChanged(); }
-    CountdownTimer& ExecuteCommandTimer() override { return Real()->m_executeCommandTimer(); }
+    ::CountdownTimer& ExecuteCommandTimer() override { return Real()->m_executeCommandTimer(); }
     void ExecuteCommandTimerUpdated() override { Real()->m_executeCommandTimer.NetworkStateChanged(); }
-    CountdownTimer& ResetVoteTimer() override { return Real()->m_resetVoteTimer(); }
+    ::CountdownTimer& ResetVoteTimer() override { return Real()->m_resetVoteTimer(); }
     void ResetVoteTimerUpdated() override { Real()->m_resetVoteTimer.NetworkStateChanged(); }
     int32_t* VotesCast() override { return Real()->m_nVotesCast(); }
     int32_t& PlayerHoldingVote() override { return Real()->m_playerHoldingVote(); }

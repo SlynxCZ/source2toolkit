@@ -56,7 +56,7 @@ private:
 
 public:
     CLogicGameEventListener* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnEventFired() override { return Real()->m_OnEventFired(); }
+    ::CEntityIOOutput& OnEventFired() override { return Real()->m_OnEventFired(); }
     void OnEventFiredUpdated() override { Real()->m_OnEventFired.NetworkStateChanged(); }
     CUtlSymbolLarge& GameEventName() override { return Real()->m_iszGameEventName(); }
     void GameEventNameUpdated() override { Real()->m_iszGameEventName.NetworkStateChanged(); }

@@ -62,9 +62,9 @@ public:
     void WorldPositionUpdated() override { Real()->worldPosition.NetworkStateChanged(); }
     Vector& WorldAxisDirection() override { return Real()->worldAxisDirection(); }
     void WorldAxisDirectionUpdated() override { Real()->worldAxisDirection.NetworkStateChanged(); }
-    constraint_axislimit_t& HingeAxis() override { return Real()->hingeAxis(); }
+    ::constraint_axislimit_t& HingeAxis() override { return Real()->hingeAxis(); }
     void HingeAxisUpdated() override { Real()->hingeAxis.NetworkStateChanged(); }
-    constraint_breakableparams_t& Constraint() override { return Real()->constraint(); }
+    ::constraint_breakableparams_t& Constraint() override { return Real()->constraint(); }
     void ConstraintUpdated() override { Real()->constraint.NetworkStateChanged(); }
 };
 

@@ -56,7 +56,7 @@ private:
 
 public:
     CPathSimple* GetOriginal() const override { return Real(); }
-    CPathQueryComponent& PathQueryComponent() override { return Real()->m_CPathQueryComponent(); }
+    ::CPathQueryComponent& PathQueryComponent() override { return Real()->m_CPathQueryComponent(); }
     void PathQueryComponentUpdated() override { Real()->m_CPathQueryComponent.NetworkStateChanged(); }
     CUtlString& PathString() override { return Real()->m_pathString(); }
     void PathStringUpdated() override { Real()->m_pathString.NetworkStateChanged(); }

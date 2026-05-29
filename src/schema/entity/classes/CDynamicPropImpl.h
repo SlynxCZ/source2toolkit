@@ -64,19 +64,19 @@ public:
     void UseHitboxesForRenderBoxUpdated() override { Real()->m_bUseHitboxesForRenderBox.NetworkStateChanged(); }
     bool& UseAnimGraph() override { return Real()->m_bUseAnimGraph(); }
     void UseAnimGraphUpdated() override { Real()->m_bUseAnimGraph.NetworkStateChanged(); }
-    CEntityIOOutput& OutputAnimBegun() override { return Real()->m_pOutputAnimBegun(); }
+    ::CEntityIOOutput& OutputAnimBegun() override { return Real()->m_pOutputAnimBegun(); }
     void OutputAnimBegunUpdated() override { Real()->m_pOutputAnimBegun.NetworkStateChanged(); }
-    CEntityIOOutput& OutputAnimOver() override { return Real()->m_pOutputAnimOver(); }
+    ::CEntityIOOutput& OutputAnimOver() override { return Real()->m_pOutputAnimOver(); }
     void OutputAnimOverUpdated() override { Real()->m_pOutputAnimOver.NetworkStateChanged(); }
-    CEntityIOOutput& OutputAnimLoopCycleOver() override { return Real()->m_pOutputAnimLoopCycleOver(); }
+    ::CEntityIOOutput& OutputAnimLoopCycleOver() override { return Real()->m_pOutputAnimLoopCycleOver(); }
     void OutputAnimLoopCycleOverUpdated() override { Real()->m_pOutputAnimLoopCycleOver.NetworkStateChanged(); }
-    CEntityIOOutput& OnAnimReachedStart() override { return Real()->m_OnAnimReachedStart(); }
+    ::CEntityIOOutput& OnAnimReachedStart() override { return Real()->m_OnAnimReachedStart(); }
     void OnAnimReachedStartUpdated() override { Real()->m_OnAnimReachedStart.NetworkStateChanged(); }
-    CEntityIOOutput& OnAnimReachedEnd() override { return Real()->m_OnAnimReachedEnd(); }
+    ::CEntityIOOutput& OnAnimReachedEnd() override { return Real()->m_OnAnimReachedEnd(); }
     void OnAnimReachedEndUpdated() override { Real()->m_OnAnimReachedEnd.NetworkStateChanged(); }
     CUtlSymbolLarge& IdleAnim() override { return Real()->m_iszIdleAnim(); }
     void IdleAnimUpdated() override { Real()->m_iszIdleAnim.NetworkStateChanged(); }
-    AnimLoopMode_t& IdleAnimLoopMode() override { return Real()->m_nIdleAnimLoopMode(); }
+    ::AnimLoopMode_t& IdleAnimLoopMode() override { return Real()->m_nIdleAnimLoopMode(); }
     void IdleAnimLoopModeUpdated() override { Real()->m_nIdleAnimLoopMode.NetworkStateChanged(); }
     bool& RandomizeCycle() override { return Real()->m_bRandomizeCycle(); }
     void RandomizeCycleUpdated() override { Real()->m_bRandomizeCycle.NetworkStateChanged(); }

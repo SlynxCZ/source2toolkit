@@ -56,7 +56,7 @@ private:
 
 public:
     CEconEntity* GetOriginal() const override { return Real(); }
-    CAttributeContainer& AttributeManager() override { return Real()->m_AttributeManager(); }
+    ::CAttributeContainer& AttributeManager() override { return Real()->m_AttributeManager(); }
     void AttributeManagerUpdated() override { Real()->m_AttributeManager.NetworkStateChanged(); }
     uint32_t& OriginalOwnerXuidLow() override { return Real()->m_OriginalOwnerXuidLow(); }
     void OriginalOwnerXuidLowUpdated() override { Real()->m_OriginalOwnerXuidLow.NetworkStateChanged(); }

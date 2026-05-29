@@ -56,7 +56,7 @@ private:
 
 public:
     CMarkupVolumeTagged_NavGame* GetOriginal() const override { return Real(); }
-    NavScopeFlags_t& Scopes() override { return Real()->m_nScopes(); }
+    ::NavScopeFlags_t& Scopes() override { return Real()->m_nScopes(); }
     void ScopesUpdated() override { Real()->m_nScopes.NetworkStateChanged(); }
     bool& FloodFillAttribute() override { return Real()->m_bFloodFillAttribute(); }
     void FloodFillAttributeUpdated() override { Real()->m_bFloodFillAttribute.NetworkStateChanged(); }

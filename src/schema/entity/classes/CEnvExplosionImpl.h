@@ -68,7 +68,7 @@ public:
     void DamageForceUpdated() override { Real()->m_flDamageForce.NetworkStateChanged(); }
     CHandle<CBaseEntity>& Inflictor() override { return Real()->m_hInflictor(); }
     void InflictorUpdated() override { Real()->m_hInflictor.NetworkStateChanged(); }
-    DamageTypes_t& CustomDamageType() override { return Real()->m_iCustomDamageType(); }
+    ::DamageTypes_t& CustomDamageType() override { return Real()->m_iCustomDamageType(); }
     void CustomDamageTypeUpdated() override { Real()->m_iCustomDamageType.NetworkStateChanged(); }
     bool& CreateDebris() override { return Real()->m_bCreateDebris(); }
     void CreateDebrisUpdated() override { Real()->m_bCreateDebris.NetworkStateChanged(); }
@@ -78,9 +78,9 @@ public:
     void CustomSoundNameUpdated() override { Real()->m_iszCustomSoundName.NetworkStateChanged(); }
     bool& SuppressParticleImpulse() override { return Real()->m_bSuppressParticleImpulse(); }
     void SuppressParticleImpulseUpdated() override { Real()->m_bSuppressParticleImpulse.NetworkStateChanged(); }
-    Class_T& ClassIgnore() override { return Real()->m_iClassIgnore(); }
+    ::Class_T& ClassIgnore() override { return Real()->m_iClassIgnore(); }
     void ClassIgnoreUpdated() override { Real()->m_iClassIgnore.NetworkStateChanged(); }
-    Class_T& ClassIgnore2() override { return Real()->m_iClassIgnore2(); }
+    ::Class_T& ClassIgnore2() override { return Real()->m_iClassIgnore2(); }
     void ClassIgnore2Updated() override { Real()->m_iClassIgnore2.NetworkStateChanged(); }
     CUtlSymbolLarge& EntityIgnoreName() override { return Real()->m_iszEntityIgnoreName(); }
     void EntityIgnoreNameUpdated() override { Real()->m_iszEntityIgnoreName.NetworkStateChanged(); }

@@ -56,9 +56,9 @@ private:
 
 public:
     CBaseAnimGraphController* GetOriginal() const override { return Real(); }
-    AnimationAlgorithm_t& AnimationAlgorithm() override { return Real()->m_nAnimationAlgorithm(); }
+    ::AnimationAlgorithm_t& AnimationAlgorithm() override { return Real()->m_nAnimationAlgorithm(); }
     void AnimationAlgorithmUpdated() override { Real()->m_nAnimationAlgorithm.NetworkStateChanged(); }
-    ExternalAnimGraphHandle_t& NextExternalGraphHandle() override { return Real()->m_nNextExternalGraphHandle(); }
+    ::ExternalAnimGraphHandle_t& NextExternalGraphHandle() override { return Real()->m_nNextExternalGraphHandle(); }
     void NextExternalGraphHandleUpdated() override { Real()->m_nNextExternalGraphHandle.NetworkStateChanged(); }
     CUtlVector<CGlobalSymbol>& SecondarySkeletonSlotIDs() override { return Real()->m_vecSecondarySkeletonSlotIDs(); }
     void SecondarySkeletonSlotIDsUpdated() override { Real()->m_vecSecondarySkeletonSlotIDs.NetworkStateChanged(); }
@@ -76,11 +76,11 @@ public:
     void SeqStartTimeUpdated() override { Real()->m_flSeqStartTime.NetworkStateChanged(); }
     float& SeqFixedCycle() override { return Real()->m_flSeqFixedCycle(); }
     void SeqFixedCycleUpdated() override { Real()->m_flSeqFixedCycle.NetworkStateChanged(); }
-    AnimLoopMode_t& AnimLoopMode() override { return Real()->m_nAnimLoopMode(); }
+    ::AnimLoopMode_t& AnimLoopMode() override { return Real()->m_nAnimLoopMode(); }
     void AnimLoopModeUpdated() override { Real()->m_nAnimLoopMode.NetworkStateChanged(); }
     float& PlaybackRate() override { return Real()->m_flPlaybackRate(); }
     void PlaybackRateUpdated() override { Real()->m_flPlaybackRate.NetworkStateChanged(); }
-    SequenceFinishNotifyState_t& NotifyState() override { return Real()->m_nNotifyState(); }
+    ::SequenceFinishNotifyState_t& NotifyState() override { return Real()->m_nNotifyState(); }
     void NotifyStateUpdated() override { Real()->m_nNotifyState.NetworkStateChanged(); }
     bool& NetworkedAnimationInputsChanged() override { return Real()->m_bNetworkedAnimationInputsChanged(); }
     void NetworkedAnimationInputsChangedUpdated() override { Real()->m_bNetworkedAnimationInputsChanged.NetworkStateChanged(); }
@@ -106,7 +106,7 @@ public:
     void ServerGraphInstanceIterationUpdated() override { Real()->m_nServerGraphInstanceIteration.NetworkStateChanged(); }
     int32_t& ServerSerializationContextIteration() override { return Real()->m_nServerSerializationContextIteration(); }
     void ServerSerializationContextIterationUpdated() override { Real()->m_nServerSerializationContextIteration.NetworkStateChanged(); }
-    ResourceId_t& PrimaryGraphId() override { return Real()->m_primaryGraphId(); }
+    ::ResourceId_t& PrimaryGraphId() override { return Real()->m_primaryGraphId(); }
     void PrimaryGraphIdUpdated() override { Real()->m_primaryGraphId.NetworkStateChanged(); }
     CUtlVector<ResourceId_t>& ExternalGraphIds() override { return Real()->m_vecExternalGraphIds(); }
     void ExternalGraphIdsUpdated() override { Real()->m_vecExternalGraphIds.NetworkStateChanged(); }

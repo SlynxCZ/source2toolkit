@@ -62,7 +62,7 @@ public:
     void PlayerAmmoStockOnPickupUpdated() override { Real()->m_bPlayerAmmoStockOnPickup.NetworkStateChanged(); }
     bool& RequireUseToTouch() override { return Real()->m_bRequireUseToTouch(); }
     void RequireUseToTouchUpdated() override { Real()->m_bRequireUseToTouch.NetworkStateChanged(); }
-    WeaponGameplayAnimState& WeaponGameplayAnimState() override { return Real()->m_iWeaponGameplayAnimState(); }
+    ::WeaponGameplayAnimState& WeaponGameplayAnimState() override { return Real()->m_iWeaponGameplayAnimState(); }
     void WeaponGameplayAnimStateUpdated() override { Real()->m_iWeaponGameplayAnimState.NetworkStateChanged(); }
     float& WeaponGameplayAnimStateTimestamp() override { return Real()->m_flWeaponGameplayAnimStateTimestamp(); }
     void WeaponGameplayAnimStateTimestampUpdated() override { Real()->m_flWeaponGameplayAnimStateTimestamp.NetworkStateChanged(); }
@@ -76,9 +76,9 @@ public:
     void LastEmptySoundCmdNumUpdated() override { Real()->m_nLastEmptySoundCmdNum.NetworkStateChanged(); }
     bool& FireOnEmpty() override { return Real()->m_bFireOnEmpty(); }
     void FireOnEmptyUpdated() override { Real()->m_bFireOnEmpty.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
+    ::CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
     void OnPlayerPickupUpdated() override { Real()->m_OnPlayerPickup.NetworkStateChanged(); }
-    CSWeaponMode& WeaponMode() override { return Real()->m_weaponMode(); }
+    ::CSWeaponMode& WeaponMode() override { return Real()->m_weaponMode(); }
     void WeaponModeUpdated() override { Real()->m_weaponMode.NetworkStateChanged(); }
     float& TurningInaccuracyDelta() override { return Real()->m_flTurningInaccuracyDelta(); }
     void TurningInaccuracyDeltaUpdated() override { Real()->m_flTurningInaccuracyDelta.NetworkStateChanged(); }
@@ -150,7 +150,7 @@ public:
     void WasOwnedByTerroristUpdated() override { Real()->m_bWasOwnedByTerrorist.NetworkStateChanged(); }
     int32_t& NumRemoveUnownedWeaponThink() override { return Real()->m_numRemoveUnownedWeaponThink(); }
     void NumRemoveUnownedWeaponThinkUpdated() override { Real()->m_numRemoveUnownedWeaponThink.NetworkStateChanged(); }
-    CIronSightController& IronSightController() override { return Real()->m_IronSightController(); }
+    ::CIronSightController& IronSightController() override { return Real()->m_IronSightController(); }
     void IronSightControllerUpdated() override { Real()->m_IronSightController.NetworkStateChanged(); }
     int32_t& IronSightMode() override { return Real()->m_iIronSightMode(); }
     void IronSightModeUpdated() override { Real()->m_iIronSightMode.NetworkStateChanged(); }

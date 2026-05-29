@@ -56,11 +56,11 @@ private:
 
 public:
     CTimerEntity* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnTimer() override { return Real()->m_OnTimer(); }
+    ::CEntityIOOutput& OnTimer() override { return Real()->m_OnTimer(); }
     void OnTimerUpdated() override { Real()->m_OnTimer.NetworkStateChanged(); }
-    CEntityIOOutput& OnTimerHigh() override { return Real()->m_OnTimerHigh(); }
+    ::CEntityIOOutput& OnTimerHigh() override { return Real()->m_OnTimerHigh(); }
     void OnTimerHighUpdated() override { Real()->m_OnTimerHigh.NetworkStateChanged(); }
-    CEntityIOOutput& OnTimerLow() override { return Real()->m_OnTimerLow(); }
+    ::CEntityIOOutput& OnTimerLow() override { return Real()->m_OnTimerLow(); }
     void OnTimerLowUpdated() override { Real()->m_OnTimerLow.NetworkStateChanged(); }
     int32_t& Disabled() override { return Real()->m_iDisabled(); }
     void DisabledUpdated() override { Real()->m_iDisabled.NetworkStateChanged(); }

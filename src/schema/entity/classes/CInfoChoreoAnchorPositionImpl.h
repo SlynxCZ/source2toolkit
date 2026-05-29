@@ -68,7 +68,7 @@ public:
     void ExtentsMaxUpdated() override { Real()->m_vExtentsMax.NetworkStateChanged(); }
     float& Radius() override { return Real()->m_flRadius(); }
     void RadiusUpdated() override { Real()->m_flRadius.NetworkStateChanged(); }
-    CInfoChoreoLocatorShapeType_t& ShapeType() override { return Real()->m_nShapeType(); }
+    ::CInfoChoreoLocatorShapeType_t& ShapeType() override { return Real()->m_nShapeType(); }
     void ShapeTypeUpdated() override { Real()->m_nShapeType.NetworkStateChanged(); }
 };
 

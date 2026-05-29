@@ -76,7 +76,7 @@ public:
     void AffectInvulnerableEntsUpdated() override { Real()->m_bAffectInvulnerableEnts.NetworkStateChanged(); }
     bool& DisablePushClamp() override { return Real()->m_bDisablePushClamp(); }
     void DisablePushClampUpdated() override { Real()->m_bDisablePushClamp.NetworkStateChanged(); }
-    CEntityIOOutput& OnPushedPlayer() override { return Real()->m_OnPushedPlayer(); }
+    ::CEntityIOOutput& OnPushedPlayer() override { return Real()->m_OnPushedPlayer(); }
     void OnPushedPlayerUpdated() override { Real()->m_OnPushedPlayer.NetworkStateChanged(); }
 };
 

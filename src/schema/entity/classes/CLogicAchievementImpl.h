@@ -60,7 +60,7 @@ public:
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }
     CUtlSymbolLarge& AchievementEventID() override { return Real()->m_iszAchievementEventID(); }
     void AchievementEventIDUpdated() override { Real()->m_iszAchievementEventID.NetworkStateChanged(); }
-    CEntityIOOutput& OnFired() override { return Real()->m_OnFired(); }
+    ::CEntityIOOutput& OnFired() override { return Real()->m_OnFired(); }
     void OnFiredUpdated() override { Real()->m_OnFired.NetworkStateChanged(); }
 };
 

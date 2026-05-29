@@ -60,9 +60,9 @@ public:
     void InValueUpdated() override { Real()->m_bInValue.NetworkStateChanged(); }
     CUtlVector<CHandle<CBaseEntity>>& Listeners() override { return Real()->m_Listeners(); }
     void ListenersUpdated() override { Real()->m_Listeners.NetworkStateChanged(); }
-    CEntityIOOutput& OnTrue() override { return Real()->m_OnTrue(); }
+    ::CEntityIOOutput& OnTrue() override { return Real()->m_OnTrue(); }
     void OnTrueUpdated() override { Real()->m_OnTrue.NetworkStateChanged(); }
-    CEntityIOOutput& OnFalse() override { return Real()->m_OnFalse(); }
+    ::CEntityIOOutput& OnFalse() override { return Real()->m_OnFalse(); }
     void OnFalseUpdated() override { Real()->m_OnFalse.NetworkStateChanged(); }
 };
 

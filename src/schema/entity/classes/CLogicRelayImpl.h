@@ -56,9 +56,9 @@ private:
 
 public:
     CLogicRelay* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnSpawn() override { return Real()->m_OnSpawn(); }
+    ::CEntityIOOutput& OnSpawn() override { return Real()->m_OnSpawn(); }
     void OnSpawnUpdated() override { Real()->m_OnSpawn.NetworkStateChanged(); }
-    CEntityIOOutput& OnTrigger() override { return Real()->m_OnTrigger(); }
+    ::CEntityIOOutput& OnTrigger() override { return Real()->m_OnTrigger(); }
     void OnTriggerUpdated() override { Real()->m_OnTrigger.NetworkStateChanged(); }
     bool& Disabled() override { return Real()->m_bDisabled(); }
     void DisabledUpdated() override { Real()->m_bDisabled.NetworkStateChanged(); }

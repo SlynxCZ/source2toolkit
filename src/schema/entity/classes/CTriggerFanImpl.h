@@ -72,7 +72,7 @@ public:
     void ForceUpdated() override { Real()->m_flForce.NetworkStateChanged(); }
     bool& Falloff() override { return Real()->m_bFalloff(); }
     void FalloffUpdated() override { Real()->m_bFalloff.NetworkStateChanged(); }
-    CountdownTimer& RampTimer() override { return Real()->m_RampTimer(); }
+    ::CountdownTimer& RampTimer() override { return Real()->m_RampTimer(); }
     void RampTimerUpdated() override { Real()->m_RampTimer.NetworkStateChanged(); }
     Vector& FanOriginWS() override { return Real()->m_vFanOriginWS(); }
     void FanOriginWSUpdated() override { Real()->m_vFanOriginWS.NetworkStateChanged(); }

@@ -66,7 +66,7 @@ public:
     void Clip3DSkyBoxNearToWorldFarUpdated() override { Real()->bClip3DSkyBoxNearToWorldFar.NetworkStateChanged(); }
     float& Clip3DSkyBoxNearToWorldFarOffset() override { return Real()->flClip3DSkyBoxNearToWorldFarOffset(); }
     void Clip3DSkyBoxNearToWorldFarOffsetUpdated() override { Real()->flClip3DSkyBoxNearToWorldFarOffset.NetworkStateChanged(); }
-    fogparams_t& Fog() override { return Real()->fog(); }
+    ::fogparams_t& Fog() override { return Real()->fog(); }
     void FogUpdated() override { Real()->fog.NetworkStateChanged(); }
     WorldGroupId_t& WorldGroupID() override { return Real()->m_nWorldGroupID(); }
     void WorldGroupIDUpdated() override { Real()->m_nWorldGroupID.NetworkStateChanged(); }

@@ -60,7 +60,7 @@ public:
     CBaseEntity* GetOriginal() const override { return Real(); }
     CBodyComponent*& BodyComponent() override { return Real()->m_CBodyComponent(); }
     void BodyComponentUpdated() override { Real()->m_CBodyComponent.NetworkStateChanged(); }
-    CNetworkTransmitComponent& NetworkTransmitComponent() override { return Real()->m_NetworkTransmitComponent(); }
+    ::CNetworkTransmitComponent& NetworkTransmitComponent() override { return Real()->m_NetworkTransmitComponent(); }
     void NetworkTransmitComponentUpdated() override { Real()->m_NetworkTransmitComponent.NetworkStateChanged(); }
     CUtlVector<thinkfunc_t>& ThinkFunctions() override { return Real()->m_aThinkFunctions(); }
     void ThinkFunctionsUpdated() override { Real()->m_aThinkFunctions.NetworkStateChanged(); }
@@ -98,17 +98,17 @@ public:
     void DamageAccumulatorUpdated() override { Real()->m_flDamageAccumulator.NetworkStateChanged(); }
     bool& TakesDamage() override { return Real()->m_bTakesDamage(); }
     void TakesDamageUpdated() override { Real()->m_bTakesDamage.NetworkStateChanged(); }
-    TakeDamageFlags_t& TakeDamageFlags() override { return Real()->m_nTakeDamageFlags(); }
+    ::TakeDamageFlags_t& TakeDamageFlags() override { return Real()->m_nTakeDamageFlags(); }
     void TakeDamageFlagsUpdated() override { Real()->m_nTakeDamageFlags.NetworkStateChanged(); }
-    EntityPlatformTypes_t& PlatformType() override { return Real()->m_nPlatformType(); }
+    ::EntityPlatformTypes_t& PlatformType() override { return Real()->m_nPlatformType(); }
     void PlatformTypeUpdated() override { Real()->m_nPlatformType.NetworkStateChanged(); }
-    MoveCollide_t& MoveCollide() override { return Real()->m_MoveCollide(); }
+    ::MoveCollide_t& MoveCollide() override { return Real()->m_MoveCollide(); }
     void MoveCollideUpdated() override { Real()->m_MoveCollide.NetworkStateChanged(); }
-    MoveType_t& MoveType() override { return Real()->m_MoveType(); }
+    ::MoveType_t& MoveType() override { return Real()->m_MoveType(); }
     void MoveTypeUpdated() override { Real()->m_MoveType.NetworkStateChanged(); }
-    MoveType_t& PreviouslySetMoveType() override { return Real()->m_nPreviouslySetMoveType(); }
+    ::MoveType_t& PreviouslySetMoveType() override { return Real()->m_nPreviouslySetMoveType(); }
     void PreviouslySetMoveTypeUpdated() override { Real()->m_nPreviouslySetMoveType.NetworkStateChanged(); }
-    MoveType_t& ActualMoveType() override { return Real()->m_nActualMoveType(); }
+    ::MoveType_t& ActualMoveType() override { return Real()->m_nActualMoveType(); }
     void ActualMoveTypeUpdated() override { Real()->m_nActualMoveType.NetworkStateChanged(); }
     uint8_t& WaterTouch() override { return Real()->m_nWaterTouch(); }
     void WaterTouchUpdated() override { Real()->m_nWaterTouch.NetworkStateChanged(); }
@@ -153,13 +153,13 @@ public:
     void NextThinkTickUpdated() override { Real()->m_nNextThinkTick.NetworkStateChanged(); }
     int32_t& SimulationTick() override { return Real()->m_nSimulationTick(); }
     void SimulationTickUpdated() override { Real()->m_nSimulationTick.NetworkStateChanged(); }
-    CEntityIOOutput& OnKilled() override { return Real()->m_OnKilled(); }
+    ::CEntityIOOutput& OnKilled() override { return Real()->m_OnKilled(); }
     void OnKilledUpdated() override { Real()->m_OnKilled.NetworkStateChanged(); }
     uint32_t& Flags() override { return Real()->m_fFlags(); }
     void FlagsUpdated() override { Real()->m_fFlags.NetworkStateChanged(); }
     Vector& AbsVelocity() override { return Real()->m_vecAbsVelocity(); }
     void AbsVelocityUpdated() override { Real()->m_vecAbsVelocity.NetworkStateChanged(); }
-    CNetworkVelocityVector& Velocity() override { return Real()->m_vecVelocity(); }
+    ::CNetworkVelocityVector& Velocity() override { return Real()->m_vecVelocity(); }
     void VelocityUpdated() override { Real()->m_vecVelocity.NetworkStateChanged(); }
     Vector& BaseVelocity() override { return Real()->m_vecBaseVelocity(); }
     void BaseVelocityUpdated() override { Real()->m_vecBaseVelocity.NetworkStateChanged(); }
@@ -201,13 +201,13 @@ public:
     void WaterTypeUpdated() override { Real()->m_nWaterType.NetworkStateChanged(); }
     int32_t& EFlags() override { return Real()->m_iEFlags(); }
     void EFlagsUpdated() override { Real()->m_iEFlags.NetworkStateChanged(); }
-    CEntityIOOutput& OnUser1() override { return Real()->m_OnUser1(); }
+    ::CEntityIOOutput& OnUser1() override { return Real()->m_OnUser1(); }
     void OnUser1Updated() override { Real()->m_OnUser1.NetworkStateChanged(); }
-    CEntityIOOutput& OnUser2() override { return Real()->m_OnUser2(); }
+    ::CEntityIOOutput& OnUser2() override { return Real()->m_OnUser2(); }
     void OnUser2Updated() override { Real()->m_OnUser2.NetworkStateChanged(); }
-    CEntityIOOutput& OnUser3() override { return Real()->m_OnUser3(); }
+    ::CEntityIOOutput& OnUser3() override { return Real()->m_OnUser3(); }
     void OnUser3Updated() override { Real()->m_OnUser3.NetworkStateChanged(); }
-    CEntityIOOutput& OnUser4() override { return Real()->m_OnUser4(); }
+    ::CEntityIOOutput& OnUser4() override { return Real()->m_OnUser4(); }
     void OnUser4Updated() override { Real()->m_OnUser4.NetworkStateChanged(); }
     int32_t& InitialTeamNum() override { return Real()->m_iInitialTeamNum(); }
     void InitialTeamNumUpdated() override { Real()->m_iInitialTeamNum.NetworkStateChanged(); }
@@ -225,7 +225,7 @@ public:
     void LocalTimeUpdated() override { Real()->m_flLocalTime.NetworkStateChanged(); }
     float& VPhysicsUpdateLocalTime() override { return Real()->m_flVPhysicsUpdateLocalTime(); }
     void VPhysicsUpdateLocalTimeUpdated() override { Real()->m_flVPhysicsUpdateLocalTime.NetworkStateChanged(); }
-    BloodType& BloodType() override { return Real()->m_nBloodType(); }
+    ::BloodType& BloodType() override { return Real()->m_nBloodType(); }
     void BloodTypeUpdated() override { Real()->m_nBloodType.NetworkStateChanged(); }
     CPulseGraphInstance_ServerEntity*& PulseGraphInstance() override { return Real()->m_pPulseGraphInstance(); }
     void PulseGraphInstanceUpdated() override { Real()->m_pPulseGraphInstance.NetworkStateChanged(); }

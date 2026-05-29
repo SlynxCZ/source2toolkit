@@ -58,7 +58,7 @@ public:
     CTriggerDetectBulletFire* GetOriginal() const override { return Real(); }
     bool& PlayerFireOnly() override { return Real()->m_bPlayerFireOnly(); }
     void PlayerFireOnlyUpdated() override { Real()->m_bPlayerFireOnly.NetworkStateChanged(); }
-    CEntityIOOutput& OnDetectedBulletFire() override { return Real()->m_OnDetectedBulletFire(); }
+    ::CEntityIOOutput& OnDetectedBulletFire() override { return Real()->m_OnDetectedBulletFire(); }
     void OnDetectedBulletFireUpdated() override { Real()->m_OnDetectedBulletFire.NetworkStateChanged(); }
 };
 

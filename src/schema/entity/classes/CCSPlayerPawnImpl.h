@@ -101,7 +101,7 @@ public:
     void RetakesMVPLastRoundUpdated() override { Real()->m_bRetakesMVPLastRound.NetworkStateChanged(); }
     int32_t& RetakesMVPBoostItem() override { return Real()->m_iRetakesMVPBoostItem(); }
     void RetakesMVPBoostItemUpdated() override { Real()->m_iRetakesMVPBoostItem.NetworkStateChanged(); }
-    loadout_slot_t& RetakesMVPBoostExtraUtility() override { return Real()->m_RetakesMVPBoostExtraUtility(); }
+    ::loadout_slot_t& RetakesMVPBoostExtraUtility() override { return Real()->m_RetakesMVPBoostExtraUtility(); }
     void RetakesMVPBoostExtraUtilityUpdated() override { Real()->m_RetakesMVPBoostExtraUtility.NetworkStateChanged(); }
     float& HealthShotBoostExpirationTime() override { return Real()->m_flHealthShotBoostExpirationTime(); }
     void HealthShotBoostExpirationTimeUpdated() override { Real()->m_flHealthShotBoostExpirationTime.NetworkStateChanged(); }
@@ -132,7 +132,7 @@ public:
     void RagdollDamageHeadshotUpdated() override { Real()->m_bRagdollDamageHeadshot.NetworkStateChanged(); }
     Vector& RagdollServerOrigin() override { return Real()->m_vRagdollServerOrigin(); }
     void RagdollServerOriginUpdated() override { Real()->m_vRagdollServerOrigin.NetworkStateChanged(); }
-    CEconItemView& EconGloves() override { return Real()->m_EconGloves(); }
+    ::CEconItemView& EconGloves() override { return Real()->m_EconGloves(); }
     void EconGlovesUpdated() override { Real()->m_EconGloves.NetworkStateChanged(); }
     uint8_t& EconGlovesChanged() override { return Real()->m_nEconGlovesChanged(); }
     void EconGlovesChangedUpdated() override { Real()->m_nEconGlovesChanged.NetworkStateChanged(); }
@@ -168,7 +168,7 @@ public:
     void ResetArmorNextSpawnUpdated() override { Real()->m_bResetArmorNextSpawn.NetworkStateChanged(); }
     CEntityIndex& LastKillerIndex() override { return Real()->m_nLastKillerIndex(); }
     void LastKillerIndexUpdated() override { Real()->m_nLastKillerIndex.NetworkStateChanged(); }
-    EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
+    ::EntitySpottedState_t& EntitySpottedState() override { return Real()->m_entitySpottedState(); }
     void EntitySpottedStateUpdated() override { Real()->m_entitySpottedState.NetworkStateChanged(); }
     int32_t& SpotRules() override { return Real()->m_nSpotRules(); }
     void SpotRulesUpdated() override { Real()->m_nSpotRules.NetworkStateChanged(); }
@@ -180,7 +180,7 @@ public:
     void IsDefusingUpdated() override { Real()->m_bIsDefusing.NetworkStateChanged(); }
     bool& IsGrabbingHostage() override { return Real()->m_bIsGrabbingHostage(); }
     void IsGrabbingHostageUpdated() override { Real()->m_bIsGrabbingHostage.NetworkStateChanged(); }
-    CSPlayerBlockingUseAction_t& BlockingUseActionInProgress() override { return Real()->m_iBlockingUseActionInProgress(); }
+    ::CSPlayerBlockingUseAction_t& BlockingUseActionInProgress() override { return Real()->m_iBlockingUseActionInProgress(); }
     void BlockingUseActionInProgressUpdated() override { Real()->m_iBlockingUseActionInProgress.NetworkStateChanged(); }
     float& EmitSoundTime() override { return Real()->m_flEmitSoundTime(); }
     void EmitSoundTimeUpdated() override { Real()->m_flEmitSoundTime.NetworkStateChanged(); }

@@ -60,7 +60,7 @@ public:
     void MoveEntitySpaceUpdated() override { Real()->m_angMoveEntitySpace.NetworkStateChanged(); }
     Vector& MoveDirParentSpace() override { return Real()->m_vecMoveDirParentSpace(); }
     void MoveDirParentSpaceUpdated() override { Real()->m_vecMoveDirParentSpace.NetworkStateChanged(); }
-    locksound_t& Ls() override { return Real()->m_ls(); }
+    ::locksound_t& Ls() override { return Real()->m_ls(); }
     void LsUpdated() override { Real()->m_ls.NetworkStateChanged(); }
     bool& ForceClosed() override { return Real()->m_bForceClosed(); }
     void ForceClosedUpdated() override { Real()->m_bForceClosed.NetworkStateChanged(); }
@@ -72,7 +72,7 @@ public:
     void IgnoreDebrisUpdated() override { Real()->m_bIgnoreDebris.NetworkStateChanged(); }
     bool& NoNPCs() override { return Real()->m_bNoNPCs(); }
     void NoNPCsUpdated() override { Real()->m_bNoNPCs.NetworkStateChanged(); }
-    FuncDoorSpawnPos_t& SpawnPosition() override { return Real()->m_eSpawnPosition(); }
+    ::FuncDoorSpawnPos_t& SpawnPosition() override { return Real()->m_eSpawnPosition(); }
     void SpawnPositionUpdated() override { Real()->m_eSpawnPosition.NetworkStateChanged(); }
     float& BlockDamage() override { return Real()->m_flBlockDamage(); }
     void BlockDamageUpdated() override { Real()->m_flBlockDamage.NetworkStateChanged(); }
@@ -86,23 +86,23 @@ public:
     void NoiseArrivedClosedUpdated() override { Real()->m_NoiseArrivedClosed.NetworkStateChanged(); }
     CUtlSymbolLarge& ChainTarget() override { return Real()->m_ChainTarget(); }
     void ChainTargetUpdated() override { Real()->m_ChainTarget.NetworkStateChanged(); }
-    CEntityIOOutput& OnBlockedClosing() override { return Real()->m_OnBlockedClosing(); }
+    ::CEntityIOOutput& OnBlockedClosing() override { return Real()->m_OnBlockedClosing(); }
     void OnBlockedClosingUpdated() override { Real()->m_OnBlockedClosing.NetworkStateChanged(); }
-    CEntityIOOutput& OnBlockedOpening() override { return Real()->m_OnBlockedOpening(); }
+    ::CEntityIOOutput& OnBlockedOpening() override { return Real()->m_OnBlockedOpening(); }
     void OnBlockedOpeningUpdated() override { Real()->m_OnBlockedOpening.NetworkStateChanged(); }
-    CEntityIOOutput& OnUnblockedClosing() override { return Real()->m_OnUnblockedClosing(); }
+    ::CEntityIOOutput& OnUnblockedClosing() override { return Real()->m_OnUnblockedClosing(); }
     void OnUnblockedClosingUpdated() override { Real()->m_OnUnblockedClosing.NetworkStateChanged(); }
-    CEntityIOOutput& OnUnblockedOpening() override { return Real()->m_OnUnblockedOpening(); }
+    ::CEntityIOOutput& OnUnblockedOpening() override { return Real()->m_OnUnblockedOpening(); }
     void OnUnblockedOpeningUpdated() override { Real()->m_OnUnblockedOpening.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
+    ::CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
     void OnFullyClosedUpdated() override { Real()->m_OnFullyClosed.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
+    ::CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
     void OnFullyOpenUpdated() override { Real()->m_OnFullyOpen.NetworkStateChanged(); }
-    CEntityIOOutput& OnClose() override { return Real()->m_OnClose(); }
+    ::CEntityIOOutput& OnClose() override { return Real()->m_OnClose(); }
     void OnCloseUpdated() override { Real()->m_OnClose.NetworkStateChanged(); }
-    CEntityIOOutput& OnOpen() override { return Real()->m_OnOpen(); }
+    ::CEntityIOOutput& OnOpen() override { return Real()->m_OnOpen(); }
     void OnOpenUpdated() override { Real()->m_OnOpen.NetworkStateChanged(); }
-    CEntityIOOutput& OnLockedUse() override { return Real()->m_OnLockedUse(); }
+    ::CEntityIOOutput& OnLockedUse() override { return Real()->m_OnLockedUse(); }
     void OnLockedUseUpdated() override { Real()->m_OnLockedUse.NetworkStateChanged(); }
     bool& LoopMoveSound() override { return Real()->m_bLoopMoveSound(); }
     void LoopMoveSoundUpdated() override { Real()->m_bLoopMoveSound.NetworkStateChanged(); }

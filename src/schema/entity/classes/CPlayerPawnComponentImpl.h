@@ -58,7 +58,7 @@ private:
 
 public:
     CPlayerPawnComponent* GetOriginal() const override { return Real(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
 
     ICSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }

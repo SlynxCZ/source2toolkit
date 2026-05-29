@@ -56,7 +56,7 @@ private:
 
 public:
     CBaseAnimGraph* GetOriginal() const override { return Real(); }
-    CAnimGraphControllerManager& GraphControllerManager() override { return Real()->m_graphControllerManager(); }
+    ::CAnimGraphControllerManager& GraphControllerManager() override { return Real()->m_graphControllerManager(); }
     void GraphControllerManagerUpdated() override { Real()->m_graphControllerManager.NetworkStateChanged(); }
     CAnimGraphControllerBase*& MainGraphController() override { return Real()->m_pMainGraphController(); }
     void MainGraphControllerUpdated() override { Real()->m_pMainGraphController.NetworkStateChanged(); }
@@ -74,7 +74,7 @@ public:
     void ForceBoneUpdated() override { Real()->m_nForceBone.NetworkStateChanged(); }
     IPhysicsRagdollControl*& RagdollControl() override { return Real()->m_pRagdollControl(); }
     void RagdollControlUpdated() override { Real()->m_pRagdollControl.NetworkStateChanged(); }
-    PhysicsRagdollPose_t& RagdollPose() override { return Real()->m_RagdollPose(); }
+    ::PhysicsRagdollPose_t& RagdollPose() override { return Real()->m_RagdollPose(); }
     void RagdollPoseUpdated() override { Real()->m_RagdollPose.NetworkStateChanged(); }
     bool& RagdollEnabled() override { return Real()->m_bRagdollEnabled(); }
     void RagdollEnabledUpdated() override { Real()->m_bRagdollEnabled.NetworkStateChanged(); }

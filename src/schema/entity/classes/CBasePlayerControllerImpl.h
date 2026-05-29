@@ -72,9 +72,9 @@ public:
     void SplitScreenPlayersUpdated() override { Real()->m_hSplitScreenPlayers.NetworkStateChanged(); }
     bool& IsHLTV() override { return Real()->m_bIsHLTV(); }
     void IsHLTVUpdated() override { Real()->m_bIsHLTV.NetworkStateChanged(); }
-    PlayerConnectedState& Connected() override { return Real()->m_iConnected(); }
+    ::PlayerConnectedState& Connected() override { return Real()->m_iConnected(); }
     void ConnectedUpdated() override { Real()->m_iConnected.NetworkStateChanged(); }
-    PlayerConnectedState& MostConnected() override { return Real()->m_iMostConnected(); }
+    ::PlayerConnectedState& MostConnected() override { return Real()->m_iMostConnected(); }
     void MostConnectedUpdated() override { Real()->m_iMostConnected.NetworkStateChanged(); }
     char* PlayerName() override { return Real()->m_iszPlayerName(); }
     CUtlString& NetworkIDString() override { return Real()->m_szNetworkIDString(); }
@@ -89,7 +89,7 @@ public:
     void IsLowViolenceUpdated() override { Real()->m_bIsLowViolence.NetworkStateChanged(); }
     bool& GamePaused() override { return Real()->m_bGamePaused(); }
     void GamePausedUpdated() override { Real()->m_bGamePaused.NetworkStateChanged(); }
-    ChatIgnoreType_t& IgnoreGlobalChat() override { return Real()->m_iIgnoreGlobalChat(); }
+    ::ChatIgnoreType_t& IgnoreGlobalChat() override { return Real()->m_iIgnoreGlobalChat(); }
     void IgnoreGlobalChatUpdated() override { Real()->m_iIgnoreGlobalChat.NetworkStateChanged(); }
     float& LastPlayerTalkTime() override { return Real()->m_flLastPlayerTalkTime(); }
     void LastPlayerTalkTimeUpdated() override { Real()->m_flLastPlayerTalkTime.NetworkStateChanged(); }

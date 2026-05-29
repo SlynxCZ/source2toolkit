@@ -56,7 +56,7 @@ private:
 
 public:
     CCSPlayerPawnBase* GetOriginal() const override { return Real(); }
-    CTouchExpansionComponent& TouchExpansionComponent() override { return Real()->m_CTouchExpansionComponent(); }
+    ::CTouchExpansionComponent& TouchExpansionComponent() override { return Real()->m_CTouchExpansionComponent(); }
     void TouchExpansionComponentUpdated() override { Real()->m_CTouchExpansionComponent.NetworkStateChanged(); }
     CCSPlayer_PingServices*& PingServices() override { return Real()->m_pPingServices(); }
     void PingServicesUpdated() override { Real()->m_pPingServices.NetworkStateChanged(); }
@@ -64,7 +64,7 @@ public:
     void BlindUntilTimeUpdated() override { Real()->m_blindUntilTime.NetworkStateChanged(); }
     float& BlindStartTime() override { return Real()->m_blindStartTime(); }
     void BlindStartTimeUpdated() override { Real()->m_blindStartTime.NetworkStateChanged(); }
-    CSPlayerState& PlayerState() override { return Real()->m_iPlayerState(); }
+    ::CSPlayerState& PlayerState() override { return Real()->m_iPlayerState(); }
     void PlayerStateUpdated() override { Real()->m_iPlayerState.NetworkStateChanged(); }
     bool& Respawning() override { return Real()->m_bRespawning(); }
     void RespawningUpdated() override { Real()->m_bRespawning.NetworkStateChanged(); }

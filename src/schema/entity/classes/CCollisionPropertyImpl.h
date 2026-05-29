@@ -58,7 +58,7 @@ private:
 
 public:
     CCollisionProperty* GetOriginal() const override { return Real(); }
-    VPhysicsCollisionAttribute_t& CollisionAttribute() override { return Real()->m_collisionAttribute(); }
+    ::VPhysicsCollisionAttribute_t& CollisionAttribute() override { return Real()->m_collisionAttribute(); }
     void CollisionAttributeUpdated() override { Real()->m_collisionAttribute.NetworkStateChanged(); }
     Vector& Mins() override { return Real()->m_vecMins(); }
     void MinsUpdated() override { Real()->m_vecMins.NetworkStateChanged(); }
@@ -66,11 +66,11 @@ public:
     void MaxsUpdated() override { Real()->m_vecMaxs.NetworkStateChanged(); }
     uint8_t& SolidFlags() override { return Real()->m_usSolidFlags(); }
     void SolidFlagsUpdated() override { Real()->m_usSolidFlags.NetworkStateChanged(); }
-    SolidType_t& SolidType() override { return Real()->m_nSolidType(); }
+    ::SolidType_t& SolidType() override { return Real()->m_nSolidType(); }
     void SolidTypeUpdated() override { Real()->m_nSolidType.NetworkStateChanged(); }
     uint8_t& TriggerBloat() override { return Real()->m_triggerBloat(); }
     void TriggerBloatUpdated() override { Real()->m_triggerBloat.NetworkStateChanged(); }
-    SurroundingBoundsType_t& SurroundType() override { return Real()->m_nSurroundType(); }
+    ::SurroundingBoundsType_t& SurroundType() override { return Real()->m_nSurroundType(); }
     void SurroundTypeUpdated() override { Real()->m_nSurroundType.NetworkStateChanged(); }
     uint8_t& CollisionGroup() override { return Real()->m_CollisionGroup(); }
     void CollisionGroupUpdated() override { Real()->m_CollisionGroup.NetworkStateChanged(); }

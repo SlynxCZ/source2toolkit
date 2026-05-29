@@ -58,7 +58,7 @@ public:
     CLogicNavigation* GetOriginal() const override { return Real(); }
     bool& IsOn() override { return Real()->m_isOn(); }
     void IsOnUpdated() override { Real()->m_isOn.NetworkStateChanged(); }
-    navproperties_t& NavProperty() override { return Real()->m_navProperty(); }
+    ::navproperties_t& NavProperty() override { return Real()->m_navProperty(); }
     void NavPropertyUpdated() override { Real()->m_navProperty.NetworkStateChanged(); }
 };
 

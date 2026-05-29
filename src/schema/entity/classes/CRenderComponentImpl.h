@@ -58,7 +58,7 @@ private:
 
 public:
     CRenderComponent* GetOriginal() const override { return Real(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
     bool& IsRenderingWithViewModels() override { return Real()->m_bIsRenderingWithViewModels(); }
     void IsRenderingWithViewModelsUpdated() override { Real()->m_bIsRenderingWithViewModels.NetworkStateChanged(); }

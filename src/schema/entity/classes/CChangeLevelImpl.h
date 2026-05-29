@@ -60,7 +60,7 @@ public:
     void MapNameUpdated() override { Real()->m_sMapName.NetworkStateChanged(); }
     CUtlString& LandmarkName() override { return Real()->m_sLandmarkName(); }
     void LandmarkNameUpdated() override { Real()->m_sLandmarkName.NetworkStateChanged(); }
-    CEntityIOOutput& OnChangeLevel() override { return Real()->m_OnChangeLevel(); }
+    ::CEntityIOOutput& OnChangeLevel() override { return Real()->m_OnChangeLevel(); }
     void OnChangeLevelUpdated() override { Real()->m_OnChangeLevel.NetworkStateChanged(); }
     bool& Touched() override { return Real()->m_bTouched(); }
     void TouchedUpdated() override { Real()->m_bTouched.NetworkStateChanged(); }

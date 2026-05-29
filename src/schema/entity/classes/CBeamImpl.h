@@ -70,7 +70,7 @@ public:
     void BaseMaterialUpdated() override { Real()->m_hBaseMaterial.NetworkStateChanged(); }
     CStrongHandle<InfoForResourceTypeIMaterial2>& HaloIndex() override { return Real()->m_nHaloIndex(); }
     void HaloIndexUpdated() override { Real()->m_nHaloIndex.NetworkStateChanged(); }
-    BeamType_t& BeamType() override { return Real()->m_nBeamType(); }
+    ::BeamType_t& BeamType() override { return Real()->m_nBeamType(); }
     void BeamTypeUpdated() override { Real()->m_nBeamType.NetworkStateChanged(); }
     uint32_t& BeamFlags() override { return Real()->m_nBeamFlags(); }
     void BeamFlagsUpdated() override { Real()->m_nBeamFlags.NetworkStateChanged(); }
@@ -91,7 +91,7 @@ public:
     void SpeedUpdated() override { Real()->m_fSpeed.NetworkStateChanged(); }
     float& Frame() override { return Real()->m_flFrame(); }
     void FrameUpdated() override { Real()->m_flFrame.NetworkStateChanged(); }
-    BeamClipStyle_t& ClipStyle() override { return Real()->m_nClipStyle(); }
+    ::BeamClipStyle_t& ClipStyle() override { return Real()->m_nClipStyle(); }
     void ClipStyleUpdated() override { Real()->m_nClipStyle.NetworkStateChanged(); }
     bool& TurnedOff() override { return Real()->m_bTurnedOff(); }
     void TurnedOffUpdated() override { Real()->m_bTurnedOff.NetworkStateChanged(); }

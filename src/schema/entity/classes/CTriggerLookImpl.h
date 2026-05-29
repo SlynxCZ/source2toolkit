@@ -80,11 +80,11 @@ public:
     void TestOcclusionUpdated() override { Real()->m_bTestOcclusion.NetworkStateChanged(); }
     bool& TestAllVisibleOcclusion() override { return Real()->m_bTestAllVisibleOcclusion(); }
     void TestAllVisibleOcclusionUpdated() override { Real()->m_bTestAllVisibleOcclusion.NetworkStateChanged(); }
-    CEntityIOOutput& OnTimeout() override { return Real()->m_OnTimeout(); }
+    ::CEntityIOOutput& OnTimeout() override { return Real()->m_OnTimeout(); }
     void OnTimeoutUpdated() override { Real()->m_OnTimeout.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartLook() override { return Real()->m_OnStartLook(); }
+    ::CEntityIOOutput& OnStartLook() override { return Real()->m_OnStartLook(); }
     void OnStartLookUpdated() override { Real()->m_OnStartLook.NetworkStateChanged(); }
-    CEntityIOOutput& OnEndLook() override { return Real()->m_OnEndLook(); }
+    ::CEntityIOOutput& OnEndLook() override { return Real()->m_OnEndLook(); }
     void OnEndLookUpdated() override { Real()->m_OnEndLook.NetworkStateChanged(); }
 };
 

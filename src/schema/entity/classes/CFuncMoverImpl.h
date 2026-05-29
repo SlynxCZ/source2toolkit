@@ -68,7 +68,7 @@ public:
     void PathNodeEndUpdated() override { Real()->m_iszPathNodeEnd.NetworkStateChanged(); }
     bool& IgnoreEndNode() override { return Real()->m_bIgnoreEndNode(); }
     void IgnoreEndNodeUpdated() override { Real()->m_bIgnoreEndNode.NetworkStateChanged(); }
-    CFuncMover__Move_t& MoveType() override { return Real()->m_eMoveType(); }
+    ::CFuncMover__Move_t& MoveType() override { return Real()->m_eMoveType(); }
     void MoveTypeUpdated() override { Real()->m_eMoveType.NetworkStateChanged(); }
     bool& IsReversing() override { return Real()->m_bIsReversing(); }
     void IsReversingUpdated() override { Real()->m_bIsReversing.NetworkStateChanged(); }
@@ -82,7 +82,7 @@ public:
     void CurrentNodeIndexUpdated() override { Real()->m_nCurrentNodeIndex.NetworkStateChanged(); }
     int32_t& PreviousNodeIndex() override { return Real()->m_nPreviousNodeIndex(); }
     void PreviousNodeIndexUpdated() override { Real()->m_nPreviousNodeIndex.NetworkStateChanged(); }
-    SolidType_t& SolidType() override { return Real()->m_eSolidType(); }
+    ::SolidType_t& SolidType() override { return Real()->m_eSolidType(); }
     void SolidTypeUpdated() override { Real()->m_eSolidType.NetworkStateChanged(); }
     bool& IsMoving() override { return Real()->m_bIsMoving(); }
     void IsMovingUpdated() override { Real()->m_bIsMoving.NetworkStateChanged(); }
@@ -128,7 +128,7 @@ public:
     void StopReverseSoundUpdated() override { Real()->m_iszStopReverseSound.NetworkStateChanged(); }
     CUtlSymbolLarge& ArriveAtDestinationSound() override { return Real()->m_iszArriveAtDestinationSound(); }
     void ArriveAtDestinationSoundUpdated() override { Real()->m_iszArriveAtDestinationSound.NetworkStateChanged(); }
-    CEntityIOOutput& OnMovementEnd() override { return Real()->m_OnMovementEnd(); }
+    ::CEntityIOOutput& OnMovementEnd() override { return Real()->m_OnMovementEnd(); }
     void OnMovementEndUpdated() override { Real()->m_OnMovementEnd.NetworkStateChanged(); }
     bool& StartAtClosestPoint() override { return Real()->m_bStartAtClosestPoint(); }
     void StartAtClosestPointUpdated() override { Real()->m_bStartAtClosestPoint.NetworkStateChanged(); }
@@ -136,7 +136,7 @@ public:
     void StartAtEndUpdated() override { Real()->m_bStartAtEnd.NetworkStateChanged(); }
     bool& StartFollowingClosestMover() override { return Real()->m_bStartFollowingClosestMover(); }
     void StartFollowingClosestMoverUpdated() override { Real()->m_bStartFollowingClosestMover.NetworkStateChanged(); }
-    CFuncMover__OrientationUpdate_t& OrientationUpdate() override { return Real()->m_eOrientationUpdate(); }
+    ::CFuncMover__OrientationUpdate_t& OrientationUpdate() override { return Real()->m_eOrientationUpdate(); }
     void OrientationUpdateUpdated() override { Real()->m_eOrientationUpdate.NetworkStateChanged(); }
     float& TimeStartOrientationChange() override { return Real()->m_flTimeStartOrientationChange(); }
     void TimeStartOrientationChangeUpdated() override { Real()->m_flTimeStartOrientationChange.NetworkStateChanged(); }
@@ -162,11 +162,11 @@ public:
     void LerpToPositionTUpdated() override { Real()->m_flLerpToPositionT.NetworkStateChanged(); }
     float& LerpToPositionDeltaT() override { return Real()->m_flLerpToPositionDeltaT(); }
     void LerpToPositionDeltaTUpdated() override { Real()->m_flLerpToPositionDeltaT.NetworkStateChanged(); }
-    CEntityIOOutput& OnLerpToPositionComplete() override { return Real()->m_OnLerpToPositionComplete(); }
+    ::CEntityIOOutput& OnLerpToPositionComplete() override { return Real()->m_OnLerpToPositionComplete(); }
     void OnLerpToPositionCompleteUpdated() override { Real()->m_OnLerpToPositionComplete.NetworkStateChanged(); }
     bool& IsPaused() override { return Real()->m_bIsPaused(); }
     void IsPausedUpdated() override { Real()->m_bIsPaused.NetworkStateChanged(); }
-    CFuncMover__TransitionToPathNodeAction_t& TransitionedToPathNodeAction() override { return Real()->m_eTransitionedToPathNodeAction(); }
+    ::CFuncMover__TransitionToPathNodeAction_t& TransitionedToPathNodeAction() override { return Real()->m_eTransitionedToPathNodeAction(); }
     void TransitionedToPathNodeActionUpdated() override { Real()->m_eTransitionedToPathNodeAction.NetworkStateChanged(); }
     Quaternion& TransitionSourceOrientation() override { return Real()->m_qTransitionSourceOrientation(); }
     void TransitionSourceOrientationUpdated() override { Real()->m_qTransitionSourceOrientation.NetworkStateChanged(); }
@@ -188,21 +188,21 @@ public:
     void StrOrientationFaceEntityNameUpdated() override { Real()->m_strOrientationFaceEntityName.NetworkStateChanged(); }
     CHandle<CBaseEntity>& OrientationFaceEntity() override { return Real()->m_hOrientationFaceEntity(); }
     void OrientationFaceEntityUpdated() override { Real()->m_hOrientationFaceEntity.NetworkStateChanged(); }
-    CEntityIOOutput& OnStart() override { return Real()->m_OnStart(); }
+    ::CEntityIOOutput& OnStart() override { return Real()->m_OnStart(); }
     void OnStartUpdated() override { Real()->m_OnStart.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartForward() override { return Real()->m_OnStartForward(); }
+    ::CEntityIOOutput& OnStartForward() override { return Real()->m_OnStartForward(); }
     void OnStartForwardUpdated() override { Real()->m_OnStartForward.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartReverse() override { return Real()->m_OnStartReverse(); }
+    ::CEntityIOOutput& OnStartReverse() override { return Real()->m_OnStartReverse(); }
     void OnStartReverseUpdated() override { Real()->m_OnStartReverse.NetworkStateChanged(); }
-    CEntityIOOutput& OnStop() override { return Real()->m_OnStop(); }
+    ::CEntityIOOutput& OnStop() override { return Real()->m_OnStop(); }
     void OnStopUpdated() override { Real()->m_OnStop.NetworkStateChanged(); }
-    CEntityIOOutput& OnStopped() override { return Real()->m_OnStopped(); }
+    ::CEntityIOOutput& OnStopped() override { return Real()->m_OnStopped(); }
     void OnStoppedUpdated() override { Real()->m_OnStopped.NetworkStateChanged(); }
     bool& NextNodeReturnsCurrent() override { return Real()->m_bNextNodeReturnsCurrent(); }
     void NextNodeReturnsCurrentUpdated() override { Real()->m_bNextNodeReturnsCurrent.NetworkStateChanged(); }
     bool& StartedMoving() override { return Real()->m_bStartedMoving(); }
     void StartedMovingUpdated() override { Real()->m_bStartedMoving.NetworkStateChanged(); }
-    CFuncMover__FollowEntityDirection_t& FollowEntityDirection() override { return Real()->m_eFollowEntityDirection(); }
+    ::CFuncMover__FollowEntityDirection_t& FollowEntityDirection() override { return Real()->m_eFollowEntityDirection(); }
     void FollowEntityDirectionUpdated() override { Real()->m_eFollowEntityDirection.NetworkStateChanged(); }
     CHandle<CFuncMover>& FollowMover() override { return Real()->m_hFollowMover(); }
     void FollowMoverUpdated() override { Real()->m_hFollowMover.NetworkStateChanged(); }
@@ -220,7 +220,7 @@ public:
     void FollowMoverConstraintPriorityUpdated() override { Real()->m_nFollowMoverConstraintPriority.NetworkStateChanged(); }
     bool& FollowConstraintsInitialized() override { return Real()->m_bFollowConstraintsInitialized(); }
     void FollowConstraintsInitializedUpdated() override { Real()->m_bFollowConstraintsInitialized.NetworkStateChanged(); }
-    CFuncMover__FollowConstraint_t& FollowConstraint() override { return Real()->m_eFollowConstraint(); }
+    ::CFuncMover__FollowConstraint_t& FollowConstraint() override { return Real()->m_eFollowConstraint(); }
     void FollowConstraintUpdated() override { Real()->m_eFollowConstraint.NetworkStateChanged(); }
     float& FollowMoverSpeed() override { return Real()->m_flFollowMoverSpeed(); }
     void FollowMoverSpeedUpdated() override { Real()->m_flFollowMoverSpeed.NetworkStateChanged(); }
@@ -228,7 +228,7 @@ public:
     void FollowMoverVelocityUpdated() override { Real()->m_flFollowMoverVelocity.NetworkStateChanged(); }
     int32_t& TickMovementRan() override { return Real()->m_nTickMovementRan(); }
     void TickMovementRanUpdated() override { Real()->m_nTickMovementRan.NetworkStateChanged(); }
-    FuncMoverMovementSummary_t& MovementSummary() override { return Real()->m_movementSummary(); }
+    ::FuncMoverMovementSummary_t& MovementSummary() override { return Real()->m_movementSummary(); }
     void MovementSummaryUpdated() override { Real()->m_movementSummary.NetworkStateChanged(); }
     bool& StopFromBeginStopTarget() override { return Real()->m_bStopFromBeginStopTarget(); }
     void StopFromBeginStopTargetUpdated() override { Real()->m_bStopFromBeginStopTarget.NetworkStateChanged(); }

@@ -70,7 +70,7 @@ public:
     void FadeOutLengthUpdated() override { Real()->m_flFadeOutLength.NetworkStateChanged(); }
     float& StartTime() override { return Real()->m_flStartTime(); }
     void StartTimeUpdated() override { Real()->m_flStartTime.NetworkStateChanged(); }
-    EntityDisolveType_t& DissolveType() override { return Real()->m_nDissolveType(); }
+    ::EntityDisolveType_t& DissolveType() override { return Real()->m_nDissolveType(); }
     void DissolveTypeUpdated() override { Real()->m_nDissolveType.NetworkStateChanged(); }
     Vector& DissolverOrigin() override { return Real()->m_vDissolverOrigin(); }
     void DissolverOriginUpdated() override { Real()->m_vDissolverOrigin.NetworkStateChanged(); }

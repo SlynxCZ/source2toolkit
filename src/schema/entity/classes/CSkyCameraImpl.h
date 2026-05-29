@@ -56,7 +56,7 @@ private:
 
 public:
     CSkyCamera* GetOriginal() const override { return Real(); }
-    sky3dparams_t& SkyboxData() override { return Real()->m_skyboxData(); }
+    ::sky3dparams_t& SkyboxData() override { return Real()->m_skyboxData(); }
     void SkyboxDataUpdated() override { Real()->m_skyboxData.NetworkStateChanged(); }
     CUtlStringToken* SkyboxSlotToken() override { return Real()->m_skyboxSlotToken(); }
     bool& UseAngles() override { return Real()->m_bUseAngles(); }

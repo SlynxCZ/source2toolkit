@@ -64,7 +64,7 @@ public:
     void HardwareTypeUpdated() override { Real()->m_nHardwareType.NetworkStateChanged(); }
     bool& NeedsHardware() override { return Real()->m_bNeedsHardware(); }
     void NeedsHardwareUpdated() override { Real()->m_bNeedsHardware.NetworkStateChanged(); }
-    DoorState_t& DoorState() override { return Real()->m_eDoorState(); }
+    ::DoorState_t& DoorState() override { return Real()->m_eDoorState(); }
     void DoorStateUpdated() override { Real()->m_eDoorState.NetworkStateChanged(); }
     bool& Locked() override { return Real()->m_bLocked(); }
     void LockedUpdated() override { Real()->m_bLocked.NetworkStateChanged(); }
@@ -78,7 +78,7 @@ public:
     void BlockerUpdated() override { Real()->m_hBlocker.NetworkStateChanged(); }
     bool& FirstBlocked() override { return Real()->m_bFirstBlocked(); }
     void FirstBlockedUpdated() override { Real()->m_bFirstBlocked.NetworkStateChanged(); }
-    locksound_t& Ls() override { return Real()->m_ls(); }
+    ::locksound_t& Ls() override { return Real()->m_ls(); }
     void LsUpdated() override { Real()->m_ls.NetworkStateChanged(); }
     bool& ForceClosed() override { return Real()->m_bForceClosed(); }
     void ForceClosedUpdated() override { Real()->m_bForceClosed.NetworkStateChanged(); }
@@ -111,25 +111,25 @@ public:
     void SlaveNameUpdated() override { Real()->m_SlaveName.NetworkStateChanged(); }
     CHandle<CBasePropDoor>& Master() override { return Real()->m_hMaster(); }
     void MasterUpdated() override { Real()->m_hMaster.NetworkStateChanged(); }
-    CEntityIOOutput& OnBlockedClosing() override { return Real()->m_OnBlockedClosing(); }
+    ::CEntityIOOutput& OnBlockedClosing() override { return Real()->m_OnBlockedClosing(); }
     void OnBlockedClosingUpdated() override { Real()->m_OnBlockedClosing.NetworkStateChanged(); }
-    CEntityIOOutput& OnBlockedOpening() override { return Real()->m_OnBlockedOpening(); }
+    ::CEntityIOOutput& OnBlockedOpening() override { return Real()->m_OnBlockedOpening(); }
     void OnBlockedOpeningUpdated() override { Real()->m_OnBlockedOpening.NetworkStateChanged(); }
-    CEntityIOOutput& OnUnblockedClosing() override { return Real()->m_OnUnblockedClosing(); }
+    ::CEntityIOOutput& OnUnblockedClosing() override { return Real()->m_OnUnblockedClosing(); }
     void OnUnblockedClosingUpdated() override { Real()->m_OnUnblockedClosing.NetworkStateChanged(); }
-    CEntityIOOutput& OnUnblockedOpening() override { return Real()->m_OnUnblockedOpening(); }
+    ::CEntityIOOutput& OnUnblockedOpening() override { return Real()->m_OnUnblockedOpening(); }
     void OnUnblockedOpeningUpdated() override { Real()->m_OnUnblockedOpening.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
+    ::CEntityIOOutput& OnFullyClosed() override { return Real()->m_OnFullyClosed(); }
     void OnFullyClosedUpdated() override { Real()->m_OnFullyClosed.NetworkStateChanged(); }
-    CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
+    ::CEntityIOOutput& OnFullyOpen() override { return Real()->m_OnFullyOpen(); }
     void OnFullyOpenUpdated() override { Real()->m_OnFullyOpen.NetworkStateChanged(); }
-    CEntityIOOutput& OnClose() override { return Real()->m_OnClose(); }
+    ::CEntityIOOutput& OnClose() override { return Real()->m_OnClose(); }
     void OnCloseUpdated() override { Real()->m_OnClose.NetworkStateChanged(); }
-    CEntityIOOutput& OnOpen() override { return Real()->m_OnOpen(); }
+    ::CEntityIOOutput& OnOpen() override { return Real()->m_OnOpen(); }
     void OnOpenUpdated() override { Real()->m_OnOpen.NetworkStateChanged(); }
-    CEntityIOOutput& OnLockedUse() override { return Real()->m_OnLockedUse(); }
+    ::CEntityIOOutput& OnLockedUse() override { return Real()->m_OnLockedUse(); }
     void OnLockedUseUpdated() override { Real()->m_OnLockedUse.NetworkStateChanged(); }
-    CEntityIOOutput& OnAjarOpen() override { return Real()->m_OnAjarOpen(); }
+    ::CEntityIOOutput& OnAjarOpen() override { return Real()->m_OnAjarOpen(); }
     void OnAjarOpenUpdated() override { Real()->m_OnAjarOpen.NetworkStateChanged(); }
 };
 

@@ -56,7 +56,7 @@ private:
 
 public:
     CSkeletonInstance* GetOriginal() const override { return Real(); }
-    CModelState& ModelState() override { return Real()->m_modelState(); }
+    ::CModelState& ModelState() override { return Real()->m_modelState(); }
     void ModelStateUpdated() override { Real()->m_modelState.NetworkStateChanged(); }
     bool& UseParentRenderBounds() override { return Real()->m_bUseParentRenderBounds(); }
     void UseParentRenderBoundsUpdated() override { Real()->m_bUseParentRenderBounds.NetworkStateChanged(); }

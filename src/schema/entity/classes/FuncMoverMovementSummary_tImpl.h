@@ -68,7 +68,7 @@ public:
     void StopNodeIndexUpdated() override { Real()->nStopNodeIndex.NetworkStateChanged(); }
     int32_t& MovementMode() override { return Real()->nMovementMode(); }
     void MovementModeUpdated() override { Real()->nMovementMode.NetworkStateChanged(); }
-    FuncMoverMovementSummaryFlags_t& Flags() override { return Real()->nFlags(); }
+    ::FuncMoverMovementSummaryFlags_t& Flags() override { return Real()->nFlags(); }
     void FlagsUpdated() override { Real()->nFlags.NetworkStateChanged(); }
     int32_t& Tick() override { return Real()->nTick(); }
     void TickUpdated() override { Real()->nTick.NetworkStateChanged(); }

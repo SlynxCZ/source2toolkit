@@ -72,13 +72,13 @@ public:
     void EntityUpdated() override { Real()->m_iszEntity.NetworkStateChanged(); }
     CUtlSymbolLarge& SyncGroup() override { return Real()->m_iszSyncGroup(); }
     void SyncGroupUpdated() override { Real()->m_iszSyncGroup.NetworkStateChanged(); }
-    ScriptedMoveTo_t& MoveTo() override { return Real()->m_nMoveTo(); }
+    ::ScriptedMoveTo_t& MoveTo() override { return Real()->m_nMoveTo(); }
     void MoveToUpdated() override { Real()->m_nMoveTo.NetworkStateChanged(); }
-    SharedMovementGait_t& MoveToGait() override { return Real()->m_nMoveToGait(); }
+    ::SharedMovementGait_t& MoveToGait() override { return Real()->m_nMoveToGait(); }
     void MoveToGaitUpdated() override { Real()->m_nMoveToGait.NetworkStateChanged(); }
-    ScriptedHeldWeaponBehavior_t& HeldWeaponBehavior() override { return Real()->m_nHeldWeaponBehavior(); }
+    ::ScriptedHeldWeaponBehavior_t& HeldWeaponBehavior() override { return Real()->m_nHeldWeaponBehavior(); }
     void HeldWeaponBehaviorUpdated() override { Real()->m_nHeldWeaponBehavior.NetworkStateChanged(); }
-    ForcedCrouchState_t& ForcedCrouchState() override { return Real()->m_nForcedCrouchState(); }
+    ::ForcedCrouchState_t& ForcedCrouchState() override { return Real()->m_nForcedCrouchState(); }
     void ForcedCrouchStateUpdated() override { Real()->m_nForcedCrouchState.NetworkStateChanged(); }
     bool& IsPlayingPreIdle() override { return Real()->m_bIsPlayingPreIdle(); }
     void IsPlayingPreIdleUpdated() override { Real()->m_bIsPlayingPreIdle.NetworkStateChanged(); }
@@ -184,21 +184,21 @@ public:
     void PreventUpdateYawOnFinishUpdated() override { Real()->m_bPreventUpdateYawOnFinish.NetworkStateChanged(); }
     bool& EnsureOnNavmeshOnFinish() override { return Real()->m_bEnsureOnNavmeshOnFinish(); }
     void EnsureOnNavmeshOnFinishUpdated() override { Real()->m_bEnsureOnNavmeshOnFinish.NetworkStateChanged(); }
-    ScriptedOnDeath_t& OnDeathBehavior() override { return Real()->m_onDeathBehavior(); }
+    ::ScriptedOnDeath_t& OnDeathBehavior() override { return Real()->m_onDeathBehavior(); }
     void OnDeathBehaviorUpdated() override { Real()->m_onDeathBehavior.NetworkStateChanged(); }
-    ScriptedConflictResponse_t& ConflictResponse() override { return Real()->m_ConflictResponse(); }
+    ::ScriptedConflictResponse_t& ConflictResponse() override { return Real()->m_ConflictResponse(); }
     void ConflictResponseUpdated() override { Real()->m_ConflictResponse.NetworkStateChanged(); }
-    CEntityIOOutput& OnBeginSequence() override { return Real()->m_OnBeginSequence(); }
+    ::CEntityIOOutput& OnBeginSequence() override { return Real()->m_OnBeginSequence(); }
     void OnBeginSequenceUpdated() override { Real()->m_OnBeginSequence.NetworkStateChanged(); }
-    CEntityIOOutput& OnActionStartOrLoop() override { return Real()->m_OnActionStartOrLoop(); }
+    ::CEntityIOOutput& OnActionStartOrLoop() override { return Real()->m_OnActionStartOrLoop(); }
     void OnActionStartOrLoopUpdated() override { Real()->m_OnActionStartOrLoop.NetworkStateChanged(); }
-    CEntityIOOutput& OnEndSequence() override { return Real()->m_OnEndSequence(); }
+    ::CEntityIOOutput& OnEndSequence() override { return Real()->m_OnEndSequence(); }
     void OnEndSequenceUpdated() override { Real()->m_OnEndSequence.NetworkStateChanged(); }
-    CEntityIOOutput& OnPostIdleEndSequence() override { return Real()->m_OnPostIdleEndSequence(); }
+    ::CEntityIOOutput& OnPostIdleEndSequence() override { return Real()->m_OnPostIdleEndSequence(); }
     void OnPostIdleEndSequenceUpdated() override { Real()->m_OnPostIdleEndSequence.NetworkStateChanged(); }
-    CEntityIOOutput& OnCancelSequence() override { return Real()->m_OnCancelSequence(); }
+    ::CEntityIOOutput& OnCancelSequence() override { return Real()->m_OnCancelSequence(); }
     void OnCancelSequenceUpdated() override { Real()->m_OnCancelSequence.NetworkStateChanged(); }
-    CEntityIOOutput& OnCancelFailedSequence() override { return Real()->m_OnCancelFailedSequence(); }
+    ::CEntityIOOutput& OnCancelFailedSequence() override { return Real()->m_OnCancelFailedSequence(); }
     void OnCancelFailedSequenceUpdated() override { Real()->m_OnCancelFailedSequence.NetworkStateChanged(); }
     CEntityIOOutput* OnScriptEvent() override { return Real()->m_OnScriptEvent(); }
     CTransform& MatOtherToMain() override { return Real()->m_matOtherToMain(); }

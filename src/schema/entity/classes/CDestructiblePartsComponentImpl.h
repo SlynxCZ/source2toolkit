@@ -58,7 +58,7 @@ private:
 
 public:
     CDestructiblePartsComponent* GetOriginal() const override { return Real(); }
-    CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
+    ::CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
     CUtlVector<uint16_t>& DamageTakenByHitGroup() override { return Real()->m_vecDamageTakenByHitGroup(); }
     void DamageTakenByHitGroupUpdated() override { Real()->m_vecDamageTakenByHitGroup.NetworkStateChanged(); }

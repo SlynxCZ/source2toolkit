@@ -82,7 +82,7 @@ public:
     void SnapObjectPositionsUpdated() override { Real()->m_bSnapObjectPositions.NetworkStateChanged(); }
     bool& TreatEntity1AsInfiniteMass() override { return Real()->m_bTreatEntity1AsInfiniteMass(); }
     void TreatEntity1AsInfiniteMassUpdated() override { Real()->m_bTreatEntity1AsInfiniteMass.NetworkStateChanged(); }
-    CEntityIOOutput& OnBreak() override { return Real()->m_OnBreak(); }
+    ::CEntityIOOutput& OnBreak() override { return Real()->m_OnBreak(); }
     void OnBreakUpdated() override { Real()->m_OnBreak.NetworkStateChanged(); }
 };
 

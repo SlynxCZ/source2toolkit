@@ -62,7 +62,7 @@ public:
     void StayPushedUpdated() override { Real()->m_fStayPushed.NetworkStateChanged(); }
     bool& Rotating() override { return Real()->m_fRotating(); }
     void RotatingUpdated() override { Real()->m_fRotating.NetworkStateChanged(); }
-    locksound_t& Ls() override { return Real()->m_ls(); }
+    ::locksound_t& Ls() override { return Real()->m_ls(); }
     void LsUpdated() override { Real()->m_ls.NetworkStateChanged(); }
     CUtlSymbolLarge& UseSound() override { return Real()->m_sUseSound(); }
     void UseSoundUpdated() override { Real()->m_sUseSound.NetworkStateChanged(); }
@@ -80,15 +80,15 @@ public:
     void UseLockedTimeUpdated() override { Real()->m_flUseLockedTime.NetworkStateChanged(); }
     bool& SolidBsp() override { return Real()->m_bSolidBsp(); }
     void SolidBspUpdated() override { Real()->m_bSolidBsp.NetworkStateChanged(); }
-    CEntityIOOutput& OnDamaged() override { return Real()->m_OnDamaged(); }
+    ::CEntityIOOutput& OnDamaged() override { return Real()->m_OnDamaged(); }
     void OnDamagedUpdated() override { Real()->m_OnDamaged.NetworkStateChanged(); }
-    CEntityIOOutput& OnPressed() override { return Real()->m_OnPressed(); }
+    ::CEntityIOOutput& OnPressed() override { return Real()->m_OnPressed(); }
     void OnPressedUpdated() override { Real()->m_OnPressed.NetworkStateChanged(); }
-    CEntityIOOutput& OnUseLocked() override { return Real()->m_OnUseLocked(); }
+    ::CEntityIOOutput& OnUseLocked() override { return Real()->m_OnUseLocked(); }
     void OnUseLockedUpdated() override { Real()->m_OnUseLocked.NetworkStateChanged(); }
-    CEntityIOOutput& OnIn() override { return Real()->m_OnIn(); }
+    ::CEntityIOOutput& OnIn() override { return Real()->m_OnIn(); }
     void OnInUpdated() override { Real()->m_OnIn.NetworkStateChanged(); }
-    CEntityIOOutput& OnOut() override { return Real()->m_OnOut(); }
+    ::CEntityIOOutput& OnOut() override { return Real()->m_OnOut(); }
     void OnOutUpdated() override { Real()->m_OnOut.NetworkStateChanged(); }
     int32_t& State() override { return Real()->m_nState(); }
     void StateUpdated() override { Real()->m_nState.NetworkStateChanged(); }

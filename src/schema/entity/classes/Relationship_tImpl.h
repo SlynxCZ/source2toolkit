@@ -58,7 +58,7 @@ private:
 
 public:
     Relationship_t* GetOriginal() const override { return Real(); }
-    Disposition_t& Disposition() override { return Real()->disposition(); }
+    ::Disposition_t& Disposition() override { return Real()->disposition(); }
     void DispositionUpdated() override { Real()->disposition.NetworkStateChanged(); }
     int32_t& Priority() override { return Real()->priority(); }
     void PriorityUpdated() override { Real()->priority.NetworkStateChanged(); }

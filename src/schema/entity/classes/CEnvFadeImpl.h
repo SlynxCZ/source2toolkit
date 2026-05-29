@@ -62,7 +62,7 @@ public:
     void DurationUpdated() override { Real()->m_Duration.NetworkStateChanged(); }
     float& HoldDuration() override { return Real()->m_HoldDuration(); }
     void HoldDurationUpdated() override { Real()->m_HoldDuration.NetworkStateChanged(); }
-    CEntityIOOutput& OnBeginFade() override { return Real()->m_OnBeginFade(); }
+    ::CEntityIOOutput& OnBeginFade() override { return Real()->m_OnBeginFade(); }
     void OnBeginFadeUpdated() override { Real()->m_OnBeginFade.NetworkStateChanged(); }
 };
 

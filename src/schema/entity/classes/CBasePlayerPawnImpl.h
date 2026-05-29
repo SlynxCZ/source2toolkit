@@ -82,7 +82,7 @@ public:
     void V_anglePreviousUpdated() override { Real()->v_anglePrevious.NetworkStateChanged(); }
     uint32_t& HideHUD() override { return Real()->m_iHideHUD(); }
     void HideHUDUpdated() override { Real()->m_iHideHUD.NetworkStateChanged(); }
-    sky3dparams_t& Skybox3d() override { return Real()->m_skybox3d(); }
+    ::sky3dparams_t& Skybox3d() override { return Real()->m_skybox3d(); }
     void Skybox3dUpdated() override { Real()->m_skybox3d.NetworkStateChanged(); }
     float& TimeLastHurt() override { return Real()->m_fTimeLastHurt(); }
     void TimeLastHurtUpdated() override { Real()->m_fTimeLastHurt.NetworkStateChanged(); }

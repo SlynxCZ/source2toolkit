@@ -69,7 +69,7 @@ public:
     int32_t& Clip2() override { return Real()->m_iClip2(); }
     void Clip2Updated() override { Real()->m_iClip2.NetworkStateChanged(); }
     int32_t* ReserveAmmo() override { return Real()->m_pReserveAmmo(); }
-    CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
+    ::CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
     void OnPlayerUseUpdated() override { Real()->m_OnPlayerUse.NetworkStateChanged(); }
 
     ICSWeaponBaseVData* GetWeaponVData() override { return Real()->GetWeaponVData(); }

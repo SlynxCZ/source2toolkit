@@ -84,7 +84,7 @@ public:
     void EndPointRelativeUpdated() override { Real()->m_vEndPointRelative.NetworkStateChanged(); }
     float& Radius() override { return Real()->m_radius(); }
     void RadiusUpdated() override { Real()->m_radius.NetworkStateChanged(); }
-    Touch_t& TouchType() override { return Real()->m_TouchType(); }
+    ::Touch_t& TouchType() override { return Real()->m_TouchType(); }
     void TouchTypeUpdated() override { Real()->m_TouchType.NetworkStateChanged(); }
     CUtlSymbolLarge& FilterName() override { return Real()->m_iFilterName(); }
     void FilterNameUpdated() override { Real()->m_iFilterName.NetworkStateChanged(); }
@@ -92,7 +92,7 @@ public:
     void FilterUpdated() override { Real()->m_hFilter.NetworkStateChanged(); }
     CUtlSymbolLarge& Decal() override { return Real()->m_iszDecal(); }
     void DecalUpdated() override { Real()->m_iszDecal.NetworkStateChanged(); }
-    CEntityIOOutput& OnTouchedByEntity() override { return Real()->m_OnTouchedByEntity(); }
+    ::CEntityIOOutput& OnTouchedByEntity() override { return Real()->m_OnTouchedByEntity(); }
     void OnTouchedByEntityUpdated() override { Real()->m_OnTouchedByEntity.NetworkStateChanged(); }
 };
 

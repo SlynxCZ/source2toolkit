@@ -56,13 +56,13 @@ private:
 
 public:
     CBreakable* GetOriginal() const override { return Real(); }
-    CPropDataComponent& PropDataComponent() override { return Real()->m_CPropDataComponent(); }
+    ::CPropDataComponent& PropDataComponent() override { return Real()->m_CPropDataComponent(); }
     void PropDataComponentUpdated() override { Real()->m_CPropDataComponent.NetworkStateChanged(); }
-    Materials& Material() override { return Real()->m_Material(); }
+    ::Materials& Material() override { return Real()->m_Material(); }
     void MaterialUpdated() override { Real()->m_Material.NetworkStateChanged(); }
     CHandle<CBaseEntity>& Breaker() override { return Real()->m_hBreaker(); }
     void BreakerUpdated() override { Real()->m_hBreaker.NetworkStateChanged(); }
-    Explosions& Explosion() override { return Real()->m_Explosion(); }
+    ::Explosions& Explosion() override { return Real()->m_Explosion(); }
     void ExplosionUpdated() override { Real()->m_Explosion.NetworkStateChanged(); }
     CUtlSymbolLarge& SpawnObject() override { return Real()->m_iszSpawnObject(); }
     void SpawnObjectUpdated() override { Real()->m_iszSpawnObject.NetworkStateChanged(); }
@@ -74,13 +74,13 @@ public:
     void PropDataUpdated() override { Real()->m_iszPropData.NetworkStateChanged(); }
     float& ImpactEnergyScale() override { return Real()->m_impactEnergyScale(); }
     void ImpactEnergyScaleUpdated() override { Real()->m_impactEnergyScale.NetworkStateChanged(); }
-    EOverrideBlockLOS_t& OverrideBlockLOS() override { return Real()->m_nOverrideBlockLOS(); }
+    ::EOverrideBlockLOS_t& OverrideBlockLOS() override { return Real()->m_nOverrideBlockLOS(); }
     void OverrideBlockLOSUpdated() override { Real()->m_nOverrideBlockLOS.NetworkStateChanged(); }
-    CEntityIOOutput& OnStartDeath() override { return Real()->m_OnStartDeath(); }
+    ::CEntityIOOutput& OnStartDeath() override { return Real()->m_OnStartDeath(); }
     void OnStartDeathUpdated() override { Real()->m_OnStartDeath.NetworkStateChanged(); }
-    CEntityIOOutput& OnBreak() override { return Real()->m_OnBreak(); }
+    ::CEntityIOOutput& OnBreak() override { return Real()->m_OnBreak(); }
     void OnBreakUpdated() override { Real()->m_OnBreak.NetworkStateChanged(); }
-    PerformanceMode_t& PerformanceMode() override { return Real()->m_PerformanceMode(); }
+    ::PerformanceMode_t& PerformanceMode() override { return Real()->m_PerformanceMode(); }
     void PerformanceModeUpdated() override { Real()->m_PerformanceMode.NetworkStateChanged(); }
     CHandle<CBasePlayerPawn>& PhysicsAttacker() override { return Real()->m_hPhysicsAttacker(); }
     void PhysicsAttackerUpdated() override { Real()->m_hPhysicsAttacker.NetworkStateChanged(); }

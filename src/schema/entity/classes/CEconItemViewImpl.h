@@ -74,9 +74,9 @@ public:
     void InventoryPositionUpdated() override { Real()->m_iInventoryPosition.NetworkStateChanged(); }
     bool& Initialized() override { return Real()->m_bInitialized(); }
     void InitializedUpdated() override { Real()->m_bInitialized.NetworkStateChanged(); }
-    CAttributeList& AttributeList() override { return Real()->m_AttributeList(); }
+    ::CAttributeList& AttributeList() override { return Real()->m_AttributeList(); }
     void AttributeListUpdated() override { Real()->m_AttributeList.NetworkStateChanged(); }
-    CAttributeList& NetworkedDynamicAttributes() override { return Real()->m_NetworkedDynamicAttributes(); }
+    ::CAttributeList& NetworkedDynamicAttributes() override { return Real()->m_NetworkedDynamicAttributes(); }
     void NetworkedDynamicAttributesUpdated() override { Real()->m_NetworkedDynamicAttributes.NetworkStateChanged(); }
     char* CustomName() override { return Real()->m_szCustomName(); }
     char* CustomNameOverride() override { return Real()->m_szCustomNameOverride(); }

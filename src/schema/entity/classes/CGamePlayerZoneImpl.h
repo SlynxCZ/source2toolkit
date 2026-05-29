@@ -56,9 +56,9 @@ private:
 
 public:
     CGamePlayerZone* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnPlayerInZone() override { return Real()->m_OnPlayerInZone(); }
+    ::CEntityIOOutput& OnPlayerInZone() override { return Real()->m_OnPlayerInZone(); }
     void OnPlayerInZoneUpdated() override { Real()->m_OnPlayerInZone.NetworkStateChanged(); }
-    CEntityIOOutput& OnPlayerOutZone() override { return Real()->m_OnPlayerOutZone(); }
+    ::CEntityIOOutput& OnPlayerOutZone() override { return Real()->m_OnPlayerOutZone(); }
     void OnPlayerOutZoneUpdated() override { Real()->m_OnPlayerOutZone.NetworkStateChanged(); }
 };
 

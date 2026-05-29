@@ -68,7 +68,7 @@ public:
     void AttachedObjectUpdated() override { Real()->m_attachedObject.NetworkStateChanged(); }
     bool& WasRestored() override { return Real()->m_wasRestored(); }
     void WasRestoredUpdated() override { Real()->m_wasRestored.NetworkStateChanged(); }
-    CConstantForceController& Integrator() override { return Real()->m_integrator(); }
+    ::CConstantForceController& Integrator() override { return Real()->m_integrator(); }
     void IntegratorUpdated() override { Real()->m_integrator.NetworkStateChanged(); }
 };
 

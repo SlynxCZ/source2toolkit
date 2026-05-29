@@ -56,7 +56,7 @@ private:
 
 public:
     CScriptItem* GetOriginal() const override { return Real(); }
-    MoveType_t& MoveTypeOverride() override { return Real()->m_MoveTypeOverride(); }
+    ::MoveType_t& MoveTypeOverride() override { return Real()->m_MoveTypeOverride(); }
     void MoveTypeOverrideUpdated() override { Real()->m_MoveTypeOverride.NetworkStateChanged(); }
 };
 

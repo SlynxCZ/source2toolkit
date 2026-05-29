@@ -56,7 +56,7 @@ private:
 
 public:
     CBaseToggle* GetOriginal() const override { return Real(); }
-    TOGGLE_STATE& Toggle_state() override { return Real()->m_toggle_state(); }
+    ::TOGGLE_STATE& Toggle_state() override { return Real()->m_toggle_state(); }
     void Toggle_stateUpdated() override { Real()->m_toggle_state.NetworkStateChanged(); }
     float& MoveDistance() override { return Real()->m_flMoveDistance(); }
     void MoveDistanceUpdated() override { Real()->m_flMoveDistance.NetworkStateChanged(); }

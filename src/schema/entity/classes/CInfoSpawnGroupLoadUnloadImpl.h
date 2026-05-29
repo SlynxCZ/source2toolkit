@@ -56,13 +56,13 @@ private:
 
 public:
     CInfoSpawnGroupLoadUnload* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnSpawnGroupLoadStarted() override { return Real()->m_OnSpawnGroupLoadStarted(); }
+    ::CEntityIOOutput& OnSpawnGroupLoadStarted() override { return Real()->m_OnSpawnGroupLoadStarted(); }
     void OnSpawnGroupLoadStartedUpdated() override { Real()->m_OnSpawnGroupLoadStarted.NetworkStateChanged(); }
-    CEntityIOOutput& OnSpawnGroupLoadFinished() override { return Real()->m_OnSpawnGroupLoadFinished(); }
+    ::CEntityIOOutput& OnSpawnGroupLoadFinished() override { return Real()->m_OnSpawnGroupLoadFinished(); }
     void OnSpawnGroupLoadFinishedUpdated() override { Real()->m_OnSpawnGroupLoadFinished.NetworkStateChanged(); }
-    CEntityIOOutput& OnSpawnGroupUnloadStarted() override { return Real()->m_OnSpawnGroupUnloadStarted(); }
+    ::CEntityIOOutput& OnSpawnGroupUnloadStarted() override { return Real()->m_OnSpawnGroupUnloadStarted(); }
     void OnSpawnGroupUnloadStartedUpdated() override { Real()->m_OnSpawnGroupUnloadStarted.NetworkStateChanged(); }
-    CEntityIOOutput& OnSpawnGroupUnloadFinished() override { return Real()->m_OnSpawnGroupUnloadFinished(); }
+    ::CEntityIOOutput& OnSpawnGroupUnloadFinished() override { return Real()->m_OnSpawnGroupUnloadFinished(); }
     void OnSpawnGroupUnloadFinishedUpdated() override { Real()->m_OnSpawnGroupUnloadFinished.NetworkStateChanged(); }
     CUtlSymbolLarge& SpawnGroupName() override { return Real()->m_iszSpawnGroupName(); }
     void SpawnGroupNameUpdated() override { Real()->m_iszSpawnGroupName.NetworkStateChanged(); }

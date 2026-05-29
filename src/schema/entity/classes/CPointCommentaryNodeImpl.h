@@ -96,9 +96,9 @@ public:
     void TeleportOriginUpdated() override { Real()->m_vecTeleportOrigin.NetworkStateChanged(); }
     float& AbortedPlaybackAt() override { return Real()->m_flAbortedPlaybackAt(); }
     void AbortedPlaybackAtUpdated() override { Real()->m_flAbortedPlaybackAt.NetworkStateChanged(); }
-    CEntityIOOutput& OnCommentaryStarted() override { return Real()->m_pOnCommentaryStarted(); }
+    ::CEntityIOOutput& OnCommentaryStarted() override { return Real()->m_pOnCommentaryStarted(); }
     void OnCommentaryStartedUpdated() override { Real()->m_pOnCommentaryStarted.NetworkStateChanged(); }
-    CEntityIOOutput& OnCommentaryStopped() override { return Real()->m_pOnCommentaryStopped(); }
+    ::CEntityIOOutput& OnCommentaryStopped() override { return Real()->m_pOnCommentaryStopped(); }
     void OnCommentaryStoppedUpdated() override { Real()->m_pOnCommentaryStopped.NetworkStateChanged(); }
     bool& Active() override { return Real()->m_bActive(); }
     void ActiveUpdated() override { Real()->m_bActive.NetworkStateChanged(); }

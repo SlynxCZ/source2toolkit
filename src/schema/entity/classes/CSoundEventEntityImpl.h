@@ -72,7 +72,7 @@ public:
     void SourceEntityNameUpdated() override { Real()->m_iszSourceEntityName.NetworkStateChanged(); }
     CUtlSymbolLarge& AttachmentName() override { return Real()->m_iszAttachmentName(); }
     void AttachmentNameUpdated() override { Real()->m_iszAttachmentName.NetworkStateChanged(); }
-    CEntityIOOutput& OnSoundFinished() override { return Real()->m_onSoundFinished(); }
+    ::CEntityIOOutput& OnSoundFinished() override { return Real()->m_onSoundFinished(); }
     void OnSoundFinishedUpdated() override { Real()->m_onSoundFinished.NetworkStateChanged(); }
     float& ClientCullRadius() override { return Real()->m_flClientCullRadius(); }
     void ClientCullRadiusUpdated() override { Real()->m_flClientCullRadius.NetworkStateChanged(); }

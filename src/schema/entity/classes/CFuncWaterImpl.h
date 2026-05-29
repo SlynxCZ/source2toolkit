@@ -56,7 +56,7 @@ private:
 
 public:
     CFuncWater* GetOriginal() const override { return Real(); }
-    CBuoyancyHelper& BuoyancyHelper() override { return Real()->m_BuoyancyHelper(); }
+    ::CBuoyancyHelper& BuoyancyHelper() override { return Real()->m_BuoyancyHelper(); }
     void BuoyancyHelperUpdated() override { Real()->m_BuoyancyHelper.NetworkStateChanged(); }
 };
 

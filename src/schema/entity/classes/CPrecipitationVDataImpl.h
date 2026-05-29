@@ -58,7 +58,7 @@ public:
     CPrecipitationVData* GetOriginal() const override { return Real(); }
     float& InnerDistance() override { return Real()->m_flInnerDistance(); }
     void InnerDistanceUpdated() override { Real()->m_flInnerDistance.NetworkStateChanged(); }
-    ParticleAttachment_t& AttachType() override { return Real()->m_nAttachType(); }
+    ::ParticleAttachment_t& AttachType() override { return Real()->m_nAttachType(); }
     void AttachTypeUpdated() override { Real()->m_nAttachType.NetworkStateChanged(); }
     bool& BatchSameVolumeType() override { return Real()->m_bBatchSameVolumeType(); }
     void BatchSameVolumeTypeUpdated() override { Real()->m_bBatchSameVolumeType.NetworkStateChanged(); }
@@ -70,7 +70,7 @@ public:
     void ModifierUpdated() override { Real()->m_szModifier.NetworkStateChanged(); }
     int32_t& UseSnapshotFromSurfaceGraph() override { return Real()->m_nUseSnapshotFromSurfaceGraph(); }
     void UseSnapshotFromSurfaceGraphUpdated() override { Real()->m_nUseSnapshotFromSurfaceGraph.NetworkStateChanged(); }
-    PrecipitationFilter_t& SnapshotFilter() override { return Real()->m_snapshotFilter(); }
+    ::PrecipitationFilter_t& SnapshotFilter() override { return Real()->m_snapshotFilter(); }
     void SnapshotFilterUpdated() override { Real()->m_snapshotFilter.NetworkStateChanged(); }
 };
 

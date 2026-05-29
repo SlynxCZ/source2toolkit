@@ -56,7 +56,7 @@ private:
 
 public:
     CFilterMultiple* GetOriginal() const override { return Real(); }
-    filter_t& FilterType() override { return Real()->m_nFilterType(); }
+    ::filter_t& FilterType() override { return Real()->m_nFilterType(); }
     void FilterTypeUpdated() override { Real()->m_nFilterType.NetworkStateChanged(); }
     CUtlSymbolLarge* FilterName() override { return Real()->m_iFilterName(); }
     CHandle<CBaseEntity>* Filter() override { return Real()->m_hFilter(); }

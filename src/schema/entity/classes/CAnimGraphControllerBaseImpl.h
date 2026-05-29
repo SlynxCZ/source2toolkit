@@ -58,7 +58,7 @@ private:
 
 public:
     CAnimGraphControllerBase* GetOriginal() const override { return Real(); }
-    ExternalAnimGraphHandle_t& ExternalGraph() override { return Real()->m_hExternalGraph(); }
+    ::ExternalAnimGraphHandle_t& ExternalGraph() override { return Real()->m_hExternalGraph(); }
     void ExternalGraphUpdated() override { Real()->m_hExternalGraph.NetworkStateChanged(); }
 };
 

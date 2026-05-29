@@ -58,7 +58,7 @@ private:
 
 public:
     ExternalAnimGraph_t* GetOriginal() const override { return Real(); }
-    ExternalAnimGraphHandle_t& ExtGraphHandle() override { return Real()->m_hExtGraphHandle(); }
+    ::ExternalAnimGraphHandle_t& ExtGraphHandle() override { return Real()->m_hExtGraphHandle(); }
     void ExtGraphHandleUpdated() override { Real()->m_hExtGraphHandle.NetworkStateChanged(); }
     CGlobalSymbol& ExternalGraphSlotID() override { return Real()->m_sExternalGraphSlotID(); }
     void ExternalGraphSlotIDUpdated() override { Real()->m_sExternalGraphSlotID.NetworkStateChanged(); }
@@ -66,7 +66,7 @@ public:
     void GraphDefinitionUpdated() override { Real()->m_hGraphDefinition.NetworkStateChanged(); }
     CHandle<CBaseAnimGraph>& ExternalGraphOwner() override { return Real()->m_hExternalGraphOwner(); }
     void ExternalGraphOwnerUpdated() override { Real()->m_hExternalGraphOwner.NetworkStateChanged(); }
-    ExternalAnimGraphInactiveBehavior_t& InactiveBehavior() override { return Real()->m_nInactiveBehavior(); }
+    ::ExternalAnimGraphInactiveBehavior_t& InactiveBehavior() override { return Real()->m_nInactiveBehavior(); }
     void InactiveBehaviorUpdated() override { Real()->m_nInactiveBehavior.NetworkStateChanged(); }
 };
 

@@ -56,9 +56,9 @@ private:
 
 public:
     CBaseGrenade* GetOriginal() const override { return Real(); }
-    CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
+    ::CEntityIOOutput& OnPlayerPickup() override { return Real()->m_OnPlayerPickup(); }
     void OnPlayerPickupUpdated() override { Real()->m_OnPlayerPickup.NetworkStateChanged(); }
-    CEntityIOOutput& OnExplode() override { return Real()->m_OnExplode(); }
+    ::CEntityIOOutput& OnExplode() override { return Real()->m_OnExplode(); }
     void OnExplodeUpdated() override { Real()->m_OnExplode.NetworkStateChanged(); }
     bool& HasWarnedAI() override { return Real()->m_bHasWarnedAI(); }
     void HasWarnedAIUpdated() override { Real()->m_bHasWarnedAI.NetworkStateChanged(); }

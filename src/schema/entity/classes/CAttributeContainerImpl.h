@@ -56,7 +56,7 @@ private:
 
 public:
     CAttributeContainer* GetOriginal() const override { return Real(); }
-    CEconItemView& Item() override { return Real()->m_Item(); }
+    ::CEconItemView& Item() override { return Real()->m_Item(); }
     void ItemUpdated() override { Real()->m_Item.NetworkStateChanged(); }
 };
 

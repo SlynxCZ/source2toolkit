@@ -86,9 +86,9 @@ public:
     void InitialWindSpeedUpdated() override { Real()->m_flInitialWindSpeed.NetworkStateChanged(); }
     Vector& Location() override { return Real()->m_location(); }
     void LocationUpdated() override { Real()->m_location.NetworkStateChanged(); }
-    CEntityIOOutput& OnGustStart() override { return Real()->m_OnGustStart(); }
+    ::CEntityIOOutput& OnGustStart() override { return Real()->m_OnGustStart(); }
     void OnGustStartUpdated() override { Real()->m_OnGustStart.NetworkStateChanged(); }
-    CEntityIOOutput& OnGustEnd() override { return Real()->m_OnGustEnd(); }
+    ::CEntityIOOutput& OnGustEnd() override { return Real()->m_OnGustEnd(); }
     void OnGustEndUpdated() override { Real()->m_OnGustEnd.NetworkStateChanged(); }
     CHandle<CBaseEntity>& EntOwner() override { return Real()->m_hEntOwner(); }
     void EntOwnerUpdated() override { Real()->m_hEntOwner.NetworkStateChanged(); }

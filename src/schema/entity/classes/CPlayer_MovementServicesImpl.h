@@ -58,7 +58,7 @@ public:
     CPlayer_MovementServices* GetOriginal() const override { return Real(); }
     int32_t& Impulse() override { return Real()->m_nImpulse(); }
     void ImpulseUpdated() override { Real()->m_nImpulse.NetworkStateChanged(); }
-    CInButtonState& Buttons() override { return Real()->m_nButtons(); }
+    ::CInButtonState& Buttons() override { return Real()->m_nButtons(); }
     void ButtonsUpdated() override { Real()->m_nButtons.NetworkStateChanged(); }
     uint64_t& QueuedButtonDownMask() override { return Real()->m_nQueuedButtonDownMask(); }
     void QueuedButtonDownMaskUpdated() override { Real()->m_nQueuedButtonDownMask.NetworkStateChanged(); }
