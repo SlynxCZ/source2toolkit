@@ -39,12 +39,15 @@
 #include "schema/entity/classes/CCSPlayerPawn.h"
 #include "schema/entity/classes/CCSObserverPawn.h"
 
+#include "source2toolkit/schema/entity/classes/ICSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/ICSPlayerPawn.h"
+#include "source2toolkit/schema/takedamageinfo.h"
+#include "source2toolkit/utils/virtual.h"
+
 #include "core/addresses.h"
 #include "core/gameconfig.h"
 #include "core/shared.h"
-
-#include "source2toolkit/schema/takedamageinfo.h"
-#include "source2toolkit/utils/virtual.h"
+#include "core/virtualhooks.h"
 
 #include "networksystem/inetworkmessages.h"
 #include "usermessages.pb.h"

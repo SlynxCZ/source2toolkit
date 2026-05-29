@@ -68,21 +68,10 @@ ICSPlayerController* CCSGameRules::GetClientAimTarget(ICSPlayerController* pPlay
     return pController ? pController->ToInterface() : nullptr;
 }
 ICSGameRules* CCSGameRules::ToInterface()
-{
-    static const char s_tag = 0;
-    auto& byTag = virtualhooks::entityInterfaces[this];
-    auto tagIt = byTag.find(&s_tag);
-    if (tagIt != byTag.end())
-        return static_cast<ICSGameRules*>(tagIt->second.ptr_for_return);
-    auto* impl = new CCSGameRulesImpl(this);
-    byTag[&s_tag] = { static_cast<IEntityInstance*>(impl), static_cast<ICSGameRules*>(impl) };
-    return impl;
-}
+{ return new CCSGameRulesImpl(this); }
 
 ICSGameRules* ICSGameRules::FromRaw(CEntityInstance* p)
-{
-    return p ? reinterpret_cast<CCSGameRules*>(p)->ToInterface() : nullptr;
-}
+{ return nullptr; }
 
 ICSGameRules* ICSGameRules::FromOriginal(CCSGameRules* p)
 { return CCSGameRules::FromOriginal(p); }

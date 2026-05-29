@@ -73,11 +73,13 @@ const char* CBasePlayerWeapon::GetWeaponClassname()
 }
 IBasePlayerWeapon* CBasePlayerWeapon::ToInterface()
 {
-    auto it = virtualhooks::entityInterfaces.find(this);
-    if (it != virtualhooks::entityInterfaces.end())
-        return static_cast<IBasePlayerWeapon*>(it->second);
+    static const char s_tag = 0;
+    auto& byTag = virtualhooks::entityInterfaces[this];
+    auto tagIt = byTag.find(&s_tag);
+    if (tagIt != byTag.end())
+        return static_cast<IBasePlayerWeapon*>(tagIt->second.ptr_for_return);
     auto* impl = new CBasePlayerWeaponImpl(this);
-    virtualhooks::entityInterfaces[this] = impl;
+    byTag[&s_tag] = { static_cast<IEntityInstance*>(impl), static_cast<IBasePlayerWeapon*>(impl) };
     return impl;
 }
 

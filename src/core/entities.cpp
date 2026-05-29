@@ -43,9 +43,16 @@
 #include "shared.h"
 
 #include "schema/entity/classes/CBaseEntity.h"
+#include "schema/entity/classes/CBasePlayerController.h"
+#include "schema/entity/classes/CBasePlayerControllerImpl.h"
+#include "schema/entity/classes/CCSGameRules.h"
+#include "schema/entity/classes/CCSGameRulesImpl.h"
 
-#include "source2toolkit/schema/entityio.h"
+#include "source2toolkit/schema/entity/classes/IBasePlayerController.h"
 #include "source2toolkit/schema/entity/classes/IEntityInstance.h"
+#include "source2toolkit/schema/entity/classes/IGameRules.h"
+#include "source2toolkit/schema/entityio.h"
+
 #include "source2toolkit/utils/plat.h"
 #include "source2toolkit/utils/virtual.h"
 
@@ -56,7 +63,7 @@ namespace entities
     IBaseEntity* EntitiesManager::FindPickerEntity(IBasePlayerController* pPlayer, ICSGameRules* pGameRules)
     {
         static int offset = shared::g_pGameConfig->GetOffset("CGameRules_FindPickerEntity");
-        auto* gr = pGameRules ? pGameRules->GetOriginal() : static_cast<CBaseEntity*>(shared::g_pGameRules);
+        auto* gr = pGameRules ? pGameRules->GetOriginal() : shared::g_pGameRules;
         return CALL_VIRTUAL(CBaseEntity*, offset, gr, pPlayer ? pPlayer->GetOriginal() : nullptr, nullptr)->ToInterface();
     }
 
