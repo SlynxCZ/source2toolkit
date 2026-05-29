@@ -61,22 +61,6 @@ class CInfoLadderDismount : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoLadderDismount);
 
-
-public:
-    static CInfoLadderDismount* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoLadderDismount>(className);
-    }
-
-    static CInfoLadderDismount* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoLadderDismount>(iIndex);
-    }
-
-    static CInfoLadderDismount* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOLADDERDISMOUNT_H

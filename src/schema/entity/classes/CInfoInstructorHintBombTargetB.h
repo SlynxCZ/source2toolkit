@@ -61,22 +61,6 @@ class CInfoInstructorHintBombTargetB : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintBombTargetB);
 
-
-public:
-    static CInfoInstructorHintBombTargetB* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoInstructorHintBombTargetB>(className);
-    }
-
-    static CInfoInstructorHintBombTargetB* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoInstructorHintBombTargetB>(iIndex);
-    }
-
-    static CInfoInstructorHintBombTargetB* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTBOMBTARGETB_H

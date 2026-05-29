@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CBaseEntity.h"
+#include "schema/entity/classes/CBaseEntityImpl.h"
 
 #include "schema/entity/classes/CBodyComponent.h"
 #include "schema/entity/classes/CCollisionProperty.h"
@@ -56,9 +56,30 @@
 #include "source2toolkit/IToolkitPlugin.h"
 #endif
 
-CBaseEntity* CBaseEntity::CreateEntityByName(const char* pszClassName)
+IBaseEntity* CBaseEntity::CreateEntityByName(const char* pszClassName)
+{
+    CBaseEntity* p = UTIL_CreateEntityByName(pszClassName);
+    return p ? p->ToInterface() : nullptr;
+}
+
+IBaseEntity* IBaseEntity::CreateEntityByName(const char* pszClassName)
+{
+    return CBaseEntity::CreateEntityByName(pszClassName);
+}
+
+IBaseEntity* IBaseEntity::FromOriginal(CBaseEntity* p)
+{
+    return CBaseEntity::FromOriginal(p);
+}
+
+CEntityInstance* IEntityInstance::_CreateRaw(const char* pszClassName)
 {
     return UTIL_CreateEntityByName(pszClassName);
+}
+
+IEntityInstance* IEntityInstance::FromOriginal(CEntityInstance* p)
+{
+    return p ? new CBaseEntityImpl(static_cast<CBaseEntity*>(p)) : nullptr;
 }
 
 void CBaseEntity::AcceptInput(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)

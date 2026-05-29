@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CBasePlayerPawn>>, m_aPlayers);
     SCHEMA_FIELD(int32_t, m_iScore);
     SCHEMA_FIELD_POINTER(char, m_szTeamname);
-
-public:
-    static CTeam* New(const char* className)
-    {
-        return CBaseEntity::New<CTeam>(className);
-    }
-
-    static CTeam* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTeam>(iIndex);
-    }
-
-    static CTeam* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTEAM_H

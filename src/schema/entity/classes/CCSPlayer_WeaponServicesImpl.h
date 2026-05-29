@@ -42,18 +42,22 @@
 
 #include "source2toolkit/schema/entity/classes/ICSPlayer_WeaponServices.h"
 #include "schema/entity/classes/CCSPlayer_WeaponServices.h"
-#include "CPlayer_WeaponServicesImpl.h"
 
-class CCSPlayer_WeaponServicesImpl : public CPlayer_WeaponServicesImpl, public ICSPlayer_WeaponServices
+class CCSPlayer_WeaponServicesImpl : public virtual ICSPlayer_WeaponServices
 {
 
+protected:
+    void* m_pReal;
+
 public:
-    explicit CCSPlayer_WeaponServicesImpl(CCSPlayer_WeaponServices* p) : CPlayer_WeaponServicesImpl(p) {}
+    explicit CCSPlayer_WeaponServicesImpl(void* p) : m_pReal(p) {}
 
 private:
     CCSPlayer_WeaponServices* Real() { return static_cast<CCSPlayer_WeaponServices*>(m_pReal); }
+    CCSPlayer_WeaponServices* Real() const { return static_cast<CCSPlayer_WeaponServices*>(m_pReal); }
 
 public:
+    CCSPlayer_WeaponServices* GetOriginal() const override { return Real(); }
     float& NextAttack() override { return Real()->m_flNextAttack(); }
     void NextAttackUpdated() override { Real()->m_flNextAttack.NetworkStateChanged(); }
     CHandle<CBasePlayerWeapon>& SavedWeapon() override { return Real()->m_hSavedWeapon(); }
@@ -81,8 +85,8 @@ public:
     bool& BlockInspectUntilNextGraphUpdate() override { return Real()->m_bBlockInspectUntilNextGraphUpdate(); }
     void BlockInspectUntilNextGraphUpdateUpdated() override { Real()->m_bBlockInspectUntilNextGraphUpdate.NetworkStateChanged(); }
 
-    void DropWeapon(CBasePlayerWeapon *pWeapon, Vector *pVecTarget, Vector *pVelocity) override { Real()->DropWeapon(pWeapon, pVecTarget, pVelocity); }
-    void SelectWeapon(CBasePlayerWeapon *pWeapon, int unk1) override { Real()->SelectWeapon(pWeapon, unk1); }
+    void DropWeapon(IBasePlayerWeapon *pWeapon, Vector *pVecTarget, Vector *pVelocity) override { Real()->DropWeapon(pWeapon, pVecTarget, pVelocity); }
+    void SelectWeapon(IBasePlayerWeapon *pWeapon, int unk1) override { Real()->SelectWeapon(pWeapon, unk1); }
 };
 
 #endif // _INCLUDE_CCSPLAYER_WEAPONSERVICESIMPL_H

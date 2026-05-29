@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(CPathQueryComponent, m_CPathQueryComponent);
     SCHEMA_FIELD(CUtlString, m_pathString);
     SCHEMA_FIELD(bool, m_bClosedLoop);
-
-public:
-    static CPathSimple* New(const char* className)
-    {
-        return CBaseEntity::New<CPathSimple>(className);
-    }
-
-    static CPathSimple* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathSimple>(iIndex);
-    }
-
-    static CPathSimple* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHSIMPLE_H

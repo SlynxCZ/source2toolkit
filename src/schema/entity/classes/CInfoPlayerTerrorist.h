@@ -61,22 +61,6 @@ class CInfoPlayerTerrorist : public SpawnPoint
 public:
     DECLARE_SCHEMA_CLASS(CInfoPlayerTerrorist);
 
-
-public:
-    static CInfoPlayerTerrorist* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoPlayerTerrorist>(className);
-    }
-
-    static CInfoPlayerTerrorist* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoPlayerTerrorist>(iIndex);
-    }
-
-    static CInfoPlayerTerrorist* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOPLAYERTERRORIST_H

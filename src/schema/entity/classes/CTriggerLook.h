@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnTimeout);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartLook);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEndLook);
-
-public:
-    static CTriggerLook* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerLook>(className);
-    }
-
-    static CTriggerLook* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerLook>(iIndex);
-    }
-
-    static CTriggerLook* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERLOOK_H

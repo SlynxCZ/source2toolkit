@@ -453,13 +453,7 @@ NETWORK_CLASSES: list[str] = [
 MANUAL_METHODS: dict[str, list[str]] = {
     "CBaseEntity": [
         "/// <summary>Creates entity by classname.</summary>",
-        "static CBaseEntity* CreateEntityByName(const char* pszClassName);",
-        "/// <summary>Create entity by classname.</summary>",
-        "template<typename T>\n    static T* New(const char* pszClassName)\n    {    \n        return reinterpret_cast<T*>(CreateEntityByName(pszClassName));\n    }",
-        "/// <summary>Get entity by index.</summary>",
-        "template<typename T>\n    static T* FromIndex(int iIndex)\n    {    \n        return reinterpret_cast<T*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(iIndex)));\n    }",
-        "/// <summary>Get entity by entity index.</summary>",
-        "template<typename T>\n    static T* FromIndex(CEntityIndex index)\n    {    \n        return FromIndex<T>(index.Get());\n    }",
+        "static IBaseEntity* CreateEntityByName(const char* pszClassName);",
         "/// <summary>Accepts entity input.</summary>",
         'void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "");',
         "/// <summary>Add delayed entity IO event.</summary>",
@@ -515,17 +509,17 @@ MANUAL_METHODS: dict[str, list[str]] = {
     ],
     "CBasePlayerController": [
         "/// <summary>Set pawn for controller.</summary>",
-        "void SetPawn(CBasePlayerPawn* pPawn);",
+        "void SetPawn(IBasePlayerPawn* pPawn);",
     ],
     "CBasePlayerPawn": [
         "/// <summary>Force suicide.</summary>",
         "void CommitSuicide(bool bExplode, bool bForce);",
         "/// <summary>Remove weapon from player.</summary>",
-        "void RemovePlayerItem(CBasePlayerWeapon* pWeapon);",
+        "void RemovePlayerItem(IBasePlayerWeapon* pWeapon);",
     ],
     "CBasePlayerWeapon": [
         "/// <summary>Get weapon VData.</summary>",
-        "CCSWeaponBaseVData* GetWeaponVData();",
+        "ICSWeaponBaseVData* GetWeaponVData();",
         "/// <summary>Get weapon classname.</summary>",
         "const char* GetWeaponClassname();",
     ],
@@ -533,25 +527,25 @@ MANUAL_METHODS: dict[str, list[str]] = {
         "/// <summary>Terminate round.</summary>",
         "void TerminateRound(float flDelay, int32_t eRoundEndReason);",
         "/// <summary>Find entity player is aiming at.</summary>",
-        "CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer);",
+        "IBaseEntity* FindPickerEntity(IBasePlayerController* pPlayer);",
         "/// <summary>Get aim target.</summary>",
-        "CCSPlayerController* GetClientAimTarget(CCSPlayerController* pPlayer);",
+        "ICSPlayerController* GetClientAimTarget(ICSPlayerController* pPlayer);",
     ],
     "CCSPlayerController": [
         "/// <summary>Get controller from pawn.</summary>",
-        "static CCSPlayerController* FromPawn(CCSPlayerPawn* pPawn);",
+        "static ICSPlayerController* FromPawn(ICSPlayerPawn* pPawn);",
         "/// <summary>Get controller from slot.</summary>",
-        "static CCSPlayerController* FromSlot(int iSlot);",
+        "static ICSPlayerController* FromSlot(int iSlot);",
         "/// <summary>Get controller from slot.</summary>",
-        "static CCSPlayerController* FromSlot(CPlayerSlot slot);",
+        "static ICSPlayerController* FromSlot(CPlayerSlot slot);",
         "/// <summary>Get controller from user id.</summary>",
-        "static CCSPlayerController* FromUserId(int iUserId);",
+        "static ICSPlayerController* FromUserId(int iUserId);",
         "/// <summary>Get controller from user id.</summary>",
-        "static CCSPlayerController* FromUserId(CPlayerUserId userId);",
+        "static ICSPlayerController* FromUserId(CPlayerUserId userId);",
         "/// <summary>Get controller from steam id.</summary>",
-        "static CCSPlayerController* FromSteamId(uint64 uSteamId);",
+        "static ICSPlayerController* FromSteamId(uint64 uSteamId);",
         "/// <summary>Get controller from steam id.</summary>",
-        "static CCSPlayerController* FromSteamId(CSteamID steamId);",
+        "static ICSPlayerController* FromSteamId(CSteamID steamId);",
         "/// <summary>Print to console.</summary>",
         "void PrintToConsole(const char* pszMessage);",
         "/// <summary>Print to chat.</summary>",
@@ -563,7 +557,7 @@ MANUAL_METHODS: dict[str, list[str]] = {
         "/// <summary>Print to center in HTML.</summary>",
         "void PrintToCenterHtml(const char* pszMessage, int iDuration = 5);",
         "/// <summary>Take damage from player</summary>",
-        "void TakeDamage(CCSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType);",
+        "void TakeDamage(ICSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType);",
         "/// <summary>Respawn player.</summary>",
         "void Respawn();",
         "/// <summary>Switch team without killing.</summary>",
@@ -579,11 +573,11 @@ MANUAL_METHODS: dict[str, list[str]] = {
         "/// <summary>Execute command from server.</summary>",
         "void ExecuteClientCommandFromServer(const char* pszCommand);",
         "/// <summary>Get pawn.</summary>",
-        "CCSPlayerPawn* GetPawn();",
+        "ICSPlayerPawn* GetPawn();",
         "/// <summary>Get player pawn.</summary>",
-        "CCSPlayerPawn* GetPlayerPawn();",
+        "ICSPlayerPawn* GetPlayerPawn();",
         "/// <summary>Get observer pawn.</summary>",
-        "CCSObserverPawn* GetObserverPawn();",
+        "ICSObserverPawn* GetObserverPawn();",
         "/// <summary>Get player index.</summary>",
         "CEntityIndex GetPlayerIndex();",
         "/// <summary>Get slot.</summary>",
@@ -609,33 +603,33 @@ MANUAL_METHODS: dict[str, list[str]] = {
     ],
     "CCSPlayerPawn": [
         "/// <summary>Get controller.</summary>",
-        "CCSPlayerController* GetController();",
+        "ICSPlayerController* GetController();",
         "/// <summary>Get default controller.</summary>",
-        "CCSPlayerController* GetDefaultController();",
+        "ICSPlayerController* GetDefaultController();",
         "/// <summary>Get original controller.</summary>",
-        "CCSPlayerController* GetOriginalController();",
+        "ICSPlayerController* GetOriginalController();",
     ],
     "CCSPlayer_ItemServices": [
         "/// <summary>Drop active weapon, recommended to use DropWeapon instead (parameter is ignored here)</summary>",
-        "void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon);",
+        "void DropActivePlayerWeapon(IBasePlayerWeapon* pActiveWeapon);",
         "/// <summary>Remove all weapons.</summary>",
         "void RemoveWeapons();",
         "/// <summary>Give item.</summary>",
-        "CBasePlayerWeapon* GiveNamedItem(const char* pszItem);",
+        "IBasePlayerWeapon* GiveNamedItem(const char* pszItem);",
     ],
     "CCSPlayer_WeaponServices": [
         "/// <summary>Drop weapon.</summary>",
-        "void DropWeapon(CBasePlayerWeapon *pWeapon, Vector *pVecTarget = nullptr, Vector *pVelocity = nullptr);",
+        "void DropWeapon(IBasePlayerWeapon *pWeapon, Vector *pVecTarget = nullptr, Vector *pVelocity = nullptr);",
         "/// <summary>Select weapon.</summary>",
-        "void SelectWeapon(CBasePlayerWeapon *pWeapon, int unk1 = 0);"
+        "void SelectWeapon(IBasePlayerWeapon *pWeapon, int unk1 = 0);"
     ],
     "CPlayerControllerComponent": [
         "/// <summary>Get player controller.</summary>",
-        "CCSPlayerController* GetPlayerController();",
+        "ICSPlayerController* GetPlayerController();",
     ],
     "CPlayerPawnComponent": [
         "/// <summary>Get player pawn.</summary>",
-        "CCSPlayerPawn* GetPlayerPawn();",
+        "ICSPlayerPawn* GetPlayerPawn();",
     ],
 }
 
@@ -835,6 +829,129 @@ def build_graph_and_bfs(
 # Code generation helpers
 # ---------------------------------------------------------------------------
 
+# FNV-1a regex for stripping Hungarian notation prefixes from schema field names.
+# Longer prefixes are listed first so the regex tries them greedily.
+_HUNGARIAN_RE = re.compile(
+    r"^(isz|vec|arr|ang|clr|bv|ub|un|us|af|fl|ch|sz|a|n|i|b|f|h|q|p|v|e|u|s)([A-Z])"
+)
+
+
+def to_pascal_case(field_name: str) -> str:
+    """Convert a schema field name to its accessor method name (PascalCase).
+
+    Examples: m_iHealth -> Health, m_CBodyComponent -> BodyComponent,
+              m_nBloodType -> BloodType, m_think -> Think
+    """
+    name = field_name
+    if name.startswith("m_"):
+        name = name[2:]
+    m = _HUNGARIAN_RE.match(name)
+    if m:
+        name = name[len(m.group(1)):]
+    # Strip Valve's C-prefix for class-instance members (m_CBodyComponent -> BodyComponent).
+    # Avoids method name clashing with the class type of the same name.
+    if len(name) > 1 and name[0] == 'C' and name[1].isupper():
+        name = name[1:]
+    if name and name[0].islower():
+        name = name[0].upper() + name[1:]
+    return name
+
+
+# ---------------------------------------------------------------------------
+# Manual method string parsing (shared with tools/schemagen)
+# ---------------------------------------------------------------------------
+
+def _split_param_list(params_str: str) -> list[str]:
+    """Split comma-separated parameter list respecting <> and () nesting."""
+    params: list[str] = []
+    angle = paren = 0
+    cur = ""
+    for ch in params_str:
+        if ch == "<":
+            angle += 1; cur += ch
+        elif ch == ">":
+            angle -= 1; cur += ch
+        elif ch == "(":
+            paren += 1; cur += ch
+        elif ch == ")":
+            paren -= 1; cur += ch
+        elif ch == "," and angle == 0 and paren == 0:
+            params.append(cur.strip()); cur = ""
+        else:
+            cur += ch
+    if cur.strip():
+        params.append(cur.strip())
+    return params
+
+
+def _param_no_default(param: str) -> str:
+    idx = param.find(" = ")
+    return (param[:idx] if idx != -1 else param).strip()
+
+
+def _param_arg_name(param: str) -> str:
+    idx = param.find(" = ")
+    if idx != -1:
+        param = param[:idx]
+    return param.split()[-1].lstrip("*&")
+
+
+def _parse_manual_method(method_str: str) -> Optional[dict]:
+    """Parse a raw method declaration string from MANUAL_METHODS.
+
+    Returns None for comments, static methods, templates, and inline bodies –
+    none of which need virtual/override treatment.
+    """
+    s = method_str.strip()
+    if s.startswith("//") or s.startswith("template") or s.startswith("static "):
+        return None
+    # Skip inline body entries (contain a brace block)
+    if "{" in s:
+        return None
+
+    s = s.rstrip(";").strip()
+
+    is_const = False
+    if s.endswith(" const"):
+        is_const = True
+        s = s[:-6].rstrip()
+
+    paren_pos = s.find("(")
+    if paren_pos == -1:
+        return None
+
+    depth = 0
+    close_pos = -1
+    for idx in range(paren_pos, len(s)):
+        if s[idx] == "(":
+            depth += 1
+        elif s[idx] == ")":
+            depth -= 1
+            if depth == 0:
+                close_pos = idx
+                break
+    if close_pos == -1:
+        return None
+
+    params_str = s[paren_pos + 1: close_pos].strip()
+    tokens = s[:paren_pos].strip().split()
+    if len(tokens) < 2:
+        return None
+
+    name = tokens[-1].lstrip("*&")
+    return_type = " ".join(tokens[:-1])
+    raw_params = _split_param_list(params_str) if params_str else []
+
+    return {
+        "return_type": return_type,
+        "name": name,
+        "params_with_defaults": [p.strip() for p in raw_params],
+        "params_no_defaults": [_param_no_default(p) for p in raw_params],
+        "args": [_param_arg_name(p) for p in raw_params],
+        "is_const": is_const,
+    }
+
+
 def make_header_guard(name: str) -> str:
     safe = sanitise_type_name(name).replace("<", "").replace(">", "").replace(" ", "_")
     return f"_INCLUDE_{safe.upper()}_H"
@@ -911,6 +1028,11 @@ def collect_types_from_methods(
         for enum_name in all_enums:
             if enum_name in method:
                 includes.add(enum_name)
+        # Forward-declare interface types (IXxx) referenced in method signatures.
+        for m in re.finditer(r'\bI([A-Z][A-Za-z_0-9]*)\b', method):
+            iface_type = "I" + m.group(1)
+            if iface_type not in includes:
+                forwards.add(iface_type)
 
 def inherits_from_base_entity(
     class_name: str,
@@ -954,6 +1076,8 @@ def write_class(
         collect_types_from_methods(
             MANUAL_METHODS[class_name], all_enums, all_classes, includes, forwards
         )
+        # Need IXxx forward declaration for ToInterface() / FromOriginal() return type
+        forwards.add(_iface_name(class_name))
 
     includes.discard(class_name)
     forwards.discard(class_name)
@@ -1036,23 +1160,16 @@ def write_class(
         for method in MANUAL_METHODS[class_name]:
             lines.append(f"    {method}")
 
-    if inherits and class_name != "CBaseEntity":
+    # ToInterface() / FromOriginal() — only for classes that have a CXxxImpl wrapper
+    if class_name in MANUAL_METHODS:
+        iface = _iface_name(class_name)
         lines += [
             "",
             "public:",
-            f"    static {class_name}* New(const char* className)",
+            f"    {iface}* ToInterface();",
+            f"    static {iface}* FromOriginal({class_name}* p)",
             "    {",
-            f"        return CBaseEntity::New<{class_name}>(className);",
-            "    }",
-            "",
-            f"    static {class_name}* FromIndex(int iIndex)",
-            "    {",
-            f"        return CBaseEntity::FromIndex<{class_name}>(iIndex);",
-            "    }",
-            "",
-            f"    static {class_name}* FromIndex(CEntityIndex index)",
-            "    {",
-            "        return FromIndex(index.Get());",
+            "        return p ? p->ToInterface() : nullptr;",
             "    }",
         ]
 
@@ -1063,14 +1180,223 @@ def write_class(
     return LICENSE_HEADER + "\r\n".join(lines)
 
 # ---------------------------------------------------------------------------
+# CXxxImpl.h generation
+# ---------------------------------------------------------------------------
+
+def _iface_name(class_name: str) -> str:
+    """CBaseEntity -> IBaseEntity"""
+    return "I" + class_name[1:]
+
+
+# IEntityInstance pure-virtual overrides for CBaseEntityImpl.
+# CBaseEntityImpl is the hierarchy root and inherits IEntityInstance through IBaseEntity.
+# Each override delegates to Real() (a CBaseEntity*, which extends CEntityInstance).
+# ScriptAcceptInput uses GetOriginal() to convert IEntityInstance* back to CEntityInstance*.
+_CENTITYINSTANCE_OVERRIDES: list[str] = [
+    "    // IEntityInstance overrides – delegate to the underlying CEntityInstance.",
+    "    CNetworkSerializerClassInfo* GetNetworkSerializerInfo() override { return Real()->GetNetworkSerializerInfo(); }",
+    "    void unk001() override { Real()->unk001(); }",
+    "    void unk002() override { Real()->unk002(); }",
+    "    void* GetScriptDesc() override { return Real()->GetScriptDesc(); }",
+    "    void Connect() override { Real()->Connect(); }",
+    "    void Disconnect() override { Real()->Disconnect(); }",
+    "    void Precache( const CEntityPrecacheContext* pContext ) override { Real()->Precache(pContext); }",
+    "    void AddedToEntityDatabase() override { Real()->AddedToEntityDatabase(); }",
+    "    void Spawn( const CEntityKeyValues* pKeyValues ) override { Real()->Spawn(pKeyValues); }",
+    "    void unk101() override { Real()->unk101(); }",
+    "    void PostDataUpdate( int updateType ) override { Real()->PostDataUpdate(updateType); }",
+    "    void OnDataUnchangedInPVS() override { Real()->OnDataUnchangedInPVS(); }",
+    "    void Activate( int activateType ) override { Real()->Activate(activateType); }",
+    "    void UpdateOnRemove() override { Real()->UpdateOnRemove(); }",
+    "    void OnSetDormant( int prevDormancyType, int newDormancyType ) override { Real()->OnSetDormant(prevDormancyType, newDormancyType); }",
+    "    void* ScriptEntityIO() override { return Real()->ScriptEntityIO(); }",
+    "    int ScriptAcceptInput( const CUtlSymbolLarge& sInputName, IEntityInstance* pActivator, IEntityInstance* pCaller, const variant_t& value, int nOutputID, void* pUnk1, void* pUnk2 ) override",
+    "    {",
+    "        return Real()->ScriptAcceptInput(sInputName,",
+    "            pActivator ? pActivator->GetOriginal() : nullptr,",
+    "            pCaller ? pCaller->GetOriginal() : nullptr,",
+    "            value, nOutputID, pUnk1, pUnk2);",
+    "    }",
+    "    void PreDataUpdate( int updateType ) override { Real()->PreDataUpdate(updateType); }",
+    "    void DrawEntityDebugOverlays( uint64_t debug_bits ) override { Real()->DrawEntityDebugOverlays(debug_bits); }",
+    "    void DrawDebugTextOverlays( void* unk, uint64_t debug_bits, int flags ) override { Real()->DrawDebugTextOverlays(unk, debug_bits, flags); }",
+    "    int Save( ISave& save ) override { return Real()->Save(save); }",
+    "    int Restore( IRestore& restore ) override { return Real()->Restore(restore); }",
+    "    void OnSave() override { Real()->OnSave(); }",
+    "    void OnRestore() override { Real()->OnRestore(); }",
+    "    void unk201() override { Real()->unk201(); }",
+    "    int ObjectCaps() override { return Real()->ObjectCaps(); }",
+    "    CEntityIndex RequiredEdictIndex() override { return Real()->RequiredEdictIndex(); }",
+    "    void NetworkStateChanged( const NetworkStateChangedData& data ) override { Real()->NetworkStateChanged(data); }",
+    "    void unk301( const void* data ) override { Real()->unk301(data); }",
+    "    void unk302( const void* data ) override { Real()->unk302(data); }",
+    "    void NetworkUpdateState( bool state ) override { Real()->NetworkUpdateState(state); }",
+    "    void NetworkStateChangedLog( const char* pszFieldName, const char* pszInfo ) override { Real()->NetworkStateChangedLog(pszFieldName, pszInfo); }",
+    "    bool FullEdictChanged() override { return Real()->FullEdictChanged(); }",
+    "    void unk401() override { Real()->unk401(); }",
+    "    void unk402() override { Real()->unk402(); }",
+    "    ChangeAccessorFieldPathIndex_t AddChangeAccessorPath( const CFieldPath& path ) override { return Real()->AddChangeAccessorPath(path); }",
+    "    void AssignChangeAccessorPathIds() override { Real()->AssignChangeAccessorPathIds(); }",
+    "    ChangeAccessorFieldPathIndexInfo_t* GetChangeAccessorPathInfo_1() override { return Real()->GetChangeAccessorPathInfo_1(); }",
+    "    ChangeAccessorFieldPathIndexInfo_t* GetChangeAccessorPathInfo_2() override { return Real()->GetChangeAccessorPathInfo_2(); }",
+    "    void unk501() override { Real()->unk501(); }",
+    "    void unk502() override { Real()->unk502(); }",
+    "    void ReloadPrivateScripts() override { Real()->ReloadPrivateScripts(); }",
+    "    datamap_t* GetDataDescMap() override { return Real()->GetDataDescMap(); }",
+    "    void unk601() override { Real()->unk601(); }",
+    "    void unk602() override { Real()->unk602(); }",
+    "    SchemaMetaInfoHandle_t<CSchemaClassInfo> Schema_DynamicBinding() override { return Real()->Schema_DynamicBinding(); }",
+]
+
+
+def write_impl_class(
+    class_name: str,
+    schema_class: SchemaClass,
+    all_enums: dict[str, SchemaEnum],
+    all_classes: dict[str, SchemaClass],
+) -> str:
+    """Generate src/schema/entity/classes/CXxxImpl.h.
+
+    Produces a concrete wrapper that:
+      - inherits from the parent impl (or is the root if no parent has an interface)
+      - publicly inherits the IXxx interface
+      - overrides all schema fields via Real()->field()
+      - overrides all custom methods (from MANUAL_METHODS) by delegating to Real()->method()
+    """
+    iface_name = _iface_name(class_name)
+    impl_name = class_name + "Impl"
+
+    # Walk up the parent chain to find the nearest parent that also has an interface.
+    parent_impl: Optional[str] = None
+    if schema_class.parent and schema_class.parent not in HARD_SKIP_CLASSES:
+        if schema_class.parent in MANUAL_METHODS:
+            parent_impl = schema_class.parent + "Impl"
+
+    is_root = parent_impl is None
+
+    guard = make_header_guard(impl_name)
+    lines: list[str] = [
+        f"#ifndef {guard}",
+        f"#define {guard}",
+        "",
+        "#pragma once",
+        "",
+        f'#include "source2toolkit/schema/entity/classes/{iface_name}.h"',
+        f'#include "schema/entity/classes/{sanitise_type_name(class_name)}.h"',
+    ]
+
+    if parent_impl:
+        lines.append(f'#include "{sanitise_type_name(parent_impl)}.h"')
+
+    lines.append("")
+
+    if parent_impl:
+        lines.append(
+            f"class {impl_name} : public {parent_impl}, public {iface_name}"
+        )
+    else:
+        lines.append(f"class {impl_name} : public virtual {iface_name}")
+
+    lines += ["{", ""]
+
+    if is_root:
+        lines += [
+            "protected:",
+            "    void* m_pReal;",
+            "",
+            "public:",
+            f"    explicit {impl_name}(void* p) : m_pReal(p) {{}}",
+        ]
+    else:
+        lines += [
+            "public:",
+            f"    explicit {impl_name}({class_name}* p) : {parent_impl}(p) {{}}",
+        ]
+
+    lines += [
+        "",
+        "private:",
+        f"    {class_name}* Real()"
+        f" {{ return static_cast<{class_name}*>(m_pReal); }}",
+        f"    {class_name}* Real() const"
+        f" {{ return static_cast<{class_name}*>(m_pReal); }}",
+        "",
+        "public:",
+        f"    {class_name}* GetOriginal() const override {{ return Real(); }}",
+    ]
+
+    # Schema field overrides
+    for f in schema_class.fields:
+        if f.type.category == SchemaTypeCategory.Bitfield:
+            continue
+        if _field_has_ignored_wildcard(f.type):
+            continue
+        if contains_ignored_type(f.type):
+            continue
+
+        method_name = to_pascal_case(f.name)
+        is_ptr = (
+            f.type.category == SchemaTypeCategory.FixedArray
+            or f.type.name == "CUtlStringToken"
+        )
+        if is_ptr:
+            lines.append(
+                f"    {f.type.cpp_type_name}* {method_name}() override"
+                f" {{ return Real()->{f.name}(); }}"
+            )
+        else:
+            lines.append(
+                f"    {f.type.cpp_type_name}& {method_name}() override"
+                f" {{ return Real()->{f.name}(); }}"
+            )
+            lines.append(
+                f"    void {method_name}Updated() override"
+                f" {{ Real()->{f.name}.NetworkStateChanged(); }}"
+            )
+
+    # Custom method overrides – delegate to the real CXxx implementation.
+    parsed = [_parse_manual_method(m) for m in MANUAL_METHODS.get(class_name, [])]
+    parsed = [m for m in parsed if m is not None]
+    if parsed:
+        lines.append("")
+        for m in parsed:
+            const = " const" if m["is_const"] else ""
+            params = ", ".join(m["params_no_defaults"])
+            args = ", ".join(m["args"])
+            if m["return_type"] == "void":
+                body = f"{{ Real()->{m['name']}({args}); }}"
+            else:
+                body = f"{{ return Real()->{m['name']}({args}); }}"
+            lines.append(
+                f"    {m['return_type']} {m['name']}({params}){const} override {body}"
+            )
+
+    # CBaseEntityImpl is the root impl and therefore inherits IEntityInstance pure virtuals
+    # through IBaseEntity. Override them all by delegating to the underlying CEntityInstance.
+    if class_name == "CBaseEntity":
+        lines.append("")
+        lines += _CENTITYINSTANCE_OVERRIDES
+
+    lines += [
+        "};",
+        "",
+        f"#endif // {guard}",
+        "",
+    ]
+    return LICENSE_HEADER + "\r\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 def main() -> None:
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # CXxx internal classes go into the core (private, never exposed in SDK public).
-    # Enum generation is handled by tools/schemagen in source2toolkit-sdk.
+    # Outputs:
+    #   CXxx.h    → src/schema/entity/classes/   (internal schema wrappers)
+    #   CXxxImpl.h → src/schema/entity/classes/  (IXxx implementations)
+    # IXxx.h and enum headers are generated by tools/schemagen in source2toolkit-sdk.
     classes_output = sys.argv[1] if len(sys.argv) > 1 else os.path.join(
         script_dir, "../../src/schema/entity"
     )
@@ -1100,18 +1426,35 @@ def main() -> None:
     os.makedirs(classes_dir, exist_ok=True)
 
     classes_written = 0
+    impl_written = 0
+
     for class_name, schema_class in all_classes.items():
         if class_name in HARD_SKIP_CLASSES:
             continue
         if class_name not in visited and "VData" not in class_name:
             continue
+
+        # CXxx.h – internal schema field wrapper
         content = write_class(class_name, schema_class, all_enums, all_classes)
         out_file = os.path.join(classes_dir, f"{sanitise_type_name(class_name)}.h")
         with open(out_file, "w", encoding="utf-8", newline="") as fh:
             fh.write(content)
         classes_written += 1
 
+        # CXxxImpl.h – IXxx concrete implementation (only for classes with an interface)
+        if class_name in MANUAL_METHODS:
+            impl_content = write_impl_class(
+                class_name, schema_class, all_enums, all_classes
+            )
+            impl_file = os.path.join(
+                classes_dir, f"{sanitise_type_name(class_name)}Impl.h"
+            )
+            with open(impl_file, "w", encoding="utf-8", newline="") as fh:
+                fh.write(impl_content)
+            impl_written += 1
+
     print(f"Done. Classes ({classes_written}): {classes_dir}")
+    print(f"      Impls   ({impl_written}): {classes_dir}")
 
 if __name__ == "__main__":
     main()

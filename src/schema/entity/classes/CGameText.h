@@ -64,22 +64,6 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMessage);
     SCHEMA_FIELD(hudtextparms_t, m_textParms);
-
-public:
-    static CGameText* New(const char* className)
-    {
-        return CBaseEntity::New<CGameText>(className);
-    }
-
-    static CGameText* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGameText>(iIndex);
-    }
-
-    static CGameText* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMETEXT_H

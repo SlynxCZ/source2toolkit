@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_engineSoundName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_movementSoundName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_targetEntityName);
-
-public:
-    static CTankTrainAI* New(const char* className)
-    {
-        return CBaseEntity::New<CTankTrainAI>(className);
-    }
-
-    static CTankTrainAI* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTankTrainAI>(iIndex);
-    }
-
-    static CTankTrainAI* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTANKTRAINAI_H

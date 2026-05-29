@@ -61,22 +61,6 @@ class CCSMinimapBoundary : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CCSMinimapBoundary);
 
-
-public:
-    static CCSMinimapBoundary* New(const char* className)
-    {
-        return CBaseEntity::New<CCSMinimapBoundary>(className);
-    }
-
-    static CCSMinimapBoundary* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSMinimapBoundary>(iIndex);
-    }
-
-    static CCSMinimapBoundary* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSMINIMAPBOUNDARY_H

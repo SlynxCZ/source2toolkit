@@ -77,22 +77,6 @@ public:
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_hThrower);
     SCHEMA_FIELD(float, m_flNextAttack);
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_hOriginalThrower);
-
-public:
-    static CBaseGrenade* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseGrenade>(className);
-    }
-
-    static CBaseGrenade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseGrenade>(iIndex);
-    }
-
-    static CBaseGrenade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEGRENADE_H

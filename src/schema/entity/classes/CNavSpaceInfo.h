@@ -61,22 +61,6 @@ class CNavSpaceInfo : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CNavSpaceInfo);
 
-
-public:
-    static CNavSpaceInfo* New(const char* className)
-    {
-        return CBaseEntity::New<CNavSpaceInfo>(className);
-    }
-
-    static CNavSpaceInfo* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CNavSpaceInfo>(iIndex);
-    }
-
-    static CNavSpaceInfo* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CNAVSPACEINFO_H

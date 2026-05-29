@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(float, m_flCooldown);
     SCHEMA_FIELD(int32_t, m_nRepeatCount);
     SCHEMA_FIELD(bool, m_bDisableOnExit);
-
-public:
-    static CInfoInteraction* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoInteraction>(className);
-    }
-
-    static CInfoInteraction* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoInteraction>(iIndex);
-    }
-
-    static CInfoInteraction* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOINTERACTION_H

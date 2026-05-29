@@ -80,22 +80,6 @@ public:
     SCHEMA_FIELD(Class_T, m_iClassIgnore2);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEntityIgnoreName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEntityIgnore);
-
-public:
-    static CEnvExplosion* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvExplosion>(className);
-    }
-
-    static CEnvExplosion* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvExplosion>(iIndex);
-    }
-
-    static CEnvExplosion* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVEXPLOSION_H

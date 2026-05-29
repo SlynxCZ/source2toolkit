@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_EffectInterpenetrateName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_EffectZapName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEffectSource);
-
-public:
-    static CFuncElectrifiedVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncElectrifiedVolume>(className);
-    }
-
-    static CFuncElectrifiedVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncElectrifiedVolume>(iIndex);
-    }
-
-    static CFuncElectrifiedVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCELECTRIFIEDVOLUME_H

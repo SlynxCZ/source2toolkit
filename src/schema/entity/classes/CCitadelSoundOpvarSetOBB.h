@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(Vector, m_vDistanceOuterMins);
     SCHEMA_FIELD(Vector, m_vDistanceOuterMaxs);
     SCHEMA_FIELD(int32_t, m_nAABBDirection);
-
-public:
-    static CCitadelSoundOpvarSetOBB* New(const char* className)
-    {
-        return CBaseEntity::New<CCitadelSoundOpvarSetOBB>(className);
-    }
-
-    static CCitadelSoundOpvarSetOBB* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCitadelSoundOpvarSetOBB>(iIndex);
-    }
-
-    static CCitadelSoundOpvarSetOBB* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCITADELSOUNDOPVARSETOBB_H

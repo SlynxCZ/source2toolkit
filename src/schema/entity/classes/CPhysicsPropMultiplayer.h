@@ -61,22 +61,6 @@ class CPhysicsPropMultiplayer : public CPhysicsProp
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropMultiplayer);
 
-
-public:
-    static CPhysicsPropMultiplayer* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsPropMultiplayer>(className);
-    }
-
-    static CPhysicsPropMultiplayer* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsPropMultiplayer>(iIndex);
-    }
-
-    static CPhysicsPropMultiplayer* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROPMULTIPLAYER_H

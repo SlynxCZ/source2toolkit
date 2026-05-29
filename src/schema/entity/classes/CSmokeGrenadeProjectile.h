@@ -73,22 +73,6 @@ public:
     SCHEMA_FIELD(float, m_fllastSimulationTime);
     SCHEMA_FIELD(bool, m_bExplodeFromInferno);
     SCHEMA_FIELD(bool, m_bDidGroundScorch);
-
-public:
-    static CSmokeGrenadeProjectile* New(const char* className)
-    {
-        return CBaseEntity::New<CSmokeGrenadeProjectile>(className);
-    }
-
-    static CSmokeGrenadeProjectile* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSmokeGrenadeProjectile>(iIndex);
-    }
-
-    static CSmokeGrenadeProjectile* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSMOKEGRENADEPROJECTILE_H

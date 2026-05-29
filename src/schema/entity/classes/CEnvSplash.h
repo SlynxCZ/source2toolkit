@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CEnvSplash);
 
     SCHEMA_FIELD(float, m_flScale);
-
-public:
-    static CEnvSplash* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvSplash>(className);
-    }
-
-    static CEnvSplash* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvSplash>(iIndex);
-    }
-
-    static CEnvSplash* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSPLASH_H

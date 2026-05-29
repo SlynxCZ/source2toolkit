@@ -84,22 +84,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nGlowRangeMin);
     SCHEMA_FIELD(Color, m_glowColor);
     SCHEMA_FIELD(int32_t, m_nGlowTeam);
-
-public:
-    static CDynamicProp* New(const char* className)
-    {
-        return CBaseEntity::New<CDynamicProp>(className);
-    }
-
-    static CDynamicProp* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDynamicProp>(iIndex);
-    }
-
-    static CDynamicProp* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDYNAMICPROP_H

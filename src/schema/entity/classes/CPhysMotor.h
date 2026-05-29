@@ -81,22 +81,6 @@ public:
     SCHEMA_FIELD(IPhysicsBody*, m_pFixedWorldBody);
     SCHEMA_FIELD(IPhysicsJoint*, m_pMotorJoint);
     SCHEMA_FIELD(CMotorController, m_motor);
-
-public:
-    static CPhysMotor* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysMotor>(className);
-    }
-
-    static CPhysMotor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysMotor>(iIndex);
-    }
-
-    static CPhysMotor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSMOTOR_H

@@ -84,22 +84,6 @@ public:
     SCHEMA_FIELD(Vector, m_vecBackBoundsMax);
     SCHEMA_FIELD(bool, m_bAjarDoorShouldntAlwaysOpen);
     SCHEMA_FIELD(CHandle<CEntityBlocker>, m_hEntityBlocker);
-
-public:
-    static CPropDoorRotating* New(const char* className)
-    {
-        return CBaseEntity::New<CPropDoorRotating>(className);
-    }
-
-    static CPropDoorRotating* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPropDoorRotating>(iIndex);
-    }
-
-    static CPropDoorRotating* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPROPDOORROTATING_H

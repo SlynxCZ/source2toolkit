@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bUseAsyncObstacleUpdate);
-
-public:
-    static CFuncNavObstruction* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncNavObstruction>(className);
-    }
-
-    static CFuncNavObstruction* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncNavObstruction>(iIndex);
-    }
-
-    static CFuncNavObstruction* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCNAVOBSTRUCTION_H

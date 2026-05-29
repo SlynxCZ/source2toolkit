@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(float, m_flTimeToDetonate);
     SCHEMA_FIELD(uint8_t, m_numOpponentsHit);
     SCHEMA_FIELD(uint8_t, m_numTeammatesHit);
-
-public:
-    static CFlashbangProjectile* New(const char* className)
-    {
-        return CBaseEntity::New<CFlashbangProjectile>(className);
-    }
-
-    static CFlashbangProjectile* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFlashbangProjectile>(iIndex);
-    }
-
-    static CFlashbangProjectile* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFLASHBANGPROJECTILE_H

@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD(Vector, m_maxForce);
     SCHEMA_FIELD(IPhysicsMotionController*, m_pShakeController);
     SCHEMA_FIELD(CPhysicsShake, m_shakeCallback);
-
-public:
-    static CEnvShake* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvShake>(className);
-    }
-
-    static CEnvShake* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvShake>(iIndex);
-    }
-
-    static CEnvShake* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSHAKE_H

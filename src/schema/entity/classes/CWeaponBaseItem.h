@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(bool, m_bSequenceInProgress);
     SCHEMA_FIELD(bool, m_bRedraw);
-
-public:
-    static CWeaponBaseItem* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponBaseItem>(className);
-    }
-
-    static CWeaponBaseItem* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponBaseItem>(iIndex);
-    }
-
-    static CWeaponBaseItem* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONBASEITEM_H

@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_SourceName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_StartEntity);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_EndEntity);
-
-public:
-    static CLogicLineToEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicLineToEntity>(className);
-    }
-
-    static CLogicLineToEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicLineToEntity>(iIndex);
-    }
-
-    static CLogicLineToEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICLINETOENTITY_H

@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(bool, m_bEnableAngularConstraint);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sBoneName1);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sBoneName2);
-
-public:
-    static CPhysFixed* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysFixed>(className);
-    }
-
-    static CPhysFixed* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysFixed>(iIndex);
-    }
-
-    static CPhysFixed* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSFIXED_H

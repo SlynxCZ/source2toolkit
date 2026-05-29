@@ -61,22 +61,6 @@ class CWeaponSCAR20 : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponSCAR20);
 
-
-public:
-    static CWeaponSCAR20* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponSCAR20>(className);
-    }
-
-    static CWeaponSCAR20* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponSCAR20>(iIndex);
-    }
-
-    static CWeaponSCAR20* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONSCAR20_H

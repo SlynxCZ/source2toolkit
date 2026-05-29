@@ -61,22 +61,6 @@ class CServerRagdollTrigger : public CBaseTrigger
 public:
     DECLARE_SCHEMA_CLASS(CServerRagdollTrigger);
 
-
-public:
-    static CServerRagdollTrigger* New(const char* className)
-    {
-        return CBaseEntity::New<CServerRagdollTrigger>(className);
-    }
-
-    static CServerRagdollTrigger* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CServerRagdollTrigger>(iIndex);
-    }
-
-    static CServerRagdollTrigger* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSERVERRAGDOLLTRIGGER_H

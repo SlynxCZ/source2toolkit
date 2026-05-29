@@ -140,22 +140,6 @@ public:
     SCHEMA_FIELD(bool, m_bPvsModifyEntity);
     SCHEMA_FIELD(bool, m_bTransmitAlways);
     SCHEMA_FIELD(CUtlVector<uint16_t>, m_VisClusters);
-
-public:
-    static CBarnLight* New(const char* className)
-    {
-        return CBaseEntity::New<CBarnLight>(className);
-    }
-
-    static CBarnLight* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBarnLight>(iIndex);
-    }
-
-    static CBarnLight* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBARNLIGHT_H

@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(bool, m_bDraw3DSkybox);
     SCHEMA_FIELD(bool, m_bStartEnabled);
-
-public:
-    static CFuncMonitor* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncMonitor>(className);
-    }
-
-    static CFuncMonitor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncMonitor>(iIndex);
-    }
-
-    static CFuncMonitor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCMONITOR_H

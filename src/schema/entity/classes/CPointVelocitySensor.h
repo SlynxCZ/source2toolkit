@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(float, m_fPrevVelocity);
     SCHEMA_FIELD(float, m_flAvgInterval);
-
-public:
-    static CPointVelocitySensor* New(const char* className)
-    {
-        return CBaseEntity::New<CPointVelocitySensor>(className);
-    }
-
-    static CPointVelocitySensor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointVelocitySensor>(iIndex);
-    }
-
-    static CPointVelocitySensor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTVELOCITYSENSOR_H

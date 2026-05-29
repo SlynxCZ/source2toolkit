@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CRulePointEntity);
 
     SCHEMA_FIELD(int32_t, m_Score);
-
-public:
-    static CRulePointEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CRulePointEntity>(className);
-    }
-
-    static CRulePointEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRulePointEntity>(iIndex);
-    }
-
-    static CRulePointEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRULEPOINTENTITY_H

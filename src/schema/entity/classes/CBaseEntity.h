@@ -68,6 +68,8 @@ class CEntityInstance;
 class CEntityKeyValues;
 class CEntitySubclassVDataBase;
 class CPulseGraphInstance_ServerEntity;
+class IBaseEntity;
+class IO;
 
 class CBaseEntity : public CEntityInstance
 {
@@ -163,25 +165,7 @@ public:
 
 public:
     /// <summary>Creates entity by classname.</summary>
-    static CBaseEntity* CreateEntityByName(const char* pszClassName);
-    /// <summary>Create entity by classname.</summary>
-    template<typename T>
-    static T* New(const char* pszClassName)
-    {    
-        return reinterpret_cast<T*>(CreateEntityByName(pszClassName));
-    }
-    /// <summary>Get entity by index.</summary>
-    template<typename T>
-    static T* FromIndex(int iIndex)
-    {    
-        return reinterpret_cast<T*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(iIndex)));
-    }
-    /// <summary>Get entity by entity index.</summary>
-    template<typename T>
-    static T* FromIndex(CEntityIndex index)
-    {    
-        return FromIndex<T>(index.Get());
-    }
+    static IBaseEntity* CreateEntityByName(const char* pszClassName);
     /// <summary>Accepts entity input.</summary>
     void AcceptInput(const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "");
     /// <summary>Add delayed entity IO event.</summary>
@@ -226,6 +210,13 @@ public:
     CHandle<CBaseEntity> GetHandle();
     /// <summary>Get entity name.</summary>
     const char* GetName() const;
+
+public:
+    IBaseEntity* ToInterface();
+    static IBaseEntity* FromOriginal(CBaseEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEENTITY_H

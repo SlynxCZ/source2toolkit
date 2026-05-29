@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(PointTemplateOwnerSpawnGroupType_t, m_ownerSpawnGroupType);
     SCHEMA_FIELD(CUtlVector<uint32_t>, m_createdSpawnGroupHandles);
     SCHEMA_FIELD(CUtlVector<CEntityHandle>, m_SpawnedEntityHandles);
-
-public:
-    static CPointTemplate* New(const char* className)
-    {
-        return CBaseEntity::New<CPointTemplate>(className);
-    }
-
-    static CPointTemplate* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointTemplate>(iIndex);
-    }
-
-    static CPointTemplate* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTTEMPLATE_H

@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CCSPlayerPawn.h"
+#include "schema/entity/classes/CCSPlayerPawnImpl.h"
 #include "schema/entity/classes/CCSPlayerController.h"
 
 CCSPlayerController* CCSPlayerPawn::GetController()
@@ -58,3 +58,7 @@ CCSPlayerController* CCSPlayerPawn::GetOriginalController()
         return handle.Get();
     return nullptr;
 }
+ICSPlayerPawn* CCSPlayerPawn::ToInterface() { return new CCSPlayerPawnImpl(this); }
+
+ICSPlayerPawn* ICSPlayerPawn::FromOriginal(CCSPlayerPawn* p)
+{ return CCSPlayerPawn::FromOriginal(p); }

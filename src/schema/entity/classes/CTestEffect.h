@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD_POINTER(CHandle<CBeam>, m_pBeam);
     SCHEMA_FIELD_POINTER(float, m_flBeamTime);
     SCHEMA_FIELD(float, m_flStartTime);
-
-public:
-    static CTestEffect* New(const char* className)
-    {
-        return CBaseEntity::New<CTestEffect>(className);
-    }
-
-    static CTestEffect* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTestEffect>(iIndex);
-    }
-
-    static CTestEffect* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTESTEFFECT_H

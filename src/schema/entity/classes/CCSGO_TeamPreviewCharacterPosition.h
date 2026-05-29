@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(CEconItemView, m_agentItem);
     SCHEMA_FIELD(CEconItemView, m_glovesItem);
     SCHEMA_FIELD(CEconItemView, m_weaponItem);
-
-public:
-    static CCSGO_TeamPreviewCharacterPosition* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGO_TeamPreviewCharacterPosition>(className);
-    }
-
-    static CCSGO_TeamPreviewCharacterPosition* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGO_TeamPreviewCharacterPosition>(iIndex);
-    }
-
-    static CCSGO_TeamPreviewCharacterPosition* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGO_TEAMPREVIEWCHARACTERPOSITION_H

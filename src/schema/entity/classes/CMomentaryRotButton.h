@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(int32_t, m_direction);
     SCHEMA_FIELD(float, m_returnSpeed);
     SCHEMA_FIELD(float, m_flStartPosition);
-
-public:
-    static CMomentaryRotButton* New(const char* className)
-    {
-        return CBaseEntity::New<CMomentaryRotButton>(className);
-    }
-
-    static CMomentaryRotButton* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMomentaryRotButton>(iIndex);
-    }
-
-    static CMomentaryRotButton* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMOMENTARYROTBUTTON_H

@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(bool, m_bPlayerFireOnly);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetectedBulletFire);
-
-public:
-    static CTriggerDetectBulletFire* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerDetectBulletFire>(className);
-    }
-
-    static CTriggerDetectBulletFire* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerDetectBulletFire>(iIndex);
-    }
-
-    static CTriggerDetectBulletFire* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERDETECTBULLETFIRE_H

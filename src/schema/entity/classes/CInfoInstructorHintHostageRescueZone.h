@@ -61,22 +61,6 @@ class CInfoInstructorHintHostageRescueZone : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintHostageRescueZone);
 
-
-public:
-    static CInfoInstructorHintHostageRescueZone* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoInstructorHintHostageRescueZone>(className);
-    }
-
-    static CInfoInstructorHintHostageRescueZone* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoInstructorHintHostageRescueZone>(iIndex);
-    }
-
-    static CInfoInstructorHintHostageRescueZone* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTHOSTAGERESCUEZONE_H

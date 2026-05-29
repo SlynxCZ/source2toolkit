@@ -61,22 +61,6 @@ class CDecoyGrenade : public CBaseCSGrenade
 public:
     DECLARE_SCHEMA_CLASS(CDecoyGrenade);
 
-
-public:
-    static CDecoyGrenade* New(const char* className)
-    {
-        return CBaseEntity::New<CDecoyGrenade>(className);
-    }
-
-    static CDecoyGrenade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDecoyGrenade>(iIndex);
-    }
-
-    static CDecoyGrenade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDECOYGRENADE_H

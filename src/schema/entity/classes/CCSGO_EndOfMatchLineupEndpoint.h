@@ -61,22 +61,6 @@ class CCSGO_EndOfMatchLineupEndpoint : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_EndOfMatchLineupEndpoint);
 
-
-public:
-    static CCSGO_EndOfMatchLineupEndpoint* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGO_EndOfMatchLineupEndpoint>(className);
-    }
-
-    static CCSGO_EndOfMatchLineupEndpoint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGO_EndOfMatchLineupEndpoint>(iIndex);
-    }
-
-    static CCSGO_EndOfMatchLineupEndpoint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGO_ENDOFMATCHLINEUPENDPOINT_H

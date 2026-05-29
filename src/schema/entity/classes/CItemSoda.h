@@ -61,22 +61,6 @@ class CItemSoda : public CBaseAnimGraph
 public:
     DECLARE_SCHEMA_CLASS(CItemSoda);
 
-
-public:
-    static CItemSoda* New(const char* className)
-    {
-        return CBaseEntity::New<CItemSoda>(className);
-    }
-
-    static CItemSoda* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemSoda>(iIndex);
-    }
-
-    static CItemSoda* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMSODA_H

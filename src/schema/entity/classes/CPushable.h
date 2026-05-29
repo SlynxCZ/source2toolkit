@@ -61,22 +61,6 @@ class CPushable : public CBreakable
 public:
     DECLARE_SCHEMA_CLASS(CPushable);
 
-
-public:
-    static CPushable* New(const char* className)
-    {
-        return CBaseEntity::New<CPushable>(className);
-    }
-
-    static CPushable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPushable>(iIndex);
-    }
-
-    static CPushable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPUSHABLE_H

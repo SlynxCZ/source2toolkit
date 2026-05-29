@@ -61,22 +61,6 @@ class CIncendiaryGrenade : public CMolotovGrenade
 public:
     DECLARE_SCHEMA_CLASS(CIncendiaryGrenade);
 
-
-public:
-    static CIncendiaryGrenade* New(const char* className)
-    {
-        return CBaseEntity::New<CIncendiaryGrenade>(className);
-    }
-
-    static CIncendiaryGrenade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CIncendiaryGrenade>(iIndex);
-    }
-
-    static CIncendiaryGrenade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINCENDIARYGRENADE_H

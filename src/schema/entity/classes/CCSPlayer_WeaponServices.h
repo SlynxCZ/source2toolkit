@@ -56,6 +56,8 @@
 #include "CPlayer_WeaponServices.h"
 
 class CBasePlayerWeapon;
+class IBasePlayerWeapon;
+class ICSPlayer_WeaponServices;
 
 class CCSPlayer_WeaponServices : public CPlayer_WeaponServices
 {
@@ -78,9 +80,16 @@ public:
 
 public:
     /// <summary>Drop weapon.</summary>
-    void DropWeapon(CBasePlayerWeapon *pWeapon, Vector *pVecTarget = nullptr, Vector *pVelocity = nullptr);
+    void DropWeapon(IBasePlayerWeapon *pWeapon, Vector *pVecTarget = nullptr, Vector *pVelocity = nullptr);
     /// <summary>Select weapon.</summary>
-    void SelectWeapon(CBasePlayerWeapon *pWeapon, int unk1 = 0);
+    void SelectWeapon(IBasePlayerWeapon *pWeapon, int unk1 = 0);
+
+public:
+    ICSPlayer_WeaponServices* ToInterface();
+    static ICSPlayer_WeaponServices* FromOriginal(CCSPlayer_WeaponServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_WEAPONSERVICES_H

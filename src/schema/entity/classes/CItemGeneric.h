@@ -97,22 +97,6 @@ public:
     SCHEMA_FIELD(Color, m_glowColor);
     SCHEMA_FIELD(bool, m_bUseable);
     SCHEMA_FIELD(CHandle<CItemGenericTriggerHelper>, m_hTriggerHelper);
-
-public:
-    static CItemGeneric* New(const char* className)
-    {
-        return CBaseEntity::New<CItemGeneric>(className);
-    }
-
-    static CItemGeneric* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemGeneric>(iIndex);
-    }
-
-    static CItemGeneric* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMGENERIC_H

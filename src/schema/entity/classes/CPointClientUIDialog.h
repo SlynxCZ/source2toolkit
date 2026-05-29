@@ -65,22 +65,6 @@ public:
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hActivator);
     SCHEMA_FIELD(bool, m_bStartEnabled);
-
-public:
-    static CPointClientUIDialog* New(const char* className)
-    {
-        return CBaseEntity::New<CPointClientUIDialog>(className);
-    }
-
-    static CPointClientUIDialog* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointClientUIDialog>(iIndex);
-    }
-
-    static CPointClientUIDialog* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTCLIENTUIDIALOG_H

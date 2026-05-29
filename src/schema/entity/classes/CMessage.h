@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNoise);
     SCHEMA_FIELD(CEntityIOOutput, m_OnShowMessage);
-
-public:
-    static CMessage* New(const char* className)
-    {
-        return CBaseEntity::New<CMessage>(className);
-    }
-
-    static CMessage* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMessage>(iIndex);
-    }
-
-    static CMessage* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMESSAGE_H

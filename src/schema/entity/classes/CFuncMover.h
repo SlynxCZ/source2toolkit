@@ -161,22 +161,6 @@ public:
     SCHEMA_FIELD(bool, m_bStopFromBeginStopTarget);
     SCHEMA_FIELD(bool, m_bQueueStop);
     SCHEMA_FIELD(bool, m_bQueueStopMoving);
-
-public:
-    static CFuncMover* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncMover>(className);
-    }
-
-    static CFuncMover* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncMover>(iIndex);
-    }
-
-    static CFuncMover* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCMOVER_H

@@ -61,22 +61,6 @@ class CCSPetPlacement : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CCSPetPlacement);
 
-
-public:
-    static CCSPetPlacement* New(const char* className)
-    {
-        return CBaseEntity::New<CCSPetPlacement>(className);
-    }
-
-    static CCSPetPlacement* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPetPlacement>(iIndex);
-    }
-
-    static CCSPetPlacement* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSPETPLACEMENT_H

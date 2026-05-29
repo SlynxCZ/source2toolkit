@@ -91,22 +91,6 @@ public:
     SCHEMA_FIELD(bool, m_bCreateNavObstacle);
     SCHEMA_FIELD(bool, m_isChaining);
     SCHEMA_FIELD(bool, m_bIsUsable);
-
-public:
-    static CBaseDoor* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseDoor>(className);
-    }
-
-    static CBaseDoor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseDoor>(iIndex);
-    }
-
-    static CBaseDoor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEDOOR_H

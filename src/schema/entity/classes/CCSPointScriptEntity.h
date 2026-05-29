@@ -61,22 +61,6 @@ class CCSPointScriptEntity : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CCSPointScriptEntity);
 
-
-public:
-    static CCSPointScriptEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CCSPointScriptEntity>(className);
-    }
-
-    static CCSPointScriptEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPointScriptEntity>(iIndex);
-    }
-
-    static CCSPointScriptEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSPOINTSCRIPTENTITY_H

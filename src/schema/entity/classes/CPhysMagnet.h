@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(float, m_flNextSuckTime);
     SCHEMA_FIELD(int32_t, m_iMaxObjectsAttached);
-
-public:
-    static CPhysMagnet* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysMagnet>(className);
-    }
-
-    static CPhysMagnet* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysMagnet>(iIndex);
-    }
-
-    static CPhysMagnet* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSMAGNET_H

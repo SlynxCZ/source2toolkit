@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFuncWall);
 
     SCHEMA_FIELD(int32_t, m_nState);
-
-public:
-    static CFuncWall* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncWall>(className);
-    }
-
-    static CFuncWall* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncWall>(iIndex);
-    }
-
-    static CFuncWall* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCWALL_H

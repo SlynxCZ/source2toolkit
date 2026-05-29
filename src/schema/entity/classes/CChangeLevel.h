@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(bool, m_bNoTouch);
     SCHEMA_FIELD(bool, m_bNewChapter);
     SCHEMA_FIELD(bool, m_bOnChangeLevelFired);
-
-public:
-    static CChangeLevel* New(const char* className)
-    {
-        return CBaseEntity::New<CChangeLevel>(className);
-    }
-
-    static CChangeLevel* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CChangeLevel>(iIndex);
-    }
-
-    static CChangeLevel* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCHANGELEVEL_H

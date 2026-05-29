@@ -99,22 +99,6 @@ public:
     SCHEMA_FIELD(float, m_fWindSpeed);
     SCHEMA_FIELD(Vector, m_vWindDirection);
     SCHEMA_FIELD(bool, m_bFirstTime);
-
-public:
-    static CEnvVolumetricFogController* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvVolumetricFogController>(className);
-    }
-
-    static CEnvVolumetricFogController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvVolumetricFogController>(iIndex);
-    }
-
-    static CEnvVolumetricFogController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVVOLUMETRICFOGCONTROLLER_H

@@ -64,22 +64,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPlatTrigger);
 
     SCHEMA_FIELD(CHandle<CFuncPlat>, m_pPlatform);
-
-public:
-    static CPlatTrigger* New(const char* className)
-    {
-        return CBaseEntity::New<CPlatTrigger>(className);
-    }
-
-    static CPlatTrigger* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPlatTrigger>(iIndex);
-    }
-
-    static CPlatTrigger* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPLATTRIGGER_H

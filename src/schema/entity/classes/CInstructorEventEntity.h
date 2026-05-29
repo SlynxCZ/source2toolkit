@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszHintTargetEntity);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hTargetPlayer);
-
-public:
-    static CInstructorEventEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CInstructorEventEntity>(className);
-    }
-
-    static CInstructorEventEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInstructorEventEntity>(iIndex);
-    }
-
-    static CInstructorEventEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINSTRUCTOREVENTENTITY_H

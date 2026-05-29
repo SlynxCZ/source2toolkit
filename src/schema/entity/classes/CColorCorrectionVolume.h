@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(float, m_LastEnterTime);
     SCHEMA_FIELD(float, m_LastExitWeight);
     SCHEMA_FIELD(float, m_LastExitTime);
-
-public:
-    static CColorCorrectionVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CColorCorrectionVolume>(className);
-    }
-
-    static CColorCorrectionVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CColorCorrectionVolume>(iIndex);
-    }
-
-    static CColorCorrectionVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCOLORCORRECTIONVOLUME_H

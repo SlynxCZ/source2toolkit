@@ -61,22 +61,6 @@ class CTriggerBombReset : public CBaseTrigger
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBombReset);
 
-
-public:
-    static CTriggerBombReset* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerBombReset>(className);
-    }
-
-    static CTriggerBombReset* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerBombReset>(iIndex);
-    }
-
-    static CTriggerBombReset* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERBOMBRESET_H

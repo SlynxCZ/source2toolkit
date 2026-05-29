@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_source);
     SCHEMA_FIELD(CUtlSymbolLarge, m_destination);
-
-public:
-    static CFootstepControl* New(const char* className)
-    {
-        return CBaseEntity::New<CFootstepControl>(className);
-    }
-
-    static CFootstepControl* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFootstepControl>(iIndex);
-    }
-
-    static CFootstepControl* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFOOTSTEPCONTROL_H

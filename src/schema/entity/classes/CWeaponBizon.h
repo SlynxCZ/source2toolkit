@@ -61,22 +61,6 @@ class CWeaponBizon : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponBizon);
 
-
-public:
-    static CWeaponBizon* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponBizon>(className);
-    }
-
-    static CWeaponBizon* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponBizon>(iIndex);
-    }
-
-    static CWeaponBizon* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONBIZON_H

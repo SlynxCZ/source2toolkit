@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nIterVal);
     SCHEMA_FIELD(TrackOrientationType_t, m_eOrientationType);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
-
-public:
-    static CPathTrack* New(const char* className)
-    {
-        return CBaseEntity::New<CPathTrack>(className);
-    }
-
-    static CPathTrack* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathTrack>(iIndex);
-    }
-
-    static CPathTrack* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHTRACK_H

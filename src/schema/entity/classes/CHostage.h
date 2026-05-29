@@ -106,22 +106,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nPickupEventCount);
     SCHEMA_FIELD(Vector, m_vecSpawnGroundPos);
     SCHEMA_FIELD(Vector, m_vecHostageResetPosition);
-
-public:
-    static CHostage* New(const char* className)
-    {
-        return CBaseEntity::New<CHostage>(className);
-    }
-
-    static CHostage* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHostage>(iIndex);
-    }
-
-    static CHostage* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHOSTAGE_H

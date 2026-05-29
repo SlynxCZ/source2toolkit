@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFuncTankTrain);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnDeath);
-
-public:
-    static CFuncTankTrain* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncTankTrain>(className);
-    }
-
-    static CFuncTankTrain* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncTankTrain>(iIndex);
-    }
-
-    static CFuncTankTrain* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCTANKTRAIN_H

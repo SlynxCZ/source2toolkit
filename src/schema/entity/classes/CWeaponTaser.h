@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(float, m_fFireTime);
     SCHEMA_FIELD(int32_t, m_nLastAttackTick);
-
-public:
-    static CWeaponTaser* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponTaser>(className);
-    }
-
-    static CWeaponTaser* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponTaser>(iIndex);
-    }
-
-    static CWeaponTaser* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONTASER_H

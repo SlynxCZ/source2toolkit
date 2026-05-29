@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CEnvEntityIgniter);
 
     SCHEMA_FIELD(float, m_flLifetime);
-
-public:
-    static CEnvEntityIgniter* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvEntityIgniter>(className);
-    }
-
-    static CEnvEntityIgniter* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvEntityIgniter>(iIndex);
-    }
-
-    static CEnvEntityIgniter* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVENTITYIGNITER_H

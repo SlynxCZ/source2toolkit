@@ -61,22 +61,6 @@ class CWeaponNegev : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponNegev);
 
-
-public:
-    static CWeaponNegev* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponNegev>(className);
-    }
-
-    static CWeaponNegev* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponNegev>(iIndex);
-    }
-
-    static CWeaponNegev* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONNEGEV_H

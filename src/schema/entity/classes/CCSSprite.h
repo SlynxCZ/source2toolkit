@@ -61,22 +61,6 @@ class CCSSprite : public CSprite
 public:
     DECLARE_SCHEMA_CLASS(CCSSprite);
 
-
-public:
-    static CCSSprite* New(const char* className)
-    {
-        return CBaseEntity::New<CCSSprite>(className);
-    }
-
-    static CCSSprite* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSSprite>(iIndex);
-    }
-
-    static CCSSprite* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSSPRITE_H

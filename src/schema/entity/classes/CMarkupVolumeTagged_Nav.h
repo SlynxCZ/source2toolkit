@@ -63,22 +63,6 @@ public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeTagged_Nav);
 
     SCHEMA_FIELD(NavScopeFlags_t, m_nScopes);
-
-public:
-    static CMarkupVolumeTagged_Nav* New(const char* className)
-    {
-        return CBaseEntity::New<CMarkupVolumeTagged_Nav>(className);
-    }
-
-    static CMarkupVolumeTagged_Nav* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMarkupVolumeTagged_Nav>(iIndex);
-    }
-
-    static CMarkupVolumeTagged_Nav* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAV_H

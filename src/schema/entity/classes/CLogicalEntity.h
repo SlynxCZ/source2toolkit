@@ -61,22 +61,6 @@ class CLogicalEntity : public CServerOnlyEntity
 public:
     DECLARE_SCHEMA_CLASS(CLogicalEntity);
 
-
-public:
-    static CLogicalEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicalEntity>(className);
-    }
-
-    static CLogicalEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicalEntity>(iIndex);
-    }
-
-    static CLogicalEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICALENTITY_H

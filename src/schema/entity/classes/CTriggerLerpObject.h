@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnLerpStarted);
     SCHEMA_FIELD(CEntityIOOutput, m_OnLerpFinished);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetached);
-
-public:
-    static CTriggerLerpObject* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerLerpObject>(className);
-    }
-
-    static CTriggerLerpObject* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerLerpObject>(iIndex);
-    }
-
-    static CTriggerLerpObject* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERLERPOBJECT_H

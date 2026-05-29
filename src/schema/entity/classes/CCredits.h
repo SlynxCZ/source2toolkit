@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnCreditsDone);
     SCHEMA_FIELD(bool, m_bRolledOutroCredits);
     SCHEMA_FIELD(float, m_flLogoLength);
-
-public:
-    static CCredits* New(const char* className)
-    {
-        return CBaseEntity::New<CCredits>(className);
-    }
-
-    static CCredits* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCredits>(iIndex);
-    }
-
-    static CCredits* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCREDITS_H

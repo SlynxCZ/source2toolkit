@@ -85,22 +85,6 @@ public:
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasY);
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasZ);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
-
-public:
-    static CEnvLightProbeVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvLightProbeVolume>(className);
-    }
-
-    static CEnvLightProbeVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvLightProbeVolume>(iIndex);
-    }
-
-    static CEnvLightProbeVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVLIGHTPROBEVOLUME_H

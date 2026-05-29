@@ -35,10 +35,14 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CPlayerPawnComponent.h"
+#include "schema/entity/classes/CPlayerPawnComponentImpl.h"
 
 #include "schema/entity/classes/CCSPlayerPawn.h"
 
 CCSPlayerPawn* CPlayerPawnComponent::GetPlayerPawn() {
     return static_cast<CCSPlayerPawn*>(__m_pChainEntity());
 }
+IPlayerPawnComponent* CPlayerPawnComponent::ToInterface() { return new CPlayerPawnComponentImpl(this); }
+
+IPlayerPawnComponent* IPlayerPawnComponent::FromOriginal(CPlayerPawnComponent* p)
+{ return CPlayerPawnComponent::FromOriginal(p); }

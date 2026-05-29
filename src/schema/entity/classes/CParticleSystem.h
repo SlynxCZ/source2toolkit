@@ -86,22 +86,6 @@ public:
     SCHEMA_FIELD(Vector, m_vecDataCPValue);
     SCHEMA_FIELD(int32_t, m_nTintCP);
     SCHEMA_FIELD(Color, m_clrTint);
-
-public:
-    static CParticleSystem* New(const char* className)
-    {
-        return CBaseEntity::New<CParticleSystem>(className);
-    }
-
-    static CParticleSystem* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CParticleSystem>(iIndex);
-    }
-
-    static CParticleSystem* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPARTICLESYSTEM_H

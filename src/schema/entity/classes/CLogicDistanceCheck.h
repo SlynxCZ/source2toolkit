@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_InZone1);
     SCHEMA_FIELD(CEntityIOOutput, m_InZone2);
     SCHEMA_FIELD(CEntityIOOutput, m_InZone3);
-
-public:
-    static CLogicDistanceCheck* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicDistanceCheck>(className);
-    }
-
-    static CLogicDistanceCheck* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicDistanceCheck>(iIndex);
-    }
-
-    static CLogicDistanceCheck* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICDISTANCECHECK_H

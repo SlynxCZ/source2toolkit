@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPhysThruster);
 
     SCHEMA_FIELD(Vector, m_localOrigin);
-
-public:
-    static CPhysThruster* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysThruster>(className);
-    }
-
-    static CPhysThruster* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysThruster>(iIndex);
-    }
-
-    static CPhysThruster* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSTHRUSTER_H

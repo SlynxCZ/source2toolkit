@@ -61,22 +61,6 @@ class CRagdollPropAlias_physics_prop_ragdoll : public CRagdollProp
 public:
     DECLARE_SCHEMA_CLASS(CRagdollPropAlias_physics_prop_ragdoll);
 
-
-public:
-    static CRagdollPropAlias_physics_prop_ragdoll* New(const char* className)
-    {
-        return CBaseEntity::New<CRagdollPropAlias_physics_prop_ragdoll>(className);
-    }
-
-    static CRagdollPropAlias_physics_prop_ragdoll* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRagdollPropAlias_physics_prop_ragdoll>(iIndex);
-    }
-
-    static CRagdollPropAlias_physics_prop_ragdoll* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRAGDOLLPROPALIAS_PHYSICS_PROP_RAGDOLL_H

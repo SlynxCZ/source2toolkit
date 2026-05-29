@@ -61,22 +61,6 @@ class CFuncRetakeBarrier : public CDynamicProp
 public:
     DECLARE_SCHEMA_CLASS(CFuncRetakeBarrier);
 
-
-public:
-    static CFuncRetakeBarrier* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncRetakeBarrier>(className);
-    }
-
-    static CFuncRetakeBarrier* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncRetakeBarrier>(iIndex);
-    }
-
-    static CFuncRetakeBarrier* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCRETAKEBARRIER_H

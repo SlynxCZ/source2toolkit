@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(CUtlString, m_strEventName);
     SCHEMA_FIELD(bool, m_bIsEnabled);
     SCHEMA_FIELD(int32_t, m_nTeam);
-
-public:
-    static CLogicEventListener* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicEventListener>(className);
-    }
-
-    static CLogicEventListener* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicEventListener>(iIndex);
-    }
-
-    static CLogicEventListener* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICEVENTLISTENER_H

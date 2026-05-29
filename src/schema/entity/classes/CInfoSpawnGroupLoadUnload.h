@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(bool, m_bUnloadingStarted);
     SCHEMA_FIELD(bool, m_bQueueActiveSpawnGroupChange);
     SCHEMA_FIELD(bool, m_bQueueFinishLoading);
-
-public:
-    static CInfoSpawnGroupLoadUnload* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoSpawnGroupLoadUnload>(className);
-    }
-
-    static CInfoSpawnGroupLoadUnload* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoSpawnGroupLoadUnload>(iIndex);
-    }
-
-    static CInfoSpawnGroupLoadUnload* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOSPAWNGROUPLOADUNLOAD_H

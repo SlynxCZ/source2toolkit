@@ -82,22 +82,6 @@ public:
     SCHEMA_FIELD(float, m_flLimitsDebugVisRotation);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartMoving);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStopMoving);
-
-public:
-    static CPhysHinge* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysHinge>(className);
-    }
-
-    static CPhysHinge* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysHinge>(iIndex);
-    }
-
-    static CPhysHinge* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSHINGE_H

@@ -76,22 +76,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nTintID);
     SCHEMA_FIELD(uint8_t, m_nVersion);
     SCHEMA_FIELD_POINTER(uint8_t, m_ubSignature);
-
-public:
-    static CPlayerSprayDecal* New(const char* className)
-    {
-        return CBaseEntity::New<CPlayerSprayDecal>(className);
-    }
-
-    static CPlayerSprayDecal* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPlayerSprayDecal>(iIndex);
-    }
-
-    static CPlayerSprayDecal* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPLAYERSPRAYDECAL_H

@@ -61,22 +61,6 @@ class CPointPulse : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CPointPulse);
 
-
-public:
-    static CPointPulse* New(const char* className)
-    {
-        return CBaseEntity::New<CPointPulse>(className);
-    }
-
-    static CPointPulse* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointPulse>(iIndex);
-    }
-
-    static CPointPulse* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTPULSE_H

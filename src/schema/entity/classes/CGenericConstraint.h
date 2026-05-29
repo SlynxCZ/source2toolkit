@@ -111,22 +111,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedX);
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedY);
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedZ);
-
-public:
-    static CGenericConstraint* New(const char* className)
-    {
-        return CBaseEntity::New<CGenericConstraint>(className);
-    }
-
-    static CGenericConstraint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGenericConstraint>(iIndex);
-    }
-
-    static CGenericConstraint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGENERICCONSTRAINT_H

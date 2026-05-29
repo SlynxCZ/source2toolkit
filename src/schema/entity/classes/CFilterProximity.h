@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFilterProximity);
 
     SCHEMA_FIELD(float, m_flRadius);
-
-public:
-    static CFilterProximity* New(const char* className)
-    {
-        return CBaseEntity::New<CFilterProximity>(className);
-    }
-
-    static CFilterProximity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFilterProximity>(iIndex);
-    }
-
-    static CFilterProximity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFILTERPROXIMITY_H

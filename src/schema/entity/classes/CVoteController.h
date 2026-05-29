@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nHighestCountIndex);
     SCHEMA_FIELD(CUtlVector<CBaseIssue*>, m_potentialIssues);
     SCHEMA_FIELD(CUtlVector<char*>, m_VoteOptions);
-
-public:
-    static CVoteController* New(const char* className)
-    {
-        return CBaseEntity::New<CVoteController>(className);
-    }
-
-    static CVoteController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CVoteController>(iIndex);
-    }
-
-    static CVoteController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CVOTECONTROLLER_H

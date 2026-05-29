@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(float, m_fWindTurbulenceMultiplier);
     SCHEMA_FIELD(float, m_fWindSpeedVariationMultiplier);
     SCHEMA_FIELD(float, m_fWindDirectionVariationMultiplier);
-
-public:
-    static CEnvWindVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvWindVolume>(className);
-    }
-
-    static CEnvWindVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvWindVolume>(iIndex);
-    }
-
-    static CEnvWindVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVWINDVOLUME_H

@@ -61,22 +61,6 @@ class CTriggerCallback : public CBaseTrigger
 public:
     DECLARE_SCHEMA_CLASS(CTriggerCallback);
 
-
-public:
-    static CTriggerCallback* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerCallback>(className);
-    }
-
-    static CTriggerCallback* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerCallback>(iIndex);
-    }
-
-    static CTriggerCallback* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERCALLBACK_H

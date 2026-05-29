@@ -64,6 +64,7 @@
 class CChoreoComponent;
 class CDestructiblePartsComponent;
 class CRenderComponent;
+class IBaseModelEntity;
 
 class CBaseModelEntity : public CBaseEntity
 {
@@ -118,19 +119,10 @@ public:
     void SetModel(const char* pszModel);
 
 public:
-    static CBaseModelEntity* New(const char* className)
+    IBaseModelEntity* ToInterface();
+    static IBaseModelEntity* FromOriginal(CBaseModelEntity* p)
     {
-        return CBaseEntity::New<CBaseModelEntity>(className);
-    }
-
-    static CBaseModelEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseModelEntity>(iIndex);
-    }
-
-    static CBaseModelEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
+        return p ? p->ToInterface() : nullptr;
     }
 };
 

@@ -61,22 +61,6 @@ class CWeaponXM1014 : public CCSWeaponBaseShotgun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponXM1014);
 
-
-public:
-    static CWeaponXM1014* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponXM1014>(className);
-    }
-
-    static CWeaponXM1014* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponXM1014>(iIndex);
-    }
-
-    static CWeaponXM1014* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONXM1014_H

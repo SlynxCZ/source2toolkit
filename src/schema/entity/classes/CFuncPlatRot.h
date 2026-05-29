@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(QAngle, m_end);
     SCHEMA_FIELD(QAngle, m_start);
-
-public:
-    static CFuncPlatRot* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncPlatRot>(className);
-    }
-
-    static CFuncPlatRot* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncPlatRot>(iIndex);
-    }
-
-    static CFuncPlatRot* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCPLATROT_H

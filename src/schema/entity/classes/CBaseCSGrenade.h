@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nNextHoldTick);
     SCHEMA_FIELD(float, m_flNextHoldFrac);
     SCHEMA_FIELD(CHandle<CCSWeaponBase>, m_hSwitchToWeaponAfterThrow);
-
-public:
-    static CBaseCSGrenade* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseCSGrenade>(className);
-    }
-
-    static CBaseCSGrenade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseCSGrenade>(iIndex);
-    }
-
-    static CBaseCSGrenade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASECSGRENADE_H

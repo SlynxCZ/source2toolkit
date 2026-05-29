@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszInteractsAs);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszInteractsWith);
-
-public:
-    static CFuncInteractionLayerClip* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncInteractionLayerClip>(className);
-    }
-
-    static CFuncInteractionLayerClip* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncInteractionLayerClip>(iIndex);
-    }
-
-    static CFuncInteractionLayerClip* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCINTERACTIONLAYERCLIP_H

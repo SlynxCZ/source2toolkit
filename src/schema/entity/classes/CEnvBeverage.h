@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(bool, m_CanInDispenser);
     SCHEMA_FIELD(int32_t, m_nBeverageType);
-
-public:
-    static CEnvBeverage* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvBeverage>(className);
-    }
-
-    static CEnvBeverage* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvBeverage>(iIndex);
-    }
-
-    static CEnvBeverage* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVBEVERAGE_H

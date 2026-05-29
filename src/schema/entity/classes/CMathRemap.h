@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnRoseAboveMax);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMin);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMax);
-
-public:
-    static CMathRemap* New(const char* className)
-    {
-        return CBaseEntity::New<CMathRemap>(className);
-    }
-
-    static CMathRemap* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMathRemap>(iIndex);
-    }
-
-    static CMathRemap* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMATHREMAP_H

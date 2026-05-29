@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(Vector, m_vSpotlightDir);
     SCHEMA_FIELD(Vector, m_vSpotlightOrg);
-
-public:
-    static CSpotlightEnd* New(const char* className)
-    {
-        return CBaseEntity::New<CSpotlightEnd>(className);
-    }
-
-    static CSpotlightEnd* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSpotlightEnd>(iIndex);
-    }
-
-    static CSpotlightEnd* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSPOTLIGHTEND_H

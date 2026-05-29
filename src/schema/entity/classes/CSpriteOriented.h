@@ -61,22 +61,6 @@ class CSpriteOriented : public CSprite
 public:
     DECLARE_SCHEMA_CLASS(CSpriteOriented);
 
-
-public:
-    static CSpriteOriented* New(const char* className)
-    {
-        return CBaseEntity::New<CSpriteOriented>(className);
-    }
-
-    static CSpriteOriented* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSpriteOriented>(iIndex);
-    }
-
-    static CSpriteOriented* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSPRITEORIENTED_H

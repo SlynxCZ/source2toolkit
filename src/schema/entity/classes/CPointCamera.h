@@ -87,22 +87,6 @@ public:
     SCHEMA_FIELD(float, m_DegreesPerSecond);
     SCHEMA_FIELD(bool, m_bIsOn);
     SCHEMA_FIELD(CPointCamera*, m_pNext);
-
-public:
-    static CPointCamera* New(const char* className)
-    {
-        return CBaseEntity::New<CPointCamera>(className);
-    }
-
-    static CPointCamera* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointCamera>(iIndex);
-    }
-
-    static CPointCamera* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTCAMERA_H

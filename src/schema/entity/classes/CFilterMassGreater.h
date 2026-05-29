@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFilterMassGreater);
 
     SCHEMA_FIELD(float, m_fFilterMass);
-
-public:
-    static CFilterMassGreater* New(const char* className)
-    {
-        return CBaseEntity::New<CFilterMassGreater>(className);
-    }
-
-    static CFilterMassGreater* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFilterMassGreater>(iIndex);
-    }
-
-    static CFilterMassGreater* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFILTERMASSGREATER_H

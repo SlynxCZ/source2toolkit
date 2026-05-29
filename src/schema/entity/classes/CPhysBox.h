@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerUse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartTouch);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hCarryingPlayer);
-
-public:
-    static CPhysBox* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysBox>(className);
-    }
-
-    static CPhysBox* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysBox>(iIndex);
-    }
-
-    static CPhysBox* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSBOX_H

@@ -61,22 +61,6 @@ class CPathParticleRopeAlias_path_particle_rope_clientside : public CPathParticl
 public:
     DECLARE_SCHEMA_CLASS(CPathParticleRopeAlias_path_particle_rope_clientside);
 
-
-public:
-    static CPathParticleRopeAlias_path_particle_rope_clientside* New(const char* className)
-    {
-        return CBaseEntity::New<CPathParticleRopeAlias_path_particle_rope_clientside>(className);
-    }
-
-    static CPathParticleRopeAlias_path_particle_rope_clientside* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathParticleRopeAlias_path_particle_rope_clientside>(iIndex);
-    }
-
-    static CPathParticleRopeAlias_path_particle_rope_clientside* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHPARTICLEROPEALIAS_PATH_PARTICLE_ROPE_CLIENTSIDE_H

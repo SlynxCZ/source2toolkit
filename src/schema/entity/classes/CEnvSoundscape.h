@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_soundscapeName);
     SCHEMA_FIELD(uint32_t, m_soundEventHash);
-
-public:
-    static CEnvSoundscape* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvSoundscape>(className);
-    }
-
-    static CEnvSoundscape* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvSoundscape>(iIndex);
-    }
-
-    static CEnvSoundscape* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPE_H

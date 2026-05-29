@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(TRAIN_CODE, m_code);
     SCHEMA_FIELD(int32_t, m_targetState);
     SCHEMA_FIELD(int32_t, m_use);
-
-public:
-    static CFuncTrackChange* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncTrackChange>(className);
-    }
-
-    static CFuncTrackChange* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncTrackChange>(iIndex);
-    }
-
-    static CFuncTrackChange* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCTRACKCHANGE_H

@@ -88,22 +88,6 @@ public:
     SCHEMA_FIELD(CStrongHandle<InfoForResourceTypeCTextureBase>, m_hFogCubemapTexture);
     SCHEMA_FIELD(bool, m_bHasHeightFogEnd);
     SCHEMA_FIELD(bool, m_bFirstTime);
-
-public:
-    static CEnvCubemapFog* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvCubemapFog>(className);
-    }
-
-    static CEnvCubemapFog* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvCubemapFog>(iIndex);
-    }
-
-    static CEnvCubemapFog* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVCUBEMAPFOG_H

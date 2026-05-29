@@ -61,22 +61,6 @@ class CItemAssaultSuit : public CItem
 public:
     DECLARE_SCHEMA_CLASS(CItemAssaultSuit);
 
-
-public:
-    static CItemAssaultSuit* New(const char* className)
-    {
-        return CBaseEntity::New<CItemAssaultSuit>(className);
-    }
-
-    static CItemAssaultSuit* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemAssaultSuit>(iIndex);
-    }
-
-    static CItemAssaultSuit* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMASSAULTSUIT_H

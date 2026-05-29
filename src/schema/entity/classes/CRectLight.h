@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CRectLight);
 
     SCHEMA_FIELD(bool, m_bShowLight);
-
-public:
-    static CRectLight* New(const char* className)
-    {
-        return CBaseEntity::New<CRectLight>(className);
-    }
-
-    static CRectLight* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRectLight>(iIndex);
-    }
-
-    static CRectLight* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRECTLIGHT_H

@@ -64,22 +64,6 @@ public:
     DECLARE_SCHEMA_CLASS(CCSGameRulesProxy);
 
     SCHEMA_FIELD(CCSGameRules*, m_pGameRules);
-
-public:
-    static CCSGameRulesProxy* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGameRulesProxy>(className);
-    }
-
-    static CCSGameRulesProxy* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGameRulesProxy>(iIndex);
-    }
-
-    static CCSGameRulesProxy* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGAMERULESPROXY_H

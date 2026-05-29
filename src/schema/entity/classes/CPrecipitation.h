@@ -61,22 +61,6 @@ class CPrecipitation : public CBaseTrigger
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitation);
 
-
-public:
-    static CPrecipitation* New(const char* className)
-    {
-        return CBaseEntity::New<CPrecipitation>(className);
-    }
-
-    static CPrecipitation* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPrecipitation>(iIndex);
-    }
-
-    static CPrecipitation* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPRECIPITATION_H

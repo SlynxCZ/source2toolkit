@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(bool, m_bUseLandmarkAngles);
     SCHEMA_FIELD(bool, m_bMirrorPlayer);
     SCHEMA_FIELD(bool, m_bCheckDestIfClearForPlayer);
-
-public:
-    static CTriggerTeleport* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerTeleport>(className);
-    }
-
-    static CTriggerTeleport* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerTeleport>(iIndex);
-    }
-
-    static CTriggerTeleport* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERTELEPORT_H

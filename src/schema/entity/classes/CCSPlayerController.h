@@ -65,6 +65,11 @@ class CCSPlayerController_DamageServices;
 class CCSPlayerController_InGameMoneyServices;
 class CCSPlayerController_InventoryServices;
 class CCSPlayerPawn;
+class ICSObserverPawn;
+class ICSPlayerController;
+class ICSPlayerPawn;
+class IGameEvent;
+class IP;
 
 class CCSPlayerController : public CBasePlayerController
 {
@@ -166,19 +171,19 @@ public:
 
 public:
     /// <summary>Get controller from pawn.</summary>
-    static CCSPlayerController* FromPawn(CCSPlayerPawn* pPawn);
+    static ICSPlayerController* FromPawn(ICSPlayerPawn* pPawn);
     /// <summary>Get controller from slot.</summary>
-    static CCSPlayerController* FromSlot(int iSlot);
+    static ICSPlayerController* FromSlot(int iSlot);
     /// <summary>Get controller from slot.</summary>
-    static CCSPlayerController* FromSlot(CPlayerSlot slot);
+    static ICSPlayerController* FromSlot(CPlayerSlot slot);
     /// <summary>Get controller from user id.</summary>
-    static CCSPlayerController* FromUserId(int iUserId);
+    static ICSPlayerController* FromUserId(int iUserId);
     /// <summary>Get controller from user id.</summary>
-    static CCSPlayerController* FromUserId(CPlayerUserId userId);
+    static ICSPlayerController* FromUserId(CPlayerUserId userId);
     /// <summary>Get controller from steam id.</summary>
-    static CCSPlayerController* FromSteamId(uint64 uSteamId);
+    static ICSPlayerController* FromSteamId(uint64 uSteamId);
     /// <summary>Get controller from steam id.</summary>
-    static CCSPlayerController* FromSteamId(CSteamID steamId);
+    static ICSPlayerController* FromSteamId(CSteamID steamId);
     /// <summary>Print to console.</summary>
     void PrintToConsole(const char* pszMessage);
     /// <summary>Print to chat.</summary>
@@ -190,7 +195,7 @@ public:
     /// <summary>Print to center in HTML.</summary>
     void PrintToCenterHtml(const char* pszMessage, int iDuration = 5);
     /// <summary>Take damage from player</summary>
-    void TakeDamage(CCSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType);
+    void TakeDamage(ICSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType);
     /// <summary>Respawn player.</summary>
     void Respawn();
     /// <summary>Switch team without killing.</summary>
@@ -206,11 +211,11 @@ public:
     /// <summary>Execute command from server.</summary>
     void ExecuteClientCommandFromServer(const char* pszCommand);
     /// <summary>Get pawn.</summary>
-    CCSPlayerPawn* GetPawn();
+    ICSPlayerPawn* GetPawn();
     /// <summary>Get player pawn.</summary>
-    CCSPlayerPawn* GetPlayerPawn();
+    ICSPlayerPawn* GetPlayerPawn();
     /// <summary>Get observer pawn.</summary>
-    CCSObserverPawn* GetObserverPawn();
+    ICSObserverPawn* GetObserverPawn();
     /// <summary>Get player index.</summary>
     CEntityIndex GetPlayerIndex();
     /// <summary>Get slot.</summary>
@@ -235,19 +240,10 @@ public:
     void FireEventToClient(IGameEvent* pEvent);
 
 public:
-    static CCSPlayerController* New(const char* className)
+    ICSPlayerController* ToInterface();
+    static ICSPlayerController* FromOriginal(CCSPlayerController* p)
     {
-        return CBaseEntity::New<CCSPlayerController>(className);
-    }
-
-    static CCSPlayerController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPlayerController>(iIndex);
-    }
-
-    static CCSPlayerController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
+        return p ? p->ToInterface() : nullptr;
     }
 };
 

@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CCSGameRules.h"
+#include "schema/entity/classes/CCSGameRulesImpl.h"
 
 #include "schema/entity/classes/CCSPlayerController.h"
 #include "schema/entity/classes/CCSPlayerPawn.h"
@@ -73,3 +73,7 @@ CCSPlayerController* CCSGameRules::GetClientAimTarget(CCSPlayerController* pPlay
 
     return V_strcmp(pPawn->GetClassname(), "player") == 0 ? pPawn->m_hOriginalController().Get() : nullptr;
 }
+ICSGameRules* CCSGameRules::ToInterface() { return new CCSGameRulesImpl(this); }
+
+ICSGameRules* ICSGameRules::FromOriginal(CCSGameRules* p)
+{ return CCSGameRules::FromOriginal(p); }

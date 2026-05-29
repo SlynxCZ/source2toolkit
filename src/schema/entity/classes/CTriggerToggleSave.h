@@ -61,22 +61,6 @@ class CTriggerToggleSave : public CBaseTrigger
 public:
     DECLARE_SCHEMA_CLASS(CTriggerToggleSave);
 
-
-public:
-    static CTriggerToggleSave* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerToggleSave>(className);
-    }
-
-    static CTriggerToggleSave* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerToggleSave>(iIndex);
-    }
-
-    static CTriggerToggleSave* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERTOGGLESAVE_H

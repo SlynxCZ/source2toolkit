@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(int32_t, m_iPriority);
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(int32_t, m_nType);
-
-public:
-    static SpawnPoint* New(const char* className)
-    {
-        return CBaseEntity::New<SpawnPoint>(className);
-    }
-
-    static SpawnPoint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<SpawnPoint>(iIndex);
-    }
-
-    static SpawnPoint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_SPAWNPOINT_H

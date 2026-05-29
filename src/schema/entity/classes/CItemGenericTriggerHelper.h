@@ -64,22 +64,6 @@ public:
     DECLARE_SCHEMA_CLASS(CItemGenericTriggerHelper);
 
     SCHEMA_FIELD(CHandle<CItemGeneric>, m_hParentItem);
-
-public:
-    static CItemGenericTriggerHelper* New(const char* className)
-    {
-        return CBaseEntity::New<CItemGenericTriggerHelper>(className);
-    }
-
-    static CItemGenericTriggerHelper* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemGenericTriggerHelper>(iIndex);
-    }
-
-    static CItemGenericTriggerHelper* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMGENERICTRIGGERHELPER_H

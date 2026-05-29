@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnGreaterThan);
     SCHEMA_FIELD(CEntityIOOutput, m_OnGreaterThanOrEqualTo);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEqualTo);
-
-public:
-    static CPointAngularVelocitySensor* New(const char* className)
-    {
-        return CBaseEntity::New<CPointAngularVelocitySensor>(className);
-    }
-
-    static CPointAngularVelocitySensor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointAngularVelocitySensor>(iIndex);
-    }
-
-    static CPointAngularVelocitySensor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTANGULARVELOCITYSENSOR_H

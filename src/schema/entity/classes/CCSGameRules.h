@@ -57,9 +57,11 @@
 #include "CTeamplayRules.h"
 
 class CBaseEntity;
-class CBasePlayerController;
 class CCSGameModeRules;
-class CCSPlayerController;
+class IBaseEntity;
+class IBasePlayerController;
+class ICSGameRules;
+class ICSPlayerController;
 class SpawnPoint;
 
 class CCSGameRules : public CTeamplayRules
@@ -260,9 +262,16 @@ public:
     /// <summary>Terminate round.</summary>
     void TerminateRound(float flDelay, int32_t eRoundEndReason);
     /// <summary>Find entity player is aiming at.</summary>
-    CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer);
+    IBaseEntity* FindPickerEntity(IBasePlayerController* pPlayer);
     /// <summary>Get aim target.</summary>
-    CCSPlayerController* GetClientAimTarget(CCSPlayerController* pPlayer);
+    ICSPlayerController* GetClientAimTarget(ICSPlayerController* pPlayer);
+
+public:
+    ICSGameRules* ToInterface();
+    static ICSGameRules* FromOriginal(CCSGameRules* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGAMERULES_H

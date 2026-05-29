@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CSoundStackSave);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszStackName);
-
-public:
-    static CSoundStackSave* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundStackSave>(className);
-    }
-
-    static CSoundStackSave* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundStackSave>(iIndex);
-    }
-
-    static CSoundStackSave* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDSTACKSAVE_H

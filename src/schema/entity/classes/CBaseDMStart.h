@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CBaseDMStart);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_Master);
-
-public:
-    static CBaseDMStart* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseDMStart>(className);
-    }
-
-    static CBaseDMStart* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseDMStart>(iIndex);
-    }
-
-    static CBaseDMStart* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEDMSTART_H

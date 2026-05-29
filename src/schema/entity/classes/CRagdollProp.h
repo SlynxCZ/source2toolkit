@@ -98,22 +98,6 @@ public:
     SCHEMA_FIELD(CUtlVector<Vector>, m_ragdollMaxs);
     SCHEMA_FIELD(bool, m_bShouldDeleteActivationRecord);
     SCHEMA_FIELD(CUtlVector<INavObstacle*>, m_vecNavObstacles);
-
-public:
-    static CRagdollProp* New(const char* className)
-    {
-        return CBaseEntity::New<CRagdollProp>(className);
-    }
-
-    static CRagdollProp* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRagdollProp>(iIndex);
-    }
-
-    static CRagdollProp* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRAGDOLLPROP_H

@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMeasureTarget);
     SCHEMA_FIELD(float, m_fRadius);
     SCHEMA_FIELD(int32_t, m_nTouchers);
-
-public:
-    static CTriggerProximity* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerProximity>(className);
-    }
-
-    static CTriggerProximity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerProximity>(iIndex);
-    }
-
-    static CTriggerProximity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERPROXIMITY_H

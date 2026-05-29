@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(bool, m_bLoadDynamic);
     SCHEMA_FIELD(CHandle<CPointPrefab>, m_associatedRelayEntity);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_ProceduralRelaySources);
-
-public:
-    static CPointPrefab* New(const char* className)
-    {
-        return CBaseEntity::New<CPointPrefab>(className);
-    }
-
-    static CPointPrefab* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointPrefab>(iIndex);
-    }
-
-    static CPointPrefab* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTPREFAB_H

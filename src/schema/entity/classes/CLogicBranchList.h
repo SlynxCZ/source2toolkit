@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnAllTrue);
     SCHEMA_FIELD(CEntityIOOutput, m_OnAllFalse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnMixed);
-
-public:
-    static CLogicBranchList* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicBranchList>(className);
-    }
-
-    static CLogicBranchList* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicBranchList>(iIndex);
-    }
-
-    static CLogicBranchList* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICBRANCHLIST_H

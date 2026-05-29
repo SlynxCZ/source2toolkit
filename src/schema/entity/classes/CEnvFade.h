@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(float, m_Duration);
     SCHEMA_FIELD(float, m_HoldDuration);
     SCHEMA_FIELD(CEntityIOOutput, m_OnBeginFade);
-
-public:
-    static CEnvFade* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvFade>(className);
-    }
-
-    static CEnvFade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvFade>(iIndex);
-    }
-
-    static CEnvFade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVFADE_H

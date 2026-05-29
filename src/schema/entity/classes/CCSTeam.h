@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD_POINTER(char, m_szTeamLogoImage);
     SCHEMA_FIELD(float, m_flNextResourceTime);
     SCHEMA_FIELD(int32_t, m_iLastUpdateSentAt);
-
-public:
-    static CCSTeam* New(const char* className)
-    {
-        return CBaseEntity::New<CCSTeam>(className);
-    }
-
-    static CCSTeam* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSTeam>(iIndex);
-    }
-
-    static CCSTeam* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSTEAM_H

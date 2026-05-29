@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(bool, m_bStopAtStartPos);
     SCHEMA_FIELD(Vector, m_vecClientOrigin);
     SCHEMA_FIELD(QAngle, m_vecClientAngles);
-
-public:
-    static CFuncRotating* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncRotating>(className);
-    }
-
-    static CFuncRotating* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncRotating>(iIndex);
-    }
-
-    static CFuncRotating* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCROTATING_H

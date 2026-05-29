@@ -61,22 +61,6 @@ class CTriggerHostageReset : public CBaseTrigger
 public:
     DECLARE_SCHEMA_CLASS(CTriggerHostageReset);
 
-
-public:
-    static CTriggerHostageReset* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerHostageReset>(className);
-    }
-
-    static CTriggerHostageReset* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerHostageReset>(iIndex);
-    }
-
-    static CTriggerHostageReset* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERHOSTAGERESET_H

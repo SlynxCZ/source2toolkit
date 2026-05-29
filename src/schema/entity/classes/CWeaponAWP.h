@@ -61,22 +61,6 @@ class CWeaponAWP : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponAWP);
 
-
-public:
-    static CWeaponAWP* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponAWP>(className);
-    }
-
-    static CWeaponAWP* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponAWP>(iIndex);
-    }
-
-    static CWeaponAWP* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONAWP_H

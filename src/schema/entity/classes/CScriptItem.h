@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CScriptItem);
 
     SCHEMA_FIELD(MoveType_t, m_MoveTypeOverride);
-
-public:
-    static CScriptItem* New(const char* className)
-    {
-        return CBaseEntity::New<CScriptItem>(className);
-    }
-
-    static CScriptItem* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CScriptItem>(iIndex);
-    }
-
-    static CScriptItem* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSCRIPTITEM_H

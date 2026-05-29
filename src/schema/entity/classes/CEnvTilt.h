@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(float, m_TiltTime);
     SCHEMA_FIELD(float, m_stopTime);
-
-public:
-    static CEnvTilt* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvTilt>(className);
-    }
-
-    static CEnvTilt* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvTilt>(iIndex);
-    }
-
-    static CEnvTilt* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVTILT_H

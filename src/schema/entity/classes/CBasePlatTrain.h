@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(float, m_volume);
     SCHEMA_FIELD(float, m_flTWidth);
     SCHEMA_FIELD(float, m_flTLength);
-
-public:
-    static CBasePlatTrain* New(const char* className)
-    {
-        return CBaseEntity::New<CBasePlatTrain>(className);
-    }
-
-    static CBasePlatTrain* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBasePlatTrain>(iIndex);
-    }
-
-    static CBasePlatTrain* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEPLATTRAIN_H

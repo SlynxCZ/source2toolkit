@@ -65,22 +65,6 @@ public:
 
     SCHEMA_FIELD(WorldGroupId_t, m_worldGroupId);
     SCHEMA_FIELD(CHandle<CSkyCamera>, m_hSkyCamera);
-
-public:
-    static CSkyboxReference* New(const char* className)
-    {
-        return CBaseEntity::New<CSkyboxReference>(className);
-    }
-
-    static CSkyboxReference* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSkyboxReference>(iIndex);
-    }
-
-    static CSkyboxReference* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSKYBOXREFERENCE_H

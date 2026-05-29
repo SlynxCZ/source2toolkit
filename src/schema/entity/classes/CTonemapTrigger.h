@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_tonemapControllerName);
     SCHEMA_FIELD(CEntityHandle, m_hTonemapController);
-
-public:
-    static CTonemapTrigger* New(const char* className)
-    {
-        return CBaseEntity::New<CTonemapTrigger>(className);
-    }
-
-    static CTonemapTrigger* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTonemapTrigger>(iIndex);
-    }
-
-    static CTonemapTrigger* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTONEMAPTRIGGER_H

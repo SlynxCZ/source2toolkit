@@ -61,22 +61,6 @@ class CInfoTarget : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoTarget);
 
-
-public:
-    static CInfoTarget* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoTarget>(className);
-    }
-
-    static CInfoTarget* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoTarget>(iIndex);
-    }
-
-    static CInfoTarget* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOTARGET_H

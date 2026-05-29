@@ -77,22 +77,6 @@ public:
     SCHEMA_FIELD_POINTER(char, m_operatorNameChar);
     SCHEMA_FIELD(Vector, m_VecNormPos);
     SCHEMA_FIELD(float, m_flNormCenterSize);
-
-public:
-    static CTriggerSndSosOpvar* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerSndSosOpvar>(className);
-    }
-
-    static CTriggerSndSosOpvar* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerSndSosOpvar>(iIndex);
-    }
-
-    static CTriggerSndSosOpvar* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERSNDSOSOPVAR_H

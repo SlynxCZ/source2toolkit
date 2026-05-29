@@ -59,6 +59,8 @@
 #include "source2toolkit/schema/entity/enums/PlayerConnectedState.h"
 
 class CBasePlayerPawn;
+class IBasePlayerController;
+class IBasePlayerPawn;
 
 class CBasePlayerController : public CBaseEntity
 {
@@ -93,22 +95,13 @@ public:
 
 public:
     /// <summary>Set pawn for controller.</summary>
-    void SetPawn(CBasePlayerPawn* pPawn);
+    void SetPawn(IBasePlayerPawn* pPawn);
 
 public:
-    static CBasePlayerController* New(const char* className)
+    IBasePlayerController* ToInterface();
+    static IBasePlayerController* FromOriginal(CBasePlayerController* p)
     {
-        return CBaseEntity::New<CBasePlayerController>(className);
-    }
-
-    static CBasePlayerController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBasePlayerController>(iIndex);
-    }
-
-    static CBasePlayerController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
+        return p ? p->ToInterface() : nullptr;
     }
 };
 

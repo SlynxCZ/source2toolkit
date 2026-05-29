@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(int32_t, m_nForceSkin);
     SCHEMA_FIELD(bool, m_bAlwaysAllow);
-
-public:
-    static CEconWearable* New(const char* className)
-    {
-        return CBaseEntity::New<CEconWearable>(className);
-    }
-
-    static CEconWearable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEconWearable>(iIndex);
-    }
-
-    static CEconWearable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CECONWEARABLE_H

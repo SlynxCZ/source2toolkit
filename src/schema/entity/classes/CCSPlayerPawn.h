@@ -62,7 +62,6 @@
 
 class CBaseEntity;
 class CCSBot;
-class CCSPlayerController;
 class CCSPlayer_ActionTrackingServices;
 class CCSPlayer_AimPunchServices;
 class CCSPlayer_BulletServices;
@@ -70,6 +69,8 @@ class CCSPlayer_BuyServices;
 class CCSPlayer_DamageReactServices;
 class CCSPlayer_HostageServices;
 class CCSPlayer_RadioServices;
+class ICSPlayerController;
+class ICSPlayerPawn;
 
 class CCSPlayerPawn : public CCSPlayerPawnBase
 {
@@ -187,26 +188,17 @@ public:
 
 public:
     /// <summary>Get controller.</summary>
-    CCSPlayerController* GetController();
+    ICSPlayerController* GetController();
     /// <summary>Get default controller.</summary>
-    CCSPlayerController* GetDefaultController();
+    ICSPlayerController* GetDefaultController();
     /// <summary>Get original controller.</summary>
-    CCSPlayerController* GetOriginalController();
+    ICSPlayerController* GetOriginalController();
 
 public:
-    static CCSPlayerPawn* New(const char* className)
+    ICSPlayerPawn* ToInterface();
+    static ICSPlayerPawn* FromOriginal(CCSPlayerPawn* p)
     {
-        return CBaseEntity::New<CCSPlayerPawn>(className);
-    }
-
-    static CCSPlayerPawn* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPlayerPawn>(iIndex);
-    }
-
-    static CCSPlayerPawn* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
+        return p ? p->ToInterface() : nullptr;
     }
 };
 

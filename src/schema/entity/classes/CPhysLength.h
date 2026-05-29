@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(float, m_addLength);
     SCHEMA_FIELD(float, m_minLength);
     SCHEMA_FIELD(float, m_totalLength);
-
-public:
-    static CPhysLength* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysLength>(className);
-    }
-
-    static CPhysLength* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysLength>(iIndex);
-    }
-
-    static CPhysLength* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSLENGTH_H

@@ -61,22 +61,6 @@ class CPointBroadcastClientCommand : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CPointBroadcastClientCommand);
 
-
-public:
-    static CPointBroadcastClientCommand* New(const char* className)
-    {
-        return CBaseEntity::New<CPointBroadcastClientCommand>(className);
-    }
-
-    static CPointBroadcastClientCommand* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointBroadcastClientCommand>(iIndex);
-    }
-
-    static CPointBroadcastClientCommand* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTBROADCASTCLIENTCOMMAND_H

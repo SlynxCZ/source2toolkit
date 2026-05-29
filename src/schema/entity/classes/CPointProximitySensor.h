@@ -65,22 +65,6 @@ public:
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEntity);
-
-public:
-    static CPointProximitySensor* New(const char* className)
-    {
-        return CBaseEntity::New<CPointProximitySensor>(className);
-    }
-
-    static CPointProximitySensor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointProximitySensor>(iIndex);
-    }
-
-    static CPointProximitySensor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTPROXIMITYSENSOR_H

@@ -61,22 +61,6 @@ class CWeaponM4A1Silencer : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponM4A1Silencer);
 
-
-public:
-    static CWeaponM4A1Silencer* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponM4A1Silencer>(className);
-    }
-
-    static CWeaponM4A1Silencer* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponM4A1Silencer>(iIndex);
-    }
-
-    static CWeaponM4A1Silencer* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONM4A1SILENCER_H

@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CBasePlayerPawn.h"
+#include "schema/entity/classes/CBasePlayerPawnImpl.h"
 
 #include "source2toolkit/utils/virtual.h"
 
@@ -70,3 +70,7 @@ void CBasePlayerPawn::RemovePlayerItem(CBasePlayerWeapon* pWeapon)
     g_ToolkitAPI->Addresses()->CBasePlayerPawn_RemovePlayerItem()(this, pWeapon);
 #endif
 }
+IBasePlayerPawn* CBasePlayerPawn::ToInterface() { return new CBasePlayerPawnImpl(this); }
+
+IBasePlayerPawn* IBasePlayerPawn::FromOriginal(CBasePlayerPawn* p)
+{ return CBasePlayerPawn::FromOriginal(p); }

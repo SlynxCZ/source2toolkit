@@ -61,22 +61,6 @@ class CPhysicalButton : public CBaseButton
 public:
     DECLARE_SCHEMA_CLASS(CPhysicalButton);
 
-
-public:
-    static CPhysicalButton* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicalButton>(className);
-    }
-
-    static CPhysicalButton* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicalButton>(iIndex);
-    }
-
-    static CPhysicalButton* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICALBUTTON_H

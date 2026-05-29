@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(bool, m_bGroupByVolume);
     SCHEMA_FIELD(bool, m_bGroupOtherGroups);
     SCHEMA_FIELD(bool, m_bIsInGroup);
-
-public:
-    static CMarkupVolumeTagged* New(const char* className)
-    {
-        return CBaseEntity::New<CMarkupVolumeTagged>(className);
-    }
-
-    static CMarkupVolumeTagged* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMarkupVolumeTagged>(iIndex);
-    }
-
-    static CMarkupVolumeTagged* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_H

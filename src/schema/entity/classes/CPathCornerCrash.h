@@ -61,22 +61,6 @@ class CPathCornerCrash : public CPathCorner
 public:
     DECLARE_SCHEMA_CLASS(CPathCornerCrash);
 
-
-public:
-    static CPathCornerCrash* New(const char* className)
-    {
-        return CBaseEntity::New<CPathCornerCrash>(className);
-    }
-
-    static CPathCornerCrash* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathCornerCrash>(iIndex);
-    }
-
-    static CPathCornerCrash* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHCORNERCRASH_H

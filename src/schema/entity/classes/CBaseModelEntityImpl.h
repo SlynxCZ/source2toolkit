@@ -52,12 +52,14 @@ public:
 
 private:
     CBaseModelEntity* Real() { return static_cast<CBaseModelEntity*>(m_pReal); }
+    CBaseModelEntity* Real() const { return static_cast<CBaseModelEntity*>(m_pReal); }
 
 public:
-    CRenderComponent*& CRenderComponent() override { return Real()->m_CRenderComponent(); }
-    void CRenderComponentUpdated() override { Real()->m_CRenderComponent.NetworkStateChanged(); }
-    CHitboxComponent& CHitboxComponent() override { return Real()->m_CHitboxComponent(); }
-    void CHitboxComponentUpdated() override { Real()->m_CHitboxComponent.NetworkStateChanged(); }
+    CBaseModelEntity* GetOriginal() const override { return Real(); }
+    CRenderComponent*& RenderComponent() override { return Real()->m_CRenderComponent(); }
+    void RenderComponentUpdated() override { Real()->m_CRenderComponent.NetworkStateChanged(); }
+    CHitboxComponent& HitboxComponent() override { return Real()->m_CHitboxComponent(); }
+    void HitboxComponentUpdated() override { Real()->m_CHitboxComponent.NetworkStateChanged(); }
     CChoreoComponent*& ChoreoComponent() override { return Real()->m_pChoreoComponent(); }
     void ChoreoComponentUpdated() override { Real()->m_pChoreoComponent.NetworkStateChanged(); }
     HitGroup_t& DestructiblePartInitialStateDestructed0() override { return Real()->m_nDestructiblePartInitialStateDestructed0(); }

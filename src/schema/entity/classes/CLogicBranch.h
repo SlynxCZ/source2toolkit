@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_Listeners);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrue);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFalse);
-
-public:
-    static CLogicBranch* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicBranch>(className);
-    }
-
-    static CLogicBranch* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicBranch>(iIndex);
-    }
-
-    static CLogicBranch* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICBRANCH_H

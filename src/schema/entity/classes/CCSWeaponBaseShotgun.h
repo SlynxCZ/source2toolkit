@@ -61,22 +61,6 @@ class CCSWeaponBaseShotgun : public CCSWeaponBase
 public:
     DECLARE_SCHEMA_CLASS(CCSWeaponBaseShotgun);
 
-
-public:
-    static CCSWeaponBaseShotgun* New(const char* className)
-    {
-        return CBaseEntity::New<CCSWeaponBaseShotgun>(className);
-    }
-
-    static CCSWeaponBaseShotgun* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSWeaponBaseShotgun>(iIndex);
-    }
-
-    static CCSWeaponBaseShotgun* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSWEAPONBASESHOTGUN_H

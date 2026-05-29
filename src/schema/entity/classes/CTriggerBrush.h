@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnUse);
     SCHEMA_FIELD(int32_t, m_iInputFilter);
     SCHEMA_FIELD(int32_t, m_iDontMessageParent);
-
-public:
-    static CTriggerBrush* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerBrush>(className);
-    }
-
-    static CTriggerBrush* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerBrush>(iIndex);
-    }
-
-    static CTriggerBrush* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERBRUSH_H

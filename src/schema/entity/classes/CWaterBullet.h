@@ -61,22 +61,6 @@ class CWaterBullet : public CBaseAnimGraph
 public:
     DECLARE_SCHEMA_CLASS(CWaterBullet);
 
-
-public:
-    static CWaterBullet* New(const char* className)
-    {
-        return CBaseEntity::New<CWaterBullet>(className);
-    }
-
-    static CWaterBullet* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWaterBullet>(iIndex);
-    }
-
-    static CWaterBullet* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWATERBULLET_H

@@ -61,22 +61,6 @@ class CItemDefuserAlias_item_defuser : public CItemDefuser
 public:
     DECLARE_SCHEMA_CLASS(CItemDefuserAlias_item_defuser);
 
-
-public:
-    static CItemDefuserAlias_item_defuser* New(const char* className)
-    {
-        return CBaseEntity::New<CItemDefuserAlias_item_defuser>(className);
-    }
-
-    static CItemDefuserAlias_item_defuser* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemDefuserAlias_item_defuser>(iIndex);
-    }
-
-    static CItemDefuserAlias_item_defuser* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMDEFUSERALIAS_ITEM_DEFUSER_H

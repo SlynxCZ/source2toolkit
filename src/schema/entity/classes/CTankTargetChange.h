@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CTankTargetChange);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_newTargetName);
-
-public:
-    static CTankTargetChange* New(const char* className)
-    {
-        return CBaseEntity::New<CTankTargetChange>(className);
-    }
-
-    static CTankTargetChange* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTankTargetChange>(iIndex);
-    }
-
-    static CTankTargetChange* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTANKTARGETCHANGE_H

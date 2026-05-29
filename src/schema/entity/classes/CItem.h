@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(Vector, m_vOriginalSpawnOrigin);
     SCHEMA_FIELD(QAngle, m_vOriginalSpawnAngles);
     SCHEMA_FIELD(bool, m_bPhysStartAsleep);
-
-public:
-    static CItem* New(const char* className)
-    {
-        return CBaseEntity::New<CItem>(className);
-    }
-
-    static CItem* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItem>(iIndex);
-    }
-
-    static CItem* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEM_H

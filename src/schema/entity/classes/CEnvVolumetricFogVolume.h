@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(bool, m_bOverrideIndirectLightStrength);
     SCHEMA_FIELD(bool, m_bOverrideSunLightStrength);
     SCHEMA_FIELD(bool, m_bOverrideNoiseStrength);
-
-public:
-    static CEnvVolumetricFogVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvVolumetricFogVolume>(className);
-    }
-
-    static CEnvVolumetricFogVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvVolumetricFogVolume>(iIndex);
-    }
-
-    static CEnvVolumetricFogVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVVOLUMETRICFOGVOLUME_H

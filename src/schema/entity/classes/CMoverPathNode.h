@@ -61,22 +61,6 @@ class CMoverPathNode : public CPathNode
 public:
     DECLARE_SCHEMA_CLASS(CMoverPathNode);
 
-
-public:
-    static CMoverPathNode* New(const char* className)
-    {
-        return CBaseEntity::New<CMoverPathNode>(className);
-    }
-
-    static CMoverPathNode* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMoverPathNode>(iIndex);
-    }
-
-    static CMoverPathNode* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMOVERPATHNODE_H

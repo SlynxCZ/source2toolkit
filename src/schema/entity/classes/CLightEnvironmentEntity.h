@@ -61,22 +61,6 @@ class CLightEnvironmentEntity : public CLightDirectionalEntity
 public:
     DECLARE_SCHEMA_CLASS(CLightEnvironmentEntity);
 
-
-public:
-    static CLightEnvironmentEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CLightEnvironmentEntity>(className);
-    }
-
-    static CLightEnvironmentEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLightEnvironmentEntity>(iIndex);
-    }
-
-    static CLightEnvironmentEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLIGHTENVIRONMENTENTITY_H

@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CBasePlayerController.h"
+#include "schema/entity/classes/CBasePlayerControllerImpl.h"
 
 #ifdef SOURCE2TOOLKIT_CORE
 #include "core/addresses.h"
@@ -53,3 +53,7 @@ void CBasePlayerController::SetPawn(CBasePlayerPawn* pPawn)
     g_ToolkitAPI->Addresses()->CBasePlayerController_SetPawn()(this, pPawn, true, false, false, false);
 #endif
 }
+IBasePlayerController* CBasePlayerController::ToInterface() { return new CBasePlayerControllerImpl(this); }
+
+IBasePlayerController* IBasePlayerController::FromOriginal(CBasePlayerController* p)
+{ return CBasePlayerController::FromOriginal(p); }

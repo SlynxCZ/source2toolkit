@@ -61,22 +61,6 @@ class CWeaponGalilAR : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponGalilAR);
 
-
-public:
-    static CWeaponGalilAR* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponGalilAR>(className);
-    }
-
-    static CWeaponGalilAR* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponGalilAR>(iIndex);
-    }
-
-    static CWeaponGalilAR* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONGALILAR_H

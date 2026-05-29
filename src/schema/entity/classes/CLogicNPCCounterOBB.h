@@ -61,22 +61,6 @@ class CLogicNPCCounterOBB : public CLogicNPCCounterAABB
 public:
     DECLARE_SCHEMA_CLASS(CLogicNPCCounterOBB);
 
-
-public:
-    static CLogicNPCCounterOBB* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicNPCCounterOBB>(className);
-    }
-
-    static CLogicNPCCounterOBB* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicNPCCounterOBB>(iIndex);
-    }
-
-    static CLogicNPCCounterOBB* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICNPCCOUNTEROBB_H

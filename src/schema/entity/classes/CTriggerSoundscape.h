@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(CHandle<CEnvSoundscapeTriggerable>, m_hSoundscape);
     SCHEMA_FIELD(CUtlSymbolLarge, m_SoundscapeName);
     SCHEMA_FIELD(CUtlVector<CHandle<CBasePlayerPawn>>, m_spectators);
-
-public:
-    static CTriggerSoundscape* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerSoundscape>(className);
-    }
-
-    static CTriggerSoundscape* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerSoundscape>(iIndex);
-    }
-
-    static CTriggerSoundscape* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERSOUNDSCAPE_H

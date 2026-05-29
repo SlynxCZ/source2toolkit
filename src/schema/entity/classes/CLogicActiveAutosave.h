@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(float, m_flTimeToTrigger);
     SCHEMA_FIELD(float, m_flStartTime);
     SCHEMA_FIELD(float, m_flDangerousTime);
-
-public:
-    static CLogicActiveAutosave* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicActiveAutosave>(className);
-    }
-
-    static CLogicActiveAutosave* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicActiveAutosave>(iIndex);
-    }
-
-    static CLogicActiveAutosave* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICACTIVEAUTOSAVE_H

@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(float, m_flBlockDamage);
     SCHEMA_FIELD(float, m_flNextBlockTime);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszLastTarget);
-
-public:
-    static CFuncTrain* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncTrain>(className);
-    }
-
-    static CFuncTrain* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncTrain>(iIndex);
-    }
-
-    static CFuncTrain* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCTRAIN_H

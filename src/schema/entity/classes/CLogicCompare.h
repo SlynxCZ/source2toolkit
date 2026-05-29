@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(float, m_flInValue);
     SCHEMA_FIELD(float, m_flCompareValue);
-
-public:
-    static CLogicCompare* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicCompare>(className);
-    }
-
-    static CLogicCompare* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicCompare>(iIndex);
-    }
-
-    static CLogicCompare* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICCOMPARE_H

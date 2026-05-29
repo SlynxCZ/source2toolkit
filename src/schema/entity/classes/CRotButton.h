@@ -61,22 +61,6 @@ class CRotButton : public CBaseButton
 public:
     DECLARE_SCHEMA_CLASS(CRotButton);
 
-
-public:
-    static CRotButton* New(const char* className)
-    {
-        return CBaseEntity::New<CRotButton>(className);
-    }
-
-    static CRotButton* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRotButton>(iIndex);
-    }
-
-    static CRotButton* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CROTBUTTON_H

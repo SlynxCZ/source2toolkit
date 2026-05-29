@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(CUtlString, m_strStartTouchEventName);
     SCHEMA_FIELD(CUtlString, m_strEndTouchEventName);
     SCHEMA_FIELD(CUtlString, m_strTriggerID);
-
-public:
-    static CTriggerGameEvent* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerGameEvent>(className);
-    }
-
-    static CTriggerGameEvent* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerGameEvent>(iIndex);
-    }
-
-    static CTriggerGameEvent* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERGAMEEVENT_H

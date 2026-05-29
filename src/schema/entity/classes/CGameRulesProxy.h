@@ -61,22 +61,6 @@ class CGameRulesProxy : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CGameRulesProxy);
 
-
-public:
-    static CGameRulesProxy* New(const char* className)
-    {
-        return CBaseEntity::New<CGameRulesProxy>(className);
-    }
-
-    static CGameRulesProxy* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGameRulesProxy>(iIndex);
-    }
-
-    static CGameRulesProxy* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMERULESPROXY_H

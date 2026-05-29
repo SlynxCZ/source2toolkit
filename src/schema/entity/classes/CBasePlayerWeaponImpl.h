@@ -42,18 +42,22 @@
 
 #include "source2toolkit/schema/entity/classes/IBasePlayerWeapon.h"
 #include "schema/entity/classes/CBasePlayerWeapon.h"
-#include "CEconEntityImpl.h"
 
-class CBasePlayerWeaponImpl : public CEconEntityImpl, public IBasePlayerWeapon
+class CBasePlayerWeaponImpl : public virtual IBasePlayerWeapon
 {
 
+protected:
+    void* m_pReal;
+
 public:
-    explicit CBasePlayerWeaponImpl(CBasePlayerWeapon* p) : CEconEntityImpl(p) {}
+    explicit CBasePlayerWeaponImpl(void* p) : m_pReal(p) {}
 
 private:
     CBasePlayerWeapon* Real() { return static_cast<CBasePlayerWeapon*>(m_pReal); }
+    CBasePlayerWeapon* Real() const { return static_cast<CBasePlayerWeapon*>(m_pReal); }
 
 public:
+    CBasePlayerWeapon* GetOriginal() const override { return Real(); }
     int32_t& NextPrimaryAttackTick() override { return Real()->m_nNextPrimaryAttackTick(); }
     void NextPrimaryAttackTickUpdated() override { Real()->m_nNextPrimaryAttackTick.NetworkStateChanged(); }
     float& NextPrimaryAttackTickRatio() override { return Real()->m_flNextPrimaryAttackTickRatio(); }
@@ -70,7 +74,7 @@ public:
     CEntityIOOutput& OnPlayerUse() override { return Real()->m_OnPlayerUse(); }
     void OnPlayerUseUpdated() override { Real()->m_OnPlayerUse.NetworkStateChanged(); }
 
-    CCSWeaponBaseVData* GetWeaponVData() override { return Real()->GetWeaponVData(); }
+    ICSWeaponBaseVData* GetWeaponVData() override { return Real()->GetWeaponVData(); }
     const char* GetWeaponClassname() override { return Real()->GetWeaponClassname(); }
 };
 

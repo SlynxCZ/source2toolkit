@@ -61,22 +61,6 @@ class CWeaponP250 : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponP250);
 
-
-public:
-    static CWeaponP250* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponP250>(className);
-    }
-
-    static CWeaponP250* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponP250>(iIndex);
-    }
-
-    static CWeaponP250* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONP250_H

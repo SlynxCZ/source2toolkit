@@ -61,22 +61,6 @@ class CWeaponMP7 : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponMP7);
 
-
-public:
-    static CWeaponMP7* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponMP7>(className);
-    }
-
-    static CWeaponMP7* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponMP7>(iIndex);
-    }
-
-    static CWeaponMP7* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONMP7_H

@@ -61,22 +61,6 @@ class CAK47 : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CAK47);
 
-
-public:
-    static CAK47* New(const char* className)
-    {
-        return CBaseEntity::New<CAK47>(className);
-    }
-
-    static CAK47* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CAK47>(iIndex);
-    }
-
-    static CAK47* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CAK47_H

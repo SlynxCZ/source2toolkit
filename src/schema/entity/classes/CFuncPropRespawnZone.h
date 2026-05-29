@@ -61,22 +61,6 @@ class CFuncPropRespawnZone : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CFuncPropRespawnZone);
 
-
-public:
-    static CFuncPropRespawnZone* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncPropRespawnZone>(className);
-    }
-
-    static CFuncPropRespawnZone* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncPropRespawnZone>(iIndex);
-    }
-
-    static CFuncPropRespawnZone* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCPROPRESPAWNZONE_H

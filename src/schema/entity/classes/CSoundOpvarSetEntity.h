@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(float, m_flOpvarValue);
     SCHEMA_FIELD(CUtlSymbolLarge, m_OpvarValueString);
     SCHEMA_FIELD(bool, m_bSetOnSpawn);
-
-public:
-    static CSoundOpvarSetEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetEntity>(className);
-    }
-
-    static CSoundOpvarSetEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETENTITY_H

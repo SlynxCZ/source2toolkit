@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnVREnabled);
     SCHEMA_FIELD(CEntityIOOutput, m_OnVRNotEnabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_globalstate);
-
-public:
-    static CLogicAuto* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicAuto>(className);
-    }
-
-    static CLogicAuto* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicAuto>(iIndex);
-    }
-
-    static CLogicAuto* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICAUTO_H

@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(float, m_flFadeStartDist);
     SCHEMA_FIELD(float, m_flFadeEndDist);
-
-public:
-    static CEnvDetailController* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvDetailController>(className);
-    }
-
-    static CEnvDetailController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvDetailController>(iIndex);
-    }
-
-    static CEnvDetailController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVDETAILCONTROLLER_H

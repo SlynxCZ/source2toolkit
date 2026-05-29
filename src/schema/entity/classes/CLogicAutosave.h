@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(bool, m_bForceNewLevelUnit);
     SCHEMA_FIELD(int32_t, m_minHitPoints);
     SCHEMA_FIELD(int32_t, m_minHitPointsToCommit);
-
-public:
-    static CLogicAutosave* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicAutosave>(className);
-    }
-
-    static CLogicAutosave* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicAutosave>(iIndex);
-    }
-
-    static CLogicAutosave* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICAUTOSAVE_H

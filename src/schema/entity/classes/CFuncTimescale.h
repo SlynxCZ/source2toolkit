@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(float, m_flMinBlendRate);
     SCHEMA_FIELD(float, m_flBlendDeltaMultiplier);
     SCHEMA_FIELD(bool, m_isStarted);
-
-public:
-    static CFuncTimescale* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncTimescale>(className);
-    }
-
-    static CFuncTimescale* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncTimescale>(iIndex);
-    }
-
-    static CFuncTimescale* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCTIMESCALE_H

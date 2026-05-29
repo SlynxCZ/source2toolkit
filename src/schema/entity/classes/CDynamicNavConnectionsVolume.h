@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(float, m_flTargetAreaSearchRadius);
     SCHEMA_FIELD(float, m_flUpdateDistance);
     SCHEMA_FIELD(float, m_flMaxConnectionDistance);
-
-public:
-    static CDynamicNavConnectionsVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CDynamicNavConnectionsVolume>(className);
-    }
-
-    static CDynamicNavConnectionsVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDynamicNavConnectionsVolume>(iIndex);
-    }
-
-    static CDynamicNavConnectionsVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDYNAMICNAVCONNECTIONSVOLUME_H

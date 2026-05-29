@@ -84,22 +84,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hFilter);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszDecal);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTouchedByEntity);
-
-public:
-    static CEnvBeam* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvBeam>(className);
-    }
-
-    static CEnvBeam* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvBeam>(iIndex);
-    }
-
-    static CEnvBeam* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVBEAM_H

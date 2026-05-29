@@ -77,22 +77,6 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CFuncMover>>, m_vecQueuedRemovals);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTemplateSpawned);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTemplateGroupSpawned);
-
-public:
-    static CPathMoverEntitySpawner* New(const char* className)
-    {
-        return CBaseEntity::New<CPathMoverEntitySpawner>(className);
-    }
-
-    static CPathMoverEntitySpawner* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathMoverEntitySpawner>(iIndex);
-    }
-
-    static CPathMoverEntitySpawner* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHMOVERENTITYSPAWNER_H

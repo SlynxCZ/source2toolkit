@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_skyboxSlotToken);
     SCHEMA_FIELD(bool, m_bUseAngles);
     SCHEMA_FIELD(CSkyCamera*, m_pNext);
-
-public:
-    static CSkyCamera* New(const char* className)
-    {
-        return CBaseEntity::New<CSkyCamera>(className);
-    }
-
-    static CSkyCamera* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSkyCamera>(iIndex);
-    }
-
-    static CSkyCamera* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSKYCAMERA_H

@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(bool, m_bAllowEmptyInputs);
     SCHEMA_FIELD(CTestPulseIOComponent_Derived, m_TestComponent);
     SCHEMA_FIELD(CEntityIOOutput, m_OnInternalTestVoid);
-
-public:
-    static CTestPulseIO* New(const char* className)
-    {
-        return CBaseEntity::New<CTestPulseIO>(className);
-    }
-
-    static CTestPulseIO* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTestPulseIO>(iIndex);
-    }
-
-    static CTestPulseIO* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIO_H

@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathSimpleName);
     SCHEMA_FIELD(CHandle<CPathSimple>, m_PathSimple);
     SCHEMA_FIELD(uint32_t, m_splinePushType);
-
-public:
-    static CTriggerPush* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerPush>(className);
-    }
-
-    static CTriggerPush* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerPush>(iIndex);
-    }
-
-    static CTriggerPush* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERPUSH_H

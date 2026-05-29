@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(filter_t, m_nFilterType);
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_iFilterName);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hFilter);
-
-public:
-    static CFilterMultiple* New(const char* className)
-    {
-        return CBaseEntity::New<CFilterMultiple>(className);
-    }
-
-    static CFilterMultiple* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFilterMultiple>(iIndex);
-    }
-
-    static CFilterMultiple* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFILTERMULTIPLE_H

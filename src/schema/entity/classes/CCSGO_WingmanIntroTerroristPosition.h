@@ -61,22 +61,6 @@ class CCSGO_WingmanIntroTerroristPosition : public CCSGO_WingmanIntroCharacterPo
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_WingmanIntroTerroristPosition);
 
-
-public:
-    static CCSGO_WingmanIntroTerroristPosition* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGO_WingmanIntroTerroristPosition>(className);
-    }
-
-    static CCSGO_WingmanIntroTerroristPosition* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGO_WingmanIntroTerroristPosition>(iIndex);
-    }
-
-    static CCSGO_WingmanIntroTerroristPosition* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGO_WINGMANINTROTERRORISTPOSITION_H

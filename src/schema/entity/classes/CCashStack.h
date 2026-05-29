@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CCashStack);
 
     SCHEMA_FIELD(int32_t, m_nCashStackValue);
-
-public:
-    static CCashStack* New(const char* className)
-    {
-        return CBaseEntity::New<CCashStack>(className);
-    }
-
-    static CCashStack* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCashStack>(iIndex);
-    }
-
-    static CCashStack* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCASHSTACK_H

@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CBuyZone);
 
     SCHEMA_FIELD(int32_t, m_LegacyTeamNum);
-
-public:
-    static CBuyZone* New(const char* className)
-    {
-        return CBaseEntity::New<CBuyZone>(className);
-    }
-
-    static CBuyZone* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBuyZone>(iIndex);
-    }
-
-    static CBuyZone* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBUYZONE_H

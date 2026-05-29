@@ -61,22 +61,6 @@ class CHostageRescueZone : public CHostageRescueZoneShim
 public:
     DECLARE_SCHEMA_CLASS(CHostageRescueZone);
 
-
-public:
-    static CHostageRescueZone* New(const char* className)
-    {
-        return CBaseEntity::New<CHostageRescueZone>(className);
-    }
-
-    static CHostageRescueZone* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHostageRescueZone>(iIndex);
-    }
-
-    static CHostageRescueZone* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHOSTAGERESCUEZONE_H

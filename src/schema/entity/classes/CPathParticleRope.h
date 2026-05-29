@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(CUtlVector<Vector>, m_PathNodes_Color);
     SCHEMA_FIELD(CUtlVector<bool>, m_PathNodes_PinEnabled);
     SCHEMA_FIELD(CUtlVector<float>, m_PathNodes_RadiusScale);
-
-public:
-    static CPathParticleRope* New(const char* className)
-    {
-        return CBaseEntity::New<CPathParticleRope>(className);
-    }
-
-    static CPathParticleRope* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathParticleRope>(iIndex);
-    }
-
-    static CPathParticleRope* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHPARTICLEROPE_H

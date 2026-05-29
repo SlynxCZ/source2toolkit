@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(float, m_angularLimit);
     SCHEMA_FIELD(bool, m_bActive);
     SCHEMA_FIELD(bool, m_bDampAllRotation);
-
-public:
-    static CKeepUpright* New(const char* className)
-    {
-        return CBaseEntity::New<CKeepUpright>(className);
-    }
-
-    static CKeepUpright* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CKeepUpright>(iIndex);
-    }
-
-    static CKeepUpright* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CKEEPUPRIGHT_H

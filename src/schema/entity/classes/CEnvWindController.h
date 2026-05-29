@@ -73,22 +73,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nClipmapLevels);
     SCHEMA_FIELD(bool, m_bIsMaster);
     SCHEMA_FIELD(bool, m_bFirstTime);
-
-public:
-    static CEnvWindController* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvWindController>(className);
-    }
-
-    static CEnvWindController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvWindController>(iIndex);
-    }
-
-    static CEnvWindController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVWINDCONTROLLER_H

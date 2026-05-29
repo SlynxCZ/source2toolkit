@@ -61,22 +61,6 @@ class CRuleBrushEntity : public CRuleEntity
 public:
     DECLARE_SCHEMA_CLASS(CRuleBrushEntity);
 
-
-public:
-    static CRuleBrushEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CRuleBrushEntity>(className);
-    }
-
-    static CRuleBrushEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRuleBrushEntity>(iIndex);
-    }
-
-    static CRuleBrushEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRULEBRUSHENTITY_H

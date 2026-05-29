@@ -61,22 +61,6 @@ class CCSGO_WingmanIntroCharacterPosition : public CCSGO_TeamIntroCharacterPosit
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_WingmanIntroCharacterPosition);
 
-
-public:
-    static CCSGO_WingmanIntroCharacterPosition* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGO_WingmanIntroCharacterPosition>(className);
-    }
-
-    static CCSGO_WingmanIntroCharacterPosition* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGO_WingmanIntroCharacterPosition>(iIndex);
-    }
-
-    static CCSGO_WingmanIntroCharacterPosition* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGO_WINGMANINTROCHARACTERPOSITION_H

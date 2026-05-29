@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerInZone);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerOutZone);
-
-public:
-    static CGamePlayerZone* New(const char* className)
-    {
-        return CBaseEntity::New<CGamePlayerZone>(className);
-    }
-
-    static CGamePlayerZone* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGamePlayerZone>(iIndex);
-    }
-
-    static CGamePlayerZone* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMEPLAYERZONE_H

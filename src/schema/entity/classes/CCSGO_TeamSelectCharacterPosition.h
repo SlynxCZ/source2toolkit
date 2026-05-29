@@ -61,22 +61,6 @@ class CCSGO_TeamSelectCharacterPosition : public CCSGO_TeamPreviewCharacterPosit
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamSelectCharacterPosition);
 
-
-public:
-    static CCSGO_TeamSelectCharacterPosition* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGO_TeamSelectCharacterPosition>(className);
-    }
-
-    static CCSGO_TeamSelectCharacterPosition* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGO_TeamSelectCharacterPosition>(iIndex);
-    }
-
-    static CCSGO_TeamSelectCharacterPosition* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGO_TEAMSELECTCHARACTERPOSITION_H

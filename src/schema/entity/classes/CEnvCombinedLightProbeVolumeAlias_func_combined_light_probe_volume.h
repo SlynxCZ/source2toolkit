@@ -61,22 +61,6 @@ class CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume : publi
 public:
     DECLARE_SCHEMA_CLASS(CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume);
 
-
-public:
-    static CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume>(className);
-    }
-
-    static CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume>(iIndex);
-    }
-
-    static CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVCOMBINEDLIGHTPROBEVOLUMEALIAS_FUNC_COMBINED_LIGHT_PROBE_VOLUME_H

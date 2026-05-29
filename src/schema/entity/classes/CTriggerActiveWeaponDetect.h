@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnTouchedActiveWeapon);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszWeaponClassName);
-
-public:
-    static CTriggerActiveWeaponDetect* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerActiveWeaponDetect>(className);
-    }
-
-    static CTriggerActiveWeaponDetect* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerActiveWeaponDetect>(iIndex);
-    }
-
-    static CTriggerActiveWeaponDetect* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERACTIVEWEAPONDETECT_H

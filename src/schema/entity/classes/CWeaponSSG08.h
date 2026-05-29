@@ -61,22 +61,6 @@ class CWeaponSSG08 : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponSSG08);
 
-
-public:
-    static CWeaponSSG08* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponSSG08>(className);
-    }
-
-    static CWeaponSSG08* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponSSG08>(iIndex);
-    }
-
-    static CWeaponSSG08* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONSSG08_H

@@ -61,22 +61,6 @@ class CHEGrenadeProjectile : public CBaseCSGrenadeProjectile
 public:
     DECLARE_SCHEMA_CLASS(CHEGrenadeProjectile);
 
-
-public:
-    static CHEGrenadeProjectile* New(const char* className)
-    {
-        return CBaseEntity::New<CHEGrenadeProjectile>(className);
-    }
-
-    static CHEGrenadeProjectile* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHEGrenadeProjectile>(iIndex);
-    }
-
-    static CHEGrenadeProjectile* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHEGRENADEPROJECTILE_H

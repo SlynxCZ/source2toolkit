@@ -89,22 +89,6 @@ public:
     SCHEMA_FIELD(bool, m_bPushPlayer);
     SCHEMA_FIELD(bool, m_bRampDown);
     SCHEMA_FIELD(int32_t, m_nManagerFanIdx);
-
-public:
-    static CTriggerFan* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerFan>(className);
-    }
-
-    static CTriggerFan* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerFan>(iIndex);
-    }
-
-    static CTriggerFan* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERFAN_H

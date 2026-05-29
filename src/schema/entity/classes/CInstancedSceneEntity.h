@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(bool, m_bIsBackground);
     SCHEMA_FIELD(bool, m_bRemoveOnCompletion);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTarget);
-
-public:
-    static CInstancedSceneEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CInstancedSceneEntity>(className);
-    }
-
-    static CInstancedSceneEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInstancedSceneEntity>(iIndex);
-    }
-
-    static CInstancedSceneEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINSTANCEDSCENEENTITY_H

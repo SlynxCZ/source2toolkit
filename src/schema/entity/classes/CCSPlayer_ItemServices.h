@@ -55,7 +55,8 @@
 
 #include "CPlayer_ItemServices.h"
 
-class CBasePlayerWeapon;
+class IBasePlayerWeapon;
+class ICSPlayer_ItemServices;
 
 class CCSPlayer_ItemServices : public CPlayer_ItemServices
 {
@@ -67,11 +68,18 @@ public:
 
 public:
     /// <summary>Drop active weapon, recommended to use DropWeapon instead (parameter is ignored here)</summary>
-    void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon);
+    void DropActivePlayerWeapon(IBasePlayerWeapon* pActiveWeapon);
     /// <summary>Remove all weapons.</summary>
     void RemoveWeapons();
     /// <summary>Give item.</summary>
-    CBasePlayerWeapon* GiveNamedItem(const char* pszItem);
+    IBasePlayerWeapon* GiveNamedItem(const char* pszItem);
+
+public:
+    ICSPlayer_ItemServices* ToInterface();
+    static ICSPlayer_ItemServices* FromOriginal(CCSPlayer_ItemServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_ITEMSERVICES_H

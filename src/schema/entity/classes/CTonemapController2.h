@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(float, m_flExposureAdaptationSpeedUp);
     SCHEMA_FIELD(float, m_flExposureAdaptationSpeedDown);
     SCHEMA_FIELD(float, m_flTonemapEVSmoothingRange);
-
-public:
-    static CTonemapController2* New(const char* className)
-    {
-        return CBaseEntity::New<CTonemapController2>(className);
-    }
-
-    static CTonemapController2* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTonemapController2>(iIndex);
-    }
-
-    static CTonemapController2* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTONEMAPCONTROLLER2_H

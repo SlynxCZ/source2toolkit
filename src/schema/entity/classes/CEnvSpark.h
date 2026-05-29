@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nTrailLength);
     SCHEMA_FIELD(int32_t, m_nType);
     SCHEMA_FIELD(CEntityIOOutput, m_OnSpark);
-
-public:
-    static CEnvSpark* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvSpark>(className);
-    }
-
-    static CEnvSpark* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvSpark>(iIndex);
-    }
-
-    static CEnvSpark* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSPARK_H

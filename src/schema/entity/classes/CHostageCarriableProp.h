@@ -61,22 +61,6 @@ class CHostageCarriableProp : public CBaseAnimGraph
 public:
     DECLARE_SCHEMA_CLASS(CHostageCarriableProp);
 
-
-public:
-    static CHostageCarriableProp* New(const char* className)
-    {
-        return CBaseEntity::New<CHostageCarriableProp>(className);
-    }
-
-    static CHostageCarriableProp* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHostageCarriableProp>(iIndex);
-    }
-
-    static CHostageCarriableProp* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHOSTAGECARRIABLEPROP_H

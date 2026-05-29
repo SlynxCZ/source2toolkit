@@ -110,22 +110,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnReachedValueCustom);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEngage);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDisengage);
-
-public:
-    static CPointValueRemapper* New(const char* className)
-    {
-        return CBaseEntity::New<CPointValueRemapper>(className);
-    }
-
-    static CPointValueRemapper* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointValueRemapper>(iIndex);
-    }
-
-    static CPointValueRemapper* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTVALUEREMAPPER_H

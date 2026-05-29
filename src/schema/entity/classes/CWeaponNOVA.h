@@ -61,22 +61,6 @@ class CWeaponNOVA : public CCSWeaponBaseShotgun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponNOVA);
 
-
-public:
-    static CWeaponNOVA* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponNOVA>(className);
-    }
-
-    static CWeaponNOVA* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponNOVA>(iIndex);
-    }
-
-    static CWeaponNOVA* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONNOVA_H

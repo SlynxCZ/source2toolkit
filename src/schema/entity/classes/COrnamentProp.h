@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(COrnamentProp);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_initialOwner);
-
-public:
-    static COrnamentProp* New(const char* className)
-    {
-        return CBaseEntity::New<COrnamentProp>(className);
-    }
-
-    static COrnamentProp* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<COrnamentProp>(iIndex);
-    }
-
-    static COrnamentProp* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CORNAMENTPROP_H

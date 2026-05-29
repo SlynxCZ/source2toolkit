@@ -88,22 +88,6 @@ public:
     SCHEMA_FIELD(CountdownTimer, m_disperseTimer);
     SCHEMA_FIELD(CountdownTimer, m_proximityTimer);
     SCHEMA_FIELD(CUtlVector<CFish*>, m_visible);
-
-public:
-    static CFish* New(const char* className)
-    {
-        return CBaseEntity::New<CFish>(className);
-    }
-
-    static CFish* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFish>(iIndex);
-    }
-
-    static CFish* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFISH_H

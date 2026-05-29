@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD_POINTER(int32_t, m_hostageRescueZ);
     SCHEMA_FIELD(bool, m_bEndMatchNextMapAllVoted);
     SCHEMA_FIELD(bool, m_foundGoalPositions);
-
-public:
-    static CCSPlayerResource* New(const char* className)
-    {
-        return CBaseEntity::New<CCSPlayerResource>(className);
-    }
-
-    static CCSPlayerResource* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPlayerResource>(iIndex);
-    }
-
-    static CCSPlayerResource* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSPLAYERRESOURCE_H

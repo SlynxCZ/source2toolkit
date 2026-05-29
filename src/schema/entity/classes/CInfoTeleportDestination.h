@@ -61,22 +61,6 @@ class CInfoTeleportDestination : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoTeleportDestination);
 
-
-public:
-    static CInfoTeleportDestination* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoTeleportDestination>(className);
-    }
-
-    static CInfoTeleportDestination* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoTeleportDestination>(iIndex);
-    }
-
-    static CInfoTeleportDestination* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOTELEPORTDESTINATION_H

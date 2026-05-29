@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(bool, m_supportMultipleEntitiesWithSameName);
     SCHEMA_FIELD(bool, m_disabled);
     SCHEMA_FIELD(bool, m_succeeded);
-
-public:
-    static CLogicCollisionPair* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicCollisionPair>(className);
-    }
-
-    static CLogicCollisionPair* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicCollisionPair>(iIndex);
-    }
-
-    static CLogicCollisionPair* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICCOLLISIONPAIR_H

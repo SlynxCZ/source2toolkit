@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(float, m_flScale);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParentAttachment);
-
-public:
-    static CEnvMuzzleFlash* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvMuzzleFlash>(className);
-    }
-
-    static CEnvMuzzleFlash* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvMuzzleFlash>(iIndex);
-    }
-
-    static CEnvMuzzleFlash* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVMUZZLEFLASH_H

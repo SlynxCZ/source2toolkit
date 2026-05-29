@@ -61,22 +61,6 @@ class CGamePlayerEquip : public CRulePointEntity
 public:
     DECLARE_SCHEMA_CLASS(CGamePlayerEquip);
 
-
-public:
-    static CGamePlayerEquip* New(const char* className)
-    {
-        return CBaseEntity::New<CGamePlayerEquip>(className);
-    }
-
-    static CGamePlayerEquip* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGamePlayerEquip>(iIndex);
-    }
-
-    static CGamePlayerEquip* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMEPLAYEREQUIP_H

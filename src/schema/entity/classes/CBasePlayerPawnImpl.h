@@ -42,18 +42,22 @@
 
 #include "source2toolkit/schema/entity/classes/IBasePlayerPawn.h"
 #include "schema/entity/classes/CBasePlayerPawn.h"
-#include "CBaseCombatCharacterImpl.h"
 
-class CBasePlayerPawnImpl : public CBaseCombatCharacterImpl, public IBasePlayerPawn
+class CBasePlayerPawnImpl : public virtual IBasePlayerPawn
 {
 
+protected:
+    void* m_pReal;
+
 public:
-    explicit CBasePlayerPawnImpl(CBasePlayerPawn* p) : CBaseCombatCharacterImpl(p) {}
+    explicit CBasePlayerPawnImpl(void* p) : m_pReal(p) {}
 
 private:
     CBasePlayerPawn* Real() { return static_cast<CBasePlayerPawn*>(m_pReal); }
+    CBasePlayerPawn* Real() const { return static_cast<CBasePlayerPawn*>(m_pReal); }
 
 public:
+    CBasePlayerPawn* GetOriginal() const override { return Real(); }
     CPlayer_WeaponServices*& WeaponServices() override { return Real()->m_pWeaponServices(); }
     void WeaponServicesUpdated() override { Real()->m_pWeaponServices.NetworkStateChanged(); }
     CPlayer_ItemServices*& ItemServices() override { return Real()->m_pItemServices(); }
@@ -106,7 +110,7 @@ public:
     void SndOpvarLatchDataUpdated() override { Real()->m_sndOpvarLatchData.NetworkStateChanged(); }
 
     void CommitSuicide(bool bExplode, bool bForce) override { Real()->CommitSuicide(bExplode, bForce); }
-    void RemovePlayerItem(CBasePlayerWeapon* pWeapon) override { Real()->RemovePlayerItem(pWeapon); }
+    void RemovePlayerItem(IBasePlayerWeapon* pWeapon) override { Real()->RemovePlayerItem(pWeapon); }
 };
 
 #endif // _INCLUDE_CBASEPLAYERPAWNIMPL_H

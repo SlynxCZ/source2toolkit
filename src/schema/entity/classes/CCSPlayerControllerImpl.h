@@ -52,8 +52,10 @@ public:
 
 private:
     CCSPlayerController* Real() { return static_cast<CCSPlayerController*>(m_pReal); }
+    CCSPlayerController* Real() const { return static_cast<CCSPlayerController*>(m_pReal); }
 
 public:
+    CCSPlayerController* GetOriginal() const override { return Real(); }
     CCSPlayerController_InGameMoneyServices*& InGameMoneyServices() override { return Real()->m_pInGameMoneyServices(); }
     void InGameMoneyServicesUpdated() override { Real()->m_pInGameMoneyServices.NetworkStateChanged(); }
     CCSPlayerController_InventoryServices*& InventoryServices() override { return Real()->m_pInventoryServices(); }
@@ -243,7 +245,7 @@ public:
     void PrintToCenter(const char* pszMessage) override { Real()->PrintToCenter(pszMessage); }
     void PrintToCenterAlert(const char* pszMessage) override { Real()->PrintToCenterAlert(pszMessage); }
     void PrintToCenterHtml(const char* pszMessage, int iDuration) override { Real()->PrintToCenterHtml(pszMessage, iDuration); }
-    void TakeDamage(CCSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType) override { Real()->TakeDamage(pAttacker, iDamage, bitsDamageType); }
+    void TakeDamage(ICSPlayerController* pAttacker, int iDamage, DamageTypes_t bitsDamageType) override { Real()->TakeDamage(pAttacker, iDamage, bitsDamageType); }
     void Respawn() override { Real()->Respawn(); }
     void SwitchTeam(int nTeam) override { Real()->SwitchTeam(nTeam); }
     void ChangeTeam(int nTeam) override { Real()->ChangeTeam(nTeam); }
@@ -251,9 +253,9 @@ public:
     void Disconnect(ENetworkDisconnectionReason eReason) override { Real()->Disconnect(eReason); }
     void ExecuteClientCommand(const char* pszCommand) override { Real()->ExecuteClientCommand(pszCommand); }
     void ExecuteClientCommandFromServer(const char* pszCommand) override { Real()->ExecuteClientCommandFromServer(pszCommand); }
-    CCSPlayerPawn* GetPawn() override { return Real()->GetPawn(); }
-    CCSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }
-    CCSObserverPawn* GetObserverPawn() override { return Real()->GetObserverPawn(); }
+    ICSPlayerPawn* GetPawn() override { return Real()->GetPawn(); }
+    ICSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }
+    ICSObserverPawn* GetObserverPawn() override { return Real()->GetObserverPawn(); }
     CEntityIndex GetPlayerIndex() override { return Real()->GetPlayerIndex(); }
     int GetSlot() override { return Real()->GetSlot(); }
     CPlayerSlot GetPlayerSlot() override { return Real()->GetPlayerSlot(); }

@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(bool, m_bIsIncGrenade);
     SCHEMA_FIELD(bool, m_bDetonated);
     SCHEMA_FIELD(IntervalTimer, m_stillTimer);
-
-public:
-    static CMolotovProjectile* New(const char* className)
-    {
-        return CBaseEntity::New<CMolotovProjectile>(className);
-    }
-
-    static CMolotovProjectile* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMolotovProjectile>(iIndex);
-    }
-
-    static CMolotovProjectile* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMOLOTOVPROJECTILE_H

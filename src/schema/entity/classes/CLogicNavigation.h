@@ -64,22 +64,6 @@ public:
 
     SCHEMA_FIELD(bool, m_isOn);
     SCHEMA_FIELD(navproperties_t, m_navProperty);
-
-public:
-    static CLogicNavigation* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicNavigation>(className);
-    }
-
-    static CLogicNavigation* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicNavigation>(iIndex);
-    }
-
-    static CLogicNavigation* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICNAVIGATION_H

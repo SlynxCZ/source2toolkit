@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(float, m_loadTime);
     SCHEMA_FIELD(float, m_Duration);
     SCHEMA_FIELD(float, m_HoldTime);
-
-public:
-    static CRevertSaved* New(const char* className)
-    {
-        return CBaseEntity::New<CRevertSaved>(className);
-    }
-
-    static CRevertSaved* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRevertSaved>(iIndex);
-    }
-
-    static CRevertSaved* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CREVERTSAVED_H

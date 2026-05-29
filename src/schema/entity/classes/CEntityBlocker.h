@@ -61,22 +61,6 @@ class CEntityBlocker : public CBaseModelEntity
 public:
     DECLARE_SCHEMA_CLASS(CEntityBlocker);
 
-
-public:
-    static CEntityBlocker* New(const char* className)
-    {
-        return CBaseEntity::New<CEntityBlocker>(className);
-    }
-
-    static CEntityBlocker* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEntityBlocker>(iIndex);
-    }
-
-    static CEntityBlocker* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENTITYBLOCKER_H

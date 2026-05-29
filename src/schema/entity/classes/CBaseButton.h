@@ -89,22 +89,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseModelEntity>, m_glowEntity);
     SCHEMA_FIELD(bool, m_usable);
     SCHEMA_FIELD(CUtlSymbolLarge, m_szDisplayText);
-
-public:
-    static CBaseButton* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseButton>(className);
-    }
-
-    static CBaseButton* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseButton>(iIndex);
-    }
-
-    static CBaseButton* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEBUTTON_H

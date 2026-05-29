@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(float, m_flAttenMin);
     SCHEMA_FIELD(float, m_flAttenMax);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParameterName);
-
-public:
-    static CSoundEventConeEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundEventConeEntity>(className);
-    }
-
-    static CSoundEventConeEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundEventConeEntity>(iIndex);
-    }
-
-    static CSoundEventConeEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTCONEENTITY_H

@@ -81,22 +81,6 @@ public:
     SCHEMA_FIELD(bool, m_Entity_bIndoorCubeMap);
     SCHEMA_FIELD(bool, m_Entity_bCopyDiffuseFromDefaultCubemap);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
-
-public:
-    static CEnvCubemap* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvCubemap>(className);
-    }
-
-    static CEnvCubemap* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvCubemap>(iIndex);
-    }
-
-    static CEnvCubemap* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVCUBEMAP_H

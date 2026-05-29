@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CTriggerDetectExplosion);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetectedExplosion);
-
-public:
-    static CTriggerDetectExplosion* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerDetectExplosion>(className);
-    }
-
-    static CTriggerDetectExplosion* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerDetectExplosion>(iIndex);
-    }
-
-    static CTriggerDetectExplosion* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERDETECTEXPLOSION_H

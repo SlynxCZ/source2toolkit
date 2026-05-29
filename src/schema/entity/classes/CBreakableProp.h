@@ -99,22 +99,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPuntSound);
     SCHEMA_FIELD(bool, m_bUsePuntSound);
     SCHEMA_FIELD(bool, m_bOriginalBlockLOS);
-
-public:
-    static CBreakableProp* New(const char* className)
-    {
-        return CBaseEntity::New<CBreakableProp>(className);
-    }
-
-    static CBreakableProp* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBreakableProp>(iIndex);
-    }
-
-    static CBreakableProp* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBREAKABLEPROP_H

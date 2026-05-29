@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CSceneListManager>>, m_hListManagers);
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_iszScenes);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hScenes);
-
-public:
-    static CSceneListManager* New(const char* className)
-    {
-        return CBaseEntity::New<CSceneListManager>(className);
-    }
-
-    static CSceneListManager* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSceneListManager>(iIndex);
-    }
-
-    static CSceneListManager* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSCENELISTMANAGER_H

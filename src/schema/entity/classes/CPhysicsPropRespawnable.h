@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(Vector, m_vOriginalMins);
     SCHEMA_FIELD(Vector, m_vOriginalMaxs);
     SCHEMA_FIELD(float, m_flRespawnDuration);
-
-public:
-    static CPhysicsPropRespawnable* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsPropRespawnable>(className);
-    }
-
-    static CPhysicsPropRespawnable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsPropRespawnable>(iIndex);
-    }
-
-    static CPhysicsPropRespawnable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROPRESPAWNABLE_H

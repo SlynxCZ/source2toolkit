@@ -64,22 +64,6 @@ public:
     DECLARE_SCHEMA_CLASS(CLightEntity);
 
     SCHEMA_FIELD(CLightComponent*, m_CLightComponent);
-
-public:
-    static CLightEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CLightEntity>(className);
-    }
-
-    static CLightEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLightEntity>(iIndex);
-    }
-
-    static CLightEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLIGHTENTITY_H

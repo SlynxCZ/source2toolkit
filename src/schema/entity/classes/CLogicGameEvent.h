@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CLogicGameEvent);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEventName);
-
-public:
-    static CLogicGameEvent* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicGameEvent>(className);
-    }
-
-    static CLogicGameEvent* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicGameEvent>(iIndex);
-    }
-
-    static CLogicGameEvent* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICGAMEEVENT_H

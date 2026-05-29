@@ -61,22 +61,6 @@ class CFuncMoveLinearAlias_momentary_door : public CFuncMoveLinear
 public:
     DECLARE_SCHEMA_CLASS(CFuncMoveLinearAlias_momentary_door);
 
-
-public:
-    static CFuncMoveLinearAlias_momentary_door* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncMoveLinearAlias_momentary_door>(className);
-    }
-
-    static CFuncMoveLinearAlias_momentary_door* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncMoveLinearAlias_momentary_door>(iIndex);
-    }
-
-    static CFuncMoveLinearAlias_momentary_door* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCMOVELINEARALIAS_MOMENTARY_DOOR_H

@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(bool, m_bEnableTwistLimit);
     SCHEMA_FIELD(float, m_flMinTwistAngle);
     SCHEMA_FIELD(float, m_flMaxTwistAngle);
-
-public:
-    static CPhysBallSocket* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysBallSocket>(className);
-    }
-
-    static CPhysBallSocket* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysBallSocket>(iIndex);
-    }
-
-    static CPhysBallSocket* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSBALLSOCKET_H

@@ -61,22 +61,6 @@ class CGameEnd : public CRulePointEntity
 public:
     DECLARE_SCHEMA_CLASS(CGameEnd);
 
-
-public:
-    static CGameEnd* New(const char* className)
-    {
-        return CBaseEntity::New<CGameEnd>(className);
-    }
-
-    static CGameEnd* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGameEnd>(iIndex);
-    }
-
-    static CGameEnd* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMEEND_H

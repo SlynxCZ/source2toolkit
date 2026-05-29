@@ -61,22 +61,6 @@ class CPointEntity : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CPointEntity);
 
-
-public:
-    static CPointEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CPointEntity>(className);
-    }
-
-    static CPointEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointEntity>(iIndex);
-    }
-
-    static CPointEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTENTITY_H

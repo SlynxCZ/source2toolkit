@@ -85,22 +85,6 @@ public:
     SCHEMA_FIELD(bool, m_bAllowNoDrawTarget);
     SCHEMA_FIELD(bool, m_bAutoStart);
     SCHEMA_FIELD(bool, m_bLocalPlayerOnly);
-
-public:
-    static CEnvInstructorHint* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvInstructorHint>(className);
-    }
-
-    static CEnvInstructorHint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvInstructorHint>(iIndex);
-    }
-
-    static CEnvInstructorHint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVINSTRUCTORHINT_H

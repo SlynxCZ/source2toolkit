@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(bool, m_bTriggerOnce);
     SCHEMA_FIELD(bool, m_bFastRetrigger);
     SCHEMA_FIELD(bool, m_bPassthoughCaller);
-
-public:
-    static CLogicRelay* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicRelay>(className);
-    }
-
-    static CLogicRelay* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicRelay>(iIndex);
-    }
-
-    static CLogicRelay* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICRELAY_H

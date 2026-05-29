@@ -64,22 +64,6 @@ public:
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnArrivedAt);
     SCHEMA_FIELD(RotatorTargetSpace_t, m_eSpace);
-
-public:
-    static CRotatorTarget* New(const char* className)
-    {
-        return CBaseEntity::New<CRotatorTarget>(className);
-    }
-
-    static CRotatorTarget* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRotatorTarget>(iIndex);
-    }
-
-    static CRotatorTarget* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CROTATORTARGET_H

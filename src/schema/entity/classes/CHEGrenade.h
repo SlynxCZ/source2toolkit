@@ -61,22 +61,6 @@ class CHEGrenade : public CBaseCSGrenade
 public:
     DECLARE_SCHEMA_CLASS(CHEGrenade);
 
-
-public:
-    static CHEGrenade* New(const char* className)
-    {
-        return CBaseEntity::New<CHEGrenade>(className);
-    }
-
-    static CHEGrenade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHEGrenade>(iIndex);
-    }
-
-    static CHEGrenade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHEGRENADE_H

@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(NavScopeFlags_t, m_nScopes);
     SCHEMA_FIELD(bool, m_bFloodFillAttribute);
     SCHEMA_FIELD(bool, m_bSplitNavSpace);
-
-public:
-    static CMarkupVolumeTagged_NavGame* New(const char* className)
-    {
-        return CBaseEntity::New<CMarkupVolumeTagged_NavGame>(className);
-    }
-
-    static CMarkupVolumeTagged_NavGame* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMarkupVolumeTagged_NavGame>(iIndex);
-    }
-
-    static CMarkupVolumeTagged_NavGame* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAVGAME_H

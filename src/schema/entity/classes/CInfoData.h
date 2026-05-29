@@ -61,22 +61,6 @@ class CInfoData : public CServerOnlyEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoData);
 
-
-public:
-    static CInfoData* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoData>(className);
-    }
-
-    static CInfoData* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoData>(iIndex);
-    }
-
-    static CInfoData* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFODATA_H

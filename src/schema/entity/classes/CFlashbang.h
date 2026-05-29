@@ -61,22 +61,6 @@ class CFlashbang : public CBaseCSGrenade
 public:
     DECLARE_SCHEMA_CLASS(CFlashbang);
 
-
-public:
-    static CFlashbang* New(const char* className)
-    {
-        return CBaseEntity::New<CFlashbang>(className);
-    }
-
-    static CFlashbang* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFlashbang>(iIndex);
-    }
-
-    static CFlashbang* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFLASHBANG_H

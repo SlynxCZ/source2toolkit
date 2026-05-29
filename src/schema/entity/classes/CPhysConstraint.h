@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(bool, m_bSnapObjectPositions);
     SCHEMA_FIELD(bool, m_bTreatEntity1AsInfiniteMass);
     SCHEMA_FIELD(CEntityIOOutput, m_OnBreak);
-
-public:
-    static CPhysConstraint* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysConstraint>(className);
-    }
-
-    static CPhysConstraint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysConstraint>(iIndex);
-    }
-
-    static CPhysConstraint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSCONSTRAINT_H

@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(float, m_flInMax);
     SCHEMA_FIELD(Color, m_OutColor1);
     SCHEMA_FIELD(Color, m_OutColor2);
-
-public:
-    static CMathColorBlend* New(const char* className)
-    {
-        return CBaseEntity::New<CMathColorBlend>(className);
-    }
-
-    static CMathColorBlend* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMathColorBlend>(iIndex);
-    }
-
-    static CMathColorBlend* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMATHCOLORBLEND_H

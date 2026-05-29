@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(bool, m_on);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEnt);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDeath);
-
-public:
-    static CGunTarget* New(const char* className)
-    {
-        return CBaseEntity::New<CGunTarget>(className);
-    }
-
-    static CGunTarget* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGunTarget>(iIndex);
-    }
-
-    static CGunTarget* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGUNTARGET_H

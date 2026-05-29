@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_strSearchName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strNewHintGroup);
     SCHEMA_FIELD(float, m_flRadius);
-
-public:
-    static CAI_ChangeHintGroup* New(const char* className)
-    {
-        return CBaseEntity::New<CAI_ChangeHintGroup>(className);
-    }
-
-    static CAI_ChangeHintGroup* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CAI_ChangeHintGroup>(iIndex);
-    }
-
-    static CAI_ChangeHintGroup* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CAI_CHANGEHINTGROUP_H

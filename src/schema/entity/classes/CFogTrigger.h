@@ -63,22 +63,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFogTrigger);
 
     SCHEMA_FIELD(fogparams_t, m_fog);
-
-public:
-    static CFogTrigger* New(const char* className)
-    {
-        return CBaseEntity::New<CFogTrigger>(className);
-    }
-
-    static CFogTrigger* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFogTrigger>(iIndex);
-    }
-
-    static CFogTrigger* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFOGTRIGGER_H

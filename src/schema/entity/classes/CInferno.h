@@ -88,22 +88,6 @@ public:
     SCHEMA_FIELD(CountdownTimer, m_BookkeepingTimer);
     SCHEMA_FIELD(CountdownTimer, m_NextSpreadTimer);
     SCHEMA_FIELD(uint16_t, m_nSourceItemDefIndex);
-
-public:
-    static CInferno* New(const char* className)
-    {
-        return CBaseEntity::New<CInferno>(className);
-    }
-
-    static CInferno* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInferno>(iIndex);
-    }
-
-    static CInferno* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFERNO_H

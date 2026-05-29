@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(Vector, m_start);
     SCHEMA_FIELD(Vector, m_end);
     SCHEMA_FIELD(uint32_t, m_teleportTick);
-
-public:
-    static CPhysicsSpring* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsSpring>(className);
-    }
-
-    static CPhysicsSpring* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsSpring>(iIndex);
-    }
-
-    static CPhysicsSpring* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSSPRING_H

@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(bool, m_bCheckCough);
     SCHEMA_FIELD(bool, m_bThinkDangerous);
     SCHEMA_FIELD(float, m_flDangerousTime);
-
-public:
-    static CLogicDistanceAutosave* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicDistanceAutosave>(className);
-    }
-
-    static CLogicDistanceAutosave* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicDistanceAutosave>(iIndex);
-    }
-
-    static CLogicDistanceAutosave* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICDISTANCEAUTOSAVE_H

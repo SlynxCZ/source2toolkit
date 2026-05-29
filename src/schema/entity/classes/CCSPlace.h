@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CCSPlace);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_name);
-
-public:
-    static CCSPlace* New(const char* className)
-    {
-        return CBaseEntity::New<CCSPlace>(className);
-    }
-
-    static CCSPlace* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPlace>(iIndex);
-    }
-
-    static CCSPlace* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSPLACE_H

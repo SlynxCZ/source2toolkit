@@ -85,22 +85,6 @@ public:
     SCHEMA_FIELD(bool, m_bOnlyRenderToTexture);
     SCHEMA_FIELD(bool, m_bDisableMipGen);
     SCHEMA_FIELD(int32_t, m_nExplicitImageLayout);
-
-public:
-    static CPointClientUIWorldPanel* New(const char* className)
-    {
-        return CBaseEntity::New<CPointClientUIWorldPanel>(className);
-    }
-
-    static CPointClientUIWorldPanel* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointClientUIWorldPanel>(iIndex);
-    }
-
-    static CPointClientUIWorldPanel* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTCLIENTUIWORLDPANEL_H

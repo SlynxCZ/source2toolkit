@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(Vector, m_vAnimationBoundsMax);
     SCHEMA_FIELD(float, m_flStartTime);
     SCHEMA_FIELD(float, m_flStartFrame);
-
-public:
-    static CTextureBasedAnimatable* New(const char* className)
-    {
-        return CBaseEntity::New<CTextureBasedAnimatable>(className);
-    }
-
-    static CTextureBasedAnimatable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTextureBasedAnimatable>(iIndex);
-    }
-
-    static CTextureBasedAnimatable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTEXTUREBASEDANIMATABLE_H

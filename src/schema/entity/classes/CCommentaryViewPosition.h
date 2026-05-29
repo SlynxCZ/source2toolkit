@@ -61,22 +61,6 @@ class CCommentaryViewPosition : public CSprite
 public:
     DECLARE_SCHEMA_CLASS(CCommentaryViewPosition);
 
-
-public:
-    static CCommentaryViewPosition* New(const char* className)
-    {
-        return CBaseEntity::New<CCommentaryViewPosition>(className);
-    }
-
-    static CCommentaryViewPosition* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCommentaryViewPosition>(iIndex);
-    }
-
-    static CCommentaryViewPosition* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCOMMENTARYVIEWPOSITION_H

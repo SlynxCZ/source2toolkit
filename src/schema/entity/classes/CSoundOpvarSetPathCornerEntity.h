@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(float, m_flDistMinSqr);
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathCornerEntityName);
-
-public:
-    static CSoundOpvarSetPathCornerEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetPathCornerEntity>(className);
-    }
-
-    static CSoundOpvarSetPathCornerEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetPathCornerEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetPathCornerEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETPATHCORNERENTITY_H

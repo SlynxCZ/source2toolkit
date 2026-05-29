@@ -61,22 +61,6 @@ class CInfoLandmark : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoLandmark);
 
-
-public:
-    static CInfoLandmark* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoLandmark>(className);
-    }
-
-    static CInfoLandmark* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoLandmark>(iIndex);
-    }
-
-    static CInfoLandmark* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOLANDMARK_H

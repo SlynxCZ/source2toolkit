@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CDebugHistory);
 
     SCHEMA_FIELD(int32_t, m_nNpcEvents);
-
-public:
-    static CDebugHistory* New(const char* className)
-    {
-        return CBaseEntity::New<CDebugHistory>(className);
-    }
-
-    static CDebugHistory* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDebugHistory>(iIndex);
-    }
-
-    static CDebugHistory* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDEBUGHISTORY_H

@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(float, m_flDotProductMax);
     SCHEMA_FIELD(bool, m_bPlaying);
-
-public:
-    static CSoundEventPathCornerEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundEventPathCornerEntity>(className);
-    }
-
-    static CSoundEventPathCornerEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundEventPathCornerEntity>(iIndex);
-    }
-
-    static CSoundEventPathCornerEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTPATHCORNERENTITY_H

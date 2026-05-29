@@ -61,22 +61,6 @@ class CSceneEntityAlias_logic_choreographed_scene : public CSceneEntity
 public:
     DECLARE_SCHEMA_CLASS(CSceneEntityAlias_logic_choreographed_scene);
 
-
-public:
-    static CSceneEntityAlias_logic_choreographed_scene* New(const char* className)
-    {
-        return CBaseEntity::New<CSceneEntityAlias_logic_choreographed_scene>(className);
-    }
-
-    static CSceneEntityAlias_logic_choreographed_scene* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSceneEntityAlias_logic_choreographed_scene>(iIndex);
-    }
-
-    static CSceneEntityAlias_logic_choreographed_scene* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSCENEENTITYALIAS_LOGIC_CHOREOGRAPHED_SCENE_H

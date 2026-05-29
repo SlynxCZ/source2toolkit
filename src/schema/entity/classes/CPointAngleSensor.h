@@ -73,22 +73,6 @@ public:
     SCHEMA_FIELD(bool, m_bFired);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFacingLookat);
     SCHEMA_FIELD(CEntityIOOutput, m_OnNotFacingLookat);
-
-public:
-    static CPointAngleSensor* New(const char* className)
-    {
-        return CBaseEntity::New<CPointAngleSensor>(className);
-    }
-
-    static CPointAngleSensor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointAngleSensor>(iIndex);
-    }
-
-    static CPointAngleSensor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTANGLESENSOR_H

@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParamName);
     SCHEMA_FIELD(float, m_flFloatValue);
-
-public:
-    static CSoundEventParameter* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundEventParameter>(className);
-    }
-
-    static CSoundEventParameter* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundEventParameter>(iIndex);
-    }
-
-    static CSoundEventParameter* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTPARAMETER_H

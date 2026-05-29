@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CKnife);
 
     SCHEMA_FIELD(bool, m_bFirstAttack);
-
-public:
-    static CKnife* New(const char* className)
-    {
-        return CBaseEntity::New<CKnife>(className);
-    }
-
-    static CKnife* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CKnife>(iIndex);
-    }
-
-    static CKnife* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CKNIFE_H

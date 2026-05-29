@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(CHandle<CPathKeyFrame>, m_pPostKeyFrame);
     SCHEMA_FIELD(float, m_flTimeIntoFrame);
     SCHEMA_FIELD(int32_t, m_iDirection);
-
-public:
-    static CBaseMoveBehavior* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseMoveBehavior>(className);
-    }
-
-    static CBaseMoveBehavior* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseMoveBehavior>(iIndex);
-    }
-
-    static CBaseMoveBehavior* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEMOVEBEHAVIOR_H

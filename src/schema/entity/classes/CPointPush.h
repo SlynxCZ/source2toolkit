@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(float, m_flConeOfInfluence);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszFilterName);
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
-
-public:
-    static CPointPush* New(const char* className)
-    {
-        return CBaseEntity::New<CPointPush>(className);
-    }
-
-    static CPointPush* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointPush>(iIndex);
-    }
-
-    static CPointPush* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTPUSH_H

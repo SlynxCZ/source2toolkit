@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPointChildModifier);
 
     SCHEMA_FIELD(bool, m_bOrphanInsteadOfDeletingChildrenOnRemove);
-
-public:
-    static CPointChildModifier* New(const char* className)
-    {
-        return CBaseEntity::New<CPointChildModifier>(className);
-    }
-
-    static CPointChildModifier* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointChildModifier>(iIndex);
-    }
-
-    static CPointChildModifier* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTCHILDMODIFIER_H

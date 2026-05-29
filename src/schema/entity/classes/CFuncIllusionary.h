@@ -61,22 +61,6 @@ class CFuncIllusionary : public CBaseModelEntity
 public:
     DECLARE_SCHEMA_CLASS(CFuncIllusionary);
 
-
-public:
-    static CFuncIllusionary* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncIllusionary>(className);
-    }
-
-    static CFuncIllusionary* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncIllusionary>(iIndex);
-    }
-
-    static CFuncIllusionary* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCILLUSIONARY_H

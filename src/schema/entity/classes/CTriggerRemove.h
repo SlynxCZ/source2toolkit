@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CTriggerRemove);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnRemove);
-
-public:
-    static CTriggerRemove* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerRemove>(className);
-    }
-
-    static CTriggerRemove* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerRemove>(iIndex);
-    }
-
-    static CTriggerRemove* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERREMOVE_H

@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(Vector, m_vMins);
     SCHEMA_FIELD(Vector, m_vMaxs);
-
-public:
-    static CSoundEventOBBEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundEventOBBEntity>(className);
-    }
-
-    static CSoundEventOBBEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundEventOBBEntity>(iIndex);
-    }
-
-    static CSoundEventOBBEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTOBBENTITY_H

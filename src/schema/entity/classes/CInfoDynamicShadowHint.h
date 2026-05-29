@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nImportance);
     SCHEMA_FIELD(int32_t, m_nLightChoice);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLight);
-
-public:
-    static CInfoDynamicShadowHint* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoDynamicShadowHint>(className);
-    }
-
-    static CInfoDynamicShadowHint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoDynamicShadowHint>(iIndex);
-    }
-
-    static CInfoDynamicShadowHint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINT_H

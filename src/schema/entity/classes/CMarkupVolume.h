@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CMarkupVolume);
 
     SCHEMA_FIELD(bool, m_bDisabled);
-
-public:
-    static CMarkupVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CMarkupVolume>(className);
-    }
-
-    static CMarkupVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMarkupVolume>(iIndex);
-    }
-
-    static CMarkupVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUME_H

@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnMoneySpentFail);
     SCHEMA_FIELD(int32_t, m_nMoney);
     SCHEMA_FIELD(CUtlString, m_strAwardText);
-
-public:
-    static CGameMoney* New(const char* className)
-    {
-        return CBaseEntity::New<CGameMoney>(className);
-    }
-
-    static CGameMoney* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGameMoney>(iIndex);
-    }
-
-    static CGameMoney* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMEMONEY_H

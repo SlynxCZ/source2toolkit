@@ -84,22 +84,6 @@ public:
     SCHEMA_FIELD(PerformanceMode_t, m_PerformanceMode);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hPhysicsAttacker);
     SCHEMA_FIELD(float, m_flLastPhysicsInfluenceTime);
-
-public:
-    static CBreakable* New(const char* className)
-    {
-        return CBaseEntity::New<CBreakable>(className);
-    }
-
-    static CBreakable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBreakable>(iIndex);
-    }
-
-    static CBreakable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBREAKABLE_H

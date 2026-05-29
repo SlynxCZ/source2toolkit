@@ -61,22 +61,6 @@ class CDEagle : public CCSWeaponBaseGun
 public:
     DECLARE_SCHEMA_CLASS(CDEagle);
 
-
-public:
-    static CDEagle* New(const char* className)
-    {
-        return CBaseEntity::New<CDEagle>(className);
-    }
-
-    static CDEagle* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDEagle>(iIndex);
-    }
-
-    static CDEagle* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDEAGLE_H

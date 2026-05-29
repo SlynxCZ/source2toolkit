@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(Vector, m_vDistanceOuterMaxs);
     SCHEMA_FIELD(Vector, m_vOuterMins);
     SCHEMA_FIELD(Vector, m_vOuterMaxs);
-
-public:
-    static CLogicNPCCounterAABB* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicNPCCounterAABB>(className);
-    }
-
-    static CLogicNPCCounterAABB* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicNPCCounterAABB>(iIndex);
-    }
-
-    static CLogicNPCCounterAABB* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICNPCCOUNTERAABB_H

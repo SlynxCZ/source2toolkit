@@ -65,22 +65,6 @@ public:
 
     SCHEMA_FIELD(CUtlVector<CHandle<CPathNode>>, m_vecPathNodes);
     SCHEMA_FIELD(CTransform, m_xInitialPathWorldToLocal);
-
-public:
-    static CPathWithDynamicNodes* New(const char* className)
-    {
-        return CBaseEntity::New<CPathWithDynamicNodes>(className);
-    }
-
-    static CPathWithDynamicNodes* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathWithDynamicNodes>(iIndex);
-    }
-
-    static CPathWithDynamicNodes* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHWITHDYNAMICNODES_H

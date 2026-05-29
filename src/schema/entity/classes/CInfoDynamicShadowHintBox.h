@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(Vector, m_vBoxMins);
     SCHEMA_FIELD(Vector, m_vBoxMaxs);
-
-public:
-    static CInfoDynamicShadowHintBox* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoDynamicShadowHintBox>(className);
-    }
-
-    static CInfoDynamicShadowHintBox* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoDynamicShadowHintBox>(iIndex);
-    }
-
-    static CInfoDynamicShadowHintBox* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINTBOX_H

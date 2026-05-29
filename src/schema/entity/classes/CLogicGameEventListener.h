@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszGameEventItem);
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(bool, m_bStartDisabled);
-
-public:
-    static CLogicGameEventListener* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicGameEventListener>(className);
-    }
-
-    static CLogicGameEventListener* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicGameEventListener>(iIndex);
-    }
-
-    static CLogicGameEventListener* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICGAMEEVENTLISTENER_H

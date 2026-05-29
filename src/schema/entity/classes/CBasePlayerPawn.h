@@ -61,7 +61,6 @@
 
 class CAI_Expresser;
 class CBasePlayerController;
-class CBasePlayerWeapon;
 class CPlayer_AutoaimServices;
 class CPlayer_CameraServices;
 class CPlayer_FlashlightServices;
@@ -71,6 +70,8 @@ class CPlayer_ObserverServices;
 class CPlayer_UseServices;
 class CPlayer_WaterServices;
 class CPlayer_WeaponServices;
+class IBasePlayerPawn;
+class IBasePlayerWeapon;
 
 class CBasePlayerPawn : public CBaseCombatCharacter
 {
@@ -107,22 +108,13 @@ public:
     /// <summary>Force suicide.</summary>
     void CommitSuicide(bool bExplode, bool bForce);
     /// <summary>Remove weapon from player.</summary>
-    void RemovePlayerItem(CBasePlayerWeapon* pWeapon);
+    void RemovePlayerItem(IBasePlayerWeapon* pWeapon);
 
 public:
-    static CBasePlayerPawn* New(const char* className)
+    IBasePlayerPawn* ToInterface();
+    static IBasePlayerPawn* FromOriginal(CBasePlayerPawn* p)
     {
-        return CBaseEntity::New<CBasePlayerPawn>(className);
-    }
-
-    static CBasePlayerPawn* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBasePlayerPawn>(iIndex);
-    }
-
-    static CBasePlayerPawn* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
+        return p ? p->ToInterface() : nullptr;
     }
 };
 

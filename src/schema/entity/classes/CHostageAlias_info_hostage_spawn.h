@@ -61,22 +61,6 @@ class CHostageAlias_info_hostage_spawn : public CHostage
 public:
     DECLARE_SCHEMA_CLASS(CHostageAlias_info_hostage_spawn);
 
-
-public:
-    static CHostageAlias_info_hostage_spawn* New(const char* className)
-    {
-        return CBaseEntity::New<CHostageAlias_info_hostage_spawn>(className);
-    }
-
-    static CHostageAlias_info_hostage_spawn* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHostageAlias_info_hostage_spawn>(iIndex);
-    }
-
-    static CHostageAlias_info_hostage_spawn* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHOSTAGEALIAS_INFO_HOSTAGE_SPAWN_H

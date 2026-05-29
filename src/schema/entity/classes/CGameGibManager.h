@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(int32_t, m_iCurrentMaxPieces);
     SCHEMA_FIELD(int32_t, m_iMaxPieces);
     SCHEMA_FIELD(int32_t, m_iLastFrame);
-
-public:
-    static CGameGibManager* New(const char* className)
-    {
-        return CBaseEntity::New<CGameGibManager>(className);
-    }
-
-    static CGameGibManager* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGameGibManager>(iIndex);
-    }
-
-    static CGameGibManager* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGAMEGIBMANAGER_H

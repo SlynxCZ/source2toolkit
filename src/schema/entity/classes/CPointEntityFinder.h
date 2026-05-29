@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hReference);
     SCHEMA_FIELD(EntFinderMethod_t, m_FindMethod);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFoundEntity);
-
-public:
-    static CPointEntityFinder* New(const char* className)
-    {
-        return CBaseEntity::New<CPointEntityFinder>(className);
-    }
-
-    static CPointEntityFinder* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointEntityFinder>(iIndex);
-    }
-
-    static CPointEntityFinder* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTENTITYFINDER_H

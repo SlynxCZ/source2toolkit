@@ -64,22 +64,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPointGiveAmmo);
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
-
-public:
-    static CPointGiveAmmo* New(const char* className)
-    {
-        return CBaseEntity::New<CPointGiveAmmo>(className);
-    }
-
-    static CPointGiveAmmo* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointGiveAmmo>(iIndex);
-    }
-
-    static CPointGiveAmmo* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTGIVEAMMO_H

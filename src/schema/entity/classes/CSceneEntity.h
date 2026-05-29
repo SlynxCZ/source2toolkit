@@ -132,22 +132,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hActivator);
     SCHEMA_FIELD(int32_t, m_BusyActor);
     SCHEMA_FIELD(SceneOnPlayerDeath_t, m_iPlayerDeathBehavior);
-
-public:
-    static CSceneEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSceneEntity>(className);
-    }
-
-    static CSceneEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSceneEntity>(iIndex);
-    }
-
-    static CSceneEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSCENEENTITY_H

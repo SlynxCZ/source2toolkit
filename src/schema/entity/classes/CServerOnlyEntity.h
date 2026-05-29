@@ -61,22 +61,6 @@ class CServerOnlyEntity : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CServerOnlyEntity);
 
-
-public:
-    static CServerOnlyEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CServerOnlyEntity>(className);
-    }
-
-    static CServerOnlyEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CServerOnlyEntity>(iIndex);
-    }
-
-    static CServerOnlyEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSERVERONLYENTITY_H

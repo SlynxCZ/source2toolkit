@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(int32_t, m_iType);
     SCHEMA_FIELD(bool, m_bUrgent);
     SCHEMA_FIELD_POINTER(char, m_szPlaceName);
-
-public:
-    static CPlayerPing* New(const char* className)
-    {
-        return CBaseEntity::New<CPlayerPing>(className);
-    }
-
-    static CPlayerPing* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPlayerPing>(iIndex);
-    }
-
-    static CPlayerPing* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPLAYERPING_H

@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(Vector, m_attachmentPointRagdollSpace);
     SCHEMA_FIELD(bool, m_bShouldDetach);
     SCHEMA_FIELD(bool, m_bShouldDeleteAttachedActivationRecord);
-
-public:
-    static CRagdollPropAttached* New(const char* className)
-    {
-        return CBaseEntity::New<CRagdollPropAttached>(className);
-    }
-
-    static CRagdollPropAttached* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRagdollPropAttached>(iIndex);
-    }
-
-    static CRagdollPropAttached* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRAGDOLLPROPATTACHED_H

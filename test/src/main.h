@@ -41,23 +41,8 @@
 
 #include "source2toolkit/IToolkitPlugin.h"
 
-#include "sdk/isteamgamecoordinator.h"
-
 #include "eiface.h"
 #include "khook.hpp"
-
-#include <google/protobuf/message.h>
-#include <steammessages.pb.h>
-#include <cstrike15_gcmessages.pb.h>
-#include <string>
-#include <vector>
-#include <utility>
-#include <optional>
-
-class CBasePlayerWeapon;
-class CCSPlayer_WeaponServices;
-class CNETMsg_StringCmd_t;
-class CServerSideClientBase;
 
 class Plugin final : public IToolkitPlugin, IToolkitListener
 {
@@ -72,33 +57,14 @@ public:
     void OnPluginUnload(PluginId id) override;
     void OnAllToolkitPluginsLoaded() override;
     void OnAllMetamodPluginsLoaded() override;
-    void OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName,
-                     bool loadGame, bool background) override;
+    void OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName, bool loadGame, bool background) override;
     void OnLevelShutdown() override;
 
 public:
-    std::optional<std::pair<uint32_t, std::string>> CreateGCSendProto(uint32_t type, google::protobuf::Message& msg,
-                                                                      CMsgProtoBufHeader* pHeader = nullptr);
-    void QueueGCMessage(uint32_t type, google::protobuf::Message& msg, CMsgProtoBufHeader* pHeader = nullptr);
-    void TriggerGCCallback();
-
-public:
     KHook::Return<void> CSource2Server_GameServerSteamAPIActivated(ISource2Server* pThis);
-    KHook::Return<EGCResults> ISteamGameCoordinator_SendMessage(ISteamGameCoordinator* pThis, uint32_t unMsgType, const void* pubData, uint32_t cubData);
-    KHook::Return<bool> ISteamGameCoordinator_IsMessageAvailable(ISteamGameCoordinator* pThis, uint32_t* pcubMsgSize);
-    KHook::Return<EGCResults> ISteamGameCoordinator_RetrieveMessage(ISteamGameCoordinator* pThis, uint32_t* punMsgType, void* pubDest, uint32_t cubDest, uint32_t* pcubMsgSize);
-    KHook::Return<void> ISteamGameServer_RunCallbacks();
-    KHook::Return<void> ISteamGameServer_RegisterCallback(CCallbackBase* pCallback, int iCallback);
-    KHook::Return<void> ISteamGameServer_UnregisterCallback(CCallbackBase* pCallback);
 
 protected:
     KHook::Virtual<ISource2Server, void>* m_pGameServerSteamAPIActivated = nullptr;
-    KHook::Virtual<ISteamGameCoordinator, EGCResults, uint32, const void*, uint32>* m_pSendMessage = nullptr;
-    KHook::Virtual<ISteamGameCoordinator, bool, uint32*>* m_pIsMessageAvailable = nullptr;
-    KHook::Virtual<ISteamGameCoordinator, EGCResults, uint32*, void*, uint32, uint32*>* m_pRetrieveMessage = nullptr;
-    KHook::Function<void>* m_pRunCallbacks = nullptr;
-    KHook::Function<void, CCallbackBase*, int>* m_pRegisterCallback = nullptr;
-    KHook::Function<void, CCallbackBase*>* m_pUnregisterCallback = nullptr;
 
 private:
     const char* GetAuthor() override;

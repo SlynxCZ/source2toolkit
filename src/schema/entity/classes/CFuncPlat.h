@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFuncPlat);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNoise);
-
-public:
-    static CFuncPlat* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncPlat>(className);
-    }
-
-    static CFuncPlat* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncPlat>(iIndex);
-    }
-
-    static CFuncPlat* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCPLAT_H

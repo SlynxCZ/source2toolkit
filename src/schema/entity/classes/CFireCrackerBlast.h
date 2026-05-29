@@ -61,22 +61,6 @@ class CFireCrackerBlast : public CInferno
 public:
     DECLARE_SCHEMA_CLASS(CFireCrackerBlast);
 
-
-public:
-    static CFireCrackerBlast* New(const char* className)
-    {
-        return CBaseEntity::New<CFireCrackerBlast>(className);
-    }
-
-    static CFireCrackerBlast* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFireCrackerBlast>(iIndex);
-    }
-
-    static CFireCrackerBlast* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFIRECRACKERBLAST_H

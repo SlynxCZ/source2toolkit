@@ -64,22 +64,6 @@ public:
 
     SCHEMA_FIELD(CBuoyancyHelper, m_BuoyancyHelper);
     SCHEMA_FIELD(float, m_flFluidDensity);
-
-public:
-    static CTriggerBuoyancy* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerBuoyancy>(className);
-    }
-
-    static CTriggerBuoyancy* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerBuoyancy>(iIndex);
-    }
-
-    static CTriggerBuoyancy* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERBUOYANCY_H

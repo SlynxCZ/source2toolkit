@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CCSPlayer_WeaponServices.h"
+#include "schema/entity/classes/CCSPlayer_WeaponServicesImpl.h"
 
 #include "source2toolkit/utils/virtual.h"
 
@@ -69,3 +69,7 @@ void CCSPlayer_WeaponServices::SelectWeapon(CBasePlayerWeapon* pWeapon, int unk1
 #endif
     CALL_VIRTUAL(void, offset, this, pWeapon, unk1);
 }
+ICSPlayer_WeaponServices* CCSPlayer_WeaponServices::ToInterface() { return new CCSPlayer_WeaponServicesImpl(this); }
+
+ICSPlayer_WeaponServices* ICSPlayer_WeaponServices::FromOriginal(CCSPlayer_WeaponServices* p)
+{ return CCSPlayer_WeaponServices::FromOriginal(p); }

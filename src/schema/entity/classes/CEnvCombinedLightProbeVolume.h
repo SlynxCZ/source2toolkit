@@ -92,22 +92,6 @@ public:
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasY);
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasZ);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
-
-public:
-    static CEnvCombinedLightProbeVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvCombinedLightProbeVolume>(className);
-    }
-
-    static CEnvCombinedLightProbeVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvCombinedLightProbeVolume>(iIndex);
-    }
-
-    static CEnvCombinedLightProbeVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVCOMBINEDLIGHTPROBEVOLUME_H

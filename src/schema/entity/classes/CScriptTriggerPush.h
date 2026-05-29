@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerPush);
 
     SCHEMA_FIELD(Vector, m_vExtent);
-
-public:
-    static CScriptTriggerPush* New(const char* className)
-    {
-        return CBaseEntity::New<CScriptTriggerPush>(className);
-    }
-
-    static CScriptTriggerPush* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CScriptTriggerPush>(iIndex);
-    }
-
-    static CScriptTriggerPush* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSCRIPTTRIGGERPUSH_H

@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSoundName);
     SCHEMA_FIELD(CEntityHandle, m_hSource);
     SCHEMA_FIELD(int32_t, m_nEntityIndexSelection);
-
-public:
-    static CSoundEventEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundEventEntity>(className);
-    }
-
-    static CSoundEventEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundEventEntity>(iIndex);
-    }
-
-    static CSoundEventEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTENTITY_H

@@ -61,22 +61,6 @@ class CEnvCubemapBox : public CEnvCubemap
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemapBox);
 
-
-public:
-    static CEnvCubemapBox* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvCubemapBox>(className);
-    }
-
-    static CEnvCubemapBox* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvCubemapBox>(iIndex);
-    }
-
-    static CEnvCubemapBox* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVCUBEMAPBOX_H

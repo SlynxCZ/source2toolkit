@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(int32_t, m_triggermode);
     SCHEMA_FIELD(int32_t, m_initialstate);
     SCHEMA_FIELD(int32_t, m_counter);
-
-public:
-    static CEnvGlobal* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvGlobal>(className);
-    }
-
-    static CEnvGlobal* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvGlobal>(iIndex);
-    }
-
-    static CEnvGlobal* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVGLOBAL_H

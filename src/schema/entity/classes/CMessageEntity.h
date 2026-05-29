@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(bool, m_drawText);
     SCHEMA_FIELD(bool, m_bDeveloperOnly);
     SCHEMA_FIELD(bool, m_bEnabled);
-
-public:
-    static CMessageEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CMessageEntity>(className);
-    }
-
-    static CMessageEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMessageEntity>(iIndex);
-    }
-
-    static CMessageEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMESSAGEENTITY_H

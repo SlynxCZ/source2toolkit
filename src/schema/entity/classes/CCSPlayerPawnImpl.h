@@ -42,18 +42,22 @@
 
 #include "source2toolkit/schema/entity/classes/ICSPlayerPawn.h"
 #include "schema/entity/classes/CCSPlayerPawn.h"
-#include "CCSPlayerPawnBaseImpl.h"
 
-class CCSPlayerPawnImpl : public CCSPlayerPawnBaseImpl, public ICSPlayerPawn
+class CCSPlayerPawnImpl : public virtual ICSPlayerPawn
 {
 
+protected:
+    void* m_pReal;
+
 public:
-    explicit CCSPlayerPawnImpl(CCSPlayerPawn* p) : CCSPlayerPawnBaseImpl(p) {}
+    explicit CCSPlayerPawnImpl(void* p) : m_pReal(p) {}
 
 private:
     CCSPlayerPawn* Real() { return static_cast<CCSPlayerPawn*>(m_pReal); }
+    CCSPlayerPawn* Real() const { return static_cast<CCSPlayerPawn*>(m_pReal); }
 
 public:
+    CCSPlayerPawn* GetOriginal() const override { return Real(); }
     CCSPlayer_BulletServices*& BulletServices() override { return Real()->m_pBulletServices(); }
     void BulletServicesUpdated() override { Real()->m_pBulletServices.NetworkStateChanged(); }
     CCSPlayer_HostageServices*& HostageServices() override { return Real()->m_pHostageServices(); }
@@ -265,9 +269,9 @@ public:
     QAngle& EyeAngles() override { return Real()->m_angEyeAngles(); }
     void EyeAnglesUpdated() override { Real()->m_angEyeAngles.NetworkStateChanged(); }
 
-    CCSPlayerController* GetController() override { return Real()->GetController(); }
-    CCSPlayerController* GetDefaultController() override { return Real()->GetDefaultController(); }
-    CCSPlayerController* GetOriginalController() override { return Real()->GetOriginalController(); }
+    ICSPlayerController* GetController() override { return Real()->GetController(); }
+    ICSPlayerController* GetDefaultController() override { return Real()->GetDefaultController(); }
+    ICSPlayerController* GetOriginalController() override { return Real()->GetOriginalController(); }
 };
 
 #endif // _INCLUDE_CCSPLAYERPAWNIMPL_H

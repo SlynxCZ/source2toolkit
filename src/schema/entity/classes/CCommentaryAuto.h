@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryNewGame);
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryMidGame);
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryMultiplayerSpawn);
-
-public:
-    static CCommentaryAuto* New(const char* className)
-    {
-        return CBaseEntity::New<CCommentaryAuto>(className);
-    }
-
-    static CCommentaryAuto* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCommentaryAuto>(iIndex);
-    }
-
-    static CCommentaryAuto* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCOMMENTARYAUTO_H

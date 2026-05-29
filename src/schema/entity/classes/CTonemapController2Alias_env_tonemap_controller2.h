@@ -61,22 +61,6 @@ class CTonemapController2Alias_env_tonemap_controller2 : public CTonemapControll
 public:
     DECLARE_SCHEMA_CLASS(CTonemapController2Alias_env_tonemap_controller2);
 
-
-public:
-    static CTonemapController2Alias_env_tonemap_controller2* New(const char* className)
-    {
-        return CBaseEntity::New<CTonemapController2Alias_env_tonemap_controller2>(className);
-    }
-
-    static CTonemapController2Alias_env_tonemap_controller2* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTonemapController2Alias_env_tonemap_controller2>(iIndex);
-    }
-
-    static CTonemapController2Alias_env_tonemap_controller2* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTONEMAPCONTROLLER2ALIAS_ENV_TONEMAP_CONTROLLER2_H

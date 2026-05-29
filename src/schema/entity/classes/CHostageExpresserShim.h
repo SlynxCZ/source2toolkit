@@ -64,22 +64,6 @@ public:
     DECLARE_SCHEMA_CLASS(CHostageExpresserShim);
 
     SCHEMA_FIELD(CAI_Expresser*, m_pExpresser);
-
-public:
-    static CHostageExpresserShim* New(const char* className)
-    {
-        return CBaseEntity::New<CHostageExpresserShim>(className);
-    }
-
-    static CHostageExpresserShim* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHostageExpresserShim>(iIndex);
-    }
-
-    static CHostageExpresserShim* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHOSTAGEEXPRESSERSHIM_H

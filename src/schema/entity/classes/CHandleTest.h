@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_Handle);
     SCHEMA_FIELD(bool, m_bSendHandle);
-
-public:
-    static CHandleTest* New(const char* className)
-    {
-        return CBaseEntity::New<CHandleTest>(className);
-    }
-
-    static CHandleTest* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHandleTest>(iIndex);
-    }
-
-    static CHandleTest* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHANDLETEST_H

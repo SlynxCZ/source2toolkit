@@ -61,22 +61,6 @@ class CLogicProximity : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CLogicProximity);
 
-
-public:
-    static CLogicProximity* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicProximity>(className);
-    }
-
-    static CLogicProximity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicProximity>(iIndex);
-    }
-
-    static CLogicProximity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICPROXIMITY_H

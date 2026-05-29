@@ -61,22 +61,6 @@ class CServerOnlyPointEntity : public CServerOnlyEntity
 public:
     DECLARE_SCHEMA_CLASS(CServerOnlyPointEntity);
 
-
-public:
-    static CServerOnlyPointEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CServerOnlyPointEntity>(className);
-    }
-
-    static CServerOnlyPointEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CServerOnlyPointEntity>(iIndex);
-    }
-
-    static CServerOnlyPointEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSERVERONLYPOINTENTITY_H

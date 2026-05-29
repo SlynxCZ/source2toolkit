@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CUtlString, m_strGraphName);
     SCHEMA_FIELD(CUtlString, m_strStateBlob);
-
-public:
-    static CPulseGameBlackboard* New(const char* className)
-    {
-        return CBaseEntity::New<CPulseGameBlackboard>(className);
-    }
-
-    static CPulseGameBlackboard* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPulseGameBlackboard>(iIndex);
-    }
-
-    static CPulseGameBlackboard* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPULSEGAMEBLACKBOARD_H

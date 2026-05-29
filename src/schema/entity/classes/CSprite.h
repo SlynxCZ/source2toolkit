@@ -86,22 +86,6 @@ public:
     SCHEMA_FIELD(float, m_flBrightnessTimeStart);
     SCHEMA_FIELD(int32_t, m_nSpriteWidth);
     SCHEMA_FIELD(int32_t, m_nSpriteHeight);
-
-public:
-    static CSprite* New(const char* className)
-    {
-        return CBaseEntity::New<CSprite>(className);
-    }
-
-    static CSprite* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSprite>(iIndex);
-    }
-
-    static CSprite* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSPRITE_H

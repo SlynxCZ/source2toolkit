@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(PointOrientConstraint_t, m_nConstraint);
     SCHEMA_FIELD(float, m_flMaxTurnRate);
     SCHEMA_FIELD(float, m_flLastGameTime);
-
-public:
-    static CPointOrient* New(const char* className)
-    {
-        return CBaseEntity::New<CPointOrient>(className);
-    }
-
-    static CPointOrient* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointOrient>(iIndex);
-    }
-
-    static CPointOrient* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTORIENT_H

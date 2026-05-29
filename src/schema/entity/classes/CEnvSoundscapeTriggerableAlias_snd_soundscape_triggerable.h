@@ -61,22 +61,6 @@ class CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable : public CEnvSou
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable);
 
-
-public:
-    static CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable>(className);
-    }
-
-    static CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable>(iIndex);
-    }
-
-    static CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLEALIAS_SND_SOUNDSCAPE_TRIGGERABLE_H

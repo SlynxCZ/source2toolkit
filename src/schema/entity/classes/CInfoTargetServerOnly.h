@@ -61,22 +61,6 @@ class CInfoTargetServerOnly : public CServerOnlyPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoTargetServerOnly);
 
-
-public:
-    static CInfoTargetServerOnly* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoTargetServerOnly>(className);
-    }
-
-    static CInfoTargetServerOnly* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoTargetServerOnly>(iIndex);
-    }
-
-    static CInfoTargetServerOnly* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOTARGETSERVERONLY_H

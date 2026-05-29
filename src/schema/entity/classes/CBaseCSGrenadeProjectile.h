@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(Vector, m_vecLastHitSurfaceNormal);
     SCHEMA_FIELD(int32_t, m_nTicksAtZeroVelocity);
     SCHEMA_FIELD(bool, m_bHasEverHitEnemy);
-
-public:
-    static CBaseCSGrenadeProjectile* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseCSGrenadeProjectile>(className);
-    }
-
-    static CBaseCSGrenadeProjectile* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseCSGrenadeProjectile>(iIndex);
-    }
-
-    static CBaseCSGrenadeProjectile* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASECSGRENADEPROJECTILE_H

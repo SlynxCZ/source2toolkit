@@ -65,22 +65,6 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterName);
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
-
-public:
-    static CTriggerVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerVolume>(className);
-    }
-
-    static CTriggerVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerVolume>(iIndex);
-    }
-
-    static CTriggerVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERVOLUME_H

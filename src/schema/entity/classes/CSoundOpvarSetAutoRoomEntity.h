@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(float, m_flSize);
     SCHEMA_FIELD(float, m_flHeightTolerance);
     SCHEMA_FIELD(float, m_flSizeSqr);
-
-public:
-    static CSoundOpvarSetAutoRoomEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetAutoRoomEntity>(className);
-    }
-
-    static CSoundOpvarSetAutoRoomEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetAutoRoomEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetAutoRoomEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETAUTOROOMENTITY_H

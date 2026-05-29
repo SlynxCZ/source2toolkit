@@ -73,22 +73,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nFallbackStatTrak);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOldProvidee);
     SCHEMA_FIELD(int32_t, m_iOldOwnerClass);
-
-public:
-    static CEconEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CEconEntity>(className);
-    }
-
-    static CEconEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEconEntity>(iIndex);
-    }
-
-    static CEconEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CECONENTITY_H

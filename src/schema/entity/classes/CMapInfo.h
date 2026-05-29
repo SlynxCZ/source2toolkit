@@ -76,22 +76,6 @@ public:
     SCHEMA_FIELD(float, m_flEnvPuddleRippleDirection);
     SCHEMA_FIELD(float, m_flEnvWetnessCoverage);
     SCHEMA_FIELD(float, m_flEnvWetnessDryingAmount);
-
-public:
-    static CMapInfo* New(const char* className)
-    {
-        return CBaseEntity::New<CMapInfo>(className);
-    }
-
-    static CMapInfo* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMapInfo>(iIndex);
-    }
-
-    static CMapInfo* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMAPINFO_H

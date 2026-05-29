@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(FilterDamageType);
 
     SCHEMA_FIELD(int32_t, m_iDamageType);
-
-public:
-    static FilterDamageType* New(const char* className)
-    {
-        return CBaseEntity::New<FilterDamageType>(className);
-    }
-
-    static FilterDamageType* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<FilterDamageType>(iIndex);
-    }
-
-    static FilterDamageType* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_FILTERDAMAGETYPE_H

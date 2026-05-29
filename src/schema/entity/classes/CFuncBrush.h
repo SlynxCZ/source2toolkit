@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszExcludedClass);
     SCHEMA_FIELD(bool, m_bInvertExclusion);
     SCHEMA_FIELD(bool, m_bScriptedMovement);
-
-public:
-    static CFuncBrush* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncBrush>(className);
-    }
-
-    static CFuncBrush* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncBrush>(iIndex);
-    }
-
-    static CFuncBrush* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCBRUSH_H

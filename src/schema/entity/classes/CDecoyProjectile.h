@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(int32_t, m_shotsRemaining);
     SCHEMA_FIELD(float, m_fExpireTime);
     SCHEMA_FIELD(uint16_t, m_decoyWeaponDefIndex);
-
-public:
-    static CDecoyProjectile* New(const char* className)
-    {
-        return CBaseEntity::New<CDecoyProjectile>(className);
-    }
-
-    static CDecoyProjectile* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDecoyProjectile>(iIndex);
-    }
-
-    static CDecoyProjectile* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDECOYPROJECTILE_H

@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CBaseModelEntity.h"
+#include "schema/entity/classes/CBaseModelEntityImpl.h"
 
 #include "schema/entity/classes/CBodyComponent.h"
 #include "schema/entity/classes/CSkeletonInstance.h"
@@ -74,3 +74,7 @@ void CBaseModelEntity::SetModel(const char* pszModel) {
     g_ToolkitAPI->Addresses()->CBaseModelEntity_SetModel()(this, pszModel);
 #endif
 }
+IBaseModelEntity* CBaseModelEntity::ToInterface() { return new CBaseModelEntityImpl(this); }
+
+IBaseModelEntity* IBaseModelEntity::FromOriginal(CBaseModelEntity* p)
+{ return CBaseModelEntity::FromOriginal(p); }

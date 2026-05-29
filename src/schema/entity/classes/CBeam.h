@@ -89,22 +89,6 @@ public:
     SCHEMA_FIELD(Vector, m_vecEndPos);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndEntity);
     SCHEMA_FIELD(int32_t, m_nDissolveType);
-
-public:
-    static CBeam* New(const char* className)
-    {
-        return CBaseEntity::New<CBeam>(className);
-    }
-
-    static CBeam* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBeam>(iIndex);
-    }
-
-    static CBeam* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBEAM_H

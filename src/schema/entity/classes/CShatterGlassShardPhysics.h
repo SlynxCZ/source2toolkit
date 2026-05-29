@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(bool, m_bDebris);
     SCHEMA_FIELD(uint32_t, m_hParentShard);
     SCHEMA_FIELD(shard_model_desc_t, m_ShardDesc);
-
-public:
-    static CShatterGlassShardPhysics* New(const char* className)
-    {
-        return CBaseEntity::New<CShatterGlassShardPhysics>(className);
-    }
-
-    static CShatterGlassShardPhysics* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CShatterGlassShardPhysics>(iIndex);
-    }
-
-    static CShatterGlassShardPhysics* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSHATTERGLASSSHARDPHYSICS_H

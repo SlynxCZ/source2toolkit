@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CRuleEntity);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMaster);
-
-public:
-    static CRuleEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CRuleEntity>(className);
-    }
-
-    static CRuleEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRuleEntity>(iIndex);
-    }
-
-    static CRuleEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRULEENTITY_H

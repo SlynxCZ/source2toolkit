@@ -109,22 +109,6 @@ public:
     SCHEMA_FIELD(float, m_flSpeedScale);
     SCHEMA_FIELD(float, m_flMinYawRotation);
     SCHEMA_FIELD(float, m_flMaxYawRotation);
-
-public:
-    static CFuncRotator* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncRotator>(className);
-    }
-
-    static CFuncRotator* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncRotator>(iIndex);
-    }
-
-    static CFuncRotator* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCROTATOR_H

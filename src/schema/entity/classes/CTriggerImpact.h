@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(float, m_flMagnitude);
     SCHEMA_FIELD(float, m_flNoise);
     SCHEMA_FIELD(float, m_flViewkick);
-
-public:
-    static CTriggerImpact* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerImpact>(className);
-    }
-
-    static CTriggerImpact* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerImpact>(iIndex);
-    }
-
-    static CTriggerImpact* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERIMPACT_H

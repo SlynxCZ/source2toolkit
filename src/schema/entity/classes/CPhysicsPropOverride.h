@@ -61,22 +61,6 @@ class CPhysicsPropOverride : public CPhysicsProp
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropOverride);
 
-
-public:
-    static CPhysicsPropOverride* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsPropOverride>(className);
-    }
-
-    static CPhysicsPropOverride* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsPropOverride>(iIndex);
-    }
-
-    static CPhysicsPropOverride* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROPOVERRIDE_H

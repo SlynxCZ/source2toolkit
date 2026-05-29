@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(float, m_flMotorDampingRatio);
     SCHEMA_FIELD(bool, m_bUseEntityPivot);
     SCHEMA_FIELD(ConstraintSoundInfo, m_soundInfo);
-
-public:
-    static CPhysSlideConstraint* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysSlideConstraint>(className);
-    }
-
-    static CPhysSlideConstraint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysSlideConstraint>(iIndex);
-    }
-
-    static CPhysSlideConstraint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSSLIDECONSTRAINT_H

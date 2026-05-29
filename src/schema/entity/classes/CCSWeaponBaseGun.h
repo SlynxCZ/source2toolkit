@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(bool, m_bSkillReloadLiftedReloadKey);
     SCHEMA_FIELD(bool, m_bSkillBoltInterruptAvailable);
     SCHEMA_FIELD(bool, m_bSkillBoltLiftedFireKey);
-
-public:
-    static CCSWeaponBaseGun* New(const char* className)
-    {
-        return CBaseEntity::New<CCSWeaponBaseGun>(className);
-    }
-
-    static CCSWeaponBaseGun* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSWeaponBaseGun>(iIndex);
-    }
-
-    static CCSWeaponBaseGun* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSWEAPONBASEGUN_H

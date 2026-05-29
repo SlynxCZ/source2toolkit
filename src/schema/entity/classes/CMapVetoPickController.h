@@ -80,22 +80,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nCurrentPhase);
     SCHEMA_FIELD(int32_t, m_nPhaseStartTick);
     SCHEMA_FIELD(int32_t, m_nPhaseDurationTicks);
-
-public:
-    static CMapVetoPickController* New(const char* className)
-    {
-        return CBaseEntity::New<CMapVetoPickController>(className);
-    }
-
-    static CMapVetoPickController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMapVetoPickController>(iIndex);
-    }
-
-    static CMapVetoPickController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMAPVETOPICKCONTROLLER_H

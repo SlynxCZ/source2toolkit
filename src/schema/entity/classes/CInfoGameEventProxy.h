@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEventName);
     SCHEMA_FIELD(float, m_flRange);
-
-public:
-    static CInfoGameEventProxy* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoGameEventProxy>(className);
-    }
-
-    static CInfoGameEventProxy* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoGameEventProxy>(iIndex);
-    }
-
-    static CInfoGameEventProxy* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOGAMEEVENTPROXY_H

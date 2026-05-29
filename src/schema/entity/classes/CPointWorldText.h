@@ -80,22 +80,6 @@ public:
     SCHEMA_FIELD(PointWorldTextJustifyHorizontal_t, m_nJustifyHorizontal);
     SCHEMA_FIELD(PointWorldTextJustifyVertical_t, m_nJustifyVertical);
     SCHEMA_FIELD(PointWorldTextReorientMode_t, m_nReorientMode);
-
-public:
-    static CPointWorldText* New(const char* className)
-    {
-        return CBaseEntity::New<CPointWorldText>(className);
-    }
-
-    static CPointWorldText* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointWorldText>(iIndex);
-    }
-
-    static CPointWorldText* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTWORLDTEXT_H

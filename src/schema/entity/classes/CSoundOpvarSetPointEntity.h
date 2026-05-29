@@ -85,22 +85,6 @@ public:
     SCHEMA_FIELD(Vector, m_vPathingListenerPos);
     SCHEMA_FIELD(Vector, m_vPathingDirection);
     SCHEMA_FIELD(int32_t, m_nPathingSourceIndex);
-
-public:
-    static CSoundOpvarSetPointEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetPointEntity>(className);
-    }
-
-    static CSoundOpvarSetPointEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetPointEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetPointEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTENTITY_H

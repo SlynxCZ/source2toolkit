@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bIsMaster);
     SCHEMA_FIELD(CGlobalSymbol, m_pPawnSubclass);
-
-public:
-    static CInfoPlayerStart* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoPlayerStart>(className);
-    }
-
-    static CInfoPlayerStart* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoPlayerStart>(iIndex);
-    }
-
-    static CInfoPlayerStart* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOPLAYERSTART_H

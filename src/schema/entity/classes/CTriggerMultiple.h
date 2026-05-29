@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CTriggerMultiple);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrigger);
-
-public:
-    static CTriggerMultiple* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerMultiple>(className);
-    }
-
-    static CTriggerMultiple* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerMultiple>(iIndex);
-    }
-
-    static CTriggerMultiple* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERMULTIPLE_H

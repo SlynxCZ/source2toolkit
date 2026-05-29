@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPhysTorque);
 
     SCHEMA_FIELD(Vector, m_axis);
-
-public:
-    static CPhysTorque* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysTorque>(className);
-    }
-
-    static CPhysTorque* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysTorque>(iIndex);
-    }
-
-    static CPhysTorque* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSTORQUE_H

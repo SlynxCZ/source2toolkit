@@ -93,22 +93,6 @@ public:
     SCHEMA_FIELD(int32_t, m_iNodeNumber);
     SCHEMA_FIELD(int32_t, m_iNodeNumberMax);
     SCHEMA_FIELD(bool, m_bListenedTo);
-
-public:
-    static CPointCommentaryNode* New(const char* className)
-    {
-        return CBaseEntity::New<CPointCommentaryNode>(className);
-    }
-
-    static CPointCommentaryNode* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointCommentaryNode>(iIndex);
-    }
-
-    static CPointCommentaryNode* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTCOMMENTARYNODE_H

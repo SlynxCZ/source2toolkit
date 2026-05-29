@@ -63,22 +63,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFuncWater);
 
     SCHEMA_FIELD(CBuoyancyHelper, m_BuoyancyHelper);
-
-public:
-    static CFuncWater* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncWater>(className);
-    }
-
-    static CFuncWater* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncWater>(iIndex);
-    }
-
-    static CFuncWater* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCWATER_H

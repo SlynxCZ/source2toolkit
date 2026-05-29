@@ -61,22 +61,6 @@ class CInfoInstructorHintTarget : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintTarget);
 
-
-public:
-    static CInfoInstructorHintTarget* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoInstructorHintTarget>(className);
-    }
-
-    static CInfoInstructorHintTarget* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoInstructorHintTarget>(iIndex);
-    }
-
-    static CInfoInstructorHintTarget* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTTARGET_H

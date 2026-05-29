@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(bool, m_bProjectOnCharacters);
     SCHEMA_FIELD(bool, m_bProjectOnWater);
     SCHEMA_FIELD(float, m_flDepthSortBias);
-
-public:
-    static CEnvDecal* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvDecal>(className);
-    }
-
-    static CEnvDecal* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvDecal>(iIndex);
-    }
-
-    static CEnvDecal* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVDECAL_H

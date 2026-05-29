@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_surfacePropName);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerGotOnLadder);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerGotOffLadder);
-
-public:
-    static CFuncLadder* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncLadder>(className);
-    }
-
-    static CFuncLadder* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncLadder>(iIndex);
-    }
-
-    static CFuncLadder* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCLADDER_H

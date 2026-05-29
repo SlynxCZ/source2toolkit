@@ -61,22 +61,6 @@ class CSoundOpvarSetOBBEntity : public CSoundOpvarSetAABBEntity
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetOBBEntity);
 
-
-public:
-    static CSoundOpvarSetOBBEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetOBBEntity>(className);
-    }
-
-    static CSoundOpvarSetOBBEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetOBBEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetOBBEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETOBBENTITY_H

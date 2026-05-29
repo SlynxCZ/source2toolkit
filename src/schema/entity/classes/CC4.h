@@ -73,22 +73,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nSpotRules);
     SCHEMA_FIELD_POINTER(bool, m_bPlayedArmingBeeps);
     SCHEMA_FIELD(bool, m_bBombPlanted);
-
-public:
-    static CC4* New(const char* className)
-    {
-        return CBaseEntity::New<CC4>(className);
-    }
-
-    static CC4* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CC4>(iIndex);
-    }
-
-    static CC4* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CC4_H

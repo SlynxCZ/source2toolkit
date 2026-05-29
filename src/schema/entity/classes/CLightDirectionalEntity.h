@@ -61,22 +61,6 @@ class CLightDirectionalEntity : public CLightEntity
 public:
     DECLARE_SCHEMA_CLASS(CLightDirectionalEntity);
 
-
-public:
-    static CLightDirectionalEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CLightDirectionalEntity>(className);
-    }
-
-    static CLightDirectionalEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLightDirectionalEntity>(iIndex);
-    }
-
-    static CLightDirectionalEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLIGHTDIRECTIONALENTITY_H

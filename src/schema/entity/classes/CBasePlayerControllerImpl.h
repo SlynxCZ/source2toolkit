@@ -52,8 +52,10 @@ public:
 
 private:
     CBasePlayerController* Real() { return static_cast<CBasePlayerController*>(m_pReal); }
+    CBasePlayerController* Real() const { return static_cast<CBasePlayerController*>(m_pReal); }
 
 public:
+    CBasePlayerController* GetOriginal() const override { return Real(); }
     uint64_t& InButtonsWhichAreToggles() override { return Real()->m_nInButtonsWhichAreToggles(); }
     void InButtonsWhichAreTogglesUpdated() override { Real()->m_nInButtonsWhichAreToggles.NetworkStateChanged(); }
     uint32_t& TickBase() override { return Real()->m_nTickBase(); }
@@ -104,7 +106,7 @@ public:
     uint32_t& DesiredFOV() override { return Real()->m_iDesiredFOV(); }
     void DesiredFOVUpdated() override { Real()->m_iDesiredFOV.NetworkStateChanged(); }
 
-    void SetPawn(CBasePlayerPawn* pPawn) override { Real()->SetPawn(pPawn); }
+    void SetPawn(IBasePlayerPawn* pPawn) override { Real()->SetPawn(pPawn); }
 };
 
 #endif // _INCLUDE_CBASEPLAYERCONTROLLERIMPL_H

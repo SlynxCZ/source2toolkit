@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetReference);
     SCHEMA_FIELD(float, m_flScale);
     SCHEMA_FIELD(int32_t, m_nMeasureType);
-
-public:
-    static CLogicMeasureMovement* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicMeasureMovement>(className);
-    }
-
-    static CLogicMeasureMovement* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicMeasureMovement>(iIndex);
-    }
-
-    static CLogicMeasureMovement* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICMEASUREMOVEMENT_H

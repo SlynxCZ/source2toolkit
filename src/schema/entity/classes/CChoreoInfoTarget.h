@@ -61,22 +61,6 @@ class CChoreoInfoTarget : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CChoreoInfoTarget);
 
-
-public:
-    static CChoreoInfoTarget* New(const char* className)
-    {
-        return CBaseEntity::New<CChoreoInfoTarget>(className);
-    }
-
-    static CChoreoInfoTarget* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CChoreoInfoTarget>(iIndex);
-    }
-
-    static CChoreoInfoTarget* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCHOREOINFOTARGET_H

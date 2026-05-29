@@ -76,22 +76,6 @@ public:
     SCHEMA_FIELD(Hull_t, m_eHull);
     SCHEMA_FIELD(uint32_t, m_nNavHullIdx);
     SCHEMA_FIELD(CMovementStatsProperty, m_movementStats);
-
-public:
-    static CBaseCombatCharacter* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseCombatCharacter>(className);
-    }
-
-    static CBaseCombatCharacter* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseCombatCharacter>(iIndex);
-    }
-
-    static CBaseCombatCharacter* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASECOMBATCHARACTER_H

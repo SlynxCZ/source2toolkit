@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(EntityDisolveType_t, m_nDissolveType);
     SCHEMA_FIELD(Vector, m_vDissolverOrigin);
     SCHEMA_FIELD(uint32_t, m_nMagnitude);
-
-public:
-    static CEntityDissolve* New(const char* className)
-    {
-        return CBaseEntity::New<CEntityDissolve>(className);
-    }
-
-    static CEntityDissolve* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEntityDissolve>(iIndex);
-    }
-
-    static CEntityDissolve* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENTITYDISSOLVE_H

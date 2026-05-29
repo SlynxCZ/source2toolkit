@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(float, m_damage);
     SCHEMA_FIELD(float, m_distance);
     SCHEMA_FIELD(CUtlSymbolLarge, m_directionEntityName);
-
-public:
-    static CPhysImpact* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysImpact>(className);
-    }
-
-    static CPhysImpact* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysImpact>(iIndex);
-    }
-
-    static CPhysImpact* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSIMPACT_H

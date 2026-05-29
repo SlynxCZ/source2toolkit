@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPointCameraVFOV);
 
     SCHEMA_FIELD(float, m_flVerticalFOV);
-
-public:
-    static CPointCameraVFOV* New(const char* className)
-    {
-        return CBaseEntity::New<CPointCameraVFOV>(className);
-    }
-
-    static CPointCameraVFOV* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointCameraVFOV>(iIndex);
-    }
-
-    static CPointCameraVFOV* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTCAMERAVFOV_H

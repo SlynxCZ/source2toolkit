@@ -102,22 +102,6 @@ public:
     SCHEMA_FIELD(float, m_flDecelSpeed);
     SCHEMA_FIELD(bool, m_bAccelToSpeed);
     SCHEMA_FIELD(float, m_flNextMPSoundTime);
-
-public:
-    static CFuncTrackTrain* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncTrackTrain>(className);
-    }
-
-    static CFuncTrackTrain* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncTrackTrain>(iIndex);
-    }
-
-    static CFuncTrackTrain* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCTRACKTRAIN_H

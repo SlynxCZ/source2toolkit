@@ -61,22 +61,6 @@ class CEnableMotionFixup : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CEnableMotionFixup);
 
-
-public:
-    static CEnableMotionFixup* New(const char* className)
-    {
-        return CBaseEntity::New<CEnableMotionFixup>(className);
-    }
-
-    static CEnableMotionFixup* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnableMotionFixup>(iIndex);
-    }
-
-    static CEnableMotionFixup* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENABLEMOTIONFIXUP_H

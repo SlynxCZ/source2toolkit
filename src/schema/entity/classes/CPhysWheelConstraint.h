@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD(float, m_flSteeringAxisFriction);
     SCHEMA_FIELD(float, m_flSpinAxisFriction);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hSteeringMimicsEntity);
-
-public:
-    static CPhysWheelConstraint* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysWheelConstraint>(className);
-    }
-
-    static CPhysWheelConstraint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysWheelConstraint>(iIndex);
-    }
-
-    static CPhysWheelConstraint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSWHEELCONSTRAINT_H

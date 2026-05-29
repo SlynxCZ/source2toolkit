@@ -61,22 +61,6 @@ class CShower : public CModelPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CShower);
 
-
-public:
-    static CShower* New(const char* className)
-    {
-        return CBaseEntity::New<CShower>(className);
-    }
-
-    static CShower* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CShower>(iIndex);
-    }
-
-    static CShower* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSHOWER_H

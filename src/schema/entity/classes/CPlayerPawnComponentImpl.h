@@ -54,12 +54,14 @@ public:
 
 private:
     CPlayerPawnComponent* Real() { return static_cast<CPlayerPawnComponent*>(m_pReal); }
+    CPlayerPawnComponent* Real() const { return static_cast<CPlayerPawnComponent*>(m_pReal); }
 
 public:
+    CPlayerPawnComponent* GetOriginal() const override { return Real(); }
     CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
 
-    CCSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }
+    ICSPlayerPawn* GetPlayerPawn() override { return Real()->GetPlayerPawn(); }
 };
 
 #endif // _INCLUDE_CPLAYERPAWNCOMPONENTIMPL_H

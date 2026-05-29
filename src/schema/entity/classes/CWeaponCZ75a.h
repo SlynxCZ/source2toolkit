@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CWeaponCZ75a);
 
     SCHEMA_FIELD(bool, m_bMagazineRemoved);
-
-public:
-    static CWeaponCZ75a* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponCZ75a>(className);
-    }
-
-    static CWeaponCZ75a* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponCZ75a>(iIndex);
-    }
-
-    static CWeaponCZ75a* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONCZ75A_H

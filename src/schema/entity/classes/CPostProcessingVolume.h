@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD(float, m_flTonemapEVSmoothingRange);
     SCHEMA_FIELD(bool, m_bMaster);
     SCHEMA_FIELD(bool, m_bExposureControl);
-
-public:
-    static CPostProcessingVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CPostProcessingVolume>(className);
-    }
-
-    static CPostProcessingVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPostProcessingVolume>(iIndex);
-    }
-
-    static CPostProcessingVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOSTPROCESSINGVOLUME_H

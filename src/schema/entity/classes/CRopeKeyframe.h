@@ -83,22 +83,6 @@ public:
     SCHEMA_FIELD(bool, m_bEndPointValid);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hStartPoint);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndPoint);
-
-public:
-    static CRopeKeyframe* New(const char* className)
-    {
-        return CBaseEntity::New<CRopeKeyframe>(className);
-    }
-
-    static CRopeKeyframe* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRopeKeyframe>(iIndex);
-    }
-
-    static CRopeKeyframe* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CROPEKEYFRAME_H

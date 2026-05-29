@@ -106,22 +106,6 @@ public:
     SCHEMA_FIELD(bool, m_bRemovableForAmmoBalancing);
     SCHEMA_FIELD(bool, m_bAwake);
     SCHEMA_FIELD(bool, m_bAttachedToReferenceFrame);
-
-public:
-    static CPhysicsProp* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsProp>(className);
-    }
-
-    static CPhysicsProp* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsProp>(iIndex);
-    }
-
-    static CPhysicsProp* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROP_H

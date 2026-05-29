@@ -61,22 +61,6 @@ class CCSGO_TeamSelectTerroristPosition : public CCSGO_TeamSelectCharacterPositi
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamSelectTerroristPosition);
 
-
-public:
-    static CCSGO_TeamSelectTerroristPosition* New(const char* className)
-    {
-        return CBaseEntity::New<CCSGO_TeamSelectTerroristPosition>(className);
-    }
-
-    static CCSGO_TeamSelectTerroristPosition* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSGO_TeamSelectTerroristPosition>(iIndex);
-    }
-
-    static CCSGO_TeamSelectTerroristPosition* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSGO_TEAMSELECTTERRORISTPOSITION_H

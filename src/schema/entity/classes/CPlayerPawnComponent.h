@@ -54,7 +54,8 @@
 #include <cstdint>
 
 
-class CCSPlayerPawn;
+class ICSPlayerPawn;
+class IPlayerPawnComponent;
 
 class CPlayerPawnComponent
 {
@@ -65,7 +66,14 @@ public:
 
 public:
     /// <summary>Get player pawn.</summary>
-    CCSPlayerPawn* GetPlayerPawn();
+    ICSPlayerPawn* GetPlayerPawn();
+
+public:
+    IPlayerPawnComponent* ToInterface();
+    static IPlayerPawnComponent* FromOriginal(CPlayerPawnComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYERPAWNCOMPONENT_H

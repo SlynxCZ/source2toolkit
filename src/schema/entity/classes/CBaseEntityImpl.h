@@ -54,10 +54,12 @@ public:
 
 private:
     CBaseEntity* Real() { return static_cast<CBaseEntity*>(m_pReal); }
+    CBaseEntity* Real() const { return static_cast<CBaseEntity*>(m_pReal); }
 
 public:
-    CBodyComponent*& CBodyComponent() override { return Real()->m_CBodyComponent(); }
-    void CBodyComponentUpdated() override { Real()->m_CBodyComponent.NetworkStateChanged(); }
+    CBaseEntity* GetOriginal() const override { return Real(); }
+    CBodyComponent*& BodyComponent() override { return Real()->m_CBodyComponent(); }
+    void BodyComponentUpdated() override { Real()->m_CBodyComponent.NetworkStateChanged(); }
     CNetworkTransmitComponent& NetworkTransmitComponent() override { return Real()->m_NetworkTransmitComponent(); }
     void NetworkTransmitComponentUpdated() override { Real()->m_NetworkTransmitComponent.NetworkStateChanged(); }
     CUtlVector<thinkfunc_t>& ThinkFunctions() override { return Real()->m_aThinkFunctions(); }
@@ -250,6 +252,60 @@ public:
     int GetIndex() override { return Real()->GetIndex(); }
     CHandle<CBaseEntity> GetHandle() override { return Real()->GetHandle(); }
     const char* GetName() const override { return Real()->GetName(); }
+
+    // IEntityInstance overrides – delegate to the underlying CEntityInstance.
+    CNetworkSerializerClassInfo* GetNetworkSerializerInfo() override { return Real()->GetNetworkSerializerInfo(); }
+    void unk001() override { Real()->unk001(); }
+    void unk002() override { Real()->unk002(); }
+    void* GetScriptDesc() override { return Real()->GetScriptDesc(); }
+    void Connect() override { Real()->Connect(); }
+    void Disconnect() override { Real()->Disconnect(); }
+    void Precache( const CEntityPrecacheContext* pContext ) override { Real()->Precache(pContext); }
+    void AddedToEntityDatabase() override { Real()->AddedToEntityDatabase(); }
+    void Spawn( const CEntityKeyValues* pKeyValues ) override { Real()->Spawn(pKeyValues); }
+    void unk101() override { Real()->unk101(); }
+    void PostDataUpdate( int updateType ) override { Real()->PostDataUpdate(updateType); }
+    void OnDataUnchangedInPVS() override { Real()->OnDataUnchangedInPVS(); }
+    void Activate( int activateType ) override { Real()->Activate(activateType); }
+    void UpdateOnRemove() override { Real()->UpdateOnRemove(); }
+    void OnSetDormant( int prevDormancyType, int newDormancyType ) override { Real()->OnSetDormant(prevDormancyType, newDormancyType); }
+    void* ScriptEntityIO() override { return Real()->ScriptEntityIO(); }
+    int ScriptAcceptInput( const CUtlSymbolLarge& sInputName, IEntityInstance* pActivator, IEntityInstance* pCaller, const variant_t& value, int nOutputID, void* pUnk1, void* pUnk2 ) override
+    {
+        return Real()->ScriptAcceptInput(sInputName,
+            pActivator ? pActivator->GetOriginal() : nullptr,
+            pCaller ? pCaller->GetOriginal() : nullptr,
+            value, nOutputID, pUnk1, pUnk2);
+    }
+    void PreDataUpdate( int updateType ) override { Real()->PreDataUpdate(updateType); }
+    void DrawEntityDebugOverlays( uint64_t debug_bits ) override { Real()->DrawEntityDebugOverlays(debug_bits); }
+    void DrawDebugTextOverlays( void* unk, uint64_t debug_bits, int flags ) override { Real()->DrawDebugTextOverlays(unk, debug_bits, flags); }
+    int Save( ISave& save ) override { return Real()->Save(save); }
+    int Restore( IRestore& restore ) override { return Real()->Restore(restore); }
+    void OnSave() override { Real()->OnSave(); }
+    void OnRestore() override { Real()->OnRestore(); }
+    void unk201() override { Real()->unk201(); }
+    int ObjectCaps() override { return Real()->ObjectCaps(); }
+    CEntityIndex RequiredEdictIndex() override { return Real()->RequiredEdictIndex(); }
+    void NetworkStateChanged( const NetworkStateChangedData& data ) override { Real()->NetworkStateChanged(data); }
+    void unk301( const void* data ) override { Real()->unk301(data); }
+    void unk302( const void* data ) override { Real()->unk302(data); }
+    void NetworkUpdateState( bool state ) override { Real()->NetworkUpdateState(state); }
+    void NetworkStateChangedLog( const char* pszFieldName, const char* pszInfo ) override { Real()->NetworkStateChangedLog(pszFieldName, pszInfo); }
+    bool FullEdictChanged() override { return Real()->FullEdictChanged(); }
+    void unk401() override { Real()->unk401(); }
+    void unk402() override { Real()->unk402(); }
+    ChangeAccessorFieldPathIndex_t AddChangeAccessorPath( const CFieldPath& path ) override { return Real()->AddChangeAccessorPath(path); }
+    void AssignChangeAccessorPathIds() override { Real()->AssignChangeAccessorPathIds(); }
+    ChangeAccessorFieldPathIndexInfo_t* GetChangeAccessorPathInfo_1() override { return Real()->GetChangeAccessorPathInfo_1(); }
+    ChangeAccessorFieldPathIndexInfo_t* GetChangeAccessorPathInfo_2() override { return Real()->GetChangeAccessorPathInfo_2(); }
+    void unk501() override { Real()->unk501(); }
+    void unk502() override { Real()->unk502(); }
+    void ReloadPrivateScripts() override { Real()->ReloadPrivateScripts(); }
+    datamap_t* GetDataDescMap() override { return Real()->GetDataDescMap(); }
+    void unk601() override { Real()->unk601(); }
+    void unk602() override { Real()->unk602(); }
+    SchemaMetaInfoHandle_t<CSchemaClassInfo> Schema_DynamicBinding() override { return Real()->Schema_DynamicBinding(); }
 };
 
 #endif // _INCLUDE_CBASEENTITYIMPL_H

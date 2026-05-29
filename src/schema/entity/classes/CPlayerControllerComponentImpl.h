@@ -54,12 +54,14 @@ public:
 
 private:
     CPlayerControllerComponent* Real() { return static_cast<CPlayerControllerComponent*>(m_pReal); }
+    CPlayerControllerComponent* Real() const { return static_cast<CPlayerControllerComponent*>(m_pReal); }
 
 public:
+    CPlayerControllerComponent* GetOriginal() const override { return Real(); }
     CEntityInstance*& __m_pChainEntity() override { return Real()->__m_pChainEntity(); }
     void __m_pChainEntityUpdated() override { Real()->__m_pChainEntity.NetworkStateChanged(); }
 
-    CCSPlayerController* GetPlayerController() override { return Real()->GetPlayerController(); }
+    ICSPlayerController* GetPlayerController() override { return Real()->GetPlayerController(); }
 };
 
 #endif // _INCLUDE_CPLAYERCONTROLLERCOMPONENTIMPL_H

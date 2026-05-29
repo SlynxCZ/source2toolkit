@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(float, m_xfriction);
     SCHEMA_FIELD(float, m_yfriction);
     SCHEMA_FIELD(float, m_zfriction);
-
-public:
-    static CRagdollConstraint* New(const char* className)
-    {
-        return CBaseEntity::New<CRagdollConstraint>(className);
-    }
-
-    static CRagdollConstraint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRagdollConstraint>(iIndex);
-    }
-
-    static CRagdollConstraint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CRAGDOLLCONSTRAINT_H

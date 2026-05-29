@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(QAngle, m_vSaveAngles);
     SCHEMA_FIELD(bool, m_bTeleportParentedEntities);
     SCHEMA_FIELD(bool, m_bTeleportUseCurrentAngle);
-
-public:
-    static CPointTeleport* New(const char* className)
-    {
-        return CBaseEntity::New<CPointTeleport>(className);
-    }
-
-    static CPointTeleport* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointTeleport>(iIndex);
-    }
-
-    static CPointTeleport* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTTELEPORT_H

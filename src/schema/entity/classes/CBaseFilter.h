@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(bool, m_bNegated);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFail);
-
-public:
-    static CBaseFilter* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseFilter>(className);
-    }
-
-    static CBaseFilter* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseFilter>(iIndex);
-    }
-
-    static CBaseFilter* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEFILTER_H

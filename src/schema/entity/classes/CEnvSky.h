@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD(float, m_flFogMaxStart);
     SCHEMA_FIELD(float, m_flFogMaxEnd);
     SCHEMA_FIELD(bool, m_bEnabled);
-
-public:
-    static CEnvSky* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvSky>(className);
-    }
-
-    static CEnvSky* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvSky>(iIndex);
-    }
-
-    static CEnvSky* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSKY_H

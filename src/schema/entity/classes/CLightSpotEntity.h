@@ -61,22 +61,6 @@ class CLightSpotEntity : public CLightEntity
 public:
     DECLARE_SCHEMA_CLASS(CLightSpotEntity);
 
-
-public:
-    static CLightSpotEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CLightSpotEntity>(className);
-    }
-
-    static CLightSpotEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLightSpotEntity>(iIndex);
-    }
-
-    static CLightSpotEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLIGHTSPOTENTITY_H

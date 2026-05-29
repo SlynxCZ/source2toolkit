@@ -65,22 +65,6 @@ public:
 
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_OwningPlayer);
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_KillingPlayer);
-
-public:
-    static CItemDogtags* New(const char* className)
-    {
-        return CBaseEntity::New<CItemDogtags>(className);
-    }
-
-    static CItemDogtags* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemDogtags>(iIndex);
-    }
-
-    static CItemDogtags* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMDOGTAGS_H

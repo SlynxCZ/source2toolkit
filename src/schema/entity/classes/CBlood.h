@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(Vector, m_vecSprayDir);
     SCHEMA_FIELD(float, m_flAmount);
     SCHEMA_FIELD(BloodType, m_Color);
-
-public:
-    static CBlood* New(const char* className)
-    {
-        return CBaseEntity::New<CBlood>(className);
-    }
-
-    static CBlood* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBlood>(iIndex);
-    }
-
-    static CBlood* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBLOOD_H

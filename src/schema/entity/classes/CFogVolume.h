@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_colorCorrectionName);
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bInFogVolumesList);
-
-public:
-    static CFogVolume* New(const char* className)
-    {
-        return CBaseEntity::New<CFogVolume>(className);
-    }
-
-    static CFogVolume* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFogVolume>(iIndex);
-    }
-
-    static CFogVolume* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFOGVOLUME_H

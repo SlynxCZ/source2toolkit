@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszCustomLayoutFile);
     SCHEMA_FIELD(int32_t, m_iAttachType);
     SCHEMA_FIELD(float, m_flHeightOffset);
-
-public:
-    static CEnvInstructorVRHint* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvInstructorVRHint>(className);
-    }
-
-    static CEnvInstructorVRHint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvInstructorVRHint>(iIndex);
-    }
-
-    static CEnvInstructorVRHint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVINSTRUCTORVRHINT_H

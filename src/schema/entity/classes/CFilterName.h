@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFilterName);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterName);
-
-public:
-    static CFilterName* New(const char* className)
-    {
-        return CBaseEntity::New<CFilterName>(className);
-    }
-
-    static CFilterName* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFilterName>(iIndex);
-    }
-
-    static CFilterName* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFILTERNAME_H

@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(Vector, m_vPreSolveAnchorPos);
     SCHEMA_FIELD(float, m_StartTransitionTime);
     SCHEMA_FIELD(Vector, m_vTangentSpaceAnchorAtTransitionStart);
-
-public:
-    static CSplineConstraint* New(const char* className)
-    {
-        return CBaseEntity::New<CSplineConstraint>(className);
-    }
-
-    static CSplineConstraint* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSplineConstraint>(iIndex);
-    }
-
-    static CSplineConstraint* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSPLINECONSTRAINT_H

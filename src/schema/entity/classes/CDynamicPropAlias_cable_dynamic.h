@@ -61,22 +61,6 @@ class CDynamicPropAlias_cable_dynamic : public CDynamicProp
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_cable_dynamic);
 
-
-public:
-    static CDynamicPropAlias_cable_dynamic* New(const char* className)
-    {
-        return CBaseEntity::New<CDynamicPropAlias_cable_dynamic>(className);
-    }
-
-    static CDynamicPropAlias_cable_dynamic* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CDynamicPropAlias_cable_dynamic>(iIndex);
-    }
-
-    static CDynamicPropAlias_cable_dynamic* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CDYNAMICPROPALIAS_CABLE_DYNAMIC_H

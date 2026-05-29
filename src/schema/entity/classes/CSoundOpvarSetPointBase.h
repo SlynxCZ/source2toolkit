@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(int32_t, m_iOpvarIndex);
     SCHEMA_FIELD(bool, m_bUseAutoCompare);
     SCHEMA_FIELD(bool, m_bFastRefresh);
-
-public:
-    static CSoundOpvarSetPointBase* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetPointBase>(className);
-    }
-
-    static CSoundOpvarSetPointBase* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetPointBase>(iIndex);
-    }
-
-    static CSoundOpvarSetPointBase* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTBASE_H

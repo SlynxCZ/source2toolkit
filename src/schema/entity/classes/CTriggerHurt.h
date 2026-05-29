@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnHurt);
     SCHEMA_FIELD(CEntityIOOutput, m_OnHurtPlayer);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_hurtEntities);
-
-public:
-    static CTriggerHurt* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerHurt>(className);
-    }
-
-    static CTriggerHurt* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerHurt>(iIndex);
-    }
-
-    static CTriggerHurt* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERHURT_H

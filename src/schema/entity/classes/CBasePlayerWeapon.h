@@ -56,8 +56,8 @@
 
 #include "CEconEntity.h"
 
-class CCSWeaponBase;
-class CCSWeaponBaseVData;
+class IBasePlayerWeapon;
+class ICSWeaponBaseVData;
 
 class CBasePlayerWeapon : public CEconEntity
 {
@@ -75,24 +75,15 @@ public:
 
 public:
     /// <summary>Get weapon VData.</summary>
-    CCSWeaponBaseVData* GetWeaponVData();
+    ICSWeaponBaseVData* GetWeaponVData();
     /// <summary>Get weapon classname.</summary>
     const char* GetWeaponClassname();
 
 public:
-    static CBasePlayerWeapon* New(const char* className)
+    IBasePlayerWeapon* ToInterface();
+    static IBasePlayerWeapon* FromOriginal(CBasePlayerWeapon* p)
     {
-        return CBaseEntity::New<CBasePlayerWeapon>(className);
-    }
-
-    static CBasePlayerWeapon* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBasePlayerWeapon>(iIndex);
-    }
-
-    static CBasePlayerWeapon* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
+        return p ? p->ToInterface() : nullptr;
     }
 };
 

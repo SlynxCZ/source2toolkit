@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(bool, m_bAffectInvulnerableEnts);
     SCHEMA_FIELD(bool, m_bDisablePushClamp);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPushedPlayer);
-
-public:
-    static CPhysExplosion* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysExplosion>(className);
-    }
-
-    static CPhysExplosion* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysExplosion>(iIndex);
-    }
-
-    static CPhysExplosion* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSEXPLOSION_H

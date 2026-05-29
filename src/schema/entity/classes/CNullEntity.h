@@ -61,22 +61,6 @@ class CNullEntity : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CNullEntity);
 
-
-public:
-    static CNullEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CNullEntity>(className);
-    }
-
-    static CNullEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CNullEntity>(iIndex);
-    }
-
-    static CNullEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CNULLENTITY_H

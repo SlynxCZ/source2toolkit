@@ -118,22 +118,6 @@ public:
     SCHEMA_FIELD(float, m_flLastLOSTraceFailureTime);
     SCHEMA_FIELD(float, m_flWatTickOffset);
     SCHEMA_FIELD(float, m_flLastShakeTime);
-
-public:
-    static CCSWeaponBase* New(const char* className)
-    {
-        return CBaseEntity::New<CCSWeaponBase>(className);
-    }
-
-    static CCSWeaponBase* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSWeaponBase>(iIndex);
-    }
-
-    static CCSWeaponBase* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSWEAPONBASE_H

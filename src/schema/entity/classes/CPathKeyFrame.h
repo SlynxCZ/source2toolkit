@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(CHandle<CPathKeyFrame>, m_pNextKey);
     SCHEMA_FIELD(CHandle<CPathKeyFrame>, m_pPrevKey);
     SCHEMA_FIELD(float, m_flMoveSpeed);
-
-public:
-    static CPathKeyFrame* New(const char* className)
-    {
-        return CBaseEntity::New<CPathKeyFrame>(className);
-    }
-
-    static CPathKeyFrame* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPathKeyFrame>(iIndex);
-    }
-
-    static CPathKeyFrame* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPATHKEYFRAME_H

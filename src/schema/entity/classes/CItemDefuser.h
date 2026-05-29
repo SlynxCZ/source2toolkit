@@ -64,22 +64,6 @@ public:
 
     SCHEMA_FIELD(EntitySpottedState_t, m_entitySpottedState);
     SCHEMA_FIELD(int32_t, m_nSpotRules);
-
-public:
-    static CItemDefuser* New(const char* className)
-    {
-        return CBaseEntity::New<CItemDefuser>(className);
-    }
-
-    static CItemDefuser* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemDefuser>(iIndex);
-    }
-
-    static CItemDefuser* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMDEFUSER_H

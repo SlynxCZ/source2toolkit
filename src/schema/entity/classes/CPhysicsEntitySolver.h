@@ -67,22 +67,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hPhysicsBlocker);
     SCHEMA_FIELD(float, m_separationDuration);
     SCHEMA_FIELD(float, m_cancelTime);
-
-public:
-    static CPhysicsEntitySolver* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsEntitySolver>(className);
-    }
-
-    static CPhysicsEntitySolver* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsEntitySolver>(iIndex);
-    }
-
-    static CPhysicsEntitySolver* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSENTITYSOLVER_H

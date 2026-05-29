@@ -61,22 +61,6 @@ class CPointServerCommand : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CPointServerCommand);
 
-
-public:
-    static CPointServerCommand* New(const char* className)
-    {
-        return CBaseEntity::New<CPointServerCommand>(className);
-    }
-
-    static CPointServerCommand* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointServerCommand>(iIndex);
-    }
-
-    static CPointServerCommand* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTSERVERCOMMAND_H

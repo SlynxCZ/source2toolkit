@@ -42,26 +42,30 @@
 
 #include "source2toolkit/schema/entity/classes/ICSPlayer_ItemServices.h"
 #include "schema/entity/classes/CCSPlayer_ItemServices.h"
-#include "CPlayer_ItemServicesImpl.h"
 
-class CCSPlayer_ItemServicesImpl : public CPlayer_ItemServicesImpl, public ICSPlayer_ItemServices
+class CCSPlayer_ItemServicesImpl : public virtual ICSPlayer_ItemServices
 {
 
+protected:
+    void* m_pReal;
+
 public:
-    explicit CCSPlayer_ItemServicesImpl(CCSPlayer_ItemServices* p) : CPlayer_ItemServicesImpl(p) {}
+    explicit CCSPlayer_ItemServicesImpl(void* p) : m_pReal(p) {}
 
 private:
     CCSPlayer_ItemServices* Real() { return static_cast<CCSPlayer_ItemServices*>(m_pReal); }
+    CCSPlayer_ItemServices* Real() const { return static_cast<CCSPlayer_ItemServices*>(m_pReal); }
 
 public:
+    CCSPlayer_ItemServices* GetOriginal() const override { return Real(); }
     bool& HasDefuser() override { return Real()->m_bHasDefuser(); }
     void HasDefuserUpdated() override { Real()->m_bHasDefuser.NetworkStateChanged(); }
     bool& HasHelmet() override { return Real()->m_bHasHelmet(); }
     void HasHelmetUpdated() override { Real()->m_bHasHelmet.NetworkStateChanged(); }
 
-    void DropActivePlayerWeapon(CBasePlayerWeapon* pActiveWeapon) override { Real()->DropActivePlayerWeapon(pActiveWeapon); }
+    void DropActivePlayerWeapon(IBasePlayerWeapon* pActiveWeapon) override { Real()->DropActivePlayerWeapon(pActiveWeapon); }
     void RemoveWeapons() override { Real()->RemoveWeapons(); }
-    CBasePlayerWeapon* GiveNamedItem(const char* pszItem) override { return Real()->GiveNamedItem(pszItem); }
+    IBasePlayerWeapon* GiveNamedItem(const char* pszItem) override { return Real()->GiveNamedItem(pszItem); }
 };
 
 #endif // _INCLUDE_CCSPLAYER_ITEMSERVICESIMPL_H

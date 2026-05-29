@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(fogparams_t, m_fog);
     SCHEMA_FIELD(bool, m_bUseAngles);
     SCHEMA_FIELD(int32_t, m_iChangedVariables);
-
-public:
-    static CFogController* New(const char* className)
-    {
-        return CBaseEntity::New<CFogController>(className);
-    }
-
-    static CFogController* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFogController>(iIndex);
-    }
-
-    static CFogController* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFOGCONTROLLER_H

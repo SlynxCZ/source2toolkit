@@ -61,22 +61,6 @@ class CEnvSoundscapeTriggerable : public CEnvSoundscape
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeTriggerable);
 
-
-public:
-    static CEnvSoundscapeTriggerable* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvSoundscapeTriggerable>(className);
-    }
-
-    static CEnvSoundscapeTriggerable* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvSoundscapeTriggerable>(iIndex);
-    }
-
-    static CEnvSoundscapeTriggerable* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLE_H

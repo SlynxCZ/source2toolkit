@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(Vector, m_vMin);
     SCHEMA_FIELD(Vector, m_vMax);
-
-public:
-    static CSoundAreaEntityOrientedBox* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundAreaEntityOrientedBox>(className);
-    }
-
-    static CSoundAreaEntityOrientedBox* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundAreaEntityOrientedBox>(iIndex);
-    }
-
-    static CSoundAreaEntityOrientedBox* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDAREAENTITYORIENTEDBOX_H

@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CPhysicsWire);
 
     SCHEMA_FIELD(int32_t, m_nDensity);
-
-public:
-    static CPhysicsWire* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysicsWire>(className);
-    }
-
-    static CPhysicsWire* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysicsWire>(iIndex);
-    }
-
-    static CPhysicsWire* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSICSWIRE_H

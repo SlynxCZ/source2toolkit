@@ -75,22 +75,6 @@ public:
     SCHEMA_FIELD(bool, m_bCreateMovableNavMesh);
     SCHEMA_FIELD(bool, m_bAllowMovableNavMeshDockingOnEntireEntity);
     SCHEMA_FIELD(bool, m_bCreateNavObstacle);
-
-public:
-    static CFuncMoveLinear* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncMoveLinear>(className);
-    }
-
-    static CFuncMoveLinear* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncMoveLinear>(iIndex);
-    }
-
-    static CFuncMoveLinear* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCMOVELINEAR_H

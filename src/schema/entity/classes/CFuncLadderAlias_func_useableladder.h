@@ -61,22 +61,6 @@ class CFuncLadderAlias_func_useableladder : public CFuncLadder
 public:
     DECLARE_SCHEMA_CLASS(CFuncLadderAlias_func_useableladder);
 
-
-public:
-    static CFuncLadderAlias_func_useableladder* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncLadderAlias_func_useableladder>(className);
-    }
-
-    static CFuncLadderAlias_func_useableladder* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncLadderAlias_func_useableladder>(iIndex);
-    }
-
-    static CFuncLadderAlias_func_useableladder* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCLADDERALIAS_FUNC_USEABLELADDER_H

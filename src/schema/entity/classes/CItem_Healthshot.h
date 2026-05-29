@@ -61,22 +61,6 @@ class CItem_Healthshot : public CWeaponBaseItem
 public:
     DECLARE_SCHEMA_CLASS(CItem_Healthshot);
 
-
-public:
-    static CItem_Healthshot* New(const char* className)
-    {
-        return CBaseEntity::New<CItem_Healthshot>(className);
-    }
-
-    static CItem_Healthshot* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItem_Healthshot>(iIndex);
-    }
-
-    static CItem_Healthshot* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEM_HEALTHSHOT_H

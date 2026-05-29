@@ -81,22 +81,6 @@ public:
     SCHEMA_FIELD(float, m_flProgressBarStartTime);
     SCHEMA_FIELD(int32_t, m_iProgressBarDuration);
     SCHEMA_FIELD(CHandle<CCSPlayerController>, m_hOriginalController);
-
-public:
-    static CCSPlayerPawnBase* New(const char* className)
-    {
-        return CBaseEntity::New<CCSPlayerPawnBase>(className);
-    }
-
-    static CCSPlayerPawnBase* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CCSPlayerPawnBase>(iIndex);
-    }
-
-    static CCSPlayerPawnBase* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCSPLAYERPAWNBASE_H

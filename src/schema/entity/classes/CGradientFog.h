@@ -79,22 +79,6 @@ public:
     SCHEMA_FIELD(bool, m_bStartDisabled);
     SCHEMA_FIELD(bool, m_bIsEnabled);
     SCHEMA_FIELD(bool, m_bGradientFogNeedsTextures);
-
-public:
-    static CGradientFog* New(const char* className)
-    {
-        return CBaseEntity::New<CGradientFog>(className);
-    }
-
-    static CGradientFog* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CGradientFog>(iIndex);
-    }
-
-    static CGradientFog* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CGRADIENTFOG_H

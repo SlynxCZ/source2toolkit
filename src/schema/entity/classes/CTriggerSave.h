@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(bool, m_bForceNewLevelUnit);
     SCHEMA_FIELD(float, m_fDangerousTimer);
     SCHEMA_FIELD(int32_t, m_minHitPoints);
-
-public:
-    static CTriggerSave* New(const char* className)
-    {
-        return CBaseEntity::New<CTriggerSave>(className);
-    }
-
-    static CTriggerSave* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTriggerSave>(iIndex);
-    }
-
-    static CTriggerSave* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTRIGGERSAVE_H

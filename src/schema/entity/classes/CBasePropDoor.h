@@ -103,22 +103,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnOpen);
     SCHEMA_FIELD(CEntityIOOutput, m_OnLockedUse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnAjarOpen);
-
-public:
-    static CBasePropDoor* New(const char* className)
-    {
-        return CBaseEntity::New<CBasePropDoor>(className);
-    }
-
-    static CBasePropDoor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBasePropDoor>(iIndex);
-    }
-
-    static CBasePropDoor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEPROPDOOR_H

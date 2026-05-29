@@ -71,22 +71,6 @@ public:
     SCHEMA_FIELD(bool, m_isDormant);
     SCHEMA_FIELD(CUtlVector<CHandle<CFish>>, m_fishes);
     SCHEMA_FIELD(CountdownTimer, m_visTimer);
-
-public:
-    static CFishPool* New(const char* className)
-    {
-        return CBaseEntity::New<CFishPool>(className);
-    }
-
-    static CFishPool* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFishPool>(iIndex);
-    }
-
-    static CFishPool* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFISHPOOL_H

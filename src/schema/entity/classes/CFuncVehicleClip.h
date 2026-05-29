@@ -61,22 +61,6 @@ class CFuncVehicleClip : public CBaseModelEntity
 public:
     DECLARE_SCHEMA_CLASS(CFuncVehicleClip);
 
-
-public:
-    static CFuncVehicleClip* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncVehicleClip>(className);
-    }
-
-    static CFuncVehicleClip* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncVehicleClip>(iIndex);
-    }
-
-    static CFuncVehicleClip* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCVEHICLECLIP_H

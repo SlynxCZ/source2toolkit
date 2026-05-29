@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CBasePlayerWeapon.h"
+#include "schema/entity/classes/CBasePlayerWeaponImpl.h"
 #include "strtools.h"
 
 CCSWeaponBaseVData* CBasePlayerWeapon::GetWeaponVData()
@@ -71,3 +71,7 @@ const char* CBasePlayerWeapon::GetWeaponClassname()
         return pszClassname;
     }
 }
+IBasePlayerWeapon* CBasePlayerWeapon::ToInterface() { return new CBasePlayerWeaponImpl(this); }
+
+IBasePlayerWeapon* IBasePlayerWeapon::FromOriginal(CBasePlayerWeapon* p)
+{ return CBasePlayerWeapon::FromOriginal(p); }

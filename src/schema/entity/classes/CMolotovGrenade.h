@@ -61,22 +61,6 @@ class CMolotovGrenade : public CBaseCSGrenade
 public:
     DECLARE_SCHEMA_CLASS(CMolotovGrenade);
 
-
-public:
-    static CMolotovGrenade* New(const char* className)
-    {
-        return CBaseEntity::New<CMolotovGrenade>(className);
-    }
-
-    static CMolotovGrenade* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMolotovGrenade>(iIndex);
-    }
-
-    static CMolotovGrenade* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMOLOTOVGRENADE_H

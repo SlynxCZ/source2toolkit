@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_attachedObject);
     SCHEMA_FIELD(bool, m_wasRestored);
     SCHEMA_FIELD(CConstantForceController, m_integrator);
-
-public:
-    static CPhysForce* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysForce>(className);
-    }
-
-    static CPhysForce* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysForce>(iIndex);
-    }
-
-    static CPhysForce* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSFORCE_H

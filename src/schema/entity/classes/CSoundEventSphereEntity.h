@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CSoundEventSphereEntity);
 
     SCHEMA_FIELD(float, m_flRadius);
-
-public:
-    static CSoundEventSphereEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundEventSphereEntity>(className);
-    }
-
-    static CSoundEventSphereEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundEventSphereEntity>(iIndex);
-    }
-
-    static CSoundEventSphereEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTSPHEREENTITY_H

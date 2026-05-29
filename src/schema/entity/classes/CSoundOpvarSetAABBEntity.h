@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(Vector, m_vInnerMaxs);
     SCHEMA_FIELD(Vector, m_vOuterMins);
     SCHEMA_FIELD(Vector, m_vOuterMaxs);
-
-public:
-    static CSoundOpvarSetAABBEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetAABBEntity>(className);
-    }
-
-    static CSoundOpvarSetAABBEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetAABBEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetAABBEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETAABBENTITY_H

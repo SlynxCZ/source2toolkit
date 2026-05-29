@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD_POINTER(Vector, m_offset);
     SCHEMA_FIELD(float, m_addLength);
     SCHEMA_FIELD(float, m_gearRatio);
-
-public:
-    static CPhysPulley* New(const char* className)
-    {
-        return CBaseEntity::New<CPhysPulley>(className);
-    }
-
-    static CPhysPulley* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPhysPulley>(iIndex);
-    }
-
-    static CPhysPulley* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPHYSPULLEY_H

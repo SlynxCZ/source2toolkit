@@ -61,22 +61,6 @@ class CItemKevlar : public CItem
 public:
     DECLARE_SCHEMA_CLASS(CItemKevlar);
 
-
-public:
-    static CItemKevlar* New(const char* className)
-    {
-        return CBaseEntity::New<CItemKevlar>(className);
-    }
-
-    static CItemKevlar* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CItemKevlar>(iIndex);
-    }
-
-    static CItemKevlar* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CITEMKEVLAR_H

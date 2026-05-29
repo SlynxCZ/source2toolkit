@@ -63,22 +63,6 @@ public:
 
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(QAngle, m_angViewPunch);
-
-public:
-    static CEnvViewPunch* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvViewPunch>(className);
-    }
-
-    static CEnvViewPunch* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvViewPunch>(iIndex);
-    }
-
-    static CEnvViewPunch* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVVIEWPUNCH_H

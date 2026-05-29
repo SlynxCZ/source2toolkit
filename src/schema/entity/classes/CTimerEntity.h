@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(float, m_flUpperRandomBound);
     SCHEMA_FIELD(float, m_flRemainingTime);
     SCHEMA_FIELD(bool, m_bPaused);
-
-public:
-    static CTimerEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CTimerEntity>(className);
-    }
-
-    static CTimerEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CTimerEntity>(iIndex);
-    }
-
-    static CTimerEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CTIMERENTITY_H

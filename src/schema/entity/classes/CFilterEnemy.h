@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(float, m_flOuterRadius);
     SCHEMA_FIELD(int32_t, m_nMaxSquadmatesPerEnemy);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPlayerName);
-
-public:
-    static CFilterEnemy* New(const char* className)
-    {
-        return CBaseEntity::New<CFilterEnemy>(className);
-    }
-
-    static CFilterEnemy* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFilterEnemy>(iIndex);
-    }
-
-    static CFilterEnemy* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFILTERENEMY_H

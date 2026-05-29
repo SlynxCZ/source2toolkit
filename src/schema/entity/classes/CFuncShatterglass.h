@@ -89,22 +89,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnBroken);
     SCHEMA_FIELD(uint8_t, m_iSurfaceType);
     SCHEMA_FIELD(CStrongHandle<InfoForResourceTypeIMaterial2>, m_hMaterialDamageBase);
-
-public:
-    static CFuncShatterglass* New(const char* className)
-    {
-        return CBaseEntity::New<CFuncShatterglass>(className);
-    }
-
-    static CFuncShatterglass* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFuncShatterglass>(iIndex);
-    }
-
-    static CFuncShatterglass* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFUNCSHATTERGLASS_H

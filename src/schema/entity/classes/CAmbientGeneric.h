@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_sSourceEntName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hSoundSource);
     SCHEMA_FIELD(CEntityIndex, m_nSoundSourceEntIndex);
-
-public:
-    static CAmbientGeneric* New(const char* className)
-    {
-        return CBaseEntity::New<CAmbientGeneric>(className);
-    }
-
-    static CAmbientGeneric* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CAmbientGeneric>(iIndex);
-    }
-
-    static CAmbientGeneric* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CAMBIENTGENERIC_H

@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CCSPlayerController.h"
+#include "schema/entity/classes/CCSPlayerControllerImpl.h"
 
 #include "schema/entity/classes/CCSPlayerPawn.h"
 #include "schema/entity/classes/CCSObserverPawn.h"
@@ -378,3 +378,7 @@ void CCSPlayerController::FireEventToClient(IGameEvent* pEvent)
 
     pListener->FireGameEvent(pEvent);
 }
+ICSPlayerController* CCSPlayerController::ToInterface() { return new CCSPlayerControllerImpl(this); }
+
+ICSPlayerController* ICSPlayerController::FromOriginal(CCSPlayerController* p)
+{ return CCSPlayerController::FromOriginal(p); }

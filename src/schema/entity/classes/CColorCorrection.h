@@ -78,22 +78,6 @@ public:
     SCHEMA_FIELD(float, m_flCurWeight);
     SCHEMA_FIELD_POINTER(char, m_netlookupFilename);
     SCHEMA_FIELD(CUtlSymbolLarge, m_lookupFilename);
-
-public:
-    static CColorCorrection* New(const char* className)
-    {
-        return CBaseEntity::New<CColorCorrection>(className);
-    }
-
-    static CColorCorrection* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CColorCorrection>(iIndex);
-    }
-
-    static CColorCorrection* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCOLORCORRECTION_H

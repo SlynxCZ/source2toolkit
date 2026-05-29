@@ -80,22 +80,6 @@ public:
     SCHEMA_FIELD(QAngle, m_vecFinalAngle);
     SCHEMA_FIELD(int32_t, m_movementType);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sMaster);
-
-public:
-    static CBaseToggle* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseToggle>(className);
-    }
-
-    static CBaseToggle* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseToggle>(iIndex);
-    }
-
-    static CBaseToggle* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASETOGGLE_H

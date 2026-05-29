@@ -61,22 +61,6 @@ class CHandleDummy : public CBaseEntity
 public:
     DECLARE_SCHEMA_CLASS(CHandleDummy);
 
-
-public:
-    static CHandleDummy* New(const char* className)
-    {
-        return CBaseEntity::New<CHandleDummy>(className);
-    }
-
-    static CHandleDummy* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CHandleDummy>(iIndex);
-    }
-
-    static CHandleDummy* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CHANDLEDUMMY_H

@@ -65,22 +65,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_DialogXMLName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_PanelClassName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_PanelID);
-
-public:
-    static CBaseClientUIEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseClientUIEntity>(className);
-    }
-
-    static CBaseClientUIEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseClientUIEntity>(iIndex);
-    }
-
-    static CBaseClientUIEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASECLIENTUIENTITY_H

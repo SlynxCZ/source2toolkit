@@ -74,22 +74,6 @@ public:
     SCHEMA_FIELD(CUtlVector<CUtlSymbolLarge>, m_vecCSSClasses);
     SCHEMA_FIELD(CUtlSymbolLarge, m_szTargetsName);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseModelEntity>>, m_AdditionalTargetEntities);
-
-public:
-    static CInfoOffscreenPanoramaTexture* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoOffscreenPanoramaTexture>(className);
-    }
-
-    static CInfoOffscreenPanoramaTexture* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoOffscreenPanoramaTexture>(iIndex);
-    }
-
-    static CInfoOffscreenPanoramaTexture* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOOFFSCREENPANORAMATEXTURE_H

@@ -64,22 +64,6 @@ public:
     SCHEMA_FIELD(float, m_flInnerAngle);
     SCHEMA_FIELD(float, m_flOuterAngle);
     SCHEMA_FIELD(bool, m_bShowLight);
-
-public:
-    static COmniLight* New(const char* className)
-    {
-        return CBaseEntity::New<COmniLight>(className);
-    }
-
-    static COmniLight* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<COmniLight>(iIndex);
-    }
-
-    static COmniLight* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_COMNILIGHT_H

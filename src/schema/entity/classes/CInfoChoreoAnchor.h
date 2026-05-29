@@ -64,22 +64,6 @@ public:
 
     SCHEMA_FIELD(CUtlVector<CInfoChoreoAnchorPosition>, m_vecTargetEntries);
     SCHEMA_FIELD(CUtlVector<CInfoChoreoAnchorPosition>, m_vecTargetWarps);
-
-public:
-    static CInfoChoreoAnchor* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoChoreoAnchor>(className);
-    }
-
-    static CInfoChoreoAnchor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoChoreoAnchor>(iIndex);
-    }
-
-    static CInfoChoreoAnchor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOCHOREOANCHOR_H

@@ -61,22 +61,6 @@ class CSimpleMarkupVolumeTagged : public CMarkupVolumeTagged
 public:
     DECLARE_SCHEMA_CLASS(CSimpleMarkupVolumeTagged);
 
-
-public:
-    static CSimpleMarkupVolumeTagged* New(const char* className)
-    {
-        return CBaseEntity::New<CSimpleMarkupVolumeTagged>(className);
-    }
-
-    static CSimpleMarkupVolumeTagged* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSimpleMarkupVolumeTagged>(iIndex);
-    }
-
-    static CSimpleMarkupVolumeTagged* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSIMPLEMARKUPVOLUMETAGGED_H

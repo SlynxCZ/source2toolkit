@@ -92,22 +92,6 @@ public:
     SCHEMA_FIELD(float, m_flNextBotBeepTime);
     SCHEMA_FIELD(QAngle, m_angCatchUpToPlayerEye);
     SCHEMA_FIELD(float, m_flLastSpinDetectionTime);
-
-public:
-    static CPlantedC4* New(const char* className)
-    {
-        return CBaseEntity::New<CPlantedC4>(className);
-    }
-
-    static CPlantedC4* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPlantedC4>(iIndex);
-    }
-
-    static CPlantedC4* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPLANTEDC4_H

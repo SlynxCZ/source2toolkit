@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CConstraintAnchor);
 
     SCHEMA_FIELD(float, m_massScale);
-
-public:
-    static CConstraintAnchor* New(const char* className)
-    {
-        return CBaseEntity::New<CConstraintAnchor>(className);
-    }
-
-    static CConstraintAnchor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CConstraintAnchor>(iIndex);
-    }
-
-    static CConstraintAnchor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCONSTRAINTANCHOR_H

@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(float, m_flDelay);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
-
-public:
-    static CPointHurt* New(const char* className)
-    {
-        return CBaseEntity::New<CPointHurt>(className);
-    }
-
-    static CPointHurt* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CPointHurt>(iIndex);
-    }
-
-    static CPointHurt* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CPOINTHURT_H

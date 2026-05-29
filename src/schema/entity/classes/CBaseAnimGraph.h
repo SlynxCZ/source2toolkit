@@ -80,22 +80,6 @@ public:
     SCHEMA_FIELD(bool, m_bRagdollEnabled);
     SCHEMA_FIELD(bool, m_bRagdollClientSide);
     SCHEMA_FIELD(CTransform, m_xParentedRagdollRootInEntitySpace);
-
-public:
-    static CBaseAnimGraph* New(const char* className)
-    {
-        return CBaseEntity::New<CBaseAnimGraph>(className);
-    }
-
-    static CBaseAnimGraph* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBaseAnimGraph>(iIndex);
-    }
-
-    static CBaseAnimGraph* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBASEANIMGRAPH_H

@@ -63,22 +63,6 @@ public:
     DECLARE_SCHEMA_CLASS(CEnvWind);
 
     SCHEMA_FIELD(CEnvWindShared, m_EnvWindShared);
-
-public:
-    static CEnvWind* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvWind>(className);
-    }
-
-    static CEnvWind* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvWind>(iIndex);
-    }
-
-    static CEnvWind* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVWIND_H

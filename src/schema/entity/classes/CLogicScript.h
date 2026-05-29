@@ -61,22 +61,6 @@ class CLogicScript : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CLogicScript);
 
-
-public:
-    static CLogicScript* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicScript>(className);
-    }
-
-    static CLogicScript* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicScript>(iIndex);
-    }
-
-    static CLogicScript* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICSCRIPT_H

@@ -61,22 +61,6 @@ class CInfoSpawnGroupLandmark : public CPointEntity
 public:
     DECLARE_SCHEMA_CLASS(CInfoSpawnGroupLandmark);
 
-
-public:
-    static CInfoSpawnGroupLandmark* New(const char* className)
-    {
-        return CBaseEntity::New<CInfoSpawnGroupLandmark>(className);
-    }
-
-    static CInfoSpawnGroupLandmark* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CInfoSpawnGroupLandmark>(iIndex);
-    }
-
-    static CInfoSpawnGroupLandmark* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CINFOSPAWNGROUPLANDMARK_H

@@ -54,7 +54,8 @@
 #include <cstdint>
 
 
-class CCSPlayerController;
+class ICSPlayerController;
+class IPlayerControllerComponent;
 
 class CPlayerControllerComponent
 {
@@ -65,7 +66,14 @@ public:
 
 public:
     /// <summary>Get player controller.</summary>
-    CCSPlayerController* GetPlayerController();
+    ICSPlayerController* GetPlayerController();
+
+public:
+    IPlayerControllerComponent* ToInterface();
+    static IPlayerControllerComponent* FromOriginal(CPlayerControllerComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYERCONTROLLERCOMPONENT_H

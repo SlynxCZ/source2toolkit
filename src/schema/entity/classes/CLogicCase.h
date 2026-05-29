@@ -66,22 +66,6 @@ public:
     SCHEMA_FIELD(int32_t, m_nLastShuffleCase);
     SCHEMA_FIELD_POINTER(uint8_t, m_uchShuffleCaseMap);
     SCHEMA_FIELD_POINTER(CEntityIOOutput, m_OnCase);
-
-public:
-    static CLogicCase* New(const char* className)
-    {
-        return CBaseEntity::New<CLogicCase>(className);
-    }
-
-    static CLogicCase* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CLogicCase>(iIndex);
-    }
-
-    static CLogicCase* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CLOGICCASE_H

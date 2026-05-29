@@ -68,22 +68,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSpriteName);
     SCHEMA_FIELD(Vector, m_firePosition);
     SCHEMA_FIELD(float, m_flStartFrame);
-
-public:
-    static CEnvLaser* New(const char* className)
-    {
-        return CBaseEntity::New<CEnvLaser>(className);
-    }
-
-    static CEnvLaser* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CEnvLaser>(iIndex);
-    }
-
-    static CEnvLaser* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CENVLASER_H

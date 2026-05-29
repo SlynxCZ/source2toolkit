@@ -61,22 +61,6 @@ class CWeaponSawedoff : public CCSWeaponBaseShotgun
 public:
     DECLARE_SCHEMA_CLASS(CWeaponSawedoff);
 
-
-public:
-    static CWeaponSawedoff* New(const char* className)
-    {
-        return CBaseEntity::New<CWeaponSawedoff>(className);
-    }
-
-    static CWeaponSawedoff* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CWeaponSawedoff>(iIndex);
-    }
-
-    static CWeaponSawedoff* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CWEAPONSAWEDOFF_H

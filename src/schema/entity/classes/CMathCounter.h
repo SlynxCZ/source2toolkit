@@ -70,22 +70,6 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnHitMax);
     SCHEMA_FIELD(CEntityIOOutput, m_OnChangedFromMin);
     SCHEMA_FIELD(CEntityIOOutput, m_OnChangedFromMax);
-
-public:
-    static CMathCounter* New(const char* className)
-    {
-        return CBaseEntity::New<CMathCounter>(className);
-    }
-
-    static CMathCounter* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CMathCounter>(iIndex);
-    }
-
-    static CMathCounter* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CMATHCOUNTER_H

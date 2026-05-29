@@ -69,22 +69,6 @@ public:
     SCHEMA_FIELD(float, m_flWindMax);
     SCHEMA_FIELD(float, m_flWindMapMin);
     SCHEMA_FIELD(float, m_flWindMapMax);
-
-public:
-    static CSoundOpvarSetOBBWindEntity* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundOpvarSetOBBWindEntity>(className);
-    }
-
-    static CSoundOpvarSetOBBWindEntity* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundOpvarSetOBBWindEntity>(iIndex);
-    }
-
-    static CSoundOpvarSetOBBWindEntity* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETOBBWINDENTITY_H

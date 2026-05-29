@@ -35,7 +35,7 @@
  * Project: Source2Toolkit
  */
 
-#include "schema/entity/classes/CCSPlayer_ItemServices.h"
+#include "schema/entity/classes/CCSPlayer_ItemServicesImpl.h"
 
 #include "source2toolkit/utils/virtual.h"
 
@@ -79,3 +79,7 @@ CBasePlayerWeapon* CCSPlayer_ItemServices::GiveNamedItem(const char* pszItem)
 #endif
     return CALL_VIRTUAL(CBasePlayerWeapon*, offset, this, pszItem);
 }
+ICSPlayer_ItemServices* CCSPlayer_ItemServices::ToInterface() { return new CCSPlayer_ItemServicesImpl(this); }
+
+ICSPlayer_ItemServices* ICSPlayer_ItemServices::FromOriginal(CCSPlayer_ItemServices* p)
+{ return CCSPlayer_ItemServices::FromOriginal(p); }

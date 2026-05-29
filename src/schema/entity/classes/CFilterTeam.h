@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CFilterTeam);
 
     SCHEMA_FIELD(int32_t, m_iFilterTeam);
-
-public:
-    static CFilterTeam* New(const char* className)
-    {
-        return CBaseEntity::New<CFilterTeam>(className);
-    }
-
-    static CFilterTeam* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CFilterTeam>(iIndex);
-    }
-
-    static CFilterTeam* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CFILTERTEAM_H

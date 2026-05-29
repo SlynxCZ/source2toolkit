@@ -95,22 +95,6 @@ public:
     SCHEMA_FIELD(float, m_flActiveFollowStartTime);
     SCHEMA_FIELD(CountdownTimer, m_followMinuteTimer);
     SCHEMA_FIELD(CountdownTimer, m_BlockDirectionTimer);
-
-public:
-    static CChicken* New(const char* className)
-    {
-        return CBaseEntity::New<CChicken>(className);
-    }
-
-    static CChicken* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CChicken>(iIndex);
-    }
-
-    static CChicken* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CCHICKEN_H

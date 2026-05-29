@@ -72,22 +72,6 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_szMountTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hInstructorHint);
     SCHEMA_FIELD(int32_t, m_nBombSiteDesignation);
-
-public:
-    static CBombTarget* New(const char* className)
-    {
-        return CBaseEntity::New<CBombTarget>(className);
-    }
-
-    static CBombTarget* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CBombTarget>(iIndex);
-    }
-
-    static CBombTarget* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CBOMBTARGET_H

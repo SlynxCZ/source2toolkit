@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CSoundAreaEntitySphere);
 
     SCHEMA_FIELD(float, m_flRadius);
-
-public:
-    static CSoundAreaEntitySphere* New(const char* className)
-    {
-        return CBaseEntity::New<CSoundAreaEntitySphere>(className);
-    }
-
-    static CSoundAreaEntitySphere* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CSoundAreaEntitySphere>(iIndex);
-    }
-
-    static CSoundAreaEntitySphere* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CSOUNDAREAENTITYSPHERE_H

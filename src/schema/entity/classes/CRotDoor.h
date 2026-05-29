@@ -62,22 +62,6 @@ public:
     DECLARE_SCHEMA_CLASS(CRotDoor);
 
     SCHEMA_FIELD(bool, m_bSolidBsp);
-
-public:
-    static CRotDoor* New(const char* className)
-    {
-        return CBaseEntity::New<CRotDoor>(className);
-    }
-
-    static CRotDoor* FromIndex(int iIndex)
-    {
-        return CBaseEntity::FromIndex<CRotDoor>(iIndex);
-    }
-
-    static CRotDoor* FromIndex(CEntityIndex index)
-    {
-        return FromIndex(index.Get());
-    }
 };
 
 #endif // _INCLUDE_CROTDOOR_H
