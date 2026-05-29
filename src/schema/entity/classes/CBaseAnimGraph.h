@@ -59,6 +59,7 @@
 #include "PhysicsRagdollPose_t.h"
 
 class CAnimGraphControllerBase;
+class IBaseAnimGraph;
 class IChoreoServices;
 class IPhysicsRagdollControl;
 
@@ -80,6 +81,13 @@ public:
     SCHEMA_FIELD(bool, m_bRagdollEnabled);
     SCHEMA_FIELD(bool, m_bRagdollClientSide);
     SCHEMA_FIELD(CTransform, m_xParentedRagdollRootInEntitySpace);
+
+public:
+    IBaseAnimGraph* ToInterface();
+    static IBaseAnimGraph* FromOriginal(CBaseAnimGraph* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEANIMGRAPH_H

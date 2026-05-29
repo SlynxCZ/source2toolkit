@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISceneRequestHandle_t;
+
 class SceneRequestHandle_t
 {
 public:
     DECLARE_SCHEMA_CLASS(SceneRequestHandle_t);
 
     SCHEMA_FIELD(int32_t, m_Value);
+
+public:
+    ISceneRequestHandle_t* ToInterface();
+    static ISceneRequestHandle_t* FromOriginal(SceneRequestHandle_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SCENEREQUESTHANDLE_T_H

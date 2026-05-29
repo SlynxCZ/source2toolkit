@@ -56,11 +56,20 @@
 
 #include "SpawnPoint.h"
 
+class IInfoPlayerCounterterrorist;
+
 class CInfoPlayerCounterterrorist : public SpawnPoint
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoPlayerCounterterrorist);
 
+
+public:
+    IInfoPlayerCounterterrorist* ToInterface();
+    static IInfoPlayerCounterterrorist* FromOriginal(CInfoPlayerCounterterrorist* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOPLAYERCOUNTERTERRORIST_H

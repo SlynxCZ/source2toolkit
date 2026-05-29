@@ -56,6 +56,8 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
+class ISmokeGrenadeProjectile;
+
 class CSmokeGrenadeProjectile : public CBaseCSGrenadeProjectile
 {
 public:
@@ -73,6 +75,13 @@ public:
     SCHEMA_FIELD(float, m_fllastSimulationTime);
     SCHEMA_FIELD(bool, m_bExplodeFromInferno);
     SCHEMA_FIELD(bool, m_bDidGroundScorch);
+
+public:
+    ISmokeGrenadeProjectile* ToInterface();
+    static ISmokeGrenadeProjectile* FromOriginal(CSmokeGrenadeProjectile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSMOKEGRENADEPROJECTILE_H

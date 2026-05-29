@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIntervalTimer;
+
 class IntervalTimer
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(float, m_timestamp);
     SCHEMA_FIELD(WorldGroupId_t, m_nWorldGroupId);
+
+public:
+    IIntervalTimer* ToInterface();
+    static IIntervalTimer* FromOriginal(IntervalTimer* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INTERVALTIMER_H

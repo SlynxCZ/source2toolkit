@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IExampleSchemaVData_PolymorphicBase;
+
 class CExampleSchemaVData_PolymorphicBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CExampleSchemaVData_PolymorphicBase);
 
     SCHEMA_FIELD(int32_t, m_nBase);
+
+public:
+    IExampleSchemaVData_PolymorphicBase* ToInterface();
+    static IExampleSchemaVData_PolymorphicBase* FromOriginal(CExampleSchemaVData_PolymorphicBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_POLYMORPHICBASE_H

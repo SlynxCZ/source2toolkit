@@ -55,6 +55,8 @@
 
 #include "IPhysicsBodyList.h"
 
+class IIPhysAggregateInstance;
+
 class IPhysAggregateInstance : public IPhysicsBodyList
 {
 public:
@@ -62,6 +64,13 @@ public:
 
     SCHEMA_FIELD(void*, m_pSkeleton);
     SCHEMA_FIELD(bool, m_bIsAxisAligned);
+
+public:
+    IIPhysAggregateInstance* ToInterface();
+    static IIPhysAggregateInstance* FromOriginal(IPhysAggregateInstance* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_IPHYSAGGREGATEINSTANCE_H

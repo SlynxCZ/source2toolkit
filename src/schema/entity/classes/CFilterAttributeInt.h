@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterAttributeInt;
+
 class CFilterAttributeInt : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterAttributeInt);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_sAttributeName);
+
+public:
+    IFilterAttributeInt* ToInterface();
+    static IFilterAttributeInt* FromOriginal(CFilterAttributeInt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERATTRIBUTEINT_H

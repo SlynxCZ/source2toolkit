@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponSSG08;
+
 class CWeaponSSG08 : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponSSG08);
 
+
+public:
+    IWeaponSSG08* ToInterface();
+    static IWeaponSSG08* FromOriginal(CWeaponSSG08* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONSSG08_H

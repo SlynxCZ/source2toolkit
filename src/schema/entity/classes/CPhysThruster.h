@@ -56,12 +56,21 @@
 
 #include "CPhysForce.h"
 
+class IPhysThruster;
+
 class CPhysThruster : public CPhysForce
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysThruster);
 
     SCHEMA_FIELD(Vector, m_localOrigin);
+
+public:
+    IPhysThruster* ToInterface();
+    static IPhysThruster* FromOriginal(CPhysThruster* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSTHRUSTER_H

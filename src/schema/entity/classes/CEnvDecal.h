@@ -56,6 +56,7 @@
 
 #include "CBaseModelEntity.h"
 
+class IEnvDecal;
 class InfoForResourceTypeIMaterial2;
 
 class CEnvDecal : public CBaseModelEntity
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(bool, m_bProjectOnCharacters);
     SCHEMA_FIELD(bool, m_bProjectOnWater);
     SCHEMA_FIELD(float, m_flDepthSortBias);
+
+public:
+    IEnvDecal* ToInterface();
+    static IEnvDecal* FromOriginal(CEnvDecal* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVDECAL_H

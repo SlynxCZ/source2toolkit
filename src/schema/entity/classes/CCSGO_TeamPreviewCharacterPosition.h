@@ -57,6 +57,8 @@
 #include "CBaseEntity.h"
 #include "CEconItemView.h"
 
+class ICSGO_TeamPreviewCharacterPosition;
+
 class CCSGO_TeamPreviewCharacterPosition : public CBaseEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(CEconItemView, m_agentItem);
     SCHEMA_FIELD(CEconItemView, m_glovesItem);
     SCHEMA_FIELD(CEconItemView, m_weaponItem);
+
+public:
+    ICSGO_TeamPreviewCharacterPosition* ToInterface();
+    static ICSGO_TeamPreviewCharacterPosition* FromOriginal(CCSGO_TeamPreviewCharacterPosition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGO_TEAMPREVIEWCHARACTERPOSITION_H

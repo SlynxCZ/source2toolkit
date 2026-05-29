@@ -56,6 +56,7 @@
 #include "ParticleIndex_t.h"
 
 class CBaseEntity;
+class Ilerpdata_t;
 
 class lerpdata_t
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecStartOrigin);
     SCHEMA_FIELD(Quaternion, m_qStartRot);
     SCHEMA_FIELD(ParticleIndex_t, m_nFXIndex);
+
+public:
+    Ilerpdata_t* ToInterface();
+    static Ilerpdata_t* FromOriginal(lerpdata_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_LERPDATA_T_H

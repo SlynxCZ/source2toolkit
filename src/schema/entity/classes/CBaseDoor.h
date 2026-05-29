@@ -58,6 +58,8 @@
 #include "source2toolkit/schema/entity/enums/FuncDoorSpawnPos_t.h"
 #include "locksound_t.h"
 
+class IBaseDoor;
+
 class CBaseDoor : public CBaseToggle
 {
 public:
@@ -91,6 +93,13 @@ public:
     SCHEMA_FIELD(bool, m_bCreateNavObstacle);
     SCHEMA_FIELD(bool, m_isChaining);
     SCHEMA_FIELD(bool, m_bIsUsable);
+
+public:
+    IBaseDoor* ToInterface();
+    static IBaseDoor* FromOriginal(CBaseDoor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEDOOR_H

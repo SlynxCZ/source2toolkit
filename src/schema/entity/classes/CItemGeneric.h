@@ -58,6 +58,7 @@
 
 class CBaseFilter;
 class CItemGenericTriggerHelper;
+class IItemGeneric;
 class InfoForResourceTypeIParticleSystemDefinition;
 
 class CItemGeneric : public CItem
@@ -97,6 +98,13 @@ public:
     SCHEMA_FIELD(Color, m_glowColor);
     SCHEMA_FIELD(bool, m_bUseable);
     SCHEMA_FIELD(CHandle<CItemGenericTriggerHelper>, m_hTriggerHelper);
+
+public:
+    IItemGeneric* ToInterface();
+    static IItemGeneric* FromOriginal(CItemGeneric* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMGENERIC_H

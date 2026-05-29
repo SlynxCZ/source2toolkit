@@ -57,6 +57,8 @@
 #include "CItem.h"
 #include "EntitySpottedState_t.h"
 
+class IItemDefuser;
+
 class CItemDefuser : public CItem
 {
 public:
@@ -64,6 +66,13 @@ public:
 
     SCHEMA_FIELD(EntitySpottedState_t, m_entitySpottedState);
     SCHEMA_FIELD(int32_t, m_nSpotRules);
+
+public:
+    IItemDefuser* ToInterface();
+    static IItemDefuser* FromOriginal(CItemDefuser* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMDEFUSER_H

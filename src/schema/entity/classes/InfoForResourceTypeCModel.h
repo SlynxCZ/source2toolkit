@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeCModel;
+
 class InfoForResourceTypeCModel
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCModel);
 
+
+public:
+    IInfoForResourceTypeCModel* ToInterface();
+    static IInfoForResourceTypeCModel* FromOriginal(InfoForResourceTypeCModel* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECMODEL_H

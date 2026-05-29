@@ -58,6 +58,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IPhysForce;
 class IPhysicsMotionController;
 
 class CPhysForce : public CPointEntity
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_attachedObject);
     SCHEMA_FIELD(bool, m_wasRestored);
     SCHEMA_FIELD(CConstantForceController, m_integrator);
+
+public:
+    IPhysForce* ToInterface();
+    static IPhysForce* FromOriginal(CPhysForce* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSFORCE_H

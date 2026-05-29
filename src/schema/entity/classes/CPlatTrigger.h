@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CFuncPlat;
+class IPlatTrigger;
 
 class CPlatTrigger : public CBaseModelEntity
 {
@@ -64,6 +65,13 @@ public:
     DECLARE_SCHEMA_CLASS(CPlatTrigger);
 
     SCHEMA_FIELD(CHandle<CFuncPlat>, m_pPlatform);
+
+public:
+    IPlatTrigger* ToInterface();
+    static IPlatTrigger* FromOriginal(CPlatTrigger* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLATTRIGGER_H

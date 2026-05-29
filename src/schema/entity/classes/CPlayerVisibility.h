@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IPlayerVisibility;
+
 class CPlayerVisibility : public CBaseEntity
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(float, m_flFadeTime);
     SCHEMA_FIELD(bool, m_bStartDisabled);
     SCHEMA_FIELD(bool, m_bIsEnabled);
+
+public:
+    IPlayerVisibility* ToInterface();
+    static IPlayerVisibility* FromOriginal(CPlayerVisibility* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYERVISIBILITY_H

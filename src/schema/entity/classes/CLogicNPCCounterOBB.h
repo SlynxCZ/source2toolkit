@@ -56,11 +56,20 @@
 
 #include "CLogicNPCCounterAABB.h"
 
+class ILogicNPCCounterOBB;
+
 class CLogicNPCCounterOBB : public CLogicNPCCounterAABB
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicNPCCounterOBB);
 
+
+public:
+    ILogicNPCCounterOBB* ToInterface();
+    static ILogicNPCCounterOBB* FromOriginal(CLogicNPCCounterOBB* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICNPCCOUNTEROBB_H

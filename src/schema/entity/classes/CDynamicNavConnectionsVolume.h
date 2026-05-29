@@ -57,6 +57,8 @@
 #include "CTriggerMultiple.h"
 #include "DynamicVolumeDef_t.h"
 
+class IDynamicNavConnectionsVolume;
+
 class CDynamicNavConnectionsVolume : public CTriggerMultiple
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_flTargetAreaSearchRadius);
     SCHEMA_FIELD(float, m_flUpdateDistance);
     SCHEMA_FIELD(float, m_flMaxConnectionDistance);
+
+public:
+    IDynamicNavConnectionsVolume* ToInterface();
+    static IDynamicNavConnectionsVolume* FromOriginal(CDynamicNavConnectionsVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDYNAMICNAVCONNECTIONSVOLUME_H

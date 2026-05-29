@@ -59,6 +59,8 @@
 #include "Extent.h"
 #include "IntervalTimer.h"
 
+class IInferno;
+
 class CInferno : public CBaseModelEntity
 {
 public:
@@ -88,6 +90,13 @@ public:
     SCHEMA_FIELD(CountdownTimer, m_BookkeepingTimer);
     SCHEMA_FIELD(CountdownTimer, m_NextSpreadTimer);
     SCHEMA_FIELD(uint16_t, m_nSourceItemDefIndex);
+
+public:
+    IInferno* ToInterface();
+    static IInferno* FromOriginal(CInferno* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFERNO_H

@@ -55,6 +55,8 @@
 
 #include "CPlayer_WaterServices.h"
 
+class ICSPlayer_WaterServices;
+
 class CCSPlayer_WaterServices : public CPlayer_WaterServices
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_flWaterJumpTime);
     SCHEMA_FIELD(Vector, m_vecWaterJumpVel);
     SCHEMA_FIELD(float, m_flSwimSoundTime);
+
+public:
+    ICSPlayer_WaterServices* ToInterface();
+    static ICSPlayer_WaterServices* FromOriginal(CCSPlayer_WaterServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_WATERSERVICES_H

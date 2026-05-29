@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeCPostProcessingResource;
+
 class InfoForResourceTypeCPostProcessingResource
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCPostProcessingResource);
 
+
+public:
+    IInfoForResourceTypeCPostProcessingResource* ToInterface();
+    static IInfoForResourceTypeCPostProcessingResource* FromOriginal(InfoForResourceTypeCPostProcessingResource* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECPOSTPROCESSINGRESOURCE_H

@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CBaseEntity;
+class ISprite;
 class InfoForResourceTypeIMaterial2;
 
 class CSprite : public CBaseModelEntity
@@ -86,6 +87,13 @@ public:
     SCHEMA_FIELD(float, m_flBrightnessTimeStart);
     SCHEMA_FIELD(int32_t, m_nSpriteWidth);
     SCHEMA_FIELD(int32_t, m_nSpriteHeight);
+
+public:
+    ISprite* ToInterface();
+    static ISprite* FromOriginal(CSprite* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSPRITE_H

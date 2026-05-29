@@ -57,6 +57,7 @@
 #include "CBaseEntity.h"
 
 class CSkyCamera;
+class ISkyboxReference;
 
 class CSkyboxReference : public CBaseEntity
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(WorldGroupId_t, m_worldGroupId);
     SCHEMA_FIELD(CHandle<CSkyCamera>, m_hSkyCamera);
+
+public:
+    ISkyboxReference* ToInterface();
+    static ISkyboxReference* FromOriginal(CSkyboxReference* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSKYBOXREFERENCE_H

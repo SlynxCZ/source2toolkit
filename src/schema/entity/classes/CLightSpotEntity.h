@@ -56,11 +56,20 @@
 
 #include "CLightEntity.h"
 
+class ILightSpotEntity;
+
 class CLightSpotEntity : public CLightEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightSpotEntity);
 
+
+public:
+    ILightSpotEntity* ToInterface();
+    static ILightSpotEntity* FromOriginal(CLightSpotEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLIGHTSPOTENTITY_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ITestPulseIO__EntityHandleIntArgs_t;
+
 class CTestPulseIO__EntityHandleIntArgs_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(CEntityHandle, handleA);
     SCHEMA_FIELD(int32_t, valueB);
+
+public:
+    ITestPulseIO__EntityHandleIntArgs_t* ToInterface();
+    static ITestPulseIO__EntityHandleIntArgs_t* FromOriginal(CTestPulseIO__EntityHandleIntArgs_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIO__ENTITYHANDLEINTARGS_T_H

@@ -56,11 +56,20 @@
 
 #include "CBaseCSGrenade.h"
 
+class IDecoyGrenade;
+
 class CDecoyGrenade : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CDecoyGrenade);
 
+
+public:
+    IDecoyGrenade* ToInterface();
+    static IDecoyGrenade* FromOriginal(CDecoyGrenade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDECOYGRENADE_H

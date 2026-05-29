@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
 
 class CBaseEntity;
+class ITriggerHurt;
 
 class CTriggerHurt : public CBaseTrigger
 {
@@ -78,6 +79,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnHurt);
     SCHEMA_FIELD(CEntityIOOutput, m_OnHurtPlayer);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_hurtEntities);
+
+public:
+    ITriggerHurt* ToInterface();
+    static ITriggerHurt* FromOriginal(CTriggerHurt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERHURT_H

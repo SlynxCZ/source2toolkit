@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CPathWithDynamicNodes;
+class IPathNode;
 
 class CPathNode : public CPointEntity
 {
@@ -69,6 +70,13 @@ public:
     SCHEMA_FIELD(CUtlString, m_strPathNodeParameter);
     SCHEMA_FIELD(CTransform, m_xWSPrevParent);
     SCHEMA_FIELD(CHandle<CPathWithDynamicNodes>, m_hPath);
+
+public:
+    IPathNode* ToInterface();
+    static IPathNode* FromOriginal(CPathNode* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHNODE_H

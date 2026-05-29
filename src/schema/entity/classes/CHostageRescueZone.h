@@ -56,11 +56,20 @@
 
 #include "CHostageRescueZoneShim.h"
 
+class IHostageRescueZone;
+
 class CHostageRescueZone : public CHostageRescueZoneShim
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageRescueZone);
 
+
+public:
+    IHostageRescueZone* ToInterface();
+    static IHostageRescueZone* FromOriginal(CHostageRescueZone* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHOSTAGERESCUEZONE_H

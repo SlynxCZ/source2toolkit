@@ -56,12 +56,21 @@
 
 #include "CLogicalEntity.h"
 
+class IMapSharedEnvironment;
+
 class CMapSharedEnvironment : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMapSharedEnvironment);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_targetMapName);
+
+public:
+    IMapSharedEnvironment* ToInterface();
+    static IMapSharedEnvironment* FromOriginal(CMapSharedEnvironment* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMAPSHAREDENVIRONMENT_H

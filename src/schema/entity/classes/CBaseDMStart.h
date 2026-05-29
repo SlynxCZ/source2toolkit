@@ -56,12 +56,21 @@
 
 #include "CPointEntity.h"
 
+class IBaseDMStart;
+
 class CBaseDMStart : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseDMStart);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_Master);
+
+public:
+    IBaseDMStart* ToInterface();
+    static IBaseDMStart* FromOriginal(CBaseDMStart* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEDMSTART_H

@@ -57,6 +57,7 @@
 #include "CItem.h"
 
 class CCSPlayerPawn;
+class IItemDogtags;
 
 class CItemDogtags : public CItem
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_OwningPlayer);
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_KillingPlayer);
+
+public:
+    IItemDogtags* ToInterface();
+    static IItemDogtags* FromOriginal(CItemDogtags* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMDOGTAGS_H

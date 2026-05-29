@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class IPhysConstraint;
 class IPhysicsJoint;
 
 class CPhysConstraint : public CLogicalEntity
@@ -78,6 +79,13 @@ public:
     SCHEMA_FIELD(bool, m_bSnapObjectPositions);
     SCHEMA_FIELD(bool, m_bTreatEntity1AsInfiniteMass);
     SCHEMA_FIELD(CEntityIOOutput, m_OnBreak);
+
+public:
+    IPhysConstraint* ToInterface();
+    static IPhysConstraint* FromOriginal(CPhysConstraint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSCONSTRAINT_H

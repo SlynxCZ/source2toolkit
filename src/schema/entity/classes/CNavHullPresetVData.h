@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INavHullPresetVData;
+
 class CNavHullPresetVData
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavHullPresetVData);
 
     SCHEMA_FIELD(CUtlVector<CUtlString>, m_vecNavHulls);
+
+public:
+    INavHullPresetVData* ToInterface();
+    static INavHullPresetVData* FromOriginal(CNavHullPresetVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNAVHULLPRESETVDATA_H

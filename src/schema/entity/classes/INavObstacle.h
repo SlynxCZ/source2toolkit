@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IINavObstacle;
+
 class INavObstacle
 {
 public:
     DECLARE_SCHEMA_CLASS(INavObstacle);
 
     SCHEMA_FIELD(uint64_t, m_nId);
+
+public:
+    IINavObstacle* ToInterface();
+    static IINavObstacle* FromOriginal(INavObstacle* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INAVOBSTACLE_H

@@ -55,6 +55,8 @@
 
 #include "CPlayerPawnComponent.h"
 
+class ICSPlayer_RadioServices;
+
 class CCSPlayer_RadioServices : public CPlayerPawnComponent
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_flC4PlantTalkTimer);
     SCHEMA_FIELD_POINTER(float, m_flRadioTokenSlots);
     SCHEMA_FIELD(bool, m_bIgnoreRadio);
+
+public:
+    ICSPlayer_RadioServices* ToInterface();
+    static ICSPlayer_RadioServices* FromOriginal(CCSPlayer_RadioServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_RADIOSERVICES_H

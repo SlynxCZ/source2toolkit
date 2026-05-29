@@ -57,6 +57,7 @@
 #include "CBaseTrigger.h"
 
 class IPhysicsMotionController;
+class ITriggerPhysics;
 
 class CTriggerPhysics : public CBaseTrigger
 {
@@ -77,6 +78,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecLinearForcePointAtWorld);
     SCHEMA_FIELD(Vector, m_vecLinearForceDirection);
     SCHEMA_FIELD(bool, m_bConvertToDebrisWhenPossible);
+
+public:
+    ITriggerPhysics* ToInterface();
+    static ITriggerPhysics* FromOriginal(CTriggerPhysics* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERPHYSICS_H

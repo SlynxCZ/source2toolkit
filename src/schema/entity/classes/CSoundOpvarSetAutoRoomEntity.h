@@ -58,6 +58,8 @@
 #include "CSoundOpvarSetPointEntity.h"
 #include "SoundOpvarTraceResult_t.h"
 
+class ISoundOpvarSetAutoRoomEntity;
+
 class CSoundOpvarSetAutoRoomEntity : public CSoundOpvarSetPointEntity
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(float, m_flSize);
     SCHEMA_FIELD(float, m_flHeightTolerance);
     SCHEMA_FIELD(float, m_flSizeSqr);
+
+public:
+    ISoundOpvarSetAutoRoomEntity* ToInterface();
+    static ISoundOpvarSetAutoRoomEntity* FromOriginal(CSoundOpvarSetAutoRoomEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETAUTOROOMENTITY_H

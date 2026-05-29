@@ -35,10 +35,12 @@
  * Project: Source2Toolkit
  */
 #include "virtualhooks.h"
+#include "source2toolkit/schema/entity/classes/IBaseEntity.h"
 
 #include "commands.h"
 #include "events.h"
 #include "shared.h"
+#include "source2toolkit/schema/schema.h"
 #include "source2toolkit/utils/plat.h"
 #include "utils/scheduler.h"
 #include "dynlibutils/module.h"
@@ -46,18 +48,14 @@
 #include "iserver.h"
 #include "mysql.h"
 #include "schema/cgameresourceserviceserver.h"
-#include "source2toolkit/schema/schema.h"
-#include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
-#include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
-#include "source2toolkit/schema/entity/classes/CCSWeaponBase.h"
-
-#include <optional>
+#include "schema/entity/classes/CCSGameRulesProxy.h"
+#include "schema/entity/classes/CCSPlayerController.h"
 
 namespace virtualhooks
 {
     Virtuals virtuals;
     CEntityListener entityListener;
+    std::unordered_map<void*, void*> entityInterfaces;
 
     static std::vector<IGameEvent*> eventStack;
 
@@ -309,6 +307,12 @@ namespace virtualhooks
 
     void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity)
     {
+        auto it = entityInterfaces.find(pEntity);
+        if (it != entityInterfaces.end())
+        {
+            delete static_cast<IBaseEntity*>(it->second);
+            entityInterfaces.erase(it);
+        }
     }
 
     void CEntityListener::OnEntityParentChanged(CEntityInstance* pEntity, CEntityInstance* pNewParent)

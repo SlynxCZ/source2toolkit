@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IInfoInstructorHintBombTargetB;
+
 class CInfoInstructorHintBombTargetB : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintBombTargetB);
 
+
+public:
+    IInfoInstructorHintBombTargetB* ToInterface();
+    static IInfoInstructorHintBombTargetB* FromOriginal(CInfoInstructorHintBombTargetB* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTBOMBTARGETB_H

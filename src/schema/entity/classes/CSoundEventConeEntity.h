@@ -56,6 +56,8 @@
 
 #include "CSoundEventEntity.h"
 
+class ISoundEventConeEntity;
+
 class CSoundEventConeEntity : public CSoundEventEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_flAttenMin);
     SCHEMA_FIELD(float, m_flAttenMax);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParameterName);
+
+public:
+    ISoundEventConeEntity* ToInterface();
+    static ISoundEventConeEntity* FromOriginal(CSoundEventConeEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTCONEENTITY_H

@@ -56,6 +56,7 @@
 
 #include "CBaseTrigger.h"
 
+class IPostProcessingVolume;
 class InfoForResourceTypeCPostProcessingResource;
 
 class CPostProcessingVolume : public CBaseTrigger
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(float, m_flTonemapEVSmoothingRange);
     SCHEMA_FIELD(bool, m_bMaster);
     SCHEMA_FIELD(bool, m_bExposureControl);
+
+public:
+    IPostProcessingVolume* ToInterface();
+    static IPostProcessingVolume* FromOriginal(CPostProcessingVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOSTPROCESSINGVOLUME_H

@@ -64,6 +64,7 @@
 
 class CBaseAnimGraph;
 class CNmGraphInstance;
+class IBaseAnimGraphController;
 class InfoForResourceTypeCNmGraphDefinition;
 
 class CBaseAnimGraphController : public CSkeletonAnimationController
@@ -102,6 +103,13 @@ public:
     SCHEMA_FIELD(CGlobalSymbol, m_sAnimGraph2Identifier);
     SCHEMA_FIELD(CNmGraphInstance*, m_pGraphInstanceAG2);
     SCHEMA_FIELD(CUtlVector<ExternalAnimGraph_t>, m_vecExternalGraphs);
+
+public:
+    IBaseAnimGraphController* ToInterface();
+    static IBaseAnimGraphController* FromOriginal(CBaseAnimGraphController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEANIMGRAPHCONTROLLER_H

@@ -57,6 +57,7 @@
 #include "CBaseEntity.h"
 
 class CCSPlayerPawn;
+class IPlayerPing;
 
 class CPlayerPing : public CBaseEntity
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iType);
     SCHEMA_FIELD(bool, m_bUrgent);
     SCHEMA_FIELD_POINTER(char, m_szPlaceName);
+
+public:
+    IPlayerPing* ToInterface();
+    static IPlayerPing* FromOriginal(CPlayerPing* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYERPING_H

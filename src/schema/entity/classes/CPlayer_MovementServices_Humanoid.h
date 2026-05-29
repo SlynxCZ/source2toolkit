@@ -55,6 +55,8 @@
 
 #include "CPlayer_MovementServices.h"
 
+class IPlayer_MovementServices_Humanoid;
+
 class CPlayer_MovementServices_Humanoid : public CPlayer_MovementServices
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_surfaceProps);
     SCHEMA_FIELD(int32_t, m_nStepside);
     SCHEMA_FIELD(Vector, m_vecSmoothedVelocity);
+
+public:
+    IPlayer_MovementServices_Humanoid* ToInterface();
+    static IPlayer_MovementServices_Humanoid* FromOriginal(CPlayer_MovementServices_Humanoid* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_MOVEMENTSERVICES_HUMANOID_H

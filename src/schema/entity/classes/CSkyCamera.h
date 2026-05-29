@@ -57,6 +57,8 @@
 #include "CBaseEntity.h"
 #include "sky3dparams_t.h"
 
+class ISkyCamera;
+
 class CSkyCamera : public CBaseEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_skyboxSlotToken);
     SCHEMA_FIELD(bool, m_bUseAngles);
     SCHEMA_FIELD(CSkyCamera*, m_pNext);
+
+public:
+    ISkyCamera* ToInterface();
+    static ISkyCamera* FromOriginal(CSkyCamera* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSKYCAMERA_H

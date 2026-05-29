@@ -59,6 +59,8 @@
 #include "source2toolkit/schema/entity/enums/DynamicContinuousContactBehavior_t.h"
 #include "source2toolkit/schema/entity/enums/INavObstacle__NavObstacleType_t.h"
 
+class IPhysicsProp;
+
 class CPhysicsProp : public CBreakableProp
 {
 public:
@@ -106,6 +108,13 @@ public:
     SCHEMA_FIELD(bool, m_bRemovableForAmmoBalancing);
     SCHEMA_FIELD(bool, m_bAwake);
     SCHEMA_FIELD(bool, m_bAttachedToReferenceFrame);
+
+public:
+    IPhysicsProp* ToInterface();
+    static IPhysicsProp* FromOriginal(CPhysicsProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROP_H

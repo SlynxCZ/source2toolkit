@@ -61,6 +61,7 @@
 class CBaseEntity;
 class CCSPlayerPawn;
 class CCSPlayerPawnBase;
+class IHostage;
 
 class CHostage : public CHostageExpresserShim
 {
@@ -106,6 +107,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nPickupEventCount);
     SCHEMA_FIELD(Vector, m_vecSpawnGroundPos);
     SCHEMA_FIELD(Vector, m_vecHostageResetPosition);
+
+public:
+    IHostage* ToInterface();
+    static IHostage* FromOriginal(CHostage* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHOSTAGE_H

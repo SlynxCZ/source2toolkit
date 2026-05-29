@@ -56,6 +56,8 @@
 #include "CEntitySubclassVDataBase.h"
 #include "CSkillFloat.h"
 
+class IBasePlayerVData;
+
 class CBasePlayerVData : public CEntitySubclassVDataBase
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(float, m_flUseRange);
     SCHEMA_FIELD(float, m_flUseAngleTolerance);
     SCHEMA_FIELD(float, m_flCrouchTime);
+
+public:
+    IBasePlayerVData* ToInterface();
+    static IBasePlayerVData* FromOriginal(CBasePlayerVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEPLAYERVDATA_H

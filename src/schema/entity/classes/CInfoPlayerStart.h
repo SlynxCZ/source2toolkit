@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IInfoPlayerStart;
+
 class CInfoPlayerStart : public CPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bIsMaster);
     SCHEMA_FIELD(CGlobalSymbol, m_pPawnSubclass);
+
+public:
+    IInfoPlayerStart* ToInterface();
+    static IInfoPlayerStart* FromOriginal(CInfoPlayerStart* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOPLAYERSTART_H

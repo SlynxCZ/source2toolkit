@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicCollisionPair;
+
 class CLogicCollisionPair : public CLogicalEntity
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(bool, m_supportMultipleEntitiesWithSameName);
     SCHEMA_FIELD(bool, m_disabled);
     SCHEMA_FIELD(bool, m_succeeded);
+
+public:
+    ILogicCollisionPair* ToInterface();
+    static ILogicCollisionPair* FromOriginal(CLogicCollisionPair* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICCOLLISIONPAIR_H

@@ -61,6 +61,7 @@
 
 class CBaseEntity;
 class CBasePlayerPawn;
+class IBreakableProp;
 
 class CBreakableProp : public CBaseProp
 {
@@ -99,6 +100,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPuntSound);
     SCHEMA_FIELD(bool, m_bUsePuntSound);
     SCHEMA_FIELD(bool, m_bOriginalBlockLOS);
+
+public:
+    IBreakableProp* ToInterface();
+    static IBreakableProp* FromOriginal(CBreakableProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBREAKABLEPROP_H

@@ -56,11 +56,20 @@
 
 #include "CPathParticleRope.h"
 
+class IPathParticleRopeAlias_path_particle_rope_clientside;
+
 class CPathParticleRopeAlias_path_particle_rope_clientside : public CPathParticleRope
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathParticleRopeAlias_path_particle_rope_clientside);
 
+
+public:
+    IPathParticleRopeAlias_path_particle_rope_clientside* ToInterface();
+    static IPathParticleRopeAlias_path_particle_rope_clientside* FromOriginal(CPathParticleRopeAlias_path_particle_rope_clientside* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHPARTICLEROPEALIAS_PATH_PARTICLE_ROPE_CLIENTSIDE_H

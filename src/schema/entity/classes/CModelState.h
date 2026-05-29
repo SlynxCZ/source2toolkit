@@ -53,6 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IModelState;
 class IPhysAggregateInstance;
 class InfoForResourceTypeCModel;
 
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(int8_t, m_nIdealMotionType);
     SCHEMA_FIELD(int8_t, m_nForceLOD);
     SCHEMA_FIELD(int8_t, m_nClothUpdateFlags);
+
+public:
+    IModelState* ToInterface();
+    static IModelState* FromOriginal(CModelState* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMODELSTATE_H

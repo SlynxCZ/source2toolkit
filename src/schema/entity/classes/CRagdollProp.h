@@ -61,6 +61,7 @@
 class CBaseEntity;
 class CBasePlayerPawn;
 class INavObstacle;
+class IRagdollProp;
 
 class CRagdollProp : public CBaseAnimGraph
 {
@@ -98,6 +99,13 @@ public:
     SCHEMA_FIELD(CUtlVector<Vector>, m_ragdollMaxs);
     SCHEMA_FIELD(bool, m_bShouldDeleteActivationRecord);
     SCHEMA_FIELD(CUtlVector<INavObstacle*>, m_vecNavObstacles);
+
+public:
+    IRagdollProp* ToInterface();
+    static IRagdollProp* FromOriginal(CRagdollProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRAGDOLLPROP_H

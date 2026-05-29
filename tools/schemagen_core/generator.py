@@ -648,6 +648,16 @@ EXTRA_WHITELIST: frozenset[str] = frozenset({
     "PrecipitationFilter_t"
 })
 
+# Fields to skip in code generation to avoid accessor-name conflicts with base-class virtuals.
+# Typically caused by CS2 having both a pointer field (m_pFoo → Foo()) and a value field
+# (m_Foo → Foo()) in parent/child classes — same generated name, incompatible return types.
+FIELD_SKIPS: dict[str, set[str]] = {
+    # CBaseEntity has m_pCollision (CCollisionProperty*) → Collision() returning CCollisionProperty*&
+    # CBaseModelEntity has m_Collision (CCollisionProperty)  → Collision() returning CCollisionProperty&
+    # They collide; skip the child's value field — the pointer accessor on the base is sufficient.
+    "CBaseModelEntity": {"m_Collision"},
+}
+
 # ---------------------------------------------------------------------------
 # Helper functions
 # ---------------------------------------------------------------------------
@@ -1076,8 +1086,8 @@ def write_class(
         collect_types_from_methods(
             MANUAL_METHODS[class_name], all_enums, all_classes, includes, forwards
         )
-        # Need IXxx forward declaration for ToInterface() / FromOriginal() return type
-        forwards.add(_iface_name(class_name))
+    # Always need IXxx forward declaration for ToInterface() / FromOriginal() return type
+    forwards.add(_iface_name(class_name))
 
     includes.discard(class_name)
     forwards.discard(class_name)
@@ -1142,7 +1152,10 @@ def write_class(
 
     lines += ["{", "public:", f"    DECLARE_SCHEMA_CLASS({class_name});", ""]
 
+    _skips = FIELD_SKIPS.get(class_name, set())
     for f in schema_class.fields:
+        if f.name in _skips:
+            continue
         if f.type.category == SchemaTypeCategory.Bitfield:
             continue
         if _field_has_ignored_wildcard(f.type):
@@ -1160,18 +1173,17 @@ def write_class(
         for method in MANUAL_METHODS[class_name]:
             lines.append(f"    {method}")
 
-    # ToInterface() / FromOriginal() — only for classes that have a CXxxImpl wrapper
-    if class_name in MANUAL_METHODS:
-        iface = _iface_name(class_name)
-        lines += [
-            "",
-            "public:",
-            f"    {iface}* ToInterface();",
-            f"    static {iface}* FromOriginal({class_name}* p)",
-            "    {",
-            "        return p ? p->ToInterface() : nullptr;",
-            "    }",
-        ]
+    # ToInterface() / FromOriginal() — present on every generated class
+    iface = _iface_name(class_name)
+    lines += [
+        "",
+        "public:",
+        f"    {iface}* ToInterface();",
+        f"    static {iface}* FromOriginal({class_name}* p)",
+        "    {",
+        "        return p ? p->ToInterface() : nullptr;",
+        "    }",
+    ]
 
     lines.append("};")
     lines.append("")
@@ -1184,8 +1196,10 @@ def write_class(
 # ---------------------------------------------------------------------------
 
 def _iface_name(class_name: str) -> str:
-    """CBaseEntity -> IBaseEntity"""
-    return "I" + class_name[1:]
+    """CBaseEntity -> IBaseEntity, audioparams_t -> Iaudioparams_t"""
+    if len(class_name) >= 2 and class_name[0] == 'C' and class_name[1].isupper():
+        return "I" + class_name[1:]
+    return "I" + class_name
 
 
 # IEntityInstance pure-virtual overrides for CBaseEntityImpl.
@@ -1266,10 +1280,11 @@ def write_impl_class(
     iface_name = _iface_name(class_name)
     impl_name = class_name + "Impl"
 
-    # Walk up the parent chain to find the nearest parent that also has an interface.
+    # Find the nearest parent that has a generated impl.
+    # Any class in all_classes (not hard-skipped) now gets an impl, so just use direct parent.
     parent_impl: Optional[str] = None
     if schema_class.parent and schema_class.parent not in HARD_SKIP_CLASSES:
-        if schema_class.parent in MANUAL_METHODS:
+        if schema_class.parent in all_classes:
             parent_impl = schema_class.parent + "Impl"
 
     is_root = parent_impl is None
@@ -1380,6 +1395,19 @@ def write_impl_class(
     lines += [
         "};",
         "",
+    ]
+
+    # For classes without a handwritten .cpp, define ToInterface() and IXxx::FromOriginal()
+    # inline here (after the impl class so CXxxImpl is fully declared).
+    # MANUAL_METHODS classes define these in their .cpp files instead.
+    if class_name not in MANUAL_METHODS:
+        lines += [
+            f"inline {iface_name}* {class_name}::ToInterface() {{ return new {impl_name}(this); }}",
+            f"inline {iface_name}* {iface_name}::FromOriginal({class_name}* p) {{ return p ? p->ToInterface() : nullptr; }}",
+            "",
+        ]
+
+    lines += [
         f"#endif // {guard}",
         "",
     ]
@@ -1441,17 +1469,16 @@ def main() -> None:
             fh.write(content)
         classes_written += 1
 
-        # CXxxImpl.h – IXxx concrete implementation (only for classes with an interface)
-        if class_name in MANUAL_METHODS:
-            impl_content = write_impl_class(
-                class_name, schema_class, all_enums, all_classes
-            )
-            impl_file = os.path.join(
-                classes_dir, f"{sanitise_type_name(class_name)}Impl.h"
-            )
-            with open(impl_file, "w", encoding="utf-8", newline="") as fh:
-                fh.write(impl_content)
-            impl_written += 1
+        # CXxxImpl.h – IXxx concrete implementation (every entity class gets one)
+        impl_content = write_impl_class(
+            class_name, schema_class, all_enums, all_classes
+        )
+        impl_file = os.path.join(
+            classes_dir, f"{sanitise_type_name(class_name)}Impl.h"
+        )
+        with open(impl_file, "w", encoding="utf-8", newline="") as fh:
+            fh.write(impl_content)
+        impl_written += 1
 
     print(f"Done. Classes ({classes_written}): {classes_dir}")
     print(f"      Impls   ({impl_written}): {classes_dir}")

@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerDetectBulletFire;
+
 class CTriggerDetectBulletFire : public CBaseTrigger
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bPlayerFireOnly);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetectedBulletFire);
+
+public:
+    ITriggerDetectBulletFire* ToInterface();
+    static ITriggerDetectBulletFire* FromOriginal(CTriggerDetectBulletFire* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERDETECTBULLETFIRE_H

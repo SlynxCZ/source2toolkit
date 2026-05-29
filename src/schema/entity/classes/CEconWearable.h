@@ -56,6 +56,8 @@
 
 #include "CEconEntity.h"
 
+class IEconWearable;
+
 class CEconWearable : public CEconEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(int32_t, m_nForceSkin);
     SCHEMA_FIELD(bool, m_bAlwaysAllow);
+
+public:
+    IEconWearable* ToInterface();
+    static IEconWearable* FromOriginal(CEconWearable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CECONWEARABLE_H

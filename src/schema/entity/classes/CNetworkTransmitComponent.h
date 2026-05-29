@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INetworkTransmitComponent;
+
 class CNetworkTransmitComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CNetworkTransmitComponent);
 
     SCHEMA_FIELD(uint8_t, m_nTransmitStateOwnedCounter);
+
+public:
+    INetworkTransmitComponent* ToInterface();
+    static INetworkTransmitComponent* FromOriginal(CNetworkTransmitComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNETWORKTRANSMITCOMPONENT_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INmTarget;
+
 class CNmTarget
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bIsUsingBoneSpaceOffsets);
     SCHEMA_FIELD(bool, m_bHasOffsets);
     SCHEMA_FIELD(bool, m_bIsSet);
+
+public:
+    INmTarget* ToInterface();
+    static INmTarget* FromOriginal(CNmTarget* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNMTARGET_H

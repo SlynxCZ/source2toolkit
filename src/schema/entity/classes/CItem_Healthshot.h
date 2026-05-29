@@ -56,11 +56,20 @@
 
 #include "CWeaponBaseItem.h"
 
+class IItem_Healthshot;
+
 class CItem_Healthshot : public CWeaponBaseItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItem_Healthshot);
 
+
+public:
+    IItem_Healthshot* ToInterface();
+    static IItem_Healthshot* FromOriginal(CItem_Healthshot* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEM_HEALTHSHOT_H

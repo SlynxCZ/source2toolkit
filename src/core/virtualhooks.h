@@ -82,4 +82,8 @@ namespace virtualhooks {
 
     extern Virtuals virtuals;
     extern CEntityListener entityListener;
+
+    // Global registry: raw entity pointer -> owned IBaseEntity* wrapper.
+    // Populated by CBaseEntity::ToInterface(), cleaned up in CEntityListener::OnEntityDeleted().
+    extern std::unordered_map<void*, void*> entityInterfaces;
 }

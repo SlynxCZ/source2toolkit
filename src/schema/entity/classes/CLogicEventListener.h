@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicEventListener;
+
 class CLogicEventListener : public CLogicalEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(CUtlString, m_strEventName);
     SCHEMA_FIELD(bool, m_bIsEnabled);
     SCHEMA_FIELD(int32_t, m_nTeam);
+
+public:
+    ILogicEventListener* ToInterface();
+    static ILogicEventListener* FromOriginal(CLogicEventListener* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICEVENTLISTENER_H

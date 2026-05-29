@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IEntityFlame;
+
 class CEntityFlame : public CBaseEntity
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hAttacker);
     SCHEMA_FIELD(float, m_flDirectDamagePerSecond);
     SCHEMA_FIELD(int32_t, m_iCustomDamageType);
+
+public:
+    IEntityFlame* ToInterface();
+    static IEntityFlame* FromOriginal(CEntityFlame* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENTITYFLAME_H

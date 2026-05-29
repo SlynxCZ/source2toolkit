@@ -57,6 +57,8 @@
 #include "CCSWeaponBase.h"
 #include "EntitySpottedState_t.h"
 
+class IC4;
+
 class CC4 : public CCSWeaponBase
 {
 public:
@@ -73,6 +75,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nSpotRules);
     SCHEMA_FIELD_POINTER(bool, m_bPlayedArmingBeeps);
     SCHEMA_FIELD(bool, m_bBombPlanted);
+
+public:
+    IC4* ToInterface();
+    static IC4* FromOriginal(CC4* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CC4_H

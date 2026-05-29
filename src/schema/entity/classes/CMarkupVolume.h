@@ -56,12 +56,21 @@
 
 #include "CBaseModelEntity.h"
 
+class IMarkupVolume;
+
 class CMarkupVolume : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolume);
 
     SCHEMA_FIELD(bool, m_bDisabled);
+
+public:
+    IMarkupVolume* ToInterface();
+    static IMarkupVolume* FromOriginal(CMarkupVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUME_H

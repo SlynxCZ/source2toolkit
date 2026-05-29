@@ -57,6 +57,7 @@
 #include "CSceneEntity.h"
 
 class CBaseEntity;
+class IInstancedSceneEntity;
 
 class CInstancedSceneEntity : public CSceneEntity
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(bool, m_bIsBackground);
     SCHEMA_FIELD(bool, m_bRemoveOnCompletion);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTarget);
+
+public:
+    IInstancedSceneEntity* ToInterface();
+    static IInstancedSceneEntity* FromOriginal(CInstancedSceneEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINSTANCEDSCENEENTITY_H

@@ -56,6 +56,8 @@
 #include "CInButtonState.h"
 #include "CPlayerPawnComponent.h"
 
+class IPlayer_MovementServices;
+
 class CPlayer_MovementServices : public CPlayerPawnComponent
 {
 public:
@@ -79,6 +81,13 @@ public:
     SCHEMA_FIELD(float, m_flUpMove);
     SCHEMA_FIELD(Vector, m_vecLastMovementImpulses);
     SCHEMA_FIELD(QAngle, m_vecOldViewAngles);
+
+public:
+    IPlayer_MovementServices* ToInterface();
+    static IPlayer_MovementServices* FromOriginal(CPlayer_MovementServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_MOVEMENTSERVICES_H

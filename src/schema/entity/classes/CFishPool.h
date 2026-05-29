@@ -58,6 +58,7 @@
 #include "CountdownTimer.h"
 
 class CFish;
+class IFishPool;
 
 class CFishPool : public CBaseEntity
 {
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(bool, m_isDormant);
     SCHEMA_FIELD(CUtlVector<CHandle<CFish>>, m_fishes);
     SCHEMA_FIELD(CountdownTimer, m_visTimer);
+
+public:
+    IFishPool* ToInterface();
+    static IFishPool* FromOriginal(CFishPool* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFISHPOOL_H

@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IAnimGraph2SerializedPoseRecipeSlot_t;
+
 class AnimGraph2SerializedPoseRecipeSlot_t
 {
 public:
     DECLARE_SCHEMA_CLASS(AnimGraph2SerializedPoseRecipeSlot_t);
 
     SCHEMA_FIELD(CUtlBinaryBlock, m_topology);
+
+public:
+    IAnimGraph2SerializedPoseRecipeSlot_t* ToInterface();
+    static IAnimGraph2SerializedPoseRecipeSlot_t* FromOriginal(AnimGraph2SerializedPoseRecipeSlot_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ANIMGRAPH2SERIALIZEDPOSERECIPESLOT_T_H

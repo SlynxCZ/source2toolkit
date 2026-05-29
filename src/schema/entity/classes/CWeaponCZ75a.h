@@ -56,12 +56,21 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponCZ75a;
+
 class CWeaponCZ75a : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponCZ75a);
 
     SCHEMA_FIELD(bool, m_bMagazineRemoved);
+
+public:
+    IWeaponCZ75a* ToInterface();
+    static IWeaponCZ75a* FromOriginal(CWeaponCZ75a* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONCZ75A_H

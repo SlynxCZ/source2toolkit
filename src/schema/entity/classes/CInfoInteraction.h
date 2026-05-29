@@ -58,6 +58,8 @@
 #include "SceneOpportunityHandle_t.h"
 #include "SceneRequestHandle_t.h"
 
+class IInfoInteraction;
+
 class CInfoInteraction : public CPointEntity
 {
 public:
@@ -78,6 +80,13 @@ public:
     SCHEMA_FIELD(float, m_flCooldown);
     SCHEMA_FIELD(int32_t, m_nRepeatCount);
     SCHEMA_FIELD(bool, m_bDisableOnExit);
+
+public:
+    IInfoInteraction* ToInterface();
+    static IInfoInteraction* FromOriginal(CInfoInteraction* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOINTERACTION_H

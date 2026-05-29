@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicAchievement;
+
 class CLogicAchievement : public CLogicalEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszAchievementEventID);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFired);
+
+public:
+    ILogicAchievement* ToInterface();
+    static ILogicAchievement* FromOriginal(CLogicAchievement* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICACHIEVEMENT_H

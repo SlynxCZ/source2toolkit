@@ -56,6 +56,8 @@
 
 #include "CBaseFilter.h"
 
+class IFilterEnemy;
+
 class CFilterEnemy : public CBaseFilter
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_flOuterRadius);
     SCHEMA_FIELD(int32_t, m_nMaxSquadmatesPerEnemy);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPlayerName);
+
+public:
+    IFilterEnemy* ToInterface();
+    static IFilterEnemy* FromOriginal(CFilterEnemy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERENEMY_H

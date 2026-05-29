@@ -55,12 +55,21 @@
 
 #include "CAI_ExpresserWithFollowup.h"
 
+class IMultiplayer_Expresser;
+
 class CMultiplayer_Expresser : public CAI_ExpresserWithFollowup
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiplayer_Expresser);
 
     SCHEMA_FIELD(bool, m_bAllowMultipleScenes);
+
+public:
+    IMultiplayer_Expresser* ToInterface();
+    static IMultiplayer_Expresser* FromOriginal(CMultiplayer_Expresser* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMULTIPLAYER_EXPRESSER_H

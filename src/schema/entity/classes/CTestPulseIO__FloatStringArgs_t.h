@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ITestPulseIO__FloatStringArgs_t;
+
 class CTestPulseIO__FloatStringArgs_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(float, flOutFloat);
     SCHEMA_FIELD(CUtlSymbolLarge, strOutString);
+
+public:
+    ITestPulseIO__FloatStringArgs_t* ToInterface();
+    static ITestPulseIO__FloatStringArgs_t* FromOriginal(CTestPulseIO__FloatStringArgs_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIO__FLOATSTRINGARGS_T_H

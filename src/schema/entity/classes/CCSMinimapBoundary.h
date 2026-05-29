@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class ICSMinimapBoundary;
+
 class CCSMinimapBoundary : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSMinimapBoundary);
 
+
+public:
+    ICSMinimapBoundary* ToInterface();
+    static ICSMinimapBoundary* FromOriginal(CCSMinimapBoundary* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSMINIMAPBOUNDARY_H

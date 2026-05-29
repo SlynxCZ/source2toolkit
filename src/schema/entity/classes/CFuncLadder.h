@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CInfoLadderDismount;
+class IFuncLadder;
 
 class CFuncLadder : public CBaseModelEntity
 {
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_surfacePropName);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerGotOnLadder);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerGotOffLadder);
+
+public:
+    IFuncLadder* ToInterface();
+    static IFuncLadder* FromOriginal(CFuncLadder* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCLADDER_H

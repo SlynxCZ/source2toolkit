@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Iaudioparams_t;
+
 class audioparams_t
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(uint8_t, localBits);
     SCHEMA_FIELD(int32_t, soundscapeEntityListIndex);
     SCHEMA_FIELD(uint32_t, soundEventHash);
+
+public:
+    Iaudioparams_t* ToInterface();
+    static Iaudioparams_t* FromOriginal(audioparams_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_AUDIOPARAMS_T_H

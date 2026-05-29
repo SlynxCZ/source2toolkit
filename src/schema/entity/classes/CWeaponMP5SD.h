@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponMP5SD;
+
 class CWeaponMP5SD : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponMP5SD);
 
+
+public:
+    IWeaponMP5SD* ToInterface();
+    static IWeaponMP5SD* FromOriginal(CWeaponMP5SD* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONMP5SD_H

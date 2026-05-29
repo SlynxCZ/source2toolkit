@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IFuncTimescale;
+
 class CFuncTimescale : public CBaseEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_flMinBlendRate);
     SCHEMA_FIELD(float, m_flBlendDeltaMultiplier);
     SCHEMA_FIELD(bool, m_isStarted);
+
+public:
+    IFuncTimescale* ToInterface();
+    static IFuncTimescale* FromOriginal(CFuncTimescale* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTIMESCALE_H

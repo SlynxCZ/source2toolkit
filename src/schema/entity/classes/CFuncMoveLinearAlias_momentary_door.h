@@ -56,11 +56,20 @@
 
 #include "CFuncMoveLinear.h"
 
+class IFuncMoveLinearAlias_momentary_door;
+
 class CFuncMoveLinearAlias_momentary_door : public CFuncMoveLinear
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncMoveLinearAlias_momentary_door);
 
+
+public:
+    IFuncMoveLinearAlias_momentary_door* ToInterface();
+    static IFuncMoveLinearAlias_momentary_door* FromOriginal(CFuncMoveLinearAlias_momentary_door* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCMOVELINEARALIAS_MOMENTARY_DOOR_H

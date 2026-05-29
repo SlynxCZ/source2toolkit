@@ -42,15 +42,13 @@
 
 #include "source2toolkit/schema/entity/classes/IBasePlayerPawn.h"
 #include "schema/entity/classes/CBasePlayerPawn.h"
+#include "CBaseCombatCharacterImpl.h"
 
-class CBasePlayerPawnImpl : public virtual IBasePlayerPawn
+class CBasePlayerPawnImpl : public CBaseCombatCharacterImpl, public IBasePlayerPawn
 {
 
-protected:
-    void* m_pReal;
-
 public:
-    explicit CBasePlayerPawnImpl(void* p) : m_pReal(p) {}
+    explicit CBasePlayerPawnImpl(CBasePlayerPawn* p) : CBaseCombatCharacterImpl(p) {}
 
 private:
     CBasePlayerPawn* Real() { return static_cast<CBasePlayerPawn*>(m_pReal); }

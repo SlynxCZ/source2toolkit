@@ -56,6 +56,7 @@
 
 #include "CParticleSystem.h"
 
+class IEnvParticleGlow;
 class InfoForResourceTypeCTextureBase;
 
 class CEnvParticleGlow : public CParticleSystem
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(float, m_flSelfIllumScale);
     SCHEMA_FIELD(Color, m_ColorTint);
     SCHEMA_FIELD(CStrongHandle<InfoForResourceTypeCTextureBase>, m_hTextureOverride);
+
+public:
+    IEnvParticleGlow* ToInterface();
+    static IEnvParticleGlow* FromOriginal(CEnvParticleGlow* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVPARTICLEGLOW_H

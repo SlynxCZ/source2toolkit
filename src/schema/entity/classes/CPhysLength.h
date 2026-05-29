@@ -56,6 +56,8 @@
 
 #include "CPhysConstraint.h"
 
+class IPhysLength;
+
 class CPhysLength : public CPhysConstraint
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_addLength);
     SCHEMA_FIELD(float, m_minLength);
     SCHEMA_FIELD(float, m_totalLength);
+
+public:
+    IPhysLength* ToInterface();
+    static IPhysLength* FromOriginal(CPhysLength* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSLENGTH_H

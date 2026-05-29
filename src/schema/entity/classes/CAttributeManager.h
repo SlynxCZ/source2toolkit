@@ -57,6 +57,7 @@
 #include "source2toolkit/schema/entity/enums/attributeprovidertypes_t.h"
 
 class CBaseEntity;
+class IAttributeManager;
 
 class CAttributeManager
 {
@@ -69,6 +70,13 @@ public:
     SCHEMA_FIELD(bool, m_bPreventLoopback);
     SCHEMA_FIELD(attributeprovidertypes_t, m_ProviderType);
     SCHEMA_FIELD(CUtlVector<CAttributeManager__cached_attribute_float_t>, m_CachedResults);
+
+public:
+    IAttributeManager* ToInterface();
+    static IAttributeManager* FromOriginal(CAttributeManager* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CATTRIBUTEMANAGER_H

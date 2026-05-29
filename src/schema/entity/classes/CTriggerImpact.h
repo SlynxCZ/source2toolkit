@@ -56,6 +56,8 @@
 
 #include "CTriggerMultiple.h"
 
+class ITriggerImpact;
+
 class CTriggerImpact : public CTriggerMultiple
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(float, m_flMagnitude);
     SCHEMA_FIELD(float, m_flNoise);
     SCHEMA_FIELD(float, m_flViewkick);
+
+public:
+    ITriggerImpact* ToInterface();
+    static ITriggerImpact* FromOriginal(CTriggerImpact* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERIMPACT_H

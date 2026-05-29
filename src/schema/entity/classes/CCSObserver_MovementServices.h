@@ -55,11 +55,20 @@
 
 #include "CPlayer_MovementServices.h"
 
+class ICSObserver_MovementServices;
+
 class CCSObserver_MovementServices : public CPlayer_MovementServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserver_MovementServices);
 
+
+public:
+    ICSObserver_MovementServices* ToInterface();
+    static ICSObserver_MovementServices* FromOriginal(CCSObserver_MovementServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSOBSERVER_MOVEMENTSERVICES_H

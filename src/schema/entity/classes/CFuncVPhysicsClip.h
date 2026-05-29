@@ -56,12 +56,21 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncVPhysicsClip;
+
 class CFuncVPhysicsClip : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncVPhysicsClip);
 
     SCHEMA_FIELD(bool, m_bDisabled);
+
+public:
+    IFuncVPhysicsClip* ToInterface();
+    static IFuncVPhysicsClip* FromOriginal(CFuncVPhysicsClip* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCVPHYSICSCLIP_H

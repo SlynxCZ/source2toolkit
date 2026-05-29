@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ITestPulseIO__EntityNameStringArgs_t;
+
 class CTestPulseIO__EntityNameStringArgs_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(CEntityNameString, nameA);
     SCHEMA_FIELD(CUtlSymbolLarge, strValueB);
+
+public:
+    ITestPulseIO__EntityNameStringArgs_t* ToInterface();
+    static ITestPulseIO__EntityNameStringArgs_t* FromOriginal(CTestPulseIO__EntityNameStringArgs_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIO__ENTITYNAMESTRINGARGS_T_H

@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IInfoWorldLayer;
+
 class CInfoWorldLayer : public CBaseEntity
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(bool, m_bEntitiesSpawned);
     SCHEMA_FIELD(bool, m_bCreateAsChildSpawnGroup);
     SCHEMA_FIELD(uint32_t, m_hLayerSpawnGroup);
+
+public:
+    IInfoWorldLayer* ToInterface();
+    static IInfoWorldLayer* FromOriginal(CInfoWorldLayer* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOWORLDLAYER_H

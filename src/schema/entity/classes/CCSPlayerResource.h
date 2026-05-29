@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ICSPlayerResource;
+
 class CCSPlayerResource : public CBaseEntity
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD_POINTER(int32_t, m_hostageRescueZ);
     SCHEMA_FIELD(bool, m_bEndMatchNextMapAllVoted);
     SCHEMA_FIELD(bool, m_foundGoalPositions);
+
+public:
+    ICSPlayerResource* ToInterface();
+    static ICSPlayerResource* FromOriginal(CCSPlayerResource* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERRESOURCE_H

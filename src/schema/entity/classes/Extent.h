@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IExtent;
+
 class Extent
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(Vector, lo);
     SCHEMA_FIELD(Vector, hi);
+
+public:
+    IExtent* ToInterface();
+    static IExtent* FromOriginal(Extent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_EXTENT_H

@@ -56,6 +56,8 @@
 
 #include "CSoundEventEntity.h"
 
+class ISoundEventPathCornerEntity;
+
 class CSoundEventPathCornerEntity : public CSoundEventEntity
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(float, m_flDotProductMax);
     SCHEMA_FIELD(bool, m_bPlaying);
+
+public:
+    ISoundEventPathCornerEntity* ToInterface();
+    static ISoundEventPathCornerEntity* FromOriginal(CSoundEventPathCornerEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTPATHCORNERENTITY_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IAutoRoomDoorwayPairs_t;
+
 class AutoRoomDoorwayPairs_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(Vector, vP1);
     SCHEMA_FIELD(Vector, vP2);
+
+public:
+    IAutoRoomDoorwayPairs_t* ToInterface();
+    static IAutoRoomDoorwayPairs_t* FromOriginal(AutoRoomDoorwayPairs_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_AUTOROOMDOORWAYPAIRS_T_H

@@ -56,11 +56,20 @@
 
 #include "CTriggerMultiple.h"
 
+class ITriggerOnce;
+
 class CTriggerOnce : public CTriggerMultiple
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerOnce);
 
+
+public:
+    ITriggerOnce* ToInterface();
+    static ITriggerOnce* FromOriginal(CTriggerOnce* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERONCE_H

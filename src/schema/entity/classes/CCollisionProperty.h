@@ -56,6 +56,8 @@
 #include "source2toolkit/schema/entity/enums/SurroundingBoundsType_t.h"
 #include "VPhysicsCollisionAttribute_t.h"
 
+class ICollisionProperty;
+
 class CCollisionProperty
 {
 public:
@@ -78,6 +80,13 @@ public:
     SCHEMA_FIELD(Vector, m_vCapsuleCenter1);
     SCHEMA_FIELD(Vector, m_vCapsuleCenter2);
     SCHEMA_FIELD(float, m_flCapsuleRadius);
+
+public:
+    ICollisionProperty* ToInterface();
+    static ICollisionProperty* FromOriginal(CCollisionProperty* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCOLLISIONPROPERTY_H

@@ -56,6 +56,7 @@
 #include "CBasePulseGraphInstance.h"
 
 class CBaseEntity;
+class IPulseGraphInstance_ServerEntity;
 
 class CPulseGraphInstance_ServerEntity : public CBasePulseGraphInstance
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNameFixupParent);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNameFixupLocal);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sProceduralWorldNameForRelays);
+
+public:
+    IPulseGraphInstance_ServerEntity* ToInterface();
+    static IPulseGraphInstance_ServerEntity* FromOriginal(CPulseGraphInstance_ServerEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPULSEGRAPHINSTANCE_SERVERENTITY_H

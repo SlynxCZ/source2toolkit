@@ -57,6 +57,8 @@
 #include "CPhysicsProp.h"
 #include "shard_model_desc_t.h"
 
+class IShatterGlassShardPhysics;
+
 class CShatterGlassShardPhysics : public CPhysicsProp
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(bool, m_bDebris);
     SCHEMA_FIELD(uint32_t, m_hParentShard);
     SCHEMA_FIELD(shard_model_desc_t, m_ShardDesc);
+
+public:
+    IShatterGlassShardPhysics* ToInterface();
+    static IShatterGlassShardPhysics* FromOriginal(CShatterGlassShardPhysics* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSHATTERGLASSSHARDPHYSICS_H

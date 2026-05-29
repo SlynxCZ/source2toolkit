@@ -55,11 +55,20 @@
 
 #include "CPlayerPawnComponent.h"
 
+class IPlayer_UseServices;
+
 class CPlayer_UseServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_UseServices);
 
+
+public:
+    IPlayer_UseServices* ToInterface();
+    static IPlayer_UseServices* FromOriginal(CPlayer_UseServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_USESERVICES_H

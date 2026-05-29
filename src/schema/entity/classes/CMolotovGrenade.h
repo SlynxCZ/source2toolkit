@@ -56,11 +56,20 @@
 
 #include "CBaseCSGrenade.h"
 
+class IMolotovGrenade;
+
 class CMolotovGrenade : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CMolotovGrenade);
 
+
+public:
+    IMolotovGrenade* ToInterface();
+    static IMolotovGrenade* FromOriginal(CMolotovGrenade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOLOTOVGRENADE_H

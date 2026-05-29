@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IPointAngularVelocitySensor;
 
 class CPointAngularVelocitySensor : public CPointEntity
 {
@@ -78,6 +79,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnGreaterThan);
     SCHEMA_FIELD(CEntityIOOutput, m_OnGreaterThanOrEqualTo);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEqualTo);
+
+public:
+    IPointAngularVelocitySensor* ToInterface();
+    static IPointAngularVelocitySensor* FromOriginal(CPointAngularVelocitySensor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTANGULARVELOCITYSENSOR_H

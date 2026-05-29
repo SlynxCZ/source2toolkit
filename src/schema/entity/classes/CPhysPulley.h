@@ -56,6 +56,8 @@
 
 #include "CPhysConstraint.h"
 
+class IPhysPulley;
+
 class CPhysPulley : public CPhysConstraint
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD_POINTER(Vector, m_offset);
     SCHEMA_FIELD(float, m_addLength);
     SCHEMA_FIELD(float, m_gearRatio);
+
+public:
+    IPhysPulley* ToInterface();
+    static IPhysPulley* FromOriginal(CPhysPulley* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSPULLEY_H

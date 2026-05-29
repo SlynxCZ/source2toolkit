@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Iragdollhierarchyjoint_t;
+
 class ragdollhierarchyjoint_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(int32_t, parentIndex);
     SCHEMA_FIELD(int32_t, childIndex);
+
+public:
+    Iragdollhierarchyjoint_t* ToInterface();
+    static Iragdollhierarchyjoint_t* FromOriginal(ragdollhierarchyjoint_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RAGDOLLHIERARCHYJOINT_T_H

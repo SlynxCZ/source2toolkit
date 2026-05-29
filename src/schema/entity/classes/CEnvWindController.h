@@ -57,6 +57,8 @@
 #include "CBaseEntity.h"
 #include "CEnvWindShared.h"
 
+class IEnvWindController;
+
 class CEnvWindController : public CBaseEntity
 {
 public:
@@ -73,6 +75,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nClipmapLevels);
     SCHEMA_FIELD(bool, m_bIsMaster);
     SCHEMA_FIELD(bool, m_bFirstTime);
+
+public:
+    IEnvWindController* ToInterface();
+    static IEnvWindController* FromOriginal(CEnvWindController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVWINDCONTROLLER_H

@@ -56,6 +56,8 @@
 
 #include "CTeam.h"
 
+class ICSTeam;
+
 class CCSTeam : public CTeam
 {
 public:
@@ -75,6 +77,13 @@ public:
     SCHEMA_FIELD_POINTER(char, m_szTeamLogoImage);
     SCHEMA_FIELD(float, m_flNextResourceTime);
     SCHEMA_FIELD(int32_t, m_iLastUpdateSentAt);
+
+public:
+    ICSTeam* ToInterface();
+    static ICSTeam* FromOriginal(CCSTeam* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSTEAM_H

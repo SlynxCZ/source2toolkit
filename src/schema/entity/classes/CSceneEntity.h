@@ -60,6 +60,7 @@
 class CBaseEntity;
 class CBaseModelEntity;
 class CSceneListManager;
+class ISceneEntity;
 
 class CSceneEntity : public CPointEntity
 {
@@ -132,6 +133,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hActivator);
     SCHEMA_FIELD(int32_t, m_BusyActor);
     SCHEMA_FIELD(SceneOnPlayerDeath_t, m_iPlayerDeathBehavior);
+
+public:
+    ISceneEntity* ToInterface();
+    static ISceneEntity* FromOriginal(CSceneEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCENEENTITY_H

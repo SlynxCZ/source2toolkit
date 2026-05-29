@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseShotgun.h"
 
+class IWeaponNOVA;
+
 class CWeaponNOVA : public CCSWeaponBaseShotgun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponNOVA);
 
+
+public:
+    IWeaponNOVA* ToInterface();
+    static IWeaponNOVA* FromOriginal(CWeaponNOVA* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONNOVA_H

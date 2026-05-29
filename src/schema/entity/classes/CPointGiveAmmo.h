@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IPointGiveAmmo;
 
 class CPointGiveAmmo : public CPointEntity
 {
@@ -64,6 +65,13 @@ public:
     DECLARE_SCHEMA_CLASS(CPointGiveAmmo);
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
+
+public:
+    IPointGiveAmmo* ToInterface();
+    static IPointGiveAmmo* FromOriginal(CPointGiveAmmo* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTGIVEAMMO_H

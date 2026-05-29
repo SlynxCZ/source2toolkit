@@ -56,6 +56,7 @@
 
 #include "CBaseEntity.h"
 
+class IEnvCubemap;
 class InfoForResourceTypeCTextureBase;
 
 class CEnvCubemap : public CBaseEntity
@@ -81,6 +82,13 @@ public:
     SCHEMA_FIELD(bool, m_Entity_bIndoorCubeMap);
     SCHEMA_FIELD(bool, m_Entity_bCopyDiffuseFromDefaultCubemap);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
+
+public:
+    IEnvCubemap* ToInterface();
+    static IEnvCubemap* FromOriginal(CEnvCubemap* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVCUBEMAP_H

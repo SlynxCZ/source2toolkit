@@ -57,6 +57,8 @@
 #include "CBaseModelEntity.h"
 #include "source2toolkit/schema/entity/enums/EntityDisolveType_t.h"
 
+class IEntityDissolve;
+
 class CEntityDissolve : public CBaseModelEntity
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(EntityDisolveType_t, m_nDissolveType);
     SCHEMA_FIELD(Vector, m_vDissolverOrigin);
     SCHEMA_FIELD(uint32_t, m_nMagnitude);
+
+public:
+    IEntityDissolve* ToInterface();
+    static IEntityDissolve* FromOriginal(CEntityDissolve* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENTITYDISSOLVE_H

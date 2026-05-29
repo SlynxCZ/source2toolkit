@@ -56,6 +56,8 @@
 #include "CAttributeList.h"
 #include "IEconItemInterface.h"
 
+class IEconItemView;
+
 class CEconItemView : public IEconItemInterface
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(CAttributeList, m_NetworkedDynamicAttributes);
     SCHEMA_FIELD_POINTER(char, m_szCustomName);
     SCHEMA_FIELD_POINTER(char, m_szCustomNameOverride);
+
+public:
+    IEconItemView* ToInterface();
+    static IEconItemView* FromOriginal(CEconItemView* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CECONITEMVIEW_H

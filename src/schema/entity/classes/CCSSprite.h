@@ -56,11 +56,20 @@
 
 #include "CSprite.h"
 
+class ICSSprite;
+
 class CCSSprite : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSSprite);
 
+
+public:
+    ICSSprite* ToInterface();
+    static ICSSprite* FromOriginal(CCSSprite* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSSPRITE_H

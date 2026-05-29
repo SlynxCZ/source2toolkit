@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INavHullVData;
+
 class CNavHullVData
 {
 public:
@@ -73,6 +75,13 @@ public:
     SCHEMA_FIELD(int32_t, m_agentBorderErosion);
     SCHEMA_FIELD(bool, m_flowMapGenerationEnabled);
     SCHEMA_FIELD(float, m_flowMapNodeMaxRadius);
+
+public:
+    INavHullVData* ToInterface();
+    static INavHullVData* FromOriginal(CNavHullVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNAVHULLVDATA_H

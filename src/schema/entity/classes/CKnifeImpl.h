@@ -1,0 +1,66 @@
+/**
+* vim: set ts=4 sw=4 tw=99 noet:
+ * =============================================================================
+ * Source2Toolkit
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
+ * AlliedModders LLC. All rights reserved.
+ * =============================================================================
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
+ * AlliedModders LLC give you permission to link the code of this program
+ * (as well as its derivative works) to "Counter-Strike 2," "Source 2,"
+ * "Steam," and any Game MODs or server software running on software by
+ * Valve Corporation. You must obey the GNU General Public License in all
+ * respects for all other code used.
+ *
+ * Additionally, this exception applies to all derivative works unless
+ * otherwise stated in LICENSE.txt.
+ *
+ * Authors:
+ *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
+ *   - AlliedModders LLC
+ *
+ * Project: Source2Toolkit
+ */
+
+#ifndef _INCLUDE_CKNIFEIMPL_H
+#define _INCLUDE_CKNIFEIMPL_H
+
+#pragma once
+
+#include "source2toolkit/schema/entity/classes/IKnife.h"
+#include "schema/entity/classes/CKnife.h"
+#include "CCSWeaponBaseImpl.h"
+
+class CKnifeImpl : public CCSWeaponBaseImpl, public IKnife
+{
+
+public:
+    explicit CKnifeImpl(CKnife* p) : CCSWeaponBaseImpl(p) {}
+
+private:
+    CKnife* Real() { return static_cast<CKnife*>(m_pReal); }
+    CKnife* Real() const { return static_cast<CKnife*>(m_pReal); }
+
+public:
+    CKnife* GetOriginal() const override { return Real(); }
+    bool& FirstAttack() override { return Real()->m_bFirstAttack(); }
+    void FirstAttackUpdated() override { Real()->m_bFirstAttack.NetworkStateChanged(); }
+};
+
+inline IKnife* CKnife::ToInterface() { return new CKnifeImpl(this); }
+inline IKnife* IKnife::FromOriginal(CKnife* p) { return p ? p->ToInterface() : nullptr; }
+
+#endif // _INCLUDE_CKNIFEIMPL_H

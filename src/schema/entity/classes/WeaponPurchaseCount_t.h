@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IWeaponPurchaseCount_t;
+
 class WeaponPurchaseCount_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(uint16_t, m_nItemDefIndex);
     SCHEMA_FIELD(uint16_t, m_nCount);
+
+public:
+    IWeaponPurchaseCount_t* ToInterface();
+    static IWeaponPurchaseCount_t* FromOriginal(WeaponPurchaseCount_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_WEAPONPURCHASECOUNT_T_H

@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeCTextureBase;
+
 class InfoForResourceTypeCTextureBase
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCTextureBase);
 
+
+public:
+    IInfoForResourceTypeCTextureBase* ToInterface();
+    static IInfoForResourceTypeCTextureBase* FromOriginal(InfoForResourceTypeCTextureBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECTEXTUREBASE_H

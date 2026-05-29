@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicAutosave;
+
 class CLogicAutosave : public CLogicalEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bForceNewLevelUnit);
     SCHEMA_FIELD(int32_t, m_minHitPoints);
     SCHEMA_FIELD(int32_t, m_minHitPointsToCommit);
+
+public:
+    ILogicAutosave* ToInterface();
+    static ILogicAutosave* FromOriginal(CLogicAutosave* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICAUTOSAVE_H

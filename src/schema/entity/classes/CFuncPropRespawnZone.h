@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IFuncPropRespawnZone;
+
 class CFuncPropRespawnZone : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPropRespawnZone);
 
+
+public:
+    IFuncPropRespawnZone* ToInterface();
+    static IFuncPropRespawnZone* FromOriginal(CFuncPropRespawnZone* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCPROPRESPAWNZONE_H

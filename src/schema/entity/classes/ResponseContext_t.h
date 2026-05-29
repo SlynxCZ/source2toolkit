@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IResponseContext_t;
+
 class ResponseContext_t
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszValue);
     SCHEMA_FIELD(float, m_fExpirationTime);
+
+public:
+    IResponseContext_t* ToInterface();
+    static IResponseContext_t* FromOriginal(ResponseContext_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RESPONSECONTEXT_T_H

@@ -56,6 +56,8 @@
 
 #include "CServerOnlyModelEntity.h"
 
+class IFogVolume;
+
 class CFogVolume : public CServerOnlyModelEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_colorCorrectionName);
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bInFogVolumesList);
+
+public:
+    IFogVolume* ToInterface();
+    static IFogVolume* FromOriginal(CFogVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFOGVOLUME_H

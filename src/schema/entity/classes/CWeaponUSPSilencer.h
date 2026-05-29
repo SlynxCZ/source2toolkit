@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponUSPSilencer;
+
 class CWeaponUSPSilencer : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponUSPSilencer);
 
+
+public:
+    IWeaponUSPSilencer* ToInterface();
+    static IWeaponUSPSilencer* FromOriginal(CWeaponUSPSilencer* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONUSPSILENCER_H

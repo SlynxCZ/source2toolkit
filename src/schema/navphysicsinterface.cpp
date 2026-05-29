@@ -41,7 +41,6 @@
 #include "core/shared.h"
 
 #include "dynlibutils/module.h"
-#include "source2toolkit/utils/plat.h"
 
 #include <cstdint>
 

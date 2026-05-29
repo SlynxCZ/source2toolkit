@@ -58,6 +58,7 @@
 
 class CBaseEntity;
 class CFuncTrackTrain;
+class ITankTrainAI;
 
 class CTankTrainAI : public CPointEntity
 {
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_engineSoundName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_movementSoundName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_targetEntityName);
+
+public:
+    ITankTrainAI* ToInterface();
+    static ITankTrainAI* FromOriginal(CTankTrainAI* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTANKTRAINAI_H

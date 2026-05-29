@@ -56,11 +56,20 @@
 
 #include "CEnvCombinedLightProbeVolume.h"
 
+class IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume;
+
 class CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume : public CEnvCombinedLightProbeVolume
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume);
 
+
+public:
+    IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* ToInterface();
+    static IEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* FromOriginal(CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVCOMBINEDLIGHTPROBEVOLUMEALIAS_FUNC_COMBINED_LIGHT_PROBE_VOLUME_H

@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IResourceId_t;
+
 class ResourceId_t
 {
 public:
     DECLARE_SCHEMA_CLASS(ResourceId_t);
 
     SCHEMA_FIELD(uint64_t, m_Value);
+
+public:
+    IResourceId_t* ToInterface();
+    static IResourceId_t* FromOriginal(ResourceId_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RESOURCEID_T_H

@@ -59,6 +59,7 @@
 #include "locksound_t.h"
 
 class CBaseEntity;
+class IBasePropDoor;
 
 class CBasePropDoor : public CDynamicProp
 {
@@ -103,6 +104,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnOpen);
     SCHEMA_FIELD(CEntityIOOutput, m_OnLockedUse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnAjarOpen);
+
+public:
+    IBasePropDoor* ToInterface();
+    static IBasePropDoor* FromOriginal(CBasePropDoor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEPROPDOOR_H

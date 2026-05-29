@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IChoreoInfoTarget;
+
 class CChoreoInfoTarget : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CChoreoInfoTarget);
 
+
+public:
+    IChoreoInfoTarget* ToInterface();
+    static IChoreoInfoTarget* FromOriginal(CChoreoInfoTarget* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCHOREOINFOTARGET_H

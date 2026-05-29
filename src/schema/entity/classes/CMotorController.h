@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IMotorController;
+
 class CMotorController
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(float, m_maxTorque);
     SCHEMA_FIELD(Vector, m_axis);
     SCHEMA_FIELD(float, m_inertiaFactor);
+
+public:
+    IMotorController* ToInterface();
+    static IMotorController* FromOriginal(CMotorController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOTORCONTROLLER_H

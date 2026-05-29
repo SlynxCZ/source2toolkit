@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ISoundAreaEntityBase;
+
 class CSoundAreaEntityBase : public CBaseEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSoundAreaType);
     SCHEMA_FIELD(Vector, m_vPos);
+
+public:
+    ISoundAreaEntityBase* ToInterface();
+    static ISoundAreaEntityBase* FromOriginal(CSoundAreaEntityBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDAREAENTITYBASE_H

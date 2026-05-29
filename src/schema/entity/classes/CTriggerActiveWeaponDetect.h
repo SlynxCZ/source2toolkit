@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerActiveWeaponDetect;
+
 class CTriggerActiveWeaponDetect : public CBaseTrigger
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnTouchedActiveWeapon);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszWeaponClassName);
+
+public:
+    ITriggerActiveWeaponDetect* ToInterface();
+    static ITriggerActiveWeaponDetect* FromOriginal(CTriggerActiveWeaponDetect* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERACTIVEWEAPONDETECT_H

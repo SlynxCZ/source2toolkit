@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IPropDataComponent;
+
 class CPropDataComponent : public CEntityComponent
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(bool, m_bSpawnMotionDisabled);
     SCHEMA_FIELD(int32_t, m_nDisableTakePhysicsDamageSpawnFlag);
     SCHEMA_FIELD(int32_t, m_nMotionDisabledSpawnFlag);
+
+public:
+    IPropDataComponent* ToInterface();
+    static IPropDataComponent* FromOriginal(CPropDataComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPROPDATACOMPONENT_H

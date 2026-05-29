@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class ICSGO_EndOfMatchLineupEndpoint;
+
 class CCSGO_EndOfMatchLineupEndpoint : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_EndOfMatchLineupEndpoint);
 
+
+public:
+    ICSGO_EndOfMatchLineupEndpoint* ToInterface();
+    static ICSGO_EndOfMatchLineupEndpoint* FromOriginal(CCSGO_EndOfMatchLineupEndpoint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGO_ENDOFMATCHLINEUPENDPOINT_H

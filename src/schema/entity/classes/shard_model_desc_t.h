@@ -56,6 +56,7 @@
 #include "source2toolkit/schema/entity/enums/ShardSolid_t.h"
 
 class InfoForResourceTypeIMaterial2;
+class Ishard_model_desc_t;
 
 class shard_model_desc_t
 {
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(bool, m_bHasParent);
     SCHEMA_FIELD(bool, m_bParentFrozen);
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_SurfacePropStringToken);
+
+public:
+    Ishard_model_desc_t* ToInterface();
+    static Ishard_model_desc_t* FromOriginal(shard_model_desc_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SHARD_MODEL_DESC_T_H

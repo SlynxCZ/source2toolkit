@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class ISceneListManager;
 
 class CSceneListManager : public CLogicalEntity
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CSceneListManager>>, m_hListManagers);
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_iszScenes);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hScenes);
+
+public:
+    ISceneListManager* ToInterface();
+    static ISceneListManager* FromOriginal(CSceneListManager* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCENELISTMANAGER_H

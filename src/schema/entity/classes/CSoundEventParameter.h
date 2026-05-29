@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ISoundEventParameter;
+
 class CSoundEventParameter : public CBaseEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParamName);
     SCHEMA_FIELD(float, m_flFloatValue);
+
+public:
+    ISoundEventParameter* ToInterface();
+    static ISoundEventParameter* FromOriginal(CSoundEventParameter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTPARAMETER_H

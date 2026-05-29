@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISoundOpvarTraceResult_t;
+
 class SoundOpvarTraceResult_t
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(Vector, vPos);
     SCHEMA_FIELD(bool, bDidHit);
     SCHEMA_FIELD(float, flDistSqrToCenter);
+
+public:
+    ISoundOpvarTraceResult_t* ToInterface();
+    static ISoundOpvarTraceResult_t* FromOriginal(SoundOpvarTraceResult_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SOUNDOPVARTRACERESULT_T_H

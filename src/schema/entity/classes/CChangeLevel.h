@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class IChangeLevel;
+
 class CChangeLevel : public CBaseTrigger
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(bool, m_bNoTouch);
     SCHEMA_FIELD(bool, m_bNewChapter);
     SCHEMA_FIELD(bool, m_bOnChangeLevelFired);
+
+public:
+    IChangeLevel* ToInterface();
+    static IChangeLevel* FromOriginal(CChangeLevel* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCHANGELEVEL_H

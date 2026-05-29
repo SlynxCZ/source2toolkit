@@ -57,6 +57,7 @@
 #include "CServerOnlyPointEntity.h"
 
 class CBaseEntity;
+class IPointPrefab;
 
 class CPointPrefab : public CServerOnlyPointEntity
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(bool, m_bLoadDynamic);
     SCHEMA_FIELD(CHandle<CPointPrefab>, m_associatedRelayEntity);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_ProceduralRelaySources);
+
+public:
+    IPointPrefab* ToInterface();
+    static IPointPrefab* FromOriginal(CPointPrefab* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTPREFAB_H

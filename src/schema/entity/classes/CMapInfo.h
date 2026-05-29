@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IMapInfo;
+
 class CMapInfo : public CPointEntity
 {
 public:
@@ -76,6 +78,13 @@ public:
     SCHEMA_FIELD(float, m_flEnvPuddleRippleDirection);
     SCHEMA_FIELD(float, m_flEnvWetnessCoverage);
     SCHEMA_FIELD(float, m_flEnvWetnessDryingAmount);
+
+public:
+    IMapInfo* ToInterface();
+    static IMapInfo* FromOriginal(CMapInfo* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMAPINFO_H

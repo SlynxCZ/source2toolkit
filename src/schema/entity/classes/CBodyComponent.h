@@ -55,6 +55,7 @@
 
 
 class CGameSceneNode;
+class IBodyComponent;
 
 class CBodyComponent : public CEntityComponent
 {
@@ -63,6 +64,13 @@ public:
 
     SCHEMA_FIELD(CGameSceneNode*, m_pSceneNode);
     SCHEMA_FIELD(CEntityInstance*, __m_pChainEntity);
+
+public:
+    IBodyComponent* ToInterface();
+    static IBodyComponent* FromOriginal(CBodyComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBODYCOMPONENT_H

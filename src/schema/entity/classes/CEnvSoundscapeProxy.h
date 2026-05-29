@@ -56,12 +56,21 @@
 
 #include "CEnvSoundscape.h"
 
+class IEnvSoundscapeProxy;
+
 class CEnvSoundscapeProxy : public CEnvSoundscape
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeProxy);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_MainSoundscapeName);
+
+public:
+    IEnvSoundscapeProxy* ToInterface();
+    static IEnvSoundscapeProxy* FromOriginal(CEnvSoundscapeProxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPEPROXY_H

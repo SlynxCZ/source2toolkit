@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIChoreoServices;
+
 class IChoreoServices
 {
 public:
     DECLARE_SCHEMA_CLASS(IChoreoServices);
 
+
+public:
+    IIChoreoServices* ToInterface();
+    static IIChoreoServices* FromOriginal(IChoreoServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ICHOREOSERVICES_H

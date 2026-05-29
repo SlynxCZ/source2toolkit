@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IEnvFade;
+
 class CEnvFade : public CLogicalEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_Duration);
     SCHEMA_FIELD(float, m_HoldDuration);
     SCHEMA_FIELD(CEntityIOOutput, m_OnBeginFade);
+
+public:
+    IEnvFade* ToInterface();
+    static IEnvFade* FromOriginal(CEnvFade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVFADE_H

@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CFogController;
+class Ifogplayerparams_t;
 
 class fogplayerparams_t
 {
@@ -74,6 +75,13 @@ public:
     SCHEMA_FIELD(float, m_flNewMaxDensity);
     SCHEMA_FIELD(float, m_flNewHDRColorScale);
     SCHEMA_FIELD(float, m_flNewFarZ);
+
+public:
+    Ifogplayerparams_t* ToInterface();
+    static Ifogplayerparams_t* FromOriginal(fogplayerparams_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_FOGPLAYERPARAMS_T_H

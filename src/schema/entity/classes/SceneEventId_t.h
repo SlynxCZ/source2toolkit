@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISceneEventId_t;
+
 class SceneEventId_t
 {
 public:
     DECLARE_SCHEMA_CLASS(SceneEventId_t);
 
     SCHEMA_FIELD(uint32_t, m_Value);
+
+public:
+    ISceneEventId_t* ToInterface();
+    static ISceneEventId_t* FromOriginal(SceneEventId_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SCENEEVENTID_T_H

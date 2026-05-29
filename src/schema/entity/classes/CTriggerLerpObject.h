@@ -58,6 +58,7 @@
 #include "lerpdata_t.h"
 
 class CBaseEntity;
+class ITriggerLerpObject;
 
 class CTriggerLerpObject : public CBaseTrigger
 {
@@ -79,6 +80,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnLerpStarted);
     SCHEMA_FIELD(CEntityIOOutput, m_OnLerpFinished);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetached);
+
+public:
+    ITriggerLerpObject* ToInterface();
+    static ITriggerLerpObject* FromOriginal(CTriggerLerpObject* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERLERPOBJECT_H

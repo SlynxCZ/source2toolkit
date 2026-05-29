@@ -56,12 +56,21 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncWall;
+
 class CFuncWall : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWall);
 
     SCHEMA_FIELD(int32_t, m_nState);
+
+public:
+    IFuncWall* ToInterface();
+    static IFuncWall* FromOriginal(CFuncWall* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCWALL_H

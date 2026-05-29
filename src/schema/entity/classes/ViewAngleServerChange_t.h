@@ -55,6 +55,8 @@
 
 #include "source2toolkit/schema/entity/enums/FixAngleSet_t.h"
 
+class IViewAngleServerChange_t;
+
 class ViewAngleServerChange_t
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(FixAngleSet_t, nType);
     SCHEMA_FIELD(QAngle, qAngle);
     SCHEMA_FIELD(uint32_t, nIndex);
+
+public:
+    IViewAngleServerChange_t* ToInterface();
+    static IViewAngleServerChange_t* FromOriginal(ViewAngleServerChange_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_VIEWANGLESERVERCHANGE_T_H

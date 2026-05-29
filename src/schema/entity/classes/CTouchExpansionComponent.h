@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ITouchExpansionComponent;
+
 class CTouchExpansionComponent : public CEntityComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CTouchExpansionComponent);
 
+
+public:
+    ITouchExpansionComponent* ToInterface();
+    static ITouchExpansionComponent* FromOriginal(CTouchExpansionComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTOUCHEXPANSIONCOMPONENT_H

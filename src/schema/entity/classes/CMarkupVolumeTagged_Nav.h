@@ -57,12 +57,21 @@
 #include "CMarkupVolumeTagged.h"
 #include "source2toolkit/schema/entity/enums/NavScopeFlags_t.h"
 
+class IMarkupVolumeTagged_Nav;
+
 class CMarkupVolumeTagged_Nav : public CMarkupVolumeTagged
 {
 public:
     DECLARE_SCHEMA_CLASS(CMarkupVolumeTagged_Nav);
 
     SCHEMA_FIELD(NavScopeFlags_t, m_nScopes);
+
+public:
+    IMarkupVolumeTagged_Nav* ToInterface();
+    static IMarkupVolumeTagged_Nav* FromOriginal(CMarkupVolumeTagged_Nav* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAV_H

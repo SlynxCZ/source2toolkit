@@ -56,11 +56,20 @@
 
 #include "CMarkupVolumeTagged.h"
 
+class ISimpleMarkupVolumeTagged;
+
 class CSimpleMarkupVolumeTagged : public CMarkupVolumeTagged
 {
 public:
     DECLARE_SCHEMA_CLASS(CSimpleMarkupVolumeTagged);
 
+
+public:
+    ISimpleMarkupVolumeTagged* ToInterface();
+    static ISimpleMarkupVolumeTagged* FromOriginal(CSimpleMarkupVolumeTagged* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSIMPLEMARKUPVOLUMETAGGED_H

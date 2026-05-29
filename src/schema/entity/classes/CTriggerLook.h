@@ -57,6 +57,7 @@
 #include "CTriggerOnce.h"
 
 class CBaseEntity;
+class ITriggerLook;
 
 class CTriggerLook : public CTriggerOnce
 {
@@ -78,6 +79,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnTimeout);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartLook);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEndLook);
+
+public:
+    ITriggerLook* ToInterface();
+    static ITriggerLook* FromOriginal(CTriggerLook* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERLOOK_H

@@ -58,6 +58,7 @@
 #include "locksound_t.h"
 
 class CBaseModelEntity;
+class IBaseButton;
 
 class CBaseButton : public CBaseToggle
 {
@@ -89,6 +90,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseModelEntity>, m_glowEntity);
     SCHEMA_FIELD(bool, m_usable);
     SCHEMA_FIELD(CUtlSymbolLarge, m_szDisplayText);
+
+public:
+    IBaseButton* ToInterface();
+    static IBaseButton* FromOriginal(CBaseButton* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEBUTTON_H

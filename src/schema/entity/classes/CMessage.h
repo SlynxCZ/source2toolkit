@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IMessage;
+
 class CMessage : public CPointEntity
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNoise);
     SCHEMA_FIELD(CEntityIOOutput, m_OnShowMessage);
+
+public:
+    IMessage* ToInterface();
+    static IMessage* FromOriginal(CMessage* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMESSAGE_H

@@ -58,6 +58,8 @@
 #include "ConstraintSoundInfo.h"
 #include "constraint_hingeparams_t.h"
 
+class IPhysHinge;
+
 class CPhysHinge : public CPhysConstraint
 {
 public:
@@ -82,6 +84,13 @@ public:
     SCHEMA_FIELD(float, m_flLimitsDebugVisRotation);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartMoving);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStopMoving);
+
+public:
+    IPhysHinge* ToInterface();
+    static IPhysHinge* FromOriginal(CPhysHinge* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSHINGE_H

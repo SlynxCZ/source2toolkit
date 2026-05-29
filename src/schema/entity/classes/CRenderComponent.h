@@ -54,6 +54,8 @@
 #include <cstdint>
 
 
+class IRenderComponent;
+
 class CRenderComponent : public CEntityComponent
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(uint32_t, m_nSplitscreenFlags);
     SCHEMA_FIELD(bool, m_bEnableRendering);
     SCHEMA_FIELD(bool, m_bInterpolationReadyToDraw);
+
+public:
+    IRenderComponent* ToInterface();
+    static IRenderComponent* FromOriginal(CRenderComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRENDERCOMPONENT_H

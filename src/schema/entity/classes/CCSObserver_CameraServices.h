@@ -55,11 +55,20 @@
 
 #include "CCSPlayerBase_CameraServices.h"
 
+class ICSObserver_CameraServices;
+
 class CCSObserver_CameraServices : public CCSPlayerBase_CameraServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserver_CameraServices);
 
+
+public:
+    ICSObserver_CameraServices* ToInterface();
+    static ICSObserver_CameraServices* FromOriginal(CCSObserver_CameraServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSOBSERVER_CAMERASERVICES_H

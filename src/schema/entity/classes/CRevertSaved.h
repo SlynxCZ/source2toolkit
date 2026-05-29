@@ -56,6 +56,8 @@
 
 #include "CModelPointEntity.h"
 
+class IRevertSaved;
+
 class CRevertSaved : public CModelPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(float, m_loadTime);
     SCHEMA_FIELD(float, m_Duration);
     SCHEMA_FIELD(float, m_HoldTime);
+
+public:
+    IRevertSaved* ToInterface();
+    static IRevertSaved* FromOriginal(CRevertSaved* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CREVERTSAVED_H

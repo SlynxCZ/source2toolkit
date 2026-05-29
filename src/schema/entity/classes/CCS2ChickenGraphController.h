@@ -55,6 +55,8 @@
 
 #include "CAnimGraphControllerBase.h"
 
+class ICS2ChickenGraphController;
+
 class CCS2ChickenGraphController : public CAnimGraphControllerBase
 {
 public:
@@ -62,6 +64,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bHasActionCompletedEvent);
     SCHEMA_FIELD(bool, m_bWaitingForCompletedEvent);
+
+public:
+    ICS2ChickenGraphController* ToInterface();
+    static ICS2ChickenGraphController* FromOriginal(CCS2ChickenGraphController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCS2CHICKENGRAPHCONTROLLER_H

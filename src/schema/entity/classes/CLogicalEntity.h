@@ -56,11 +56,20 @@
 
 #include "CServerOnlyEntity.h"
 
+class ILogicalEntity;
+
 class CLogicalEntity : public CServerOnlyEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicalEntity);
 
+
+public:
+    ILogicalEntity* ToInterface();
+    static ILogicalEntity* FromOriginal(CLogicalEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICALENTITY_H

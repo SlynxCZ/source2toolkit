@@ -56,6 +56,8 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponTaser;
+
 class CWeaponTaser : public CCSWeaponBaseGun
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(float, m_fFireTime);
     SCHEMA_FIELD(int32_t, m_nLastAttackTick);
+
+public:
+    IWeaponTaser* ToInterface();
+    static IWeaponTaser* FromOriginal(CWeaponTaser* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONTASER_H

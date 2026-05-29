@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/EntFinderMethod_t.h"
 
 class CBaseFilter;
+class IPointEntityFinder;
 
 class CPointEntityFinder : public CBaseEntity
 {
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hReference);
     SCHEMA_FIELD(EntFinderMethod_t, m_FindMethod);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFoundEntity);
+
+public:
+    IPointEntityFinder* ToInterface();
+    static IPointEntityFinder* FromOriginal(CPointEntityFinder* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTENTITYFINDER_H

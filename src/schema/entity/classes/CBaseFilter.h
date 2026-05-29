@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IBaseFilter;
+
 class CBaseFilter : public CLogicalEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bNegated);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFail);
+
+public:
+    IBaseFilter* ToInterface();
+    static IBaseFilter* FromOriginal(CBaseFilter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEFILTER_H

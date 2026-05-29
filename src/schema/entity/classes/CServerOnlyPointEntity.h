@@ -56,11 +56,20 @@
 
 #include "CServerOnlyEntity.h"
 
+class IServerOnlyPointEntity;
+
 class CServerOnlyPointEntity : public CServerOnlyEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerOnlyPointEntity);
 
+
+public:
+    IServerOnlyPointEntity* ToInterface();
+    static IServerOnlyPointEntity* FromOriginal(CServerOnlyPointEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSERVERONLYPOINTENTITY_H

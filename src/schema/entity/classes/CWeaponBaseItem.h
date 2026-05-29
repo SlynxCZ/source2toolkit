@@ -56,6 +56,8 @@
 
 #include "CCSWeaponBase.h"
 
+class IWeaponBaseItem;
+
 class CWeaponBaseItem : public CCSWeaponBase
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bSequenceInProgress);
     SCHEMA_FIELD(bool, m_bRedraw);
+
+public:
+    IWeaponBaseItem* ToInterface();
+    static IWeaponBaseItem* FromOriginal(CWeaponBaseItem* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONBASEITEM_H

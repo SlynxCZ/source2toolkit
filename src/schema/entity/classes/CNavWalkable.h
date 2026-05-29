@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class INavWalkable;
+
 class CNavWalkable : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavWalkable);
 
+
+public:
+    INavWalkable* ToInterface();
+    static INavWalkable* FromOriginal(CNavWalkable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNAVWALKABLE_H

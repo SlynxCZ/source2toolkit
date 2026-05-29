@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class ILogicMeasureMovement;
 
 class CLogicMeasureMovement : public CLogicalEntity
 {
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetReference);
     SCHEMA_FIELD(float, m_flScale);
     SCHEMA_FIELD(int32_t, m_nMeasureType);
+
+public:
+    ILogicMeasureMovement* ToInterface();
+    static ILogicMeasureMovement* FromOriginal(CLogicMeasureMovement* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICMEASUREMOVEMENT_H

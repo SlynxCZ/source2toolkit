@@ -56,6 +56,8 @@
 
 #include "CCSWeaponBase.h"
 
+class IBaseCSGrenade;
+
 class CBaseCSGrenade : public CCSWeaponBase
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nNextHoldTick);
     SCHEMA_FIELD(float, m_flNextHoldFrac);
     SCHEMA_FIELD(CHandle<CCSWeaponBase>, m_hSwitchToWeaponAfterThrow);
+
+public:
+    IBaseCSGrenade* ToInterface();
+    static IBaseCSGrenade* FromOriginal(CBaseCSGrenade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASECSGRENADE_H

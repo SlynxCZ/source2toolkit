@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicGameEventListener;
+
 class CLogicGameEventListener : public CLogicalEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszGameEventItem);
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(bool, m_bStartDisabled);
+
+public:
+    ILogicGameEventListener* ToInterface();
+    static ILogicGameEventListener* FromOriginal(CLogicGameEventListener* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICGAMEEVENTLISTENER_H

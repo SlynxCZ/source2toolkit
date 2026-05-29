@@ -62,6 +62,7 @@ class CColorCorrection;
 class CEnvSoundscapeTriggerable;
 class CPostProcessingVolume;
 class CTonemapController2;
+class IPlayer_CameraServices;
 
 class CPlayer_CameraServices : public CPlayerPawnComponent
 {
@@ -80,6 +81,13 @@ public:
     SCHEMA_FIELD(float, m_flOldPlayerZ);
     SCHEMA_FIELD(float, m_flOldPlayerViewOffsetZ);
     SCHEMA_FIELD(CUtlVector<CHandle<CEnvSoundscapeTriggerable>>, m_hTriggerSoundscapeList);
+
+public:
+    IPlayer_CameraServices* ToInterface();
+    static IPlayer_CameraServices* FromOriginal(CPlayer_CameraServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_CAMERASERVICES_H

@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IDEagle;
+
 class CDEagle : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CDEagle);
 
+
+public:
+    IDEagle* ToInterface();
+    static IDEagle* FromOriginal(CDEagle* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDEAGLE_H

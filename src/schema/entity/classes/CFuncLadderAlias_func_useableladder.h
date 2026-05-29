@@ -56,11 +56,20 @@
 
 #include "CFuncLadder.h"
 
+class IFuncLadderAlias_func_useableladder;
+
 class CFuncLadderAlias_func_useableladder : public CFuncLadder
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncLadderAlias_func_useableladder);
 
+
+public:
+    IFuncLadderAlias_func_useableladder* ToInterface();
+    static IFuncLadderAlias_func_useableladder* FromOriginal(CFuncLadderAlias_func_useableladder* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCLADDERALIAS_FUNC_USEABLELADDER_H

@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INmGraphInstance;
+
 class CNmGraphInstance
 {
 public:
     DECLARE_SCHEMA_CLASS(CNmGraphInstance);
 
+
+public:
+    INmGraphInstance* ToInterface();
+    static INmGraphInstance* FromOriginal(CNmGraphInstance* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNMGRAPHINSTANCE_H

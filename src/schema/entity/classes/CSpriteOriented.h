@@ -56,11 +56,20 @@
 
 #include "CSprite.h"
 
+class ISpriteOriented;
+
 class CSpriteOriented : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpriteOriented);
 
+
+public:
+    ISpriteOriented* ToInterface();
+    static ISpriteOriented* FromOriginal(CSpriteOriented* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSPRITEORIENTED_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IEntityRenderAttribute_t;
+
 class EntityRenderAttribute_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_ID);
     SCHEMA_FIELD(Vector4D, m_Values);
+
+public:
+    IEntityRenderAttribute_t* ToInterface();
+    static IEntityRenderAttribute_t* FromOriginal(EntityRenderAttribute_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ENTITYRENDERATTRIBUTE_T_H

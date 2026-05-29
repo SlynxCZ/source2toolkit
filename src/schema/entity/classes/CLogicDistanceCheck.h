@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicDistanceCheck;
+
 class CLogicDistanceCheck : public CLogicalEntity
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_InZone1);
     SCHEMA_FIELD(CEntityIOOutput, m_InZone2);
     SCHEMA_FIELD(CEntityIOOutput, m_InZone3);
+
+public:
+    ILogicDistanceCheck* ToInterface();
+    static ILogicDistanceCheck* FromOriginal(CLogicDistanceCheck* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICDISTANCECHECK_H

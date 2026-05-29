@@ -60,6 +60,7 @@
 #include "RelationshipOverride_t.h"
 
 class CEconWearable;
+class IBaseCombatCharacter;
 
 class CBaseCombatCharacter : public CBaseAnimGraph
 {
@@ -76,6 +77,13 @@ public:
     SCHEMA_FIELD(Hull_t, m_eHull);
     SCHEMA_FIELD(uint32_t, m_nNavHullIdx);
     SCHEMA_FIELD(CMovementStatsProperty, m_movementStats);
+
+public:
+    IBaseCombatCharacter* ToInterface();
+    static IBaseCombatCharacter* FromOriginal(CBaseCombatCharacter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASECOMBATCHARACTER_H

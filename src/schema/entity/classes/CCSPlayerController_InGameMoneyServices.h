@@ -55,6 +55,8 @@
 
 #include "CPlayerControllerComponent.h"
 
+class ICSPlayerController_InGameMoneyServices;
+
 class CCSPlayerController_InGameMoneyServices : public CPlayerControllerComponent
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iStartAccount);
     SCHEMA_FIELD(int32_t, m_iTotalCashSpent);
     SCHEMA_FIELD(int32_t, m_iCashSpentThisRound);
+
+public:
+    ICSPlayerController_InGameMoneyServices* ToInterface();
+    static ICSPlayerController_InGameMoneyServices* FromOriginal(CCSPlayerController_InGameMoneyServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_INGAMEMONEYSERVICES_H

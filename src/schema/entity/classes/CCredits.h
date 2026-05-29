@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class ICredits;
+
 class CCredits : public CPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnCreditsDone);
     SCHEMA_FIELD(bool, m_bRolledOutroCredits);
     SCHEMA_FIELD(float, m_flLogoLength);
+
+public:
+    ICredits* ToInterface();
+    static ICredits* FromOriginal(CCredits* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCREDITS_H

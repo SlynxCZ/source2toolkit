@@ -56,6 +56,8 @@
 
 #include "CSoundEventEntity.h"
 
+class ISoundEventAABBEntity;
+
 class CSoundEventAABBEntity : public CSoundEventEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(Vector, m_vMins);
     SCHEMA_FIELD(Vector, m_vMaxs);
+
+public:
+    ISoundEventAABBEntity* ToInterface();
+    static ISoundEventAABBEntity* FromOriginal(CSoundEventAABBEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTAABBENTITY_H

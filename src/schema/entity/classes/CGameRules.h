@@ -54,6 +54,8 @@
 #include <cstdint>
 
 
+class IGameRules;
+
 class CGameRules
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nTotalPausedTicks);
     SCHEMA_FIELD(int32_t, m_nPauseStartTick);
     SCHEMA_FIELD(bool, m_bGamePaused);
+
+public:
+    IGameRules* ToInterface();
+    static IGameRules* FromOriginal(CGameRules* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMERULES_H

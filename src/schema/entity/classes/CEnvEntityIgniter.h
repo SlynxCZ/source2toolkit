@@ -56,12 +56,21 @@
 
 #include "CBaseEntity.h"
 
+class IEnvEntityIgniter;
+
 class CEnvEntityIgniter : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvEntityIgniter);
 
     SCHEMA_FIELD(float, m_flLifetime);
+
+public:
+    IEnvEntityIgniter* ToInterface();
+    static IEnvEntityIgniter* FromOriginal(CEnvEntityIgniter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVENTITYIGNITER_H

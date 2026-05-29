@@ -56,11 +56,20 @@
 
 #include "CEnvSoundscape.h"
 
+class IEnvSoundscapeTriggerable;
+
 class CEnvSoundscapeTriggerable : public CEnvSoundscape
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeTriggerable);
 
+
+public:
+    IEnvSoundscapeTriggerable* ToInterface();
+    static IEnvSoundscapeTriggerable* FromOriginal(CEnvSoundscapeTriggerable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLE_H

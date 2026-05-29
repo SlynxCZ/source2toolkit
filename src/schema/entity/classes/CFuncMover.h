@@ -65,6 +65,7 @@
 class CBaseEntity;
 class CMoverPathNode;
 class CPathMover;
+class IFuncMover;
 
 class CFuncMover : public CBaseModelEntity
 {
@@ -161,6 +162,13 @@ public:
     SCHEMA_FIELD(bool, m_bStopFromBeginStopTarget);
     SCHEMA_FIELD(bool, m_bQueueStop);
     SCHEMA_FIELD(bool, m_bQueueStopMoving);
+
+public:
+    IFuncMover* ToInterface();
+    static IFuncMover* FromOriginal(CFuncMover* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCMOVER_H

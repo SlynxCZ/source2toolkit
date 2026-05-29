@@ -63,6 +63,13 @@ public:
     DECLARE_SCHEMA_CLASS(CSkeletonAnimationController);
 
     SCHEMA_FIELD(CSkeletonInstance*, m_pSkeletonInstance);
+
+public:
+    ISkeletonAnimationController* ToInterface();
+    static ISkeletonAnimationController* FromOriginal(CSkeletonAnimationController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSKELETONANIMATIONCONTROLLER_H

@@ -57,6 +57,8 @@
 #include "CLogicalEntity.h"
 #include "CTestPulseIOComponent_Derived.h"
 
+class ITestPulseIO;
+
 class CTestPulseIO : public CLogicalEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(bool, m_bAllowEmptyInputs);
     SCHEMA_FIELD(CTestPulseIOComponent_Derived, m_TestComponent);
     SCHEMA_FIELD(CEntityIOOutput, m_OnInternalTestVoid);
+
+public:
+    ITestPulseIO* ToInterface();
+    static ITestPulseIO* FromOriginal(CTestPulseIO* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIO_H

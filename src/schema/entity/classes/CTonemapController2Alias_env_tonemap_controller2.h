@@ -56,11 +56,20 @@
 
 #include "CTonemapController2.h"
 
+class ITonemapController2Alias_env_tonemap_controller2;
+
 class CTonemapController2Alias_env_tonemap_controller2 : public CTonemapController2
 {
 public:
     DECLARE_SCHEMA_CLASS(CTonemapController2Alias_env_tonemap_controller2);
 
+
+public:
+    ITonemapController2Alias_env_tonemap_controller2* ToInterface();
+    static ITonemapController2Alias_env_tonemap_controller2* FromOriginal(CTonemapController2Alias_env_tonemap_controller2* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTONEMAPCONTROLLER2ALIAS_ENV_TONEMAP_CONTROLLER2_H

@@ -63,6 +63,7 @@
 #include "source2toolkit/schema/entity/enums/SharedMovementGait_t.h"
 
 class CBaseAnimGraph;
+class IScriptedSequence;
 
 class CScriptedSequence : public CBaseEntity
 {
@@ -146,6 +147,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hInteractionMainEntity);
     SCHEMA_FIELD(int32_t, m_iPlayerDeathBehavior);
     SCHEMA_FIELD(bool, m_bSkipFadeIn);
+
+public:
+    IScriptedSequence* ToInterface();
+    static IScriptedSequence* FromOriginal(CScriptedSequence* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTEDSEQUENCE_H

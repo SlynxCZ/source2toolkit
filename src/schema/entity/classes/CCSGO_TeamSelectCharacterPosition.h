@@ -56,11 +56,20 @@
 
 #include "CCSGO_TeamPreviewCharacterPosition.h"
 
+class ICSGO_TeamSelectCharacterPosition;
+
 class CCSGO_TeamSelectCharacterPosition : public CCSGO_TeamPreviewCharacterPosition
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamSelectCharacterPosition);
 
+
+public:
+    ICSGO_TeamSelectCharacterPosition* ToInterface();
+    static ICSGO_TeamSelectCharacterPosition* FromOriginal(CCSGO_TeamSelectCharacterPosition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGO_TEAMSELECTCHARACTERPOSITION_H

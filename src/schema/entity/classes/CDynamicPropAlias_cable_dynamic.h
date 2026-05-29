@@ -56,11 +56,20 @@
 
 #include "CDynamicProp.h"
 
+class IDynamicPropAlias_cable_dynamic;
+
 class CDynamicPropAlias_cable_dynamic : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_cable_dynamic);
 
+
+public:
+    IDynamicPropAlias_cable_dynamic* ToInterface();
+    static IDynamicPropAlias_cable_dynamic* FromOriginal(CDynamicPropAlias_cable_dynamic* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDYNAMICPROPALIAS_CABLE_DYNAMIC_H

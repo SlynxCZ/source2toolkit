@@ -56,11 +56,20 @@
 
 #include "CHostage.h"
 
+class IHostageAlias_info_hostage_spawn;
+
 class CHostageAlias_info_hostage_spawn : public CHostage
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageAlias_info_hostage_spawn);
 
+
+public:
+    IHostageAlias_info_hostage_spawn* ToInterface();
+    static IHostageAlias_info_hostage_spawn* FromOriginal(CHostageAlias_info_hostage_spawn* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHOSTAGEALIAS_INFO_HOSTAGE_SPAWN_H

@@ -56,6 +56,7 @@
 #include "CPlayerPawnComponent.h"
 
 class CBasePlayerWeapon;
+class IPlayer_WeaponServices;
 
 class CPlayer_WeaponServices : public CPlayerPawnComponent
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CHandle<CBasePlayerWeapon>, m_hLastWeapon);
     SCHEMA_FIELD_POINTER(uint16_t, m_iAmmo);
     SCHEMA_FIELD(bool, m_bPreventWeaponPickup);
+
+public:
+    IPlayer_WeaponServices* ToInterface();
+    static IPlayer_WeaponServices* FromOriginal(CPlayer_WeaponServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_WEAPONSERVICES_H

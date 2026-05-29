@@ -57,6 +57,7 @@
 #include "CBaseAnimGraph.h"
 
 class CCSPlayerPawn;
+class IBaseGrenade;
 
 class CBaseGrenade : public CBaseAnimGraph
 {
@@ -77,6 +78,13 @@ public:
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_hThrower);
     SCHEMA_FIELD(float, m_flNextAttack);
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_hOriginalThrower);
+
+public:
+    IBaseGrenade* ToInterface();
+    static IBaseGrenade* FromOriginal(CBaseGrenade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEGRENADE_H

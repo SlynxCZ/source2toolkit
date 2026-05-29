@@ -56,12 +56,21 @@
 #include "CBodyComponent.h"
 #include "CSkeletonInstance.h"
 
+class IBodyComponentSkeletonInstance;
+
 class CBodyComponentSkeletonInstance : public CBodyComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentSkeletonInstance);
 
     SCHEMA_FIELD(CSkeletonInstance, m_skeletonInstance);
+
+public:
+    IBodyComponentSkeletonInstance* ToInterface();
+    static IBodyComponentSkeletonInstance* FromOriginal(CBodyComponentSkeletonInstance* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBODYCOMPONENTSKELETONINSTANCE_H

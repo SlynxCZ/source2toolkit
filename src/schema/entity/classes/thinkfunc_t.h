@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Ithinkfunc_t;
+
 class thinkfunc_t
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_nContext);
     SCHEMA_FIELD(int32_t, m_nNextThinkTick);
     SCHEMA_FIELD(int32_t, m_nLastThinkTick);
+
+public:
+    Ithinkfunc_t* ToInterface();
+    static Ithinkfunc_t* FromOriginal(thinkfunc_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_THINKFUNC_T_H

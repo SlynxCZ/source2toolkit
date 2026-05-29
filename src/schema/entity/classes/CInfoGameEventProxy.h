@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IInfoGameEventProxy;
+
 class CInfoGameEventProxy : public CPointEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEventName);
     SCHEMA_FIELD(float, m_flRange);
+
+public:
+    IInfoGameEventProxy* ToInterface();
+    static IInfoGameEventProxy* FromOriginal(CInfoGameEventProxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOGAMEEVENTPROXY_H

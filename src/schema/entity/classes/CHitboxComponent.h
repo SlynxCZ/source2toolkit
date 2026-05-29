@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IHitboxComponent;
+
 class CHitboxComponent : public CEntityComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CHitboxComponent);
 
     SCHEMA_FIELD(float, m_flBoundsExpandRadius);
+
+public:
+    IHitboxComponent* ToInterface();
+    static IHitboxComponent* FromOriginal(CHitboxComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHITBOXCOMPONENT_H

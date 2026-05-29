@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IKeepUpright;
 class IPhysicsMotionController;
 
 class CKeepUpright : public CPointEntity
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(float, m_angularLimit);
     SCHEMA_FIELD(bool, m_bActive);
     SCHEMA_FIELD(bool, m_bDampAllRotation);
+
+public:
+    IKeepUpright* ToInterface();
+    static IKeepUpright* FromOriginal(CKeepUpright* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CKEEPUPRIGHT_H

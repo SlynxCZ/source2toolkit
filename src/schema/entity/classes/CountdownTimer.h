@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ICountdownTimer;
+
 class CountdownTimer
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(float, m_timestamp);
     SCHEMA_FIELD(float, m_timescale);
     SCHEMA_FIELD(WorldGroupId_t, m_nWorldGroupId);
+
+public:
+    ICountdownTimer* ToInterface();
+    static ICountdownTimer* FromOriginal(CountdownTimer* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_COUNTDOWNTIMER_H

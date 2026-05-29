@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Iconstraint_breakableparams_t;
+
 class constraint_breakableparams_t
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(float, torqueLimit);
     SCHEMA_FIELD_POINTER(float, bodyMassScale);
     SCHEMA_FIELD(bool, isActive);
+
+public:
+    Iconstraint_breakableparams_t* ToInterface();
+    static Iconstraint_breakableparams_t* FromOriginal(constraint_breakableparams_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CONSTRAINT_BREAKABLEPARAMS_T_H

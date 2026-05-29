@@ -56,11 +56,20 @@
 
 #include "CBaseAnimGraph.h"
 
+class IItemSoda;
+
 class CItemSoda : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemSoda);
 
+
+public:
+    IItemSoda* ToInterface();
+    static IItemSoda* FromOriginal(CItemSoda* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMSODA_H

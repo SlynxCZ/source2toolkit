@@ -56,11 +56,20 @@
 
 #include "CEnvSoundscapeProxy.h"
 
+class IEnvSoundscapeProxyAlias_snd_soundscape_proxy;
+
 class CEnvSoundscapeProxyAlias_snd_soundscape_proxy : public CEnvSoundscapeProxy
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeProxyAlias_snd_soundscape_proxy);
 
+
+public:
+    IEnvSoundscapeProxyAlias_snd_soundscape_proxy* ToInterface();
+    static IEnvSoundscapeProxyAlias_snd_soundscape_proxy* FromOriginal(CEnvSoundscapeProxyAlias_snd_soundscape_proxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPEPROXYALIAS_SND_SOUNDSCAPE_PROXY_H

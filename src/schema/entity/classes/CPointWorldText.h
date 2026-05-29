@@ -59,6 +59,8 @@
 #include "source2toolkit/schema/entity/enums/PointWorldTextJustifyVertical_t.h"
 #include "source2toolkit/schema/entity/enums/PointWorldTextReorientMode_t.h"
 
+class IPointWorldText;
+
 class CPointWorldText : public CModelPointEntity
 {
 public:
@@ -80,6 +82,13 @@ public:
     SCHEMA_FIELD(PointWorldTextJustifyHorizontal_t, m_nJustifyHorizontal);
     SCHEMA_FIELD(PointWorldTextJustifyVertical_t, m_nJustifyVertical);
     SCHEMA_FIELD(PointWorldTextReorientMode_t, m_nReorientMode);
+
+public:
+    IPointWorldText* ToInterface();
+    static IPointWorldText* FromOriginal(CPointWorldText* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTWORLDTEXT_H

@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncNavBlocker;
+
 class CFuncNavBlocker : public CBaseModelEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(int32_t, m_nBlockedTeamNumber);
+
+public:
+    IFuncNavBlocker* ToInterface();
+    static IFuncNavBlocker* FromOriginal(CFuncNavBlocker* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCNAVBLOCKER_H

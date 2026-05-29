@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISimpleConstraintSoundProfile;
+
 class SimpleConstraintSoundProfile
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(float, m_reversalSoundThresholdSmall);
     SCHEMA_FIELD(float, m_reversalSoundThresholdMedium);
     SCHEMA_FIELD(float, m_reversalSoundThresholdLarge);
+
+public:
+    ISimpleConstraintSoundProfile* ToInterface();
+    static ISimpleConstraintSoundProfile* FromOriginal(SimpleConstraintSoundProfile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SIMPLECONSTRAINTSOUNDPROFILE_H

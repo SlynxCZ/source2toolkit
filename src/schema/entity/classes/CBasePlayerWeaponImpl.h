@@ -42,15 +42,13 @@
 
 #include "source2toolkit/schema/entity/classes/IBasePlayerWeapon.h"
 #include "schema/entity/classes/CBasePlayerWeapon.h"
+#include "CEconEntityImpl.h"
 
-class CBasePlayerWeaponImpl : public virtual IBasePlayerWeapon
+class CBasePlayerWeaponImpl : public CEconEntityImpl, public IBasePlayerWeapon
 {
 
-protected:
-    void* m_pReal;
-
 public:
-    explicit CBasePlayerWeaponImpl(void* p) : m_pReal(p) {}
+    explicit CBasePlayerWeaponImpl(CBasePlayerWeapon* p) : CEconEntityImpl(p) {}
 
 private:
     CBasePlayerWeapon* Real() { return static_cast<CBasePlayerWeapon*>(m_pReal); }

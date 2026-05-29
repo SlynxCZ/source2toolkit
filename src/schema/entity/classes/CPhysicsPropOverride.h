@@ -56,11 +56,20 @@
 
 #include "CPhysicsProp.h"
 
+class IPhysicsPropOverride;
+
 class CPhysicsPropOverride : public CPhysicsProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropOverride);
 
+
+public:
+    IPhysicsPropOverride* ToInterface();
+    static IPhysicsPropOverride* FromOriginal(CPhysicsPropOverride* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROPOVERRIDE_H

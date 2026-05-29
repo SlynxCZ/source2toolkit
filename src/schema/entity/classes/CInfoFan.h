@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IInfoFan;
+
 class CInfoFan : public CPointEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_fFanForceMinRadius);
     SCHEMA_FIELD(float, m_flCurveDistRange);
     SCHEMA_FIELD(CUtlSymbolLarge, m_FanForceCurveString);
+
+public:
+    IInfoFan* ToInterface();
+    static IInfoFan* FromOriginal(CInfoFan* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOFAN_H

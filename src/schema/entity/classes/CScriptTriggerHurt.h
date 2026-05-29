@@ -56,12 +56,21 @@
 
 #include "CTriggerHurt.h"
 
+class IScriptTriggerHurt;
+
 class CScriptTriggerHurt : public CTriggerHurt
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerHurt);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    IScriptTriggerHurt* ToInterface();
+    static IScriptTriggerHurt* FromOriginal(CScriptTriggerHurt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTTRIGGERHURT_H

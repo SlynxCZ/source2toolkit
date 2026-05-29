@@ -56,11 +56,20 @@
 
 #include "CServerOnlyPointEntity.h"
 
+class IInfoTargetServerOnly;
+
 class CInfoTargetServerOnly : public CServerOnlyPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoTargetServerOnly);
 
+
+public:
+    IInfoTargetServerOnly* ToInterface();
+    static IInfoTargetServerOnly* FromOriginal(CInfoTargetServerOnly* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOTARGETSERVERONLY_H

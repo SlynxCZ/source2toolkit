@@ -55,12 +55,21 @@
 
 #include "CPlayerPawnComponent.h"
 
+class ICSPlayer_BulletServices;
+
 class CCSPlayer_BulletServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_BulletServices);
 
     SCHEMA_FIELD(int32_t, m_totalHitsOnServer);
+
+public:
+    ICSPlayer_BulletServices* ToInterface();
+    static ICSPlayer_BulletServices* FromOriginal(CCSPlayer_BulletServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_BULLETSERVICES_H

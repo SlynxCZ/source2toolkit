@@ -56,6 +56,8 @@
 
 #include "CPhysConstraint.h"
 
+class IPhysFixed;
+
 class CPhysFixed : public CPhysConstraint
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(bool, m_bEnableAngularConstraint);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sBoneName1);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sBoneName2);
+
+public:
+    IPhysFixed* ToInterface();
+    static IPhysFixed* FromOriginal(CPhysFixed* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSFIXED_H

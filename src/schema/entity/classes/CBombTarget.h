@@ -57,6 +57,7 @@
 #include "CBaseTrigger.h"
 
 class CBaseEntity;
+class IBombTarget;
 
 class CBombTarget : public CBaseTrigger
 {
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_szMountTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hInstructorHint);
     SCHEMA_FIELD(int32_t, m_nBombSiteDesignation);
+
+public:
+    IBombTarget* ToInterface();
+    static IBombTarget* FromOriginal(CBombTarget* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBOMBTARGET_H

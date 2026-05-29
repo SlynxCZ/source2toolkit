@@ -56,6 +56,8 @@
 
 #include "CPhysicsProp.h"
 
+class IPhysicsPropRespawnable;
+
 class CPhysicsPropRespawnable : public CPhysicsProp
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(Vector, m_vOriginalMins);
     SCHEMA_FIELD(Vector, m_vOriginalMaxs);
     SCHEMA_FIELD(float, m_flRespawnDuration);
+
+public:
+    IPhysicsPropRespawnable* ToInterface();
+    static IPhysicsPropRespawnable* FromOriginal(CPhysicsPropRespawnable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROPRESPAWNABLE_H

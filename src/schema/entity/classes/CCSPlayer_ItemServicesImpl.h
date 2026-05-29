@@ -42,15 +42,13 @@
 
 #include "source2toolkit/schema/entity/classes/ICSPlayer_ItemServices.h"
 #include "schema/entity/classes/CCSPlayer_ItemServices.h"
+#include "CPlayer_ItemServicesImpl.h"
 
-class CCSPlayer_ItemServicesImpl : public virtual ICSPlayer_ItemServices
+class CCSPlayer_ItemServicesImpl : public CPlayer_ItemServicesImpl, public ICSPlayer_ItemServices
 {
 
-protected:
-    void* m_pReal;
-
 public:
-    explicit CCSPlayer_ItemServicesImpl(void* p) : m_pReal(p) {}
+    explicit CCSPlayer_ItemServicesImpl(CCSPlayer_ItemServices* p) : CPlayer_ItemServicesImpl(p) {}
 
 private:
     CCSPlayer_ItemServices* Real() { return static_cast<CCSPlayer_ItemServices*>(m_pReal); }

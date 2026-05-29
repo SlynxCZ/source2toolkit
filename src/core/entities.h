@@ -35,7 +35,6 @@
  * Project: Source2Toolkit
  */
 #pragma once
-#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 #include "source2toolkit/schema/entityio.h"
 #include "source2toolkit/IToolkitEntities.h"
 
@@ -44,17 +43,18 @@
 
 namespace entities {
     class EntitiesManager : public IToolkitEntities {
-        CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules = nullptr) override;
-        CBaseEntity* FindEntityByClassname(CEntityInstance* pStart, const char* name) override;
-        CBaseEntity* FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity = nullptr, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, IEntityFindFilter* pFilter = nullptr) override;
+    public:
+        IBaseEntity* FindPickerEntity(IBasePlayerController* pPlayer, ICSGameRules* pGameRules = nullptr) override;
+        IBaseEntity* FindEntityByClassname(IEntityInstance* pStart, const char* name) override;
+        IBaseEntity* FindEntityByName(IEntityInstance* pStartEntity, const char* szName, IEntityInstance* pSearchingEntity = nullptr, IEntityInstance* pActivator = nullptr, IEntityInstance* pCaller = nullptr, IEntityFindFilter* pFilter = nullptr) override;
 
-        CBaseEntity* CreateEntityByName(const char* pszClassName) override;
+        IBaseEntity* CreateEntityByName(const char* pszClassName) override;
 
         void AddEntityListener(IEntityListener* pListener) override;
         void RemoveEntityListener(IEntityListener* pListener) override;
 
-        void AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue = "") override;
-        void AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f) override;
+        void AcceptInput(IEntityInstance* pTarget, const char* pszInput, IEntityInstance* pActivator, IEntityInstance* pCaller, const char* pszValue = "") override;
+        void AddEntityIOEvent(IEntityInstance* pTarget, const char* pszInput, IEntityInstance* pActivator = nullptr, IEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f) override;
 
         void AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode = Mode::Pre) override;
         void RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode = Mode::Pre) override;

@@ -63,6 +63,7 @@
 
 class CBaseEntity;
 class CBasePlayerPawn;
+class IBreakable;
 
 class CBreakable : public CBaseModelEntity
 {
@@ -84,6 +85,13 @@ public:
     SCHEMA_FIELD(PerformanceMode_t, m_PerformanceMode);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hPhysicsAttacker);
     SCHEMA_FIELD(float, m_flLastPhysicsInfluenceTime);
+
+public:
+    IBreakable* ToInterface();
+    static IBreakable* FromOriginal(CBreakable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBREAKABLE_H

@@ -57,6 +57,8 @@
 #include "CBaseAnimGraph.h"
 #include "magnetted_objects_t.h"
 
+class IPhysMagnet;
+
 class CPhysMagnet : public CBaseAnimGraph
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(float, m_flNextSuckTime);
     SCHEMA_FIELD(int32_t, m_iMaxObjectsAttached);
+
+public:
+    IPhysMagnet* ToInterface();
+    static IPhysMagnet* FromOriginal(CPhysMagnet* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSMAGNET_H

@@ -58,6 +58,7 @@
 #include "CountdownTimer.h"
 
 class CFishPool;
+class IFish;
 
 class CFish : public CBaseAnimGraph
 {
@@ -88,6 +89,13 @@ public:
     SCHEMA_FIELD(CountdownTimer, m_disperseTimer);
     SCHEMA_FIELD(CountdownTimer, m_proximityTimer);
     SCHEMA_FIELD(CUtlVector<CFish*>, m_visible);
+
+public:
+    IFish* ToInterface();
+    static IFish* FromOriginal(CFish* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFISH_H

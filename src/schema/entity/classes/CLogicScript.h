@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class ILogicScript;
+
 class CLogicScript : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicScript);
 
+
+public:
+    ILogicScript* ToInterface();
+    static ILogicScript* FromOriginal(CLogicScript* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICSCRIPT_H

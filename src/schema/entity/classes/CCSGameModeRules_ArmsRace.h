@@ -55,12 +55,21 @@
 
 #include "CCSGameModeRules.h"
 
+class ICSGameModeRules_ArmsRace;
+
 class CCSGameModeRules_ArmsRace : public CCSGameModeRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules_ArmsRace);
 
     SCHEMA_FIELD(CUtlVector<CUtlString>, m_WeaponSequence);
+
+public:
+    ICSGameModeRules_ArmsRace* ToInterface();
+    static ICSGameModeRules_ArmsRace* FromOriginal(CCSGameModeRules_ArmsRace* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGAMEMODERULES_ARMSRACE_H

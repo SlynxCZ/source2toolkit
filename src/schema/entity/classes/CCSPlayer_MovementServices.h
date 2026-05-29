@@ -58,6 +58,8 @@
 #include "CCSPlayerModernJump.h"
 #include "CPlayer_MovementServices_Humanoid.h"
 
+class ICSPlayer_MovementServices;
+
 class CCSPlayer_MovementServices : public CPlayer_MovementServices_Humanoid
 {
 public:
@@ -115,6 +117,13 @@ public:
     SCHEMA_FIELD(bool, m_bWasSurfing);
     SCHEMA_FIELD(Vector2D, m_vecWalkWishVel);
     SCHEMA_FIELD(bool, m_bHasEverProcessedCommand);
+
+public:
+    ICSPlayer_MovementServices* ToInterface();
+    static ICSPlayer_MovementServices* FromOriginal(CCSPlayer_MovementServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_MOVEMENTSERVICES_H

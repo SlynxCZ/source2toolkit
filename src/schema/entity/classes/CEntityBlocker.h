@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IEntityBlocker;
+
 class CEntityBlocker : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityBlocker);
 
+
+public:
+    IEntityBlocker* ToInterface();
+    static IEntityBlocker* FromOriginal(CEntityBlocker* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENTITYBLOCKER_H

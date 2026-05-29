@@ -36,7 +36,7 @@
  */
 #include "menus.h"
 
-#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/ICSPlayerController.h"
 
 namespace menus
 {
@@ -44,14 +44,14 @@ namespace menus
 
     ChatMenuOption& BaseMenu::AddMenuOptionWithCooldown(
         std::string optionText,
-        std::function<void(CCSPlayerController*, ChatMenuOption&)> action,
+        std::function<void(ICSPlayerController*, ChatMenuOption&)> action,
         bool disabled,
         bool close,
         std::function<bool()> disabledEvaluator)
     {
         ChatMenuOption& opt = AddMenuOption(std::move(optionText),
             [this, action = std::move(action), close](
-            CCSPlayerController* player, ChatMenuOption& optRef)
+            ICSPlayerController* player, ChatMenuOption& optRef)
             {
                 if (!s_canSelect(player)) return;
                 action(player, optRef);
@@ -135,7 +135,7 @@ namespace menus
         player_->PrintToCenterHtml(html.c_str(), 3);
     }
 
-    void CenterHtmlMenuInstance::OnKeyPress(CCSPlayerController* p, int key)
+    void CenterHtmlMenuInstance::OnKeyPress(ICSPlayerController* p, int key)
     {
         if (p != player_) return;
         if (!menu_) return;
@@ -200,7 +200,7 @@ namespace menus
         }
     }
 
-    void MenuManager::OpenCenterHtmlMenu(CCSPlayerController* player, CenterHtmlMenu* menu)
+    void MenuManager::OpenCenterHtmlMenu(ICSPlayerController* player, CenterHtmlMenu* menu)
     {
         if (!player || !menu) return;
         CloseActiveMenu(player);
@@ -211,7 +211,7 @@ namespace menus
         activeMenus[player->GetSlot()]->Display();
     }
 
-    IMenuInstance* MenuManager::GetActiveMenu(CCSPlayerController* player)
+    IMenuInstance* MenuManager::GetActiveMenu(ICSPlayerController* player)
     {
         if (!player) return nullptr;
 
@@ -219,7 +219,7 @@ namespace menus
         return (it == activeMenus.end()) ? nullptr : it->second.get();
     }
 
-    void MenuManager::CloseActiveMenu(CCSPlayerController* player)
+    void MenuManager::CloseActiveMenu(ICSPlayerController* player)
     {
         if (!player) return;
 
@@ -231,7 +231,7 @@ namespace menus
         }
     }
 
-    void MenuManager::OnKeyPress(CCSPlayerController* player, int key)
+    void MenuManager::OnKeyPress(ICSPlayerController* player, int key)
     {
         auto* inst = GetActiveMenu(player);
         if (inst)

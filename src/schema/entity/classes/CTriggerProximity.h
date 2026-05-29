@@ -57,6 +57,7 @@
 #include "CBaseTrigger.h"
 
 class CBaseEntity;
+class ITriggerProximity;
 
 class CTriggerProximity : public CBaseTrigger
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMeasureTarget);
     SCHEMA_FIELD(float, m_fRadius);
     SCHEMA_FIELD(int32_t, m_nTouchers);
+
+public:
+    ITriggerProximity* ToInterface();
+    static ITriggerProximity* FromOriginal(CTriggerProximity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERPROXIMITY_H

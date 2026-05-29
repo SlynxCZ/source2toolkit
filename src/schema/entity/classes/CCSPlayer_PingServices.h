@@ -56,6 +56,7 @@
 #include "CPlayerPawnComponent.h"
 
 class CPlayerPing;
+class ICSPlayer_PingServices;
 
 class CCSPlayer_PingServices : public CPlayerPawnComponent
 {
@@ -64,6 +65,13 @@ public:
 
     SCHEMA_FIELD_POINTER(float, m_flPlayerPingTokens);
     SCHEMA_FIELD(CHandle<CPlayerPing>, m_hPlayerPing);
+
+public:
+    ICSPlayer_PingServices* ToInterface();
+    static ICSPlayer_PingServices* FromOriginal(CCSPlayer_PingServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_PINGSERVICES_H

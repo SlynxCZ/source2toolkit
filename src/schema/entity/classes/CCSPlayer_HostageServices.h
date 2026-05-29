@@ -56,6 +56,7 @@
 #include "CPlayerPawnComponent.h"
 
 class CBaseEntity;
+class ICSPlayer_HostageServices;
 
 class CCSPlayer_HostageServices : public CPlayerPawnComponent
 {
@@ -64,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hCarriedHostage);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hCarriedHostageProp);
+
+public:
+    ICSPlayer_HostageServices* ToInterface();
+    static ICSPlayer_HostageServices* FromOriginal(CCSPlayer_HostageServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_HOSTAGESERVICES_H

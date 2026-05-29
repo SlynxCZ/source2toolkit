@@ -56,11 +56,20 @@
 
 #include "CBaseCSGrenade.h"
 
+class ISmokeGrenade;
+
 class CSmokeGrenade : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CSmokeGrenade);
 
+
+public:
+    ISmokeGrenade* ToInterface();
+    static ISmokeGrenade* FromOriginal(CSmokeGrenade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSMOKEGRENADE_H

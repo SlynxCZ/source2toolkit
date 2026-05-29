@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IPointProximitySensor;
 
 class CPointProximitySensor : public CPointEntity
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEntity);
+
+public:
+    IPointProximitySensor* ToInterface();
+    static IPointProximitySensor* FromOriginal(CPointProximitySensor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTPROXIMITYSENSOR_H

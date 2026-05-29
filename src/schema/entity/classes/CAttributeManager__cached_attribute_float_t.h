@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IAttributeManager__cached_attribute_float_t;
+
 class CAttributeManager__cached_attribute_float_t
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(float, flIn);
     SCHEMA_FIELD(CUtlSymbolLarge, iAttribHook);
     SCHEMA_FIELD(float, flOut);
+
+public:
+    IAttributeManager__cached_attribute_float_t* ToInterface();
+    static IAttributeManager__cached_attribute_float_t* FromOriginal(CAttributeManager__cached_attribute_float_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CATTRIBUTEMANAGER__CACHED_ATTRIBUTE_FLOAT_T_H

@@ -56,11 +56,20 @@
 
 #include "CPhysicsProp.h"
 
+class IPhysicsPropMultiplayer;
+
 class CPhysicsPropMultiplayer : public CPhysicsProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsPropMultiplayer);
 
+
+public:
+    IPhysicsPropMultiplayer* ToInterface();
+    static IPhysicsPropMultiplayer* FromOriginal(CPhysicsPropMultiplayer* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSPROPMULTIPLAYER_H

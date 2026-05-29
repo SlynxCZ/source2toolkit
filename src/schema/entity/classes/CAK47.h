@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IAK47;
+
 class CAK47 : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CAK47);
 
+
+public:
+    IAK47* ToInterface();
+    static IAK47* FromOriginal(CAK47* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CAK47_H

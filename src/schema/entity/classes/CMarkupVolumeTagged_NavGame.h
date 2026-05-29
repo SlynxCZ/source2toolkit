@@ -57,6 +57,8 @@
 #include "CMarkupVolumeWithRef.h"
 #include "source2toolkit/schema/entity/enums/NavScopeFlags_t.h"
 
+class IMarkupVolumeTagged_NavGame;
+
 class CMarkupVolumeTagged_NavGame : public CMarkupVolumeWithRef
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(NavScopeFlags_t, m_nScopes);
     SCHEMA_FIELD(bool, m_bFloodFillAttribute);
     SCHEMA_FIELD(bool, m_bSplitNavSpace);
+
+public:
+    IMarkupVolumeTagged_NavGame* ToInterface();
+    static IMarkupVolumeTagged_NavGame* FromOriginal(CMarkupVolumeTagged_NavGame* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAVGAME_H

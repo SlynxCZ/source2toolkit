@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IVPhysicsCollisionAttribute_t;
+
 class VPhysicsCollisionAttribute_t
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(uint8_t, m_nTargetDetailLayer);
     SCHEMA_FIELD(uint8_t, m_nCollisionGroup);
     SCHEMA_FIELD(uint8_t, m_nCollisionFunctionMask);
+
+public:
+    IVPhysicsCollisionAttribute_t* ToInterface();
+    static IVPhysicsCollisionAttribute_t* FromOriginal(VPhysicsCollisionAttribute_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_VPHYSICSCOLLISIONATTRIBUTE_T_H

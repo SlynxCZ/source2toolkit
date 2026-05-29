@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIPhysicsJoint;
+
 class IPhysicsJoint
 {
 public:
     DECLARE_SCHEMA_CLASS(IPhysicsJoint);
 
+
+public:
+    IIPhysicsJoint* ToInterface();
+    static IIPhysicsJoint* FromOriginal(IPhysicsJoint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_IPHYSICSJOINT_H

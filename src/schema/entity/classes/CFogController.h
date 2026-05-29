@@ -57,6 +57,8 @@
 #include "CBaseEntity.h"
 #include "fogparams_t.h"
 
+class IFogController;
+
 class CFogController : public CBaseEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(fogparams_t, m_fog);
     SCHEMA_FIELD(bool, m_bUseAngles);
     SCHEMA_FIELD(int32_t, m_iChangedVariables);
+
+public:
+    IFogController* ToInterface();
+    static IFogController* FromOriginal(CFogController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFOGCONTROLLER_H

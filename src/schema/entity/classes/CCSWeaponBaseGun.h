@@ -56,6 +56,8 @@
 
 #include "CCSWeaponBase.h"
 
+class ICSWeaponBaseGun;
+
 class CCSWeaponBaseGun : public CCSWeaponBase
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD(bool, m_bSkillReloadLiftedReloadKey);
     SCHEMA_FIELD(bool, m_bSkillBoltInterruptAvailable);
     SCHEMA_FIELD(bool, m_bSkillBoltLiftedFireKey);
+
+public:
+    ICSWeaponBaseGun* ToInterface();
+    static ICSWeaponBaseGun* FromOriginal(CCSWeaponBaseGun* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSWEAPONBASEGUN_H

@@ -56,11 +56,20 @@
 
 #include "SpawnPoint.h"
 
+class IInfoDeathmatchSpawn;
+
 class CInfoDeathmatchSpawn : public SpawnPoint
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoDeathmatchSpawn);
 
+
+public:
+    IInfoDeathmatchSpawn* ToInterface();
+    static IInfoDeathmatchSpawn* FromOriginal(CInfoDeathmatchSpawn* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFODEATHMATCHSPAWN_H

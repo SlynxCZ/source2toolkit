@@ -57,6 +57,8 @@
 #include "CBaseEntity.h"
 #include "CPathQueryComponent.h"
 
+class IPathSimple;
+
 class CPathSimple : public CBaseEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(CPathQueryComponent, m_CPathQueryComponent);
     SCHEMA_FIELD(CUtlString, m_pathString);
     SCHEMA_FIELD(bool, m_bClosedLoop);
+
+public:
+    IPathSimple* ToInterface();
+    static IPathSimple* FromOriginal(CPathSimple* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHSIMPLE_H

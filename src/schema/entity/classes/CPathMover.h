@@ -58,6 +58,7 @@
 
 class CFuncMover;
 class CPathMoverEntitySpawner;
+class IPathMover;
 
 class CPathMover : public CPathWithDynamicNodes
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CFuncMover>>, m_vecMovers);
     SCHEMA_FIELD(CHandle<CPathMoverEntitySpawner>, m_hMoverSpawner);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMoverSpawnerName);
+
+public:
+    IPathMover* ToInterface();
+    static IPathMover* FromOriginal(CPathMover* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHMOVER_H

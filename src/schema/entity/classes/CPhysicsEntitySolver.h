@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class IPhysicsEntitySolver;
 
 class CPhysicsEntitySolver : public CLogicalEntity
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hPhysicsBlocker);
     SCHEMA_FIELD(float, m_separationDuration);
     SCHEMA_FIELD(float, m_cancelTime);
+
+public:
+    IPhysicsEntitySolver* ToInterface();
+    static IPhysicsEntitySolver* FromOriginal(CPhysicsEntitySolver* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSENTITYSOLVER_H

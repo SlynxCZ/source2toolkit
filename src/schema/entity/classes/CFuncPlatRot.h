@@ -56,6 +56,8 @@
 
 #include "CFuncPlat.h"
 
+class IFuncPlatRot;
+
 class CFuncPlatRot : public CFuncPlat
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(QAngle, m_end);
     SCHEMA_FIELD(QAngle, m_start);
+
+public:
+    IFuncPlatRot* ToInterface();
+    static IFuncPlatRot* FromOriginal(CFuncPlatRot* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCPLATROT_H

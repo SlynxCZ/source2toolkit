@@ -56,11 +56,20 @@
 
 #include "CBaseFilter.h"
 
+class IFilterLOS;
+
 class CFilterLOS : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterLOS);
 
+
+public:
+    IFilterLOS* ToInterface();
+    static IFilterLOS* FromOriginal(CFilterLOS* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERLOS_H

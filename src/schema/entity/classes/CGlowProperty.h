@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IGlowProperty;
+
 class CGlowProperty
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_flGlowStartTime);
     SCHEMA_FIELD(bool, m_bEligibleForScreenHighlight);
     SCHEMA_FIELD(bool, m_bGlowing);
+
+public:
+    IGlowProperty* ToInterface();
+    static IGlowProperty* FromOriginal(CGlowProperty* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGLOWPROPERTY_H

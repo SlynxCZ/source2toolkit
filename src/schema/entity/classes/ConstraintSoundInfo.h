@@ -56,6 +56,8 @@
 #include "SimpleConstraintSoundProfile.h"
 #include "VelocitySampler.h"
 
+class IConstraintSoundInfo;
+
 class ConstraintSoundInfo
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszReversalSoundLarge);
     SCHEMA_FIELD(bool, m_bPlayTravelSound);
     SCHEMA_FIELD(bool, m_bPlayReversalSound);
+
+public:
+    IConstraintSoundInfo* ToInterface();
+    static IConstraintSoundInfo* FromOriginal(ConstraintSoundInfo* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CONSTRAINTSOUNDINFO_H

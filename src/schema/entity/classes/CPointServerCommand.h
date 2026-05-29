@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IPointServerCommand;
+
 class CPointServerCommand : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointServerCommand);
 
+
+public:
+    IPointServerCommand* ToInterface();
+    static IPointServerCommand* FromOriginal(CPointServerCommand* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTSERVERCOMMAND_H

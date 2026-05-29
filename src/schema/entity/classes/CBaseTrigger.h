@@ -58,6 +58,7 @@
 
 class CBaseEntity;
 class CBaseFilter;
+class IBaseTrigger;
 
 class CBaseTrigger : public CBaseToggle
 {
@@ -76,6 +77,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bUseAsyncQueries);
+
+public:
+    IBaseTrigger* ToInterface();
+    static IBaseTrigger* FromOriginal(CBaseTrigger* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASETRIGGER_H

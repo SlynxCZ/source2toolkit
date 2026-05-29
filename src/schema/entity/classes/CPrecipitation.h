@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class IPrecipitation;
+
 class CPrecipitation : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitation);
 
+
+public:
+    IPrecipitation* ToInterface();
+    static IPrecipitation* FromOriginal(CPrecipitation* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPRECIPITATION_H

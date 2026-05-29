@@ -55,11 +55,20 @@
 
 #include "CAnimGraphControllerBase.h"
 
+class IEmptyGraphController;
+
 class CEmptyGraphController : public CAnimGraphControllerBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CEmptyGraphController);
 
+
+public:
+    IEmptyGraphController* ToInterface();
+    static IEmptyGraphController* FromOriginal(CEmptyGraphController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CEMPTYGRAPHCONTROLLER_H

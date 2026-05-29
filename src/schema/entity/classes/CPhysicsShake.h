@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IPhysicsShake;
+
 class CPhysicsShake
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsShake);
 
     SCHEMA_FIELD(Vector, m_force);
+
+public:
+    IPhysicsShake* ToInterface();
+    static IPhysicsShake* FromOriginal(CPhysicsShake* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSSHAKE_H

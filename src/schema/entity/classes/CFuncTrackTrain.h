@@ -59,6 +59,7 @@
 #include "source2toolkit/schema/entity/enums/TrainVelocityType_t.h"
 
 class CPathTrack;
+class IFuncTrackTrain;
 
 class CFuncTrackTrain : public CBaseModelEntity
 {
@@ -102,6 +103,13 @@ public:
     SCHEMA_FIELD(float, m_flDecelSpeed);
     SCHEMA_FIELD(bool, m_bAccelToSpeed);
     SCHEMA_FIELD(float, m_flNextMPSoundTime);
+
+public:
+    IFuncTrackTrain* ToInterface();
+    static IFuncTrackTrain* FromOriginal(CFuncTrackTrain* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTRACKTRAIN_H

@@ -56,6 +56,7 @@
 
 #include "CBaseModelEntity.h"
 
+class IBarnLight;
 class InfoForResourceTypeCTextureBase;
 
 class CBarnLight : public CBaseModelEntity
@@ -140,6 +141,13 @@ public:
     SCHEMA_FIELD(bool, m_bPvsModifyEntity);
     SCHEMA_FIELD(bool, m_bTransmitAlways);
     SCHEMA_FIELD(CUtlVector<uint16_t>, m_VisClusters);
+
+public:
+    IBarnLight* ToInterface();
+    static IBarnLight* FromOriginal(CBarnLight* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBARNLIGHT_H

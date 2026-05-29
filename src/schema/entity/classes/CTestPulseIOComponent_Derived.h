@@ -55,11 +55,20 @@
 
 #include "CTestPulseIOComponent.h"
 
+class ITestPulseIOComponent_Derived;
+
 class CTestPulseIOComponent_Derived : public CTestPulseIOComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CTestPulseIOComponent_Derived);
 
+
+public:
+    ITestPulseIOComponent_Derived* ToInterface();
+    static ITestPulseIOComponent_Derived* FromOriginal(CTestPulseIOComponent_Derived* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIOCOMPONENT_DERIVED_H

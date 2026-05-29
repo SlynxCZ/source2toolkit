@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CBaseEntity;
+class IFuncConveyor;
 
 class CFuncConveyor : public CBaseModelEntity
 {
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nTransitionDurationTicks);
     SCHEMA_FIELD(float, m_flTransitionStartSpeed);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_hConveyorModels);
+
+public:
+    IFuncConveyor* ToInterface();
+    static IFuncConveyor* FromOriginal(CFuncConveyor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCCONVEYOR_H

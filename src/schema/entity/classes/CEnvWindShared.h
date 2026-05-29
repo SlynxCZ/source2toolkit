@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CBaseEntity;
+class IEnvWindShared;
 
 class CEnvWindShared
 {
@@ -77,6 +78,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnGustStart);
     SCHEMA_FIELD(CEntityIOOutput, m_OnGustEnd);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEntOwner);
+
+public:
+    IEnvWindShared* ToInterface();
+    static IEnvWindShared* FromOriginal(CEnvWindShared* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVWINDSHARED_H

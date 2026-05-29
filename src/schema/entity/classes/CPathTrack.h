@@ -57,6 +57,8 @@
 #include "CPointEntity.h"
 #include "source2toolkit/schema/entity/enums/TrackOrientationType_t.h"
 
+class IPathTrack;
+
 class CPathTrack : public CPointEntity
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nIterVal);
     SCHEMA_FIELD(TrackOrientationType_t, m_eOrientationType);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
+
+public:
+    IPathTrack* ToInterface();
+    static IPathTrack* FromOriginal(CPathTrack* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHTRACK_H

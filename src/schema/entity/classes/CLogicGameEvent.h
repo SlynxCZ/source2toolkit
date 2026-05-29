@@ -56,12 +56,21 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicGameEvent;
+
 class CLogicGameEvent : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicGameEvent);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEventName);
+
+public:
+    ILogicGameEvent* ToInterface();
+    static ILogicGameEvent* FromOriginal(CLogicGameEvent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICGAMEEVENT_H

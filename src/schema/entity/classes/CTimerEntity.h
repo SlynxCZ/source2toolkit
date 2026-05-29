@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ITimerEntity;
+
 class CTimerEntity : public CLogicalEntity
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(float, m_flUpperRandomBound);
     SCHEMA_FIELD(float, m_flRemainingTime);
     SCHEMA_FIELD(bool, m_bPaused);
+
+public:
+    ITimerEntity* ToInterface();
+    static ITimerEntity* FromOriginal(CTimerEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTIMERENTITY_H

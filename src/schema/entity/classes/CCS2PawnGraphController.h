@@ -55,11 +55,20 @@
 
 #include "CCS2WeaponGraphController.h"
 
+class ICS2PawnGraphController;
+
 class CCS2PawnGraphController : public CCS2WeaponGraphController
 {
 public:
     DECLARE_SCHEMA_CLASS(CCS2PawnGraphController);
 
+
+public:
+    ICS2PawnGraphController* ToInterface();
+    static ICS2PawnGraphController* FromOriginal(CCS2PawnGraphController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCS2PAWNGRAPHCONTROLLER_H

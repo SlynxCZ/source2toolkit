@@ -42,15 +42,13 @@
 
 #include "source2toolkit/schema/entity/classes/ICSPlayer_WeaponServices.h"
 #include "schema/entity/classes/CCSPlayer_WeaponServices.h"
+#include "CPlayer_WeaponServicesImpl.h"
 
-class CCSPlayer_WeaponServicesImpl : public virtual ICSPlayer_WeaponServices
+class CCSPlayer_WeaponServicesImpl : public CPlayer_WeaponServicesImpl, public ICSPlayer_WeaponServices
 {
 
-protected:
-    void* m_pReal;
-
 public:
-    explicit CCSPlayer_WeaponServicesImpl(void* p) : m_pReal(p) {}
+    explicit CCSPlayer_WeaponServicesImpl(CCSPlayer_WeaponServices* p) : CPlayer_WeaponServicesImpl(p) {}
 
 private:
     CCSPlayer_WeaponServices* Real() { return static_cast<CCSPlayer_WeaponServices*>(m_pReal); }

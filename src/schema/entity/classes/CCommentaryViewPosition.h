@@ -56,11 +56,20 @@
 
 #include "CSprite.h"
 
+class ICommentaryViewPosition;
+
 class CCommentaryViewPosition : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CCommentaryViewPosition);
 
+
+public:
+    ICommentaryViewPosition* ToInterface();
+    static ICommentaryViewPosition* FromOriginal(CCommentaryViewPosition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCOMMENTARYVIEWPOSITION_H

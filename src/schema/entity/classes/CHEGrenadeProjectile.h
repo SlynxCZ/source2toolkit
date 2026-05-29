@@ -56,11 +56,20 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
+class IHEGrenadeProjectile;
+
 class CHEGrenadeProjectile : public CBaseCSGrenadeProjectile
 {
 public:
     DECLARE_SCHEMA_CLASS(CHEGrenadeProjectile);
 
+
+public:
+    IHEGrenadeProjectile* ToInterface();
+    static IHEGrenadeProjectile* FromOriginal(CHEGrenadeProjectile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHEGRENADEPROJECTILE_H

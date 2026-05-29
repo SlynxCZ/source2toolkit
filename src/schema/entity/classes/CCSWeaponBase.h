@@ -60,6 +60,7 @@
 #include "source2toolkit/schema/entity/enums/WeaponGameplayAnimState.h"
 
 class CCSPlayerPawn;
+class ICSWeaponBase;
 
 class CCSWeaponBase : public CBasePlayerWeapon
 {
@@ -118,6 +119,13 @@ public:
     SCHEMA_FIELD(float, m_flLastLOSTraceFailureTime);
     SCHEMA_FIELD(float, m_flWatTickOffset);
     SCHEMA_FIELD(float, m_flLastShakeTime);
+
+public:
+    ICSWeaponBase* ToInterface();
+    static ICSWeaponBase* FromOriginal(CCSWeaponBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSWEAPONBASE_H

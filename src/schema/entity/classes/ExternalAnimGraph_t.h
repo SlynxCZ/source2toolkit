@@ -57,6 +57,7 @@
 #include "source2toolkit/schema/entity/enums/ExternalAnimGraphInactiveBehavior_t.h"
 
 class CBaseAnimGraph;
+class IExternalAnimGraph_t;
 class InfoForResourceTypeCNmGraphDefinition;
 
 class ExternalAnimGraph_t
@@ -69,6 +70,13 @@ public:
     SCHEMA_FIELD(CStrongHandleCopyable<InfoForResourceTypeCNmGraphDefinition>, m_hGraphDefinition);
     SCHEMA_FIELD(CHandle<CBaseAnimGraph>, m_hExternalGraphOwner);
     SCHEMA_FIELD(ExternalAnimGraphInactiveBehavior_t, m_nInactiveBehavior);
+
+public:
+    IExternalAnimGraph_t* ToInterface();
+    static IExternalAnimGraph_t* FromOriginal(ExternalAnimGraph_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_EXTERNALANIMGRAPH_T_H

@@ -56,11 +56,20 @@
 
 #include "CItemDefuser.h"
 
+class IItemDefuserAlias_item_defuser;
+
 class CItemDefuserAlias_item_defuser : public CItemDefuser
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemDefuserAlias_item_defuser);
 
+
+public:
+    IItemDefuserAlias_item_defuser* ToInterface();
+    static IItemDefuserAlias_item_defuser* FromOriginal(CItemDefuserAlias_item_defuser* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMDEFUSERALIAS_ITEM_DEFUSER_H

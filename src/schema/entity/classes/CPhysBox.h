@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/HoverPoseFlags_t.h"
 
 class CBasePlayerPawn;
+class IPhysBox;
 
 class CPhysBox : public CBreakable
 {
@@ -79,6 +80,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerUse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnStartTouch);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hCarryingPlayer);
+
+public:
+    IPhysBox* ToInterface();
+    static IPhysBox* FromOriginal(CPhysBox* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSBOX_H

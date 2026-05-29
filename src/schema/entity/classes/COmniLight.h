@@ -56,6 +56,8 @@
 
 #include "CBarnLight.h"
 
+class IOmniLight;
+
 class COmniLight : public CBarnLight
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(float, m_flInnerAngle);
     SCHEMA_FIELD(float, m_flOuterAngle);
     SCHEMA_FIELD(bool, m_bShowLight);
+
+public:
+    IOmniLight* ToInterface();
+    static IOmniLight* FromOriginal(COmniLight* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_COMNILIGHT_H

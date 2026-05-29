@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CBaseModelEntity;
+class IAI_Expresser;
 
 class CAI_Expresser
 {
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(bool, m_bSceneEntityDisabled);
     SCHEMA_FIELD(int32_t, m_nLastSpokenPriority);
     SCHEMA_FIELD(CBaseModelEntity*, m_pOuter);
+
+public:
+    IAI_Expresser* ToInterface();
+    static IAI_Expresser* FromOriginal(CAI_Expresser* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CAI_EXPRESSER_H

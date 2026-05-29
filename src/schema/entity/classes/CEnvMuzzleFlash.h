@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IEnvMuzzleFlash;
+
 class CEnvMuzzleFlash : public CPointEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(float, m_flScale);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszParentAttachment);
+
+public:
+    IEnvMuzzleFlash* ToInterface();
+    static IEnvMuzzleFlash* FromOriginal(CEnvMuzzleFlash* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVMUZZLEFLASH_H

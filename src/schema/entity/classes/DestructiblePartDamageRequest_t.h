@@ -56,6 +56,8 @@
 #include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
 #include "source2toolkit/schema/entity/enums/EDestructibleParts_DestroyParameterFlags.h"
 
+class IDestructiblePartDamageRequest_t;
+
 class DestructiblePartDamageRequest_t
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(float, m_flBreakDamageRadius);
     SCHEMA_FIELD(Vector, m_vWsBreakDamageOrigin);
     SCHEMA_FIELD(Vector, m_vWsBreakDamageForce);
+
+public:
+    IDestructiblePartDamageRequest_t* ToInterface();
+    static IDestructiblePartDamageRequest_t* FromOriginal(DestructiblePartDamageRequest_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_DESTRUCTIBLEPARTDAMAGEREQUEST_T_H

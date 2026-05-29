@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IEnvSpark;
+
 class CEnvSpark : public CPointEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nTrailLength);
     SCHEMA_FIELD(int32_t, m_nType);
     SCHEMA_FIELD(CEntityIOOutput, m_OnSpark);
+
+public:
+    IEnvSpark* ToInterface();
+    static IEnvSpark* FromOriginal(CEnvSpark* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSPARK_H

@@ -56,11 +56,20 @@
 
 #include "CRagdollProp.h"
 
+class IRagdollPropAlias_physics_prop_ragdoll;
+
 class CRagdollPropAlias_physics_prop_ragdoll : public CRagdollProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CRagdollPropAlias_physics_prop_ragdoll);
 
+
+public:
+    IRagdollPropAlias_physics_prop_ragdoll* ToInterface();
+    static IRagdollPropAlias_physics_prop_ragdoll* FromOriginal(CRagdollPropAlias_physics_prop_ragdoll* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRAGDOLLPROPALIAS_PHYSICS_PROP_RAGDOLL_H

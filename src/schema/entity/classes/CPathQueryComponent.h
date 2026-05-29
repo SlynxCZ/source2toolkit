@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IPathQueryComponent;
+
 class CPathQueryComponent : public CEntityComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathQueryComponent);
 
+
+public:
+    IPathQueryComponent* ToInterface();
+    static IPathQueryComponent* FromOriginal(CPathQueryComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHQUERYCOMPONENT_H

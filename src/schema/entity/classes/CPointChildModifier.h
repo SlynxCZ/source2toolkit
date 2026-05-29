@@ -56,12 +56,21 @@
 
 #include "CPointEntity.h"
 
+class IPointChildModifier;
+
 class CPointChildModifier : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointChildModifier);
 
     SCHEMA_FIELD(bool, m_bOrphanInsteadOfDeletingChildrenOnRemove);
+
+public:
+    IPointChildModifier* ToInterface();
+    static IPointChildModifier* FromOriginal(CPointChildModifier* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCHILDMODIFIER_H

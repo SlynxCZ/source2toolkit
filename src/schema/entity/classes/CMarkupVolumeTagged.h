@@ -56,6 +56,8 @@
 
 #include "CMarkupVolume.h"
 
+class IMarkupVolumeTagged;
+
 class CMarkupVolumeTagged : public CMarkupVolume
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(bool, m_bGroupByVolume);
     SCHEMA_FIELD(bool, m_bGroupOtherGroups);
     SCHEMA_FIELD(bool, m_bIsInGroup);
+
+public:
+    IMarkupVolumeTagged* ToInterface();
+    static IMarkupVolumeTagged* FromOriginal(CMarkupVolumeTagged* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_H

@@ -56,6 +56,8 @@
 
 #include "CBaseToggle.h"
 
+class IBasePlatTrain;
+
 class CBasePlatTrain : public CBaseToggle
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_volume);
     SCHEMA_FIELD(float, m_flTWidth);
     SCHEMA_FIELD(float, m_flTLength);
+
+public:
+    IBasePlatTrain* ToInterface();
+    static IBasePlatTrain* FromOriginal(CBasePlatTrain* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEPLATTRAIN_H

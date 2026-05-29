@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IBaseModelEntity__OnDamageLevelChangedArgs_t;
+
 class CBaseModelEntity__OnDamageLevelChangedArgs_t
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(int32_t, nDamageLevel);
     SCHEMA_FIELD(int32_t, nDamageLevelsRemaining);
     SCHEMA_FIELD(int32_t, nPrevDamageLevel);
+
+public:
+    IBaseModelEntity__OnDamageLevelChangedArgs_t* ToInterface();
+    static IBaseModelEntity__OnDamageLevelChangedArgs_t* FromOriginal(CBaseModelEntity__OnDamageLevelChangedArgs_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEMODELENTITY__ONDAMAGELEVELCHANGEDARGS_T_H

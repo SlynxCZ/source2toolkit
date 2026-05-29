@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IRagdollManager;
+
 class CRagdollManager : public CBaseEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iMaxRagdollCount);
     SCHEMA_FIELD(bool, m_bSaveImportant);
     SCHEMA_FIELD(bool, m_bCanTakeDamage);
+
+public:
+    IRagdollManager* ToInterface();
+    static IRagdollManager* FromOriginal(CRagdollManager* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRAGDOLLMANAGER_H

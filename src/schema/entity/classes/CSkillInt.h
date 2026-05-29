@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISkillInt;
+
 class CSkillInt
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkillInt);
 
     SCHEMA_FIELD_POINTER(int32_t, m_pValue);
+
+public:
+    ISkillInt* ToInterface();
+    static ISkillInt* FromOriginal(CSkillInt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSKILLINT_H

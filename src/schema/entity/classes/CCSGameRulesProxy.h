@@ -57,6 +57,7 @@
 #include "CGameRulesProxy.h"
 
 class CCSGameRules;
+class ICSGameRulesProxy;
 
 class CCSGameRulesProxy : public CGameRulesProxy
 {
@@ -64,6 +65,13 @@ public:
     DECLARE_SCHEMA_CLASS(CCSGameRulesProxy);
 
     SCHEMA_FIELD(CCSGameRules*, m_pGameRules);
+
+public:
+    ICSGameRulesProxy* ToInterface();
+    static ICSGameRulesProxy* FromOriginal(CCSGameRulesProxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGAMERULESPROXY_H

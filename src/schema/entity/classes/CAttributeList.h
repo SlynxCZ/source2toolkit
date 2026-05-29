@@ -56,6 +56,7 @@
 #include "CEconItemAttribute.h"
 
 class CAttributeManager;
+class IAttributeList;
 
 class CAttributeList
 {
@@ -64,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlVector<CEconItemAttribute>, m_Attributes);
     SCHEMA_FIELD(CAttributeManager*, m_pManager);
+
+public:
+    IAttributeList* ToInterface();
+    static IAttributeList* FromOriginal(CAttributeList* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CATTRIBUTELIST_H

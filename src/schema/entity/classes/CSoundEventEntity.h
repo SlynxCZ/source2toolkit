@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ISoundEventEntity;
+
 class CSoundEventEntity : public CBaseEntity
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSoundName);
     SCHEMA_FIELD(CEntityHandle, m_hSource);
     SCHEMA_FIELD(int32_t, m_nEntityIndexSelection);
+
+public:
+    ISoundEventEntity* ToInterface();
+    static ISoundEventEntity* FromOriginal(CSoundEventEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTENTITY_H

@@ -57,6 +57,7 @@
 #include "CBeam.h"
 
 class CSprite;
+class IEnvLaser;
 
 class CEnvLaser : public CBeam
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszSpriteName);
     SCHEMA_FIELD(Vector, m_firePosition);
     SCHEMA_FIELD(float, m_flStartFrame);
+
+public:
+    IEnvLaser* ToInterface();
+    static IEnvLaser* FromOriginal(CEnvLaser* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVLASER_H

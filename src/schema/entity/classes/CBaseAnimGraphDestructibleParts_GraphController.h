@@ -55,11 +55,20 @@
 
 #include "CAnimGraphControllerBase.h"
 
+class IBaseAnimGraphDestructibleParts_GraphController;
+
 class CBaseAnimGraphDestructibleParts_GraphController : public CAnimGraphControllerBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CBaseAnimGraphDestructibleParts_GraphController);
 
+
+public:
+    IBaseAnimGraphDestructibleParts_GraphController* ToInterface();
+    static IBaseAnimGraphDestructibleParts_GraphController* FromOriginal(CBaseAnimGraphDestructibleParts_GraphController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEANIMGRAPHDESTRUCTIBLEPARTS_GRAPHCONTROLLER_H

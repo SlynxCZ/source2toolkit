@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncRotating;
+
 class CFuncRotating : public CBaseModelEntity
 {
 public:
@@ -79,6 +81,13 @@ public:
     SCHEMA_FIELD(bool, m_bStopAtStartPos);
     SCHEMA_FIELD(Vector, m_vecClientOrigin);
     SCHEMA_FIELD(QAngle, m_vecClientAngles);
+
+public:
+    IFuncRotating* ToInterface();
+    static IFuncRotating* FromOriginal(CFuncRotating* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCROTATING_H

@@ -55,6 +55,8 @@
 
 #include "CCSGameModeRules.h"
 
+class ICSGameModeRules_Deathmatch;
+
 class CCSGameModeRules_Deathmatch : public CCSGameModeRules
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(float, m_flDMBonusStartTime);
     SCHEMA_FIELD(float, m_flDMBonusTimeLength);
     SCHEMA_FIELD(CUtlString, m_sDMBonusWeapon);
+
+public:
+    ICSGameModeRules_Deathmatch* ToInterface();
+    static ICSGameModeRules_Deathmatch* FromOriginal(CCSGameModeRules_Deathmatch* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGAMEMODERULES_DEATHMATCH_H

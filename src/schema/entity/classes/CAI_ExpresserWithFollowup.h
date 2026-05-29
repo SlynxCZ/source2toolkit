@@ -55,11 +55,20 @@
 
 #include "CAI_Expresser.h"
 
+class IAI_ExpresserWithFollowup;
+
 class CAI_ExpresserWithFollowup : public CAI_Expresser
 {
 public:
     DECLARE_SCHEMA_CLASS(CAI_ExpresserWithFollowup);
 
+
+public:
+    IAI_ExpresserWithFollowup* ToInterface();
+    static IAI_ExpresserWithFollowup* FromOriginal(CAI_ExpresserWithFollowup* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CAI_EXPRESSERWITHFOLLOWUP_H

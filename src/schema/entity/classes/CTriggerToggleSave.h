@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerToggleSave;
+
 class CTriggerToggleSave : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerToggleSave);
 
+
+public:
+    ITriggerToggleSave* ToInterface();
+    static ITriggerToggleSave* FromOriginal(CTriggerToggleSave* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERTOGGLESAVE_H

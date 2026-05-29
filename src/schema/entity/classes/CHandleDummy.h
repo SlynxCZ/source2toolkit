@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IHandleDummy;
+
 class CHandleDummy : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CHandleDummy);
 
+
+public:
+    IHandleDummy* ToInterface();
+    static IHandleDummy* FromOriginal(CHandleDummy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHANDLEDUMMY_H

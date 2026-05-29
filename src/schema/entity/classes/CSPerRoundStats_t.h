@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISPerRoundStats_t;
+
 class CSPerRoundStats_t
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iCashEarned);
     SCHEMA_FIELD(int32_t, m_iUtilityDamage);
     SCHEMA_FIELD(int32_t, m_iEnemiesFlashed);
+
+public:
+    ISPerRoundStats_t* ToInterface();
+    static ISPerRoundStats_t* FromOriginal(CSPerRoundStats_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSPERROUNDSTATS_T_H

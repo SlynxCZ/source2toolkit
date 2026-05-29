@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IInfoInstructorHintHostageRescueZone;
+
 class CInfoInstructorHintHostageRescueZone : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoInstructorHintHostageRescueZone);
 
+
+public:
+    IInfoInstructorHintHostageRescueZone* ToInterface();
+    static IInfoInstructorHintHostageRescueZone* FromOriginal(CInfoInstructorHintHostageRescueZone* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOINSTRUCTORHINTHOSTAGERESCUEZONE_H

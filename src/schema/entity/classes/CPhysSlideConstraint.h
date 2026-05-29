@@ -57,6 +57,8 @@
 #include "CPhysConstraint.h"
 #include "ConstraintSoundInfo.h"
 
+class IPhysSlideConstraint;
+
 class CPhysSlideConstraint : public CPhysConstraint
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(float, m_flMotorDampingRatio);
     SCHEMA_FIELD(bool, m_bUseEntityPivot);
     SCHEMA_FIELD(ConstraintSoundInfo, m_soundInfo);
+
+public:
+    IPhysSlideConstraint* ToInterface();
+    static IPhysSlideConstraint* FromOriginal(CPhysSlideConstraint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSSLIDECONSTRAINT_H

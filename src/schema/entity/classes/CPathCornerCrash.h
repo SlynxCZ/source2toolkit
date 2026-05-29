@@ -56,11 +56,20 @@
 
 #include "CPathCorner.h"
 
+class IPathCornerCrash;
+
 class CPathCornerCrash : public CPathCorner
 {
 public:
     DECLARE_SCHEMA_CLASS(CPathCornerCrash);
 
+
+public:
+    IPathCornerCrash* ToInterface();
+    static IPathCornerCrash* FromOriginal(CPathCornerCrash* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHCORNERCRASH_H

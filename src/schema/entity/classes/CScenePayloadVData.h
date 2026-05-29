@@ -56,6 +56,8 @@
 #include "source2toolkit/schema/entity/enums/ENPCBehaviorOverride_t.h"
 #include "source2toolkit/schema/entity/enums/InteractionPriority_t.h"
 
+class IScenePayloadVData;
+
 class CScenePayloadVData
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(ENPCBehaviorOverride_t, m_eNPCBehavior);
     SCHEMA_FIELD(InteractionPriority_t, m_ePriority);
+
+public:
+    IScenePayloadVData* ToInterface();
+    static IScenePayloadVData* FromOriginal(CScenePayloadVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCENEPAYLOADVDATA_H

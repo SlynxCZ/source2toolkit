@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class ILogicProximity;
+
 class CLogicProximity : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLogicProximity);
 
+
+public:
+    ILogicProximity* ToInterface();
+    static ILogicProximity* FromOriginal(CLogicProximity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICPROXIMITY_H

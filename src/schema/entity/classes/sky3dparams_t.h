@@ -55,6 +55,8 @@
 
 #include "fogparams_t.h"
 
+class Isky3dparams_t;
+
 class sky3dparams_t
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, flClip3DSkyBoxNearToWorldFarOffset);
     SCHEMA_FIELD(fogparams_t, fog);
     SCHEMA_FIELD(WorldGroupId_t, m_nWorldGroupID);
+
+public:
+    Isky3dparams_t* ToInterface();
+    static Isky3dparams_t* FromOriginal(sky3dparams_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SKY3DPARAMS_T_H

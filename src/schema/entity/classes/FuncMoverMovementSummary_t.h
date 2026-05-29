@@ -56,6 +56,7 @@
 #include "source2toolkit/schema/entity/enums/FuncMoverMovementSummaryFlags_t.h"
 
 class CPathMover;
+class IFuncMoverMovementSummary_t;
 
 class FuncMoverMovementSummary_t
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(FuncMoverMovementSummaryFlags_t, nFlags);
     SCHEMA_FIELD(int32_t, nTick);
     SCHEMA_FIELD(CHandle<CPathMover>, hPathMover);
+
+public:
+    IFuncMoverMovementSummary_t* ToInterface();
+    static IFuncMoverMovementSummary_t* FromOriginal(FuncMoverMovementSummary_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_FUNCMOVERMOVEMENTSUMMARY_T_H

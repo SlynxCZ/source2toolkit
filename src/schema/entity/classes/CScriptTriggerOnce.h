@@ -56,12 +56,21 @@
 
 #include "CTriggerOnce.h"
 
+class IScriptTriggerOnce;
+
 class CScriptTriggerOnce : public CTriggerOnce
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerOnce);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    IScriptTriggerOnce* ToInterface();
+    static IScriptTriggerOnce* FromOriginal(CScriptTriggerOnce* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTTRIGGERONCE_H

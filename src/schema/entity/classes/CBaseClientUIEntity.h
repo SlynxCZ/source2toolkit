@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class IBaseClientUIEntity;
+
 class CBaseClientUIEntity : public CBaseModelEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_DialogXMLName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_PanelClassName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_PanelID);
+
+public:
+    IBaseClientUIEntity* ToInterface();
+    static IBaseClientUIEntity* FromOriginal(CBaseClientUIEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASECLIENTUIENTITY_H

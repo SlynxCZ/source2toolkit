@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/TOGGLE_STATE.h"
 
 class CBaseEntity;
+class IBaseToggle;
 
 class CBaseToggle : public CBaseModelEntity
 {
@@ -80,6 +81,13 @@ public:
     SCHEMA_FIELD(QAngle, m_vecFinalAngle);
     SCHEMA_FIELD(int32_t, m_movementType);
     SCHEMA_FIELD(CUtlSymbolLarge, m_sMaster);
+
+public:
+    IBaseToggle* ToInterface();
+    static IBaseToggle* FromOriginal(CBaseToggle* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASETOGGLE_H

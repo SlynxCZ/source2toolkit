@@ -55,11 +55,20 @@
 
 #include "CBodyComponentSkeletonInstance.h"
 
+class IBodyComponentBaseModelEntity;
+
 class CBodyComponentBaseModelEntity : public CBodyComponentSkeletonInstance
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentBaseModelEntity);
 
+
+public:
+    IBodyComponentBaseModelEntity* ToInterface();
+    static IBodyComponentBaseModelEntity* FromOriginal(CBodyComponentBaseModelEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBODYCOMPONENTBASEMODELENTITY_H

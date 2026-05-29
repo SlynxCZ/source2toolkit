@@ -56,6 +56,8 @@
 
 #include "CSoundOpvarSetPointEntity.h"
 
+class ISoundOpvarSetAABBEntity;
+
 class CSoundOpvarSetAABBEntity : public CSoundOpvarSetPointEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(Vector, m_vInnerMaxs);
     SCHEMA_FIELD(Vector, m_vOuterMins);
     SCHEMA_FIELD(Vector, m_vOuterMaxs);
+
+public:
+    ISoundOpvarSetAABBEntity* ToInterface();
+    static ISoundOpvarSetAABBEntity* FromOriginal(CSoundOpvarSetAABBEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETAABBENTITY_H

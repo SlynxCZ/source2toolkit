@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerSave;
+
 class CTriggerSave : public CBaseTrigger
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bForceNewLevelUnit);
     SCHEMA_FIELD(float, m_fDangerousTimer);
     SCHEMA_FIELD(int32_t, m_minHitPoints);
+
+public:
+    ITriggerSave* ToInterface();
+    static ITriggerSave* FromOriginal(CTriggerSave* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERSAVE_H

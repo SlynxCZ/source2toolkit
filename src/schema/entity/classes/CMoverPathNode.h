@@ -56,11 +56,20 @@
 
 #include "CPathNode.h"
 
+class IMoverPathNode;
+
 class CMoverPathNode : public CPathNode
 {
 public:
     DECLARE_SCHEMA_CLASS(CMoverPathNode);
 
+
+public:
+    IMoverPathNode* ToInterface();
+    static IMoverPathNode* FromOriginal(CMoverPathNode* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOVERPATHNODE_H

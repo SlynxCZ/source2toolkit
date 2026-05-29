@@ -56,6 +56,8 @@
 #include "CGameSceneNode.h"
 #include "CModelState.h"
 
+class ISkeletonInstance;
+
 class CSkeletonInstance : public CGameSceneNode
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_materialGroup);
     SCHEMA_FIELD(uint8_t, m_nHitboxSet);
     SCHEMA_FIELD(bool, m_bForceServerConstraintsEnabled);
+
+public:
+    ISkeletonInstance* ToInterface();
+    static ISkeletonInstance* FromOriginal(CSkeletonInstance* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSKELETONINSTANCE_H

@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CBaseEntity;
+class IParticleSystem;
 class InfoForResourceTypeIParticleSystemDefinition;
 
 class CParticleSystem : public CBaseModelEntity
@@ -86,6 +87,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecDataCPValue);
     SCHEMA_FIELD(int32_t, m_nTintCP);
     SCHEMA_FIELD(Color, m_clrTint);
+
+public:
+    IParticleSystem* ToInterface();
+    static IParticleSystem* FromOriginal(CParticleSystem* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPARTICLESYSTEM_H

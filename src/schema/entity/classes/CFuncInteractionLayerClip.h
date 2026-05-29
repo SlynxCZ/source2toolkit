@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncInteractionLayerClip;
+
 class CFuncInteractionLayerClip : public CBaseModelEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszInteractsAs);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszInteractsWith);
+
+public:
+    IFuncInteractionLayerClip* ToInterface();
+    static IFuncInteractionLayerClip* FromOriginal(CFuncInteractionLayerClip* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCINTERACTIONLAYERCLIP_H

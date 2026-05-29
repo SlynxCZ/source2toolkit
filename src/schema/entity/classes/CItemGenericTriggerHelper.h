@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CItemGeneric;
+class IItemGenericTriggerHelper;
 
 class CItemGenericTriggerHelper : public CBaseModelEntity
 {
@@ -64,6 +65,13 @@ public:
     DECLARE_SCHEMA_CLASS(CItemGenericTriggerHelper);
 
     SCHEMA_FIELD(CHandle<CItemGeneric>, m_hParentItem);
+
+public:
+    IItemGenericTriggerHelper* ToInterface();
+    static IItemGenericTriggerHelper* FromOriginal(CItemGenericTriggerHelper* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMGENERICTRIGGERHELPER_H

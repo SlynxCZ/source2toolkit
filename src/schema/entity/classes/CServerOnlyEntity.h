@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IServerOnlyEntity;
+
 class CServerOnlyEntity : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerOnlyEntity);
 
+
+public:
+    IServerOnlyEntity* ToInterface();
+    static IServerOnlyEntity* FromOriginal(CServerOnlyEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSERVERONLYENTITY_H

@@ -55,11 +55,20 @@
 
 #include "CAnimGraphControllerBase.h"
 
+class ICS2WeaponGraphController;
+
 class CCS2WeaponGraphController : public CAnimGraphControllerBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CCS2WeaponGraphController);
 
+
+public:
+    ICS2WeaponGraphController* ToInterface();
+    static ICS2WeaponGraphController* FromOriginal(CCS2WeaponGraphController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCS2WEAPONGRAPHCONTROLLER_H

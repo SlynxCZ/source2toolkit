@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIPhysicsMotionController;
+
 class IPhysicsMotionController
 {
 public:
     DECLARE_SCHEMA_CLASS(IPhysicsMotionController);
 
+
+public:
+    IIPhysicsMotionController* ToInterface();
+    static IIPhysicsMotionController* FromOriginal(IPhysicsMotionController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_IPHYSICSMOTIONCONTROLLER_H

@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicCompare;
+
 class CLogicCompare : public CLogicalEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(float, m_flInValue);
     SCHEMA_FIELD(float, m_flCompareValue);
+
+public:
+    ILogicCompare* ToInterface();
+    static ILogicCompare* FromOriginal(CLogicCompare* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICCOMPARE_H

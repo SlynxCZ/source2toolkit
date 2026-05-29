@@ -56,11 +56,20 @@
 
 #include "CDynamicProp.h"
 
+class IDynamicPropAlias_dynamic_prop;
+
 class CDynamicPropAlias_dynamic_prop : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_dynamic_prop);
 
+
+public:
+    IDynamicPropAlias_dynamic_prop* ToInterface();
+    static IDynamicPropAlias_dynamic_prop* FromOriginal(CDynamicPropAlias_dynamic_prop* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDYNAMICPROPALIAS_DYNAMIC_PROP_H

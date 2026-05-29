@@ -56,6 +56,8 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
+class IFlashbangProjectile;
+
 class CFlashbangProjectile : public CBaseCSGrenadeProjectile
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(float, m_flTimeToDetonate);
     SCHEMA_FIELD(uint8_t, m_numOpponentsHit);
     SCHEMA_FIELD(uint8_t, m_numTeammatesHit);
+
+public:
+    IFlashbangProjectile* ToInterface();
+    static IFlashbangProjectile* FromOriginal(CFlashbangProjectile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFLASHBANGPROJECTILE_H

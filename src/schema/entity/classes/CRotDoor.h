@@ -56,12 +56,21 @@
 
 #include "CBaseDoor.h"
 
+class IRotDoor;
+
 class CRotDoor : public CBaseDoor
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotDoor);
 
     SCHEMA_FIELD(bool, m_bSolidBsp);
+
+public:
+    IRotDoor* ToInterface();
+    static IRotDoor* FromOriginal(CRotDoor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CROTDOOR_H

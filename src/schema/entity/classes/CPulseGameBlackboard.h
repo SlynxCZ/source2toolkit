@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IPulseGameBlackboard;
+
 class CPulseGameBlackboard : public CBaseEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlString, m_strGraphName);
     SCHEMA_FIELD(CUtlString, m_strStateBlob);
+
+public:
+    IPulseGameBlackboard* ToInterface();
+    static IPulseGameBlackboard* FromOriginal(CPulseGameBlackboard* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPULSEGAMEBLACKBOARD_H

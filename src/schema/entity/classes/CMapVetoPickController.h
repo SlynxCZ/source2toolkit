@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IMapVetoPickController;
+
 class CMapVetoPickController : public CBaseEntity
 {
 public:
@@ -80,6 +82,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nCurrentPhase);
     SCHEMA_FIELD(int32_t, m_nPhaseStartTick);
     SCHEMA_FIELD(int32_t, m_nPhaseDurationTicks);
+
+public:
+    IMapVetoPickController* ToInterface();
+    static IMapVetoPickController* FromOriginal(CMapVetoPickController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMAPVETOPICKCONTROLLER_H

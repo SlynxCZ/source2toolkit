@@ -56,12 +56,21 @@
 
 #include "CBaseModelEntity.h"
 
+class IRuleEntity;
+
 class CRuleEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRuleEntity);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMaster);
+
+public:
+    IRuleEntity* ToInterface();
+    static IRuleEntity* FromOriginal(CRuleEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRULEENTITY_H

@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ISoundOpvarSetPointBase;
+
 class CSoundOpvarSetPointBase : public CBaseEntity
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iOpvarIndex);
     SCHEMA_FIELD(bool, m_bUseAutoCompare);
     SCHEMA_FIELD(bool, m_bFastRefresh);
+
+public:
+    ISoundOpvarSetPointBase* ToInterface();
+    static ISoundOpvarSetPointBase* FromOriginal(CSoundOpvarSetPointBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTBASE_H

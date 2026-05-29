@@ -55,12 +55,21 @@
 
 #include "ExternalAnimGraphHandle_t.h"
 
+class IAnimGraphControllerBase;
+
 class CAnimGraphControllerBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CAnimGraphControllerBase);
 
     SCHEMA_FIELD(ExternalAnimGraphHandle_t, m_hExternalGraph);
+
+public:
+    IAnimGraphControllerBase* ToInterface();
+    static IAnimGraphControllerBase* FromOriginal(CAnimGraphControllerBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CANIMGRAPHCONTROLLERBASE_H

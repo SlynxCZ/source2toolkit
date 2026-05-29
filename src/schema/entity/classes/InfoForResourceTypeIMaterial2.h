@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeIMaterial2;
+
 class InfoForResourceTypeIMaterial2
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeIMaterial2);
 
+
+public:
+    IInfoForResourceTypeIMaterial2* ToInterface();
+    static IInfoForResourceTypeIMaterial2* FromOriginal(InfoForResourceTypeIMaterial2* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPEIMATERIAL2_H

@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class IDynamicLight;
+
 class CDynamicLight : public CBaseModelEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(float, m_InnerAngle);
     SCHEMA_FIELD(float, m_OuterAngle);
     SCHEMA_FIELD(float, m_SpotRadius);
+
+public:
+    IDynamicLight* ToInterface();
+    static IDynamicLight* FromOriginal(CDynamicLight* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDYNAMICLIGHT_H

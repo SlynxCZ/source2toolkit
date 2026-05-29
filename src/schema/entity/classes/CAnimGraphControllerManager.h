@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CAnimGraphControllerBase;
+class IAnimGraphControllerManager;
 
 class CAnimGraphControllerManager
 {
@@ -62,6 +63,13 @@ public:
 
     SCHEMA_FIELD(CUtlVector<CAnimGraphControllerBase*>, m_controllers);
     SCHEMA_FIELD(bool, m_bGraphBindingsCreated);
+
+public:
+    IAnimGraphControllerManager* ToInterface();
+    static IAnimGraphControllerManager* FromOriginal(CAnimGraphControllerManager* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CANIMGRAPHCONTROLLERMANAGER_H

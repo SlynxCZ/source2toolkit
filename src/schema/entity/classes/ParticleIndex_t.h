@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IParticleIndex_t;
+
 class ParticleIndex_t
 {
 public:
     DECLARE_SCHEMA_CLASS(ParticleIndex_t);
 
     SCHEMA_FIELD(int32_t, m_Value);
+
+public:
+    IParticleIndex_t* ToInterface();
+    static IParticleIndex_t* FromOriginal(ParticleIndex_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_PARTICLEINDEX_T_H

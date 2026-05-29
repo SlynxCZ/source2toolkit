@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IInfoLadderDismount;
+
 class CInfoLadderDismount : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoLadderDismount);
 
+
+public:
+    IInfoLadderDismount* ToInterface();
+    static IInfoLadderDismount* FromOriginal(CInfoLadderDismount* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOLADDERDISMOUNT_H

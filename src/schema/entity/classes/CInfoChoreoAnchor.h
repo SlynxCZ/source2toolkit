@@ -57,6 +57,8 @@
 #include "CInfoChoreoAnchorPosition.h"
 #include "CPointEntity.h"
 
+class IInfoChoreoAnchor;
+
 class CInfoChoreoAnchor : public CPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CUtlVector<CInfoChoreoAnchorPosition>, m_vecTargetEntries);
     SCHEMA_FIELD(CUtlVector<CInfoChoreoAnchorPosition>, m_vecTargetWarps);
+
+public:
+    IInfoChoreoAnchor* ToInterface();
+    static IInfoChoreoAnchor* FromOriginal(CInfoChoreoAnchor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOCHOREOANCHOR_H

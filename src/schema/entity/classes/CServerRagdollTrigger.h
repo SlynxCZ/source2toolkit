@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class IServerRagdollTrigger;
+
 class CServerRagdollTrigger : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CServerRagdollTrigger);
 
+
+public:
+    IServerRagdollTrigger* ToInterface();
+    static IServerRagdollTrigger* FromOriginal(CServerRagdollTrigger* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSERVERRAGDOLLTRIGGER_H

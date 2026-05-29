@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IServerAuthoritativeWeaponSlot_t;
+
 class ServerAuthoritativeWeaponSlot_t
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(uint16_t, unClass);
     SCHEMA_FIELD(uint16_t, unSlot);
     SCHEMA_FIELD(uint16_t, unItemDefIdx);
+
+public:
+    IServerAuthoritativeWeaponSlot_t* ToInterface();
+    static IServerAuthoritativeWeaponSlot_t* FromOriginal(ServerAuthoritativeWeaponSlot_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SERVERAUTHORITATIVEWEAPONSLOT_T_H

@@ -55,11 +55,20 @@
 
 #include "CPlayerPawnComponent.h"
 
+class IPlayer_WaterServices;
+
 class CPlayer_WaterServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_WaterServices);
 
+
+public:
+    IPlayer_WaterServices* ToInterface();
+    static IPlayer_WaterServices* FromOriginal(CPlayer_WaterServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_WATERSERVICES_H

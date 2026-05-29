@@ -56,11 +56,20 @@
 
 #include "CModelPointEntity.h"
 
+class IShower;
+
 class CShower : public CModelPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CShower);
 
+
+public:
+    IShower* ToInterface();
+    static IShower* FromOriginal(CShower* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSHOWER_H

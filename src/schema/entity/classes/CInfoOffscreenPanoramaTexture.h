@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseModelEntity;
+class IInfoOffscreenPanoramaTexture;
 
 class CInfoOffscreenPanoramaTexture : public CPointEntity
 {
@@ -74,6 +75,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CUtlSymbolLarge>, m_vecCSSClasses);
     SCHEMA_FIELD(CUtlSymbolLarge, m_szTargetsName);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseModelEntity>>, m_AdditionalTargetEntities);
+
+public:
+    IInfoOffscreenPanoramaTexture* ToInterface();
+    static IInfoOffscreenPanoramaTexture* FromOriginal(CInfoOffscreenPanoramaTexture* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOOFFSCREENPANORAMATEXTURE_H

@@ -55,6 +55,8 @@
 
 #include "source2toolkit/schema/entity/enums/CInfoChoreoLocatorShapeType_t.h"
 
+class IInfoChoreoAnchorPosition;
+
 class CInfoChoreoAnchorPosition
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(Vector, m_vExtentsMax);
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(CInfoChoreoLocatorShapeType_t, m_nShapeType);
+
+public:
+    IInfoChoreoAnchorPosition* ToInterface();
+    static IInfoChoreoAnchorPosition* FromOriginal(CInfoChoreoAnchorPosition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOCHOREOANCHORPOSITION_H

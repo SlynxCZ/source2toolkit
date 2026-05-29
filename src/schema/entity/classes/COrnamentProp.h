@@ -56,12 +56,21 @@
 
 #include "CDynamicProp.h"
 
+class IOrnamentProp;
+
 class COrnamentProp : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(COrnamentProp);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_initialOwner);
+
+public:
+    IOrnamentProp* ToInterface();
+    static IOrnamentProp* FromOriginal(COrnamentProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CORNAMENTPROP_H

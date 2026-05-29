@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISceneOpportunityHandle_t;
+
 class SceneOpportunityHandle_t
 {
 public:
     DECLARE_SCHEMA_CLASS(SceneOpportunityHandle_t);
 
     SCHEMA_FIELD(int32_t, m_Value);
+
+public:
+    ISceneOpportunityHandle_t* ToInterface();
+    static ISceneOpportunityHandle_t* FromOriginal(SceneOpportunityHandle_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SCENEOPPORTUNITYHANDLE_T_H

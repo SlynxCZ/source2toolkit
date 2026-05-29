@@ -57,6 +57,8 @@
 #include "CSMatchStats_t.h"
 #include "CSPerRoundStats_t.h"
 
+class ICSPlayerController_ActionTrackingServices;
+
 class CCSPlayerController_ActionTrackingServices : public CPlayerControllerComponent
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iNumRoundKills);
     SCHEMA_FIELD(int32_t, m_iNumRoundKillsHeadshots);
     SCHEMA_FIELD(float, m_flTotalRoundDamageDealt);
+
+public:
+    ICSPlayerController_ActionTrackingServices* ToInterface();
+    static ICSPlayerController_ActionTrackingServices* FromOriginal(CCSPlayerController_ActionTrackingServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_ACTIONTRACKINGSERVICES_H

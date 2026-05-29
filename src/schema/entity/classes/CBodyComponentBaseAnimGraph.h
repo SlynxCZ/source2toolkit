@@ -56,12 +56,21 @@
 #include "CBaseAnimGraphController.h"
 #include "CBodyComponentSkeletonInstance.h"
 
+class IBodyComponentBaseAnimGraph;
+
 class CBodyComponentBaseAnimGraph : public CBodyComponentSkeletonInstance
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentBaseAnimGraph);
 
     SCHEMA_FIELD(CBaseAnimGraphController, m_animationController);
+
+public:
+    IBodyComponentBaseAnimGraph* ToInterface();
+    static IBodyComponentBaseAnimGraph* FromOriginal(CBodyComponentBaseAnimGraph* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBODYCOMPONENTBASEANIMGRAPH_H

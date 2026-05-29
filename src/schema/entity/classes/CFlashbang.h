@@ -56,11 +56,20 @@
 
 #include "CBaseCSGrenade.h"
 
+class IFlashbang;
+
 class CFlashbang : public CBaseCSGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CFlashbang);
 
+
+public:
+    IFlashbang* ToInterface();
+    static IFlashbang* FromOriginal(CFlashbang* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFLASHBANG_H

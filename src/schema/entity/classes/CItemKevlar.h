@@ -56,11 +56,20 @@
 
 #include "CItem.h"
 
+class IItemKevlar;
+
 class CItemKevlar : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemKevlar);
 
+
+public:
+    IItemKevlar* ToInterface();
+    static IItemKevlar* FromOriginal(CItemKevlar* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMKEVLAR_H

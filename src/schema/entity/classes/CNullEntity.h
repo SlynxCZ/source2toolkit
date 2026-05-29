@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class INullEntity;
+
 class CNullEntity : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CNullEntity);
 
+
+public:
+    INullEntity* ToInterface();
+    static INullEntity* FromOriginal(CNullEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNULLENTITY_H

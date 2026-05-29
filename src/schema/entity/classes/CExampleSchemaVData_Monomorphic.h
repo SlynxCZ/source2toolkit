@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IExampleSchemaVData_Monomorphic;
+
 class CExampleSchemaVData_Monomorphic
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(int32_t, m_nExample1);
     SCHEMA_FIELD(int32_t, m_nExample2);
+
+public:
+    IExampleSchemaVData_Monomorphic* ToInterface();
+    static IExampleSchemaVData_Monomorphic* FromOriginal(CExampleSchemaVData_Monomorphic* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_MONOMORPHIC_H

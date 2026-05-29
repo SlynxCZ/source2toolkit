@@ -56,12 +56,21 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerRemove;
+
 class CTriggerRemove : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerRemove);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnRemove);
+
+public:
+    ITriggerRemove* ToInterface();
+    static ITriggerRemove* FromOriginal(CTriggerRemove* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERREMOVE_H

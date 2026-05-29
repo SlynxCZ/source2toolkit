@@ -56,12 +56,21 @@
 
 #include "CPointEntity.h"
 
+class IEnvHudHint;
+
 class CEnvHudHint : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvHudHint);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMessage);
+
+public:
+    IEnvHudHint* ToInterface();
+    static IEnvHudHint* FromOriginal(CEnvHudHint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVHUDHINT_H

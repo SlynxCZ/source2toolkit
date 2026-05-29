@@ -55,11 +55,20 @@
 
 #include "CPlayerPawnComponent.h"
 
+class IPlayer_AutoaimServices;
+
 class CPlayer_AutoaimServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_AutoaimServices);
 
+
+public:
+    IPlayer_AutoaimServices* ToInterface();
+    static IPlayer_AutoaimServices* FromOriginal(CPlayer_AutoaimServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_AUTOAIMSERVICES_H

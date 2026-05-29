@@ -56,6 +56,8 @@
 
 #include "CLogicAutosave.h"
 
+class ILogicActiveAutosave;
+
 class CLogicActiveAutosave : public CLogicAutosave
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_flTimeToTrigger);
     SCHEMA_FIELD(float, m_flStartTime);
     SCHEMA_FIELD(float, m_flDangerousTime);
+
+public:
+    ILogicActiveAutosave* ToInterface();
+    static ILogicActiveAutosave* FromOriginal(CLogicActiveAutosave* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICACTIVEAUTOSAVE_H

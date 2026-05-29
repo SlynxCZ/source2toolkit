@@ -57,6 +57,8 @@
 #include "CBaseCSGrenadeProjectile.h"
 #include "IntervalTimer.h"
 
+class IMolotovProjectile;
+
 class CMolotovProjectile : public CBaseCSGrenadeProjectile
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(bool, m_bIsIncGrenade);
     SCHEMA_FIELD(bool, m_bDetonated);
     SCHEMA_FIELD(IntervalTimer, m_stillTimer);
+
+public:
+    IMolotovProjectile* ToInterface();
+    static IMolotovProjectile* FromOriginal(CMolotovProjectile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOLOTOVPROJECTILE_H

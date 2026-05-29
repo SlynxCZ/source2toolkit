@@ -56,11 +56,20 @@
 
 #include "CSoundOpvarSetAABBEntity.h"
 
+class ISoundOpvarSetOBBEntity;
+
 class CSoundOpvarSetOBBEntity : public CSoundOpvarSetAABBEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundOpvarSetOBBEntity);
 
+
+public:
+    ISoundOpvarSetOBBEntity* ToInterface();
+    static ISoundOpvarSetOBBEntity* FromOriginal(CSoundOpvarSetOBBEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETOBBENTITY_H

@@ -55,12 +55,21 @@
 
 #include "source2toolkit/schema/entity/enums/MoodType_t.h"
 
+class IMoodVData;
+
 class CMoodVData
 {
 public:
     DECLARE_SCHEMA_CLASS(CMoodVData);
 
     SCHEMA_FIELD(MoodType_t, m_nMoodType);
+
+public:
+    IMoodVData* ToInterface();
+    static IMoodVData* FromOriginal(CMoodVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOODVDATA_H

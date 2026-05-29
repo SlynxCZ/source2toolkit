@@ -56,6 +56,7 @@
 
 #include "CBaseGrenade.h"
 
+class IBaseCSGrenadeProjectile;
 class InfoForResourceTypeIParticleSystemDefinition;
 
 class CBaseCSGrenadeProjectile : public CBaseGrenade
@@ -79,6 +80,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecLastHitSurfaceNormal);
     SCHEMA_FIELD(int32_t, m_nTicksAtZeroVelocity);
     SCHEMA_FIELD(bool, m_bHasEverHitEnemy);
+
+public:
+    IBaseCSGrenadeProjectile* ToInterface();
+    static IBaseCSGrenadeProjectile* FromOriginal(CBaseCSGrenadeProjectile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASECSGRENADEPROJECTILE_H

@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIPhysicsRagdollControl;
+
 class IPhysicsRagdollControl
 {
 public:
     DECLARE_SCHEMA_CLASS(IPhysicsRagdollControl);
 
+
+public:
+    IIPhysicsRagdollControl* ToInterface();
+    static IIPhysicsRagdollControl* FromOriginal(IPhysicsRagdollControl* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_IPHYSICSRAGDOLLCONTROL_H

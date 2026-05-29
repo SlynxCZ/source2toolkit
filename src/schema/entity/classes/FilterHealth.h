@@ -56,6 +56,8 @@
 
 #include "CBaseFilter.h"
 
+class IFilterHealth;
+
 class FilterHealth : public CBaseFilter
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(bool, m_bAdrenalineActive);
     SCHEMA_FIELD(int32_t, m_iHealthMin);
     SCHEMA_FIELD(int32_t, m_iHealthMax);
+
+public:
+    IFilterHealth* ToInterface();
+    static IFilterHealth* FromOriginal(FilterHealth* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_FILTERHEALTH_H

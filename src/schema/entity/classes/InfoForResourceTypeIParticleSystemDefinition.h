@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeIParticleSystemDefinition;
+
 class InfoForResourceTypeIParticleSystemDefinition
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeIParticleSystemDefinition);
 
+
+public:
+    IInfoForResourceTypeIParticleSystemDefinition* ToInterface();
+    static IInfoForResourceTypeIParticleSystemDefinition* FromOriginal(InfoForResourceTypeIParticleSystemDefinition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPEIPARTICLESYSTEMDEFINITION_H

@@ -58,6 +58,7 @@
 #include "dynpitchvol_t.h"
 
 class CBaseEntity;
+class IAmbientGeneric;
 
 class CAmbientGeneric : public CPointEntity
 {
@@ -74,6 +75,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_sSourceEntName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hSoundSource);
     SCHEMA_FIELD(CEntityIndex, m_nSoundSourceEntIndex);
+
+public:
+    IAmbientGeneric* ToInterface();
+    static IAmbientGeneric* FromOriginal(CAmbientGeneric* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CAMBIENTGENERIC_H

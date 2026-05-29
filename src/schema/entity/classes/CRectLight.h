@@ -56,12 +56,21 @@
 
 #include "CBarnLight.h"
 
+class IRectLight;
+
 class CRectLight : public CBarnLight
 {
 public:
     DECLARE_SCHEMA_CLASS(CRectLight);
 
     SCHEMA_FIELD(bool, m_bShowLight);
+
+public:
+    IRectLight* ToInterface();
+    static IRectLight* FromOriginal(CRectLight* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRECTLIGHT_H

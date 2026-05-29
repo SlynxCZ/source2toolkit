@@ -56,12 +56,21 @@
 
 #include "CPointEntity.h"
 
+class IEnvSplash;
+
 class CEnvSplash : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSplash);
 
     SCHEMA_FIELD(float, m_flScale);
+
+public:
+    IEnvSplash* ToInterface();
+    static IEnvSplash* FromOriginal(CEnvSplash* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSPLASH_H

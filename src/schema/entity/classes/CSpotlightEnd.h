@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class ISpotlightEnd;
+
 class CSpotlightEnd : public CBaseModelEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(Vector, m_vSpotlightDir);
     SCHEMA_FIELD(Vector, m_vSpotlightOrg);
+
+public:
+    ISpotlightEnd* ToInterface();
+    static ISpotlightEnd* FromOriginal(CSpotlightEnd* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSPOTLIGHTEND_H

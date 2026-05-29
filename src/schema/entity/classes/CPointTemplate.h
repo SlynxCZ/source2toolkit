@@ -58,6 +58,8 @@
 #include "source2toolkit/schema/entity/enums/PointTemplateClientOnlyEntityBehavior_t.h"
 #include "source2toolkit/schema/entity/enums/PointTemplateOwnerSpawnGroupType_t.h"
 
+class IPointTemplate;
+
 class CPointTemplate : public CLogicalEntity
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(PointTemplateOwnerSpawnGroupType_t, m_ownerSpawnGroupType);
     SCHEMA_FIELD(CUtlVector<uint32_t>, m_createdSpawnGroupHandles);
     SCHEMA_FIELD(CUtlVector<CEntityHandle>, m_SpawnedEntityHandles);
+
+public:
+    IPointTemplate* ToInterface();
+    static IPointTemplate* FromOriginal(CPointTemplate* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTTEMPLATE_H

@@ -56,11 +56,20 @@
 
 #include "CLightEntity.h"
 
+class ILightOrthoEntity;
+
 class CLightOrthoEntity : public CLightEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightOrthoEntity);
 
+
+public:
+    ILightOrthoEntity* ToInterface();
+    static ILightOrthoEntity* FromOriginal(CLightOrthoEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLIGHTORTHOENTITY_H

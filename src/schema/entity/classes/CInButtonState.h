@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInButtonState;
+
 class CInButtonState
 {
 public:
     DECLARE_SCHEMA_CLASS(CInButtonState);
 
     SCHEMA_FIELD_POINTER(uint64_t, m_pButtonStates);
+
+public:
+    IInButtonState* ToInterface();
+    static IInButtonState* FromOriginal(CInButtonState* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINBUTTONSTATE_H

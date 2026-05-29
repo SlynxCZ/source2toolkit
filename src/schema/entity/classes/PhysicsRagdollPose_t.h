@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CBaseEntity;
+class IPhysicsRagdollPose_t;
 
 class PhysicsRagdollPose_t
 {
@@ -63,6 +64,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CTransform>, m_Transforms);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOwner);
     SCHEMA_FIELD(bool, m_bSetFromDebugHistory);
+
+public:
+    IPhysicsRagdollPose_t* ToInterface();
+    static IPhysicsRagdollPose_t* FromOriginal(PhysicsRagdollPose_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_PHYSICSRAGDOLLPOSE_T_H

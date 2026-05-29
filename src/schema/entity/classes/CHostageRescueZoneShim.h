@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class IHostageRescueZoneShim;
+
 class CHostageRescueZoneShim : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageRescueZoneShim);
 
+
+public:
+    IHostageRescueZoneShim* ToInterface();
+    static IHostageRescueZoneShim* FromOriginal(CHostageRescueZoneShim* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHOSTAGERESCUEZONESHIM_H

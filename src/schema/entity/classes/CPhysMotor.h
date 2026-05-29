@@ -58,6 +58,7 @@
 #include "CMotorController.h"
 
 class CBaseEntity;
+class IPhysMotor;
 class IPhysicsBody;
 class IPhysicsJoint;
 
@@ -81,6 +82,13 @@ public:
     SCHEMA_FIELD(IPhysicsBody*, m_pFixedWorldBody);
     SCHEMA_FIELD(IPhysicsJoint*, m_pMotorJoint);
     SCHEMA_FIELD(CMotorController, m_motor);
+
+public:
+    IPhysMotor* ToInterface();
+    static IPhysMotor* FromOriginal(CPhysMotor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSMOTOR_H

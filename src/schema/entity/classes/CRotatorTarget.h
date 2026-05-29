@@ -57,6 +57,8 @@
 #include "CPointEntity.h"
 #include "source2toolkit/schema/entity/enums/RotatorTargetSpace_t.h"
 
+class IRotatorTarget;
+
 class CRotatorTarget : public CPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnArrivedAt);
     SCHEMA_FIELD(RotatorTargetSpace_t, m_eSpace);
+
+public:
+    IRotatorTarget* ToInterface();
+    static IRotatorTarget* FromOriginal(CRotatorTarget* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CROTATORTARGET_H

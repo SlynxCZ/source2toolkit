@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IPathCorner;
+
 class CPathCorner : public CPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(float, m_flWait);
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPass);
+
+public:
+    IPathCorner* ToInterface();
+    static IPathCorner* FromOriginal(CPathCorner* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHCORNER_H

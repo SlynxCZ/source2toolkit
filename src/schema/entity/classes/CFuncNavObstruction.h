@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncNavObstruction;
+
 class CFuncNavObstruction : public CBaseModelEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(bool, m_bUseAsyncObstacleUpdate);
+
+public:
+    IFuncNavObstruction* ToInterface();
+    static IFuncNavObstruction* FromOriginal(CFuncNavObstruction* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCNAVOBSTRUCTION_H

@@ -42,15 +42,13 @@
 
 #include "source2toolkit/schema/entity/classes/ICSGameRules.h"
 #include "schema/entity/classes/CCSGameRules.h"
+#include "CTeamplayRulesImpl.h"
 
-class CCSGameRulesImpl : public virtual ICSGameRules
+class CCSGameRulesImpl : public CTeamplayRulesImpl, public ICSGameRules
 {
 
-protected:
-    void* m_pReal;
-
 public:
-    explicit CCSGameRulesImpl(void* p) : m_pReal(p) {}
+    explicit CCSGameRulesImpl(CCSGameRules* p) : CTeamplayRulesImpl(p) {}
 
 private:
     CCSGameRules* Real() { return static_cast<CCSGameRules*>(m_pReal); }

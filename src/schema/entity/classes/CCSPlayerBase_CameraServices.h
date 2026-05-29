@@ -56,6 +56,7 @@
 #include "CPlayer_CameraServices.h"
 
 class CBaseEntity;
+class ICSPlayerBase_CameraServices;
 
 class CCSPlayerBase_CameraServices : public CPlayer_CameraServices
 {
@@ -69,6 +70,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hZoomOwner);
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_hTriggerFogList);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLastFogTrigger);
+
+public:
+    ICSPlayerBase_CameraServices* ToInterface();
+    static ICSPlayerBase_CameraServices* FromOriginal(CCSPlayerBase_CameraServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERBASE_CAMERASERVICES_H

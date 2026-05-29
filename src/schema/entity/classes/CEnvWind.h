@@ -57,12 +57,21 @@
 #include "CBaseEntity.h"
 #include "CEnvWindShared.h"
 
+class IEnvWind;
+
 class CEnvWind : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvWind);
 
     SCHEMA_FIELD(CEnvWindShared, m_EnvWindShared);
+
+public:
+    IEnvWind* ToInterface();
+    static IEnvWind* FromOriginal(CEnvWind* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVWIND_H

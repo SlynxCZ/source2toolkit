@@ -56,11 +56,20 @@
 
 #include "CRulePointEntity.h"
 
+class IGamePlayerEquip;
+
 class CGamePlayerEquip : public CRulePointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGamePlayerEquip);
 
+
+public:
+    IGamePlayerEquip* ToInterface();
+    static IGamePlayerEquip* FromOriginal(CGamePlayerEquip* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMEPLAYEREQUIP_H

@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IHandleTest;
+
 class CHandleTest : public CBaseEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_Handle);
     SCHEMA_FIELD(bool, m_bSendHandle);
+
+public:
+    IHandleTest* ToInterface();
+    static IHandleTest* FromOriginal(CHandleTest* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHANDLETEST_H

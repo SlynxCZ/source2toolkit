@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IPointCamera;
+
 class CPointCamera : public CBaseEntity
 {
 public:
@@ -87,6 +89,13 @@ public:
     SCHEMA_FIELD(float, m_DegreesPerSecond);
     SCHEMA_FIELD(bool, m_bIsOn);
     SCHEMA_FIELD(CPointCamera*, m_pNext);
+
+public:
+    IPointCamera* ToInterface();
+    static IPointCamera* FromOriginal(CPointCamera* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCAMERA_H

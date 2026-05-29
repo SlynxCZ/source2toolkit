@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IGameRulesProxy;
+
 class CGameRulesProxy : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameRulesProxy);
 
+
+public:
+    IGameRulesProxy* ToInterface();
+    static IGameRulesProxy* FromOriginal(CGameRulesProxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMERULESPROXY_H

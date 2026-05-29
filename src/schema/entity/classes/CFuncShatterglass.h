@@ -56,6 +56,7 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncShatterglass;
 class InfoForResourceTypeIMaterial2;
 
 class CFuncShatterglass : public CBaseModelEntity
@@ -89,6 +90,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnBroken);
     SCHEMA_FIELD(uint8_t, m_iSurfaceType);
     SCHEMA_FIELD(CStrongHandle<InfoForResourceTypeIMaterial2>, m_hMaterialDamageBase);
+
+public:
+    IFuncShatterglass* ToInterface();
+    static IFuncShatterglass* FromOriginal(CFuncShatterglass* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCSHATTERGLASS_H

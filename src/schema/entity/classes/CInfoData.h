@@ -56,11 +56,20 @@
 
 #include "CServerOnlyEntity.h"
 
+class IInfoData;
+
 class CInfoData : public CServerOnlyEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoData);
 
+
+public:
+    IInfoData* ToInterface();
+    static IInfoData* FromOriginal(CInfoData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFODATA_H

@@ -56,11 +56,20 @@
 
 #include "CEnvCubemap.h"
 
+class IEnvCubemapBox;
+
 class CEnvCubemapBox : public CEnvCubemap
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvCubemapBox);
 
+
+public:
+    IEnvCubemapBox* ToInterface();
+    static IEnvCubemapBox* FromOriginal(CEnvCubemapBox* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVCUBEMAPBOX_H

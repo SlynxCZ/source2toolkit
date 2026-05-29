@@ -62,6 +62,7 @@
 #include "source2toolkit/schema/entity/enums/ValueRemapperRatchetType_t.h"
 
 class CBasePlayerPawn;
+class IPointValueRemapper;
 
 class CPointValueRemapper : public CBaseEntity
 {
@@ -110,6 +111,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnReachedValueCustom);
     SCHEMA_FIELD(CEntityIOOutput, m_OnEngage);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDisengage);
+
+public:
+    IPointValueRemapper* ToInterface();
+    static IPointValueRemapper* FromOriginal(CPointValueRemapper* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTVALUEREMAPPER_H

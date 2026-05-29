@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INetworkViewOffsetVector;
+
 class CNetworkViewOffsetVector
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(float, m_vecX);
     SCHEMA_FIELD(float, m_vecY);
     SCHEMA_FIELD(float, m_vecZ);
+
+public:
+    INetworkViewOffsetVector* ToInterface();
+    static INetworkViewOffsetVector* FromOriginal(CNetworkViewOffsetVector* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNETWORKVIEWOFFSETVECTOR_H

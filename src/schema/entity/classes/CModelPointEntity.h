@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IModelPointEntity;
+
 class CModelPointEntity : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CModelPointEntity);
 
+
+public:
+    IModelPointEntity* ToInterface();
+    static IModelPointEntity* FromOriginal(CModelPointEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMODELPOINTENTITY_H

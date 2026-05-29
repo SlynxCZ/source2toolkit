@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IVelocitySampler;
+
 class VelocitySampler
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(Vector, m_prevSample);
     SCHEMA_FIELD(float, m_fPrevSampleTime);
     SCHEMA_FIELD(float, m_fIdealSampleRate);
+
+public:
+    IVelocitySampler* ToInterface();
+    static IVelocitySampler* FromOriginal(VelocitySampler* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_VELOCITYSAMPLER_H

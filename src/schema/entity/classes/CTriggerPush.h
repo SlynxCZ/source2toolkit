@@ -57,6 +57,7 @@
 #include "CBaseTrigger.h"
 
 class CPathSimple;
+class ITriggerPush;
 
 class CTriggerPush : public CBaseTrigger
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathSimpleName);
     SCHEMA_FIELD(CHandle<CPathSimple>, m_PathSimple);
     SCHEMA_FIELD(uint32_t, m_splinePushType);
+
+public:
+    ITriggerPush* ToInterface();
+    static ITriggerPush* FromOriginal(CTriggerPush* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERPUSH_H

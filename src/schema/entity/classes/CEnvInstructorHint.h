@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IEnvInstructorHint;
+
 class CEnvInstructorHint : public CPointEntity
 {
 public:
@@ -85,6 +87,13 @@ public:
     SCHEMA_FIELD(bool, m_bAllowNoDrawTarget);
     SCHEMA_FIELD(bool, m_bAutoStart);
     SCHEMA_FIELD(bool, m_bLocalPlayerOnly);
+
+public:
+    IEnvInstructorHint* ToInterface();
+    static IEnvInstructorHint* FromOriginal(CEnvInstructorHint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVINSTRUCTORHINT_H

@@ -56,12 +56,21 @@
 #include "CBodyComponent.h"
 #include "CGameSceneNode.h"
 
+class IBodyComponentPoint;
+
 class CBodyComponentPoint : public CBodyComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CBodyComponentPoint);
 
     SCHEMA_FIELD(CGameSceneNode, m_sceneNode);
+
+public:
+    IBodyComponentPoint* ToInterface();
+    static IBodyComponentPoint* FromOriginal(CBodyComponentPoint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBODYCOMPONENTPOINT_H

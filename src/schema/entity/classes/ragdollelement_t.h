@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Iragdollelement_t;
+
 class ragdollelement_t
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(int32_t, parentIndex);
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(int32_t, m_nHeight);
+
+public:
+    Iragdollelement_t* ToInterface();
+    static Iragdollelement_t* FromOriginal(ragdollelement_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RAGDOLLELEMENT_T_H

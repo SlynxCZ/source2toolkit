@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/Touch_t.h"
 
 class CBaseEntity;
+class IEnvBeam;
 class InfoForResourceTypeIMaterial2;
 
 class CEnvBeam : public CBeam
@@ -84,6 +85,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hFilter);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszDecal);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTouchedByEntity);
+
+public:
+    IEnvBeam* ToInterface();
+    static IEnvBeam* FromOriginal(CEnvBeam* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVBEAM_H

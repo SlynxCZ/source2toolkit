@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ITonemapController2;
+
 class CTonemapController2 : public CBaseEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(float, m_flExposureAdaptationSpeedUp);
     SCHEMA_FIELD(float, m_flExposureAdaptationSpeedDown);
     SCHEMA_FIELD(float, m_flTonemapEVSmoothingRange);
+
+public:
+    ITonemapController2* ToInterface();
+    static ITonemapController2* FromOriginal(CTonemapController2* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTONEMAPCONTROLLER2_H

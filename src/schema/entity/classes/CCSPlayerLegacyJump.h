@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ICSPlayerLegacyJump;
+
 class CCSPlayerLegacyJump
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bOldJumpPressed);
     SCHEMA_FIELD(float, m_flJumpPressedTime);
+
+public:
+    ICSPlayerLegacyJump* ToInterface();
+    static ICSPlayerLegacyJump* FromOriginal(CCSPlayerLegacyJump* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERLEGACYJUMP_H

@@ -56,11 +56,20 @@
 
 #include "CRopeKeyframe.h"
 
+class IRopeKeyframeAlias_move_rope;
+
 class CRopeKeyframeAlias_move_rope : public CRopeKeyframe
 {
 public:
     DECLARE_SCHEMA_CLASS(CRopeKeyframeAlias_move_rope);
 
+
+public:
+    IRopeKeyframeAlias_move_rope* ToInterface();
+    static IRopeKeyframeAlias_move_rope* FromOriginal(CRopeKeyframeAlias_move_rope* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CROPEKEYFRAMEALIAS_MOVE_ROPE_H

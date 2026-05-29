@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IExternalAnimGraphHandle_t;
+
 class ExternalAnimGraphHandle_t
 {
 public:
     DECLARE_SCHEMA_CLASS(ExternalAnimGraphHandle_t);
 
     SCHEMA_FIELD(uint32_t, m_Value);
+
+public:
+    IExternalAnimGraphHandle_t* ToInterface();
+    static IExternalAnimGraphHandle_t* FromOriginal(ExternalAnimGraphHandle_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_EXTERNALANIMGRAPHHANDLE_T_H

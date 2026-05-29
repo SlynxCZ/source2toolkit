@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IPathKeyFrame;
+
 class CPathKeyFrame : public CLogicalEntity
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(CHandle<CPathKeyFrame>, m_pNextKey);
     SCHEMA_FIELD(CHandle<CPathKeyFrame>, m_pPrevKey);
     SCHEMA_FIELD(float, m_flMoveSpeed);
+
+public:
+    IPathKeyFrame* ToInterface();
+    static IPathKeyFrame* FromOriginal(CPathKeyFrame* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHKEYFRAME_H

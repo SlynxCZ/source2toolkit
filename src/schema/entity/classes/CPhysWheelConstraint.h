@@ -57,6 +57,7 @@
 #include "CPhysConstraint.h"
 
 class CBaseEntity;
+class IPhysWheelConstraint;
 
 class CPhysWheelConstraint : public CPhysConstraint
 {
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(float, m_flSteeringAxisFriction);
     SCHEMA_FIELD(float, m_flSpinAxisFriction);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hSteeringMimicsEntity);
+
+public:
+    IPhysWheelConstraint* ToInterface();
+    static IPhysWheelConstraint* FromOriginal(CPhysWheelConstraint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSWHEELCONSTRAINT_H

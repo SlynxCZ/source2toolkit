@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ICSPlayerModernJump;
+
 class CCSPlayerModernJump
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(float, m_flLastLandedVelocityX);
     SCHEMA_FIELD(float, m_flLastLandedVelocityY);
     SCHEMA_FIELD(float, m_flLastLandedVelocityZ);
+
+public:
+    ICSPlayerModernJump* ToInterface();
+    static ICSPlayerModernJump* FromOriginal(CCSPlayerModernJump* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERMODERNJUMP_H

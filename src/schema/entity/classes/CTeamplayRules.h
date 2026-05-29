@@ -55,11 +55,20 @@
 
 #include "CMultiplayRules.h"
 
+class ITeamplayRules;
+
 class CTeamplayRules : public CMultiplayRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CTeamplayRules);
 
+
+public:
+    ITeamplayRules* ToInterface();
+    static ITeamplayRules* FromOriginal(CTeamplayRules* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTEAMPLAYRULES_H

@@ -55,6 +55,8 @@
 
 #include "CPlayerPawnComponent.h"
 
+class ICSPlayer_AimPunchServices;
+
 class CCSPlayer_AimPunchServices : public CPlayerPawnComponent
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(QAngle, m_predictableBaseAngleVel);
     SCHEMA_FIELD(int32_t, m_unpredictableBaseTick);
     SCHEMA_FIELD(QAngle, m_unpredictableBaseAngle);
+
+public:
+    ICSPlayer_AimPunchServices* ToInterface();
+    static ICSPlayer_AimPunchServices* FromOriginal(CCSPlayer_AimPunchServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_AIMPUNCHSERVICES_H

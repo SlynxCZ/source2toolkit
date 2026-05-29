@@ -53,6 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IBuoyancyHelper;
 class IPhysicsMotionController;
 
 class CBuoyancyHelper
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(CUtlVector<float>, m_vecWheelFrictionScales);
     SCHEMA_FIELD(CUtlVector<float>, m_vecFractionOfWheelSubmergedForWheelDrag);
     SCHEMA_FIELD(CUtlVector<float>, m_vecWheelDrag);
+
+public:
+    IBuoyancyHelper* ToInterface();
+    static IBuoyancyHelper* FromOriginal(CBuoyancyHelper* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBUOYANCYHELPER_H

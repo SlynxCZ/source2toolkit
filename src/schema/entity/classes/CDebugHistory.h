@@ -56,12 +56,21 @@
 
 #include "CBaseEntity.h"
 
+class IDebugHistory;
+
 class CDebugHistory : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CDebugHistory);
 
     SCHEMA_FIELD(int32_t, m_nNpcEvents);
+
+public:
+    IDebugHistory* ToInterface();
+    static IDebugHistory* FromOriginal(CDebugHistory* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDEBUGHISTORY_H

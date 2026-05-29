@@ -57,12 +57,21 @@
 #include "CBaseModelEntity.h"
 #include "CBuoyancyHelper.h"
 
+class IFuncWater;
+
 class CFuncWater : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWater);
 
     SCHEMA_FIELD(CBuoyancyHelper, m_BuoyancyHelper);
+
+public:
+    IFuncWater* ToInterface();
+    static IFuncWater* FromOriginal(CFuncWater* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCWATER_H

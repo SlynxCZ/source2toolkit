@@ -56,6 +56,7 @@
 
 #include "CBaseModelEntity.h"
 
+class ITextureBasedAnimatable;
 class InfoForResourceTypeCTextureBase;
 
 class CTextureBasedAnimatable : public CBaseModelEntity
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(Vector, m_vAnimationBoundsMax);
     SCHEMA_FIELD(float, m_flStartTime);
     SCHEMA_FIELD(float, m_flStartFrame);
+
+public:
+    ITextureBasedAnimatable* ToInterface();
+    static ITextureBasedAnimatable* FromOriginal(CTextureBasedAnimatable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTEXTUREBASEDANIMATABLE_H

@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class INavSpaceInfo;
+
 class CNavSpaceInfo : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CNavSpaceInfo);
 
+
+public:
+    INavSpaceInfo* ToInterface();
+    static INavSpaceInfo* FromOriginal(CNavSpaceInfo* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNAVSPACEINFO_H

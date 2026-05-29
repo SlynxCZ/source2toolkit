@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IEnvEntityMaker;
 
 class CEnvEntityMaker : public CPointEntity
 {
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszTemplate);
     SCHEMA_FIELD(CEntityIOOutput, m_pOutputOnSpawned);
     SCHEMA_FIELD(CEntityIOOutput, m_pOutputOnFailedSpawn);
+
+public:
+    IEnvEntityMaker* ToInterface();
+    static IEnvEntityMaker* FromOriginal(CEnvEntityMaker* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVENTITYMAKER_H

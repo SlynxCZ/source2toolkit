@@ -57,6 +57,8 @@
 #include "source2toolkit/schema/entity/enums/MedalRank_t.h"
 #include "ServerAuthoritativeWeaponSlot_t.h"
 
+class ICSPlayerController_InventoryServices;
+
 class CCSPlayerController_InventoryServices : public CPlayerControllerComponent
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD_POINTER(uint32_t, m_unEquippedPlayerSprayIDs);
     SCHEMA_FIELD(uint64_t, m_unCurrentLoadoutHash);
     SCHEMA_FIELD(CUtlVector<ServerAuthoritativeWeaponSlot_t>, m_vecServerAuthoritativeWeaponSlots);
+
+public:
+    ICSPlayerController_InventoryServices* ToInterface();
+    static ICSPlayerController_InventoryServices* FromOriginal(CCSPlayerController_InventoryServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_INVENTORYSERVICES_H

@@ -56,6 +56,8 @@
 
 #include "CPhysConstraint.h"
 
+class IPhysBallSocket;
+
 class CPhysBallSocket : public CPhysConstraint
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(bool, m_bEnableTwistLimit);
     SCHEMA_FIELD(float, m_flMinTwistAngle);
     SCHEMA_FIELD(float, m_flMaxTwistAngle);
+
+public:
+    IPhysBallSocket* ToInterface();
+    static IPhysBallSocket* FromOriginal(CPhysBallSocket* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSBALLSOCKET_H

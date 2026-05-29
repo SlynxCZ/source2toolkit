@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IGameGibManager;
+
 class CGameGibManager : public CBaseEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iCurrentMaxPieces);
     SCHEMA_FIELD(int32_t, m_iMaxPieces);
     SCHEMA_FIELD(int32_t, m_iLastFrame);
+
+public:
+    IGameGibManager* ToInterface();
+    static IGameGibManager* FromOriginal(CGameGibManager* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMEGIBMANAGER_H

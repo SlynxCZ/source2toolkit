@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class ILogicLineToEntity;
 
 class CLogicLineToEntity : public CLogicalEntity
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_SourceName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_StartEntity);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_EndEntity);
+
+public:
+    ILogicLineToEntity* ToInterface();
+    static ILogicLineToEntity* FromOriginal(CLogicLineToEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICLINETOENTITY_H

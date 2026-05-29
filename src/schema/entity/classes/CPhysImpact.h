@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IPhysImpact;
+
 class CPhysImpact : public CPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(float, m_damage);
     SCHEMA_FIELD(float, m_distance);
     SCHEMA_FIELD(CUtlSymbolLarge, m_directionEntityName);
+
+public:
+    IPhysImpact* ToInterface();
+    static IPhysImpact* FromOriginal(CPhysImpact* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSIMPACT_H

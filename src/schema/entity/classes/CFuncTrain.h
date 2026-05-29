@@ -57,6 +57,7 @@
 #include "CBasePlatTrain.h"
 
 class CBaseEntity;
+class IFuncTrain;
 
 class CFuncTrain : public CBasePlatTrain
 {
@@ -69,6 +70,13 @@ public:
     SCHEMA_FIELD(float, m_flBlockDamage);
     SCHEMA_FIELD(float, m_flNextBlockTime);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszLastTarget);
+
+public:
+    IFuncTrain* ToInterface();
+    static IFuncTrain* FromOriginal(CFuncTrain* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTRAIN_H

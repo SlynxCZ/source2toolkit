@@ -56,12 +56,21 @@
 
 #include "CServerOnlyModelEntity.h"
 
+class ICSPlace;
+
 class CCSPlace : public CServerOnlyModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlace);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_name);
+
+public:
+    ICSPlace* ToInterface();
+    static ICSPlace* FromOriginal(CCSPlace* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLACE_H

@@ -59,6 +59,7 @@
 #include "CBaseModelEntity.h"
 
 class CBaseEntity;
+class IBeam;
 class InfoForResourceTypeIMaterial2;
 
 class CBeam : public CBaseModelEntity
@@ -89,6 +90,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecEndPos);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndEntity);
     SCHEMA_FIELD(int32_t, m_nDissolveType);
+
+public:
+    IBeam* ToInterface();
+    static IBeam* FromOriginal(CBeam* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBEAM_H

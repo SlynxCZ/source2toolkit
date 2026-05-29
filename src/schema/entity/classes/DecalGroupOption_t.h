@@ -53,6 +53,7 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IDecalGroupOption_t;
 class InfoForResourceTypeIMaterial2;
 
 class DecalGroupOption_t
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(bool, m_bEnableAngleBetweenNormalAndGravityRange);
     SCHEMA_FIELD(float, m_flMinAngleBetweenNormalAndGravity);
     SCHEMA_FIELD(float, m_flMaxAngleBetweenNormalAndGravity);
+
+public:
+    IDecalGroupOption_t* ToInterface();
+    static IDecalGroupOption_t* FromOriginal(DecalGroupOption_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_DECALGROUPOPTION_T_H

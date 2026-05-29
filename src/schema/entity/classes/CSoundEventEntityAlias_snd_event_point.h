@@ -56,11 +56,20 @@
 
 #include "CSoundEventEntity.h"
 
+class ISoundEventEntityAlias_snd_event_point;
+
 class CSoundEventEntityAlias_snd_event_point : public CSoundEventEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventEntityAlias_snd_event_point);
 
+
+public:
+    ISoundEventEntityAlias_snd_event_point* ToInterface();
+    static ISoundEventEntityAlias_snd_event_point* FromOriginal(CSoundEventEntityAlias_snd_event_point* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTENTITYALIAS_SND_EVENT_POINT_H

@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CBaseFilter;
+class ITriggerVolume;
 
 class CTriggerVolume : public CBaseModelEntity
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterName);
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
+
+public:
+    ITriggerVolume* ToInterface();
+    static ITriggerVolume* FromOriginal(CTriggerVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERVOLUME_H

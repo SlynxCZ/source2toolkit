@@ -56,6 +56,8 @@
 
 #include "CRagdollProp.h"
 
+class IRagdollPropAttached;
+
 class CRagdollPropAttached : public CRagdollProp
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(Vector, m_attachmentPointRagdollSpace);
     SCHEMA_FIELD(bool, m_bShouldDetach);
     SCHEMA_FIELD(bool, m_bShouldDeleteAttachedActivationRecord);
+
+public:
+    IRagdollPropAttached* ToInterface();
+    static IRagdollPropAttached* FromOriginal(CRagdollPropAttached* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRAGDOLLPROPATTACHED_H

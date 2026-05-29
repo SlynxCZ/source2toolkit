@@ -56,12 +56,21 @@
 
 #include "CItem.h"
 
+class IScriptItem;
+
 class CScriptItem : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptItem);
 
     SCHEMA_FIELD(MoveType_t, m_MoveTypeOverride);
+
+public:
+    IScriptItem* ToInterface();
+    static IScriptItem* FromOriginal(CScriptItem* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTITEM_H

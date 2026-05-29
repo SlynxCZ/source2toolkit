@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CCSPlayerPawn;
+class IRetakeGameRules;
 
 class CRetakeGameRules
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iFirstSecondHalfRound);
     SCHEMA_FIELD(int32_t, m_iBombSite);
     SCHEMA_FIELD(CHandle<CCSPlayerPawn>, m_hBombPlanter);
+
+public:
+    IRetakeGameRules* ToInterface();
+    static IRetakeGameRules* FromOriginal(CRetakeGameRules* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRETAKEGAMERULES_H

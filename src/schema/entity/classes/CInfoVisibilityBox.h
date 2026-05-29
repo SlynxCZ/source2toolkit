@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IInfoVisibilityBox;
+
 class CInfoVisibilityBox : public CBaseEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nMode);
     SCHEMA_FIELD(Vector, m_vBoxSize);
     SCHEMA_FIELD(bool, m_bEnabled);
+
+public:
+    IInfoVisibilityBox* ToInterface();
+    static IInfoVisibilityBox* FromOriginal(CInfoVisibilityBox* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOVISIBILITYBOX_H

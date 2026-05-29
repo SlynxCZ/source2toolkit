@@ -57,6 +57,7 @@
 #include "WeaponPurchaseTracker_t.h"
 
 class CBasePlayerWeapon;
+class ICSPlayer_ActionTrackingServices;
 
 class CCSPlayer_ActionTrackingServices : public CPlayerPawnComponent
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(bool, m_bIsRescuing);
     SCHEMA_FIELD(WeaponPurchaseTracker_t, m_weaponPurchasesThisMatch);
     SCHEMA_FIELD(WeaponPurchaseTracker_t, m_weaponPurchasesThisRound);
+
+public:
+    ICSPlayer_ActionTrackingServices* ToInterface();
+    static ICSPlayer_ActionTrackingServices* FromOriginal(CCSPlayer_ActionTrackingServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_ACTIONTRACKINGSERVICES_H

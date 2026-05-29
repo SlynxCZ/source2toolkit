@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IPointGamestatsCounter;
+
 class CPointGamestatsCounter : public CPointEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_strStatisticName);
     SCHEMA_FIELD(bool, m_bDisabled);
+
+public:
+    IPointGamestatsCounter* ToInterface();
+    static IPointGamestatsCounter* FromOriginal(CPointGamestatsCounter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTGAMESTATSCOUNTER_H

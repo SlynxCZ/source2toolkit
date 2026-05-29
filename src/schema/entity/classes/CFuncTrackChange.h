@@ -59,6 +59,7 @@
 
 class CFuncTrackTrain;
 class CPathTrack;
+class IFuncTrackChange;
 
 class CFuncTrackChange : public CFuncPlatRot
 {
@@ -74,6 +75,13 @@ public:
     SCHEMA_FIELD(TRAIN_CODE, m_code);
     SCHEMA_FIELD(int32_t, m_targetState);
     SCHEMA_FIELD(int32_t, m_use);
+
+public:
+    IFuncTrackChange* ToInterface();
+    static IFuncTrackChange* FromOriginal(CFuncTrackChange* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTRACKCHANGE_H

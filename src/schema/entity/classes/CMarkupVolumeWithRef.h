@@ -56,6 +56,8 @@
 
 #include "CMarkupVolumeTagged.h"
 
+class IMarkupVolumeWithRef;
+
 class CMarkupVolumeWithRef : public CMarkupVolumeTagged
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(Vector, m_vRefPosEntitySpace);
     SCHEMA_FIELD(Vector, m_vRefPosWorldSpace);
     SCHEMA_FIELD(float, m_flRefDot);
+
+public:
+    IMarkupVolumeWithRef* ToInterface();
+    static IMarkupVolumeWithRef* FromOriginal(CMarkupVolumeWithRef* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMARKUPVOLUMEWITHREF_H

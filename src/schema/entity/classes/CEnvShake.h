@@ -57,6 +57,7 @@
 #include "CPhysicsShake.h"
 #include "CPointEntity.h"
 
+class IEnvShake;
 class IPhysicsMotionController;
 
 class CEnvShake : public CPointEntity
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(Vector, m_maxForce);
     SCHEMA_FIELD(IPhysicsMotionController*, m_pShakeController);
     SCHEMA_FIELD(CPhysicsShake, m_shakeCallback);
+
+public:
+    IEnvShake* ToInterface();
+    static IEnvShake* FromOriginal(CEnvShake* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSHAKE_H

@@ -56,6 +56,7 @@
 
 #include "CBaseEntity.h"
 
+class IEnvLightProbeVolume;
 class InfoForResourceTypeCTextureBase;
 
 class CEnvLightProbeVolume : public CBaseEntity
@@ -85,6 +86,13 @@ public:
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasY);
     SCHEMA_FIELD(int32_t, m_Entity_nLightProbeAtlasZ);
     SCHEMA_FIELD(bool, m_Entity_bEnabled);
+
+public:
+    IEnvLightProbeVolume* ToInterface();
+    static IEnvLightProbeVolume* FromOriginal(CEnvLightProbeVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVLIGHTPROBEVOLUME_H

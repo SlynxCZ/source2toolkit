@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/filter_t.h"
 
 class CBaseEntity;
+class IFilterMultiple;
 
 class CFilterMultiple : public CBaseFilter
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(filter_t, m_nFilterType);
     SCHEMA_FIELD_POINTER(CUtlSymbolLarge, m_iFilterName);
     SCHEMA_FIELD_POINTER(CHandle<CBaseEntity>, m_hFilter);
+
+public:
+    IFilterMultiple* ToInterface();
+    static IFilterMultiple* FromOriginal(CFilterMultiple* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERMULTIPLE_H

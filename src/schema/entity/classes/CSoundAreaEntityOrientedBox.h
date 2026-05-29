@@ -56,6 +56,8 @@
 
 #include "CSoundAreaEntityBase.h"
 
+class ISoundAreaEntityOrientedBox;
+
 class CSoundAreaEntityOrientedBox : public CSoundAreaEntityBase
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(Vector, m_vMin);
     SCHEMA_FIELD(Vector, m_vMax);
+
+public:
+    ISoundAreaEntityOrientedBox* ToInterface();
+    static ISoundAreaEntityOrientedBox* FromOriginal(CSoundAreaEntityOrientedBox* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDAREAENTITYORIENTEDBOX_H

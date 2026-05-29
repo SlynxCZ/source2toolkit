@@ -56,12 +56,21 @@
 #include "CAttributeManager.h"
 #include "CEconItemView.h"
 
+class IAttributeContainer;
+
 class CAttributeContainer : public CAttributeManager
 {
 public:
     DECLARE_SCHEMA_CLASS(CAttributeContainer);
 
     SCHEMA_FIELD(CEconItemView, m_Item);
+
+public:
+    IAttributeContainer* ToInterface();
+    static IAttributeContainer* FromOriginal(CAttributeContainer* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CATTRIBUTECONTAINER_H

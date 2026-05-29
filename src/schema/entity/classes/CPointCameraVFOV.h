@@ -56,12 +56,21 @@
 
 #include "CPointCamera.h"
 
+class IPointCameraVFOV;
+
 class CPointCameraVFOV : public CPointCamera
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointCameraVFOV);
 
     SCHEMA_FIELD(float, m_flVerticalFOV);
+
+public:
+    IPointCameraVFOV* ToInterface();
+    static IPointCameraVFOV* FromOriginal(CPointCameraVFOV* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCAMERAVFOV_H

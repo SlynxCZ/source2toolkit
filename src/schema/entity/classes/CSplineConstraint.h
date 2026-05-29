@@ -58,6 +58,7 @@
 
 class CBaseEntity;
 class IPhysicsBody;
+class ISplineConstraint;
 
 class CSplineConstraint : public CPhysConstraint
 {
@@ -79,6 +80,13 @@ public:
     SCHEMA_FIELD(Vector, m_vPreSolveAnchorPos);
     SCHEMA_FIELD(float, m_StartTransitionTime);
     SCHEMA_FIELD(Vector, m_vTangentSpaceAnchorAtTransitionStart);
+
+public:
+    ISplineConstraint* ToInterface();
+    static ISplineConstraint* FromOriginal(CSplineConstraint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSPLINECONSTRAINT_H

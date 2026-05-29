@@ -58,6 +58,7 @@
 #include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
 
 class CBaseEntity;
+class IPointHurt;
 
 class CPointHurt : public CPointEntity
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_flDelay);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strTarget);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_pActivator);
+
+public:
+    IPointHurt* ToInterface();
+    static IPointHurt* FromOriginal(CPointHurt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTHURT_H

@@ -56,11 +56,20 @@
 
 #include "CSceneEntity.h"
 
+class ISceneEntityAlias_logic_choreographed_scene;
+
 class CSceneEntityAlias_logic_choreographed_scene : public CSceneEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSceneEntityAlias_logic_choreographed_scene);
 
+
+public:
+    ISceneEntityAlias_logic_choreographed_scene* ToInterface();
+    static ISceneEntityAlias_logic_choreographed_scene* FromOriginal(CSceneEntityAlias_logic_choreographed_scene* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCENEENTITYALIAS_LOGIC_CHOREOGRAPHED_SCENE_H

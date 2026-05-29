@@ -56,6 +56,8 @@
 
 #include "CFuncBrush.h"
 
+class IFuncElectrifiedVolume;
+
 class CFuncElectrifiedVolume : public CFuncBrush
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_EffectInterpenetrateName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_EffectZapName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEffectSource);
+
+public:
+    IFuncElectrifiedVolume* ToInterface();
+    static IFuncElectrifiedVolume* FromOriginal(CFuncElectrifiedVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCELECTRIFIEDVOLUME_H

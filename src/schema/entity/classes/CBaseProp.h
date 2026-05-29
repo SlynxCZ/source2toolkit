@@ -56,6 +56,8 @@
 
 #include "CBaseAnimGraph.h"
 
+class IBaseProp;
+
 class CBaseProp : public CBaseAnimGraph
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iShapeType);
     SCHEMA_FIELD(bool, m_bConformToCollisionBounds);
     SCHEMA_FIELD(CTransform, m_mPreferredCatchTransform);
+
+public:
+    IBaseProp* ToInterface();
+    static IBaseProp* FromOriginal(CBaseProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEPROP_H

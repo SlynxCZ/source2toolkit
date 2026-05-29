@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IMathCounter;
+
 class CMathCounter : public CLogicalEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnHitMax);
     SCHEMA_FIELD(CEntityIOOutput, m_OnChangedFromMin);
     SCHEMA_FIELD(CEntityIOOutput, m_OnChangedFromMax);
+
+public:
+    IMathCounter* ToInterface();
+    static IMathCounter* FromOriginal(CMathCounter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMATHCOUNTER_H

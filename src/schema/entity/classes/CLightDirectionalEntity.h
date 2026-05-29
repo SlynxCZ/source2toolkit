@@ -56,11 +56,20 @@
 
 #include "CLightEntity.h"
 
+class ILightDirectionalEntity;
+
 class CLightDirectionalEntity : public CLightEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CLightDirectionalEntity);
 
+
+public:
+    ILightDirectionalEntity* ToInterface();
+    static ILightDirectionalEntity* FromOriginal(CLightDirectionalEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLIGHTDIRECTIONALENTITY_H

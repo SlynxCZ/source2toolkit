@@ -55,6 +55,8 @@
 
 #include "CVectorExponentialMovingAverage.h"
 
+class IMovementStatsProperty;
+
 class CMovementStatsProperty
 {
 public:
@@ -62,6 +64,13 @@ public:
 
     SCHEMA_FIELD(int32_t, m_nUseCounter);
     SCHEMA_FIELD(CVectorExponentialMovingAverage, m_emaMovementDirection);
+
+public:
+    IMovementStatsProperty* ToInterface();
+    static IMovementStatsProperty* FromOriginal(CMovementStatsProperty* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOVEMENTSTATSPROPERTY_H

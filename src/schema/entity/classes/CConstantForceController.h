@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IConstantForceController;
+
 class CConstantForceController
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(RotationVector, m_angular);
     SCHEMA_FIELD(Vector, m_linearSave);
     SCHEMA_FIELD(RotationVector, m_angularSave);
+
+public:
+    IConstantForceController* ToInterface();
+    static IConstantForceController* FromOriginal(CConstantForceController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCONSTANTFORCECONTROLLER_H

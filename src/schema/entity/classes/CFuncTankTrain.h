@@ -56,12 +56,21 @@
 
 #include "CFuncTrackTrain.h"
 
+class IFuncTankTrain;
+
 class CFuncTankTrain : public CFuncTrackTrain
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTankTrain);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnDeath);
+
+public:
+    IFuncTankTrain* ToInterface();
+    static IFuncTankTrain* FromOriginal(CFuncTankTrain* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTANKTRAIN_H

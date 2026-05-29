@@ -56,11 +56,20 @@
 
 #include "CCSPlayerPawnBase.h"
 
+class ICSObserverPawn;
+
 class CCSObserverPawn : public CCSPlayerPawnBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserverPawn);
 
+
+public:
+    ICSObserverPawn* ToInterface();
+    static ICSObserverPawn* FromOriginal(CCSObserverPawn* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSOBSERVERPAWN_H

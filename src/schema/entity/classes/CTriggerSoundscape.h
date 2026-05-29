@@ -58,6 +58,7 @@
 
 class CBasePlayerPawn;
 class CEnvSoundscapeTriggerable;
+class ITriggerSoundscape;
 
 class CTriggerSoundscape : public CBaseTrigger
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CHandle<CEnvSoundscapeTriggerable>, m_hSoundscape);
     SCHEMA_FIELD(CUtlSymbolLarge, m_SoundscapeName);
     SCHEMA_FIELD(CUtlVector<CHandle<CBasePlayerPawn>>, m_spectators);
+
+public:
+    ITriggerSoundscape* ToInterface();
+    static ITriggerSoundscape* FromOriginal(CTriggerSoundscape* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERSOUNDSCAPE_H

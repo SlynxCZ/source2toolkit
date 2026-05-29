@@ -56,6 +56,8 @@
 
 #include "CRotButton.h"
 
+class IMomentaryRotButton;
+
 class CMomentaryRotButton : public CRotButton
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(int32_t, m_direction);
     SCHEMA_FIELD(float, m_returnSpeed);
     SCHEMA_FIELD(float, m_flStartPosition);
+
+public:
+    IMomentaryRotButton* ToInterface();
+    static IMomentaryRotButton* FromOriginal(CMomentaryRotButton* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMOMENTARYROTBUTTON_H

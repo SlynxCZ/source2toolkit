@@ -55,11 +55,20 @@
 
 #include "dynpitchvol_base_t.h"
 
+class Idynpitchvol_t;
+
 class dynpitchvol_t : public dynpitchvol_base_t
 {
 public:
     DECLARE_SCHEMA_CLASS(dynpitchvol_t);
 
+
+public:
+    Idynpitchvol_t* ToInterface();
+    static Idynpitchvol_t* FromOriginal(dynpitchvol_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_DYNPITCHVOL_T_H

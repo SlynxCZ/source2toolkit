@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISkillFloat;
+
 class CSkillFloat
 {
 public:
     DECLARE_SCHEMA_CLASS(CSkillFloat);
 
     SCHEMA_FIELD_POINTER(float, m_pValue);
+
+public:
+    ISkillFloat* ToInterface();
+    static ISkillFloat* FromOriginal(CSkillFloat* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSKILLFLOAT_H

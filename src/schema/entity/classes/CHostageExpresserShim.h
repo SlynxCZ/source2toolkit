@@ -57,6 +57,7 @@
 #include "CBaseCombatCharacter.h"
 
 class CAI_Expresser;
+class IHostageExpresserShim;
 
 class CHostageExpresserShim : public CBaseCombatCharacter
 {
@@ -64,6 +65,13 @@ public:
     DECLARE_SCHEMA_CLASS(CHostageExpresserShim);
 
     SCHEMA_FIELD(CAI_Expresser*, m_pExpresser);
+
+public:
+    IHostageExpresserShim* ToInterface();
+    static IHostageExpresserShim* FromOriginal(CHostageExpresserShim* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHOSTAGEEXPRESSERSHIM_H

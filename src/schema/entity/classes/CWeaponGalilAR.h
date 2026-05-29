@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponGalilAR;
+
 class CWeaponGalilAR : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponGalilAR);
 
+
+public:
+    IWeaponGalilAR* ToInterface();
+    static IWeaponGalilAR* FromOriginal(CWeaponGalilAR* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONGALILAR_H

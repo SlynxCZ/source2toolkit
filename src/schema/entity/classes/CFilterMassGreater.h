@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterMassGreater;
+
 class CFilterMassGreater : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterMassGreater);
 
     SCHEMA_FIELD(float, m_fFilterMass);
+
+public:
+    IFilterMassGreater* ToInterface();
+    static IFilterMassGreater* FromOriginal(CFilterMassGreater* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERMASSGREATER_H

@@ -55,12 +55,21 @@
 
 #include "WeaponPurchaseCount_t.h"
 
+class IWeaponPurchaseTracker_t;
+
 class WeaponPurchaseTracker_t
 {
 public:
     DECLARE_SCHEMA_CLASS(WeaponPurchaseTracker_t);
 
     SCHEMA_FIELD(CUtlVector<WeaponPurchaseCount_t>, m_weaponPurchases);
+
+public:
+    IWeaponPurchaseTracker_t* ToInterface();
+    static IWeaponPurchaseTracker_t* FromOriginal(WeaponPurchaseTracker_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_WEAPONPURCHASETRACKER_T_H

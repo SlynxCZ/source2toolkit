@@ -57,6 +57,8 @@
 #include "CPhysConstraint.h"
 #include "source2toolkit/schema/entity/enums/JointMotion_t.h"
 
+class IGenericConstraint;
+
 class CGenericConstraint : public CPhysConstraint
 {
 public:
@@ -111,6 +113,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedX);
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedY);
     SCHEMA_FIELD(CEntityIOOutput, m_NotifyForceReachedZ);
+
+public:
+    IGenericConstraint* ToInterface();
+    static IGenericConstraint* FromOriginal(CGenericConstraint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGENERICCONSTRAINT_H

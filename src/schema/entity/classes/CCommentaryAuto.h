@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ICommentaryAuto;
+
 class CCommentaryAuto : public CBaseEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryNewGame);
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryMidGame);
     SCHEMA_FIELD(CEntityIOOutput, m_OnCommentaryMultiplayerSpawn);
+
+public:
+    ICommentaryAuto* ToInterface();
+    static ICommentaryAuto* FromOriginal(CCommentaryAuto* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCOMMENTARYAUTO_H

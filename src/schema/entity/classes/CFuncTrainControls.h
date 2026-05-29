@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncTrainControls;
+
 class CFuncTrainControls : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrainControls);
 
+
+public:
+    IFuncTrainControls* ToInterface();
+    static IFuncTrainControls* FromOriginal(CFuncTrainControls* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTRAINCONTROLS_H

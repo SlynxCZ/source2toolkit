@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseFilter;
+class IPointPush;
 
 class CPointPush : public CPointEntity
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_flConeOfInfluence);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszFilterName);
     SCHEMA_FIELD(CHandle<CBaseFilter>, m_hFilter);
+
+public:
+    IPointPush* ToInterface();
+    static IPointPush* FromOriginal(CPointPush* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTPUSH_H

@@ -56,6 +56,8 @@
 #include "CDamageRecord.h"
 #include "CPlayerControllerComponent.h"
 
+class ICSPlayerController_DamageServices;
+
 class CCSPlayerController_DamageServices : public CPlayerControllerComponent
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(int32_t, m_nSendUpdate);
     SCHEMA_FIELD(CUtlVector<CDamageRecord>, m_DamageList);
+
+public:
+    ICSPlayerController_DamageServices* ToInterface();
+    static ICSPlayerController_DamageServices* FromOriginal(CCSPlayerController_DamageServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_DAMAGESERVICES_H

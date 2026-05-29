@@ -57,6 +57,8 @@
 #include "CRulePointEntity.h"
 #include "hudtextparms_t.h"
 
+class IGameText;
+
 class CGameText : public CRulePointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszMessage);
     SCHEMA_FIELD(hudtextparms_t, m_textParms);
+
+public:
+    IGameText* ToInterface();
+    static IGameText* FromOriginal(CGameText* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMETEXT_H

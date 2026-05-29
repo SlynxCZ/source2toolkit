@@ -56,12 +56,21 @@
 
 #include "CSoundEventEntity.h"
 
+class ISoundEventSphereEntity;
+
 class CSoundEventSphereEntity : public CSoundEventEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundEventSphereEntity);
 
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    ISoundEventSphereEntity* ToInterface();
+    static ISoundEventSphereEntity* FromOriginal(CSoundEventSphereEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDEVENTSPHEREENTITY_H

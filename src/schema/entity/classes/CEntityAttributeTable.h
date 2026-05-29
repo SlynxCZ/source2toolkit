@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IEntityAttributeTable;
+
 class CEntityAttributeTable
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntityAttributeTable);
 
+
+public:
+    IEntityAttributeTable* ToInterface();
+    static IEntityAttributeTable* FromOriginal(CEntityAttributeTable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENTITYATTRIBUTETABLE_H

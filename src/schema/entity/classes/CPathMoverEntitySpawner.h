@@ -58,6 +58,7 @@
 
 class CFuncMover;
 class CPathMover;
+class IPathMoverEntitySpawner;
 
 class CPathMoverEntitySpawner : public CLogicalEntity
 {
@@ -77,6 +78,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CFuncMover>>, m_vecQueuedRemovals);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTemplateSpawned);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTemplateGroupSpawned);
+
+public:
+    IPathMoverEntitySpawner* ToInterface();
+    static IPathMoverEntitySpawner* FromOriginal(CPathMoverEntitySpawner* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHMOVERENTITYSPAWNER_H

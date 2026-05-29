@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IPrecipitationBlocker;
+
 class CPrecipitationBlocker : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPrecipitationBlocker);
 
+
+public:
+    IPrecipitationBlocker* ToInterface();
+    static IPrecipitationBlocker* FromOriginal(CPrecipitationBlocker* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPRECIPITATIONBLOCKER_H

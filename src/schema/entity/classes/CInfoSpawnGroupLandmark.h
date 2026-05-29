@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IInfoSpawnGroupLandmark;
+
 class CInfoSpawnGroupLandmark : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoSpawnGroupLandmark);
 
+
+public:
+    IInfoSpawnGroupLandmark* ToInterface();
+    static IInfoSpawnGroupLandmark* FromOriginal(CInfoSpawnGroupLandmark* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOSPAWNGROUPLANDMARK_H

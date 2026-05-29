@@ -56,12 +56,21 @@
 
 #include "CCSWeaponBase.h"
 
+class IKnife;
+
 class CKnife : public CCSWeaponBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CKnife);
 
     SCHEMA_FIELD(bool, m_bFirstAttack);
+
+public:
+    IKnife* ToInterface();
+    static IKnife* FromOriginal(CKnife* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CKNIFE_H

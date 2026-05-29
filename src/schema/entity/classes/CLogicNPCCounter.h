@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ILogicNPCCounter;
+
 class CLogicNPCCounter : public CBaseEntity
 {
 public:
@@ -101,6 +103,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nMinFactor_3);
     SCHEMA_FIELD(int32_t, m_nMaxFactor_3);
     SCHEMA_FIELD(float, m_flDefaultDist_3);
+
+public:
+    ILogicNPCCounter* ToInterface();
+    static ILogicNPCCounter* FromOriginal(CLogicNPCCounter* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICNPCCOUNTER_H

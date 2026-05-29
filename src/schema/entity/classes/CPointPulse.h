@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IPointPulse;
+
 class CPointPulse : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointPulse);
 
+
+public:
+    IPointPulse* ToInterface();
+    static IPointPulse* FromOriginal(CPointPulse* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTPULSE_H

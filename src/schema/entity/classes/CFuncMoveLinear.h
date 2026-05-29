@@ -57,6 +57,8 @@
 #include "CBaseToggle.h"
 #include "source2toolkit/schema/entity/enums/MoveLinearAuthoredPos_t.h"
 
+class IFuncMoveLinear;
+
 class CFuncMoveLinear : public CBaseToggle
 {
 public:
@@ -75,6 +77,13 @@ public:
     SCHEMA_FIELD(bool, m_bCreateMovableNavMesh);
     SCHEMA_FIELD(bool, m_bAllowMovableNavMeshDockingOnEntireEntity);
     SCHEMA_FIELD(bool, m_bCreateNavObstacle);
+
+public:
+    IFuncMoveLinear* ToInterface();
+    static IFuncMoveLinear* FromOriginal(CFuncMoveLinear* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCMOVELINEAR_H

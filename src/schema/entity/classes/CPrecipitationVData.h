@@ -57,6 +57,8 @@
 #include "source2toolkit/schema/entity/enums/ParticleAttachment_t.h"
 #include "PrecipitationFilter_t.h"
 
+class IPrecipitationVData;
+
 class CPrecipitationVData : public CEntitySubclassVDataBase
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(CUtlString, m_szModifier);
     SCHEMA_FIELD(int32_t, m_nUseSnapshotFromSurfaceGraph);
     SCHEMA_FIELD(PrecipitationFilter_t, m_snapshotFilter);
+
+public:
+    IPrecipitationVData* ToInterface();
+    static IPrecipitationVData* FromOriginal(CPrecipitationVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPRECIPITATIONVDATA_H

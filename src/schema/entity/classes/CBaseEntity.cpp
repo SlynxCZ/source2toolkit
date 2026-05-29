@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 
+#include "core/entities.h"
 #include "schema/entity/classes/CBaseEntityImpl.h"
 
 #include "schema/entity/classes/CBodyComponent.h"
@@ -42,7 +43,6 @@
 #include "schema/entity/classes/CEntitySubclassVDataBase.h"
 #include "schema/entity/classes/CGameSceneNode.h"
 
-#include "source2toolkit/schema/entities.h"
 #include "source2toolkit/utils/virtual.h"
 
 #ifdef SOURCE2TOOLKIT_CORE
@@ -56,10 +56,12 @@
 #include "source2toolkit/IToolkitPlugin.h"
 #endif
 
+#include "core/virtualhooks.h"
+
 IBaseEntity* CBaseEntity::CreateEntityByName(const char* pszClassName)
 {
-    CBaseEntity* p = UTIL_CreateEntityByName(pszClassName);
-    return p ? p->ToInterface() : nullptr;
+    IBaseEntity* p = entities::entitiesManager.CreateEntityByName(pszClassName);
+    return p;
 }
 
 IBaseEntity* IBaseEntity::CreateEntityByName(const char* pszClassName)
@@ -74,31 +76,41 @@ IBaseEntity* IBaseEntity::FromOriginal(CBaseEntity* p)
 
 CEntityInstance* IEntityInstance::_CreateRaw(const char* pszClassName)
 {
-    return UTIL_CreateEntityByName(pszClassName);
+    return addresses::toolkitAddresses.CreateEntityByName(pszClassName, -1);
 }
 
 IEntityInstance* IEntityInstance::FromOriginal(CEntityInstance* p)
 {
-    return p ? new CBaseEntityImpl(static_cast<CBaseEntity*>(p)) : nullptr;
+    return p ? static_cast<CBaseEntity*>(p)->ToInterface() : nullptr;
+}
+
+IBaseEntity* CBaseEntity::ToInterface()
+{
+    auto it = virtualhooks::entityInterfaces.find(this);
+    if (it != virtualhooks::entityInterfaces.end())
+        return static_cast<IBaseEntity*>(it->second);
+    auto* impl = new CBaseEntityImpl(this);
+    virtualhooks::entityInterfaces[this] = impl;
+    return impl;
 }
 
 void CBaseEntity::AcceptInput(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
 {
-    UTIL_AcceptInput(this, pszInput, pActivator, pCaller, pszValue);
+    entities::entitiesManager.AcceptInput(ToInterface(), pszInput, IEntityInstance::FromOriginal(pActivator), IEntityInstance::FromOriginal(pCaller), pszValue);
 }
 
 void CBaseEntity::AddEntityIOEvent(const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
 {
-    UTIL_AddEntityIOEvent(this, pszInput, pActivator, pCaller, pszValue, flDelay);
+    entities::entitiesManager.AddEntityIOEvent(ToInterface(), pszInput, IEntityInstance::FromOriginal(pActivator), IEntityInstance::FromOriginal(pCaller), pszValue, flDelay);
 }
 
 CEntityIOListenerHandle* CBaseEntity::AddSingleEntityIOListener(const char* pszOutput, std::function<Action(const char*,CEntityInstance*, CEntityInstance*, float, Mode)> callback, Mode mode)
 {
     auto* listener = new CSingleEntityIOListener(this, std::move(callback));
 
-    const char* classname = this->GetClassname();
+    const char* classname = GetClassname();
 
-    UTIL_AddEntityIOListener(listener, classname, pszOutput, mode);
+    entities::entitiesManager.AddEntityIOListener(listener, classname, pszOutput, mode);
 
     auto* handle = new CEntityIOListenerHandle();
     handle->m_pListener = listener;

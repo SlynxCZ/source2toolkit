@@ -59,6 +59,7 @@
 
 class CBaseModelEntity;
 class CScriptedSequence;
+class IGameChoreoServices;
 
 class CGameChoreoServices : public IChoreoServices
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(IChoreoServices__ScriptState_t, m_scriptState);
     SCHEMA_FIELD(IChoreoServices__ChoreoState_t, m_choreoState);
     SCHEMA_FIELD(float, m_flTimeStartedState);
+
+public:
+    IGameChoreoServices* ToInterface();
+    static IGameChoreoServices* FromOriginal(CGameChoreoServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMECHOREOSERVICES_H

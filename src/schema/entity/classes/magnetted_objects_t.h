@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CBaseEntity;
+class Imagnetted_objects_t;
 
 class magnetted_objects_t
 {
@@ -61,6 +62,13 @@ public:
     DECLARE_SCHEMA_CLASS(magnetted_objects_t);
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, hEntity);
+
+public:
+    Imagnetted_objects_t* ToInterface();
+    static Imagnetted_objects_t* FromOriginal(magnetted_objects_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_MAGNETTED_OBJECTS_T_H

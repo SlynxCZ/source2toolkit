@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncIllusionary;
+
 class CFuncIllusionary : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncIllusionary);
 
+
+public:
+    IFuncIllusionary* ToInterface();
+    static IFuncIllusionary* FromOriginal(CFuncIllusionary* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCILLUSIONARY_H

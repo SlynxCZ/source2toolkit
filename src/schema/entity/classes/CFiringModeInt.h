@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IFiringModeInt;
+
 class CFiringModeInt
 {
 public:
     DECLARE_SCHEMA_CLASS(CFiringModeInt);
 
     SCHEMA_FIELD_POINTER(int32_t, m_nValues);
+
+public:
+    IFiringModeInt* ToInterface();
+    static IFiringModeInt* FromOriginal(CFiringModeInt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFIRINGMODEINT_H

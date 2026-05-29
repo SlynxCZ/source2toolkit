@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CLightComponent;
+class ILightEntity;
 
 class CLightEntity : public CBaseModelEntity
 {
@@ -64,6 +65,13 @@ public:
     DECLARE_SCHEMA_CLASS(CLightEntity);
 
     SCHEMA_FIELD(CLightComponent*, m_CLightComponent);
+
+public:
+    ILightEntity* ToInterface();
+    static ILightEntity* FromOriginal(CLightEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLIGHTENTITY_H

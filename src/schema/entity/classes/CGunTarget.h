@@ -57,6 +57,7 @@
 #include "CBaseToggle.h"
 
 class CBaseEntity;
+class IGunTarget;
 
 class CGunTarget : public CBaseToggle
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(bool, m_on);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hTargetEnt);
     SCHEMA_FIELD(CEntityIOOutput, m_OnDeath);
+
+public:
+    IGunTarget* ToInterface();
+    static IGunTarget* FromOriginal(CGunTarget* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGUNTARGET_H

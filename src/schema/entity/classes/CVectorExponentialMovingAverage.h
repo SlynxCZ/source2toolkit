@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IVectorExponentialMovingAverage;
+
 class CVectorExponentialMovingAverage
 {
 public:
     DECLARE_SCHEMA_CLASS(CVectorExponentialMovingAverage);
 
+
+public:
+    IVectorExponentialMovingAverage* ToInterface();
+    static IVectorExponentialMovingAverage* FromOriginal(CVectorExponentialMovingAverage* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CVECTOREXPONENTIALMOVINGAVERAGE_H

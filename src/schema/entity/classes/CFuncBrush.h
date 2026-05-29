@@ -57,6 +57,8 @@
 #include "source2toolkit/schema/entity/enums/BrushSolidities_e.h"
 #include "CBaseModelEntity.h"
 
+class IFuncBrush;
+
 class CFuncBrush : public CBaseModelEntity
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszExcludedClass);
     SCHEMA_FIELD(bool, m_bInvertExclusion);
     SCHEMA_FIELD(bool, m_bScriptedMovement);
+
+public:
+    IFuncBrush* ToInterface();
+    static IFuncBrush* FromOriginal(CFuncBrush* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCBRUSH_H

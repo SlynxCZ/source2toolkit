@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIPhysicsBodyList;
+
 class IPhysicsBodyList
 {
 public:
     DECLARE_SCHEMA_CLASS(IPhysicsBodyList);
 
+
+public:
+    IIPhysicsBodyList* ToInterface();
+    static IIPhysicsBodyList* FromOriginal(IPhysicsBodyList* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_IPHYSICSBODYLIST_H

@@ -56,11 +56,20 @@
 
 #include "CBaseButton.h"
 
+class IRotButton;
+
 class CRotButton : public CBaseButton
 {
 public:
     DECLARE_SCHEMA_CLASS(CRotButton);
 
+
+public:
+    IRotButton* ToInterface();
+    static IRotButton* FromOriginal(CRotButton* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CROTBUTTON_H

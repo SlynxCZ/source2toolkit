@@ -56,6 +56,8 @@
 
 #include "CInfoDynamicShadowHint.h"
 
+class IInfoDynamicShadowHintBox;
+
 class CInfoDynamicShadowHintBox : public CInfoDynamicShadowHint
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(Vector, m_vBoxMins);
     SCHEMA_FIELD(Vector, m_vBoxMaxs);
+
+public:
+    IInfoDynamicShadowHintBox* ToInterface();
+    static IInfoDynamicShadowHintBox* FromOriginal(CInfoDynamicShadowHintBox* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINTBOX_H

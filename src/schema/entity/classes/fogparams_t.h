@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Ifogparams_t;
+
 class fogparams_t
 {
 public:
@@ -83,6 +85,13 @@ public:
     SCHEMA_FIELD(bool, blend);
     SCHEMA_FIELD(bool, m_bPadding2);
     SCHEMA_FIELD(bool, m_bPadding);
+
+public:
+    Ifogparams_t* ToInterface();
+    static Ifogparams_t* FromOriginal(fogparams_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_FOGPARAMS_T_H

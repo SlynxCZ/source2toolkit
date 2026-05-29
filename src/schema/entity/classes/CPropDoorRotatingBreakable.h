@@ -56,6 +56,8 @@
 
 #include "CPropDoorRotating.h"
 
+class IPropDoorRotatingBreakable;
+
 class CPropDoorRotatingBreakable : public CPropDoorRotating
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(bool, m_isAbleToCloseAreaPortals);
     SCHEMA_FIELD(int32_t, m_currentDamageState);
     SCHEMA_FIELD(CUtlVector<CUtlSymbolLarge>, m_damageStates);
+
+public:
+    IPropDoorRotatingBreakable* ToInterface();
+    static IPropDoorRotatingBreakable* FromOriginal(CPropDoorRotatingBreakable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPROPDOORROTATINGBREAKABLE_H

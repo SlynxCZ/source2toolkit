@@ -56,12 +56,21 @@
 
 #include "CLogicalEntity.h"
 
+class ISoundStackSave;
+
 class CSoundStackSave : public CLogicalEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundStackSave);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszStackName);
+
+public:
+    ISoundStackSave* ToInterface();
+    static ISoundStackSave* FromOriginal(CSoundStackSave* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDSTACKSAVE_H

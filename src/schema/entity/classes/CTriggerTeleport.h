@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerTeleport;
+
 class CTriggerTeleport : public CBaseTrigger
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(bool, m_bUseLandmarkAngles);
     SCHEMA_FIELD(bool, m_bMirrorPlayer);
     SCHEMA_FIELD(bool, m_bCheckDestIfClearForPlayer);
+
+public:
+    ITriggerTeleport* ToInterface();
+    static ITriggerTeleport* FromOriginal(CTriggerTeleport* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERTELEPORT_H

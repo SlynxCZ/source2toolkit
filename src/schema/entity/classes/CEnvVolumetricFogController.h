@@ -56,6 +56,7 @@
 
 #include "CBaseEntity.h"
 
+class IEnvVolumetricFogController;
 class InfoForResourceTypeCTextureBase;
 
 class CEnvVolumetricFogController : public CBaseEntity
@@ -99,6 +100,13 @@ public:
     SCHEMA_FIELD(float, m_fWindSpeed);
     SCHEMA_FIELD(Vector, m_vWindDirection);
     SCHEMA_FIELD(bool, m_bFirstTime);
+
+public:
+    IEnvVolumetricFogController* ToInterface();
+    static IEnvVolumetricFogController* FromOriginal(CEnvVolumetricFogController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVVOLUMETRICFOGCONTROLLER_H

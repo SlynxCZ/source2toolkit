@@ -55,11 +55,20 @@
 
 #include "CPlayerPawnComponent.h"
 
+class ICSPlayer_DamageReactServices;
+
 class CCSPlayer_DamageReactServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_DamageReactServices);
 
+
+public:
+    ICSPlayer_DamageReactServices* ToInterface();
+    static ICSPlayer_DamageReactServices* FromOriginal(CCSPlayer_DamageReactServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_DAMAGEREACTSERVICES_H

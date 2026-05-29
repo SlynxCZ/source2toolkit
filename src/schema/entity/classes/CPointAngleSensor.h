@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IPointAngleSensor;
 
 class CPointAngleSensor : public CPointEntity
 {
@@ -73,6 +74,13 @@ public:
     SCHEMA_FIELD(bool, m_bFired);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFacingLookat);
     SCHEMA_FIELD(CEntityIOOutput, m_OnNotFacingLookat);
+
+public:
+    IPointAngleSensor* ToInterface();
+    static IPointAngleSensor* FromOriginal(CPointAngleSensor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTANGLESENSOR_H

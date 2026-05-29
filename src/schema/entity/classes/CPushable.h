@@ -56,11 +56,20 @@
 
 #include "CBreakable.h"
 
+class IPushable;
+
 class CPushable : public CBreakable
 {
 public:
     DECLARE_SCHEMA_CLASS(CPushable);
 
+
+public:
+    IPushable* ToInterface();
+    static IPushable* FromOriginal(CPushable* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPUSHABLE_H

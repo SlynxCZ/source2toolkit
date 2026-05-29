@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Isndopvarlatchdata_t;
+
 class sndopvarlatchdata_t
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszOpvar);
     SCHEMA_FIELD(float, m_flVal);
     SCHEMA_FIELD(Vector, m_vPos);
+
+public:
+    Isndopvarlatchdata_t* ToInterface();
+    static Isndopvarlatchdata_t* FromOriginal(sndopvarlatchdata_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SNDOPVARLATCHDATA_T_H

@@ -56,12 +56,21 @@
 
 #include "CBasePlatTrain.h"
 
+class IFuncPlat;
+
 class CFuncPlat : public CBasePlatTrain
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncPlat);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_sNoise);
+
+public:
+    IFuncPlat* ToInterface();
+    static IFuncPlat* FromOriginal(CFuncPlat* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCPLAT_H

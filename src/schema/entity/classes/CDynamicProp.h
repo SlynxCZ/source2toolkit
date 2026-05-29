@@ -57,6 +57,8 @@
 #include "source2toolkit/schema/entity/enums/AnimLoopMode_t.h"
 #include "CBreakableProp.h"
 
+class IDynamicProp;
+
 class CDynamicProp : public CBreakableProp
 {
 public:
@@ -84,6 +86,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nGlowRangeMin);
     SCHEMA_FIELD(Color, m_glowColor);
     SCHEMA_FIELD(int32_t, m_nGlowTeam);
+
+public:
+    IDynamicProp* ToInterface();
+    static IDynamicProp* FromOriginal(CDynamicProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDYNAMICPROP_H

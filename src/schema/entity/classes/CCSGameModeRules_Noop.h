@@ -55,11 +55,20 @@
 
 #include "CCSGameModeRules.h"
 
+class ICSGameModeRules_Noop;
+
 class CCSGameModeRules_Noop : public CCSGameModeRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules_Noop);
 
+
+public:
+    ICSGameModeRules_Noop* ToInterface();
+    static ICSGameModeRules_Noop* FromOriginal(CCSGameModeRules_Noop* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGAMEMODERULES_NOOP_H

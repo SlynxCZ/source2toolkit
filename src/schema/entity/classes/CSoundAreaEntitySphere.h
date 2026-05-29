@@ -56,12 +56,21 @@
 
 #include "CSoundAreaEntityBase.h"
 
+class ISoundAreaEntitySphere;
+
 class CSoundAreaEntitySphere : public CSoundAreaEntityBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CSoundAreaEntitySphere);
 
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    ISoundAreaEntitySphere* ToInterface();
+    static ISoundAreaEntitySphere* FromOriginal(CSoundAreaEntitySphere* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDAREAENTITYSPHERE_H

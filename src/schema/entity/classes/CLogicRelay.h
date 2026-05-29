@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicRelay;
+
 class CLogicRelay : public CLogicalEntity
 {
 public:
@@ -68,6 +70,13 @@ public:
     SCHEMA_FIELD(bool, m_bTriggerOnce);
     SCHEMA_FIELD(bool, m_bFastRetrigger);
     SCHEMA_FIELD(bool, m_bPassthoughCaller);
+
+public:
+    ILogicRelay* ToInterface();
+    static ILogicRelay* FromOriginal(CLogicRelay* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICRELAY_H

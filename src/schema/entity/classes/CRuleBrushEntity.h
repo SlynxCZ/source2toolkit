@@ -56,11 +56,20 @@
 
 #include "CRuleEntity.h"
 
+class IRuleBrushEntity;
+
 class CRuleBrushEntity : public CRuleEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRuleBrushEntity);
 
+
+public:
+    IRuleBrushEntity* ToInterface();
+    static IRuleBrushEntity* FromOriginal(CRuleBrushEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRULEBRUSHENTITY_H

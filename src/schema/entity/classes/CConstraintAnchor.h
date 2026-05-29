@@ -56,12 +56,21 @@
 
 #include "CBaseAnimGraph.h"
 
+class IConstraintAnchor;
+
 class CConstraintAnchor : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CConstraintAnchor);
 
     SCHEMA_FIELD(float, m_massScale);
+
+public:
+    IConstraintAnchor* ToInterface();
+    static IConstraintAnchor* FromOriginal(CConstraintAnchor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCONSTRAINTANCHOR_H

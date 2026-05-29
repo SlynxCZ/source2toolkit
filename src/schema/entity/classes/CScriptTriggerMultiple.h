@@ -56,12 +56,21 @@
 
 #include "CTriggerMultiple.h"
 
+class IScriptTriggerMultiple;
+
 class CScriptTriggerMultiple : public CTriggerMultiple
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerMultiple);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    IScriptTriggerMultiple* ToInterface();
+    static IScriptTriggerMultiple* FromOriginal(CScriptTriggerMultiple* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTTRIGGERMULTIPLE_H

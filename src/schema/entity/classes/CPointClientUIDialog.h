@@ -57,6 +57,7 @@
 #include "CBaseClientUIEntity.h"
 
 class CBaseEntity;
+class IPointClientUIDialog;
 
 class CPointClientUIDialog : public CBaseClientUIEntity
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hActivator);
     SCHEMA_FIELD(bool, m_bStartEnabled);
+
+public:
+    IPointClientUIDialog* ToInterface();
+    static IPointClientUIDialog* FromOriginal(CPointClientUIDialog* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCLIENTUIDIALOG_H

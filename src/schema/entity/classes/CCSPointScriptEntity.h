@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class ICSPointScriptEntity;
+
 class CCSPointScriptEntity : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPointScriptEntity);
 
+
+public:
+    ICSPointScriptEntity* ToInterface();
+    static ICSPointScriptEntity* FromOriginal(CCSPointScriptEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPOINTSCRIPTENTITY_H

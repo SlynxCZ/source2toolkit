@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBasePlayerPawn;
+class IInstructorEventEntity;
 
 class CInstructorEventEntity : public CPointEntity
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszHintTargetEntity);
     SCHEMA_FIELD(CHandle<CBasePlayerPawn>, m_hTargetPlayer);
+
+public:
+    IInstructorEventEntity* ToInterface();
+    static IInstructorEventEntity* FromOriginal(CInstructorEventEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINSTRUCTOREVENTENTITY_H

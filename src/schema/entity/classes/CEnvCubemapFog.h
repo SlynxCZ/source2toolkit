@@ -56,6 +56,7 @@
 
 #include "CBaseEntity.h"
 
+class IEnvCubemapFog;
 class InfoForResourceTypeCTextureBase;
 class InfoForResourceTypeIMaterial2;
 
@@ -88,6 +89,13 @@ public:
     SCHEMA_FIELD(CStrongHandle<InfoForResourceTypeCTextureBase>, m_hFogCubemapTexture);
     SCHEMA_FIELD(bool, m_bHasHeightFogEnd);
     SCHEMA_FIELD(bool, m_bFirstTime);
+
+public:
+    IEnvCubemapFog* ToInterface();
+    static IEnvCubemapFog* FromOriginal(CEnvCubemapFog* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVCUBEMAPFOG_H

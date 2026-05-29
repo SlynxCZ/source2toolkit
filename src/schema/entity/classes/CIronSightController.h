@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IIronSightController;
+
 class CIronSightController
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(float, m_flIronSightAmount);
     SCHEMA_FIELD(float, m_flIronSightAmountGained);
     SCHEMA_FIELD(float, m_flIronSightAmountBiased);
+
+public:
+    IIronSightController* ToInterface();
+    static IIronSightController* FromOriginal(CIronSightController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CIRONSIGHTCONTROLLER_H

@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseGun.h"
 
+class IWeaponAWP;
+
 class CWeaponAWP : public CCSWeaponBaseGun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponAWP);
 
+
+public:
+    IWeaponAWP* ToInterface();
+    static IWeaponAWP* FromOriginal(CWeaponAWP* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONAWP_H

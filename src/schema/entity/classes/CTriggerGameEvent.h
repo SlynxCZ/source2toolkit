@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerGameEvent;
+
 class CTriggerGameEvent : public CBaseTrigger
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(CUtlString, m_strStartTouchEventName);
     SCHEMA_FIELD(CUtlString, m_strEndTouchEventName);
     SCHEMA_FIELD(CUtlString, m_strTriggerID);
+
+public:
+    ITriggerGameEvent* ToInterface();
+    static ITriggerGameEvent* FromOriginal(CTriggerGameEvent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERGAMEEVENT_H

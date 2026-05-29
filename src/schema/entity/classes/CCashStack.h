@@ -56,12 +56,21 @@
 
 #include "CBaseModelEntity.h"
 
+class ICashStack;
+
 class CCashStack : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCashStack);
 
     SCHEMA_FIELD(int32_t, m_nCashStackValue);
+
+public:
+    ICashStack* ToInterface();
+    static ICashStack* FromOriginal(CCashStack* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCASHSTACK_H

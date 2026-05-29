@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Idynpitchvol_base_t;
+
 class dynpitchvol_base_t
 {
 public:
@@ -83,6 +85,13 @@ public:
     SCHEMA_FIELD(int32_t, volfrac);
     SCHEMA_FIELD(int32_t, lfofrac);
     SCHEMA_FIELD(int32_t, lfomult);
+
+public:
+    Idynpitchvol_base_t* ToInterface();
+    static Idynpitchvol_base_t* FromOriginal(dynpitchvol_base_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_DYNPITCHVOL_BASE_T_H

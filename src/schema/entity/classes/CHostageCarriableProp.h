@@ -56,11 +56,20 @@
 
 #include "CBaseAnimGraph.h"
 
+class IHostageCarriableProp;
+
 class CHostageCarriableProp : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CHostageCarriableProp);
 
+
+public:
+    IHostageCarriableProp* ToInterface();
+    static IHostageCarriableProp* FromOriginal(CHostageCarriableProp* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CHOSTAGECARRIABLEPROP_H

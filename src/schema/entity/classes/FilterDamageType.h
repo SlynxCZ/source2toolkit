@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterDamageType;
+
 class FilterDamageType : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(FilterDamageType);
 
     SCHEMA_FIELD(int32_t, m_iDamageType);
+
+public:
+    IFilterDamageType* ToInterface();
+    static IFilterDamageType* FromOriginal(FilterDamageType* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_FILTERDAMAGETYPE_H

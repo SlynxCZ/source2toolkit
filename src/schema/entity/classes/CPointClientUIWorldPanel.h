@@ -56,6 +56,8 @@
 
 #include "CBaseClientUIEntity.h"
 
+class IPointClientUIWorldPanel;
+
 class CPointClientUIWorldPanel : public CBaseClientUIEntity
 {
 public:
@@ -85,6 +87,13 @@ public:
     SCHEMA_FIELD(bool, m_bOnlyRenderToTexture);
     SCHEMA_FIELD(bool, m_bDisableMipGen);
     SCHEMA_FIELD(int32_t, m_nExplicitImageLayout);
+
+public:
+    IPointClientUIWorldPanel* ToInterface();
+    static IPointClientUIWorldPanel* FromOriginal(CPointClientUIWorldPanel* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCLIENTUIWORLDPANEL_H

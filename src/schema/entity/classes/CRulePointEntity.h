@@ -56,12 +56,21 @@
 
 #include "CRuleEntity.h"
 
+class IRulePointEntity;
+
 class CRulePointEntity : public CRuleEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CRulePointEntity);
 
     SCHEMA_FIELD(int32_t, m_Score);
+
+public:
+    IRulePointEntity* ToInterface();
+    static IRulePointEntity* FromOriginal(CRulePointEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRULEPOINTENTITY_H

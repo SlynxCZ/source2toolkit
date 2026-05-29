@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IFuncVehicleClip;
+
 class CFuncVehicleClip : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncVehicleClip);
 
+
+public:
+    IFuncVehicleClip* ToInterface();
+    static IFuncVehicleClip* FromOriginal(CFuncVehicleClip* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCVEHICLECLIP_H

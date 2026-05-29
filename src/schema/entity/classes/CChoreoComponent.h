@@ -56,6 +56,7 @@
 #include "SceneEventId_t.h"
 
 class CBaseModelEntity;
+class IChoreoComponent;
 
 class CChoreoComponent
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(SceneEventId_t, m_nNextSceneEventId);
     SCHEMA_FIELD(bool, m_bUpdateLayerPriorities);
     SCHEMA_FIELD(float, m_flAllowResponsesEndTime);
+
+public:
+    IChoreoComponent* ToInterface();
+    static IChoreoComponent* FromOriginal(CChoreoComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCHOREOCOMPONENT_H

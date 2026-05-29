@@ -56,6 +56,7 @@
 
 #include "CBaseEntity.h"
 
+class IPathParticleRope;
 class InfoForResourceTypeIParticleSystemDefinition;
 
 class CPathParticleRope : public CBaseEntity
@@ -79,6 +80,13 @@ public:
     SCHEMA_FIELD(CUtlVector<Vector>, m_PathNodes_Color);
     SCHEMA_FIELD(CUtlVector<bool>, m_PathNodes_PinEnabled);
     SCHEMA_FIELD(CUtlVector<float>, m_PathNodes_RadiusScale);
+
+public:
+    IPathParticleRope* ToInterface();
+    static IPathParticleRope* FromOriginal(CPathParticleRope* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHPARTICLEROPE_H

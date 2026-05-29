@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IPointVelocitySensor;
 
 class CPointVelocitySensor : public CPointEntity
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(float, m_fPrevVelocity);
     SCHEMA_FIELD(float, m_flAvgInterval);
+
+public:
+    IPointVelocitySensor* ToInterface();
+    static IPointVelocitySensor* FromOriginal(CPointVelocitySensor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTVELOCITYSENSOR_H

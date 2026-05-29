@@ -56,12 +56,21 @@
 
 #include "CBaseTrigger.h"
 
+class IBuyZone;
+
 class CBuyZone : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CBuyZone);
 
     SCHEMA_FIELD(int32_t, m_LegacyTeamNum);
+
+public:
+    IBuyZone* ToInterface();
+    static IBuyZone* FromOriginal(CBuyZone* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBUYZONE_H

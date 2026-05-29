@@ -58,6 +58,7 @@
 
 class CBasePlayerController;
 class CBasePlayerPawn;
+class ITeam;
 
 class CTeam : public CBaseEntity
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CBasePlayerPawn>>, m_aPlayers);
     SCHEMA_FIELD(int32_t, m_iScore);
     SCHEMA_FIELD_POINTER(char, m_szTeamname);
+
+public:
+    ITeam* ToInterface();
+    static ITeam* FromOriginal(CTeam* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTEAM_H

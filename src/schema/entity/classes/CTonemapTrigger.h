@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class ITonemapTrigger;
+
 class CTonemapTrigger : public CBaseTrigger
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_tonemapControllerName);
     SCHEMA_FIELD(CEntityHandle, m_hTonemapController);
+
+public:
+    ITonemapTrigger* ToInterface();
+    static ITonemapTrigger* FromOriginal(CTonemapTrigger* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTONEMAPTRIGGER_H

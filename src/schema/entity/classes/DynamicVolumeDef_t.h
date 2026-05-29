@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CBaseEntity;
+class IDynamicVolumeDef_t;
 
 class DynamicVolumeDef_t
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(uint32_t, m_nAreaSrc);
     SCHEMA_FIELD(uint32_t, m_nAreaDst);
     SCHEMA_FIELD(bool, m_bAttached);
+
+public:
+    IDynamicVolumeDef_t* ToInterface();
+    static IDynamicVolumeDef_t* FromOriginal(DynamicVolumeDef_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_DYNAMICVOLUMEDEF_T_H

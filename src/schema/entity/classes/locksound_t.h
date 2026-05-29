@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Ilocksound_t;
+
 class locksound_t
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, sLockedSound);
     SCHEMA_FIELD(CUtlSymbolLarge, sUnlockedSound);
     SCHEMA_FIELD(float, flwaitSound);
+
+public:
+    Ilocksound_t* ToInterface();
+    static Ilocksound_t* FromOriginal(locksound_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_LOCKSOUND_T_H

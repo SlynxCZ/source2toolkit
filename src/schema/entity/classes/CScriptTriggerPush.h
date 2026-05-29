@@ -56,12 +56,21 @@
 
 #include "CTriggerPush.h"
 
+class IScriptTriggerPush;
+
 class CScriptTriggerPush : public CTriggerPush
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptTriggerPush);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    IScriptTriggerPush* ToInterface();
+    static IScriptTriggerPush* FromOriginal(CScriptTriggerPush* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTTRIGGERPUSH_H

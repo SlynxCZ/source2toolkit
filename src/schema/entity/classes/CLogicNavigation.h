@@ -57,6 +57,8 @@
 #include "CLogicalEntity.h"
 #include "source2toolkit/schema/entity/enums/navproperties_t.h"
 
+class ILogicNavigation;
+
 class CLogicNavigation : public CLogicalEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
 
     SCHEMA_FIELD(bool, m_isOn);
     SCHEMA_FIELD(navproperties_t, m_navProperty);
+
+public:
+    ILogicNavigation* ToInterface();
+    static ILogicNavigation* FromOriginal(CLogicNavigation* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICNAVIGATION_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ISellbackPurchaseEntry_t;
+
 class SellbackPurchaseEntry_t
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nPrevArmor);
     SCHEMA_FIELD(bool, m_bPrevHelmet);
     SCHEMA_FIELD(CEntityHandle, m_hItem);
+
+public:
+    ISellbackPurchaseEntry_t* ToInterface();
+    static ISellbackPurchaseEntry_t* FromOriginal(SellbackPurchaseEntry_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SELLBACKPURCHASEENTRY_T_H

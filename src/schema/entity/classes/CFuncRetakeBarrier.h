@@ -56,11 +56,20 @@
 
 #include "CDynamicProp.h"
 
+class IFuncRetakeBarrier;
+
 class CFuncRetakeBarrier : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncRetakeBarrier);
 
+
+public:
+    IFuncRetakeBarrier* ToInterface();
+    static IFuncRetakeBarrier* FromOriginal(CFuncRetakeBarrier* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCRETAKEBARRIER_H

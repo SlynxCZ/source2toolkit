@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IEntitySpottedState_t;
+
 class EntitySpottedState_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(bool, m_bSpotted);
     SCHEMA_FIELD_POINTER(uint32_t, m_bSpottedByMask);
+
+public:
+    IEntitySpottedState_t* ToInterface();
+    static IEntitySpottedState_t* FromOriginal(EntitySpottedState_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ENTITYSPOTTEDSTATE_T_H

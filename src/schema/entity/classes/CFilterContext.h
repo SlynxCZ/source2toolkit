@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterContext;
+
 class CFilterContext : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterContext);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterContext);
+
+public:
+    IFilterContext* ToInterface();
+    static IFilterContext* FromOriginal(CFilterContext* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERCONTEXT_H

@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class ILogicDistanceAutosave;
+
 class CLogicDistanceAutosave : public CLogicalEntity
 {
 public:
@@ -67,6 +69,13 @@ public:
     SCHEMA_FIELD(bool, m_bCheckCough);
     SCHEMA_FIELD(bool, m_bThinkDangerous);
     SCHEMA_FIELD(float, m_flDangerousTime);
+
+public:
+    ILogicDistanceAutosave* ToInterface();
+    static ILogicDistanceAutosave* FromOriginal(CLogicDistanceAutosave* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICDISTANCEAUTOSAVE_H

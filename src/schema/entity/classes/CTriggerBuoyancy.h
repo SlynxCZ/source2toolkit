@@ -57,6 +57,8 @@
 #include "CBaseTrigger.h"
 #include "CBuoyancyHelper.h"
 
+class ITriggerBuoyancy;
+
 class CTriggerBuoyancy : public CBaseTrigger
 {
 public:
@@ -64,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CBuoyancyHelper, m_BuoyancyHelper);
     SCHEMA_FIELD(float, m_flFluidDensity);
+
+public:
+    ITriggerBuoyancy* ToInterface();
+    static ITriggerBuoyancy* FromOriginal(CTriggerBuoyancy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERBUOYANCY_H

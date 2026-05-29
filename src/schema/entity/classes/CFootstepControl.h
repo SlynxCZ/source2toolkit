@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class IFootstepControl;
+
 class CFootstepControl : public CBaseTrigger
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_source);
     SCHEMA_FIELD(CUtlSymbolLarge, m_destination);
+
+public:
+    IFootstepControl* ToInterface();
+    static IFootstepControl* FromOriginal(CFootstepControl* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFOOTSTEPCONTROL_H

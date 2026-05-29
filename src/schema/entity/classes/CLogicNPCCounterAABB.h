@@ -56,6 +56,8 @@
 
 #include "CLogicNPCCounter.h"
 
+class ILogicNPCCounterAABB;
+
 class CLogicNPCCounterAABB : public CLogicNPCCounter
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(Vector, m_vDistanceOuterMaxs);
     SCHEMA_FIELD(Vector, m_vOuterMins);
     SCHEMA_FIELD(Vector, m_vOuterMaxs);
+
+public:
+    ILogicNPCCounterAABB* ToInterface();
+    static ILogicNPCCounterAABB* FromOriginal(CLogicNPCCounterAABB* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICNPCCOUNTERAABB_H

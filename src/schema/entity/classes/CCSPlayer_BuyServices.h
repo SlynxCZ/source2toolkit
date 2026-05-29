@@ -56,12 +56,21 @@
 #include "CPlayerPawnComponent.h"
 #include "SellbackPurchaseEntry_t.h"
 
+class ICSPlayer_BuyServices;
+
 class CCSPlayer_BuyServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPlayer_BuyServices);
 
     SCHEMA_FIELD(CUtlVector<SellbackPurchaseEntry_t>, m_vecSellbackPurchaseEntries);
+
+public:
+    ICSPlayer_BuyServices* ToInterface();
+    static ICSPlayer_BuyServices* FromOriginal(CCSPlayer_BuyServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_BUYSERVICES_H

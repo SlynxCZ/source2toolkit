@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CLightEntity;
+class IMultiLightProxy;
 
 class CMultiLightProxy : public CLogicalEntity
 {
@@ -71,6 +72,13 @@ public:
     SCHEMA_FIELD(float, m_flTargetBrightnessMultiplier);
     SCHEMA_FIELD(float, m_flCurrentBrightnessMultiplier);
     SCHEMA_FIELD(CUtlVector<CHandle<CLightEntity>>, m_vecLights);
+
+public:
+    IMultiLightProxy* ToInterface();
+    static IMultiLightProxy* FromOriginal(CMultiLightProxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMULTILIGHTPROXY_H

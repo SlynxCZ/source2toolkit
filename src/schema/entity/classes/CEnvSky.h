@@ -56,6 +56,7 @@
 
 #include "CBaseModelEntity.h"
 
+class IEnvSky;
 class InfoForResourceTypeIMaterial2;
 
 class CEnvSky : public CBaseModelEntity
@@ -75,6 +76,13 @@ public:
     SCHEMA_FIELD(float, m_flFogMaxStart);
     SCHEMA_FIELD(float, m_flFogMaxEnd);
     SCHEMA_FIELD(bool, m_bEnabled);
+
+public:
+    IEnvSky* ToInterface();
+    static IEnvSky* FromOriginal(CEnvSky* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSKY_H

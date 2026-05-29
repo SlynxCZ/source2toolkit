@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerGravity;
+
 class CTriggerGravity : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerGravity);
 
+
+public:
+    ITriggerGravity* ToInterface();
+    static ITriggerGravity* FromOriginal(CTriggerGravity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERGRAVITY_H

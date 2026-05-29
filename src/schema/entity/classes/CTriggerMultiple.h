@@ -56,12 +56,21 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerMultiple;
+
 class CTriggerMultiple : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerMultiple);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrigger);
+
+public:
+    ITriggerMultiple* ToInterface();
+    static ITriggerMultiple* FromOriginal(CTriggerMultiple* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERMULTIPLE_H

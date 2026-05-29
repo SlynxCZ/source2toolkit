@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeCVDataResource;
+
 class InfoForResourceTypeCVDataResource
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCVDataResource);
 
+
+public:
+    IInfoForResourceTypeCVDataResource* ToInterface();
+    static IInfoForResourceTypeCVDataResource* FromOriginal(InfoForResourceTypeCVDataResource* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECVDATARESOURCE_H

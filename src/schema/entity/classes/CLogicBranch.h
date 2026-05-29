@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class ILogicBranch;
 
 class CLogicBranch : public CLogicalEntity
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CUtlVector<CHandle<CBaseEntity>>, m_Listeners);
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrue);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFalse);
+
+public:
+    ILogicBranch* ToInterface();
+    static ILogicBranch* FromOriginal(CLogicBranch* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICBRANCH_H

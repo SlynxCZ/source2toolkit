@@ -57,6 +57,7 @@
 #include "CBaseModelEntity.h"
 
 class CBaseEntity;
+class IRopeKeyframe;
 class InfoForResourceTypeIMaterial2;
 
 class CRopeKeyframe : public CBaseModelEntity
@@ -83,6 +84,13 @@ public:
     SCHEMA_FIELD(bool, m_bEndPointValid);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hStartPoint);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEndPoint);
+
+public:
+    IRopeKeyframe* ToInterface();
+    static IRopeKeyframe* FromOriginal(CRopeKeyframe* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CROPEKEYFRAME_H

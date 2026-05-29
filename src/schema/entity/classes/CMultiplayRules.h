@@ -55,11 +55,20 @@
 
 #include "CGameRules.h"
 
+class IMultiplayRules;
+
 class CMultiplayRules : public CGameRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CMultiplayRules);
 
+
+public:
+    IMultiplayRules* ToInterface();
+    static IMultiplayRules* FromOriginal(CMultiplayRules* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMULTIPLAYRULES_H

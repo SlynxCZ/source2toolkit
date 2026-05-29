@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IEnvDetailController;
+
 class CEnvDetailController : public CBaseEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(float, m_flFadeStartDist);
     SCHEMA_FIELD(float, m_flFadeEndDist);
+
+public:
+    IEnvDetailController* ToInterface();
+    static IEnvDetailController* FromOriginal(CEnvDetailController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVDETAILCONTROLLER_H

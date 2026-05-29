@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IInfoLandmark;
+
 class CInfoLandmark : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoLandmark);
 
+
+public:
+    IInfoLandmark* ToInterface();
+    static IInfoLandmark* FromOriginal(CInfoLandmark* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOLANDMARK_H

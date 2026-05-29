@@ -61,6 +61,7 @@
 
 class CBaseEntity;
 class CCSPlayerPawn;
+class IChicken;
 
 class CChicken : public CDynamicProp
 {
@@ -95,6 +96,13 @@ public:
     SCHEMA_FIELD(float, m_flActiveFollowStartTime);
     SCHEMA_FIELD(CountdownTimer, m_followMinuteTimer);
     SCHEMA_FIELD(CountdownTimer, m_BlockDirectionTimer);
+
+public:
+    IChicken* ToInterface();
+    static IChicken* FromOriginal(CChicken* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCHICKEN_H

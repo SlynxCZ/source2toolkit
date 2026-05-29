@@ -56,11 +56,20 @@
 
 #include "CCSGO_TeamSelectCharacterPosition.h"
 
+class ICSGO_TeamSelectTerroristPosition;
+
 class CCSGO_TeamSelectTerroristPosition : public CCSGO_TeamSelectCharacterPosition
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_TeamSelectTerroristPosition);
 
+
+public:
+    ICSGO_TeamSelectTerroristPosition* ToInterface();
+    static ICSGO_TeamSelectTerroristPosition* FromOriginal(CCSGO_TeamSelectTerroristPosition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGO_TEAMSELECTTERRORISTPOSITION_H

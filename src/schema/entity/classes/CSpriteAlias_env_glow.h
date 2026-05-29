@@ -56,11 +56,20 @@
 
 #include "CSprite.h"
 
+class ISpriteAlias_env_glow;
+
 class CSpriteAlias_env_glow : public CSprite
 {
 public:
     DECLARE_SCHEMA_CLASS(CSpriteAlias_env_glow);
 
+
+public:
+    ISpriteAlias_env_glow* ToInterface();
+    static ISpriteAlias_env_glow* FromOriginal(CSpriteAlias_env_glow* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSPRITEALIAS_ENV_GLOW_H

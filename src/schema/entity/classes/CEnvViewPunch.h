@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IEnvViewPunch;
+
 class CEnvViewPunch : public CPointEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(float, m_flRadius);
     SCHEMA_FIELD(QAngle, m_angViewPunch);
+
+public:
+    IEnvViewPunch* ToInterface();
+    static IEnvViewPunch* FromOriginal(CEnvViewPunch* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVVIEWPUNCH_H

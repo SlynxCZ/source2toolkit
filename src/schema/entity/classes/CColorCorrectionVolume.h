@@ -56,6 +56,8 @@
 
 #include "CBaseTrigger.h"
 
+class IColorCorrectionVolume;
+
 class CColorCorrectionVolume : public CBaseTrigger
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_LastEnterTime);
     SCHEMA_FIELD(float, m_LastExitWeight);
     SCHEMA_FIELD(float, m_LastExitTime);
+
+public:
+    IColorCorrectionVolume* ToInterface();
+    static IColorCorrectionVolume* FromOriginal(CColorCorrectionVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCOLORCORRECTIONVOLUME_H

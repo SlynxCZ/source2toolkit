@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterTeam;
+
 class CFilterTeam : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterTeam);
 
     SCHEMA_FIELD(int32_t, m_iFilterTeam);
+
+public:
+    IFilterTeam* ToInterface();
+    static IFilterTeam* FromOriginal(CFilterTeam* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERTEAM_H

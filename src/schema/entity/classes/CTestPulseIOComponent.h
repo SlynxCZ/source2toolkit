@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ITestPulseIOComponent;
+
 class CTestPulseIOComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CTestPulseIOComponent);
 
     SCHEMA_FIELD(CUtlString, m_ComponentData);
+
+public:
+    ITestPulseIOComponent* ToInterface();
+    static ITestPulseIOComponent* FromOriginal(CTestPulseIOComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIOCOMPONENT_H

@@ -59,6 +59,7 @@
 #include "source2toolkit/schema/entity/enums/DamageTypes_t.h"
 
 class CBaseEntity;
+class IEnvExplosion;
 
 class CEnvExplosion : public CModelPointEntity
 {
@@ -80,6 +81,13 @@ public:
     SCHEMA_FIELD(Class_T, m_iClassIgnore2);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszEntityIgnoreName);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hEntityIgnore);
+
+public:
+    IEnvExplosion* ToInterface();
+    static IEnvExplosion* FromOriginal(CEnvExplosion* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVEXPLOSION_H

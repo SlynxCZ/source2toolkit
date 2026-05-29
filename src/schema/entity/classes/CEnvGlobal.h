@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IEnvGlobal;
+
 class CEnvGlobal : public CLogicalEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_triggermode);
     SCHEMA_FIELD(int32_t, m_initialstate);
     SCHEMA_FIELD(int32_t, m_counter);
+
+public:
+    IEnvGlobal* ToInterface();
+    static IEnvGlobal* FromOriginal(CEnvGlobal* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVGLOBAL_H

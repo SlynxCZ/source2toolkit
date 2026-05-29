@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IEnvTilt;
+
 class CEnvTilt : public CPointEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_Radius);
     SCHEMA_FIELD(float, m_TiltTime);
     SCHEMA_FIELD(float, m_stopTime);
+
+public:
+    IEnvTilt* ToInterface();
+    static IEnvTilt* FromOriginal(CEnvTilt* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVTILT_H

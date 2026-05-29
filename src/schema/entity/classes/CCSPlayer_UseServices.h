@@ -56,6 +56,7 @@
 #include "CPlayer_UseServices.h"
 
 class CBaseEntity;
+class ICSPlayer_UseServices;
 
 class CCSPlayer_UseServices : public CPlayer_UseServices
 {
@@ -65,6 +66,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLastKnownUseEntity);
     SCHEMA_FIELD(float, m_flLastUseTimeStamp);
     SCHEMA_FIELD(float, m_flTimeLastUsedWindow);
+
+public:
+    ICSPlayer_UseServices* ToInterface();
+    static ICSPlayer_UseServices* FromOriginal(CCSPlayer_UseServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYER_USESERVICES_H

@@ -56,12 +56,21 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerDetectExplosion;
+
 class CTriggerDetectExplosion : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerDetectExplosion);
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnDetectedExplosion);
+
+public:
+    ITriggerDetectExplosion* ToInterface();
+    static ITriggerDetectExplosion* FromOriginal(CTriggerDetectExplosion* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERDETECTEXPLOSION_H

@@ -56,6 +56,8 @@
 
 #include "CPhysConstraint.h"
 
+class IRagdollConstraint;
+
 class CRagdollConstraint : public CPhysConstraint
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(float, m_xfriction);
     SCHEMA_FIELD(float, m_yfriction);
     SCHEMA_FIELD(float, m_zfriction);
+
+public:
+    IRagdollConstraint* ToInterface();
+    static IRagdollConstraint* FromOriginal(CRagdollConstraint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRAGDOLLCONSTRAINT_H

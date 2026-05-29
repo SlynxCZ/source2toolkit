@@ -56,11 +56,20 @@
 
 #include "CEnvSoundscape.h"
 
+class IEnvSoundscapeAlias_snd_soundscape;
+
 class CEnvSoundscapeAlias_snd_soundscape : public CEnvSoundscape
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnvSoundscapeAlias_snd_soundscape);
 
+
+public:
+    IEnvSoundscapeAlias_snd_soundscape* ToInterface();
+    static IEnvSoundscapeAlias_snd_soundscape* FromOriginal(CEnvSoundscapeAlias_snd_soundscape* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPEALIAS_SND_SOUNDSCAPE_H

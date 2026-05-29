@@ -56,6 +56,8 @@
 
 #include "CBaseCSGrenadeProjectile.h"
 
+class IDecoyProjectile;
+
 class CDecoyProjectile : public CBaseCSGrenadeProjectile
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_shotsRemaining);
     SCHEMA_FIELD(float, m_fExpireTime);
     SCHEMA_FIELD(uint16_t, m_decoyWeaponDefIndex);
+
+public:
+    IDecoyProjectile* ToInterface();
+    static IDecoyProjectile* FromOriginal(CDecoyProjectile* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDECOYPROJECTILE_H

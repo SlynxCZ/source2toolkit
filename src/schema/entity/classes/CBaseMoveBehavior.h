@@ -56,6 +56,8 @@
 
 #include "CPathKeyFrame.h"
 
+class IBaseMoveBehavior;
+
 class CBaseMoveBehavior : public CPathKeyFrame
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(CHandle<CPathKeyFrame>, m_pPostKeyFrame);
     SCHEMA_FIELD(float, m_flTimeIntoFrame);
     SCHEMA_FIELD(int32_t, m_iDirection);
+
+public:
+    IBaseMoveBehavior* ToInterface();
+    static IBaseMoveBehavior* FromOriginal(CBaseMoveBehavior* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEMOVEBEHAVIOR_H

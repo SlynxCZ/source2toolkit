@@ -55,6 +55,8 @@
 
 #include "DecalGroupOption_t.h"
 
+class IDecalGroupVData;
+
 class CDecalGroupVData
 {
 public:
@@ -62,6 +64,13 @@ public:
 
     SCHEMA_FIELD(CUtlVector<DecalGroupOption_t>, m_vecOptions);
     SCHEMA_FIELD(float, m_flTotalProbability);
+
+public:
+    IDecalGroupVData* ToInterface();
+    static IDecalGroupVData* FromOriginal(CDecalGroupVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDECALGROUPVDATA_H

@@ -56,11 +56,20 @@
 
 #include "CFuncWall.h"
 
+class IFuncWallToggle;
+
 class CFuncWallToggle : public CFuncWall
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncWallToggle);
 
+
+public:
+    IFuncWallToggle* ToInterface();
+    static IFuncWallToggle* FromOriginal(CFuncWallToggle* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCWALLTOGGLE_H

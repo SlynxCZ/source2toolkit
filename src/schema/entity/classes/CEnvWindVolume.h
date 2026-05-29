@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IEnvWindVolume;
+
 class CEnvWindVolume : public CBaseEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(float, m_fWindTurbulenceMultiplier);
     SCHEMA_FIELD(float, m_fWindSpeedVariationMultiplier);
     SCHEMA_FIELD(float, m_fWindDirectionVariationMultiplier);
+
+public:
+    IEnvWindVolume* ToInterface();
+    static IEnvWindVolume* FromOriginal(CEnvWindVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVWINDVOLUME_H

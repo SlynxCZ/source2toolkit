@@ -57,6 +57,7 @@
 #include "source2toolkit/schema/entity/enums/ObserverMode_t.h"
 
 class CBaseEntity;
+class IPlayer_ObserverServices;
 
 class CPlayer_ObserverServices : public CPlayerPawnComponent
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hObserverTarget);
     SCHEMA_FIELD(ObserverMode_t, m_iObserverLastMode);
     SCHEMA_FIELD(bool, m_bForcedObserverMode);
+
+public:
+    IPlayer_ObserverServices* ToInterface();
+    static IPlayer_ObserverServices* FromOriginal(CPlayer_ObserverServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_OBSERVERSERVICES_H

@@ -56,12 +56,21 @@
 
 #include "CPointClientUIWorldPanel.h"
 
+class IPointClientUIWorldTextPanel;
+
 class CPointClientUIWorldTextPanel : public CPointClientUIWorldPanel
 {
 public:
     DECLARE_SCHEMA_CLASS(CPointClientUIWorldTextPanel);
 
     SCHEMA_FIELD_POINTER(char, m_messageText);
+
+public:
+    IPointClientUIWorldTextPanel* ToInterface();
+    static IPointClientUIWorldTextPanel* FromOriginal(CPointClientUIWorldTextPanel* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCLIENTUIWORLDTEXTPANEL_H

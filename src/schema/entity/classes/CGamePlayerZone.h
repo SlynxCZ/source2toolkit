@@ -56,6 +56,8 @@
 
 #include "CRuleBrushEntity.h"
 
+class IGamePlayerZone;
+
 class CGamePlayerZone : public CRuleBrushEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerInZone);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPlayerOutZone);
+
+public:
+    IGamePlayerZone* ToInterface();
+    static IGamePlayerZone* FromOriginal(CGamePlayerZone* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMEPLAYERZONE_H

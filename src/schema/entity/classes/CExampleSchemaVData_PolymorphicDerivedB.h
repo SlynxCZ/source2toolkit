@@ -55,12 +55,21 @@
 
 #include "CExampleSchemaVData_PolymorphicBase.h"
 
+class IExampleSchemaVData_PolymorphicDerivedB;
+
 class CExampleSchemaVData_PolymorphicDerivedB : public CExampleSchemaVData_PolymorphicBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CExampleSchemaVData_PolymorphicDerivedB);
 
     SCHEMA_FIELD(int32_t, m_nDerivedB);
+
+public:
+    IExampleSchemaVData_PolymorphicDerivedB* ToInterface();
+    static IExampleSchemaVData_PolymorphicDerivedB* FromOriginal(CExampleSchemaVData_PolymorphicDerivedB* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_POLYMORPHICDERIVEDB_H

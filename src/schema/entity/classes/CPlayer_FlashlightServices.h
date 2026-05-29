@@ -55,11 +55,20 @@
 
 #include "CPlayerPawnComponent.h"
 
+class IPlayer_FlashlightServices;
+
 class CPlayer_FlashlightServices : public CPlayerPawnComponent
 {
 public:
     DECLARE_SCHEMA_CLASS(CPlayer_FlashlightServices);
 
+
+public:
+    IPlayer_FlashlightServices* ToInterface();
+    static IPlayer_FlashlightServices* FromOriginal(CPlayer_FlashlightServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLAYER_FLASHLIGHTSERVICES_H

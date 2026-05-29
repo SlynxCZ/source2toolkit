@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IEnvInstructorVRHint;
+
 class CEnvInstructorVRHint : public CPointEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszCustomLayoutFile);
     SCHEMA_FIELD(int32_t, m_iAttachType);
     SCHEMA_FIELD(float, m_flHeightOffset);
+
+public:
+    IEnvInstructorVRHint* ToInterface();
+    static IEnvInstructorVRHint* FromOriginal(CEnvInstructorVRHint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVINSTRUCTORVRHINT_H

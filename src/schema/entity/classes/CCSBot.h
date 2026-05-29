@@ -59,6 +59,7 @@
 
 class CBaseEntity;
 class CCSPlayerPawn;
+class ICSBot;
 
 class CCSBot : public CBot
 {
@@ -205,6 +206,13 @@ public:
     SCHEMA_FIELD(Vector, m_radioPosition);
     SCHEMA_FIELD(float, m_voiceEndTimestamp);
     SCHEMA_FIELD(int32_t, m_lastValidReactionQueueFrame);
+
+public:
+    ICSBot* ToInterface();
+    static ICSBot* FromOriginal(CCSBot* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSBOT_H

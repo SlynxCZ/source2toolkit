@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerCallback;
+
 class CTriggerCallback : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerCallback);
 
+
+public:
+    ITriggerCallback* ToInterface();
+    static ITriggerCallback* FromOriginal(CTriggerCallback* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERCALLBACK_H

@@ -39,63 +39,106 @@
 #include "addresses.h"
 #include "commands.h"
 #include "events.h"
+#include "inlinehooks.h"
 #include "shared.h"
 
-#include "source2toolkit/utils/plat.h"
+#include "schema/entity/classes/CBaseEntity.h"
+
 #include "source2toolkit/schema/entityio.h"
-#include "source2toolkit/schema/entity/classes/CBeam.h"
+#include "source2toolkit/schema/entity/classes/IEntityInstance.h"
+#include "source2toolkit/utils/plat.h"
+#include "source2toolkit/utils/virtual.h"
 
 namespace entities
 {
     EntitiesManager entitiesManager;
 
-    CBaseEntity* EntitiesManager::FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules)
+    IBaseEntity* EntitiesManager::FindPickerEntity(IBasePlayerController* pPlayer, ICSGameRules* pGameRules)
     {
-        return UTIL_FindPickerEntity(pPlayer, pGameRules);
+        static int offset = shared::g_pGameConfig->GetOffset("CGameRules_FindPickerEntity");
+        return CALL_VIRTUAL(CBaseEntity*, offset, pGameRules ? pGameRules : shared::g_pGameRules, pPlayer, nullptr)->ToInterface();
     }
 
-    CBaseEntity* EntitiesManager::FindEntityByClassname(CEntityInstance* pStart, const char* name)
+    IBaseEntity* EntitiesManager::FindEntityByClassname(IEntityInstance* pStart, const char* name)
     {
-        return UTIL_FindEntityByClassname(pStart, name);
+        return addresses::toolkitAddresses.FindEntityByClassName(shared::g_pEntitySystem, pStart->GetOriginal(), name)->ToInterface();
     }
 
-    CBaseEntity* EntitiesManager::FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter)
+    IBaseEntity* EntitiesManager::FindEntityByName(IEntityInstance* pStartEntity, const char* szName, IEntityInstance* pSearchingEntity, IEntityInstance* pActivator, IEntityInstance* pCaller, IEntityFindFilter* pFilter)
     {
-        return UTIL_FindEntityByName(pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
+        return addresses::toolkitAddresses.FindEntityByName(shared::g_pEntitySystem, pStartEntity->GetOriginal(), szName, pSearchingEntity->GetOriginal(), pActivator->GetOriginal(), pCaller->GetOriginal(), pFilter)->ToInterface();
     }
 
-    CBaseEntity* EntitiesManager::CreateEntityByName(const char* pszClassName)
+    IBaseEntity* EntitiesManager::CreateEntityByName(const char* pszClassName)
     {
-        return UTIL_CreateEntityByName(pszClassName);
+        return addresses::toolkitAddresses.CreateEntityByName(pszClassName, -1)->ToInterface();
     }
 
     void EntitiesManager::AddEntityListener(IEntityListener* pListener)
     {
-        UTIL_AddEntityListener(pListener);
+        shared::g_pEntitySystem->AddListenerEntity(pListener);
     }
 
     void EntitiesManager::RemoveEntityListener(IEntityListener* pListener)
     {
-        UTIL_RemoveEntityListener(pListener);
+        shared::g_pEntitySystem->RemoveListenerEntity(pListener);
     }
 
-    void EntitiesManager::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
+    void EntitiesManager::AcceptInput(IEntityInstance* pTarget, const char* pszInput, IEntityInstance* pActivator, IEntityInstance* pCaller, const char* pszValue)
     {
-        return UTIL_AcceptInput(pTarget, pszInput, pActivator, pCaller, pszValue);
+        addresses::toolkitAddresses.AcceptInput(pTarget->GetOriginal(), pszInput, pActivator->GetOriginal(), pCaller->GetOriginal(), variant_t(pszValue), 0, nullptr);
     }
 
-    void EntitiesManager::AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
+    void EntitiesManager::AddEntityIOEvent(IEntityInstance* pTarget, const char* pszInput, IEntityInstance* pActivator, IEntityInstance* pCaller, const char* pszValue, float flDelay)
     {
-        return UTIL_AddEntityIOEvent(pTarget, pszInput, pActivator, pCaller, pszValue, flDelay);
+        addresses::toolkitAddresses.AddEntityIOEvent(shared::g_pEntitySystem, pTarget->GetOriginal(), pszInput, pActivator->GetOriginal(), pCaller->GetOriginal(), variant_t(pszValue), flDelay, 0, nullptr, nullptr);
     }
 
     void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
     {
-        UTIL_AddEntityIOListener(pListener, pchClassName, pchOutputName, nMode);
+        OutputKey key{
+            pchClassName ? pchClassName : "*",
+            pchOutputName ? pchOutputName : "*"
+        };
+
+        if (nMode == Mode::Post)
+            inlinehooks::entityIOListenerStack[key].m_vecPost.push_back(pListener);
+        else
+            inlinehooks::entityIOListenerStack[key].m_vecPre.push_back(pListener);
     }
 
     void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
     {
-        UTIL_RemoveEntityIOListener(pListener, pchClassName, pchOutputName, nMode);
+        if (!pchClassName && !pchOutputName)
+        {
+            for (auto it = inlinehooks::entityIOListenerStack.begin(); it != inlinehooks::entityIOListenerStack.end(); )
+            {
+                auto& vec = nMode == Mode::Post ? it->second.m_vecPost : it->second.m_vecPre;
+
+                std::erase(vec, pListener);
+
+                if (it->second.m_vecPre.empty() && it->second.m_vecPost.empty())
+                    it = inlinehooks::entityIOListenerStack.erase(it);
+                else
+                    ++it;
+            }
+            return;
+        }
+
+        OutputKey key{
+            pchClassName ? pchClassName : "*",
+            pchOutputName ? pchOutputName : "*"
+        };
+
+        auto it = inlinehooks::entityIOListenerStack.find(key);
+        if (it == inlinehooks::entityIOListenerStack.end())
+            return;
+
+        auto& vec = nMode == Mode::Post ? it->second.m_vecPost : it->second.m_vecPre;
+
+        std::erase(vec, pListener);
+
+        if (it->second.m_vecPre.empty() && it->second.m_vecPost.empty())
+            inlinehooks::entityIOListenerStack.erase(it);
     }
 }

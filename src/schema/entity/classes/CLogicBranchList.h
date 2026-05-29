@@ -58,6 +58,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class ILogicBranchList;
 
 class CLogicBranchList : public CLogicalEntity
 {
@@ -70,6 +71,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnAllTrue);
     SCHEMA_FIELD(CEntityIOOutput, m_OnAllFalse);
     SCHEMA_FIELD(CEntityIOOutput, m_OnMixed);
+
+public:
+    ILogicBranchList* ToInterface();
+    static ILogicBranchList* FromOriginal(CLogicBranchList* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICBRANCHLIST_H

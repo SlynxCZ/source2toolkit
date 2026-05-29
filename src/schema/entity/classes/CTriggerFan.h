@@ -58,6 +58,7 @@
 #include "CountdownTimer.h"
 
 class CInfoFan;
+class ITriggerFan;
 
 class CTriggerFan : public CBaseTrigger
 {
@@ -89,6 +90,13 @@ public:
     SCHEMA_FIELD(bool, m_bPushPlayer);
     SCHEMA_FIELD(bool, m_bRampDown);
     SCHEMA_FIELD(int32_t, m_nManagerFanIdx);
+
+public:
+    ITriggerFan* ToInterface();
+    static ITriggerFan* FromOriginal(CTriggerFan* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERFAN_H

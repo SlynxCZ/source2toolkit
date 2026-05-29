@@ -57,6 +57,7 @@
 #include "CBaseAnimGraph.h"
 
 class CBaseEntity;
+class IPointCommentaryNode;
 
 class CPointCommentaryNode : public CBaseAnimGraph
 {
@@ -93,6 +94,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iNodeNumber);
     SCHEMA_FIELD(int32_t, m_iNodeNumberMax);
     SCHEMA_FIELD(bool, m_bListenedTo);
+
+public:
+    IPointCommentaryNode* ToInterface();
+    static IPointCommentaryNode* FromOriginal(CPointCommentaryNode* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTCOMMENTARYNODE_H

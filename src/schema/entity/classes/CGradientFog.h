@@ -56,6 +56,7 @@
 
 #include "CBaseEntity.h"
 
+class IGradientFog;
 class InfoForResourceTypeCTextureBase;
 
 class CGradientFog : public CBaseEntity
@@ -79,6 +80,13 @@ public:
     SCHEMA_FIELD(bool, m_bStartDisabled);
     SCHEMA_FIELD(bool, m_bIsEnabled);
     SCHEMA_FIELD(bool, m_bGradientFogNeedsTextures);
+
+public:
+    IGradientFog* ToInterface();
+    static IGradientFog* FromOriginal(CGradientFog* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGRADIENTFOG_H

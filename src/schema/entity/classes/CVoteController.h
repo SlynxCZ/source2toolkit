@@ -58,6 +58,7 @@
 #include "CountdownTimer.h"
 
 class CBaseIssue;
+class IVoteController;
 
 class CVoteController : public CBaseEntity
 {
@@ -78,6 +79,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nHighestCountIndex);
     SCHEMA_FIELD(CUtlVector<CBaseIssue*>, m_potentialIssues);
     SCHEMA_FIELD(CUtlVector<char*>, m_VoteOptions);
+
+public:
+    IVoteController* ToInterface();
+    static IVoteController* FromOriginal(CVoteController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CVOTECONTROLLER_H

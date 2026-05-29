@@ -57,6 +57,8 @@
 #include "source2toolkit/schema/entity/enums/BloodType.h"
 #include "CPointEntity.h"
 
+class IBlood;
+
 class CBlood : public CPointEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecSprayDir);
     SCHEMA_FIELD(float, m_flAmount);
     SCHEMA_FIELD(BloodType, m_Color);
+
+public:
+    IBlood* ToInterface();
+    static IBlood* FromOriginal(CBlood* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBLOOD_H

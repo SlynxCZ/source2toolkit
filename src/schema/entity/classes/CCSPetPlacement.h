@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class ICSPetPlacement;
+
 class CCSPetPlacement : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSPetPlacement);
 
+
+public:
+    ICSPetPlacement* ToInterface();
+    static ICSPetPlacement* FromOriginal(CCSPetPlacement* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPETPLACEMENT_H

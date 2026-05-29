@@ -58,6 +58,7 @@
 #include "CBaseAnimGraph.h"
 
 class CBaseEntity;
+class IEconEntity;
 
 class CEconEntity : public CBaseAnimGraph
 {
@@ -73,6 +74,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nFallbackStatTrak);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hOldProvidee);
     SCHEMA_FIELD(int32_t, m_iOldOwnerClass);
+
+public:
+    IEconEntity* ToInterface();
+    static IEconEntity* FromOriginal(CEconEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CECONENTITY_H

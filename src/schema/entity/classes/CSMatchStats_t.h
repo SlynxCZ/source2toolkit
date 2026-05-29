@@ -55,6 +55,8 @@
 
 #include "CSPerRoundStats_t.h"
 
+class ISMatchStats_t;
+
 class CSMatchStats_t : public CSPerRoundStats_t
 {
 public:
@@ -81,6 +83,13 @@ public:
     SCHEMA_FIELD(int32_t, m_i1v2Wins);
     SCHEMA_FIELD(int32_t, m_iEntryCount);
     SCHEMA_FIELD(int32_t, m_iEntryWins);
+
+public:
+    ISMatchStats_t* ToInterface();
+    static ISMatchStats_t* FromOriginal(CSMatchStats_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSMATCHSTATS_T_H

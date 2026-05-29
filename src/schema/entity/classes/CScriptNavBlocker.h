@@ -56,12 +56,21 @@
 
 #include "CFuncNavBlocker.h"
 
+class IScriptNavBlocker;
+
 class CScriptNavBlocker : public CFuncNavBlocker
 {
 public:
     DECLARE_SCHEMA_CLASS(CScriptNavBlocker);
 
     SCHEMA_FIELD(Vector, m_vExtent);
+
+public:
+    IScriptNavBlocker* ToInterface();
+    static IScriptNavBlocker* FromOriginal(CScriptNavBlocker* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSCRIPTNAVBLOCKER_H

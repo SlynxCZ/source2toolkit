@@ -56,6 +56,8 @@
 
 #include "CSoundOpvarSetPointEntity.h"
 
+class ISoundOpvarSetPathCornerEntity;
+
 class CSoundOpvarSetPathCornerEntity : public CSoundOpvarSetPointEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_flDistMinSqr);
     SCHEMA_FIELD(float, m_flDistMaxSqr);
     SCHEMA_FIELD(CUtlSymbolLarge, m_iszPathCornerEntityName);
+
+public:
+    ISoundOpvarSetPathCornerEntity* ToInterface();
+    static ISoundOpvarSetPathCornerEntity* FromOriginal(CSoundOpvarSetPathCornerEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETPATHCORNERENTITY_H

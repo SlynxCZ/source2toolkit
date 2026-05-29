@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IColorCorrection;
+
 class CColorCorrection : public CBaseEntity
 {
 public:
@@ -78,6 +80,13 @@ public:
     SCHEMA_FIELD(float, m_flCurWeight);
     SCHEMA_FIELD_POINTER(char, m_netlookupFilename);
     SCHEMA_FIELD(CUtlSymbolLarge, m_lookupFilename);
+
+public:
+    IColorCorrection* ToInterface();
+    static IColorCorrection* FromOriginal(CColorCorrection* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCOLORCORRECTION_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class ITestPulseIO__ThreeStringArgs_t;
+
 class CTestPulseIO__ThreeStringArgs_t
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(CUtlString, strArg1);
     SCHEMA_FIELD(CUtlString, strArg2);
     SCHEMA_FIELD(CUtlString, strArg3);
+
+public:
+    ITestPulseIO__ThreeStringArgs_t* ToInterface();
+    static ITestPulseIO__ThreeStringArgs_t* FromOriginal(CTestPulseIO__ThreeStringArgs_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTPULSEIO__THREESTRINGARGS_T_H

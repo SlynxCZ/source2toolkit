@@ -55,11 +55,20 @@
 
 #include "CPlayer_UseServices.h"
 
+class ICSObserver_UseServices;
+
 class CCSObserver_UseServices : public CPlayer_UseServices
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSObserver_UseServices);
 
+
+public:
+    ICSObserver_UseServices* ToInterface();
+    static ICSObserver_UseServices* FromOriginal(CCSObserver_UseServices* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSOBSERVER_USESERVICES_H

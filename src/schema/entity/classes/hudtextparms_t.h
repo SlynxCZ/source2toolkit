@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Ihudtextparms_t;
+
 class hudtextparms_t
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(uint8_t, channel);
     SCHEMA_FIELD(float, x);
     SCHEMA_FIELD(float, y);
+
+public:
+    Ihudtextparms_t* ToInterface();
+    static Ihudtextparms_t* FromOriginal(hudtextparms_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_HUDTEXTPARMS_T_H

@@ -59,6 +59,7 @@
 #include "EntitySpottedState_t.h"
 
 class CCSPlayerPawn;
+class IPlantedC4;
 
 class CPlantedC4 : public CBaseAnimGraph
 {
@@ -92,6 +93,13 @@ public:
     SCHEMA_FIELD(float, m_flNextBotBeepTime);
     SCHEMA_FIELD(QAngle, m_angCatchUpToPlayerEye);
     SCHEMA_FIELD(float, m_flLastSpinDetectionTime);
+
+public:
+    IPlantedC4* ToInterface();
+    static IPlantedC4* FromOriginal(CPlantedC4* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPLANTEDC4_H

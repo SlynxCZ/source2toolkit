@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IEnvSoundscape;
+
 class CEnvSoundscape : public CBaseEntity
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(bool, m_bDisabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_soundscapeName);
     SCHEMA_FIELD(uint32_t, m_soundEventHash);
+
+public:
+    IEnvSoundscape* ToInterface();
+    static IEnvSoundscape* FromOriginal(CEnvSoundscape* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVSOUNDSCAPE_H

@@ -60,6 +60,7 @@
 
 class CCSPlayerController;
 class CCSPlayer_PingServices;
+class ICSPlayerPawnBase;
 
 class CCSPlayerPawnBase : public CBasePlayerPawn
 {
@@ -81,6 +82,13 @@ public:
     SCHEMA_FIELD(float, m_flProgressBarStartTime);
     SCHEMA_FIELD(int32_t, m_iProgressBarDuration);
     SCHEMA_FIELD(CHandle<CCSPlayerController>, m_hOriginalController);
+
+public:
+    ICSPlayerPawnBase* ToInterface();
+    static ICSPlayerPawnBase* FromOriginal(CCSPlayerPawnBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERPAWNBASE_H

@@ -43,7 +43,7 @@ namespace menus {
     public:
         ChatMenuOption &AddMenuOptionWithCooldown(
                 std::string optionText,
-                std::function<void(CCSPlayerController *, ChatMenuOption &)> action,
+                std::function<void(ICSPlayerController *, ChatMenuOption &)> action,
                 bool disabled = false,
                 bool close = true,
                 std::function<bool()> disabledEvaluator = nullptr) override;
@@ -52,13 +52,13 @@ namespace menus {
     class CenterHtmlMenuInstance : public IMenuInstance
     {
     public:
-        CenterHtmlMenuInstance(CCSPlayerController *player, CenterHtmlMenu *menu)
+        CenterHtmlMenuInstance(ICSPlayerController *player, CenterHtmlMenu *menu)
             : IMenuInstance(player, menu), chMenu_(menu)
         {
         }
 
         void Display() override;
-        void OnKeyPress(CCSPlayerController* player, int key) override;
+        void OnKeyPress(ICSPlayerController* player, int key) override;
         void Close() override;
 
     protected:
@@ -78,10 +78,10 @@ namespace menus {
     class MenuManager : public IToolkitMenus
     {
     public:
-        void OpenCenterHtmlMenu(CCSPlayerController *player, CenterHtmlMenu *menu) override;
-        IMenuInstance *GetActiveMenu(CCSPlayerController *player) override;
-        void CloseActiveMenu(CCSPlayerController *player) override;
-        void OnKeyPress(CCSPlayerController *player, int key) override;
+        void OpenCenterHtmlMenu(ICSPlayerController *player, CenterHtmlMenu *menu) override;
+        IMenuInstance *GetActiveMenu(ICSPlayerController *player) override;
+        void CloseActiveMenu(ICSPlayerController *player) override;
+        void OnKeyPress(ICSPlayerController *player, int key) override;
     public:
         void Tick();
     protected:

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INetworkVelocityVector;
+
 class CNetworkVelocityVector
 {
 public:
@@ -61,6 +63,13 @@ public:
     SCHEMA_FIELD(float, m_vecX);
     SCHEMA_FIELD(float, m_vecY);
     SCHEMA_FIELD(float, m_vecZ);
+
+public:
+    INetworkVelocityVector* ToInterface();
+    static INetworkVelocityVector* FromOriginal(CNetworkVelocityVector* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNETWORKVELOCITYVECTOR_H

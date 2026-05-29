@@ -56,6 +56,8 @@
 
 #include "CSoundOpvarSetPointBase.h"
 
+class ISoundOpvarSetPointEntity;
+
 class CSoundOpvarSetPointEntity : public CSoundOpvarSetPointBase
 {
 public:
@@ -85,6 +87,13 @@ public:
     SCHEMA_FIELD(Vector, m_vPathingListenerPos);
     SCHEMA_FIELD(Vector, m_vPathingDirection);
     SCHEMA_FIELD(int32_t, m_nPathingSourceIndex);
+
+public:
+    ISoundOpvarSetPointEntity* ToInterface();
+    static ISoundOpvarSetPointEntity* FromOriginal(CSoundOpvarSetPointEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTENTITY_H

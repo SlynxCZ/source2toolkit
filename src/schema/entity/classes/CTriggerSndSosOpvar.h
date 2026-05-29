@@ -57,6 +57,7 @@
 #include "CBaseTrigger.h"
 
 class CBaseEntity;
+class ITriggerSndSosOpvar;
 
 class CTriggerSndSosOpvar : public CBaseTrigger
 {
@@ -77,6 +78,13 @@ public:
     SCHEMA_FIELD_POINTER(char, m_operatorNameChar);
     SCHEMA_FIELD(Vector, m_VecNormPos);
     SCHEMA_FIELD(float, m_flNormCenterSize);
+
+public:
+    ITriggerSndSosOpvar* ToInterface();
+    static ITriggerSndSosOpvar* FromOriginal(CTriggerSndSosOpvar* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERSNDSOSOPVAR_H

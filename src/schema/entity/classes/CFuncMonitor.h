@@ -57,6 +57,7 @@
 #include "CFuncBrush.h"
 
 class CBaseEntity;
+class IFuncMonitor;
 
 class CFuncMonitor : public CFuncBrush
 {
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(bool, m_bDraw3DSkybox);
     SCHEMA_FIELD(bool, m_bStartEnabled);
+
+public:
+    IFuncMonitor* ToInterface();
+    static IFuncMonitor* FromOriginal(CFuncMonitor* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCMONITOR_H

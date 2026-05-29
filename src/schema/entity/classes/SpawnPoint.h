@@ -56,6 +56,8 @@
 
 #include "CServerOnlyPointEntity.h"
 
+class ISpawnPoint;
+
 class SpawnPoint : public CServerOnlyPointEntity
 {
 public:
@@ -64,6 +66,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iPriority);
     SCHEMA_FIELD(bool, m_bEnabled);
     SCHEMA_FIELD(int32_t, m_nType);
+
+public:
+    ISpawnPoint* ToInterface();
+    static ISpawnPoint* FromOriginal(SpawnPoint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_SPAWNPOINT_H

@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class INetworkOriginCellCoordQuantizedVector;
+
 class CNetworkOriginCellCoordQuantizedVector
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_vecX);
     SCHEMA_FIELD(float, m_vecY);
     SCHEMA_FIELD(float, m_vecZ);
+
+public:
+    INetworkOriginCellCoordQuantizedVector* ToInterface();
+    static INetworkOriginCellCoordQuantizedVector* FromOriginal(CNetworkOriginCellCoordQuantizedVector* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CNETWORKORIGINCELLCOORDQUANTIZEDVECTOR_H

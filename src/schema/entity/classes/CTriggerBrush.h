@@ -56,6 +56,8 @@
 
 #include "CBaseModelEntity.h"
 
+class ITriggerBrush;
+
 class CTriggerBrush : public CBaseModelEntity
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnUse);
     SCHEMA_FIELD(int32_t, m_iInputFilter);
     SCHEMA_FIELD(int32_t, m_iDontMessageParent);
+
+public:
+    ITriggerBrush* ToInterface();
+    static ITriggerBrush* FromOriginal(CTriggerBrush* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERBRUSH_H

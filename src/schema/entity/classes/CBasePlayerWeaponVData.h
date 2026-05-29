@@ -57,6 +57,8 @@
 #include "source2toolkit/schema/entity/enums/ItemFlagTypes_t.h"
 #include "source2toolkit/schema/entity/enums/RumbleEffect_t.h"
 
+class IBasePlayerWeaponVData;
+
 class CBasePlayerWeaponVData : public CEntitySubclassVDataBase
 {
 public:
@@ -87,6 +89,13 @@ public:
     SCHEMA_FIELD(float, m_flDropSpeed);
     SCHEMA_FIELD(int32_t, m_iSlot);
     SCHEMA_FIELD(int32_t, m_iPosition);
+
+public:
+    IBasePlayerWeaponVData* ToInterface();
+    static IBasePlayerWeaponVData* FromOriginal(CBasePlayerWeaponVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEPLAYERWEAPONVDATA_H

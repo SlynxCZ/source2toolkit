@@ -56,11 +56,20 @@
 
 #include "CMolotovGrenade.h"
 
+class IIncendiaryGrenade;
+
 class CIncendiaryGrenade : public CMolotovGrenade
 {
 public:
     DECLARE_SCHEMA_CLASS(CIncendiaryGrenade);
 
+
+public:
+    IIncendiaryGrenade* ToInterface();
+    static IIncendiaryGrenade* FromOriginal(CIncendiaryGrenade* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINCENDIARYGRENADE_H

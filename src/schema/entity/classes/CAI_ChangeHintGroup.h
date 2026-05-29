@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IAI_ChangeHintGroup;
+
 class CAI_ChangeHintGroup : public CBaseEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlSymbolLarge, m_strSearchName);
     SCHEMA_FIELD(CUtlSymbolLarge, m_strNewHintGroup);
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    IAI_ChangeHintGroup* ToInterface();
+    static IAI_ChangeHintGroup* FromOriginal(CAI_ChangeHintGroup* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CAI_CHANGEHINTGROUP_H

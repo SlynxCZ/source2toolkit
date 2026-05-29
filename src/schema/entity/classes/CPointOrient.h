@@ -58,6 +58,8 @@
 #include "source2toolkit/schema/entity/enums/PointOrientConstraint_t.h"
 #include "source2toolkit/schema/entity/enums/PointOrientGoalDirectionType_t.h"
 
+class IPointOrient;
+
 class CPointOrient : public CBaseEntity
 {
 public:
@@ -70,6 +72,13 @@ public:
     SCHEMA_FIELD(PointOrientConstraint_t, m_nConstraint);
     SCHEMA_FIELD(float, m_flMaxTurnRate);
     SCHEMA_FIELD(float, m_flLastGameTime);
+
+public:
+    IPointOrient* ToInterface();
+    static IPointOrient* FromOriginal(CPointOrient* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTORIENT_H

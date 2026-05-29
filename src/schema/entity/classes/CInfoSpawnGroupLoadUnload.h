@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IInfoSpawnGroupLoadUnload;
+
 class CInfoSpawnGroupLoadUnload : public CLogicalEntity
 {
 public:
@@ -74,6 +76,13 @@ public:
     SCHEMA_FIELD(bool, m_bUnloadingStarted);
     SCHEMA_FIELD(bool, m_bQueueActiveSpawnGroupChange);
     SCHEMA_FIELD(bool, m_bQueueFinishLoading);
+
+public:
+    IInfoSpawnGroupLoadUnload* ToInterface();
+    static IInfoSpawnGroupLoadUnload* FromOriginal(CInfoSpawnGroupLoadUnload* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOSPAWNGROUPLOADUNLOAD_H

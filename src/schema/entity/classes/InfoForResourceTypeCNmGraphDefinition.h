@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IInfoForResourceTypeCNmGraphDefinition;
+
 class InfoForResourceTypeCNmGraphDefinition
 {
 public:
     DECLARE_SCHEMA_CLASS(InfoForResourceTypeCNmGraphDefinition);
 
+
+public:
+    IInfoForResourceTypeCNmGraphDefinition* ToInterface();
+    static IInfoForResourceTypeCNmGraphDefinition* FromOriginal(InfoForResourceTypeCNmGraphDefinition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_INFOFORRESOURCETYPECNMGRAPHDEFINITION_H

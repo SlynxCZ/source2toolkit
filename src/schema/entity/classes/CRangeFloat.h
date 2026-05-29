@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IRangeFloat;
+
 class CRangeFloat
 {
 public:
     DECLARE_SCHEMA_CLASS(CRangeFloat);
 
     SCHEMA_FIELD_POINTER(float, m_pValue);
+
+public:
+    IRangeFloat* ToInterface();
+    static IRangeFloat* FromOriginal(CRangeFloat* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRANGEFLOAT_H

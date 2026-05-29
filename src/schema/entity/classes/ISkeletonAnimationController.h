@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IISkeletonAnimationController;
+
 class ISkeletonAnimationController
 {
 public:
     DECLARE_SCHEMA_CLASS(ISkeletonAnimationController);
 
+
+public:
+    IISkeletonAnimationController* ToInterface();
+    static IISkeletonAnimationController* FromOriginal(ISkeletonAnimationController* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ISKELETONANIMATIONCONTROLLER_H

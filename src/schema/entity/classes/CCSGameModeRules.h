@@ -54,12 +54,21 @@
 #include <cstdint>
 
 
+class ICSGameModeRules;
+
 class CCSGameModeRules
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGameModeRules);
 
     SCHEMA_FIELD(CEntityInstance*, __m_pChainEntity);
+
+public:
+    ICSGameModeRules* ToInterface();
+    static ICSGameModeRules* FromOriginal(CCSGameModeRules* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGAMEMODERULES_H

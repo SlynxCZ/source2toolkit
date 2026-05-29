@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ICitadelSoundOpvarSetOBB;
+
 class CCitadelSoundOpvarSetOBB : public CBaseEntity
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(Vector, m_vDistanceOuterMins);
     SCHEMA_FIELD(Vector, m_vDistanceOuterMaxs);
     SCHEMA_FIELD(int32_t, m_nAABBDirection);
+
+public:
+    ICitadelSoundOpvarSetOBB* ToInterface();
+    static ICitadelSoundOpvarSetOBB* FromOriginal(CCitadelSoundOpvarSetOBB* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCITADELSOUNDOPVARSETOBB_H

@@ -55,6 +55,7 @@
 
 class CCSPlayerController;
 class CCSPlayerPawn;
+class IBot;
 
 class CBot
 {
@@ -74,6 +75,13 @@ public:
     SCHEMA_FIELD(float, m_jumpTimestamp);
     SCHEMA_FIELD(Vector, m_viewForward);
     SCHEMA_FIELD(int32_t, m_postureStackIndex);
+
+public:
+    IBot* ToInterface();
+    static IBot* FromOriginal(CBot* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBOT_H

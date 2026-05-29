@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class ILogicPlayerProxy;
 
 class CLogicPlayerProxy : public CLogicalEntity
 {
@@ -67,6 +68,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_PlayerHasNoAmmo);
     SCHEMA_FIELD(CEntityIOOutput, m_PlayerDied);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hPlayer);
+
+public:
+    ILogicPlayerProxy* ToInterface();
+    static ILogicPlayerProxy* FromOriginal(CLogicPlayerProxy* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICPLAYERPROXY_H

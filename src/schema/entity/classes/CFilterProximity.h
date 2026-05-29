@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterProximity;
+
 class CFilterProximity : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterProximity);
 
     SCHEMA_FIELD(float, m_flRadius);
+
+public:
+    IFilterProximity* ToInterface();
+    static IFilterProximity* FromOriginal(CFilterProximity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERPROXIMITY_H

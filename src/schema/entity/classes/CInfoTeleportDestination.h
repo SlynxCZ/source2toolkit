@@ -56,11 +56,20 @@
 
 #include "CPointEntity.h"
 
+class IInfoTeleportDestination;
+
 class CInfoTeleportDestination : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CInfoTeleportDestination);
 
+
+public:
+    IInfoTeleportDestination* ToInterface();
+    static IInfoTeleportDestination* FromOriginal(CInfoTeleportDestination* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFOTELEPORTDESTINATION_H

@@ -58,6 +58,8 @@
 #include "source2toolkit/schema/entity/enums/CCSPlayerAnimationState__GroundMoveState_t.h"
 #include "source2toolkit/schema/entity/enums/CCSPlayerAnimationState__MoveType_t.h"
 
+class ICSPlayerAnimationState;
+
 class CCSPlayerAnimationState
 {
 public:
@@ -79,6 +81,13 @@ public:
     SCHEMA_FIELD(float, m_flFootIKOffsetRight);
     SCHEMA_FIELD(float, m_flWeaponDropPercentageDueToMovement);
     SCHEMA_FIELD(float, m_flWeaponDropSmoothDampVelocity);
+
+public:
+    ICSPlayerAnimationState* ToInterface();
+    static ICSPlayerAnimationState* FromOriginal(CCSPlayerAnimationState* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSPLAYERANIMATIONSTATE_H

@@ -54,6 +54,7 @@
 #include <cstdint>
 
 class CVoteController;
+class IBaseIssue;
 
 class CBaseIssue
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iNumNoVotes);
     SCHEMA_FIELD(int32_t, m_iNumPotentialVotes);
     SCHEMA_FIELD(CVoteController*, m_pVoteController);
+
+public:
+    IBaseIssue* ToInterface();
+    static IBaseIssue* FromOriginal(CBaseIssue* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEISSUE_H

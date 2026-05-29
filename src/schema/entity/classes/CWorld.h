@@ -56,11 +56,20 @@
 
 #include "CBaseModelEntity.h"
 
+class IWorld;
+
 class CWorld : public CBaseModelEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CWorld);
 
+
+public:
+    IWorld* ToInterface();
+    static IWorld* FromOriginal(CWorld* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWORLD_H

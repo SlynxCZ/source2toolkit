@@ -55,6 +55,8 @@
 
 #include "CNetworkOriginCellCoordQuantizedVector.h"
 
+class IGameSceneNode;
+
 class CGameSceneNode
 {
 public:
@@ -82,6 +84,13 @@ public:
     SCHEMA_FIELD_POINTER(CUtlStringToken, m_hierarchyAttachName);
     SCHEMA_FIELD(float, m_flClientLocalScale);
     SCHEMA_FIELD(Vector, m_vRenderOrigin);
+
+public:
+    IGameSceneNode* ToInterface();
+    static IGameSceneNode* FromOriginal(CGameSceneNode* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMESCENENODE_H

@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IRagdollMagnet;
+
 class CRagdollMagnet : public CPointEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_radius);
     SCHEMA_FIELD(float, m_force);
     SCHEMA_FIELD(Vector, m_axis);
+
+public:
+    IRagdollMagnet* ToInterface();
+    static IRagdollMagnet* FromOriginal(CRagdollMagnet* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CRAGDOLLMAGNET_H

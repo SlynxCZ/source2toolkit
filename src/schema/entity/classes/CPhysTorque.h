@@ -56,12 +56,21 @@
 
 #include "CPhysForce.h"
 
+class IPhysTorque;
+
 class CPhysTorque : public CPhysForce
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysTorque);
 
     SCHEMA_FIELD(Vector, m_axis);
+
+public:
+    IPhysTorque* ToInterface();
+    static IPhysTorque* FromOriginal(CPhysTorque* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSTORQUE_H

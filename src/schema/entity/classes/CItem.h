@@ -56,6 +56,8 @@
 
 #include "CBaseAnimGraph.h"
 
+class IItem;
+
 class CItem : public CBaseAnimGraph
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(Vector, m_vOriginalSpawnOrigin);
     SCHEMA_FIELD(QAngle, m_vOriginalSpawnAngles);
     SCHEMA_FIELD(bool, m_bPhysStartAsleep);
+
+public:
+    IItem* ToInterface();
+    static IItem* FromOriginal(CItem* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEM_H

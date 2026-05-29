@@ -56,11 +56,20 @@
 
 #include "CFuncTrackChange.h"
 
+class IFuncTrackAuto;
+
 class CFuncTrackAuto : public CFuncTrackChange
 {
 public:
     DECLARE_SCHEMA_CLASS(CFuncTrackAuto);
 
+
+public:
+    IFuncTrackAuto* ToInterface();
+    static IFuncTrackAuto* FromOriginal(CFuncTrackAuto* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCTRACKAUTO_H

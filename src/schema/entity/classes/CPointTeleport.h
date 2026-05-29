@@ -56,6 +56,8 @@
 
 #include "CServerOnlyPointEntity.h"
 
+class IPointTeleport;
+
 class CPointTeleport : public CServerOnlyPointEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(QAngle, m_vSaveAngles);
     SCHEMA_FIELD(bool, m_bTeleportParentedEntities);
     SCHEMA_FIELD(bool, m_bTeleportUseCurrentAngle);
+
+public:
+    IPointTeleport* ToInterface();
+    static IPointTeleport* FromOriginal(CPointTeleport* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPOINTTELEPORT_H

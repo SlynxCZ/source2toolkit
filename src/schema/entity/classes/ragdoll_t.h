@@ -56,6 +56,8 @@
 #include "ragdollelement_t.h"
 #include "ragdollhierarchyjoint_t.h"
 
+class Iragdoll_t;
+
 class ragdoll_t
 {
 public:
@@ -66,6 +68,13 @@ public:
     SCHEMA_FIELD(CUtlVector<int32_t>, boneIndex);
     SCHEMA_FIELD(bool, allowStretch);
     SCHEMA_FIELD(bool, unused);
+
+public:
+    Iragdoll_t* ToInterface();
+    static Iragdoll_t* FromOriginal(ragdoll_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RAGDOLL_T_H

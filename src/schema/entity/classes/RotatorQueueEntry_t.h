@@ -55,6 +55,8 @@
 
 #include "source2toolkit/schema/entity/enums/RotatorTargetSpace_t.h"
 
+class IRotatorQueueEntry_t;
+
 class RotatorQueueEntry_t
 {
 public:
@@ -62,6 +64,13 @@ public:
 
     SCHEMA_FIELD(Quaternion, qTarget);
     SCHEMA_FIELD(RotatorTargetSpace_t, eSpace);
+
+public:
+    IRotatorQueueEntry_t* ToInterface();
+    static IRotatorQueueEntry_t* FromOriginal(RotatorQueueEntry_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ROTATORQUEUEENTRY_T_H

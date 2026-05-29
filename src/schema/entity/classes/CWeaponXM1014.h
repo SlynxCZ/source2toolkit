@@ -56,11 +56,20 @@
 
 #include "CCSWeaponBaseShotgun.h"
 
+class IWeaponXM1014;
+
 class CWeaponXM1014 : public CCSWeaponBaseShotgun
 {
 public:
     DECLARE_SCHEMA_CLASS(CWeaponXM1014);
 
+
+public:
+    IWeaponXM1014* ToInterface();
+    static IWeaponXM1014* FromOriginal(CWeaponXM1014* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWEAPONXM1014_H

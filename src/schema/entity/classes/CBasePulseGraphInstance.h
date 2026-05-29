@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IBasePulseGraphInstance;
+
 class CBasePulseGraphInstance
 {
 public:
     DECLARE_SCHEMA_CLASS(CBasePulseGraphInstance);
 
+
+public:
+    IBasePulseGraphInstance* ToInterface();
+    static IBasePulseGraphInstance* FromOriginal(CBasePulseGraphInstance* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CBASEPULSEGRAPHINSTANCE_H

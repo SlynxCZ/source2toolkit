@@ -56,12 +56,21 @@
 
 #include "CBaseEntity.h"
 
+class IPhysicsWire;
+
 class CPhysicsWire : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicsWire);
 
     SCHEMA_FIELD(int32_t, m_nDensity);
+
+public:
+    IPhysicsWire* ToInterface();
+    static IPhysicsWire* FromOriginal(CPhysicsWire* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSWIRE_H

@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ISoundOpvarSetEntity;
+
 class CSoundOpvarSetEntity : public CBaseEntity
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_flOpvarValue);
     SCHEMA_FIELD(CUtlSymbolLarge, m_OpvarValueString);
     SCHEMA_FIELD(bool, m_bSetOnSpawn);
+
+public:
+    ISoundOpvarSetEntity* ToInterface();
+    static ISoundOpvarSetEntity* FromOriginal(CSoundOpvarSetEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETENTITY_H

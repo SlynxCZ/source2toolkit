@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerBombReset;
+
 class CTriggerBombReset : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerBombReset);
 
+
+public:
+    ITriggerBombReset* ToInterface();
+    static ITriggerBombReset* FromOriginal(CTriggerBombReset* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERBOMBRESET_H

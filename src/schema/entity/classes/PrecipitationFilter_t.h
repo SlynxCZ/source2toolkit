@@ -53,12 +53,21 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IPrecipitationFilter_t;
+
 class PrecipitationFilter_t
 {
 public:
     DECLARE_SCHEMA_CLASS(PrecipitationFilter_t);
 
     SCHEMA_FIELD(float, m_flMaxRadius);
+
+public:
+    IPrecipitationFilter_t* ToInterface();
+    static IPrecipitationFilter_t* FromOriginal(PrecipitationFilter_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_PRECIPITATIONFILTER_T_H

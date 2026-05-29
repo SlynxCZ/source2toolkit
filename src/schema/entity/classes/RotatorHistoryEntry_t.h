@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IRotatorHistoryEntry_t;
+
 class RotatorHistoryEntry_t
 {
 public:
@@ -60,6 +62,13 @@ public:
 
     SCHEMA_FIELD(Quaternion, qInvChange);
     SCHEMA_FIELD(float, flTimeRotationStart);
+
+public:
+    IRotatorHistoryEntry_t* ToInterface();
+    static IRotatorHistoryEntry_t* FromOriginal(RotatorHistoryEntry_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_ROTATORHISTORYENTRY_T_H

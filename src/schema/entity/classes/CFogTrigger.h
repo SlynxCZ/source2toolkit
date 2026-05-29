@@ -57,12 +57,21 @@
 #include "CBaseTrigger.h"
 #include "fogparams_t.h"
 
+class IFogTrigger;
+
 class CFogTrigger : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CFogTrigger);
 
     SCHEMA_FIELD(fogparams_t, m_fog);
+
+public:
+    IFogTrigger* ToInterface();
+    static IFogTrigger* FromOriginal(CFogTrigger* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFOGTRIGGER_H

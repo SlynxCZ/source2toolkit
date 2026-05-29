@@ -60,6 +60,7 @@
 #include "source2toolkit/schema/entity/enums/doorCheck_e.h"
 
 class CEntityBlocker;
+class IPropDoorRotating;
 
 class CPropDoorRotating : public CBasePropDoor
 {
@@ -84,6 +85,13 @@ public:
     SCHEMA_FIELD(Vector, m_vecBackBoundsMax);
     SCHEMA_FIELD(bool, m_bAjarDoorShouldntAlwaysOpen);
     SCHEMA_FIELD(CHandle<CEntityBlocker>, m_hEntityBlocker);
+
+public:
+    IPropDoorRotating* ToInterface();
+    static IPropDoorRotating* FromOriginal(CPropDoorRotating* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPROPDOORROTATING_H

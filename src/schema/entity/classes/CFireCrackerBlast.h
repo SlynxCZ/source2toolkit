@@ -56,11 +56,20 @@
 
 #include "CInferno.h"
 
+class IFireCrackerBlast;
+
 class CFireCrackerBlast : public CInferno
 {
 public:
     DECLARE_SCHEMA_CLASS(CFireCrackerBlast);
 
+
+public:
+    IFireCrackerBlast* ToInterface();
+    static IFireCrackerBlast* FromOriginal(CFireCrackerBlast* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFIRECRACKERBLAST_H

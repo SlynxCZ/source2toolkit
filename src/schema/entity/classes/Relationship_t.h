@@ -55,6 +55,8 @@
 
 #include "source2toolkit/schema/entity/enums/Disposition_t.h"
 
+class IRelationship_t;
+
 class Relationship_t
 {
 public:
@@ -62,6 +64,13 @@ public:
 
     SCHEMA_FIELD(Disposition_t, disposition);
     SCHEMA_FIELD(int32_t, priority);
+
+public:
+    IRelationship_t* ToInterface();
+    static IRelationship_t* FromOriginal(Relationship_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RELATIONSHIP_T_H

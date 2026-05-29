@@ -57,6 +57,7 @@
 #include "CLogicalEntity.h"
 
 class CBaseEntity;
+class IMultiSource;
 
 class CMultiSource : public CLogicalEntity
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnTrigger);
     SCHEMA_FIELD(int32_t, m_iTotal);
     SCHEMA_FIELD(CUtlSymbolLarge, m_globalstate);
+
+public:
+    IMultiSource* ToInterface();
+    static IMultiSource* FromOriginal(CMultiSource* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMULTISOURCE_H

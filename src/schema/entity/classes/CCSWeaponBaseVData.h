@@ -62,6 +62,8 @@
 #include "source2toolkit/schema/entity/enums/gear_slot_t.h"
 #include "source2toolkit/schema/entity/enums/loadout_slot_t.h"
 
+class ICSWeaponBaseVData;
+
 class CCSWeaponBaseVData : public CBasePlayerWeaponVData
 {
 public:
@@ -149,6 +151,13 @@ public:
     SCHEMA_FIELD(float, m_flThrowVelocity);
     SCHEMA_FIELD(Vector, m_vSmokeColor);
     SCHEMA_FIELD(CGlobalSymbol, m_szAnimClass);
+
+public:
+    ICSWeaponBaseVData* ToInterface();
+    static ICSWeaponBaseVData* FromOriginal(CCSWeaponBaseVData* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSWEAPONBASEVDATA_H

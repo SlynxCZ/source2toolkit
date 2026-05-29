@@ -42,15 +42,13 @@
 
 #include "source2toolkit/schema/entity/classes/ICSPlayerPawn.h"
 #include "schema/entity/classes/CCSPlayerPawn.h"
+#include "CCSPlayerPawnBaseImpl.h"
 
-class CCSPlayerPawnImpl : public virtual ICSPlayerPawn
+class CCSPlayerPawnImpl : public CCSPlayerPawnBaseImpl, public ICSPlayerPawn
 {
 
-protected:
-    void* m_pReal;
-
 public:
-    explicit CCSPlayerPawnImpl(void* p) : m_pReal(p) {}
+    explicit CCSPlayerPawnImpl(CCSPlayerPawn* p) : CCSPlayerPawnBaseImpl(p) {}
 
 private:
     CCSPlayerPawn* Real() { return static_cast<CCSPlayerPawn*>(m_pReal); }

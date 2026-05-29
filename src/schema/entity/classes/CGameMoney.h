@@ -56,6 +56,8 @@
 
 #include "CRulePointEntity.h"
 
+class IGameMoney;
+
 class CGameMoney : public CRulePointEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnMoneySpentFail);
     SCHEMA_FIELD(int32_t, m_nMoney);
     SCHEMA_FIELD(CUtlString, m_strAwardText);
+
+public:
+    IGameMoney* ToInterface();
+    static IGameMoney* FromOriginal(CGameMoney* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMEMONEY_H

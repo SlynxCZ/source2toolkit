@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IEnvBeverage;
+
 class CEnvBeverage : public CBaseEntity
 {
 public:
@@ -63,6 +65,13 @@ public:
 
     SCHEMA_FIELD(bool, m_CanInDispenser);
     SCHEMA_FIELD(int32_t, m_nBeverageType);
+
+public:
+    IEnvBeverage* ToInterface();
+    static IEnvBeverage* FromOriginal(CEnvBeverage* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVBEVERAGE_H

@@ -56,11 +56,20 @@
 
 #include "CCSGO_WingmanIntroCharacterPosition.h"
 
+class ICSGO_WingmanIntroTerroristPosition;
+
 class CCSGO_WingmanIntroTerroristPosition : public CCSGO_WingmanIntroCharacterPosition
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_WingmanIntroTerroristPosition);
 
+
+public:
+    ICSGO_WingmanIntroTerroristPosition* ToInterface();
+    static ICSGO_WingmanIntroTerroristPosition* FromOriginal(CCSGO_WingmanIntroTerroristPosition* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGO_WINGMANINTROTERRORISTPOSITION_H

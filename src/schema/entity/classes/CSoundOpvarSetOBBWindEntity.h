@@ -56,6 +56,8 @@
 
 #include "CSoundOpvarSetPointBase.h"
 
+class ISoundOpvarSetOBBWindEntity;
+
 class CSoundOpvarSetOBBWindEntity : public CSoundOpvarSetPointBase
 {
 public:
@@ -69,6 +71,13 @@ public:
     SCHEMA_FIELD(float, m_flWindMax);
     SCHEMA_FIELD(float, m_flWindMapMin);
     SCHEMA_FIELD(float, m_flWindMapMax);
+
+public:
+    ISoundOpvarSetOBBWindEntity* ToInterface();
+    static ISoundOpvarSetOBBWindEntity* FromOriginal(CSoundOpvarSetOBBWindEntity* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CSOUNDOPVARSETOBBWINDENTITY_H

@@ -56,11 +56,20 @@
 
 #include "CBaseButton.h"
 
+class IPhysicalButton;
+
 class CPhysicalButton : public CBaseButton
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysicalButton);
 
+
+public:
+    IPhysicalButton* ToInterface();
+    static IPhysicalButton* FromOriginal(CPhysicalButton* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICALBUTTON_H

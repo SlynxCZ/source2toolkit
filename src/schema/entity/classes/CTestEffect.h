@@ -57,6 +57,7 @@
 #include "CBaseEntity.h"
 
 class CBeam;
+class ITestEffect;
 
 class CTestEffect : public CBaseEntity
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD_POINTER(CHandle<CBeam>, m_pBeam);
     SCHEMA_FIELD_POINTER(float, m_flBeamTime);
     SCHEMA_FIELD(float, m_flStartTime);
+
+public:
+    ITestEffect* ToInterface();
+    static ITestEffect* FromOriginal(CTestEffect* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTESTEFFECT_H

@@ -56,12 +56,21 @@
 
 #include "CBaseFilter.h"
 
+class IFilterModel;
+
 class CFilterModel : public CBaseFilter
 {
 public:
     DECLARE_SCHEMA_CLASS(CFilterModel);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_iFilterModel);
+
+public:
+    IFilterModel* ToInterface();
+    static IFilterModel* FromOriginal(CFilterModel* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFILTERMODEL_H

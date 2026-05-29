@@ -56,11 +56,20 @@
 
 #include "CBaseTrigger.h"
 
+class ITriggerHostageReset;
+
 class CTriggerHostageReset : public CBaseTrigger
 {
 public:
     DECLARE_SCHEMA_CLASS(CTriggerHostageReset);
 
+
+public:
+    ITriggerHostageReset* ToInterface();
+    static ITriggerHostageReset* FromOriginal(CTriggerHostageReset* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTRIGGERHOSTAGERESET_H

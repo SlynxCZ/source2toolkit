@@ -56,12 +56,21 @@
 
 #include "CPointEntity.h"
 
+class ITankTargetChange;
+
 class CTankTargetChange : public CPointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CTankTargetChange);
 
     SCHEMA_FIELD(CUtlSymbolLarge, m_newTargetName);
+
+public:
+    ITankTargetChange* ToInterface();
+    static ITankTargetChange* FromOriginal(CTankTargetChange* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CTANKTARGETCHANGE_H

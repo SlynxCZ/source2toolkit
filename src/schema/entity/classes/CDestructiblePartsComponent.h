@@ -56,6 +56,7 @@
 
 class CBaseAnimGraphDestructibleParts_GraphController;
 class CBaseModelEntity;
+class IDestructiblePartsComponent;
 
 class CDestructiblePartsComponent
 {
@@ -66,6 +67,13 @@ public:
     SCHEMA_FIELD(CUtlVector<uint16_t>, m_vecDamageTakenByHitGroup);
     SCHEMA_FIELD(CHandle<CBaseModelEntity>, m_hOwner);
     SCHEMA_FIELD(CBaseAnimGraphDestructibleParts_GraphController*, m_pAnimGraphDestructibleGraphController);
+
+public:
+    IDestructiblePartsComponent* ToInterface();
+    static IDestructiblePartsComponent* FromOriginal(CDestructiblePartsComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDESTRUCTIBLEPARTSCOMPONENT_H

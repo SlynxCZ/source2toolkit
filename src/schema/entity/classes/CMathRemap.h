@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IMathRemap;
+
 class CMathRemap : public CLogicalEntity
 {
 public:
@@ -71,6 +73,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnRoseAboveMax);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMin);
     SCHEMA_FIELD(CEntityIOOutput, m_OnFellBelowMax);
+
+public:
+    IMathRemap* ToInterface();
+    static IMathRemap* FromOriginal(CMathRemap* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMATHREMAP_H

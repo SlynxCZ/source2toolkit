@@ -56,11 +56,20 @@
 
 #include "CBaseAnimGraph.h"
 
+class IWaterBullet;
+
 class CWaterBullet : public CBaseAnimGraph
 {
 public:
     DECLARE_SCHEMA_CLASS(CWaterBullet);
 
+
+public:
+    IWaterBullet* ToInterface();
+    static IWaterBullet* FromOriginal(CWaterBullet* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CWATERBULLET_H

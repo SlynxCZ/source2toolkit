@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IEconItemAttribute;
+
 class CEconItemAttribute
 {
 public:
@@ -63,6 +65,13 @@ public:
     SCHEMA_FIELD(float, m_flInitialValue);
     SCHEMA_FIELD(int32_t, m_nRefundableCurrency);
     SCHEMA_FIELD(bool, m_bSetBonus);
+
+public:
+    IEconItemAttribute* ToInterface();
+    static IEconItemAttribute* FromOriginal(CEconItemAttribute* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CECONITEMATTRIBUTE_H

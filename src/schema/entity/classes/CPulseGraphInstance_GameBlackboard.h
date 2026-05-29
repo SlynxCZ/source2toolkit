@@ -55,11 +55,20 @@
 
 #include "CPulseGraphInstance_ServerEntity.h"
 
+class IPulseGraphInstance_GameBlackboard;
+
 class CPulseGraphInstance_GameBlackboard : public CPulseGraphInstance_ServerEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CPulseGraphInstance_GameBlackboard);
 
+
+public:
+    IPulseGraphInstance_GameBlackboard* ToInterface();
+    static IPulseGraphInstance_GameBlackboard* FromOriginal(CPulseGraphInstance_GameBlackboard* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPULSEGRAPHINSTANCE_GAMEBLACKBOARD_H

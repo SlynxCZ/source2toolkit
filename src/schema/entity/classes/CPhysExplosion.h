@@ -56,6 +56,8 @@
 
 #include "CPointEntity.h"
 
+class IPhysExplosion;
+
 class CPhysExplosion : public CPointEntity
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(bool, m_bAffectInvulnerableEnts);
     SCHEMA_FIELD(bool, m_bDisablePushClamp);
     SCHEMA_FIELD(CEntityIOOutput, m_OnPushedPlayer);
+
+public:
+    IPhysExplosion* ToInterface();
+    static IPhysExplosion* FromOriginal(CPhysExplosion* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSEXPLOSION_H

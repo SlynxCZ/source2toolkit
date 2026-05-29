@@ -56,11 +56,20 @@
 
 #include "CItem.h"
 
+class IItemAssaultSuit;
+
 class CItemAssaultSuit : public CItem
 {
 public:
     DECLARE_SCHEMA_CLASS(CItemAssaultSuit);
 
+
+public:
+    IItemAssaultSuit* ToInterface();
+    static IItemAssaultSuit* FromOriginal(CItemAssaultSuit* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CITEMASSAULTSUIT_H

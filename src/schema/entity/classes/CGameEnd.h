@@ -56,11 +56,20 @@
 
 #include "CRulePointEntity.h"
 
+class IGameEnd;
+
 class CGameEnd : public CRulePointEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CGameEnd);
 
+
+public:
+    IGameEnd* ToInterface();
+    static IGameEnd* FromOriginal(CGameEnd* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CGAMEEND_H

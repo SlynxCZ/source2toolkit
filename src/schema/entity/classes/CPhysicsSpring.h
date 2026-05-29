@@ -57,6 +57,7 @@
 #include "CBaseEntity.h"
 
 class IPhysicsJoint;
+class IPhysicsSpring;
 
 class CPhysicsSpring : public CBaseEntity
 {
@@ -72,6 +73,13 @@ public:
     SCHEMA_FIELD(Vector, m_start);
     SCHEMA_FIELD(Vector, m_end);
     SCHEMA_FIELD(uint32_t, m_teleportTick);
+
+public:
+    IPhysicsSpring* ToInterface();
+    static IPhysicsSpring* FromOriginal(CPhysicsSpring* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSICSSPRING_H

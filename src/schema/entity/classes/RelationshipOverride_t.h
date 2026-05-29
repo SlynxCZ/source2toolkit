@@ -57,6 +57,7 @@
 #include "Relationship_t.h"
 
 class CBaseEntity;
+class IRelationshipOverride_t;
 
 class RelationshipOverride_t : public Relationship_t
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CHandle<CBaseEntity>, entity);
     SCHEMA_FIELD(Class_T, classType);
+
+public:
+    IRelationshipOverride_t* ToInterface();
+    static IRelationshipOverride_t* FromOriginal(RelationshipOverride_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_RELATIONSHIPOVERRIDE_T_H

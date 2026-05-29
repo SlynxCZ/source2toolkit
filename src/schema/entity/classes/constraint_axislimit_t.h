@@ -53,6 +53,8 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class Iconstraint_axislimit_t;
+
 class constraint_axislimit_t
 {
 public:
@@ -62,6 +64,13 @@ public:
     SCHEMA_FIELD(float, flMaxRotation);
     SCHEMA_FIELD(float, flMotorTargetAngSpeed);
     SCHEMA_FIELD(float, flMotorMaxTorque);
+
+public:
+    Iconstraint_axislimit_t* ToInterface();
+    static Iconstraint_axislimit_t* FromOriginal(constraint_axislimit_t* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CONSTRAINT_AXISLIMIT_T_H

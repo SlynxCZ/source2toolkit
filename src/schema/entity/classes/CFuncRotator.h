@@ -62,6 +62,7 @@
 
 class CBaseEntity;
 class CFuncMover;
+class IFuncRotator;
 
 class CFuncRotator : public CBaseModelEntity
 {
@@ -109,6 +110,13 @@ public:
     SCHEMA_FIELD(float, m_flSpeedScale);
     SCHEMA_FIELD(float, m_flMinYawRotation);
     SCHEMA_FIELD(float, m_flMaxYawRotation);
+
+public:
+    IFuncRotator* ToInterface();
+    static IFuncRotator* FromOriginal(CFuncRotator* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CFUNCROTATOR_H

@@ -57,6 +57,7 @@
 #include "CPointEntity.h"
 
 class CBaseEntity;
+class IInfoDynamicShadowHint;
 
 class CInfoDynamicShadowHint : public CPointEntity
 {
@@ -68,6 +69,13 @@ public:
     SCHEMA_FIELD(int32_t, m_nImportance);
     SCHEMA_FIELD(int32_t, m_nLightChoice);
     SCHEMA_FIELD(CHandle<CBaseEntity>, m_hLight);
+
+public:
+    IInfoDynamicShadowHint* ToInterface();
+    static IInfoDynamicShadowHint* FromOriginal(CInfoDynamicShadowHint* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINT_H

@@ -53,11 +53,20 @@
 #include "source2toolkit/schema/schema.h"
 #include <cstdint>
 
+class IEntitySubclassVDataBase;
+
 class CEntitySubclassVDataBase
 {
 public:
     DECLARE_SCHEMA_CLASS(CEntitySubclassVDataBase);
 
+
+public:
+    IEntitySubclassVDataBase* ToInterface();
+    static IEntitySubclassVDataBase* FromOriginal(CEntitySubclassVDataBase* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENTITYSUBCLASSVDATABASE_H

@@ -54,6 +54,7 @@
 #include <cstdint>
 
 
+class ILightComponent;
 class InfoForResourceTypeCTextureBase;
 
 class CLightComponent : public CEntityComponent
@@ -132,6 +133,13 @@ public:
     SCHEMA_FIELD(float, m_flCapsuleLength);
     SCHEMA_FIELD(float, m_flMinRoughness);
     SCHEMA_FIELD(bool, m_bPvsModifyEntity);
+
+public:
+    ILightComponent* ToInterface();
+    static ILightComponent* FromOriginal(CLightComponent* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLIGHTCOMPONENT_H

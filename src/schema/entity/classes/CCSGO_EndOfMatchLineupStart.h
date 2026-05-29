@@ -56,11 +56,20 @@
 
 #include "CCSGO_EndOfMatchLineupEndpoint.h"
 
+class ICSGO_EndOfMatchLineupStart;
+
 class CCSGO_EndOfMatchLineupStart : public CCSGO_EndOfMatchLineupEndpoint
 {
 public:
     DECLARE_SCHEMA_CLASS(CCSGO_EndOfMatchLineupStart);
 
+
+public:
+    ICSGO_EndOfMatchLineupStart* ToInterface();
+    static ICSGO_EndOfMatchLineupStart* FromOriginal(CCSGO_EndOfMatchLineupStart* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CCSGO_ENDOFMATCHLINEUPSTART_H

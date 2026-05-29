@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class ILogicAuto;
+
 class CLogicAuto : public CBaseEntity
 {
 public:
@@ -72,6 +74,13 @@ public:
     SCHEMA_FIELD(CEntityIOOutput, m_OnVREnabled);
     SCHEMA_FIELD(CEntityIOOutput, m_OnVRNotEnabled);
     SCHEMA_FIELD(CUtlSymbolLarge, m_globalstate);
+
+public:
+    ILogicAuto* ToInterface();
+    static ILogicAuto* FromOriginal(CLogicAuto* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CLOGICAUTO_H

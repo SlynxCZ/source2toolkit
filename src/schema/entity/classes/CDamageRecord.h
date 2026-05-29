@@ -57,6 +57,7 @@
 
 class CCSPlayerController;
 class CCSPlayerPawn;
+class IDamageRecord;
 
 class CDamageRecord
 {
@@ -78,6 +79,13 @@ public:
     SCHEMA_FIELD(int32_t, m_iLastBulletUpdate);
     SCHEMA_FIELD(bool, m_bIsOtherEnemy);
     SCHEMA_FIELD(EKillTypes_t, m_killType);
+
+public:
+    IDamageRecord* ToInterface();
+    static IDamageRecord* FromOriginal(CDamageRecord* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDAMAGERECORD_H

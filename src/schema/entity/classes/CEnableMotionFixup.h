@@ -56,11 +56,20 @@
 
 #include "CBaseEntity.h"
 
+class IEnableMotionFixup;
+
 class CEnableMotionFixup : public CBaseEntity
 {
 public:
     DECLARE_SCHEMA_CLASS(CEnableMotionFixup);
 
+
+public:
+    IEnableMotionFixup* ToInterface();
+    static IEnableMotionFixup* FromOriginal(CEnableMotionFixup* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENABLEMOTIONFIXUP_H

@@ -57,6 +57,7 @@
 #include "CPathSimple.h"
 
 class CPathNode;
+class IPathWithDynamicNodes;
 
 class CPathWithDynamicNodes : public CPathSimple
 {
@@ -65,6 +66,13 @@ public:
 
     SCHEMA_FIELD(CUtlVector<CHandle<CPathNode>>, m_vecPathNodes);
     SCHEMA_FIELD(CTransform, m_xInitialPathWorldToLocal);
+
+public:
+    IPathWithDynamicNodes* ToInterface();
+    static IPathWithDynamicNodes* FromOriginal(CPathWithDynamicNodes* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPATHWITHDYNAMICNODES_H

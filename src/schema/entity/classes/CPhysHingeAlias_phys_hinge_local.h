@@ -56,11 +56,20 @@
 
 #include "CPhysHinge.h"
 
+class IPhysHingeAlias_phys_hinge_local;
+
 class CPhysHingeAlias_phys_hinge_local : public CPhysHinge
 {
 public:
     DECLARE_SCHEMA_CLASS(CPhysHingeAlias_phys_hinge_local);
 
+
+public:
+    IPhysHingeAlias_phys_hinge_local* ToInterface();
+    static IPhysHingeAlias_phys_hinge_local* FromOriginal(CPhysHingeAlias_phys_hinge_local* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CPHYSHINGEALIAS_PHYS_HINGE_LOCAL_H

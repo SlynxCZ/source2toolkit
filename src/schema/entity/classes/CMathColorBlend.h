@@ -56,6 +56,8 @@
 
 #include "CLogicalEntity.h"
 
+class IMathColorBlend;
+
 class CMathColorBlend : public CLogicalEntity
 {
 public:
@@ -65,6 +67,13 @@ public:
     SCHEMA_FIELD(float, m_flInMax);
     SCHEMA_FIELD(Color, m_OutColor1);
     SCHEMA_FIELD(Color, m_OutColor2);
+
+public:
+    IMathColorBlend* ToInterface();
+    static IMathColorBlend* FromOriginal(CMathColorBlend* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CMATHCOLORBLEND_H

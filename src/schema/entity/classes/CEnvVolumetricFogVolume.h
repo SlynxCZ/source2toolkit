@@ -56,6 +56,8 @@
 
 #include "CBaseEntity.h"
 
+class IEnvVolumetricFogVolume;
+
 class CEnvVolumetricFogVolume : public CBaseEntity
 {
 public:
@@ -79,6 +81,13 @@ public:
     SCHEMA_FIELD(bool, m_bOverrideIndirectLightStrength);
     SCHEMA_FIELD(bool, m_bOverrideSunLightStrength);
     SCHEMA_FIELD(bool, m_bOverrideNoiseStrength);
+
+public:
+    IEnvVolumetricFogVolume* ToInterface();
+    static IEnvVolumetricFogVolume* FromOriginal(CEnvVolumetricFogVolume* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CENVVOLUMETRICFOGVOLUME_H

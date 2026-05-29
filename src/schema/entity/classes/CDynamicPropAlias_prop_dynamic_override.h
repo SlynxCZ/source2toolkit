@@ -56,11 +56,20 @@
 
 #include "CDynamicProp.h"
 
+class IDynamicPropAlias_prop_dynamic_override;
+
 class CDynamicPropAlias_prop_dynamic_override : public CDynamicProp
 {
 public:
     DECLARE_SCHEMA_CLASS(CDynamicPropAlias_prop_dynamic_override);
 
+
+public:
+    IDynamicPropAlias_prop_dynamic_override* ToInterface();
+    static IDynamicPropAlias_prop_dynamic_override* FromOriginal(CDynamicPropAlias_prop_dynamic_override* p)
+    {
+        return p ? p->ToInterface() : nullptr;
+    }
 };
 
 #endif // _INCLUDE_CDYNAMICPROPALIAS_PROP_DYNAMIC_OVERRIDE_H
