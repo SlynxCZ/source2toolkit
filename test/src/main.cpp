@@ -104,15 +104,6 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
         m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
     }
 
-    // Console commands
-    g_ToolkitAPI->Commands()->RegConCommand(g_PluginID, "test", [](const CCommandContext& ctx, const CCommand& args, Mode)
-    {
-        CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot());
-        if (!player) return;
-
-        TOOLKIT_LOG(&g_Plugin, "test: player=%p, name=%s, steamid=%llu\n", player, player->GetPlayerName(), player->GetSteamID());
-    });
-
     TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
 
     return true;
