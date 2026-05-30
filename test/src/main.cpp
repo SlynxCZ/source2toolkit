@@ -51,15 +51,6 @@
 #include "source2toolkit/IToolkitTrace.h"
 #include "source2toolkit/IToolkitTypes.h"
 
-#include "source2toolkit/utils/commands.h"
-#include "source2toolkit/utils/convars.h"
-#include "source2toolkit/utils/events.h"
-#include "source2toolkit/utils/gameconfig.h"
-#include "source2toolkit/utils/menus.h"
-#include "source2toolkit/utils/mysql.h"
-#include "source2toolkit/utils/scheduler.h"
-#include "source2toolkit/utils/trace.h"
-
 #include "source2toolkit/schema/entity/classes/ICSPlayerController.h"
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/schema/serversideclient.h"
@@ -114,9 +105,12 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     }
 
     // Console commands
-    UTIL_RegConCommand("test", [](const CCommandContext& ctx, const CCommand& args, Mode)
+    g_ToolkitAPI->Commands()->RegConCommand(g_PluginID, "test", [](const CCommandContext& ctx, const CCommand& args, Mode)
     {
-        ICSPlayerController* player = ICSPlayerController::
+        ICSPlayerController* player = ICSPlayerController::FromSlot(ctx.GetPlayerSlot());
+        if (!player) return;
+
+        TOOLKIT_LOG(&g_Plugin, "test: player=%p, original=%p, name=%s, steamid=%llu\n", player, player->GetOriginal(), player->GetPlayerName(), player->GetPlayerSteamID());
     });
 
     TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
