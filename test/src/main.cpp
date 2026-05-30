@@ -51,7 +51,7 @@
 #include "source2toolkit/IToolkitTrace.h"
 #include "source2toolkit/IToolkitTypes.h"
 
-#include "source2toolkit/schema/entity/classes/ICSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/schema/serversideclient.h"
 
@@ -107,7 +107,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     // Console commands
     g_ToolkitAPI->Commands()->RegConCommand(g_PluginID, "test", [](const CCommandContext& ctx, const CCommand& args, Mode)
     {
-        ICSPlayerController* player = ICSPlayerController::FromSlot(ctx.GetPlayerSlot());
+        CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot());
         if (!player) return;
 
         TOOLKIT_LOG(&g_Plugin, "test: player=%p, original=%p, name=%s, steamid=%llu\n", player, player->GetOriginal(), player->GetPlayerName(), player->GetSteamID());

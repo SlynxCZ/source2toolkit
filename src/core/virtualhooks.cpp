@@ -35,7 +35,10 @@
  * Project: Source2Toolkit
  */
 #include "virtualhooks.h"
-#include "source2toolkit/schema/entity/classes/IBaseEntity.h"
+
+#include "source2toolkit/schema/entity/classes/CBaseEntity.h"
+#include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 
 #include "commands.h"
 #include "events.h"
@@ -48,14 +51,11 @@
 #include "iserver.h"
 #include "mysql.h"
 #include "schema/cgameresourceserviceserver.h"
-#include "schema/entity/classes/CCSGameRulesProxy.h"
-#include "schema/entity/classes/CCSPlayerController.h"
 
 namespace virtualhooks
 {
     Virtuals virtuals;
     CEntityListener entityListener;
-    std::unordered_map<void*, EntityImplsByTag> entityInterfaces;
 
     static std::vector<IGameEvent*> eventStack;
 
@@ -110,8 +110,7 @@ namespace virtualhooks
         }
     }
 
-    KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick,
-                                                 bool bLastTick)
+    KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
     {
         scheduler::Tick(simulating);
 
@@ -125,15 +124,13 @@ namespace virtualhooks
                 auto steamId = shared::g_pEngine->GetClientSteamID(CPlayerSlot(i));
                 if (steamId)
                 {
-                    auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(
-                        CEntityIndex(i + 1)));
+                    auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(i + 1)));
                     if (controller)
                     {
                         ISteamGameServer* gs = SteamGameServer();
                         if (gs && gs->BLoggedOn())
                         {
-                            gs->BUpdateUserData(*steamId, controller->GetPlayerName(),
-                                                shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
+                            gs->BUpdateUserData(*steamId, controller->GetPlayerName(), shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
                         }
                     }
                 }
@@ -144,9 +141,7 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<void> Virtuals::Hook_StartupServer(INetworkServerService* pThis,
-                                                     const GameSessionConfiguration_t& config,
-                                                     ISource2WorldSession* pWorldSession, const char*)
+    KHook::Return<void> Virtuals::Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char*)
     {
         if (!shared::g_bDetoursLoaded)
         {
@@ -235,8 +230,7 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis,
-                                                                const EventServerGamePostSimulate_t* const pMsg)
+    KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg)
     {
         for (auto connection : mysql::mysqlManager.m_vecMysqlConnections)
         {
@@ -245,8 +239,7 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename,
-                                                         bool bSearchAll)
+    KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAll)
     {
         ExecuteOnce(
             shared::g_pGameEventManager = pThis;
@@ -302,18 +295,11 @@ namespace virtualhooks
     void CEntityListener::OnEntityCreated(CEntityInstance* pEntity)
     {
         if (!V_strcmp("cs_gamerules", pEntity->GetClassname()))
-            shared::g_pGameRules = ((CCSGameRulesProxy*)pEntity)->m_pGameRules;
+            shared::g_pGameRules = static_cast<CCSGameRulesProxy*>(pEntity)->m_pGameRules;
     }
 
     void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity)
     {
-        auto it = entityInterfaces.find(pEntity);
-        if (it != entityInterfaces.end())
-        {
-            for (auto& [tag, entry] : it->second)
-                delete entry.ptr_for_delete;
-            entityInterfaces.erase(it);
-        }
     }
 
     void CEntityListener::OnEntityParentChanged(CEntityInstance* pEntity, CEntityInstance* pNewParent)

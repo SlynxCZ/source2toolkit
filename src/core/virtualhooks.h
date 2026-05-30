@@ -84,21 +84,4 @@ namespace virtualhooks {
 
     extern Virtuals virtuals;
     extern CEntityListener entityListener;
-
-    // One entry per interface type cached for a given entity.
-    // ptr_for_delete: the impl cast to IEntityInstance* for virtual-destructor deletion.
-    // ptr_for_return: the impl cast to the concrete IXxx* for returning to callers.
-    struct EntityImplEntry {
-        ::IEntityInstance* ptr_for_delete;
-        void*              ptr_for_return;
-        EntityImplEntry() : ptr_for_delete(nullptr), ptr_for_return(nullptr) {}
-        EntityImplEntry(::IEntityInstance* d, void* r) : ptr_for_delete(d), ptr_for_return(r) {}
-    };
-
-    // Inner map key: address of a per-class static char (unique per translation unit/class).
-    using EntityImplsByTag = std::unordered_map<const void*, EntityImplEntry>;
-
-    // Global registry: raw entity pointer -> map of (class-tag -> impl entry).
-    // Populated by XxxImpl::ToInterface(), cleaned up in CEntityListener::OnEntityDeleted().
-    extern std::unordered_map<void*, EntityImplsByTag> entityInterfaces;
 }

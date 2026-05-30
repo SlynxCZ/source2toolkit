@@ -37,8 +37,8 @@
 #pragma once
 #include "source2toolkit/IToolkitTrace.h"
 
-#include "schema/entity/classes/CBaseEntity.h"
-#include "schema/entity/classes/CCollisionProperty.h"
+#include "source2toolkit/schema/entity/classes/CBaseEntity.h"
+#include "source2toolkit/schema/entity/classes/CCollisionProperty.h"
 
 #include "eiface.h"
 #include "entitysystem.h"
@@ -69,13 +69,13 @@ namespace raytrace
     class RayTrace : public IToolkitTrace
     {
     public:
-        TraceResult TraceShape(const Vector& vecStart, const QAngle& angAngles, IBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
-        TraceResult TraceEndShape(const Vector& vecStart, const Vector& vecEnd, IBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
-        TraceResult TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, IBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
+        TraceResult TraceShape(const Vector& vecStart, const QAngle& angAngles, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
+        TraceResult TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
+        TraceResult TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
         TraceResult TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay) override;
         uint64 PointContents(const Vector* const vTestPos, uint64 nContentsMask) override;
-        bool CheckAreaOverlappingEntity(const void* const rArea, const IBaseEntity* const rEntity, bool bExtrudeHullHeight) override;
-        void GetEntityWorldSpaceAABB(const IBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut) override;
+        bool CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight) override;
+        void GetEntityWorldSpaceAABB(const CBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut) override;
     };
 
     extern RayTrace rayTrace;
