@@ -79,63 +79,6 @@ static void ClientPrint(int slot, int hudDestination, const char* message)
     delete data;
 }
 
-ICSPlayerController *CCSPlayerController::FromPawn(ICSPlayerPawn* pPawn)
-{
-    if (!pPawn) return nullptr;
-    auto* raw = static_cast<CCSPlayerController*>(static_cast<CCSPlayerPawn*>(pPawn->GetOriginal())->m_hController().Get());
-    return raw ? raw->ToInterface() : nullptr;
-}
-
-ICSPlayerController *CCSPlayerController::FromSlot(int iSlot)
-{
-    auto* raw = static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(iSlot + 1)));
-    return raw ? raw->ToInterface() : nullptr;
-}
-
-ICSPlayerController *CCSPlayerController::FromSlot(CPlayerSlot slot)
-{
-    if (!slot.IsValid())
-        return nullptr;
-
-    return FromSlot(slot.Get());
-}
-
-ICSPlayerController *CCSPlayerController::FromUserId(int iUserId)
-{
-    for (int i = 0; i < GetGlobalVars()->maxClients; ++i)
-    {
-        auto* raw = static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(i + 1)));
-        if (!raw)
-            continue;
-
-        if (iUserId == GetEngineServer()->GetPlayerUserId(i).Get()) return raw->ToInterface();
-    }
-    return nullptr;
-}
-
-ICSPlayerController *CCSPlayerController::FromUserId(CPlayerUserId userId)
-{
-    return FromUserId(userId.Get());
-}
-
-ICSPlayerController *CCSPlayerController::FromSteamId(uint64 uSteamId)
-{
-    for (int i = 0; i < GetGlobalVars()->maxClients; ++i)
-    {
-        auto* raw = static_cast<CCSPlayerController*>(GetEntitySystem()->GetEntityInstance(CEntityIndex(i + 1)));
-        if (!raw)
-            continue;
-
-        if (uSteamId == raw->m_steamID()) return raw->ToInterface();
-    }
-    return nullptr;
-}
-
-ICSPlayerController *CCSPlayerController::FromSteamId(CSteamID steamId)
-{
-    return FromSteamId(steamId.ConvertToUint64());
-}
-
 void CCSPlayerController::PrintToConsole(const char* pszMessage)
 {
     std::string pszSanitizedMessage;
@@ -374,24 +317,3 @@ ICSPlayerController* ICSPlayerController::FromRaw(CEntityInstance* p)
 
 ICSPlayerController* ICSPlayerController::FromOriginal(CCSPlayerController* p)
 { return CCSPlayerController::FromOriginal(p); }
-
-ICSPlayerController* ICSPlayerController::FromPawn(ICSPlayerPawn* pPawn)
-{ return CCSPlayerController::FromPawn(pPawn); }
-
-ICSPlayerController* ICSPlayerController::FromSlot(int iSlot)
-{ return CCSPlayerController::FromSlot(iSlot); }
-
-ICSPlayerController* ICSPlayerController::FromSlot(CPlayerSlot slot)
-{ return CCSPlayerController::FromSlot(slot); }
-
-ICSPlayerController* ICSPlayerController::FromUserId(int iUserId)
-{ return CCSPlayerController::FromUserId(iUserId); }
-
-ICSPlayerController* ICSPlayerController::FromUserId(CPlayerUserId userId)
-{ return CCSPlayerController::FromUserId(userId); }
-
-ICSPlayerController* ICSPlayerController::FromSteamId(uint64 uSteamId)
-{ return CCSPlayerController::FromSteamId(uSteamId); }
-
-ICSPlayerController* ICSPlayerController::FromSteamId(CSteamID steamId)
-{ return CCSPlayerController::FromSteamId(steamId); }
