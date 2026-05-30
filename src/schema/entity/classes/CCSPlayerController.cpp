@@ -363,7 +363,7 @@ ICSPlayerController* CCSPlayerController::ToInterface()
     if (tagIt != byTag.end())
         return static_cast<ICSPlayerController*>(tagIt->second.ptr_for_return);
     auto* impl = new CCSPlayerControllerImpl(this);
-    byTag[&s_tag] = { static_cast<IEntityInstance*>(impl), static_cast<ICSPlayerController*>(impl) };
+    byTag[&s_tag] = virtualhooks::EntityImplEntry(static_cast<IEntityInstance*>(impl), static_cast<ICSPlayerController*>(impl));
     return impl;
 }
 
@@ -374,3 +374,24 @@ ICSPlayerController* ICSPlayerController::FromRaw(CEntityInstance* p)
 
 ICSPlayerController* ICSPlayerController::FromOriginal(CCSPlayerController* p)
 { return CCSPlayerController::FromOriginal(p); }
+
+ICSPlayerController* ICSPlayerController::FromPawn(ICSPlayerPawn* pPawn)
+{ return CCSPlayerController::FromPawn(pPawn); }
+
+ICSPlayerController* ICSPlayerController::FromSlot(int iSlot)
+{ return CCSPlayerController::FromSlot(iSlot); }
+
+ICSPlayerController* ICSPlayerController::FromSlot(CPlayerSlot slot)
+{ return CCSPlayerController::FromSlot(slot); }
+
+ICSPlayerController* ICSPlayerController::FromUserId(int iUserId)
+{ return CCSPlayerController::FromUserId(iUserId); }
+
+ICSPlayerController* ICSPlayerController::FromUserId(CPlayerUserId userId)
+{ return CCSPlayerController::FromUserId(userId); }
+
+ICSPlayerController* ICSPlayerController::FromSteamId(uint64 uSteamId)
+{ return CCSPlayerController::FromSteamId(uSteamId); }
+
+ICSPlayerController* ICSPlayerController::FromSteamId(CSteamID steamId)
+{ return CCSPlayerController::FromSteamId(steamId); }
