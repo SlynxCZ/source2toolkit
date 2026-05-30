@@ -90,8 +90,8 @@ namespace addresses
         CBaseEntity_TakeDamageOld_t CBaseEntity_TakeDamageOld() override;
         CBaseModelEntity_SetModel_t CBaseModelEntity_SetModel() override;
         CBasePlayerController_SetPawn_t CBasePlayerController_SetPawn() override;
-        CBasePlayerPawn_RemovePlayerItem_t CBasePlayerPawn_RemovePlayerItem() override;
         CGameRules_TerminateRound_t CGameRules_TerminateRound() override;
+        CCSPlayer_WeaponServices_Destroy_t CCSPlayer_WeaponServices_Destroy() override;
         CCSPlayerController_LegacyGameEventListener_t CCSPlayerController_LegacyGameEventListener() override;
         CCSPlayerController_SwitchTeam_t CCSPlayerController_SwitchTeam() override;
         CEntityInstance_AcceptInput_t CEntityInstance_AcceptInput() override;
@@ -106,8 +106,8 @@ namespace addresses
         CBaseEntity_TakeDamageOld_t TakeDamageOld = nullptr;
         CBaseModelEntity_SetModel_t SetModel = nullptr;
         CBasePlayerController_SetPawn_t SetPawn = nullptr;
-        CBasePlayerPawn_RemovePlayerItem_t RemovePlayerItem = nullptr;
         CGameRules_TerminateRound_t TerminateRound = nullptr;
+        CCSPlayer_WeaponServices_Destroy_t Destroy = nullptr;
         CCSPlayerController_LegacyGameEventListener_t LegacyGameEventListener = nullptr;
         CCSPlayerController_SwitchTeam_t SwitchTeam = nullptr;
         CEntityInstance_AcceptInput_t AcceptInput = nullptr;
