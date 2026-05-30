@@ -83,6 +83,4 @@ public:
     }
 };
 
-#include "CCSPlayerController_InventoryServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_INVENTORYSERVICES_H

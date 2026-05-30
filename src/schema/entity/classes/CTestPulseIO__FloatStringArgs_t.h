@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CTestPulseIO__FloatStringArgs_tImpl.h"
-
 #endif // _INCLUDE_CTESTPULSEIO__FLOATSTRINGARGS_T_H

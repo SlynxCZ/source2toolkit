@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CMultiplayRulesImpl.h"
-
 #endif // _INCLUDE_CMULTIPLAYRULES_H

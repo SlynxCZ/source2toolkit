@@ -126,6 +126,4 @@ public:
     }
 };
 
-#include "CCSPlayer_MovementServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_MOVEMENTSERVICES_H

@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CCSObserver_ObserverServicesImpl.h"
-
 #endif // _INCLUDE_CCSOBSERVER_OBSERVERSERVICES_H

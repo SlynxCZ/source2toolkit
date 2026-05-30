@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "CMultiplayer_ExpresserImpl.h"
-
 #endif // _INCLUDE_CMULTIPLAYER_EXPRESSER_H

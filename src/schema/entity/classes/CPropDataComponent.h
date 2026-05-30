@@ -79,6 +79,4 @@ public:
     }
 };
 
-#include "CPropDataComponentImpl.h"
-
 #endif // _INCLUDE_CPROPDATACOMPONENT_H

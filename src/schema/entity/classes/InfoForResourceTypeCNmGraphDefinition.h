@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "InfoForResourceTypeCNmGraphDefinitionImpl.h"
-
 #endif // _INCLUDE_INFOFORRESOURCETYPECNMGRAPHDEFINITION_H

@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CPlayer_ItemServicesImpl.h"
-
 #endif // _INCLUDE_CPLAYER_ITEMSERVICES_H

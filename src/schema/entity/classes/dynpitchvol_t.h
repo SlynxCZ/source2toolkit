@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "dynpitchvol_tImpl.h"
-
 #endif // _INCLUDE_DYNPITCHVOL_T_H

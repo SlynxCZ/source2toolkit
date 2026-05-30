@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "constraint_axislimit_tImpl.h"
-
 #endif // _INCLUDE_CONSTRAINT_AXISLIMIT_T_H

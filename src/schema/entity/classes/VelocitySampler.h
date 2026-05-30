@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "VelocitySamplerImpl.h"
-
 #endif // _INCLUDE_VELOCITYSAMPLER_H

@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "SoundOpvarTraceResult_tImpl.h"
-
 #endif // _INCLUDE_SOUNDOPVARTRACERESULT_T_H

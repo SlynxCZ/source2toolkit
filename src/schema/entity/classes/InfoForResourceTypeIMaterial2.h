@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "InfoForResourceTypeIMaterial2Impl.h"
-
 #endif // _INCLUDE_INFOFORRESOURCETYPEIMATERIAL2_H

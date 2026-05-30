@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "CBasePulseGraphInstanceImpl.h"
-
 #endif // _INCLUDE_CBASEPULSEGRAPHINSTANCE_H

@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "InfoForResourceTypeCVDataResourceImpl.h"
-
 #endif // _INCLUDE_INFOFORRESOURCETYPECVDATARESOURCE_H

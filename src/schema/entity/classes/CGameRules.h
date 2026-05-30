@@ -78,6 +78,4 @@ public:
     }
 };
 
-#include "CGameRulesImpl.h"
-
 #endif // _INCLUDE_CGAMERULES_H

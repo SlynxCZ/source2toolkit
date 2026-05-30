@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "CEntityAttributeTableImpl.h"
-
 #endif // _INCLUDE_CENTITYATTRIBUTETABLE_H

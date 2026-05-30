@@ -92,6 +92,4 @@ public:
     }
 };
 
-#include "CCSPlayer_WeaponServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_WEAPONSERVICES_H

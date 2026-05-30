@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CIronSightControllerImpl.h"
-
 #endif // _INCLUDE_CIRONSIGHTCONTROLLER_H

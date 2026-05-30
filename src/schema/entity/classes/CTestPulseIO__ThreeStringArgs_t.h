@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "CTestPulseIO__ThreeStringArgs_tImpl.h"
-
 #endif // _INCLUDE_CTESTPULSEIO__THREESTRINGARGS_T_H

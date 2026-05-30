@@ -79,6 +79,4 @@ public:
     }
 };
 
-#include "ExternalAnimGraph_tImpl.h"
-
 #endif // _INCLUDE_EXTERNALANIMGRAPH_T_H

@@ -82,6 +82,4 @@ public:
     }
 };
 
-#include "ConstraintSoundInfoImpl.h"
-
 #endif // _INCLUDE_CONSTRAINTSOUNDINFO_H

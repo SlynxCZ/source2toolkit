@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CCSGameModeRules_NoopImpl.h"
-
 #endif // _INCLUDE_CCSGAMEMODERULES_NOOP_H

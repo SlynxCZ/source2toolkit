@@ -94,6 +94,4 @@ public:
     }
 };
 
-#include "dynpitchvol_base_tImpl.h"
-
 #endif // _INCLUDE_DYNPITCHVOL_BASE_T_H

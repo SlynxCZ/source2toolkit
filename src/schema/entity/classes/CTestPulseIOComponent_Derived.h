@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CTestPulseIOComponent_DerivedImpl.h"
-
 #endif // _INCLUDE_CTESTPULSEIOCOMPONENT_DERIVED_H

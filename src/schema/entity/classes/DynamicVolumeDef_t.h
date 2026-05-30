@@ -78,6 +78,4 @@ public:
     }
 };
 
-#include "DynamicVolumeDef_tImpl.h"
-
 #endif // _INCLUDE_DYNAMICVOLUMEDEF_T_H

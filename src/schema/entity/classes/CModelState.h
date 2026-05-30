@@ -85,6 +85,4 @@ public:
     }
 };
 
-#include "CModelStateImpl.h"
-
 #endif // _INCLUDE_CMODELSTATE_H

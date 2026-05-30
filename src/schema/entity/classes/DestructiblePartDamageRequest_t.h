@@ -81,6 +81,4 @@ public:
     }
 };
 
-#include "DestructiblePartDamageRequest_tImpl.h"
-
 #endif // _INCLUDE_DESTRUCTIBLEPARTDAMAGEREQUEST_T_H

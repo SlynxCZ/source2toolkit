@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CConstantForceControllerImpl.h"
-
 #endif // _INCLUDE_CCONSTANTFORCECONTROLLER_H

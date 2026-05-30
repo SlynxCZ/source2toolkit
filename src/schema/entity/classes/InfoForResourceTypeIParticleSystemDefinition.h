@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "InfoForResourceTypeIParticleSystemDefinitionImpl.h"
-
 #endif // _INCLUDE_INFOFORRESOURCETYPEIPARTICLESYSTEMDEFINITION_H

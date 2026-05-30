@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "CMoodVDataImpl.h"
-
 #endif // _INCLUDE_CMOODVDATA_H

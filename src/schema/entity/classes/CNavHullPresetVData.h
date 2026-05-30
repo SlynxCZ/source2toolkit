@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "CNavHullPresetVDataImpl.h"
-
 #endif // _INCLUDE_CNAVHULLPRESETVDATA_H

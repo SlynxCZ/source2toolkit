@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CBodyComponentSkeletonInstanceImpl.h"
-
 #endif // _INCLUDE_CBODYCOMPONENTSKELETONINSTANCE_H

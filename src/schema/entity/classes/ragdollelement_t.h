@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "ragdollelement_tImpl.h"
-
 #endif // _INCLUDE_RAGDOLLELEMENT_T_H

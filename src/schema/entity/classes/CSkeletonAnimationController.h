@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "CSkeletonAnimationControllerImpl.h"
-
 #endif // _INCLUDE_CSKELETONANIMATIONCONTROLLER_H

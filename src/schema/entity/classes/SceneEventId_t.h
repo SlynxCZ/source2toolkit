@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "SceneEventId_tImpl.h"
-
 #endif // _INCLUDE_SCENEEVENTID_T_H

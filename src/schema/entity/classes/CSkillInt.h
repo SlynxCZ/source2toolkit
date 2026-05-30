@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "CSkillIntImpl.h"
-
 #endif // _INCLUDE_CSKILLINT_H

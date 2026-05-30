@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "WeaponPurchaseTracker_tImpl.h"
-
 #endif // _INCLUDE_WEAPONPURCHASETRACKER_T_H

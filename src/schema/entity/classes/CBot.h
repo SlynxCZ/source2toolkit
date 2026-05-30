@@ -84,6 +84,4 @@ public:
     }
 };
 
-#include "CBotImpl.h"
-
 #endif // _INCLUDE_CBOT_H

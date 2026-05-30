@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "IPhysicsRagdollControlImpl.h"
-
 #endif // _INCLUDE_IPHYSICSRAGDOLLCONTROL_H

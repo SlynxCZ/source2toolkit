@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CBodyComponentBaseAnimGraphImpl.h"
-
 #endif // _INCLUDE_CBODYCOMPONENTBASEANIMGRAPH_H

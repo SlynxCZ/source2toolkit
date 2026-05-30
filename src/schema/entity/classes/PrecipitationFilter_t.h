@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "PrecipitationFilter_tImpl.h"
-
 #endif // _INCLUDE_PRECIPITATIONFILTER_T_H

@@ -74,6 +74,4 @@ public:
     }
 };
 
-#include "SimpleConstraintSoundProfileImpl.h"
-
 #endif // _INCLUDE_SIMPLECONSTRAINTSOUNDPROFILE_H

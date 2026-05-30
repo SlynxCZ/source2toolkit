@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CEmptyGraphControllerImpl.h"
-
 #endif // _INCLUDE_CEMPTYGRAPHCONTROLLER_H

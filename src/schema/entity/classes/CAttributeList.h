@@ -74,6 +74,4 @@ public:
     }
 };
 
-#include "CAttributeListImpl.h"
-
 #endif // _INCLUDE_CATTRIBUTELIST_H

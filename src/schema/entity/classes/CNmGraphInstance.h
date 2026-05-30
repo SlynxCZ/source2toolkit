@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "CNmGraphInstanceImpl.h"
-
 #endif // _INCLUDE_CNMGRAPHINSTANCE_H

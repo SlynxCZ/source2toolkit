@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "IPhysicsMotionControllerImpl.h"
-
 #endif // _INCLUDE_IPHYSICSMOTIONCONTROLLER_H

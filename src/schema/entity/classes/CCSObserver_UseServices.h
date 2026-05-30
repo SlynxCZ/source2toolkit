@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CCSObserver_UseServicesImpl.h"
-
 #endif // _INCLUDE_CCSOBSERVER_USESERVICES_H

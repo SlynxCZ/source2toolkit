@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "INavObstacleImpl.h"
-
 #endif // _INCLUDE_INAVOBSTACLE_H

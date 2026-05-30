@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CCSPlayer_BuyServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_BUYSERVICES_H

@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "ServerAuthoritativeWeaponSlot_tImpl.h"
-
 #endif // _INCLUDE_SERVERAUTHORITATIVEWEAPONSLOT_T_H

@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CBodyComponentBaseModelEntityImpl.h"
-
 #endif // _INCLUDE_CBODYCOMPONENTBASEMODELENTITY_H

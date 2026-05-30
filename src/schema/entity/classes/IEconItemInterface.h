@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "IEconItemInterfaceImpl.h"
-
 #endif // _INCLUDE_IECONITEMINTERFACE_H

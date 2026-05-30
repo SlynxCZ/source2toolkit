@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "RotatorHistoryEntry_tImpl.h"
-
 #endif // _INCLUDE_ROTATORHISTORYENTRY_T_H

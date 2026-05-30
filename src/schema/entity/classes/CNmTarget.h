@@ -75,6 +75,4 @@ public:
     }
 };
 
-#include "CNmTargetImpl.h"
-
 #endif // _INCLUDE_CNMTARGET_H

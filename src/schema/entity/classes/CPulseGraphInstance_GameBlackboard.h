@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CPulseGraphInstance_GameBlackboardImpl.h"
-
 #endif // _INCLUDE_CPULSEGRAPHINSTANCE_GAMEBLACKBOARD_H

@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "ragdollhierarchyjoint_tImpl.h"
-
 #endif // _INCLUDE_RAGDOLLHIERARCHYJOINT_T_H

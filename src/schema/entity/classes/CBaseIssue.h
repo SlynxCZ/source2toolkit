@@ -76,6 +76,4 @@ public:
     }
 };
 
-#include "CBaseIssueImpl.h"
-
 #endif // _INCLUDE_CBASEISSUE_H

@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "locksound_tImpl.h"
-
 #endif // _INCLUDE_LOCKSOUND_T_H

@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CCSObserver_CameraServicesImpl.h"
-
 #endif // _INCLUDE_CCSOBSERVER_CAMERASERVICES_H

@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "SceneOpportunityHandle_tImpl.h"
-
 #endif // _INCLUDE_SCENEOPPORTUNITYHANDLE_T_H

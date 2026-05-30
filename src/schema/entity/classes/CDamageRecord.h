@@ -88,6 +88,4 @@ public:
     }
 };
 
-#include "CDamageRecordImpl.h"
-
 #endif // _INCLUDE_CDAMAGERECORD_H

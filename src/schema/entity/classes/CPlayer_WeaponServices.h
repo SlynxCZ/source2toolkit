@@ -77,6 +77,4 @@ public:
     }
 };
 
-#include "CPlayer_WeaponServicesImpl.h"
-
 #endif // _INCLUDE_CPLAYER_WEAPONSERVICES_H

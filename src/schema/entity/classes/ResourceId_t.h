@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "ResourceId_tImpl.h"
-
 #endif // _INCLUDE_RESOURCEID_T_H

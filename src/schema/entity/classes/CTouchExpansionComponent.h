@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "CTouchExpansionComponentImpl.h"
-
 #endif // _INCLUDE_CTOUCHEXPANSIONCOMPONENT_H

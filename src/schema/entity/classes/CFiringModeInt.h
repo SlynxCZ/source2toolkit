@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "CFiringModeIntImpl.h"
-
 #endif // _INCLUDE_CFIRINGMODEINT_H

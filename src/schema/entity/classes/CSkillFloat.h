@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "CSkillFloatImpl.h"
-
 #endif // _INCLUDE_CSKILLFLOAT_H

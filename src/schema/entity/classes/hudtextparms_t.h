@@ -75,6 +75,4 @@ public:
     }
 };
 
-#include "hudtextparms_tImpl.h"
-
 #endif // _INCLUDE_HUDTEXTPARMS_T_H

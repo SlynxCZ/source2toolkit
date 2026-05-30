@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "ISkeletonAnimationControllerImpl.h"
-
 #endif // _INCLUDE_ISKELETONANIMATIONCONTROLLER_H

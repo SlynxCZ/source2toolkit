@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CBaseAnimGraphDestructibleParts_GraphControllerImpl.h"
-
 #endif // _INCLUDE_CBASEANIMGRAPHDESTRUCTIBLEPARTS_GRAPHCONTROLLER_H

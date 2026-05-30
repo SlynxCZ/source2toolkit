@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "EntityRenderAttribute_tImpl.h"
-
 #endif // _INCLUDE_ENTITYRENDERATTRIBUTE_T_H

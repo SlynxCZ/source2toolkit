@@ -74,6 +74,4 @@ public:
     }
 };
 
-#include "CCSGameModeRules_DeathmatchImpl.h"
-
 #endif // _INCLUDE_CCSGAMEMODERULES_DEATHMATCH_H

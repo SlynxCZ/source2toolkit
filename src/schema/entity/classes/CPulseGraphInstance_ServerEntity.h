@@ -78,6 +78,4 @@ public:
     }
 };
 
-#include "CPulseGraphInstance_ServerEntityImpl.h"
-
 #endif // _INCLUDE_CPULSEGRAPHINSTANCE_SERVERENTITY_H

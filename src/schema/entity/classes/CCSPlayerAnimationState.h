@@ -90,6 +90,4 @@ public:
     }
 };
 
-#include "CCSPlayerAnimationStateImpl.h"
-
 #endif // _INCLUDE_CCSPLAYERANIMATIONSTATE_H

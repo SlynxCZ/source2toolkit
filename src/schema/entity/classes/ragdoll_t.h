@@ -77,6 +77,4 @@ public:
     }
 };
 
-#include "ragdoll_tImpl.h"
-
 #endif // _INCLUDE_RAGDOLL_T_H

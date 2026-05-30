@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "ExtentImpl.h"
-
 #endif // _INCLUDE_EXTENT_H

@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CAttributeContainerImpl.h"
-
 #endif // _INCLUDE_CATTRIBUTECONTAINER_H

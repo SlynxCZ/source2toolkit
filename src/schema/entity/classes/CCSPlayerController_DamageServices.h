@@ -74,6 +74,4 @@ public:
     }
 };
 
-#include "CCSPlayerController_DamageServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_DAMAGESERVICES_H

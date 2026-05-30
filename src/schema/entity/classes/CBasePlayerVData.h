@@ -85,6 +85,4 @@ public:
     }
 };
 
-#include "CBasePlayerVDataImpl.h"
-
 #endif // _INCLUDE_CBASEPLAYERVDATA_H

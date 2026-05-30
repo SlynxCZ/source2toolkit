@@ -77,6 +77,4 @@ public:
     }
 };
 
-#include "CCSPlayerController_InGameMoneyServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_INGAMEMONEYSERVICES_H

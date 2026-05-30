@@ -76,6 +76,4 @@ public:
     }
 };
 
-#include "CRetakeGameRulesImpl.h"
-
 #endif // _INCLUDE_CRETAKEGAMERULES_H

@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "magnetted_objects_tImpl.h"
-
 #endif // _INCLUDE_MAGNETTED_OBJECTS_T_H

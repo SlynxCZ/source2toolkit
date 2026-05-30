@@ -73,6 +73,4 @@ public:
     }
 };
 
-#include "CountdownTimerImpl.h"
-
 #endif // _INCLUDE_COUNTDOWNTIMER_H

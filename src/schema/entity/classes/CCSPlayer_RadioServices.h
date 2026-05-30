@@ -76,6 +76,4 @@ public:
     }
 };
 
-#include "CCSPlayer_RadioServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_RADIOSERVICES_H

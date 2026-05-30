@@ -72,6 +72,4 @@ public:
     }
 };
 
-#include "CCSGameModeRules_ArmsRaceImpl.h"
-
 #endif // _INCLUDE_CCSGAMEMODERULES_ARMSRACE_H

@@ -78,6 +78,4 @@ public:
     }
 };
 
-#include "CSkeletonInstanceImpl.h"
-
 #endif // _INCLUDE_CSKELETONINSTANCE_H

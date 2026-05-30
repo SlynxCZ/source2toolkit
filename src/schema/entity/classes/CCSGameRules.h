@@ -274,6 +274,4 @@ public:
     }
 };
 
-#include "CCSGameRulesImpl.h"
-
 #endif // _INCLUDE_CCSGAMERULES_H

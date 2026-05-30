@@ -160,6 +160,4 @@ public:
     }
 };
 
-#include "CCSWeaponBaseVDataImpl.h"
-
 #endif // _INCLUDE_CCSWEAPONBASEVDATA_H

@@ -70,6 +70,4 @@ public:
     }
 };
 
-#include "SceneRequestHandle_tImpl.h"
-
 #endif // _INCLUDE_SCENEREQUESTHANDLE_T_H

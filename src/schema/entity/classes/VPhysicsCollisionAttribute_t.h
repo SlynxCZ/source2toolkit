@@ -80,6 +80,4 @@ public:
     }
 };
 
-#include "VPhysicsCollisionAttribute_tImpl.h"
-
 #endif // _INCLUDE_VPHYSICSCOLLISIONATTRIBUTE_T_H

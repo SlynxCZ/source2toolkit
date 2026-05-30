@@ -69,6 +69,4 @@ public:
     }
 };
 
-#include "IPhysicsJointImpl.h"
-
 #endif // _INCLUDE_IPHYSICSJOINT_H

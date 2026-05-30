@@ -94,6 +94,4 @@ public:
     }
 };
 
-#include "fogparams_tImpl.h"
-
 #endif // _INCLUDE_FOGPARAMS_T_H

@@ -76,6 +76,4 @@ public:
     }
 };
 
-#include "constraint_hingeparams_tImpl.h"
-
 #endif // _INCLUDE_CONSTRAINT_HINGEPARAMS_T_H

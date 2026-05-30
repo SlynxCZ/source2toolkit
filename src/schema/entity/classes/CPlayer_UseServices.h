@@ -71,6 +71,4 @@ public:
     }
 };
 
-#include "CPlayer_UseServicesImpl.h"
-
 #endif // _INCLUDE_CPLAYER_USESERVICES_H

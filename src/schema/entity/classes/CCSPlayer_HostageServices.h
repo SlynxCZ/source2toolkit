@@ -74,6 +74,4 @@ public:
     }
 };
 
-#include "CCSPlayer_HostageServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_HOSTAGESERVICES_H

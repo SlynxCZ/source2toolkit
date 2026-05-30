@@ -98,6 +98,4 @@ public:
     }
 };
 
-#include "CBasePlayerWeaponVDataImpl.h"
-
 #endif // _INCLUDE_CBASEPLAYERWEAPONVDATA_H

@@ -75,6 +75,4 @@ public:
     }
 };
 
-#include "CCSPlayer_UseServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_USESERVICES_H

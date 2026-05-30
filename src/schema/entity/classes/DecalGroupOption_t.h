@@ -76,6 +76,4 @@ public:
     }
 };
 
-#include "DecalGroupOption_tImpl.h"
-
 #endif // _INCLUDE_DECALGROUPOPTION_T_H

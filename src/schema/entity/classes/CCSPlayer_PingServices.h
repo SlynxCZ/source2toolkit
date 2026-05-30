@@ -74,6 +74,4 @@ public:
     }
 };
 
-#include "CCSPlayer_PingServicesImpl.h"
-
 #endif // _INCLUDE_CCSPLAYER_PINGSERVICES_H

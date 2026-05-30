@@ -76,6 +76,4 @@ public:
     }
 };
 
-#include "CPlayerControllerComponentImpl.h"
-
 #endif // _INCLUDE_CPLAYERCONTROLLERCOMPONENT_H
