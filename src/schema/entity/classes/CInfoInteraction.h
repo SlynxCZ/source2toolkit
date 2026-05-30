@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CInfoInteractionImpl.h"
+
 #endif // _INCLUDE_CINFOINTERACTION_H

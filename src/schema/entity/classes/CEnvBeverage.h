@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEnvBeverageImpl.h"
+
 #endif // _INCLUDE_CENVBEVERAGE_H

@@ -94,4 +94,6 @@ public:
     }
 };
 
+#include "CPropDoorRotatingImpl.h"
+
 #endif // _INCLUDE_CPROPDOORROTATING_H

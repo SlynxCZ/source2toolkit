@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCSGameModeRulesImpl.h"
+
 #endif // _INCLUDE_CCSGAMEMODERULES_H

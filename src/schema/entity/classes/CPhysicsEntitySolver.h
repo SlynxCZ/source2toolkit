@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CPhysicsEntitySolverImpl.h"
+
 #endif // _INCLUDE_CPHYSICSENTITYSOLVER_H

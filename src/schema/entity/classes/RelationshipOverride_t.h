@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "RelationshipOverride_tImpl.h"
+
 #endif // _INCLUDE_RELATIONSHIPOVERRIDE_T_H

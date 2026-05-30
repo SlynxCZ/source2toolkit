@@ -171,4 +171,6 @@ public:
     }
 };
 
+#include "CFuncMoverImpl.h"
+
 #endif // _INCLUDE_CFUNCMOVER_H

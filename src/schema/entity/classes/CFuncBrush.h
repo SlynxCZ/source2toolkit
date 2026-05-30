@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CFuncBrushImpl.h"
+
 #endif // _INCLUDE_CFUNCBRUSH_H

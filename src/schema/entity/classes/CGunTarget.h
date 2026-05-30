@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CGunTargetImpl.h"
+
 #endif // _INCLUDE_CGUNTARGET_H

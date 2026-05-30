@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "IChoreoServicesImpl.h"
+
 #endif // _INCLUDE_ICHOREOSERVICES_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoSpawnGroupLandmarkImpl.h"
+
 #endif // _INCLUDE_CINFOSPAWNGROUPLANDMARK_H

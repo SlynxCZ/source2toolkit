@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CMathRemapImpl.h"
+
 #endif // _INCLUDE_CMATHREMAP_H

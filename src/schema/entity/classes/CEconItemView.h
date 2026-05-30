@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CEconItemViewImpl.h"
+
 #endif // _INCLUDE_CECONITEMVIEW_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "thinkfunc_tImpl.h"
+
 #endif // _INCLUDE_THINKFUNC_T_H

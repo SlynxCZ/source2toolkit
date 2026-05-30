@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CFogControllerImpl.h"
+
 #endif // _INCLUDE_CFOGCONTROLLER_H

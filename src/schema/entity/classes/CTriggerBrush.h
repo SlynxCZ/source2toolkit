@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CTriggerBrushImpl.h"
+
 #endif // _INCLUDE_CTRIGGERBRUSH_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponAWPImpl.h"
+
 #endif // _INCLUDE_CWEAPONAWP_H

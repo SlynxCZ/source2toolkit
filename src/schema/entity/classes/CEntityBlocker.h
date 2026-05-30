@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEntityBlockerImpl.h"
+
 #endif // _INCLUDE_CENTITYBLOCKER_H

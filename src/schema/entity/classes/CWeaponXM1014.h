@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponXM1014Impl.h"
+
 #endif // _INCLUDE_CWEAPONXM1014_H

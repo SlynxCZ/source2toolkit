@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CPointTemplateImpl.h"
+
 #endif // _INCLUDE_CPOINTTEMPLATE_H

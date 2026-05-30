@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CSpriteAlias_env_glowImpl.h"
+
 #endif // _INCLUDE_CSPRITEALIAS_ENV_GLOW_H

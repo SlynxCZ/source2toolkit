@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CLogicDistanceCheckImpl.h"
+
 #endif // _INCLUDE_CLOGICDISTANCECHECK_H

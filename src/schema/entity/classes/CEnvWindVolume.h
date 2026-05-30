@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CEnvWindVolumeImpl.h"
+
 #endif // _INCLUDE_CENVWINDVOLUME_H

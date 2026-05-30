@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CLightEntityImpl.h"
+
 #endif // _INCLUDE_CLIGHTENTITY_H

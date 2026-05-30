@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CCSGameRulesProxyImpl.h"
+
 #endif // _INCLUDE_CCSGAMERULESPROXY_H

@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CPhysWheelConstraintImpl.h"
+
 #endif // _INCLUDE_CPHYSWHEELCONSTRAINT_H

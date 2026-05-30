@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CFuncNavObstructionImpl.h"
+
 #endif // _INCLUDE_CFUNCNAVOBSTRUCTION_H

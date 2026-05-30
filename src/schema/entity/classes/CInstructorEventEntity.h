@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CInstructorEventEntityImpl.h"
+
 #endif // _INCLUDE_CINSTRUCTOREVENTENTITY_H

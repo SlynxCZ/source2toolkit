@@ -88,4 +88,6 @@ public:
     }
 };
 
+#include "CTriggerHurtImpl.h"
+
 #endif // _INCLUDE_CTRIGGERHURT_H

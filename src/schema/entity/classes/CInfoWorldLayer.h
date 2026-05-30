@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CInfoWorldLayerImpl.h"
+
 #endif // _INCLUDE_CINFOWORLDLAYER_H

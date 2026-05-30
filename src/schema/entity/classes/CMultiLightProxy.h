@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CMultiLightProxyImpl.h"
+
 #endif // _INCLUDE_CMULTILIGHTPROXY_H

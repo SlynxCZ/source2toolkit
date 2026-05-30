@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoDeathmatchSpawnImpl.h"
+
 #endif // _INCLUDE_CINFODEATHMATCHSPAWN_H

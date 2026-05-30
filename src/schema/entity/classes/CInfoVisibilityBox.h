@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CInfoVisibilityBoxImpl.h"
+
 #endif // _INCLUDE_CINFOVISIBILITYBOX_H

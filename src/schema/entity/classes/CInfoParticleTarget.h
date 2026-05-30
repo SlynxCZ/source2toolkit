@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoParticleTargetImpl.h"
+
 #endif // _INCLUDE_CINFOPARTICLETARGET_H

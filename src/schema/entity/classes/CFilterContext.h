@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterContextImpl.h"
+
 #endif // _INCLUDE_CFILTERCONTEXT_H

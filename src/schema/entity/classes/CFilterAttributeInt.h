@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterAttributeIntImpl.h"
+
 #endif // _INCLUDE_CFILTERATTRIBUTEINT_H

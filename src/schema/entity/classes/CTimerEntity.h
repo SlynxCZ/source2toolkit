@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CTimerEntityImpl.h"
+
 #endif // _INCLUDE_CTIMERENTITY_H

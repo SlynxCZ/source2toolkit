@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CBodyComponentPointImpl.h"
+
 #endif // _INCLUDE_CBODYCOMPONENTPOINT_H

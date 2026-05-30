@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CNavHullVDataImpl.h"
+
 #endif // _INCLUDE_CNAVHULLVDATA_H

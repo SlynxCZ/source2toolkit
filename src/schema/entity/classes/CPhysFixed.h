@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CPhysFixedImpl.h"
+
 #endif // _INCLUDE_CPHYSFIXED_H

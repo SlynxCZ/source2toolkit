@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CNetworkTransmitComponentImpl.h"
+
 #endif // _INCLUDE_CNETWORKTRANSMITCOMPONENT_H

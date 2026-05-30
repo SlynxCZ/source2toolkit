@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CLogicAutoImpl.h"
+
 #endif // _INCLUDE_CLOGICAUTO_H

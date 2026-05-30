@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CCS2ChickenGraphControllerImpl.h"
+
 #endif // _INCLUDE_CCS2CHICKENGRAPHCONTROLLER_H

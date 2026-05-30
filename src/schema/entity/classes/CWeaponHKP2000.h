@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponHKP2000Impl.h"
+
 #endif // _INCLUDE_CWEAPONHKP2000_H

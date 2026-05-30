@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CGameChoreoServicesImpl.h"
+
 #endif // _INCLUDE_CGAMECHOREOSERVICES_H

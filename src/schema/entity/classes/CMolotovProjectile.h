@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CMolotovProjectileImpl.h"
+
 #endif // _INCLUDE_CMOLOTOVPROJECTILE_H

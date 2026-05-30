@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CCSPlayerModernJumpImpl.h"
+
 #endif // _INCLUDE_CCSPLAYERMODERNJUMP_H

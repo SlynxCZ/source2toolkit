@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CPointVelocitySensorImpl.h"
+
 #endif // _INCLUDE_CPOINTVELOCITYSENSOR_H

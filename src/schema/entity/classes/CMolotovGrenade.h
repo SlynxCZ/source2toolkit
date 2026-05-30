@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CMolotovGrenadeImpl.h"
+
 #endif // _INCLUDE_CMOLOTOVGRENADE_H

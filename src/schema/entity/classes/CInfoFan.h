@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CInfoFanImpl.h"
+
 #endif // _INCLUDE_CINFOFAN_H

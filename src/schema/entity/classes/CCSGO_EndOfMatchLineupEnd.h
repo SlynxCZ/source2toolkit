@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSGO_EndOfMatchLineupEndImpl.h"
+
 #endif // _INCLUDE_CCSGO_ENDOFMATCHLINEUPEND_H

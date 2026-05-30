@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CScriptTriggerPushImpl.h"
+
 #endif // _INCLUDE_CSCRIPTTRIGGERPUSH_H

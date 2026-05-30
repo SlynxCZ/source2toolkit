@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CCSPlayer_ItemServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_ITEMSERVICES_H

@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CWeaponBaseItemImpl.h"
+
 #endif // _INCLUDE_CWEAPONBASEITEM_H

@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CGameGibManagerImpl.h"
+
 #endif // _INCLUDE_CGAMEGIBMANAGER_H

@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CSkyboxReferenceImpl.h"
+
 #endif // _INCLUDE_CSKYBOXREFERENCE_H

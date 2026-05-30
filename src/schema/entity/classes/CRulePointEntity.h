@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CRulePointEntityImpl.h"
+
 #endif // _INCLUDE_CRULEPOINTENTITY_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CEnvEntityIgniterImpl.h"
+
 #endif // _INCLUDE_CENVENTITYIGNITER_H

@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCSObserver_MovementServicesImpl.h"
+
 #endif // _INCLUDE_CCSOBSERVER_MOVEMENTSERVICES_H

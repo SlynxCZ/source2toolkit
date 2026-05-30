@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CScriptTriggerHurtImpl.h"
+
 #endif // _INCLUDE_CSCRIPTTRIGGERHURT_H

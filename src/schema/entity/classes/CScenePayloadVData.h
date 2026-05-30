@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CScenePayloadVDataImpl.h"
+
 #endif // _INCLUDE_CSCENEPAYLOADVDATA_H

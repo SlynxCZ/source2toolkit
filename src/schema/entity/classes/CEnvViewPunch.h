@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEnvViewPunchImpl.h"
+
 #endif // _INCLUDE_CENVVIEWPUNCH_H

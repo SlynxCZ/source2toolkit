@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "PhysicsRagdollPose_tImpl.h"
+
 #endif // _INCLUDE_PHYSICSRAGDOLLPOSE_T_H

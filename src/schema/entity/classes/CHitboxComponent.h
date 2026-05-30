@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CHitboxComponentImpl.h"
+
 #endif // _INCLUDE_CHITBOXCOMPONENT_H

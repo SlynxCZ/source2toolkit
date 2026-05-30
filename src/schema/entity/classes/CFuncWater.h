@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CFuncWaterImpl.h"
+
 #endif // _INCLUDE_CFUNCWATER_H

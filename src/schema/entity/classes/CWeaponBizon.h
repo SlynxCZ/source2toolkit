@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponBizonImpl.h"
+
 #endif // _INCLUDE_CWEAPONBIZON_H

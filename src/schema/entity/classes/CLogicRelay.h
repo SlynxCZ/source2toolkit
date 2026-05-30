@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CLogicRelayImpl.h"
+
 #endif // _INCLUDE_CLOGICRELAY_H

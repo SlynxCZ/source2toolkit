@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "COrnamentPropImpl.h"
+
 #endif // _INCLUDE_CORNAMENTPROP_H

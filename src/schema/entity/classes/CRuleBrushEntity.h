@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CRuleBrushEntityImpl.h"
+
 #endif // _INCLUDE_CRULEBRUSHENTITY_H

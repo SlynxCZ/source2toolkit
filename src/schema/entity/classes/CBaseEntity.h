@@ -219,4 +219,6 @@ public:
     }
 };
 
+#include "CBaseEntityImpl.h"
+
 #endif // _INCLUDE_CBASEENTITY_H

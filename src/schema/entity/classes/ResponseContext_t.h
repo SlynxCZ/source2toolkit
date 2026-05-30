@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "ResponseContext_tImpl.h"
+
 #endif // _INCLUDE_RESPONSECONTEXT_T_H

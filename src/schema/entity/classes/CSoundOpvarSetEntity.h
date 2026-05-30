@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETENTITY_H

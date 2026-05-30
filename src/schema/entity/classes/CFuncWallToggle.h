@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncWallToggleImpl.h"
+
 #endif // _INCLUDE_CFUNCWALLTOGGLE_H

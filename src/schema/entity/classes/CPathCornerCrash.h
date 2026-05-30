@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPathCornerCrashImpl.h"
+
 #endif // _INCLUDE_CPATHCORNERCRASH_H

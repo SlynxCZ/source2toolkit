@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFilterLOSImpl.h"
+
 #endif // _INCLUDE_CFILTERLOS_H

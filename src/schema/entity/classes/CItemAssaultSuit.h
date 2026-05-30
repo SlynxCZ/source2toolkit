@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CItemAssaultSuitImpl.h"
+
 #endif // _INCLUDE_CITEMASSAULTSUIT_H

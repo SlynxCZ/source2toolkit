@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPhysicalButtonImpl.h"
+
 #endif // _INCLUDE_CPHYSICALBUTTON_H

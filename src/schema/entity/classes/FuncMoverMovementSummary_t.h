@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "FuncMoverMovementSummary_tImpl.h"
+
 #endif // _INCLUDE_FUNCMOVERMOVEMENTSUMMARY_T_H

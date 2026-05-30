@@ -202,4 +202,6 @@ public:
     }
 };
 
+#include "CCSPlayerPawnImpl.h"
+
 #endif // _INCLUDE_CCSPLAYERPAWN_H

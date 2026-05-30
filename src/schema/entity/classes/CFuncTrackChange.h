@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CFuncTrackChangeImpl.h"
+
 #endif // _INCLUDE_CFUNCTRACKCHANGE_H

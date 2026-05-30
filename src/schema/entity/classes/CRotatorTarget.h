@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CRotatorTargetImpl.h"
+
 #endif // _INCLUDE_CROTATORTARGET_H

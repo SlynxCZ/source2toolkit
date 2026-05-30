@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CTankTargetChangeImpl.h"
+
 #endif // _INCLUDE_CTANKTARGETCHANGE_H

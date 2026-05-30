@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTriggerToggleSaveImpl.h"
+
 #endif // _INCLUDE_CTRIGGERTOGGLESAVE_H

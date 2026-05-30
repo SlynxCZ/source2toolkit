@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetOBBWindEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETOBBWINDENTITY_H

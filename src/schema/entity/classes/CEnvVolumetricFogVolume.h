@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CEnvVolumetricFogVolumeImpl.h"
+
 #endif // _INCLUDE_CENVVOLUMETRICFOGVOLUME_H

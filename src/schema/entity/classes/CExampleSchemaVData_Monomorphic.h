@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CExampleSchemaVData_MonomorphicImpl.h"
+
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_MONOMORPHIC_H

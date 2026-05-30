@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CEnvInstructorVRHintImpl.h"
+
 #endif // _INCLUDE_CENVINSTRUCTORVRHINT_H

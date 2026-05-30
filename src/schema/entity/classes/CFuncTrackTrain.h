@@ -112,4 +112,6 @@ public:
     }
 };
 
+#include "CFuncTrackTrainImpl.h"
+
 #endif // _INCLUDE_CFUNCTRACKTRAIN_H

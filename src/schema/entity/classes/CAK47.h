@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CAK47Impl.h"
+
 #endif // _INCLUDE_CAK47_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterNameImpl.h"
+
 #endif // _INCLUDE_CFILTERNAME_H

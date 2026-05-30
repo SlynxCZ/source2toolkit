@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CDEagleImpl.h"
+
 #endif // _INCLUDE_CDEAGLE_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterModelImpl.h"
+
 #endif // _INCLUDE_CFILTERMODEL_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncIllusionaryImpl.h"
+
 #endif // _INCLUDE_CFUNCILLUSIONARY_H

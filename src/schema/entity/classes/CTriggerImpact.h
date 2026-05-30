@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CTriggerImpactImpl.h"
+
 #endif // _INCLUDE_CTRIGGERIMPACT_H

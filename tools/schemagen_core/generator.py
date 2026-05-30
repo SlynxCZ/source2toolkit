@@ -1191,6 +1191,13 @@ def write_class(
 
     lines.append("};")
     lines.append("")
+    # Pull in the impl header at the bottom of the class header so that the
+    # inline ToInterface() / FromRaw() / FromOriginal() definitions are compiled
+    # into every TU that includes CXxx.h — without this, the inline definition
+    # in CXxxImpl.h would never be instantiated and the linker would error.
+    impl_header = f"{class_name}Impl.h"
+    lines.append(f'#include "{impl_header}"')
+    lines.append("")
     lines.append(f"#endif // {guard}")
     lines.append("")
     return LICENSE_HEADER + "\r\n".join(lines)

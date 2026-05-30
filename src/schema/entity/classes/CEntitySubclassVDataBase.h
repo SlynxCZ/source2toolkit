@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "CEntitySubclassVDataBaseImpl.h"
+
 #endif // _INCLUDE_CENTITYSUBCLASSVDATABASE_H

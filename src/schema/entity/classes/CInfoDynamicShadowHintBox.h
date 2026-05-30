@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CInfoDynamicShadowHintBoxImpl.h"
+
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINTBOX_H

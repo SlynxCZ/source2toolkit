@@ -96,4 +96,6 @@ public:
     }
 };
 
+#include "CSpriteImpl.h"
+
 #endif // _INCLUDE_CSPRITE_H

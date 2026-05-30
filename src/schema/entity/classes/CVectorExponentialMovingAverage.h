@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "CVectorExponentialMovingAverageImpl.h"
+
 #endif // _INCLUDE_CVECTOREXPONENTIALMOVINGAVERAGE_H

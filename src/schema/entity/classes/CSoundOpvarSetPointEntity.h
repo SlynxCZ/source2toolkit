@@ -96,4 +96,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetPointEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTENTITY_H

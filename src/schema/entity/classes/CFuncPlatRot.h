@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CFuncPlatRotImpl.h"
+
 #endif // _INCLUDE_CFUNCPLATROT_H

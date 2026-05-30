@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CSoundEventEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTENTITY_H

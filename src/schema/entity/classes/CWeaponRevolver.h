@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponRevolverImpl.h"
+
 #endif // _INCLUDE_CWEAPONREVOLVER_H

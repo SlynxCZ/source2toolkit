@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponMAC10Impl.h"
+
 #endif // _INCLUDE_CWEAPONMAC10_H

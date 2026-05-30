@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CMarkupVolumeTaggedImpl.h"
+
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_H

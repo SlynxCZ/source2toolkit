@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CCSPlayer_ActionTrackingServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_ACTIONTRACKINGSERVICES_H

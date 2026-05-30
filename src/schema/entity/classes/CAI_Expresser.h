@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CAI_ExpresserImpl.h"
+
 #endif // _INCLUDE_CAI_EXPRESSER_H

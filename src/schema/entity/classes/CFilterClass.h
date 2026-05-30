@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterClassImpl.h"
+
 #endif // _INCLUDE_CFILTERCLASS_H

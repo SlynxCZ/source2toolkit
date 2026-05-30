@@ -95,4 +95,6 @@ public:
     }
 };
 
+#include "CDynamicPropImpl.h"
+
 #endif // _INCLUDE_CDYNAMICPROP_H

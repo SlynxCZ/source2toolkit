@@ -156,4 +156,6 @@ public:
     }
 };
 
+#include "CScriptedSequenceImpl.h"
+
 #endif // _INCLUDE_CSCRIPTEDSEQUENCE_H

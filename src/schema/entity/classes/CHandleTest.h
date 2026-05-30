@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CHandleTestImpl.h"
+
 #endif // _INCLUDE_CHANDLETEST_H

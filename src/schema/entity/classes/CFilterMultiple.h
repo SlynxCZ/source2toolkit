@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CFilterMultipleImpl.h"
+
 #endif // _INCLUDE_CFILTERMULTIPLE_H

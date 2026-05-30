@@ -118,4 +118,6 @@ public:
     }
 };
 
+#include "CBasePlayerPawnImpl.h"
+
 #endif // _INCLUDE_CBASEPLAYERPAWN_H

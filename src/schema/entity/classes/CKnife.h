@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CKnifeImpl.h"
+
 #endif // _INCLUDE_CKNIFE_H

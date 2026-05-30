@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoTargetImpl.h"
+
 #endif // _INCLUDE_CINFOTARGET_H

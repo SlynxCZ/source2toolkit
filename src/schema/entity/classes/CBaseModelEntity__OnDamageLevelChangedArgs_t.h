@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CBaseModelEntity__OnDamageLevelChangedArgs_tImpl.h"
+
 #endif // _INCLUDE_CBASEMODELENTITY__ONDAMAGELEVELCHANGEDARGS_T_H

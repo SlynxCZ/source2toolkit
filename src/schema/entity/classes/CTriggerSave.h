@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CTriggerSaveImpl.h"
+
 #endif // _INCLUDE_CTRIGGERSAVE_H

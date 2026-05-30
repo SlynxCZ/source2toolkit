@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "shard_model_desc_tImpl.h"
+
 #endif // _INCLUDE_SHARD_MODEL_DESC_T_H

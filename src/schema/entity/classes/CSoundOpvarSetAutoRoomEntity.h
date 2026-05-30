@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetAutoRoomEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETAUTOROOMENTITY_H

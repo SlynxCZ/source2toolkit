@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CGameRulesProxyImpl.h"
+
 #endif // _INCLUDE_CGAMERULESPROXY_H

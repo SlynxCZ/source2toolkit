@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "ParticleIndex_tImpl.h"
+
 #endif // _INCLUDE_PARTICLEINDEX_T_H

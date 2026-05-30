@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CSoundEventAABBEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTAABBENTITY_H

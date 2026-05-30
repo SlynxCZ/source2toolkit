@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCommentaryViewPositionImpl.h"
+
 #endif // _INCLUDE_CCOMMENTARYVIEWPOSITION_H

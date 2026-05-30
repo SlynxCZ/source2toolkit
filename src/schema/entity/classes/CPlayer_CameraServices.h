@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CPlayer_CameraServicesImpl.h"
+
 #endif // _INCLUDE_CPLAYER_CAMERASERVICES_H

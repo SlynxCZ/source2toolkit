@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CBuyZoneImpl.h"
+
 #endif // _INCLUDE_CBUYZONE_H

@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CPathKeyFrameImpl.h"
+
 #endif // _INCLUDE_CPATHKEYFRAME_H

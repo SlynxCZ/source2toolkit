@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CTeamplayRulesImpl.h"
+
 #endif // _INCLUDE_CTEAMPLAYRULES_H

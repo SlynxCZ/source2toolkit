@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CDynamicPropAlias_dynamic_propImpl.h"
+
 #endif // _INCLUDE_CDYNAMICPROPALIAS_DYNAMIC_PROP_H

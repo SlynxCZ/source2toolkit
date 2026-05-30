@@ -92,4 +92,6 @@ public:
     }
 };
 
+#include "CSMatchStats_tImpl.h"
+
 #endif // _INCLUDE_CSMATCHSTATS_T_H

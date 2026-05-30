@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CMomentaryRotButtonImpl.h"
+
 #endif // _INCLUDE_CMOMENTARYROTBUTTON_H

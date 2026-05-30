@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CEnvSkyImpl.h"
+
 #endif // _INCLUDE_CENVSKY_H

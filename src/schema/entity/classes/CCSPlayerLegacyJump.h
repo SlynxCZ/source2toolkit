@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCSPlayerLegacyJumpImpl.h"
+
 #endif // _INCLUDE_CCSPLAYERLEGACYJUMP_H

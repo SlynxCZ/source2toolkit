@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CEntityFlameImpl.h"
+
 #endif // _INCLUDE_CENTITYFLAME_H

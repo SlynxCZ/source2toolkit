@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponFiveSevenImpl.h"
+
 #endif // _INCLUDE_CWEAPONFIVESEVEN_H

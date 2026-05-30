@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CLightDirectionalEntityImpl.h"
+
 #endif // _INCLUDE_CLIGHTDIRECTIONALENTITY_H

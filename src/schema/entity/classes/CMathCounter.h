@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CMathCounterImpl.h"
+
 #endif // _INCLUDE_CMATHCOUNTER_H

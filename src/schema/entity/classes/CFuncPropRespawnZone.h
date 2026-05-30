@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncPropRespawnZoneImpl.h"
+
 #endif // _INCLUDE_CFUNCPROPRESPAWNZONE_H

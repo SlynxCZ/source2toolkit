@@ -125,4 +125,6 @@ public:
     }
 };
 
+#include "CBaseModelEntityImpl.h"
+
 #endif // _INCLUDE_CBASEMODELENTITY_H

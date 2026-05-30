@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CBaseCSGrenadeImpl.h"
+
 #endif // _INCLUDE_CBASECSGRENADE_H

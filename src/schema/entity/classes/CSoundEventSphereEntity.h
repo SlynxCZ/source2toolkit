@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CSoundEventSphereEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTSPHEREENTITY_H

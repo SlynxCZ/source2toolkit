@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CEnvWindControllerImpl.h"
+
 #endif // _INCLUDE_CENVWINDCONTROLLER_H

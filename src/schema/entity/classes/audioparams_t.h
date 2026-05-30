@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "audioparams_tImpl.h"
+
 #endif // _INCLUDE_AUDIOPARAMS_T_H

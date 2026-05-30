@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CLogicGameEventImpl.h"
+
 #endif // _INCLUDE_CLOGICGAMEEVENT_H

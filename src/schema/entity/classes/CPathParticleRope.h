@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CPathParticleRopeImpl.h"
+
 #endif // _INCLUDE_CPATHPARTICLEROPE_H

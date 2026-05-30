@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CInfoDynamicShadowHintImpl.h"
+
 #endif // _INCLUDE_CINFODYNAMICSHADOWHINT_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPrecipitationImpl.h"
+
 #endif // _INCLUDE_CPRECIPITATION_H

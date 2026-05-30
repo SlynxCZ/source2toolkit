@@ -98,4 +98,6 @@ public:
     }
 };
 
+#include "CFishImpl.h"
+
 #endif // _INCLUDE_CFISH_H

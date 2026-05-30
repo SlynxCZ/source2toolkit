@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CCitadelSoundOpvarSetOBBImpl.h"
+
 #endif // _INCLUDE_CCITADELSOUNDOPVARSETOBB_H

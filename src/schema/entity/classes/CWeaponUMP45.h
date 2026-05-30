@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponUMP45Impl.h"
+
 #endif // _INCLUDE_CWEAPONUMP45_H

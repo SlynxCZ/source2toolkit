@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPathParticleRopeAlias_path_particle_rope_clientsideImpl.h"
+
 #endif // _INCLUDE_CPATHPARTICLEROPEALIAS_PATH_PARTICLE_ROPE_CLIENTSIDE_H

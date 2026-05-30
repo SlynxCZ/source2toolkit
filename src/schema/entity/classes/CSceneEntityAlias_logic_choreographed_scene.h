@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CSceneEntityAlias_logic_choreographed_sceneImpl.h"
+
 #endif // _INCLUDE_CSCENEENTITYALIAS_LOGIC_CHOREOGRAPHED_SCENE_H

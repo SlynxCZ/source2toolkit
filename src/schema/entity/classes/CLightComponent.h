@@ -142,4 +142,6 @@ public:
     }
 };
 
+#include "CLightComponentImpl.h"
+
 #endif // _INCLUDE_CLIGHTCOMPONENT_H

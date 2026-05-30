@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CCSPlayerController_ActionTrackingServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_ACTIONTRACKINGSERVICES_H

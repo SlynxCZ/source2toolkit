@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetPathCornerEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETPATHCORNERENTITY_H

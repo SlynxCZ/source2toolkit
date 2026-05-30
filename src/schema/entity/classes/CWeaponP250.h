@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponP250Impl.h"
+
 #endif // _INCLUDE_CWEAPONP250_H

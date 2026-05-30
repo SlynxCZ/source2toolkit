@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCS2WeaponGraphControllerImpl.h"
+
 #endif // _INCLUDE_CCS2WEAPONGRAPHCONTROLLER_H

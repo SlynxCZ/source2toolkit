@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CChoreoInfoTargetImpl.h"
+
 #endif // _INCLUDE_CCHOREOINFOTARGET_H

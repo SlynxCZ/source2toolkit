@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CCommentaryAutoImpl.h"
+
 #endif // _INCLUDE_CCOMMENTARYAUTO_H

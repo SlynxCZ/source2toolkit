@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CItemDefuserImpl.h"
+
 #endif // _INCLUDE_CITEMDEFUSER_H

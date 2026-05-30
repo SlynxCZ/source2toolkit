@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCS2PawnGraphControllerImpl.h"
+
 #endif // _INCLUDE_CCS2PAWNGRAPHCONTROLLER_H

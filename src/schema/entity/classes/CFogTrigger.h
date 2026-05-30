@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CFogTriggerImpl.h"
+
 #endif // _INCLUDE_CFOGTRIGGER_H

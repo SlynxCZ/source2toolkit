@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "ExternalAnimGraphHandle_tImpl.h"
+
 #endif // _INCLUDE_EXTERNALANIMGRAPHHANDLE_T_H

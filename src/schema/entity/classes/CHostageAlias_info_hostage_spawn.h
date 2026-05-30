@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CHostageAlias_info_hostage_spawnImpl.h"
+
 #endif // _INCLUDE_CHOSTAGEALIAS_INFO_HOSTAGE_SPAWN_H

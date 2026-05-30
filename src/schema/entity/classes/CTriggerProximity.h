@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CTriggerProximityImpl.h"
+
 #endif // _INCLUDE_CTRIGGERPROXIMITY_H

@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CPathCornerImpl.h"
+
 #endif // _INCLUDE_CPATHCORNER_H

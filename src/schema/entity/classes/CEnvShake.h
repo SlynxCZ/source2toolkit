@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CEnvShakeImpl.h"
+
 #endif // _INCLUDE_CENVSHAKE_H

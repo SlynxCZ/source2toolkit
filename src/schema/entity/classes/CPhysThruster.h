@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CPhysThrusterImpl.h"
+
 #endif // _INCLUDE_CPHYSTHRUSTER_H

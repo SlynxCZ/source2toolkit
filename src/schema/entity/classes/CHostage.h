@@ -116,4 +116,6 @@ public:
     }
 };
 
+#include "CHostageImpl.h"
+
 #endif // _INCLUDE_CHOSTAGE_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSPlayer_BulletServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_BULLETSERVICES_H

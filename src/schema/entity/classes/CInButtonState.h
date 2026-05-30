@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CInButtonStateImpl.h"
+
 #endif // _INCLUDE_CINBUTTONSTATE_H

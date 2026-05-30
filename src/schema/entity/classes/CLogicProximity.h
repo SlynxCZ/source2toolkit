@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CLogicProximityImpl.h"
+
 #endif // _INCLUDE_CLOGICPROXIMITY_H

@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CPathMoverImpl.h"
+
 #endif // _INCLUDE_CPATHMOVER_H

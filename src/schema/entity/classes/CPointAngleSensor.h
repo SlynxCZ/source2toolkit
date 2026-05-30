@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CPointAngleSensorImpl.h"
+
 #endif // _INCLUDE_CPOINTANGLESENSOR_H

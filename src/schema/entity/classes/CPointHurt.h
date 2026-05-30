@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CPointHurtImpl.h"
+
 #endif // _INCLUDE_CPOINTHURT_H

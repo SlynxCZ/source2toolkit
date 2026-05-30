@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CPointClientUIDialogImpl.h"
+
 #endif // _INCLUDE_CPOINTCLIENTUIDIALOG_H

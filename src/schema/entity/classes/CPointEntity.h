@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPointEntityImpl.h"
+
 #endif // _INCLUDE_CPOINTENTITY_H

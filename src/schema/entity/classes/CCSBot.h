@@ -215,4 +215,6 @@ public:
     }
 };
 
+#include "CCSBotImpl.h"
+
 #endif // _INCLUDE_CCSBOT_H

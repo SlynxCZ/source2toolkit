@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CGameMoneyImpl.h"
+
 #endif // _INCLUDE_CGAMEMONEY_H

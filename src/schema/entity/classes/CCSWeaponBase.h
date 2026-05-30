@@ -128,4 +128,6 @@ public:
     }
 };
 
+#include "CCSWeaponBaseImpl.h"
+
 #endif // _INCLUDE_CCSWEAPONBASE_H

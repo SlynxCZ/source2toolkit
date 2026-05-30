@@ -99,4 +99,6 @@ public:
     }
 };
 
+#include "CTriggerFanImpl.h"
+
 #endif // _INCLUDE_CTRIGGERFAN_H

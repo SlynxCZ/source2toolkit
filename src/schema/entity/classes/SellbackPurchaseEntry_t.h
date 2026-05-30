@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "SellbackPurchaseEntry_tImpl.h"
+
 #endif // _INCLUDE_SELLBACKPURCHASEENTRY_T_H

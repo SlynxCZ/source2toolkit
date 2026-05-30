@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CLogicBranchListImpl.h"
+
 #endif // _INCLUDE_CLOGICBRANCHLIST_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CNavWalkableImpl.h"
+
 #endif // _INCLUDE_CNAVWALKABLE_H

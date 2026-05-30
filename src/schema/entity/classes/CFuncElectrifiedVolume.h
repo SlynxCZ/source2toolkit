@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CFuncElectrifiedVolumeImpl.h"
+
 #endif // _INCLUDE_CFUNCELECTRIFIEDVOLUME_H

@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CRagdollPropAttachedImpl.h"
+
 #endif // _INCLUDE_CRAGDOLLPROPATTACHED_H

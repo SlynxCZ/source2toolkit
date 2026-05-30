@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CPointTeleportImpl.h"
+
 #endif // _INCLUDE_CPOINTTELEPORT_H

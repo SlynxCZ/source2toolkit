@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFuncVPhysicsClipImpl.h"
+
 #endif // _INCLUDE_CFUNCVPHYSICSCLIP_H

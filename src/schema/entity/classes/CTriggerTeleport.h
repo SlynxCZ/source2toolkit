@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CTriggerTeleportImpl.h"
+
 #endif // _INCLUDE_CTRIGGERTELEPORT_H

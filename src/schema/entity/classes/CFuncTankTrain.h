@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFuncTankTrainImpl.h"
+
 #endif // _INCLUDE_CFUNCTANKTRAIN_H

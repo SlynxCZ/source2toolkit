@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CHEGrenadeImpl.h"
+
 #endif // _INCLUDE_CHEGRENADE_H

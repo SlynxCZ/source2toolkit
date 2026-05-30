@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CTriggerMultipleImpl.h"
+
 #endif // _INCLUDE_CTRIGGERMULTIPLE_H

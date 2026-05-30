@@ -113,4 +113,6 @@ public:
     }
 };
 
+#include "CBasePropDoorImpl.h"
+
 #endif // _INCLUDE_CBASEPROPDOOR_H

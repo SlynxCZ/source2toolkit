@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CTriggerBuoyancyImpl.h"
+
 #endif // _INCLUDE_CTRIGGERBUOYANCY_H

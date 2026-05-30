@@ -122,4 +122,6 @@ public:
     }
 };
 
+#include "CGenericConstraintImpl.h"
+
 #endif // _INCLUDE_CGENERICCONSTRAINT_H

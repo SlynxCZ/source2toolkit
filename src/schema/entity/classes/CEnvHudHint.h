@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CEnvHudHintImpl.h"
+
 #endif // _INCLUDE_CENVHUDHINT_H

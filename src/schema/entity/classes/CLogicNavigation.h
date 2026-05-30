@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CLogicNavigationImpl.h"
+
 #endif // _INCLUDE_CLOGICNAVIGATION_H

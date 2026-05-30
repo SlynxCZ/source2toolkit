@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CPhysMagnetImpl.h"
+
 #endif // _INCLUDE_CPHYSMAGNET_H

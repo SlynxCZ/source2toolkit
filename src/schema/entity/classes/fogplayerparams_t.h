@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "fogplayerparams_tImpl.h"
+
 #endif // _INCLUDE_FOGPLAYERPARAMS_T_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetOBBEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETOBBENTITY_H

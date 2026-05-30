@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponM4A1SilencerImpl.h"
+
 #endif // _INCLUDE_CWEAPONM4A1SILENCER_H

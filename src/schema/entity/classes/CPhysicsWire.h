@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CPhysicsWireImpl.h"
+
 #endif // _INCLUDE_CPHYSICSWIRE_H

@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CGradientFogImpl.h"
+
 #endif // _INCLUDE_CGRADIENTFOG_H

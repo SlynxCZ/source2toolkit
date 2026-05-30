@@ -120,4 +120,6 @@ public:
     }
 };
 
+#include "CPointValueRemapperImpl.h"
+
 #endif // _INCLUDE_CPOINTVALUEREMAPPER_H

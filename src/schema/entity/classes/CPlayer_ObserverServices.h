@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CPlayer_ObserverServicesImpl.h"
+
 #endif // _INCLUDE_CPLAYER_OBSERVERSERVICES_H

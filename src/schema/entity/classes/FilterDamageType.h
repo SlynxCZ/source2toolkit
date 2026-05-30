@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "FilterDamageTypeImpl.h"
+
 #endif // _INCLUDE_FILTERDAMAGETYPE_H

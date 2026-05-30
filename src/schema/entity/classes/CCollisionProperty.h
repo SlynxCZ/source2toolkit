@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CCollisionPropertyImpl.h"
+
 #endif // _INCLUDE_CCOLLISIONPROPERTY_H

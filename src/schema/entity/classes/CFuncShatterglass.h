@@ -99,4 +99,6 @@ public:
     }
 };
 
+#include "CFuncShatterglassImpl.h"
+
 #endif // _INCLUDE_CFUNCSHATTERGLASS_H

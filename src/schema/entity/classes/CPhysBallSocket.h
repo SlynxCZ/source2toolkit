@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CPhysBallSocketImpl.h"
+
 #endif // _INCLUDE_CPHYSBALLSOCKET_H

@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CPhysLengthImpl.h"
+
 #endif // _INCLUDE_CPHYSLENGTH_H

@@ -91,4 +91,6 @@ public:
     }
 };
 
+#include "CPhysMotorImpl.h"
+
 #endif // _INCLUDE_CPHYSMOTOR_H

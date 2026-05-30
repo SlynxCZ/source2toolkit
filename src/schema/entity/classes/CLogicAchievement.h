@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CLogicAchievementImpl.h"
+
 #endif // _INCLUDE_CLOGICACHIEVEMENT_H

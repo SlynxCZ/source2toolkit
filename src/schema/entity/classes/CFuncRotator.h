@@ -119,4 +119,6 @@ public:
     }
 };
 
+#include "CFuncRotatorImpl.h"
+
 #endif // _INCLUDE_CFUNCROTATOR_H

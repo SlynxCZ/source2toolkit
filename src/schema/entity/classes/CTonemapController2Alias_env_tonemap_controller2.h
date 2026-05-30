@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTonemapController2Alias_env_tonemap_controller2Impl.h"
+
 #endif // _INCLUDE_CTONEMAPCONTROLLER2ALIAS_ENV_TONEMAP_CONTROLLER2_H

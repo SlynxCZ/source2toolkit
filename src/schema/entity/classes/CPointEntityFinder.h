@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CPointEntityFinderImpl.h"
+
 #endif // _INCLUDE_CPOINTENTITYFINDER_H

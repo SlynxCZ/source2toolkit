@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CLogicCompareImpl.h"
+
 #endif // _INCLUDE_CLOGICCOMPARE_H

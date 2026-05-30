@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CHostageCarriablePropImpl.h"
+
 #endif // _INCLUDE_CHOSTAGECARRIABLEPROP_H

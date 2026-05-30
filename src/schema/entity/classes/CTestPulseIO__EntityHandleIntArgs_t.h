@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CTestPulseIO__EntityHandleIntArgs_tImpl.h"
+
 #endif // _INCLUDE_CTESTPULSEIO__ENTITYHANDLEINTARGS_T_H

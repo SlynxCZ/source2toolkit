@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CScriptTriggerOnceImpl.h"
+
 #endif // _INCLUDE_CSCRIPTTRIGGERONCE_H

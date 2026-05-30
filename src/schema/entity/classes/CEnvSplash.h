@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CEnvSplashImpl.h"
+
 #endif // _INCLUDE_CENVSPLASH_H

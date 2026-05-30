@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CSoundAreaEntityBaseImpl.h"
+
 #endif // _INCLUDE_CSOUNDAREAENTITYBASE_H

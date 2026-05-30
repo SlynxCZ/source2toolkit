@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPhysicsPropOverrideImpl.h"
+
 #endif // _INCLUDE_CPHYSICSPROPOVERRIDE_H

@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CLogicCollisionPairImpl.h"
+
 #endif // _INCLUDE_CLOGICCOLLISIONPAIR_H

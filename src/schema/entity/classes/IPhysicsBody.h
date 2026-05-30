@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "IPhysicsBodyImpl.h"
+
 #endif // _INCLUDE_IPHYSICSBODY_H

@@ -86,4 +86,6 @@ public:
     }
 };
 
+#include "CFuncMoveLinearImpl.h"
+
 #endif // _INCLUDE_CFUNCMOVELINEAR_H

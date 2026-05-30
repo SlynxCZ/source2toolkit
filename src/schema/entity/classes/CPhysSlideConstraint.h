@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CPhysSlideConstraintImpl.h"
+
 #endif // _INCLUDE_CPHYSSLIDECONSTRAINT_H

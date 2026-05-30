@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CBloodImpl.h"
+
 #endif // _INCLUDE_CBLOOD_H

@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CEnvFadeImpl.h"
+
 #endif // _INCLUDE_CENVFADE_H

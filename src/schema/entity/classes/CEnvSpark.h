@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CEnvSparkImpl.h"
+
 #endif // _INCLUDE_CENVSPARK_H

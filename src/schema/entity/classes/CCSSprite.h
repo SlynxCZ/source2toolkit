@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSSpriteImpl.h"
+
 #endif // _INCLUDE_CCSSPRITE_H

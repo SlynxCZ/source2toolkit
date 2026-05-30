@@ -105,4 +105,6 @@ public:
     }
 };
 
+#include "CChickenImpl.h"
+
 #endif // _INCLUDE_CCHICKEN_H

@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CMarkupVolumeWithRefImpl.h"
+
 #endif // _INCLUDE_CMARKUPVOLUMEWITHREF_H

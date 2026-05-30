@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEconWearableImpl.h"
+
 #endif // _INCLUDE_CECONWEARABLE_H

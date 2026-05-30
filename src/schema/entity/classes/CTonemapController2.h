@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CTonemapController2Impl.h"
+
 #endif // _INCLUDE_CTONEMAPCONTROLLER2_H

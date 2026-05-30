@@ -99,4 +99,6 @@ public:
     }
 };
 
+#include "CBaseButtonImpl.h"
+
 #endif // _INCLUDE_CBASEBUTTON_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CHEGrenadeProjectileImpl.h"
+
 #endif // _INCLUDE_CHEGRENADEPROJECTILE_H

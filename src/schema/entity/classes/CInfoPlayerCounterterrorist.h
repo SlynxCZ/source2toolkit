@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoPlayerCounterterroristImpl.h"
+
 #endif // _INCLUDE_CINFOPLAYERCOUNTERTERRORIST_H

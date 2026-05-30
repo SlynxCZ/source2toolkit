@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CEnvLaserImpl.h"
+
 #endif // _INCLUDE_CENVLASER_H

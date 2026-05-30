@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CTonemapTriggerImpl.h"
+
 #endif // _INCLUDE_CTONEMAPTRIGGER_H

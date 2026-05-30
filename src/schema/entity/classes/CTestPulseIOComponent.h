@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CTestPulseIOComponentImpl.h"
+
 #endif // _INCLUDE_CTESTPULSEIOCOMPONENT_H

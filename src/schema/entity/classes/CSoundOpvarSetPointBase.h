@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetPointBaseImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETPOINTBASE_H

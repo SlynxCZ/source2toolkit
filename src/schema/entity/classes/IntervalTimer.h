@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "IntervalTimerImpl.h"
+
 #endif // _INCLUDE_INTERVALTIMER_H

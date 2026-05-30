@@ -108,4 +108,6 @@ public:
     }
 };
 
+#include "CRagdollPropImpl.h"
+
 #endif // _INCLUDE_CRAGDOLLPROP_H

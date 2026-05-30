@@ -96,4 +96,6 @@ public:
     }
 };
 
+#include "CEnvInstructorHintImpl.h"
+
 #endif // _INCLUDE_CENVINSTRUCTORHINT_H

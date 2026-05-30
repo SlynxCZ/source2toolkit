@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CPointCameraVFOVImpl.h"
+
 #endif // _INCLUDE_CPOINTCAMERAVFOV_H

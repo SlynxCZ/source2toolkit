@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterMassGreaterImpl.h"
+
 #endif // _INCLUDE_CFILTERMASSGREATER_H

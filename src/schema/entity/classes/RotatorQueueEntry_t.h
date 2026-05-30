@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "RotatorQueueEntry_tImpl.h"
+
 #endif // _INCLUDE_ROTATORQUEUEENTRY_T_H

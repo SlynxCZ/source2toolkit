@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CSoundOpvarSetAABBEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDOPVARSETAABBENTITY_H

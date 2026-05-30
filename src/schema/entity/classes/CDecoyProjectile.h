@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CDecoyProjectileImpl.h"
+
 #endif // _INCLUDE_CDECOYPROJECTILE_H

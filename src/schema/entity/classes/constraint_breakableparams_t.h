@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "constraint_breakableparams_tImpl.h"
+
 #endif // _INCLUDE_CONSTRAINT_BREAKABLEPARAMS_T_H

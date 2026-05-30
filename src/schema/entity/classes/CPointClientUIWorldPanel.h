@@ -96,4 +96,6 @@ public:
     }
 };
 
+#include "CPointClientUIWorldPanelImpl.h"
+
 #endif // _INCLUDE_CPOINTCLIENTUIWORLDPANEL_H

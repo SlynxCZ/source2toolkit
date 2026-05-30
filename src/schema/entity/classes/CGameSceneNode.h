@@ -93,4 +93,6 @@ public:
     }
 };
 
+#include "CGameSceneNodeImpl.h"
+
 #endif // _INCLUDE_CGAMESCENENODE_H

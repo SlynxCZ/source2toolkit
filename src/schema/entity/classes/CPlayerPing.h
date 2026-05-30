@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CPlayerPingImpl.h"
+
 #endif // _INCLUDE_CPLAYERPING_H

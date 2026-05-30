@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CCSPlaceImpl.h"
+
 #endif // _INCLUDE_CCSPLACE_H

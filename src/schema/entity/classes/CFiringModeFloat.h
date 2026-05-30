@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CFiringModeFloatImpl.h"
+
 #endif // _INCLUDE_CFIRINGMODEFLOAT_H

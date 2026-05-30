@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CRotDoorImpl.h"
+
 #endif // _INCLUDE_CROTDOOR_H

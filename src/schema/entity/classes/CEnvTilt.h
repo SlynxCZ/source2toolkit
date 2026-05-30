@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CEnvTiltImpl.h"
+
 #endif // _INCLUDE_CENVTILT_H

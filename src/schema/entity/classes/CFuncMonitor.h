@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CFuncMonitorImpl.h"
+
 #endif // _INCLUDE_CFUNCMONITOR_H

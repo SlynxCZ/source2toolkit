@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CTriggerRemoveImpl.h"
+
 #endif // _INCLUDE_CTRIGGERREMOVE_H

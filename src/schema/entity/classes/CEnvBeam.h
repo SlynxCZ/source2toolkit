@@ -94,4 +94,6 @@ public:
     }
 };
 
+#include "CEnvBeamImpl.h"
+
 #endif // _INCLUDE_CENVBEAM_H

@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CBaseClientUIEntityImpl.h"
+
 #endif // _INCLUDE_CBASECLIENTUIENTITY_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFlashbangImpl.h"
+
 #endif // _INCLUDE_CFLASHBANG_H

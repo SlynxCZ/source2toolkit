@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CLightSpotEntityImpl.h"
+
 #endif // _INCLUDE_CLIGHTSPOTENTITY_H

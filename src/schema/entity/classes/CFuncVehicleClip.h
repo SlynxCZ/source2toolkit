@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncVehicleClipImpl.h"
+
 #endif // _INCLUDE_CFUNCVEHICLECLIP_H

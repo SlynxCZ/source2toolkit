@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoTargetServerOnlyImpl.h"
+
 #endif // _INCLUDE_CINFOTARGETSERVERONLY_H

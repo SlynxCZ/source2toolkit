@@ -103,4 +103,6 @@ public:
     }
 };
 
+#include "CPointCommentaryNodeImpl.h"
+
 #endif // _INCLUDE_CPOINTCOMMENTARYNODE_H

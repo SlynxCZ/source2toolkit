@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CTriggerActiveWeaponDetectImpl.h"
+
 #endif // _INCLUDE_CTRIGGERACTIVEWEAPONDETECT_H

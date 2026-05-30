@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CPhysImpactImpl.h"
+
 #endif // _INCLUDE_CPHYSIMPACT_H

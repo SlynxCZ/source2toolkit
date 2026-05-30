@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CCreditsImpl.h"
+
 #endif // _INCLUDE_CCREDITS_H

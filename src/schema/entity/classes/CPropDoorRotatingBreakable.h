@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CPropDoorRotatingBreakableImpl.h"
+
 #endif // _INCLUDE_CPROPDOORROTATINGBREAKABLE_H

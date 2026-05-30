@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CEnvGlobalImpl.h"
+
 #endif // _INCLUDE_CENVGLOBAL_H

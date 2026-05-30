@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CBasePlayerWeaponImpl.h"
+
 #endif // _INCLUDE_CBASEPLAYERWEAPON_H

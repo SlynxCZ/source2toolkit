@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CNullEntityImpl.h"
+
 #endif // _INCLUDE_CNULLENTITY_H

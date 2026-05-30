@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CPathTrackImpl.h"
+
 #endif // _INCLUDE_CPATHTRACK_H

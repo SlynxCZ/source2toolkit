@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CBaseFilterImpl.h"
+
 #endif // _INCLUDE_CBASEFILTER_H

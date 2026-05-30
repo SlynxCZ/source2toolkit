@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponSCAR20Impl.h"
+
 #endif // _INCLUDE_CWEAPONSCAR20_H

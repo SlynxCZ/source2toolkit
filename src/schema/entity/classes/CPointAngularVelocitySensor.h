@@ -88,4 +88,6 @@ public:
     }
 };
 
+#include "CPointAngularVelocitySensorImpl.h"
+
 #endif // _INCLUDE_CPOINTANGULARVELOCITYSENSOR_H

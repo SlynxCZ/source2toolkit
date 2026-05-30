@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CAttributeManagerImpl.h"
+
 #endif // _INCLUDE_CATTRIBUTEMANAGER_H

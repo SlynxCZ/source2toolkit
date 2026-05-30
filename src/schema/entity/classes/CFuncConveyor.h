@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CFuncConveyorImpl.h"
+
 #endif // _INCLUDE_CFUNCCONVEYOR_H

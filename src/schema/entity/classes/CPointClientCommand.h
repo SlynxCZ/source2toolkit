@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPointClientCommandImpl.h"
+
 #endif // _INCLUDE_CPOINTCLIENTCOMMAND_H

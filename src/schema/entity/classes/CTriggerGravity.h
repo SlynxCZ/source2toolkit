@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTriggerGravityImpl.h"
+
 #endif // _INCLUDE_CTRIGGERGRAVITY_H

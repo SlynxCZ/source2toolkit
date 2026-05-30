@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSMinimapBoundaryImpl.h"
+
 #endif // _INCLUDE_CCSMINIMAPBOUNDARY_H

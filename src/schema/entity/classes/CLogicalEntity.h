@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CLogicalEntityImpl.h"
+
 #endif // _INCLUDE_CLOGICALENTITY_H

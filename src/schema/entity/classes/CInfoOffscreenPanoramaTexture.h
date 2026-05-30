@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CInfoOffscreenPanoramaTextureImpl.h"
+
 #endif // _INCLUDE_CINFOOFFSCREENPANORAMATEXTURE_H

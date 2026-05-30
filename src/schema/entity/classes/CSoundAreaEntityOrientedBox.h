@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CSoundAreaEntityOrientedBoxImpl.h"
+
 #endif // _INCLUDE_CSOUNDAREAENTITYORIENTEDBOX_H

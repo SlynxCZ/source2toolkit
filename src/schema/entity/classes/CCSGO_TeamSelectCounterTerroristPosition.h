@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSGO_TeamSelectCounterTerroristPositionImpl.h"
+
 #endif // _INCLUDE_CCSGO_TEAMSELECTCOUNTERTERRORISTPOSITION_H

@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CTestEffectImpl.h"
+
 #endif // _INCLUDE_CTESTEFFECT_H

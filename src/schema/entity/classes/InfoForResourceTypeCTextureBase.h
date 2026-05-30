@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "InfoForResourceTypeCTextureBaseImpl.h"
+
 #endif // _INCLUDE_INFOFORRESOURCETYPECTEXTUREBASE_H

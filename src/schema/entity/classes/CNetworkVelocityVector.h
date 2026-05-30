@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CNetworkVelocityVectorImpl.h"
+
 #endif // _INCLUDE_CNETWORKVELOCITYVECTOR_H

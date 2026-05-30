@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CSpriteOrientedImpl.h"
+
 #endif // _INCLUDE_CSPRITEORIENTED_H

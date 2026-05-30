@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CSplineConstraintImpl.h"
+
 #endif // _INCLUDE_CSPLINECONSTRAINT_H

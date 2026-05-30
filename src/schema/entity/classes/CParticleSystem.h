@@ -96,4 +96,6 @@ public:
     }
 };
 
+#include "CParticleSystemImpl.h"
+
 #endif // _INCLUDE_CPARTICLESYSTEM_H

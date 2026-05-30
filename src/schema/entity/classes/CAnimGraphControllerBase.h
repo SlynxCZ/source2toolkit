@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CAnimGraphControllerBaseImpl.h"
+
 #endif // _INCLUDE_CANIMGRAPHCONTROLLERBASE_H

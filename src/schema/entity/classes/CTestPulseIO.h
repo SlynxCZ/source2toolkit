@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CTestPulseIOImpl.h"
+
 #endif // _INCLUDE_CTESTPULSEIO_H

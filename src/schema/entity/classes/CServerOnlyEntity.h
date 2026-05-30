@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CServerOnlyEntityImpl.h"
+
 #endif // _INCLUDE_CSERVERONLYENTITY_H

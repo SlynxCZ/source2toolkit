@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CBaseCSGrenadeProjectileImpl.h"
+
 #endif // _INCLUDE_CBASECSGRENADEPROJECTILE_H

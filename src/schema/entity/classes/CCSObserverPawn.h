@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSObserverPawnImpl.h"
+
 #endif // _INCLUDE_CCSOBSERVERPAWN_H

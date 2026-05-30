@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CLogicMeasureMovementImpl.h"
+
 #endif // _INCLUDE_CLOGICMEASUREMOVEMENT_H

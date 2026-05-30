@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "InfoForResourceTypeCModelImpl.h"
+
 #endif // _INCLUDE_INFOFORRESOURCETYPECMODEL_H

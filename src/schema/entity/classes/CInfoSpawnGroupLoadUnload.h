@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CInfoSpawnGroupLoadUnloadImpl.h"
+
 #endif // _INCLUDE_CINFOSPAWNGROUPLOADUNLOAD_H

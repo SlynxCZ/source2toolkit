@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CInfoChoreoAnchorImpl.h"
+
 #endif // _INCLUDE_CINFOCHOREOANCHOR_H

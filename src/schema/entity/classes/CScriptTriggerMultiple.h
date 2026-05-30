@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CScriptTriggerMultipleImpl.h"
+
 #endif // _INCLUDE_CSCRIPTTRIGGERMULTIPLE_H

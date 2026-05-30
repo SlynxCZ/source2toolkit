@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CPhysBoxImpl.h"
+
 #endif // _INCLUDE_CPHYSBOX_H

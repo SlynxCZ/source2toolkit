@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CEnvEntityMakerImpl.h"
+
 #endif // _INCLUDE_CENVENTITYMAKER_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CLogicScriptImpl.h"
+
 #endif // _INCLUDE_CLOGICSCRIPT_H

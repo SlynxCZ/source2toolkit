@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CTriggerDetectBulletFireImpl.h"
+
 #endif // _INCLUDE_CTRIGGERDETECTBULLETFIRE_H

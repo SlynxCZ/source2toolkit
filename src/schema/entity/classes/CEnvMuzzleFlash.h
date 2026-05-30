@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEnvMuzzleFlashImpl.h"
+
 #endif // _INCLUDE_CENVMUZZLEFLASH_H

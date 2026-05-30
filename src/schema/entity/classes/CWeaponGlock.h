@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponGlockImpl.h"
+
 #endif // _INCLUDE_CWEAPONGLOCK_H

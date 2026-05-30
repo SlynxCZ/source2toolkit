@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CBaseDMStartImpl.h"
+
 #endif // _INCLUDE_CBASEDMSTART_H

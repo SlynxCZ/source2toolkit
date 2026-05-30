@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponSG556Impl.h"
+
 #endif // _INCLUDE_CWEAPONSG556_H

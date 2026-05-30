@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CPlayerVisibilityImpl.h"
+
 #endif // _INCLUDE_CPLAYERVISIBILITY_H

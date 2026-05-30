@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CCSPlayer_WaterServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_WATERSERVICES_H

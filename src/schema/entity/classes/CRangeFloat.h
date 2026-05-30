@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CRangeFloatImpl.h"
+
 #endif // _INCLUDE_CRANGEFLOAT_H

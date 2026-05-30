@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CGlowPropertyImpl.h"
+
 #endif // _INCLUDE_CGLOWPROPERTY_H

@@ -88,4 +88,6 @@ public:
     }
 };
 
+#include "CPhysConstraintImpl.h"
+
 #endif // _INCLUDE_CPHYSCONSTRAINT_H

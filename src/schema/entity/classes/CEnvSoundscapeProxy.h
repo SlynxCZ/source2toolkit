@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CEnvSoundscapeProxyImpl.h"
+
 #endif // _INCLUDE_CENVSOUNDSCAPEPROXY_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponMP7Impl.h"
+
 #endif // _INCLUDE_CWEAPONMP7_H

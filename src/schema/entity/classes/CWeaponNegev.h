@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponNegevImpl.h"
+
 #endif // _INCLUDE_CWEAPONNEGEV_H

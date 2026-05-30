@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CMarkupVolumeImpl.h"
+
 #endif // _INCLUDE_CMARKUPVOLUME_H

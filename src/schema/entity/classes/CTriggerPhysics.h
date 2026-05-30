@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CTriggerPhysicsImpl.h"
+
 #endif // _INCLUDE_CTRIGGERPHYSICS_H

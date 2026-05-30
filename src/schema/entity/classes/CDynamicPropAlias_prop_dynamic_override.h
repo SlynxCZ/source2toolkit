@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CDynamicPropAlias_prop_dynamic_overrideImpl.h"
+
 #endif // _INCLUDE_CDYNAMICPROPALIAS_PROP_DYNAMIC_OVERRIDE_H

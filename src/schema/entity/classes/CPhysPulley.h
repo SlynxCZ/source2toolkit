@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CPhysPulleyImpl.h"
+
 #endif // _INCLUDE_CPHYSPULLEY_H

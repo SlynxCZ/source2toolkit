@@ -109,4 +109,6 @@ public:
     }
 };
 
+#include "CBreakablePropImpl.h"
+
 #endif // _INCLUDE_CBREAKABLEPROP_H

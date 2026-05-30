@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnvCombinedLightProbeVolumeAlias_func_combined_light_probe_volumeImpl.h"
+
 #endif // _INCLUDE_CENVCOMBINEDLIGHTPROBEVOLUMEALIAS_FUNC_COMBINED_LIGHT_PROBE_VOLUME_H

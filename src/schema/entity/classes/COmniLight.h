@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "COmniLightImpl.h"
+
 #endif // _INCLUDE_COMNILIGHT_H

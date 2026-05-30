@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CSPerRoundStats_tImpl.h"
+
 #endif // _INCLUDE_CSPERROUNDSTATS_T_H

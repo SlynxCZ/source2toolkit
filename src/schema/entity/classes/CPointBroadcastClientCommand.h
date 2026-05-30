@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPointBroadcastClientCommandImpl.h"
+
 #endif // _INCLUDE_CPOINTBROADCASTCLIENTCOMMAND_H

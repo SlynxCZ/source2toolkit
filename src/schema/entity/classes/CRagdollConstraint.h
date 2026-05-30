@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CRagdollConstraintImpl.h"
+
 #endif // _INCLUDE_CRAGDOLLCONSTRAINT_H

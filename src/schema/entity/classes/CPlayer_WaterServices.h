@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CPlayer_WaterServicesImpl.h"
+
 #endif // _INCLUDE_CPLAYER_WATERSERVICES_H

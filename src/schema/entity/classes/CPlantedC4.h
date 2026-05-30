@@ -102,4 +102,6 @@ public:
     }
 };
 
+#include "CPlantedC4Impl.h"
+
 #endif // _INCLUDE_CPLANTEDC4_H

@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CRenderComponentImpl.h"
+
 #endif // _INCLUDE_CRENDERCOMPONENT_H

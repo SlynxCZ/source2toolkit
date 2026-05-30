@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CModelPointEntityImpl.h"
+
 #endif // _INCLUDE_CMODELPOINTENTITY_H

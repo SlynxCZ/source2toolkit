@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterTeamImpl.h"
+
 #endif // _INCLUDE_CFILTERTEAM_H

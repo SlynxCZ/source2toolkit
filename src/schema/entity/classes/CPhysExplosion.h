@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CPhysExplosionImpl.h"
+
 #endif // _INCLUDE_CPHYSEXPLOSION_H

@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CLogicGameEventListenerImpl.h"
+
 #endif // _INCLUDE_CLOGICGAMEEVENTLISTENER_H

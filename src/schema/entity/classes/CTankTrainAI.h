@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CTankTrainAIImpl.h"
+
 #endif // _INCLUDE_CTANKTRAINAI_H

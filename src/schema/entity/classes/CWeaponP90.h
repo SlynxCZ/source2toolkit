@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponP90Impl.h"
+
 #endif // _INCLUDE_CWEAPONP90_H

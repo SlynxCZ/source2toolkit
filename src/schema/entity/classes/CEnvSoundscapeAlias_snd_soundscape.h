@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnvSoundscapeAlias_snd_soundscapeImpl.h"
+
 #endif // _INCLUDE_CENVSOUNDSCAPEALIAS_SND_SOUNDSCAPE_H

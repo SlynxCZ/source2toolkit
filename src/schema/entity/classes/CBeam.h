@@ -99,4 +99,6 @@ public:
     }
 };
 
+#include "CBeamImpl.h"
+
 #endif // _INCLUDE_CBEAM_H

@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CLogicActiveAutosaveImpl.h"
+
 #endif // _INCLUDE_CLOGICACTIVEAUTOSAVE_H

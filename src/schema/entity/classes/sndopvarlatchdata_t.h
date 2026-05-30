@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "sndopvarlatchdata_tImpl.h"
+
 #endif // _INCLUDE_SNDOPVARLATCHDATA_T_H

@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CMultiSourceImpl.h"
+
 #endif // _INCLUDE_CMULTISOURCE_H

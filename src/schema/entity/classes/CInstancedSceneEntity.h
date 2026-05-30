@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CInstancedSceneEntityImpl.h"
+
 #endif // _INCLUDE_CINSTANCEDSCENEENTITY_H

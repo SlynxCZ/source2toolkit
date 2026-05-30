@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CEnvDecalImpl.h"
+
 #endif // _INCLUDE_CENVDECAL_H

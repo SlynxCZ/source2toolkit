@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CGamePlayerEquipImpl.h"
+
 #endif // _INCLUDE_CGAMEPLAYEREQUIP_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CDebugHistoryImpl.h"
+
 #endif // _INCLUDE_CDEBUGHISTORY_H

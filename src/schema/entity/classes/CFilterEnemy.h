@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CFilterEnemyImpl.h"
+
 #endif // _INCLUDE_CFILTERENEMY_H

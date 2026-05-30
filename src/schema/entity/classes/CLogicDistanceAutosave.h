@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CLogicDistanceAutosaveImpl.h"
+
 #endif // _INCLUDE_CLOGICDISTANCEAUTOSAVE_H

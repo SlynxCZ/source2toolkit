@@ -247,4 +247,6 @@ public:
     }
 };
 
+#include "CCSPlayerControllerImpl.h"
+
 #endif // _INCLUDE_CCSPLAYERCONTROLLER_H

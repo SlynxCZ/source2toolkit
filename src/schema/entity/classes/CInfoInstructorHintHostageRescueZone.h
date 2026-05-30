@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoInstructorHintHostageRescueZoneImpl.h"
+
 #endif // _INCLUDE_CINFOINSTRUCTORHINTHOSTAGERESCUEZONE_H

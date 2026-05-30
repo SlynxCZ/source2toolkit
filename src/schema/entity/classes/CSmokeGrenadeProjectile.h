@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CSmokeGrenadeProjectileImpl.h"
+
 #endif // _INCLUDE_CSMOKEGRENADEPROJECTILE_H

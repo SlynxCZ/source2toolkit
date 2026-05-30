@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CLogicBranchImpl.h"
+
 #endif // _INCLUDE_CLOGICBRANCH_H

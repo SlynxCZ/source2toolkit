@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CSoundEventConeEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTCONEENTITY_H

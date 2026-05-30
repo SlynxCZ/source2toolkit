@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CHostageExpresserShimImpl.h"
+
 #endif // _INCLUDE_CHOSTAGEEXPRESSERSHIM_H

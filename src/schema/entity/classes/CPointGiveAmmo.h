@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CPointGiveAmmoImpl.h"
+
 #endif // _INCLUDE_CPOINTGIVEAMMO_H

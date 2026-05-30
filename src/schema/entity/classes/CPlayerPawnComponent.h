@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CPlayerPawnComponentImpl.h"
+
 #endif // _INCLUDE_CPLAYERPAWNCOMPONENT_H

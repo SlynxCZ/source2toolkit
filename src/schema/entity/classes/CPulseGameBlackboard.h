@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CPulseGameBlackboardImpl.h"
+
 #endif // _INCLUDE_CPULSEGAMEBLACKBOARD_H

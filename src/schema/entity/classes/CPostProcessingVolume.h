@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CPostProcessingVolumeImpl.h"
+
 #endif // _INCLUDE_CPOSTPROCESSINGVOLUME_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponNOVAImpl.h"
+
 #endif // _INCLUDE_CWEAPONNOVA_H

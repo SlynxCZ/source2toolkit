@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CServerOnlyPointEntityImpl.h"
+
 #endif // _INCLUDE_CSERVERONLYPOINTENTITY_H

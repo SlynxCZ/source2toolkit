@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CPlayer_FlashlightServicesImpl.h"
+
 #endif // _INCLUDE_CPLAYER_FLASHLIGHTSERVICES_H

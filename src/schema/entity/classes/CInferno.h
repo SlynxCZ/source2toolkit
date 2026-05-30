@@ -99,4 +99,6 @@ public:
     }
 };
 
+#include "CInfernoImpl.h"
+
 #endif // _INCLUDE_CINFERNO_H

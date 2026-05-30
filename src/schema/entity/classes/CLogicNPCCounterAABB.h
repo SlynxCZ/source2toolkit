@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CLogicNPCCounterAABBImpl.h"
+
 #endif // _INCLUDE_CLOGICNPCCOUNTERAABB_H

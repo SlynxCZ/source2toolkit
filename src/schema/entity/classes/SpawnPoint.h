@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "SpawnPointImpl.h"
+
 #endif // _INCLUDE_SPAWNPOINT_H

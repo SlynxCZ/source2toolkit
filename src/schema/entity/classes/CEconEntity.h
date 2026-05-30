@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CEconEntityImpl.h"
+
 #endif // _INCLUDE_CECONENTITY_H

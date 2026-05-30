@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CEnvSoundscapeImpl.h"
+
 #endif // _INCLUDE_CENVSOUNDSCAPE_H

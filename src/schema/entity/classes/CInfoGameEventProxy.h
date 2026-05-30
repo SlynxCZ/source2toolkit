@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CInfoGameEventProxyImpl.h"
+
 #endif // _INCLUDE_CINFOGAMEEVENTPROXY_H

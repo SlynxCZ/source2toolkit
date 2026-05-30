@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWorldImpl.h"
+
 #endif // _INCLUDE_CWORLD_H

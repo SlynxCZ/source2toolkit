@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CSoundAreaEntitySphereImpl.h"
+
 #endif // _INCLUDE_CSOUNDAREAENTITYSPHERE_H

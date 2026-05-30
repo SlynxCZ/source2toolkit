@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoInstructorHintBombTargetAImpl.h"
+
 #endif // _INCLUDE_CINFOINSTRUCTORHINTBOMBTARGETA_H

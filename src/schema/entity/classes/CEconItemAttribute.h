@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEconItemAttributeImpl.h"
+
 #endif // _INCLUDE_CECONITEMATTRIBUTE_H

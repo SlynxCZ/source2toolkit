@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTriggerOnceImpl.h"
+
 #endif // _INCLUDE_CTRIGGERONCE_H

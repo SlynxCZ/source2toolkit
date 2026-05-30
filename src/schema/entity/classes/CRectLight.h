@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CRectLightImpl.h"
+
 #endif // _INCLUDE_CRECTLIGHT_H

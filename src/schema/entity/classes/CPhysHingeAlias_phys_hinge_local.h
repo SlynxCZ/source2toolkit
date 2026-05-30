@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPhysHingeAlias_phys_hinge_localImpl.h"
+
 #endif // _INCLUDE_CPHYSHINGEALIAS_PHYS_HINGE_LOCAL_H

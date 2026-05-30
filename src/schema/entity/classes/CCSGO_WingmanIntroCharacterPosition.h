@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSGO_WingmanIntroCharacterPositionImpl.h"
+
 #endif // _INCLUDE_CCSGO_WINGMANINTROCHARACTERPOSITION_H

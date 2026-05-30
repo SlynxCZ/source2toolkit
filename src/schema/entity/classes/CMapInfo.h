@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CMapInfoImpl.h"
+
 #endif // _INCLUDE_CMAPINFO_H

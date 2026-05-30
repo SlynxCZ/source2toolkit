@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CCSPlayer_AimPunchServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_AIMPUNCHSERVICES_H

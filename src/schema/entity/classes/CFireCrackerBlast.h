@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFireCrackerBlastImpl.h"
+
 #endif // _INCLUDE_CFIRECRACKERBLAST_H

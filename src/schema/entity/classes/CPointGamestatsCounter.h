@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CPointGamestatsCounterImpl.h"
+
 #endif // _INCLUDE_CPOINTGAMESTATSCOUNTER_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CBodyComponentImpl.h"
+
 #endif // _INCLUDE_CBODYCOMPONENT_H

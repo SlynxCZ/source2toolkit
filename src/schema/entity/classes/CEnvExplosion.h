@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CEnvExplosionImpl.h"
+
 #endif // _INCLUDE_CENVEXPLOSION_H

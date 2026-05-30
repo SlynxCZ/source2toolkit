@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CFuncNavBlockerImpl.h"
+
 #endif // _INCLUDE_CFUNCNAVBLOCKER_H

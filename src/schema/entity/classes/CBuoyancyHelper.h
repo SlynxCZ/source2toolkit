@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CBuoyancyHelperImpl.h"
+
 #endif // _INCLUDE_CBUOYANCYHELPER_H

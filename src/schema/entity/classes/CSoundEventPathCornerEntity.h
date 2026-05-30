@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CSoundEventPathCornerEntityImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTPATHCORNERENTITY_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPhysicsPropMultiplayerImpl.h"
+
 #endif // _INCLUDE_CPHYSICSPROPMULTIPLAYER_H

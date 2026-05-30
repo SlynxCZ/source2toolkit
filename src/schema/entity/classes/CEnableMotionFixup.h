@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnableMotionFixupImpl.h"
+
 #endif // _INCLUDE_CENABLEMOTIONFIXUP_H

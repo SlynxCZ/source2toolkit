@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CEnvWindSharedImpl.h"
+
 #endif // _INCLUDE_CENVWINDSHARED_H

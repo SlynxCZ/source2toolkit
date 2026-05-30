@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CFogVolumeImpl.h"
+
 #endif // _INCLUDE_CFOGVOLUME_H

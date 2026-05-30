@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CFootstepControlImpl.h"
+
 #endif // _INCLUDE_CFOOTSTEPCONTROL_H

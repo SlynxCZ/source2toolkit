@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTriggerCallbackImpl.h"
+
 #endif // _INCLUDE_CTRIGGERCALLBACK_H

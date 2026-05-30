@@ -102,4 +102,6 @@ public:
     }
 };
 
+#include "CEnvCombinedLightProbeVolumeImpl.h"
+
 #endif // _INCLUDE_CENVCOMBINEDLIGHTPROBEVOLUME_H

@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "sky3dparams_tImpl.h"
+
 #endif // _INCLUDE_SKY3DPARAMS_T_H

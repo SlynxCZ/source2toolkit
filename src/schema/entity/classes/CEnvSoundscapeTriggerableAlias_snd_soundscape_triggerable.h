@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnvSoundscapeTriggerableAlias_snd_soundscape_triggerableImpl.h"
+
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLEALIAS_SND_SOUNDSCAPE_TRIGGERABLE_H

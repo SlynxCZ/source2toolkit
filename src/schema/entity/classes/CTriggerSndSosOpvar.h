@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CTriggerSndSosOpvarImpl.h"
+
 #endif // _INCLUDE_CTRIGGERSNDSOSOPVAR_H

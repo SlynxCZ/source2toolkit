@@ -117,4 +117,6 @@ public:
     }
 };
 
+#include "CPhysicsPropImpl.h"
+
 #endif // _INCLUDE_CPHYSICSPROP_H

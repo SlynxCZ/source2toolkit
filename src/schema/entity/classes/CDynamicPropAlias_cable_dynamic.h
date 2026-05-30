@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CDynamicPropAlias_cable_dynamicImpl.h"
+
 #endif // _INCLUDE_CDYNAMICPROPALIAS_CABLE_DYNAMIC_H

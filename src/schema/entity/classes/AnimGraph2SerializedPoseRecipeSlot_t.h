@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "AnimGraph2SerializedPoseRecipeSlot_tImpl.h"
+
 #endif // _INCLUDE_ANIMGRAPH2SERIALIZEDPOSERECIPESLOT_T_H

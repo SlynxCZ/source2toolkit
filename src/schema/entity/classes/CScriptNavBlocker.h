@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CScriptNavBlockerImpl.h"
+
 #endif // _INCLUDE_CSCRIPTNAVBLOCKER_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CPointChildModifierImpl.h"
+
 #endif // _INCLUDE_CPOINTCHILDMODIFIER_H

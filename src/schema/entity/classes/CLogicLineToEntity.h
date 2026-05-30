@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CLogicLineToEntityImpl.h"
+
 #endif // _INCLUDE_CLOGICLINETOENTITY_H

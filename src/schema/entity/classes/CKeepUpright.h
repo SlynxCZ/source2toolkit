@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CKeepUprightImpl.h"
+
 #endif // _INCLUDE_CKEEPUPRIGHT_H

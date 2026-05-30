@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CBaseMoveBehaviorImpl.h"
+
 #endif // _INCLUDE_CBASEMOVEBEHAVIOR_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncTrainControlsImpl.h"
+
 #endif // _INCLUDE_CFUNCTRAINCONTROLS_H

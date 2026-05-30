@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CItemGenericTriggerHelperImpl.h"
+
 #endif // _INCLUDE_CITEMGENERICTRIGGERHELPER_H

@@ -86,4 +86,6 @@ public:
     }
 };
 
+#include "CBaseCombatCharacterImpl.h"
+
 #endif // _INCLUDE_CBASECOMBATCHARACTER_H

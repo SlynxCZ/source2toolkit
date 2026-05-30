@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponM249Impl.h"
+
 #endif // _INCLUDE_CWEAPONM249_H

@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CPlayerSprayDecalImpl.h"
+
 #endif // _INCLUDE_CPLAYERSPRAYDECAL_H

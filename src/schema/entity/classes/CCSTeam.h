@@ -86,4 +86,6 @@ public:
     }
 };
 
+#include "CCSTeamImpl.h"
+
 #endif // _INCLUDE_CCSTEAM_H

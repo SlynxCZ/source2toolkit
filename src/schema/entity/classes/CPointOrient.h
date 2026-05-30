@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CPointOrientImpl.h"
+
 #endif // _INCLUDE_CPOINTORIENT_H

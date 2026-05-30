@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CChangeLevelImpl.h"
+
 #endif // _INCLUDE_CCHANGELEVEL_H

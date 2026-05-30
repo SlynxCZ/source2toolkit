@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CRagdollManagerImpl.h"
+
 #endif // _INCLUDE_CRAGDOLLMANAGER_H

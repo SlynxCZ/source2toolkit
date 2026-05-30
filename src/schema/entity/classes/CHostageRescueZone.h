@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CHostageRescueZoneImpl.h"
+
 #endif // _INCLUDE_CHOSTAGERESCUEZONE_H

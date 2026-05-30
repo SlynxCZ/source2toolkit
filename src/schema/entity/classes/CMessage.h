@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CMessageImpl.h"
+
 #endif // _INCLUDE_CMESSAGE_H

@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEnvWindImpl.h"
+
 #endif // _INCLUDE_CENVWIND_H

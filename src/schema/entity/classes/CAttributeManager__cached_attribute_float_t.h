@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CAttributeManager__cached_attribute_float_tImpl.h"
+
 #endif // _INCLUDE_CATTRIBUTEMANAGER__CACHED_ATTRIBUTE_FLOAT_T_H

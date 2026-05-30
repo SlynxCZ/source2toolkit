@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSGO_TeamIntroCharacterPositionImpl.h"
+
 #endif // _INCLUDE_CCSGO_TEAMINTROCHARACTERPOSITION_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnvSoundscapeProxyAlias_snd_soundscape_proxyImpl.h"
+
 #endif // _INCLUDE_CENVSOUNDSCAPEPROXYALIAS_SND_SOUNDSCAPE_PROXY_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CSmokeGrenadeImpl.h"
+
 #endif // _INCLUDE_CSMOKEGRENADE_H

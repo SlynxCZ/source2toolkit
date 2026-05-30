@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CItemKevlarImpl.h"
+
 #endif // _INCLUDE_CITEMKEVLAR_H

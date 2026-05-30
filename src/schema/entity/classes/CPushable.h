@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPushableImpl.h"
+
 #endif // _INCLUDE_CPUSHABLE_H

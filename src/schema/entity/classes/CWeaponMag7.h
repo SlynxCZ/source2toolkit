@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponMag7Impl.h"
+
 #endif // _INCLUDE_CWEAPONMAG7_H

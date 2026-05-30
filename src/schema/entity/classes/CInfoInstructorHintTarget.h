@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoInstructorHintTargetImpl.h"
+
 #endif // _INCLUDE_CINFOINSTRUCTORHINTTARGET_H

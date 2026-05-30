@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CDecalGroupVDataImpl.h"
+
 #endif // _INCLUDE_CDECALGROUPVDATA_H

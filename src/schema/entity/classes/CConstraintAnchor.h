@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CConstraintAnchorImpl.h"
+
 #endif // _INCLUDE_CCONSTRAINTANCHOR_H

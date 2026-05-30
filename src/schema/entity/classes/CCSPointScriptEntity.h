@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSPointScriptEntityImpl.h"
+
 #endif // _INCLUDE_CCSPOINTSCRIPTENTITY_H

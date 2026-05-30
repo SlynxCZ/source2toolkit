@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoDataImpl.h"
+
 #endif // _INCLUDE_CINFODATA_H

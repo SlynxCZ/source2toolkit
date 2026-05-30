@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTriggerHostageResetImpl.h"
+
 #endif // _INCLUDE_CTRIGGERHOSTAGERESET_H

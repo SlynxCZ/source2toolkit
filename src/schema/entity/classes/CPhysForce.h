@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CPhysForceImpl.h"
+
 #endif // _INCLUDE_CPHYSFORCE_H

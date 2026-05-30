@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponSSG08Impl.h"
+
 #endif // _INCLUDE_CWEAPONSSG08_H

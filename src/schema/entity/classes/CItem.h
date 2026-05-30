@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CItemImpl.h"
+
 #endif // _INCLUDE_CITEM_H

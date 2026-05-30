@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CWeaponCZ75aImpl.h"
+
 #endif // _INCLUDE_CWEAPONCZ75A_H

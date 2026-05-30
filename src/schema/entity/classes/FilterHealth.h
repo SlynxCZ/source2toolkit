@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "FilterHealthImpl.h"
+
 #endif // _INCLUDE_FILTERHEALTH_H

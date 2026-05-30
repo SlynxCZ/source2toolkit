@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CItem_HealthshotImpl.h"
+
 #endif // _INCLUDE_CITEM_HEALTHSHOT_H

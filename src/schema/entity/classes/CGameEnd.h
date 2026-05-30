@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CGameEndImpl.h"
+
 #endif // _INCLUDE_CGAMEEND_H

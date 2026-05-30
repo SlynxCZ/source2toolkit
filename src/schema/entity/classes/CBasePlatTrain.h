@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CBasePlatTrainImpl.h"
+
 #endif // _INCLUDE_CBASEPLATTRAIN_H

@@ -88,4 +88,6 @@ public:
     }
 };
 
+#include "CTriggerLookImpl.h"
+
 #endif // _INCLUDE_CTRIGGERLOOK_H

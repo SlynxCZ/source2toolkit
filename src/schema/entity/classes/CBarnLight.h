@@ -150,4 +150,6 @@ public:
     }
 };
 
+#include "CBarnLightImpl.h"
+
 #endif // _INCLUDE_CBARNLIGHT_H

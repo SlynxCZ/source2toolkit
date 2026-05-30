@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFuncPlatImpl.h"
+
 #endif // _INCLUDE_CFUNCPLAT_H

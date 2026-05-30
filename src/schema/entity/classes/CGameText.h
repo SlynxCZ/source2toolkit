@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CGameTextImpl.h"
+
 #endif // _INCLUDE_CGAMETEXT_H

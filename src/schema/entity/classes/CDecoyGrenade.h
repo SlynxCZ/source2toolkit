@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CDecoyGrenadeImpl.h"
+
 #endif // _INCLUDE_CDECOYGRENADE_H

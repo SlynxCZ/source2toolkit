@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CItemDefuserAlias_item_defuserImpl.h"
+
 #endif // _INCLUDE_CITEMDEFUSERALIAS_ITEM_DEFUSER_H

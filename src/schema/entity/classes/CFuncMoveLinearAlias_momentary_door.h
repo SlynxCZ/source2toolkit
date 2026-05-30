@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncMoveLinearAlias_momentary_doorImpl.h"
+
 #endif // _INCLUDE_CFUNCMOVELINEARALIAS_MOMENTARY_DOOR_H

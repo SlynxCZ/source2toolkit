@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSPetPlacementImpl.h"
+
 #endif // _INCLUDE_CCSPETPLACEMENT_H

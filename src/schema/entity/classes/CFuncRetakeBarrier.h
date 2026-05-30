@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncRetakeBarrierImpl.h"
+
 #endif // _INCLUDE_CFUNCRETAKEBARRIER_H

@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "ViewAngleServerChange_tImpl.h"
+
 #endif // _INCLUDE_VIEWANGLESERVERCHANGE_T_H

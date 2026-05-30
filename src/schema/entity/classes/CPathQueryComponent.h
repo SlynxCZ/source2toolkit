@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "CPathQueryComponentImpl.h"
+
 #endif // _INCLUDE_CPATHQUERYCOMPONENT_H

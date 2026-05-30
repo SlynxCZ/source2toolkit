@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponGalilARImpl.h"
+
 #endif // _INCLUDE_CWEAPONGALILAR_H

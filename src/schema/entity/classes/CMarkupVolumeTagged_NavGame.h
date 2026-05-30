@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CMarkupVolumeTagged_NavGameImpl.h"
+
 #endif // _INCLUDE_CMARKUPVOLUMETAGGED_NAVGAME_H

@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CMotorControllerImpl.h"
+
 #endif // _INCLUDE_CMOTORCONTROLLER_H

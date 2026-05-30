@@ -112,4 +112,6 @@ public:
     }
 };
 
+#include "CBaseAnimGraphControllerImpl.h"
+
 #endif // _INCLUDE_CBASEANIMGRAPHCONTROLLER_H

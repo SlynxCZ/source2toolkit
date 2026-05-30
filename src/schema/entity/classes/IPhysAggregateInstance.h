@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "IPhysAggregateInstanceImpl.h"
+
 #endif // _INCLUDE_IPHYSAGGREGATEINSTANCE_H

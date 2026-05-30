@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CColorCorrectionImpl.h"
+
 #endif // _INCLUDE_CCOLORCORRECTION_H

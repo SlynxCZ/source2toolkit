@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponUSPSilencerImpl.h"
+
 #endif // _INCLUDE_CWEAPONUSPSILENCER_H

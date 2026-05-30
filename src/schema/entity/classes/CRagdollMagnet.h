@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CRagdollMagnetImpl.h"
+
 #endif // _INCLUDE_CRAGDOLLMAGNET_H

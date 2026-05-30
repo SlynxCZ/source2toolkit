@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponM4A1Impl.h"
+
 #endif // _INCLUDE_CWEAPONM4A1_H

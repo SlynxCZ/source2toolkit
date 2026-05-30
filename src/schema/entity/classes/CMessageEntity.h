@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CMessageEntityImpl.h"
+
 #endif // _INCLUDE_CMESSAGEENTITY_H

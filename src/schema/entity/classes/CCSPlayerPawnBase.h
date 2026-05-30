@@ -91,4 +91,6 @@ public:
     }
 };
 
+#include "CCSPlayerPawnBaseImpl.h"
+
 #endif // _INCLUDE_CCSPLAYERPAWNBASE_H

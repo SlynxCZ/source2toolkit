@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CMovementStatsPropertyImpl.h"
+
 #endif // _INCLUDE_CMOVEMENTSTATSPROPERTY_H

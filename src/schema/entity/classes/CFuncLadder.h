@@ -85,4 +85,6 @@ public:
     }
 };
 
+#include "CFuncLadderImpl.h"
+
 #endif // _INCLUDE_CFUNCLADDER_H

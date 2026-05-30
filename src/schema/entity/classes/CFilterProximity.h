@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFilterProximityImpl.h"
+
 #endif // _INCLUDE_CFILTERPROXIMITY_H

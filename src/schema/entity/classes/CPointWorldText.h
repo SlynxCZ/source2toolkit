@@ -91,4 +91,6 @@ public:
     }
 };
 
+#include "CPointWorldTextImpl.h"
+
 #endif // _INCLUDE_CPOINTWORLDTEXT_H

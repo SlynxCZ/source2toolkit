@@ -86,4 +86,6 @@ public:
     }
 };
 
+#include "CBaseTriggerImpl.h"
+
 #endif // _INCLUDE_CBASETRIGGER_H

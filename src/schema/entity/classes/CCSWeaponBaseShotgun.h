@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSWeaponBaseShotgunImpl.h"
+
 #endif // _INCLUDE_CCSWEAPONBASESHOTGUN_H

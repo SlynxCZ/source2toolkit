@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCSPlayer_CameraServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_CAMERASERVICES_H

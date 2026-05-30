@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CNavSpaceInfoImpl.h"
+
 #endif // _INCLUDE_CNAVSPACEINFO_H

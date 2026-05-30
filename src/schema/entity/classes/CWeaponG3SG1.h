@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponG3SG1Impl.h"
+
 #endif // _INCLUDE_CWEAPONG3SG1_H

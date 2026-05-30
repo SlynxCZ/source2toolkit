@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CTriggerGameEventImpl.h"
+
 #endif // _INCLUDE_CTRIGGERGAMEEVENT_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnvCubemapBoxImpl.h"
+
 #endif // _INCLUDE_CENVCUBEMAPBOX_H

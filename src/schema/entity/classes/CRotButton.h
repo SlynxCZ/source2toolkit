@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CRotButtonImpl.h"
+
 #endif // _INCLUDE_CROTBUTTON_H

@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CPrecipitationVDataImpl.h"
+
 #endif // _INCLUDE_CPRECIPITATIONVDATA_H

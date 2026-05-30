@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CRopeKeyframeAlias_move_ropeImpl.h"
+
 #endif // _INCLUDE_CROPEKEYFRAMEALIAS_MOVE_ROPE_H

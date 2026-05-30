@@ -98,4 +98,6 @@ public:
     }
 };
 
+#include "CEnvCubemapFogImpl.h"
+
 #endif // _INCLUDE_CENVCUBEMAPFOG_H

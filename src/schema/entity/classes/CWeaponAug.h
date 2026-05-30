@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponAugImpl.h"
+
 #endif // _INCLUDE_CWEAPONAUG_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWaterBulletImpl.h"
+
 #endif // _INCLUDE_CWATERBULLET_H

@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CPathSimpleImpl.h"
+
 #endif // _INCLUDE_CPATHSIMPLE_H

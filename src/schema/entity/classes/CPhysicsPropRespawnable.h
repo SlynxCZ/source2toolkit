@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CPhysicsPropRespawnableImpl.h"
+
 #endif // _INCLUDE_CPHYSICSPROPRESPAWNABLE_H

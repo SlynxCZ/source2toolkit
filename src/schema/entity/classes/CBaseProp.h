@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CBasePropImpl.h"
+
 #endif // _INCLUDE_CBASEPROP_H

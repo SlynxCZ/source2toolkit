@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CTeamImpl.h"
+
 #endif // _INCLUDE_CTEAM_H

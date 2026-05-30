@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CExampleSchemaVData_PolymorphicDerivedAImpl.h"
+
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_POLYMORPHICDERIVEDA_H

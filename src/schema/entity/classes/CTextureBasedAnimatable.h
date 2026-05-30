@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CTextureBasedAnimatableImpl.h"
+
 #endif // _INCLUDE_CTEXTUREBASEDANIMATABLE_H

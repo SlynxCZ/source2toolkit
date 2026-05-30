@@ -109,4 +109,6 @@ public:
     }
 };
 
+#include "CEnvVolumetricFogControllerImpl.h"
+
 #endif // _INCLUDE_CENVVOLUMETRICFOGCONTROLLER_H

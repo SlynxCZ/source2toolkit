@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CMapSharedEnvironmentImpl.h"
+
 #endif // _INCLUDE_CMAPSHAREDENVIRONMENT_H

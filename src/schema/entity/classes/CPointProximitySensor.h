@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CPointProximitySensorImpl.h"
+
 #endif // _INCLUDE_CPOINTPROXIMITYSENSOR_H

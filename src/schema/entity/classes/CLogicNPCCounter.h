@@ -112,4 +112,6 @@ public:
     }
 };
 
+#include "CLogicNPCCounterImpl.h"
+
 #endif // _INCLUDE_CLOGICNPCCOUNTER_H

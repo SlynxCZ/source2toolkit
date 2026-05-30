@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CSkyCameraImpl.h"
+
 #endif // _INCLUDE_CSKYCAMERA_H

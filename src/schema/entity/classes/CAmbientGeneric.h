@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CAmbientGenericImpl.h"
+
 #endif // _INCLUDE_CAMBIENTGENERIC_H

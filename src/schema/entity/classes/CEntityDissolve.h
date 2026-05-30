@@ -83,4 +83,6 @@ public:
     }
 };
 
+#include "CEntityDissolveImpl.h"
+
 #endif // _INCLUDE_CENTITYDISSOLVE_H

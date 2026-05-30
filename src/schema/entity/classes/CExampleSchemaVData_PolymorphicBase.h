@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CExampleSchemaVData_PolymorphicBaseImpl.h"
+
 #endif // _INCLUDE_CEXAMPLESCHEMAVDATA_POLYMORPHICBASE_H

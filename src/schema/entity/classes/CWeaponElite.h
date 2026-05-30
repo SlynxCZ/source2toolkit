@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponEliteImpl.h"
+
 #endif // _INCLUDE_CWEAPONELITE_H

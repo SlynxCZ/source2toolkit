@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponFamasImpl.h"
+
 #endif // _INCLUDE_CWEAPONFAMAS_H

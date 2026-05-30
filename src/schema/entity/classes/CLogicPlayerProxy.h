@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CLogicPlayerProxyImpl.h"
+
 #endif // _INCLUDE_CLOGICPLAYERPROXY_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CRagdollPropAlias_physics_prop_ragdollImpl.h"
+
 #endif // _INCLUDE_CRAGDOLLPROPALIAS_PHYSICS_PROP_RAGDOLL_H

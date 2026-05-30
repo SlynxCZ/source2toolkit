@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CServerRagdollTriggerImpl.h"
+
 #endif // _INCLUDE_CSERVERRAGDOLLTRIGGER_H

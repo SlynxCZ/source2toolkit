@@ -69,4 +69,6 @@ public:
     }
 };
 
+#include "InfoForResourceTypeCPostProcessingResourceImpl.h"
+
 #endif // _INCLUDE_INFOFORRESOURCETYPECPOSTPROCESSINGRESOURCE_H

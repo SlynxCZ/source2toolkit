@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CRuleEntityImpl.h"
+
 #endif // _INCLUDE_CRULEENTITY_H

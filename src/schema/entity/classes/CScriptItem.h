@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CScriptItemImpl.h"
+
 #endif // _INCLUDE_CSCRIPTITEM_H

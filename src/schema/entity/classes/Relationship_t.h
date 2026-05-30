@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "Relationship_tImpl.h"
+
 #endif // _INCLUDE_RELATIONSHIP_T_H

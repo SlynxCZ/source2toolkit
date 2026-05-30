@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "EntitySpottedState_tImpl.h"
+
 #endif // _INCLUDE_ENTITYSPOTTEDSTATE_T_H

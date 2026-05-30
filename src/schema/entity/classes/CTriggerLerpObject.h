@@ -89,4 +89,6 @@ public:
     }
 };
 
+#include "CTriggerLerpObjectImpl.h"
+
 #endif // _INCLUDE_CTRIGGERLERPOBJECT_H

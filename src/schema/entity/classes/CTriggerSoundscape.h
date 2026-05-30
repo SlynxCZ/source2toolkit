@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CTriggerSoundscapeImpl.h"
+
 #endif // _INCLUDE_CTRIGGERSOUNDSCAPE_H

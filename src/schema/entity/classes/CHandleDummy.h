@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CHandleDummyImpl.h"
+
 #endif // _INCLUDE_CHANDLEDUMMY_H

@@ -88,4 +88,6 @@ public:
     }
 };
 
+#include "CVoteControllerImpl.h"
+
 #endif // _INCLUDE_CVOTECONTROLLER_H

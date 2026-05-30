@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CRevertSavedImpl.h"
+
 #endif // _INCLUDE_CREVERTSAVED_H

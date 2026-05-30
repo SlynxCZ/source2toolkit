@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CPhysTorqueImpl.h"
+
 #endif // _INCLUDE_CPHYSTORQUE_H

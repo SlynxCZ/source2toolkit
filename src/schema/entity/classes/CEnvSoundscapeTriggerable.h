@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CEnvSoundscapeTriggerableImpl.h"
+
 #endif // _INCLUDE_CENVSOUNDSCAPETRIGGERABLE_H

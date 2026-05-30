@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CPlatTriggerImpl.h"
+
 #endif // _INCLUDE_CPLATTRIGGER_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CItemSodaImpl.h"
+
 #endif // _INCLUDE_CITEMSODA_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponMP5SDImpl.h"
+
 #endif // _INCLUDE_CWEAPONMP5SD_H

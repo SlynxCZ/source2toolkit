@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CShowerImpl.h"
+
 #endif // _INCLUDE_CSHOWER_H

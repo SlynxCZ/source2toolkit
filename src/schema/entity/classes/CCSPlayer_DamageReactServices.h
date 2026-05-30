@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CCSPlayer_DamageReactServicesImpl.h"
+
 #endif // _INCLUDE_CCSPLAYER_DAMAGEREACTSERVICES_H

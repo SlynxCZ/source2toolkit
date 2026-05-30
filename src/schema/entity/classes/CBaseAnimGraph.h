@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CBaseAnimGraphImpl.h"
+
 #endif // _INCLUDE_CBASEANIMGRAPH_H

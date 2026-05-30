@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CSoundEventParameterImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTPARAMETER_H

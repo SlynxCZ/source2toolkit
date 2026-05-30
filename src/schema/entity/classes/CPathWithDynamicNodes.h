@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CPathWithDynamicNodesImpl.h"
+
 #endif // _INCLUDE_CPATHWITHDYNAMICNODES_H

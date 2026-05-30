@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CWeaponSawedoffImpl.h"
+
 #endif // _INCLUDE_CWEAPONSAWEDOFF_H

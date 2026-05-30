@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CInfoPlayerStartImpl.h"
+
 #endif // _INCLUDE_CINFOPLAYERSTART_H

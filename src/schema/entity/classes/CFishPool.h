@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CFishPoolImpl.h"
+
 #endif // _INCLUDE_CFISHPOOL_H

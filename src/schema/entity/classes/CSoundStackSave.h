@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CSoundStackSaveImpl.h"
+
 #endif // _INCLUDE_CSOUNDSTACKSAVE_H

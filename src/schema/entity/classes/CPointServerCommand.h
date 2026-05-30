@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPointServerCommandImpl.h"
+
 #endif // _INCLUDE_CPOINTSERVERCOMMAND_H

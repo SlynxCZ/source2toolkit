@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CMathColorBlendImpl.h"
+
 #endif // _INCLUDE_CMATHCOLORBLEND_H

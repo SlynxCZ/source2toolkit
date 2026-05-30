@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CAI_ChangeHintGroupImpl.h"
+
 #endif // _INCLUDE_CAI_CHANGEHINTGROUP_H

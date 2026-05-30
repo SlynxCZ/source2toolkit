@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncLadderAlias_func_useableladderImpl.h"
+
 #endif // _INCLUDE_CFUNCLADDERALIAS_FUNC_USEABLELADDER_H

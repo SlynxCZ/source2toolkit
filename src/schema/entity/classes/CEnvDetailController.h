@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CEnvDetailControllerImpl.h"
+
 #endif // _INCLUDE_CENVDETAILCONTROLLER_H

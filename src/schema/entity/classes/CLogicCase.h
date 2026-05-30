@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CLogicCaseImpl.h"
+
 #endif // _INCLUDE_CLOGICCASE_H

@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CGamePlayerZoneImpl.h"
+
 #endif // _INCLUDE_CGAMEPLAYERZONE_H

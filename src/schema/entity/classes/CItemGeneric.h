@@ -107,4 +107,6 @@ public:
     }
 };
 
+#include "CItemGenericImpl.h"
+
 #endif // _INCLUDE_CITEMGENERIC_H

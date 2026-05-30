@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "AutoRoomDoorwayPairs_tImpl.h"
+
 #endif // _INCLUDE_AUTOROOMDOORWAYPAIRS_T_H

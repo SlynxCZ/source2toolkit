@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CTriggerDetectExplosionImpl.h"
+
 #endif // _INCLUDE_CTRIGGERDETECTEXPLOSION_H

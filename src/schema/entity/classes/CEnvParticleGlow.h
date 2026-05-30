@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CEnvParticleGlowImpl.h"
+
 #endif // _INCLUDE_CENVPARTICLEGLOW_H

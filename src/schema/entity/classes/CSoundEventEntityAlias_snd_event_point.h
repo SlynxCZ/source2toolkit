@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CSoundEventEntityAlias_snd_event_pointImpl.h"
+
 #endif // _INCLUDE_CSOUNDEVENTENTITYALIAS_SND_EVENT_POINT_H

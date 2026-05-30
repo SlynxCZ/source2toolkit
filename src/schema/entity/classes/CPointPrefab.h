@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CPointPrefabImpl.h"
+
 #endif // _INCLUDE_CPOINTPREFAB_H

@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CLightOrthoEntityImpl.h"
+
 #endif // _INCLUDE_CLIGHTORTHOENTITY_H

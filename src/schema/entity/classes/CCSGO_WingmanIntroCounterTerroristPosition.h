@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CCSGO_WingmanIntroCounterTerroristPositionImpl.h"
+
 #endif // _INCLUDE_CCSGO_WINGMANINTROCOUNTERTERRORISTPOSITION_H

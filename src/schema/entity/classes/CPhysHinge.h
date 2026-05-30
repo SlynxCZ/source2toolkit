@@ -93,4 +93,6 @@ public:
     }
 };
 
+#include "CPhysHingeImpl.h"
+
 #endif // _INCLUDE_CPHYSHINGE_H

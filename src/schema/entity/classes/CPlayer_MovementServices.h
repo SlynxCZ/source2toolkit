@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CPlayer_MovementServicesImpl.h"
+
 #endif // _INCLUDE_CPLAYER_MOVEMENTSERVICES_H

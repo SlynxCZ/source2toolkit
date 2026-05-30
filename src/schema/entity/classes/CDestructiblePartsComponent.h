@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CDestructiblePartsComponentImpl.h"
+
 #endif // _INCLUDE_CDESTRUCTIBLEPARTSCOMPONENT_H

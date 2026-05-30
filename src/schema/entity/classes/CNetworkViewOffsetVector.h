@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CNetworkViewOffsetVectorImpl.h"
+
 #endif // _INCLUDE_CNETWORKVIEWOFFSETVECTOR_H

@@ -105,4 +105,6 @@ public:
     }
 };
 
+#include "CBasePlayerControllerImpl.h"
+
 #endif // _INCLUDE_CBASEPLAYERCONTROLLER_H

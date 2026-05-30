@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CFuncRotatingImpl.h"
+
 #endif // _INCLUDE_CFUNCROTATING_H

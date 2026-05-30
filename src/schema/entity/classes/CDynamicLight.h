@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CDynamicLightImpl.h"
+
 #endif // _INCLUDE_CDYNAMICLIGHT_H

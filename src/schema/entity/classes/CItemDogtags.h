@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CItemDogtagsImpl.h"
+
 #endif // _INCLUDE_CITEMDOGTAGS_H

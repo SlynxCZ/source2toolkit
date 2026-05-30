@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "lerpdata_tImpl.h"
+
 #endif // _INCLUDE_LERPDATA_T_H

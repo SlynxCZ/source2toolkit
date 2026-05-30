@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CSpotlightEndImpl.h"
+
 #endif // _INCLUDE_CSPOTLIGHTEND_H

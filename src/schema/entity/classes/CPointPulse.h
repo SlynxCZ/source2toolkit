@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPointPulseImpl.h"
+
 #endif // _INCLUDE_CPOINTPULSE_H

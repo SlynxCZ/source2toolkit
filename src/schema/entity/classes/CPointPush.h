@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CPointPushImpl.h"
+
 #endif // _INCLUDE_CPOINTPUSH_H

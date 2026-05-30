@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CColorCorrectionVolumeImpl.h"
+
 #endif // _INCLUDE_CCOLORCORRECTIONVOLUME_H

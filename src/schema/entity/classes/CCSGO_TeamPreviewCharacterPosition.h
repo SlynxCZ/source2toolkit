@@ -81,4 +81,6 @@ public:
     }
 };
 
+#include "CCSGO_TeamPreviewCharacterPositionImpl.h"
+
 #endif // _INCLUDE_CCSGO_TEAMPREVIEWCHARACTERPOSITION_H

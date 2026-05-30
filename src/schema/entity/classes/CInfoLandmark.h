@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoLandmarkImpl.h"
+
 #endif // _INCLUDE_CINFOLANDMARK_H

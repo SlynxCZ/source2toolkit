@@ -70,4 +70,6 @@ public:
     }
 };
 
+#include "CPhysicsShakeImpl.h"
+
 #endif // _INCLUDE_CPHYSICSSHAKE_H

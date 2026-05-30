@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CIncendiaryGrenadeImpl.h"
+
 #endif // _INCLUDE_CINCENDIARYGRENADE_H

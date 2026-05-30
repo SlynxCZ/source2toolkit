@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CPrecipitationBlockerImpl.h"
+
 #endif // _INCLUDE_CPRECIPITATIONBLOCKER_H

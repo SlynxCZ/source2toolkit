@@ -91,4 +91,6 @@ public:
     }
 };
 
+#include "CMapVetoPickControllerImpl.h"
+
 #endif // _INCLUDE_CMAPVETOPICKCONTROLLER_H

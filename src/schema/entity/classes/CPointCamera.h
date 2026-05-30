@@ -98,4 +98,6 @@ public:
     }
 };
 
+#include "CPointCameraImpl.h"
+
 #endif // _INCLUDE_CPOINTCAMERA_H

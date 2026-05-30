@@ -87,4 +87,6 @@ public:
     }
 };
 
+#include "CPathMoverEntitySpawnerImpl.h"
+
 #endif // _INCLUDE_CPATHMOVERENTITYSPAWNER_H

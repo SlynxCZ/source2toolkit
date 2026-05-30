@@ -90,4 +90,6 @@ public:
     }
 };
 
+#include "CBaseToggleImpl.h"
+
 #endif // _INCLUDE_CBASETOGGLE_H

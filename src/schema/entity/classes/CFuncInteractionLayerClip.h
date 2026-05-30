@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CFuncInteractionLayerClipImpl.h"
+
 #endif // _INCLUDE_CFUNCINTERACTIONLAYERCLIP_H

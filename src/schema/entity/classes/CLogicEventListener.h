@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CLogicEventListenerImpl.h"
+
 #endif // _INCLUDE_CLOGICEVENTLISTENER_H

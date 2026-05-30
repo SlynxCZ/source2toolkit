@@ -94,4 +94,6 @@ public:
     }
 };
 
+#include "CBreakableImpl.h"
+
 #endif // _INCLUDE_CBREAKABLE_H

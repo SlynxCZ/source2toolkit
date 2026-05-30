@@ -142,4 +142,6 @@ public:
     }
 };
 
+#include "CSceneEntityImpl.h"
+
 #endif // _INCLUDE_CSCENEENTITY_H

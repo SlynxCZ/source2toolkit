@@ -78,4 +78,6 @@ public:
     }
 };
 
+#include "CPlayer_MovementServices_HumanoidImpl.h"
+
 #endif // _INCLUDE_CPLAYER_MOVEMENTSERVICES_HUMANOID_H

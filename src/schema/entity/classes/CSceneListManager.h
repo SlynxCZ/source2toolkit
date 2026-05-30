@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CSceneListManagerImpl.h"
+
 #endif // _INCLUDE_CSCENELISTMANAGER_H

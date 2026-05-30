@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CMoverPathNodeImpl.h"
+
 #endif // _INCLUDE_CMOVERPATHNODE_H

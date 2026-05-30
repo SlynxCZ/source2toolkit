@@ -84,4 +84,6 @@ public:
     }
 };
 
+#include "CC4Impl.h"
+
 #endif // _INCLUDE_CC4_H

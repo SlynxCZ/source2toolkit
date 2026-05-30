@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CCashStackImpl.h"
+
 #endif // _INCLUDE_CCASHSTACK_H

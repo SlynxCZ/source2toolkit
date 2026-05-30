@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CShatterGlassShardPhysicsImpl.h"
+
 #endif // _INCLUDE_CSHATTERGLASSSHARDPHYSICS_H

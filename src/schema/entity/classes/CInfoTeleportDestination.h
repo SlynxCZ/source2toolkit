@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoTeleportDestinationImpl.h"
+
 #endif // _INCLUDE_CINFOTELEPORTDESTINATION_H

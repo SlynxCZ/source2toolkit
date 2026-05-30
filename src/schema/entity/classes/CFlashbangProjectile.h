@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CFlashbangProjectileImpl.h"
+
 #endif // _INCLUDE_CFLASHBANGPROJECTILE_H

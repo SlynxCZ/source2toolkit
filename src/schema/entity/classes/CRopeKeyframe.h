@@ -93,4 +93,6 @@ public:
     }
 };
 
+#include "CRopeKeyframeImpl.h"
+
 #endif // _INCLUDE_CROPEKEYFRAME_H

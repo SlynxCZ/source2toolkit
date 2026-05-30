@@ -75,4 +75,6 @@ public:
     }
 };
 
+#include "CTriggerVolumeImpl.h"
+
 #endif // _INCLUDE_CTRIGGERVOLUME_H

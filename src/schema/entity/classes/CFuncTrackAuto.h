@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CFuncTrackAutoImpl.h"
+
 #endif // _INCLUDE_CFUNCTRACKAUTO_H

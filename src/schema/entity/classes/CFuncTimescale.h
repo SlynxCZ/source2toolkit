@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CFuncTimescaleImpl.h"
+
 #endif // _INCLUDE_CFUNCTIMESCALE_H

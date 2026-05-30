@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CTriggerBombResetImpl.h"
+
 #endif // _INCLUDE_CTRIGGERBOMBRESET_H

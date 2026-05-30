@@ -72,4 +72,6 @@ public:
     }
 };
 
+#include "CInfoLadderDismountImpl.h"
+
 #endif // _INCLUDE_CINFOLADDERDISMOUNT_H

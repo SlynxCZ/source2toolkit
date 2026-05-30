@@ -82,4 +82,6 @@ public:
     }
 };
 
+#include "CBombTargetImpl.h"
+
 #endif // _INCLUDE_CBOMBTARGET_H

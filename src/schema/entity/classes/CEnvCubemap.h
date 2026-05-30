@@ -91,4 +91,6 @@ public:
     }
 };
 
+#include "CEnvCubemapImpl.h"
+
 #endif // _INCLUDE_CENVCUBEMAP_H

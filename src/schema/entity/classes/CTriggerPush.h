@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CTriggerPushImpl.h"
+
 #endif // _INCLUDE_CTRIGGERPUSH_H

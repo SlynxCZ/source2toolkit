@@ -76,4 +76,6 @@ public:
     }
 };
 
+#include "CNetworkOriginCellCoordQuantizedVectorImpl.h"
+
 #endif // _INCLUDE_CNETWORKORIGINCELLCOORDQUANTIZEDVECTOR_H

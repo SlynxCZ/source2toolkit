@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "CPlayer_AutoaimServicesImpl.h"
+
 #endif // _INCLUDE_CPLAYER_AUTOAIMSERVICES_H

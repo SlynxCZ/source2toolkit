@@ -77,4 +77,6 @@ public:
     }
 };
 
+#include "CChoreoComponentImpl.h"
+
 #endif // _INCLUDE_CCHOREOCOMPONENT_H

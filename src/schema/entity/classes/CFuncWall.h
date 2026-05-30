@@ -73,4 +73,6 @@ public:
     }
 };
 
+#include "CFuncWallImpl.h"
+
 #endif // _INCLUDE_CFUNCWALL_H

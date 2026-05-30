@@ -74,4 +74,6 @@ public:
     }
 };
 
+#include "CWeaponTaserImpl.h"
+
 #endif // _INCLUDE_CWEAPONTASER_H

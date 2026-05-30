@@ -79,4 +79,6 @@ public:
     }
 };
 
+#include "CPathNodeImpl.h"
+
 #endif // _INCLUDE_CPATHNODE_H

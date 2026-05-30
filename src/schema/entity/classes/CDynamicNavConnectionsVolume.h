@@ -80,4 +80,6 @@ public:
     }
 };
 
+#include "CDynamicNavConnectionsVolumeImpl.h"
+
 #endif // _INCLUDE_CDYNAMICNAVCONNECTIONSVOLUME_H

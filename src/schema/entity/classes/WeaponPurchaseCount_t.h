@@ -71,4 +71,6 @@ public:
     }
 };
 
+#include "WeaponPurchaseCount_tImpl.h"
+
 #endif // _INCLUDE_WEAPONPURCHASECOUNT_T_H
