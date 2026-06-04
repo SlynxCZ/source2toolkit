@@ -108,6 +108,14 @@ namespace virtualhooks
             m_pLoadEventsFromFile->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
             m_pFireEvent->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
         }
+
+        delete m_pGameFrame;
+        delete m_pStartupServer;
+        delete m_pDispatchConCommand;
+        delete m_pClientCommand;
+        delete m_pOnServerGamePostSimulate;
+        delete m_pLoadEventsFromFile;
+        delete m_pFireEvent;
     }
 
     KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
