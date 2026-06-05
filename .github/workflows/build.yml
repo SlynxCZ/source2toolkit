@@ -47,15 +47,9 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Configure CMake
-        run: |
-          mkdir build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-
-      - name: Build
-        run: |
-          cmake --build build --config Release
+      - name: Run Windows setup & build
+        shell: pwsh
+        run: .\scripts\windows-entrypoint.ps1
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
