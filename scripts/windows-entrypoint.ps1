@@ -17,7 +17,7 @@ $SDK_DIR = "$env:TEMP\sdk"
 $SOURCE2TOOLKITSDK_DIR = "$SDK_DIR\source2toolkit-sdk"
 $HL2SDK_DIR = "$SDK_DIR\hl2sdk-cs2"
 $MMSOURCE_DIR = "$SDK_DIR\metamod-source"
-$CSGO_PROTO_DIR = "$SDK_DIR\Protobufs"
+$CSGO_PROTO_DIR = "$SDK_DIR\Protobufs\csgo"
 
 Write-Host "=== Preparing temporary SDK directory ==="
 if (Test-Path $SDK_DIR) { Remove-Item -Recurse -Force $SDK_DIR }
