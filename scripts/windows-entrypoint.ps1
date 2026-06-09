@@ -2,6 +2,7 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+Write-Host "=== Updating git submodules ==="
 git submodule update --init --recursive
 
 # Version env vars
@@ -11,6 +12,33 @@ try {
 } catch {}
 
 $env:GITHUB_SHA_SHORT = git rev-parse --short HEAD
+
+### --- Load MSVC environment (IMPORTANT) -------------------------------------
+Write-Host "=== Loading MSVC environment ==="
+
+$vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+
+$vsPath = & $vswhere -latest -products * `
+    -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 `
+    -property installationPath
+
+if (-not $vsPath) {
+    throw "MSVC not found on runner!"
+}
+
+$vcvars = Join-Path $vsPath "VC\Auxiliary\Build\vcvars64.bat"
+
+cmd /c "`"$vcvars`" && set" | ForEach-Object {
+    if ($_ -match "^(.*?)=(.*)$") {
+        Set-Item -Path "env:$($matches[1])" -Value $matches[2]
+    }
+}
+
+if (-not (Get-Command cl.exe -ErrorAction SilentlyContinue)) {
+    throw "MSVC (cl.exe) not available after environment setup!"
+}
+
+Write-Host "MSVC loaded successfully"
 
 ### --- Clone SDKs ------------------------------------------------------------
 $SDK_DIR = "$env:TEMP\sdk"
@@ -53,7 +81,9 @@ New-Item -ItemType Directory build | Out-Null
 Set-Location build
 
 cmake .. -G Ninja `
-  -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    -DCMAKE_C_COMPILER=cl `
+    -DCMAKE_CXX_COMPILER=cl `
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
 Write-Host "=== Building | RelWithDebInfo ==="
 cmake --build . -- -j $env:NUMBER_OF_PROCESSORS
