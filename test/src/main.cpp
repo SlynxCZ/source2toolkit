@@ -88,43 +88,19 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pEngineServer, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
-    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService,
-                            GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetFileSystemFactory, g_pFullFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2Server, ISource2Server, INTERFACEVERSION_SERVERGAMEDLL);
-    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameClients, IServerGameClients,
-                            INTERFACEVERSION_SERVERGAMECLIENTS);
-    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pNetworkServerService, INetworkServerService,
-                            NETWORKSERVERSERVICE_INTERFACE_VERSION);
+    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
+    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
-    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities,
-                            SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
 
     api->AddListener(this, this);
 
-    auto* commands = g_ToolkitAPI->Commands();
-    REG_CON_(g_PluginID, "prapele", [](const CCommandContext& context, const CCommand& args, Mode mode)
-    {
-        auto* player = CCSPlayerController::FromSlot(context.GetPlayerSlot().Get());
-        if (!player || player->m_iConnected() != PlayerConnectedState::Connected) return;
 
-        INetworkMessageInternal* pNetMsg = g_pNetworkMessages->FindNetworkMessageById(CS_UM_VoteStart);
-        auto data = pNetMsg->AllocateMessage()->ToPB<CCSUsrMsg_VoteStart>();
-
-        data->set_team(-1);
-        data->set_player_slot(player->GetSlot());
-        data->set_vote_type(-1);
-        data->set_disp_str("Test menu ve vote");
-        data->set_details_str("Nevim pico");
-        data->set_is_yes_no_vote(true);
-
-        CSingleRecipientFilter pFilter(player->GetPlayerSlot());
-        g_pGameEventSystem->PostEventAbstract(-1, false, &pFilter, pNetMsg, data, 0);
-
-        delete data;
-    });
 
     TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
 

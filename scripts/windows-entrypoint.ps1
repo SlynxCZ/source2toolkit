@@ -30,7 +30,7 @@ Write-Host "=== Downloading HL2SDK-CS2 ==="
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git $HL2SDK_DIR
 
 Write-Host "=== Downloading Metamod-Source ==="
-git clone --recursive --branch master --single-branch https://github.com/alliedmodders/metamod-source.git $MMSOURCE_DIR
+git clone --recursive --branch k/sourcehook_alternative --single-branch https://github.com/alliedmodders/metamod-source.git $MMSOURCE_DIR
 
 Write-Host "=== Downloading Protobufs ==="
 git clone --recursive https://github.com/SteamDatabase/Protobufs $CSGO_PROTO_DIR
