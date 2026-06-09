@@ -60,12 +60,6 @@ public:
     void OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName, bool loadGame, bool background) override;
     void OnLevelShutdown() override;
 
-public:
-    KHook::Return<void> CSource2Server_GameServerSteamAPIActivated(ISource2Server* pThis);
-
-protected:
-    KHook::Virtual<ISource2Server, void>* m_pGameServerSteamAPIActivated = nullptr;
-
 private:
     const char* GetAuthor() override;
     const char* GetName() override;

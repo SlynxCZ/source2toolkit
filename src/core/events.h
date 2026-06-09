@@ -62,7 +62,7 @@ namespace events {
     class EventManager : public IToolkitEvents
     {
     public:
-        void RegGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, Mode mode) override;
+        void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, Mode mode) override;
     public:
         void RemoveAllForPlugin(PluginId id);
     };

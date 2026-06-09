@@ -56,7 +56,7 @@ namespace events {
         }
     }
 
-    void EventManager::RegGameEvent(PluginId owner, const char* name, GameEventHandler handler, Mode mode)
+    void EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, Mode mode)
     {
         gameEvents[name].push_back({owner, handler, mode});
         RegisterListenerIfNeeded(name);

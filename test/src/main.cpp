@@ -55,6 +55,10 @@
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/schema/serversideclient.h"
 
+#include "crecipientfilter.h"
+
+#include "cstrike15_usermessages.pb.h"
+
 #include "steam/steam_api.h"
 #include "steam/steam_gameserver.h"
 #include "steam/steam_api_common.h"
@@ -72,12 +76,9 @@
 Plugin g_Plugin;
 TOOLKIT_EXPOSE(source2toolkit_test, g_Plugin);
 
-IToolkitModule* g_pLibSteamApi = nullptr;
 IGameEventSystem* g_pGameEventSystem = nullptr;
-CSteamGameServerAPIContext* g_pSteamAPI = nullptr;
 
-Plugin::Plugin() :
-    m_pGameServerSteamAPIActivated(new KHook::Virtual(&ISource2Server::GameServerSteamAPIActivated, this, &Plugin::CSource2Server_GameServerSteamAPIActivated, nullptr))
+Plugin::Plugin()
 {
 }
 
@@ -87,22 +88,43 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pEngineServer, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
-    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService,
+                            GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetFileSystemFactory, g_pFullFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2Server, ISource2Server, INTERFACEVERSION_SERVERGAMEDLL);
-    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
-    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
+    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameClients, IServerGameClients,
+                            INTERFACEVERSION_SERVERGAMECLIENTS);
+    GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pNetworkServerService, INetworkServerService,
+                            NETWORKSERVERSERVICE_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
     GET_VALVE_IFACE_CURRENT(GetEngineFactory, g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
-    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_VALVE_IFACE_CURRENT(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities,
+                            SOURCE2GAMEENTITIES_INTERFACE_VERSION);
 
     api->AddListener(this, this);
 
-    // Function hooks
+    auto* commands = g_ToolkitAPI->Commands();
+    commands->RegConCommand(g_PluginID, "prapele", [](const CCommandContext& context, const CCommand& args, Mode mode)
     {
-        m_pGameServerSteamAPIActivated->Add(g_pSource2Server);
-    }
+        auto* player = CCSPlayerController::FromSlot(context.GetPlayerSlot().Get());
+        if (!player || player->m_iConnected() != PlayerConnectedState::Connected) return;
+
+        INetworkMessageInternal* pNetMsg = g_pNetworkMessages->FindNetworkMessageById(CS_UM_VoteStart);
+        auto data = pNetMsg->AllocateMessage()->ToPB<CCSUsrMsg_VoteStart>();
+
+        data->set_team(-1);
+        data->set_player_slot(player->GetSlot());
+        data->set_vote_type(-1);
+        data->set_disp_str("Test menu ve vote");
+        data->set_details_str("Nevim pico");
+        data->set_is_yes_no_vote(true);
+
+        CSingleRecipientFilter pFilter(player->GetPlayerSlot());
+        g_pGameEventSystem->PostEventAbstract(-1, false, &pFilter, pNetMsg, data, 0);
+
+        delete data;
+    });
 
     TOOLKIT_LOG(this, "Load( id=%d, api=%p, late=%d ) done\n", id, api, late);
 
@@ -111,8 +133,6 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
 
 bool Plugin::Unload(char* error, size_t maxlen)
 {
-    m_pGameServerSteamAPIActivated->Remove(g_pSource2Server);
-
     TOOLKIT_LOG(this, "Unload() done\n");
 
     return true;
@@ -138,24 +158,17 @@ void Plugin::OnAllMetamodPluginsLoaded()
     TOOLKIT_LOG(this, "OnAllMetamodPluginsLoaded()\n");
 }
 
-void Plugin::OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName, bool loadGame, bool background)
+void Plugin::OnLevelInit(const char* mapName, const char* mapEntities, const char* oldLevel, const char* landmarkName,
+                         bool loadGame, bool background)
 {
-    TOOLKIT_LOG(this, "OnLevelInit( map=%s, old=%s, landmark=%s, loadGame=%d, background=%d )\n", mapName ? mapName : "nullptr", oldLevel ? oldLevel : "nullptr", landmarkName ? landmarkName : "nullptr", loadGame, background);
+    TOOLKIT_LOG(this, "OnLevelInit( map=%s, old=%s, landmark=%s, loadGame=%d, background=%d )\n",
+                mapName ? mapName : "nullptr", oldLevel ? oldLevel : "nullptr", landmarkName ? landmarkName : "nullptr",
+                loadGame, background);
 }
 
 void Plugin::OnLevelShutdown()
 {
     TOOLKIT_LOG(this, "OnLevelShutdown()\n");
-}
-
-KHook::Return<void> Plugin::CSource2Server_GameServerSteamAPIActivated(ISource2Server* pThis)
-{
-    TOOLKIT_LOG(this, "CSource2Server_GameServerSteamAPIActivated( pThis=%p )\n", pThis);
-
-    g_pSteamAPI = new CSteamGameServerAPIContext();
-    g_pSteamAPI->Init();
-
-    return {KHook::Action::Ignore};
 }
 
 const char* Plugin::GetVersion()
