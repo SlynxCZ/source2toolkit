@@ -71,6 +71,7 @@ public:
     IToolkitGameConfig* GameConfig() override;
     IToolkitMenus* Menus() override;
     IToolkitMySQL* MySQL() override;
+    IToolkitNetworkMessages* NetworkMessages() override;
     IToolkitScheduler* Scheduler() override;
     IToolkitTrace* Trace() override;
 

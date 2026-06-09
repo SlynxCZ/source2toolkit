@@ -43,6 +43,7 @@
 #include "events.h"
 #include "menus.h"
 #include "mysql.h"
+#include "networkmessages.h"
 #include "plugin.h"
 
 #include "source2toolkit/IToolkitPlugin.h"
@@ -286,6 +287,11 @@ IToolkitMenus* PluginApi::Menus()
 IToolkitMySQL* PluginApi::MySQL()
 {
     return &mysql::mysqlManager;
+}
+
+IToolkitNetworkMessages* PluginApi::NetworkMessages()
+{
+    return &networkmessages::networkMessagesManager;
 }
 
 IToolkitScheduler* PluginApi::Scheduler()
