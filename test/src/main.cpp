@@ -105,7 +105,7 @@ bool Plugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, boo
     api->AddListener(this, this);
 
     auto* commands = g_ToolkitAPI->Commands();
-    commands->RegConCommand(g_PluginID, "prapele", [](const CCommandContext& context, const CCommand& args, Mode mode)
+    REG_CON_(g_PluginID, "prapele", [](const CCommandContext& context, const CCommand& args, Mode mode)
     {
         auto* player = CCSPlayerController::FromSlot(context.GetPlayerSlot().Get());
         if (!player || player->m_iConnected() != PlayerConnectedState::Connected) return;
