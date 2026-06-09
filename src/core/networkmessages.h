@@ -138,7 +138,7 @@ namespace networkmessages
         void ClearRepeatedField(void* msg, const char* fieldName) override;
         void Clear(void* msg) override;
 
-        void SendMessage(void* msg, int msgid, int playerid) override;
+        void SendMessage(void* msg, int msgid, CPlayerSlot slot) override;
         void SendMessageToPlayers(void* msg, int msgid, uint64_t playermask) override;
 
         uint64_t AddServerHook(NetMessageServerHook callback) override;
@@ -163,6 +163,6 @@ namespace networkmessages
     extern NetworkMessagesManager networkMessagesManager;
 
     Action DispatchServerHook(uint64_t* clients, int messageid, void* msg);
-    Action DispatchClientHook(int playerid, int messageid, void* msg);
-    Action DispatchServerInternalHook(int playerid, int messageid, void* msg);
+    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg);
+    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg);
 }

@@ -39,7 +39,7 @@
 #include "igameeventsystem.h"
 #include "networksystem/inetworkmessages.h"
 #include "source2toolkit/schema/netmessages.h"
-#include "recipientfilter.h"
+#include "source2toolkit/schema/recipientfilter.h"
 
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/message.h>
@@ -94,8 +94,8 @@ Internal helpers / macros
     if (elemCount == 0 || idx >= elemCount || idx < 0)                                                        \
         return return_value;
 
-namespace networkmessages {
-
+namespace networkmessages
+{
     NetworkMessagesManager networkMessagesManager;
 
     /* =========================
@@ -553,7 +553,7 @@ namespace networkmessages {
     Vector2D NetworkMessagesManager::GetVector2D(void* pmsg, const char* fieldName)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        Vector2D vec{ 0.0f, 0.0f };
+        Vector2D vec{0.0f, 0.0f};
         GETCHECK_FIELD(vec);
         CHECK_FIELD_NOT_REPEATED(vec);
 
@@ -566,12 +566,13 @@ namespace networkmessages {
     Vector2D NetworkMessagesManager::GetRepeatedVector2D(void* pmsg, const char* fieldName, int index)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        Vector2D vec{ 0.0f, 0.0f };
+        Vector2D vec{0.0f, 0.0f};
         GETCHECK_FIELD(vec);
         CHECK_FIELD_REPEATED(vec);
         CHECK_REPEATED_ELEMENT(index, vec);
 
-        const CMsgVector2D* msgVec2d = (const CMsgVector2D*)&msg->GetReflection()->GetRepeatedMessage(*msg, field, index);
+        const CMsgVector2D* msgVec2d = (const CMsgVector2D*)&msg->GetReflection()->GetRepeatedMessage(
+            *msg, field, index);
         vec.x = msgVec2d->x();
         vec.y = msgVec2d->y();
         return vec;
@@ -618,7 +619,7 @@ namespace networkmessages {
     Vector NetworkMessagesManager::GetVector(void* pmsg, const char* fieldName)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        Vector vec{ 0.0f, 0.0f, 0.0f };
+        Vector vec{0.0f, 0.0f, 0.0f};
         GETCHECK_FIELD(vec);
         CHECK_FIELD_NOT_REPEATED(vec);
 
@@ -632,7 +633,7 @@ namespace networkmessages {
     Vector NetworkMessagesManager::GetRepeatedVector(void* pmsg, const char* fieldName, int index)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        Vector vec{ 0.0f, 0.0f, 0.0f };
+        Vector vec{0.0f, 0.0f, 0.0f};
         GETCHECK_FIELD(vec);
         CHECK_FIELD_REPEATED(vec);
         CHECK_REPEATED_ELEMENT(index, vec);
@@ -688,7 +689,7 @@ namespace networkmessages {
     Color NetworkMessagesManager::GetColor(void* pmsg, const char* fieldName)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        Color color{ 255, 255, 255, 255 };
+        Color color{255, 255, 255, 255};
         GETCHECK_FIELD(color);
         CHECK_FIELD_NOT_REPEATED(color);
 
@@ -700,7 +701,7 @@ namespace networkmessages {
     Color NetworkMessagesManager::GetRepeatedColor(void* pmsg, const char* fieldName, int index)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        Color color{ 255, 255, 255, 255 };
+        Color color{255, 255, 255, 255};
         GETCHECK_FIELD(color);
         CHECK_FIELD_REPEATED(color);
         CHECK_REPEATED_ELEMENT(index, color);
@@ -757,7 +758,7 @@ namespace networkmessages {
     QAngle NetworkMessagesManager::GetQAngle(void* pmsg, const char* fieldName)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        QAngle angle{ 0.0f, 0.0f, 0.0f };
+        QAngle angle{0.0f, 0.0f, 0.0f};
         GETCHECK_FIELD(angle);
         CHECK_FIELD_NOT_REPEATED(angle);
 
@@ -771,7 +772,7 @@ namespace networkmessages {
     QAngle NetworkMessagesManager::GetRepeatedQAngle(void* pmsg, const char* fieldName, int index)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
-        QAngle angle{ 0.0f, 0.0f, 0.0f };
+        QAngle angle{0.0f, 0.0f, 0.0f};
         GETCHECK_FIELD(angle);
         CHECK_FIELD_REPEATED(angle);
         CHECK_REPEATED_ELEMENT(index, angle);
@@ -857,7 +858,8 @@ namespace networkmessages {
         msg->GetReflection()->SetString(msg, field, std::string(value, (size_t)valueLength));
     }
 
-    void NetworkMessagesManager::SetRepeatedBytes(void* pmsg, const char* fieldName, int index, const char* value, int valueLength)
+    void NetworkMessagesManager::SetRepeatedBytes(void* pmsg, const char* fieldName, int index, const char* value,
+                                                  int valueLength)
     {
         google::protobuf::Message* msg = (google::protobuf::Message*)pmsg;
         GETCHECK_FIELD_VOID();
@@ -933,7 +935,7 @@ namespace networkmessages {
     Sending
     ========================= */
 
-    void NetworkMessagesManager::SendMessage(void* pmsg, int msgid, int playerid)
+    void NetworkMessagesManager::SendMessage(void* pmsg, int msgid, CPlayerSlot slot)
     {
         CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
 
@@ -941,7 +943,7 @@ namespace networkmessages {
         if (!netmsg)
             return;
 
-        CSingleRecipientFilter filter(playerid);
+        CSingleRecipientFilter filter(slot);
         shared::g_pGameEventSystem->PostEventAbstract(-1, false, &filter, netmsg, msg, 0);
     }
 
@@ -1015,24 +1017,24 @@ namespace networkmessages {
         return result;
     }
 
-    Action DispatchClientHook(int playerid, int messageid, void* msg)
+    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg)
     {
         Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_clientHooks)
         {
-            Action a = cb(playerid, messageid, msg);
+            Action a = cb(slot, messageid, msg);
             if (a > result)
                 result = a;
         }
         return result;
     }
 
-    Action DispatchServerInternalHook(int playerid, int messageid, void* msg)
+    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg)
     {
         Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_serverInternalHooks)
         {
-            Action a = cb(playerid, messageid, msg);
+            Action a = cb(slot, messageid, msg);
             if (a > result)
                 result = a;
         }
