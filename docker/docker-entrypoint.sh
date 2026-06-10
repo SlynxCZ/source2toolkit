@@ -36,7 +36,7 @@ git clone --recursive https://github.com/SteamDatabase/Protobufs "$CSGO_PROTO_DI
 export SOURCE2TOOLKIT_SDK="$SOURCE2TOOLKITSDK_DIR"
 export HL2SDKCS2="$HL2SDK_DIR"
 export MMSOURCE_DEV="$MMSOURCE_DIR"
-export CSGO_PROTO="$CSGO_PROTO_DIR\csgo"
+export CSGO_PROTO="$CSGO_PROTO_DIR/csgo"
 
 echo "Using HL2SDKCS2=$HL2SDKCS2"
 echo "Using MMSOURCE_DEV=$MMSOURCE_DEV"
