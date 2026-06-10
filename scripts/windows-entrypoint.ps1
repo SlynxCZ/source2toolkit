@@ -74,16 +74,20 @@ Write-Host "Using MMSOURCE_DEV=$env:MMSOURCE_DEV"
 Write-Host "Using CSGO_PROTO=$env:CSGO_PROTO"
 
 ### --- Build -----------------------------------------------------------------
+$REPO_ROOT = Split-Path -Parent $PSScriptRoot
+
 Write-Host "=== Starting build ==="
+Write-Host "REPO_ROOT=$REPO_ROOT"
 
-if (Test-Path build) { Remove-Item -Recurse -Force build }
-New-Item -ItemType Directory build | Out-Null
-Set-Location build
+$BUILD_DIR = "$REPO_ROOT\build"
+if (Test-Path $BUILD_DIR) { Remove-Item -Recurse -Force $BUILD_DIR }
+New-Item -ItemType Directory $BUILD_DIR | Out-Null
+Set-Location $BUILD_DIR
 
-cmake .. -G Ninja `
+cmake $REPO_ROOT -G Ninja `
     -DCMAKE_C_COMPILER=cl `
     -DCMAKE_CXX_COMPILER=cl `
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
 Write-Host "=== Building | RelWithDebInfo ==="
-cmake --build . -- -j $env:NUMBER_OF_PROCESSORS
+cmake --build $BUILD_DIR -- -j $env:NUMBER_OF_PROCESSORS
