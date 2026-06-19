@@ -47,19 +47,30 @@
 #include "plugin.h"
 
 #include "source2toolkit/IToolkitPlugin.h"
+#include "source2toolkit/IToolkitAddresses.h"
+#include "source2toolkit/IToolkitCommands.h"
+#include "source2toolkit/IToolkitConVars.h"
+#include "source2toolkit/IToolkitEntities.h"
+#include "source2toolkit/IToolkitEvents.h"
+#include "source2toolkit/IToolkitGameConfig.h"
+#include "source2toolkit/IToolkitMenus.h"
+#include "source2toolkit/IToolkitMySQL.h"
+#include "source2toolkit/IToolkitNetworkMessages.h"
+#include "source2toolkit/IToolkitScheduler.h"
+#include "source2toolkit/IToolkitTrace.h"
 
 #include "plugin.h"
 #include "pluginmanager.h"
 #include "raytrace.h"
 #include "module.h"
-#include "utils/scheduler.h"
+#include "core/scheduler.h"
 
 #include <cstring>
 #include <stdarg.h>
 
 PluginApi pluginApi;
 
-void PluginApi::Log(IToolkitPlugin *plugin, const char* msg, ...)
+void PluginApi::Log(IToolkitPlugin* plugin, const char* msg, ...)
 {
     va_list ap;
     char buffer[2048];
@@ -88,16 +99,16 @@ void PluginApi::ConPrintf(const char* fmt, ...)
     g_SMAPI->ConPrint(buffer);
 }
 
-void PluginApi::AddListener(IToolkitPlugin *plugin, IToolkitListener *pListener)
+void PluginApi::AddListener(IToolkitPlugin* plugin, IToolkitListener* pListener)
 {
     pluginManager.AddListener(plugin, pListener);
 }
 
-void* PluginApi::QueryInterface(CreateInterfaceFn fn, const char *iface, int min)
+void* PluginApi::QueryInterface(CreateInterfaceFn fn, const char* iface, int min)
 {
-    char buffer[256];	/* assume no interface will go beyond this */
+    char buffer[256]; /* assume no interface will go beyond this */
     size_t len = strlen(iface);
-    int ret;			/* just in case something doesn't handle NULL properly */
+    int ret; /* just in case something doesn't handle NULL properly */
 
     if (len > sizeof(buffer) - 4)
     {
@@ -108,9 +119,9 @@ void* PluginApi::QueryInterface(CreateInterfaceFn fn, const char *iface, int min
 
     if (min != -1)
     {
-        char *ptr = &buffer[len - 1];
+        char* ptr = &buffer[len - 1];
         int digits = 0;
-        while (isdigit(*ptr) && digits <=3)
+        while (isdigit(*ptr) && digits <= 3)
         {
             *ptr = '\0';
             digits++;
@@ -135,10 +146,10 @@ void* PluginApi::QueryInterface(CreateInterfaceFn fn, const char *iface, int min
 
 void* PluginApi::InterfaceSearch(CreateInterfaceFn fn, const char* iface, int max, int* ret)
 {
-    char _if[256];	/* assume no interface goes beyond this */
+    char _if[256]; /* assume no interface goes beyond this */
     size_t len = strlen(iface);
     int num = 0;
-    void *pf = NULL;
+    void* pf = NULL;
 
     if (max > 999)
     {
@@ -166,7 +177,8 @@ void* PluginApi::InterfaceSearch(CreateInterfaceFn fn, const char* iface, int ma
         {
             break;
         }
-    } while ((num = FormatIface(_if, len+1)));
+    }
+    while ((num = FormatIface(_if, len + 1)));
 
     return pf;
 }
@@ -189,7 +201,7 @@ int PluginApi::FormatIface(char iface[], size_t maxlength)
         }
     }
 
-    if ( (num && (maxlength <= length)) || (!num && (maxlength <= length + 3)) )
+    if ((num && (maxlength <= length)) || (!num && (maxlength <= length + 3)))
     {
         return -1;
     }
@@ -226,8 +238,28 @@ CreateInterfaceFn PluginApi::GetServerFactory(bool syn/* =true */)
     return g_SMAPI->GetServerFactory(syn);
 }
 
-void* PluginApi::ToolkitFactory(const char *iface, int *ret, PluginId *id)
+void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
 {
+    void* ptr = nullptr;
+
+    if (!strcmp(iface, TOOLKIT_ADDRESSES_INTERFACE)) ptr = &addresses::toolkitAddresses;
+    else if (!strcmp(iface, TOOLKIT_COMMANDS_INTERFACE)) ptr = &commands::commandsManager;
+    else if (!strcmp(iface, TOOLKIT_CONVARS_INTERFACE)) ptr = &convars::convarsManager;
+    else if (!strcmp(iface, TOOLKIT_ENTITIES_INTERFACE)) ptr = &entities::entitiesManager;
+    else if (!strcmp(iface, TOOLKIT_EVENTS_INTERFACE)) ptr = &events::eventManager;
+    else if (!strcmp(iface, TOOLKIT_GAMECONFIG_INTERFACE)) ptr = shared::g_pGameConfig;
+    else if (!strcmp(iface, TOOLKIT_MENUS_INTERFACE)) ptr = &menus::menuManager;
+    else if (!strcmp(iface, TOOLKIT_MYSQL_INTERFACE)) ptr = &mysql::mysqlManager;
+    else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
+    else if (!strcmp(iface, TOOLKIT_SCHEDULER_INTERFACE)) ptr = &scheduler::schedulerManager;
+    else if (!strcmp(iface, TOOLKIT_TRACE_INTERFACE)) ptr = &raytrace::rayTrace;
+
+    if (ptr)
+    {
+        if (ret) *ret = TOOLKIT_IFACE_OK;
+        return ptr;
+    }
+
     for (auto& p : pluginManager.m_plugins)
     {
         for (auto* l : p->listeners)
@@ -244,7 +276,7 @@ void* PluginApi::ToolkitFactory(const char *iface, int *ret, PluginId *id)
     return nullptr;
 }
 
-void* PluginApi::MetaFactory(const char *iface, int *ret, PluginId *id)
+void* PluginApi::MetaFactory(const char* iface, int* ret, PluginId* id)
 {
     return g_SMAPI->MetaFactory(iface, ret, id);
 }
@@ -296,7 +328,7 @@ IToolkitNetworkMessages* PluginApi::NetworkMessages()
 
 IToolkitScheduler* PluginApi::Scheduler()
 {
-    return &toolkitScheduler;
+    return &scheduler::schedulerManager;
 }
 
 IToolkitTrace* PluginApi::Trace()
@@ -374,7 +406,7 @@ const char* PluginApi::GetBaseDir()
     return g_SMAPI->GetBaseDir();
 }
 
-size_t PluginApi::Format(char *buffer, size_t maxlength, const char *format, ...)
+size_t PluginApi::Format(char* buffer, size_t maxlength, const char* format, ...)
 {
     va_list ap;
     size_t result;
@@ -386,7 +418,7 @@ size_t PluginApi::Format(char *buffer, size_t maxlength, const char *format, ...
     return result;
 }
 
-size_t PluginApi::FormatArgs(char *buffer, size_t maxlength, const char *format, va_list ap)
+size_t PluginApi::FormatArgs(char* buffer, size_t maxlength, const char* format, va_list ap)
 {
     return g_SMAPI->FormatArgs(buffer, maxlength, format, ap);
 }

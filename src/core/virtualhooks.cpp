@@ -45,7 +45,7 @@
 #include "shared.h"
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/utils/plat.h"
-#include "utils/scheduler.h"
+#include "core/scheduler.h"
 #include "dynlibutils/module.h"
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
@@ -61,29 +61,38 @@ namespace virtualhooks
 
     Virtuals::Virtuals() :
         m_pGameFrame(new KHook::Virtual(&IServerGameDLL::GameFrame, this, nullptr, &Virtuals::Hook_GameFrame)),
-        m_pDispatchConCommand(new KHook::Virtual(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr)),
-        m_pClientCommand(new KHook::Virtual( &IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr)),
-        m_pStartupServer(new KHook::Virtual(&INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer)),
-        m_pOnServerGamePostSimulate(new KHook::Virtual(&IGameSystem::OnServerGamePostSimulate, this, nullptr, &Virtuals::Hook_OnServerGamePostSimulate)),
-        m_pLoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr, &Virtuals::Hook_LoadEventsFromFile)),
-        m_pFireEvent(new KHook::Virtual(&IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent, &Virtuals::Hook_FireEventPost))
+        m_pDispatchConCommand(new KHook::Virtual(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand,
+                                                 nullptr)),
+        m_pClientCommand(new KHook::Virtual(&IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand,
+                                            nullptr)),
+        m_pStartupServer(new KHook::Virtual(&INetworkServerService::StartupServer, this, nullptr,
+                                            &Virtuals::Hook_StartupServer)),
+        m_pOnServerGamePostSimulate(new KHook::Virtual(&IGameSystem::OnServerGamePostSimulate, this, nullptr,
+                                                       &Virtuals::Hook_OnServerGamePostSimulate)),
+        m_pLoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr,
+                                                 &Virtuals::Hook_LoadEventsFromFile)),
+        m_pFireEvent(new KHook::Virtual(&IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent,
+                                        &Virtuals::Hook_FireEventPost))
     {
     }
 
     void Virtuals::InitListeners()
     {
+        DynLibUtils::CModule libserver(shared::g_pServer);
+
         m_pGameFrame->Add(shared::g_pServer);
         m_pStartupServer->Add(shared::g_pNetworkServerService);
         m_pDispatchConCommand->Add(shared::g_pCVar);
         m_pClientCommand->Add(shared::g_pGameClients);
 
-        m_pCEntityDebugGameSystemVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CEntityDebugGameSystem").RCast<IGameSystem*>();
+        m_pCEntityDebugGameSystemVTable = libserver.GetVirtualTableByName("CEntityDebugGameSystem").RCast<IGameSystem
+            *>();
         if (m_pCEntityDebugGameSystemVTable)
         {
             m_pOnServerGamePostSimulate->AddGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
         }
 
-        m_pCGameEventManagerVTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
+        m_pCGameEventManagerVTable = libserver.GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
         if (m_pCGameEventManagerVTable)
         {
             m_pLoadEventsFromFile->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
@@ -118,7 +127,8 @@ namespace virtualhooks
         delete m_pFireEvent;
     }
 
-    KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick)
+    KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick,
+                                                 bool bLastTick)
     {
         scheduler::Tick(simulating);
 
@@ -132,13 +142,15 @@ namespace virtualhooks
                 auto steamId = shared::g_pEngine->GetClientSteamID(CPlayerSlot(i));
                 if (steamId)
                 {
-                    auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(CEntityIndex(i + 1)));
+                    auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(
+                        CEntityIndex(i + 1)));
                     if (controller)
                     {
                         ISteamGameServer* gs = SteamGameServer();
                         if (gs && gs->BLoggedOn())
                         {
-                            gs->BUpdateUserData(*steamId, controller->GetPlayerName(), shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
+                            gs->BUpdateUserData(*steamId, controller->GetPlayerName(),
+                                                shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
                         }
                     }
                 }
@@ -149,7 +161,9 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<void> Virtuals::Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char*)
+    KHook::Return<void> Virtuals::Hook_StartupServer(INetworkServerService* pThis,
+                                                     const GameSessionConfiguration_t& config,
+                                                     ISource2WorldSession* pWorldSession, const char*)
     {
         if (!shared::g_bDetoursLoaded)
         {
@@ -165,7 +179,8 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args)
+    KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx,
+                                                          const CCommand& args)
     {
         if (args.ArgC() >= 2)
         {
@@ -238,7 +253,8 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg)
+    KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis,
+                                                                const EventServerGamePostSimulate_t* const pMsg)
     {
         for (auto connection : mysql::mysqlManager.m_vecMysqlConnections)
         {
@@ -247,7 +263,8 @@ namespace virtualhooks
         return {KHook::Action::Ignore};
     }
 
-    KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAll)
+    KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename,
+                                                         bool bSearchAll)
     {
         ExecuteOnce(
             shared::g_pGameEventManager = pThis;

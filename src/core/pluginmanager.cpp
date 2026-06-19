@@ -48,7 +48,7 @@
 #include "core/shared.h"
 #include "utils/log.h"
 #include "utils/paths.h"
-#include "utils/scheduler.h"
+#include "core/scheduler.h"
 
 #ifndef _WIN32
 #include <sys/inotify.h>
@@ -457,7 +457,7 @@ void PluginManager::StartFileWatcher()
             if (len <= 0)
                 continue;
 
-            for (int i = 0; i < len; )
+            for (int i = 0; i < len;)
             {
                 auto* ev = reinterpret_cast<struct inotify_event*>(buf + i);
 

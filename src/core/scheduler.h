@@ -45,19 +45,20 @@ extern double g_dUniversalTime;
 extern double g_dLastTickTime;
 extern double g_dTimerNextThink;
 
-class Scheduler : public IToolkitScheduler
+namespace scheduler
 {
-public:
-    void NextFrame(std::function<void()> &&task) override;
-    Timer* AddTimer(float interval, TimerCallback callback, int flags = 0) override;
-    void KillTimer(Timer* timer) override;
-};
-
-extern Scheduler toolkitScheduler;
-
-namespace scheduler {
     void Init();
     void Shutdown();
     void Tick(bool simulating = true);
     void RemoveMapChangeTimers();
+
+    class Scheduler : public IToolkitScheduler
+    {
+    public:
+        void NextFrame(std::function<void()>&& task) override;
+        Timer* AddTimer(float interval, TimerCallback callback, int flags = 0) override;
+        void KillTimer(Timer* timer) override;
+    };
+
+    extern Scheduler schedulerManager;
 }

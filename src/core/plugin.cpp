@@ -54,7 +54,7 @@
 
 #include "utils/log.h"
 #include "utils/paths.h"
-#include "utils/scheduler.h"
+#include "core/scheduler.h"
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
@@ -74,14 +74,20 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
 
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pEngine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameResourceServiceServer, CGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameEventSystem, IGameEventSystem,
+                        GAMEEVENTSYSTEM_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameResourceServiceServer, CGameResourceService,
+                        GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkMessages, INetworkMessages,
+                        NETWORKMESSAGES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkServerService, INetworkServerService,
+                        NETWORKSERVERSERVICE_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pServer, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
-    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameClients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
-    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameClients, IServerGameClients,
+                        INTERFACEVERSION_SERVERGAMECLIENTS);
+    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameEntities, ISource2GameEntities,
+                        SOURCE2GAMEENTITIES_INTERFACE_VERSION);
 
     g_pCVar = shared::g_pCVar;
     g_pEngineServer = shared::g_pEngine;
@@ -190,7 +196,8 @@ void ToolkitCore::OnPluginUnload(PluginId id)
     pluginManager.OnPluginUnload(id);
 }
 
-void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background)
+void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel,
+                              char const* pLandmarkName, bool loadGame, bool background)
 {
     pluginManager.OnLevelInit(pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background);
 }

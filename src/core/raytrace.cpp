@@ -41,7 +41,7 @@
 #include "events.h"
 #include "shared.h"
 #include "source2toolkit/utils/plat.h"
-#include "utils/scheduler.h"
+#include "core/scheduler.h"
 #include "utils/vectorextends.h"
 #include "dynlibutils/module.h"
 #include "iserver.h"
@@ -53,7 +53,8 @@ namespace raytrace
 {
     RayTrace rayTrace;
 
-    TraceResult RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
+    TraceResult RayTrace::TraceShape(const Vector& vecStart, const QAngle& angAngles, CBaseEntity* pIgnoreEntity,
+                                     TraceOptions* pTraceOptions)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity) : CTraceFilterEx();
 
@@ -86,7 +87,8 @@ namespace raytrace
         return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    TraceResult RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
+    TraceResult RayTrace::TraceEndShape(const Vector& vecStart, const Vector& vecEnd, CBaseEntity* pIgnoreEntity,
+                                        TraceOptions* pTraceOptions)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity) : CTraceFilterEx();
 
@@ -111,7 +113,8 @@ namespace raytrace
         return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    TraceResult RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
+    TraceResult RayTrace::TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins,
+                                         const Vector& vecMaxs, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions)
     {
         CTraceFilterEx filter = pIgnoreEntity ? CTraceFilterEx(pIgnoreEntity) : CTraceFilterEx();
 
@@ -137,7 +140,8 @@ namespace raytrace
         return TraceShapeEx(vecStart, vecEnd, &filter, &ray);
     }
 
-    TraceResult RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay)
+    TraceResult RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter,
+                                       Ray_t* pRay)
     {
         if (!INavPhysicsInterface::vTable)
         {
@@ -165,7 +169,8 @@ namespace raytrace
         return INavPhysicsInterface::PointContents(vTestPos, nContentsMask);
     }
 
-    bool RayTrace::CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight)
+    bool RayTrace::CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity,
+                                              bool bExtrudeHullHeight)
     {
         if (!INavPhysicsInterface::vTable)
         {

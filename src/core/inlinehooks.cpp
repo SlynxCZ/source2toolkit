@@ -41,7 +41,7 @@
 #include "events.h"
 #include "shared.h"
 #include "source2toolkit/utils/plat.h"
-#include "utils/scheduler.h"
+#include "core/scheduler.h"
 #include "dynlibutils/module.h"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
@@ -59,9 +59,11 @@ namespace inlinehooks
 
     void Inlines::InitListeners()
     {
+        DynLibUtils::CModule libserver(shared::g_pServer);
+
         m_pFireOutputInternal->Configure(addresses::toolkitAddresses.FireOutputInternal);
 
-        auto platDebugAddr = DynLibUtils::CModule("tier0").GetFunctionByName("Plat_DebugString_Buffered").RCast<void (*)(void*, void*)>();
+        auto platDebugAddr = libserver.GetFunctionByName("Plat_DebugString_Buffered").RCast<void (*)(void*, void*)>();
         if (platDebugAddr)
         {
             m_pPlatDebug->Configure(platDebugAddr);
@@ -74,7 +76,9 @@ namespace inlinehooks
         delete m_pPlatDebug;
     }
 
-    KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
+    KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator,
+                                                         CEntityInstance* pCaller, void* variantValue, float delay,
+                                                         void* unk01, void* unk02)
     {
         const char* outputName = pThis->m_pDesc->m_pName;
         const char* callerClass = pCaller ? pCaller->GetClassname() : "*";
@@ -148,8 +152,8 @@ namespace inlinehooks
     KHook::Return<void> Inlines::Hook_PlatDebug(void* unk001, void* unk002)
     {
         if (!unk001)
-            return { KHook::Action::Supersede };
+            return {KHook::Action::Supersede};
 
-        return { KHook::Action::Ignore };
+        return {KHook::Action::Ignore};
     }
 }
