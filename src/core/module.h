@@ -37,8 +37,8 @@
 #pragma once
 #include "source2toolkit/IToolkitModule.h"
 
-#include "dynlibutils/module.h"
-#include "dynlibutils/memaddr.h"
+#include "dynlibutils/module.hpp"
+#include "dynlibutils/memaddr.hpp"
 
 #include <string>
 

@@ -42,7 +42,7 @@
 #include "shared.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
-#include "dynlibutils/module.h"
+#include "dynlibutils/module.hpp"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
 

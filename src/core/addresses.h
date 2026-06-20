@@ -40,8 +40,8 @@
 #include "utils/log.h"
 
 #include "platform.h"
-#include "dynlibutils/module.h"
-#include "dynlibutils/memaddr.h"
+#include "dynlibutils/module.hpp"
+#include "dynlibutils/memaddr.hpp"
 
 #include "playerslot.h"
 #include "variant.h"

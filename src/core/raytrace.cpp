@@ -43,7 +43,7 @@
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
 #include "utils/vectorextends.h"
-#include "dynlibutils/module.h"
+#include "dynlibutils/module.hpp"
 #include "iserver.h"
 #include "schema/cgameresourceserviceserver.h"
 #include "schema/navphysicsinterface.h"

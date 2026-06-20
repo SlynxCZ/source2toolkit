@@ -40,7 +40,7 @@
 #include "core/gameconfig.h"
 #include "core/shared.h"
 
-#include "dynlibutils/module.h"
+#include "dynlibutils/module.hpp"
 
 #include <cstdint>
 

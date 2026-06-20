@@ -41,7 +41,7 @@
 #include "eiface.h"
 #include "entitysystem.h"
 
-#include "dynlibutils/memaddr.h"
+#include "dynlibutils/memaddr.hpp"
 
 namespace inlinehooks {
     class Inlines {

@@ -57,13 +57,15 @@ bool ToolkitModule::InitFromMemory(uintptr_t ptr)
 
 IToolkitMemory ToolkitModule::FindPattern(const char* pattern, IToolkitMemory startAddress) const
 {
-    return IToolkitMemory(m_module.FindPattern(pattern, DynLibUtils::CMemory(startAddress.GetPtr())).GetPtr());
+    auto parsed = DynLibUtils::ParsePattern(pattern);
+    return IToolkitMemory(m_module.FindPattern(parsed, DynLibUtils::CMemory(startAddress.GetPtr())).GetPtr());
 }
 
 IToolkitMemory ToolkitModule::FindPatternInSection(const char* pattern, const char* section, IToolkitMemory startAddress) const
 {
-    auto sec = m_module.GetSectionByName(section);
-    return IToolkitMemory(m_module.FindPattern(pattern, DynLibUtils::CMemory(startAddress.GetPtr()), &sec).GetPtr());
+    auto parsed = DynLibUtils::ParsePattern(pattern);
+    const auto* sec = m_module.GetSectionByName(section);
+    return IToolkitMemory(m_module.FindPattern(parsed, DynLibUtils::CMemory(startAddress.GetPtr()), sec).GetPtr());
 }
 
 IToolkitMemory ToolkitModule::GetVirtualTableByName(const char* name, bool decorated) const
@@ -78,28 +80,29 @@ IToolkitMemory ToolkitModule::GetFunctionByName(const char* name) const
 
 IToolkitModule::SectionInfo ToolkitModule::GetSectionByName(const char* name) const
 {
-    auto sec = m_module.GetSectionByName(name);
-    return { sec.m_pSectionBase.GetPtr(), sec.m_nSectionSize };
+    const auto* sec = m_module.GetSectionByName(name);
+    if (!sec) return { 0, 0 };
+    return { reinterpret_cast<uintptr_t>(sec->GetPtr()), sec->m_nSectionSize };
 }
 
 void* ToolkitModule::GetModuleHandle() const
 {
-    return m_module.GetModuleHandle();
+    return m_module.GetHandle();
 }
 
 IToolkitMemory ToolkitModule::GetModuleBase() const
 {
-    return IToolkitMemory(m_module.GetModuleBase().GetPtr());
+    return IToolkitMemory(m_module.GetBase().GetPtr());
 }
 
 const char* ToolkitModule::GetModulePath() const
 {
-    return m_module.GetModulePath().data();
+    return m_module.GetPath().data();
 }
 
 const char* ToolkitModule::GetModuleName() const
 {
     if (m_cachedName.empty())
-        m_cachedName = m_module.GetModuleName();
+        m_cachedName = m_module.GetName();
     return m_cachedName.c_str();
 }

@@ -39,7 +39,7 @@
 #include "source2toolkit/utils/plat.h"
 
 #include "shared.h"
-#include "dynlibutils/module.h"
+#include "dynlibutils/module.hpp"
 #include "utils/log.h"
 
 namespace patches

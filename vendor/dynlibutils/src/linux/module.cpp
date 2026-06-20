@@ -1,9 +1,10 @@
 // DynLibUtils
 // Copyright (C) 2023 komashchenko (Phoenix)
-// https://github.com/komashchenko/DynLibUtils
+// Licensed under the MIT license. See LICENSE file in the project root for details.
 
-#include "module.h"
-#include "memaddr.h"
+#include <dynlibutils/module.hpp>
+#include <dynlibutils/memaddr.hpp>
+
 #include <cstring>
 #include <link.h>
 #include <unistd.h>
@@ -15,8 +16,8 @@ using namespace DynLibUtils;
 
 CModule::~CModule()
 {
-	if (m_pModuleHandle)
-		dlclose(m_pModuleHandle);
+	if (IsValid())
+		dlclose(GetPtr());
 }
 
 //-----------------------------------------------------------------------------
@@ -27,7 +28,7 @@ CModule::~CModule()
 //-----------------------------------------------------------------------------
 bool CModule::InitFromName(const std::string_view svModuleName, bool bExtension)
 {
-	if (m_pModuleHandle)
+	if (IsValid())
 		return false;
 
 	if (svModuleName.empty())
@@ -44,7 +45,7 @@ bool CModule::InitFromName(const std::string_view svModuleName, bool bExtension)
 		const char* modulePath;
 	} dldata{ 0, sModuleName.c_str(), {} };
 
-	dl_iterate_phdr([](dl_phdr_info* info, size_t /* size */, void* data)
+	dl_iterate_phdr([](dl_phdr_info* info, std::size_t /* size */, void* data)
 	{
 		dl_data* dldata = reinterpret_cast<dl_data*>(data);
 
@@ -60,7 +61,7 @@ bool CModule::InitFromName(const std::string_view svModuleName, bool bExtension)
 	if (!dldata.addr)
 		return false;
 
-	if (!Init(dldata.modulePath))
+	if (!LoadFromPath(dldata.modulePath, RTLD_LAZY | RTLD_NOLOAD))
 		return false;
 
 	return true;
@@ -71,19 +72,19 @@ bool CModule::InitFromName(const std::string_view svModuleName, bool bExtension)
 // Input  : pModuleMemory
 // Output : bool
 //-----------------------------------------------------------------------------
-bool CModule::InitFromMemory(const CMemory pModuleMemory)
+bool CModule::InitFromMemory(const CMemory pModuleMemory, bool bForce)
 {
-	if (m_pModuleHandle)
+	if (IsValid() && !bForce)
 		return false;
 
-	if (!pModuleMemory)
+	if (!pModuleMemory.IsValid())
 		return false;
 
 	Dl_info info;
 	if (!dladdr(pModuleMemory, &info) || !info.dli_fbase || !info.dli_fname)
 		return false;
 
-	if (!Init(info.dli_fname))
+	if (!LoadFromPath(info.dli_fname, RTLD_LAZY | RTLD_NOLOAD))
 		return false;
 
 	return true;
@@ -92,11 +93,14 @@ bool CModule::InitFromMemory(const CMemory pModuleMemory)
 //-----------------------------------------------------------------------------
 // Purpose: Initializes a module descriptors
 //-----------------------------------------------------------------------------
-bool CModule::Init(const std::string_view svModelePath)
+bool CModule::LoadFromPath(const std::string_view svModelePath, int flags)
 {
-	void* handle = dlopen(svModelePath.data(), RTLD_LAZY | RTLD_NOLOAD);
+	void* handle = dlopen(svModelePath.data(), flags);
 	if (!handle)
+	{
+		SaveLastError();
 		return false;
+	}
 
 	link_map* lmap;
 	if (dlinfo(handle, RTLD_DI_LINKMAP, &lmap) != 0)
@@ -119,16 +123,25 @@ bool CModule::Init(const std::string_view svModelePath)
 		if (map != MAP_FAILED)
 		{
 			ElfW(Ehdr)* ehdr = static_cast<ElfW(Ehdr)*>(map);
-			ElfW(Shdr)* shdrs = reinterpret_cast<ElfW(Shdr)*>(reinterpret_cast<uintptr_t>(ehdr) + ehdr->e_shoff);
-			const char* strTab = reinterpret_cast<const char*>(reinterpret_cast<uintptr_t>(ehdr) + shdrs[ehdr->e_shstrndx].sh_offset);
+			ElfW(Shdr)* shdrs = reinterpret_cast<ElfW(Shdr)*>(reinterpret_cast<std::uintptr_t>(ehdr) + ehdr->e_shoff);
+			const char* strTab = reinterpret_cast<const char*>(reinterpret_cast<std::uintptr_t>(ehdr) + shdrs[ehdr->e_shstrndx].sh_offset);
 
 			for (auto i = 0; i < ehdr->e_shnum; ++i) // Loop through the sections.
 			{
-				ElfW(Shdr)* shdr = reinterpret_cast<ElfW(Shdr)*>(reinterpret_cast<uintptr_t>(shdrs) + i * ehdr->e_shentsize);
+				ElfW(Shdr)* shdr = reinterpret_cast<ElfW(Shdr)*>(reinterpret_cast<std::uintptr_t>(shdrs) + i * ehdr->e_shentsize);
 				if (*(strTab + shdr->sh_name) == '\0')
 					continue;
 
-				m_vModuleSections.emplace_back(strTab + shdr->sh_name, static_cast<uintptr_t>(lmap->l_addr + shdr->sh_addr), shdr->sh_size);
+				auto& section = m_vecSections.emplace_back(static_cast<std::uintptr_t>(lmap->l_addr + shdr->sh_addr), shdr->sh_size, strTab + shdr->sh_name);
+
+				// Copy disk bytes for executable sections so FindPattern can scan
+				// original bytes even when functions have been hooked in live memory.
+				const bool bExecutable = (shdr->sh_flags & SHF_EXECINSTR) != 0;
+				if (bExecutable && shdr->sh_offset != 0 && shdr->sh_size != 0)
+				{
+					const auto* diskBytes = reinterpret_cast<const std::uint8_t*>(reinterpret_cast<std::uintptr_t>(ehdr) + shdr->sh_offset);
+					section.m_diskBytes.assign(diskBytes, diskBytes + shdr->sh_size);
+				}
 			}
 
 			munmap(map, st.st_size);
@@ -137,10 +150,11 @@ bool CModule::Init(const std::string_view svModelePath)
 
 	close(fd);
 
-	m_pModuleHandle = handle;
-	m_sModulePath.assign(svModelePath);
+	SetPtr(handle);
+	m_sPath.assign(svModelePath);
 
-	m_ExecutableCode = GetSectionByName(".text");
+	m_pExecutableSection = GetSectionByName(".text");
+	assert(m_pExecutableSection != nullptr);
 
 	return true;
 }
@@ -154,35 +168,39 @@ bool CModule::Init(const std::string_view svModelePath)
 CMemory CModule::GetVirtualTableByName(const std::string_view svTableName, bool bDecorated) const
 {
 	if (svTableName.empty())
-		return CMemory();
+		return DYNLIB_INVALID_MEMORY;
 
-	CModule::ModuleSections_t readOnlyData = GetSectionByName(".rodata"), readOnlyRelocations = GetSectionByName(".data.rel.ro");
-	if (!readOnlyData.IsSectionValid() || !readOnlyRelocations.IsSectionValid())
-		return CMemory();
+	const Section_t *pReadOnlyData = GetSectionByName(".rodata"), *pReadOnlyRelocations = GetSectionByName(".data.rel.ro");
+
+	assert(pReadOnlyData != nullptr);
+	assert(pReadOnlyRelocations != nullptr);
+
+	if (!pReadOnlyData || !pReadOnlyRelocations)
+		return DYNLIB_INVALID_MEMORY;
 
 	std::string sDecoratedTableName(bDecorated ? svTableName : std::to_string(svTableName.length()) + std::string(svTableName));
 	std::string sMask(sDecoratedTableName.length() + 1, 'x');
 
-	CMemory typeInfoName = FindPattern(sDecoratedTableName.data(), sMask, nullptr, &readOnlyData);
+	CMemory typeInfoName = FindPattern(sDecoratedTableName.data(), sMask, nullptr, pReadOnlyData);
 	if (!typeInfoName)
-		return CMemory();
+		return DYNLIB_INVALID_MEMORY;
 
-	CMemory referenceTypeName = FindPattern(&typeInfoName, "xxxxxxxx", nullptr, &readOnlyRelocations); // Get reference to type name.
+	CMemory referenceTypeName = FindPattern(&typeInfoName, "xxxxxxxx", nullptr, pReadOnlyRelocations); // Get reference to type name.
 	if (!referenceTypeName)
-		return CMemory();
+		return DYNLIB_INVALID_MEMORY;
 
 	CMemory typeInfo = referenceTypeName.Offset(-0x8); // Offset -0x8 to typeinfo.
 
 	for (const auto& sectionName : { std::string_view(".data.rel.ro"), std::string_view(".data.rel.ro.local") })
 	{
-		CModule::ModuleSections_t section = GetSectionByName(sectionName);
-		if (!section.IsSectionValid())
+		const Section_t *pSection = GetSectionByName(sectionName);
+		if (!pSection)
 			continue;
 
 		CMemory reference;
-		while ((reference = FindPattern(&typeInfo, "xxxxxxxx", reference, &section))) // Get reference typeinfo in vtable
+		while ((reference = FindPattern(&typeInfo, "xxxxxxxx", reference, pSection))) // Get reference typeinfo in vtable
 		{
-			if (reference.Offset(-0x8).GetValue<int64_t>() == 0) // Offset to this.
+			if (reference.Offset(-0x8).Get<int64_t>() == 0) // Offset to this.
 			{
 				return reference.Offset(0x8);
 			}
@@ -191,7 +209,7 @@ CMemory CModule::GetVirtualTableByName(const std::string_view svTableName, bool 
 		}
 	}
 
-	return CMemory();
+	return DYNLIB_INVALID_MEMORY;
 }
 
 //-----------------------------------------------------------------------------
@@ -201,19 +219,18 @@ CMemory CModule::GetVirtualTableByName(const std::string_view svTableName, bool 
 //-----------------------------------------------------------------------------
 CMemory CModule::GetFunctionByName(const std::string_view svFunctionName) const noexcept
 {
-	if (!m_pModuleHandle)
-		return CMemory();
-
-	if (svFunctionName.empty())
-		return CMemory();
-
-	return dlsym(m_pModuleHandle, svFunctionName.data());
+	return CMemory((IsValid() && !svFunctionName.empty()) ? dlsym(GetPtr(), svFunctionName.data()) : nullptr);
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Returns the module base
 //-----------------------------------------------------------------------------
-CMemory CModule::GetModuleBase() const noexcept
+CMemory CModule::GetBase() const noexcept
 {
-	return static_cast<link_map*>(m_pModuleHandle)->l_addr;
+	return RCast<link_map*>()->l_addr;
+}
+
+void CModule::SaveLastError()
+{
+	m_sLastError = dlerror();
 }

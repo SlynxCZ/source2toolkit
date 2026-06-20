@@ -34,8 +34,7 @@ file(GLOB_RECURSE SOURCE_FILES
 )
 
 list(APPEND SOURCE_FILES
-        vendor/dynlibutils/module.cpp
-        vendor/dynlibutils/module.h
+        vendor/dynlibutils/src/module.cpp
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
@@ -74,6 +73,8 @@ if (UNIX AND NOT APPLE)
             ${METAMOD_DIR}/core
             ${METAMOD_DIR}/third_party/khook/include
             ${CMAKE_SOURCE_DIR}/vendor
+            ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include
+            ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include/dynlibutils
             ${CMAKE_SOURCE_DIR}/vendor/openssl/include
             ${CMAKE_SOURCE_DIR}/vendor/mysql/include
             ${CMAKE_SOURCE_DIR}/vendor/spdlog/include
@@ -93,6 +94,8 @@ elseif (WIN32)
             ${METAMOD_DIR}/core
             ${METAMOD_DIR}/third_party/khook/include
             ${CMAKE_SOURCE_DIR}/vendor
+            ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include
+            ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include/dynlibutils
             ${CMAKE_SOURCE_DIR}/vendor/openssl/include
             ${CMAKE_SOURCE_DIR}/vendor/mysql/include
             ${CMAKE_SOURCE_DIR}/vendor/spdlog/include

@@ -468,7 +468,7 @@ void PluginManager::StartFileWatcher()
                     {
                         std::string fullPath = dir + "/" + name;
                         FP_INFO("Detected change in {}, queuing hot reload...", name);
-                        toolkitScheduler.NextFrame([this, fullPath]()
+                        scheduler::schedulerManager.NextFrame([this, fullPath]()
                         {
                             ReloadPluginByPath(fullPath);
                         });

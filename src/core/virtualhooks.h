@@ -41,7 +41,7 @@
 #include "eiface.h"
 #include "entitysystem.h"
 
-#include "dynlibutils/memaddr.h"
+#include "dynlibutils/memaddr.hpp"
 
 class IEntityInstance; // forward-declare global SDK interface (defined in IEntityInstance.h)
 

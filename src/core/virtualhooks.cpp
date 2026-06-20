@@ -46,7 +46,7 @@
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
-#include "dynlibutils/module.h"
+#include "dynlibutils/module.hpp"
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
 #include "mysql.h"
