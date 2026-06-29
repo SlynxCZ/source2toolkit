@@ -13,9 +13,9 @@ function(resolve_dep_internal OUT_VAR ENV_NAME)
         file(TO_CMAKE_PATH "$ENV{${ENV_NAME}}" _resolved)
         set(${OUT_VAR} "${_resolved}" PARENT_SCOPE)
         message(STATUS "${ENV_NAME} -> ${_resolved}")
-    else()
+    else ()
         message(FATAL_ERROR "${ENV_NAME} is not set")
-    endif()
+    endif ()
 endfunction()
 
 resolve_dep_internal(SOURCE2TOOLKIT_SDK_DIR SOURCE2TOOLKIT_SDK)
@@ -25,16 +25,13 @@ resolve_dep_internal(METAMOD_DIR MMSOURCE_DEV)
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(${SOURCE2TOOLKIT_SDK_DIR} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
+add_subdirectory(vendor/dynlibutils)
 add_subdirectory(vendor/spdlog)
 
 file(GLOB_RECURSE SOURCE_FILES
         src/*.cpp
         src/*.h
         src/*.hpp
-)
-
-list(APPEND SOURCE_FILES
-        vendor/dynlibutils/src/module.cpp
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
@@ -63,9 +60,9 @@ if (GIT_FOUND)
             OUTPUT_STRIP_TRAILING_WHITESPACE
             ERROR_QUIET
     )
-else()
+else ()
     set(GIT_SHA "nogit")
-endif()
+endif ()
 
 if (UNIX AND NOT APPLE)
     SET(source2toolkit_include_directories
@@ -83,6 +80,7 @@ if (UNIX AND NOT APPLE)
             ${CMAKE_SOURCE_DIR}/vendor/mysql/lib/libmysqlclient.a
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libssl.a
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libcrypto.a
+            dynlibutils
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
@@ -105,12 +103,13 @@ elseif (WIN32)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/ssl.lib
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/crypto.lib
             crypt32.lib
+            dynlibutils
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/win64"
     )
-endif()
+endif ()
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${source2toolkit_include_directories})
 target_include_directories(source2toolkit-sdk PUBLIC ${source2toolkit_include_directories})
