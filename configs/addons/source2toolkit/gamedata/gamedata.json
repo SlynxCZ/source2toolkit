@@ -17,13 +17,13 @@
     "signatures": {
       "library": "server",
       "windows": "40 55 53 56 57 41 54 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E0",
-      "linux": "55 48 89 E5 41 57 41 56 41 55 49 89 FD 31 FF"
+      "linux": "55 66 0F EF C0 48 89 E5 41 57 41 56 41 55 49 89 FD 31 FF"
     }
   },
   "CBaseModelEntity_SetModel": {
     "signatures": {
       "library": "server",
-      "windows": "40 53 48 83 EC ? 48 8B D9 4C 8B C2 48 8B 0D ? ? ? ? 48 8D 54 24 ? 48 8B 01 FF 50 ? 48 8B 44 24 ? 48 8D 54 24 ? 48 8B CB 48 89 44 24 ? E8 ? ? ? ? 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24",
+      "windows": "40 53 48 83 EC ? 48 8B D9 4C 8B C2 48 8B 0D ? ? ? ? 48 8D 54 24 ? 48 8B 01 FF 50 ? 48 8B 54 24 ? 48 8B CB E8 ? ? ? ? 48 83 C4 ? 5B C3 CC CC CC CC CC CC CC CC CC CC CC CC CC CC CC 48 89 5C 24",
       "linux": "55 48 89 E5 53 48 89 FB 48 83 EC ? 48 8D 05 ? ? ? ? 48 8B 38 48 8B 07 FF 50 ? 48 89 DF 48 8B 5D ? C9 48 89 C6 E9 ? ? ? ? CC CC CC CC 55"
     }
   },
@@ -37,8 +37,8 @@
   "CGameRules_TerminateRound": {
     "signatures": {
       "library": "server",
-      "windows": "48 8B C4 4C 89 48 ? 48 89 48 ? 55 56 41 56",
-      "linux": "55 48 89 E5 41 57 49 89 FF 41 56 41 55 41 54 53 48 81 EC ? ? ? ? 48 8D 05 ? ? ? ? F3 0F 11 85"
+      "windows": "48 8B C4 4C 89 48 ? 48 89 48 ? 55 41 54",
+      "linux": "55 48 89 E5 41 57 41 89 F7 41 56 48 8D 35"
     }
   },
   "CCSPlayer_WeaponServices_Destroy": {
@@ -51,7 +51,7 @@
   "CCSPlayerController_LegacyGameEventListener": {
     "signatures": {
       "library": "server",
-      "windows": "48 8B 15 ? ? ? ? 48 85 D2 74 ? 83 F9 ? 77 ? 48 63 C1 48 C1 E0",
+      "windows": "48 8B 15 ? ? ? ? 48 85 D2 74 ? 85 C9",
       "linux": "48 8B 05 ? ? ? ? 48 85 C0 74 ? 83 FF ? 77 ? 48 63 FF 48 C1 E7 ? 48 8D 44 38"
     }
   },
@@ -66,7 +66,7 @@
     "signatures": {
       "library": "server",
       "windows": "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 49 8B F0 48 8B D9 48 8B 0D",
-      "linux": "55 48 89 F0 48 89 E5 41 57 49 89 FF 41 56 48 8D 7D C0"
+      "linux": "55 48 89 E5 41 56 49 89 FE 41 55 48 8D 7D"
     }
   },
   "CEntityIOOutput_FireOutputInternal": {
@@ -101,14 +101,14 @@
     "signatures": {
       "library": "server",
       "windows": "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 41 56 48 83 EC ? 45 33 F6 48 C7 41",
-      "linux": "49 BB ? ? ? ? ? ? ? ? 55"
+      "linux": "49 BB ? ? ? ? ? ? ? ? 55 48 89 E5"
     }
   },
   "SetSchemaHammerUniqueId": {
     "signatures": {
       "library": "server",
       "windows": "75 ? 48 8B 03 48 8B CB FF 90 ? ? ? ? 84 C0 74 ? 48 8D 05",
-      "linux": "75 ? 48 8B 03 48 8D 15 ? ? ? ? 48 8B 80 ? ? ? ? 48 39 D0 75 ? 48 83 C4"
+      "linux": "75 ? 48 8B 03 48 89 DF FF 90 ? ? ? ? 84 C0 74 ? 48 8D 05"
     },
     "patches": {
       "windows": "EB",
@@ -129,8 +129,8 @@
   },
   "CBasePlayerPawn_CommitSuicide": {
     "offsets": {
-      "windows": 390,
-      "linux": 390
+      "windows": 384,
+      "linux": 384
     }
   },
   "CGameRules_FindPickerEntity": {
@@ -141,44 +141,44 @@
   },
   "CCSPlayer_ItemServices_DropActivePlayerWeapon": {
     "offsets": {
-      "windows": 23,
-      "linux": 24
-    }
-  },
-  "CCSPlayer_ItemServices_GiveNamedItem": {
-    "offsets": {
-      "windows": 20,
-      "linux": 21
-    }
-  },
-  "CCSPlayer_ItemServices_RemoveWeapons": {
-    "offsets": {
-      "windows": 24,
-      "linux": 25
-    }
-  },
-  "CCSPlayer_WeaponServices_CanUse": {
-    "offsets": {
-      "windows": 24,
-      "linux": 25
-    }
-  },
-  "CCSPlayer_WeaponServices_DropWeapon": {
-    "offsets": {
-      "windows": 25,
-      "linux": 26
-    }
-  },
-  "CCSPlayer_WeaponServices_BumpWeapon": {
-    "offsets": {
       "windows": 26,
       "linux": 27
     }
   },
-  "CCSPlayer_WeaponServices_SelectItem": {
+  "CCSPlayer_ItemServices_GiveNamedItem": {
+    "offsets": {
+      "windows": 23,
+      "linux": 24
+    }
+  },
+  "CCSPlayer_ItemServices_RemoveWeapons": {
     "offsets": {
       "windows": 27,
       "linux": 28
+    }
+  },
+  "CCSPlayer_WeaponServices_CanUse": {
+    "offsets": {
+      "windows": 27,
+      "linux": 28
+    }
+  },
+  "CCSPlayer_WeaponServices_DropWeapon": {
+    "offsets": {
+      "windows": 28,
+      "linux": 29
+    }
+  },
+  "CCSPlayer_WeaponServices_BumpWeapon": {
+    "offsets": {
+      "windows": 29,
+      "linux": 30
+    }
+  },
+  "CCSPlayer_WeaponServices_SelectItem": {
+    "offsets": {
+      "windows": 30,
+      "linux": 31
     }
   },
   "CCSPlayerController_ChangeTeam": {
@@ -189,8 +189,8 @@
   },
   "CCSPlayerController_Respawn": {
     "offsets": {
-      "windows": 273,
-      "linux": 275
+      "windows": 270,
+      "linux": 272
     }
   },
   "CNavPhysicsInterface_TraceShape": {
