@@ -33,12 +33,48 @@ Designed for both beginners and hardcore engine hackers.
 - **Entity System** – Schema-based entity access  
 - **Events & GameEvents** – Pre/Post hook support with typed data  
 - **Memory** – Direct memory access & manipulation  
-- **Hooks** – Inline, virtual, command and event hooks  
+- **Hooks** – SourceHook engine: virtual, DVP, manual and inline hooks  
 - **Schema System** – Access SDK classes, offsets and fields  
 - **Scheduler** – Timers and next-frame execution  
 - **Tracing** – Raycasts and collision queries  
 - **GameConfig** – Signature & offset management  
 - **Dynamic Libraries** – Extend functionality with external modules  
+
+---
+
+## Hooking
+
+Source2Toolkit runs its **own SourceHook engine**, separate from the one
+Metamod hands out. Every hook the core places and every hook a plugin places
+land on that single instance, which is what makes `SH_CALL` and
+`SH_GET_INLINEHOOK_ORIGINAL` able to see through each other's handler chains.
+Two independent engines patching the same address cannot do that.
+
+Plugins receive the engine exactly the way Metamod exposes its own — the
+`TOOLKIT_EXPOSE` / `TOOLKIT_SAVEVARS` macros define and fill `g_SHPtr` and
+`g_PLID` for you, so the stock `SH_` macros work with no extra setup:
+
+```cpp
+SH_DECL_HOOK3_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
+
+m_iGameFrameHookID = SH_ADD_HOOK(IServerGameDLL, GameFrame, g_pSource2Server,
+                                 SH_MEMBER(this, &MyPlugin::Hook_GameFrame), true);
+```
+
+Inline hooks work on raw addresses, so anything a signature scan finds is
+hookable — no vtable required:
+
+```cpp
+SH_DECL_INLINEHOOK2(FilterMessage, INetworkMessageProcessingPreFilterCustom,
+                    bool, const CNetMessage*, INetChannel*);
+
+m_iHookID = SH_ADD_INLINEHOOK(FilterMessage, pAddress,
+                              SH_MEMBER(this, &MyPlugin::Hook_FilterMessage), false);
+```
+
+Handlers return `META_RES` (`MRES_IGNORED`, `MRES_HANDLED`, `MRES_OVERRIDE`,
+`MRES_SUPERCEDE`) and register with `META_MODE` (`MMODE_PRE` / `MMODE_POST`,
+or the `SHMODE_` aliases) — the same vocabulary as Metamod.
 
 ---
 

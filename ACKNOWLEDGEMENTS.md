@@ -45,10 +45,11 @@ interoperability concepts.
 
 JSON library used on the native side.
 
-## KHook
+## SourceHook
 
-Detouring library used for centralized hooking. KHook is a spiritual
-successor to SourceHook and is built on top of SafetyHook.
+Hooking library used for centralized virtual, DVP, manual and inline
+hooking. Originally by Pavol "PM OnoTo" Marko for Metamod:Source; the
+toolkit uses a fork that adds inline hooking on top of SafetyHook.
 
 ## CounterStrikeSharp
 
