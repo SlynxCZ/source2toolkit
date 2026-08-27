@@ -72,7 +72,7 @@ namespace commands {
 
     CommandsManager commandsManager;
 
-    static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
+    static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, META_MODE mode)
     {
         int argc = args.ArgC();
 
@@ -207,7 +207,7 @@ namespace commands {
         }
     }
 
-    static void HandleMenuCommand(const CCommandContext& ctx, const CCommand& args, Mode mode)
+    static void HandleMenuCommand(const CCommandContext& ctx, const CCommand& args, META_MODE mode)
     {
         CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot().Get());
         if (!player || player->m_iConnected() != PlayerConnectedState::Connected)
@@ -263,31 +263,31 @@ namespace commands {
         if (it == commandCallbacks.end())
             return;
 
-        (void) it->second(ctx, args, Mode::Post);
+        (void) it->second(ctx, args, MMODE_POST);
     }
 
-    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, Mode mode) {
+    META_RES DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, META_MODE mode) {
         std::string name = args.Arg(0);
         std::transform(name.begin(), name.end(), name.begin(),
                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
 
         auto it = consoleListeners.find(name);
         if (it == consoleListeners.end())
-            return Action::Ignore;
+            return MRES_IGNORED;
 
-        Action result = Action::Ignore;
+        META_RES result = MRES_IGNORED;
 
         for (const auto &entry: it->second) {
             if (entry.mode != mode)
                 continue;
 
-            Action thisResult = entry.handler(ctx, args, mode);
+            META_RES thisResult = entry.handler(ctx, args, mode);
 
-            if (thisResult == Action::Supersede)
-                return Action::Supersede;
+            if (thisResult == MRES_SUPERCEDE)
+                return MRES_SUPERCEDE;
 
-            if (thisResult == Action::Override && mode == Mode::Pre)
-                return Action::Override;
+            if (thisResult == MRES_OVERRIDE && mode == MMODE_PRE)
+                return MRES_OVERRIDE;
 
             if (static_cast<int>(thisResult) > static_cast<int>(result))
                 result = thisResult;
@@ -299,19 +299,19 @@ namespace commands {
     void CommandsManager::RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(owner, pchName, nativeHandler, MMODE_PRE);
+        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, MMODE_PRE);
+        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, MMODE_PRE);
     }
 
     void CommandsManager::RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        if (shared::g_pCVar && shared::g_pCVar->FindConCommand(pchName).IsValidRef()) {
+        if (g_pCVar && g_pCVar->FindConCommand(pchName).IsValidRef()) {
             FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
-            RegConListener(owner, pchName, nativeHandler, Mode::Pre);
-            RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-            RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+            RegConListener(owner, pchName, nativeHandler, MMODE_PRE);
+            RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, MMODE_PRE);
+            RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, MMODE_PRE);
             return;
         }
 
@@ -324,12 +324,12 @@ namespace commands {
         std::string key = pchName;
         std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-        RegConListener(owner, pchName, nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
-        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);
+        RegConListener(owner, pchName, nativeHandler, MMODE_PRE);
+        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, MMODE_PRE);
+        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, MMODE_PRE);
     }
 
-    void CommandsManager::RegConListener(PluginId owner, const char* pchName, CommandHandler handler, Mode mode) {
+    void CommandsManager::RegConListener(PluginId owner, const char* pchName, CommandHandler handler, META_MODE mode) {
         consoleListeners[pchName].push_back({owner, handler, mode});
     }
 

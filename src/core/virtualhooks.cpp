@@ -42,15 +42,28 @@
 
 #include "commands.h"
 #include "events.h"
+#include "networkmessages.h"
+#include "plugin.h"
 #include "shared.h"
 #include "source2toolkit/schema/schema.h"
+#include "source2toolkit/schema/serversideclient.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
 #include "dynlibutils/module.hpp"
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
+#include "engine/igameeventsystem.h"
 #include "mysql.h"
-#include "schema/cgameresourceserviceserver.h"
+
+SH_DECL_HOOK3_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
+SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*);
+SH_DECL_HOOK3_void(ICvar, DispatchConCommand, SH_NOATTRIB, 0, ConCommandRef, const CCommandContext&, const CCommand&);
+SH_DECL_HOOK2_void(IServerGameClients, ClientCommand, SH_NOATTRIB, 0, CPlayerSlot, const CCommand&);
+SH_DECL_HOOK8_void(IGameEventSystem, PostEventAbstract, SH_NOATTRIB, 0, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t);
+SH_DECL_HOOK1_void(IGameSystem, OnServerGamePostSimulate, SH_NOATTRIB, 0, const EventServerGamePostSimulate_t*);
+SH_DECL_HOOK2(IGameEventManager2, LoadEventsFromFile, SH_NOATTRIB, 0, int, const char*, bool);
+SH_DECL_HOOK2(IGameEventManager2, FireEvent, SH_NOATTRIB, 0, bool, IGameEvent*, bool);
+SH_DECL_HOOK2(CServerSideClient, SendNetMessage, SH_NOATTRIB, 0, bool, const CNetMessage*, NetChannelBufType_t);
 
 namespace virtualhooks
 {
@@ -59,87 +72,61 @@ namespace virtualhooks
 
     static std::vector<IGameEvent*> eventStack;
 
-    Virtuals::Virtuals() :
-        m_pGameFrame(new KHook::Virtual(&IServerGameDLL::GameFrame, this, nullptr, &Virtuals::Hook_GameFrame)),
-        m_pDispatchConCommand(new KHook::Virtual(&ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand,
-                                                 nullptr)),
-        m_pClientCommand(new KHook::Virtual(&IServerGameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand,
-                                            nullptr)),
-        m_pStartupServer(new KHook::Virtual(&INetworkServerService::StartupServer, this, nullptr,
-                                            &Virtuals::Hook_StartupServer)),
-        m_pOnServerGamePostSimulate(new KHook::Virtual(&IGameSystem::OnServerGamePostSimulate, this, nullptr,
-                                                       &Virtuals::Hook_OnServerGamePostSimulate)),
-        m_pLoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr,
-                                                 &Virtuals::Hook_LoadEventsFromFile)),
-        m_pFireEvent(new KHook::Virtual(&IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent,
-                                        &Virtuals::Hook_FireEventPost))
-    {
-    }
-
     void Virtuals::InitListeners()
     {
-        DynLibUtils::CModule libserver(shared::g_pServer);
+        DynLibUtils::CModule libserver(g_pSource2Server);
+        DynLibUtils::CModule libengine(g_pEngineServer);
 
-        m_pGameFrame->Add(shared::g_pServer);
-        m_pStartupServer->Add(shared::g_pNetworkServerService);
-        m_pDispatchConCommand->Add(shared::g_pCVar);
-        m_pClientCommand->Add(shared::g_pGameClients);
+        m_iGameFrameHookID = SH_ADD_HOOK(IServerGameDLL, GameFrame, g_pSource2Server, SH_MEMBER(this, &Virtuals::Hook_GameFrame), true);
+        m_iStartupServerHookID = SH_ADD_HOOK(INetworkServerService, StartupServer, g_pNetworkServerService, SH_MEMBER(this, &Virtuals::Hook_StartupServer), true);
+        m_iDispatchConCommandHookID = SH_ADD_HOOK(ICvar, DispatchConCommand, g_pCVar, SH_MEMBER(this, &Virtuals::Hook_DispatchConCommand), false);
+        m_iClientCommandHookID = SH_ADD_HOOK(IServerGameClients, ClientCommand, g_pSource2GameClients, SH_MEMBER(this, &Virtuals::Hook_ClientCommand), false);
+        m_iPostEventAbstractHookID = SH_ADD_HOOK(IGameEventSystem, PostEventAbstract, shared::g_pGameEventSystem, SH_MEMBER(this, &Virtuals::Hook_PostEventAbstract), false);
 
-        m_pCEntityDebugGameSystemVTable = libserver.GetVirtualTableByName("CEntityDebugGameSystem").RCast<IGameSystem
-            *>();
-        if (m_pCEntityDebugGameSystemVTable)
+        if (DynLibUtils::CMemory vtable = libserver.GetVirtualTableByName("CEntityDebugGameSystem"); vtable.IsValid())
         {
-            m_pOnServerGamePostSimulate->AddGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
+            m_iOnServerGamePostSimulateHookID = SH_ADD_DVPHOOK(IGameSystem, OnServerGamePostSimulate, vtable.RCast<IGameSystem*>(), SH_MEMBER(this, &Virtuals::Hook_OnServerGamePostSimulate), true);
         }
 
-        m_pCGameEventManagerVTable = libserver.GetVirtualTableByName("CGameEventManager").RCast<IGameEventManager2*>();
-        if (m_pCGameEventManagerVTable)
+        if (DynLibUtils::CMemory vtable = libserver.GetVirtualTableByName("CGameEventManager"); vtable.IsValid())
         {
-            m_pLoadEventsFromFile->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-            m_pFireEvent->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
+            m_iLoadEventsFromFileHookID = SH_ADD_DVPHOOK(IGameEventManager2, LoadEventsFromFile, vtable.RCast<IGameEventManager2*>(), SH_MEMBER(this, &Virtuals::Hook_LoadEventsFromFile), true);
+            m_iFireEventHookID = SH_ADD_DVPHOOK(IGameEventManager2, FireEvent, vtable.RCast<IGameEventManager2*>(), SH_MEMBER(this, &Virtuals::Hook_FireEvent), false);
+            m_iFireEventPostHookID = SH_ADD_DVPHOOK(IGameEventManager2, FireEvent, vtable.RCast<IGameEventManager2*>(), SH_MEMBER(this, &Virtuals::Hook_FireEventPost), true);
+        }
+
+        if (DynLibUtils::CMemory vtable = libengine.GetVirtualTableByName("CServerSideClient"); vtable.IsValid())
+        {
+            m_iSendNetMessageHookID = SH_ADD_DVPHOOK(CServerSideClient, SendNetMessage, vtable.RCast<CServerSideClient*>(), SH_MEMBER(this, &Virtuals::Hook_SendNetMessage), false);
         }
     }
 
     void Virtuals::DestructListeners()
     {
-        m_pGameFrame->Remove(shared::g_pServer);
-        m_pStartupServer->Remove(shared::g_pNetworkServerService);
-        m_pDispatchConCommand->Remove(shared::g_pCVar);
-        m_pClientCommand->Remove(shared::g_pGameClients);
-
-        if (m_pCEntityDebugGameSystemVTable)
-        {
-            m_pOnServerGamePostSimulate->RemoveGlobal((IGameSystem*)&m_pCEntityDebugGameSystemVTable);
-        }
-
-        if (m_pCGameEventManagerVTable)
-        {
-            m_pLoadEventsFromFile->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-            m_pFireEvent->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
-        }
-
-        delete m_pGameFrame;
-        delete m_pStartupServer;
-        delete m_pDispatchConCommand;
-        delete m_pClientCommand;
-        delete m_pOnServerGamePostSimulate;
-        delete m_pLoadEventsFromFile;
-        delete m_pFireEvent;
+        SH_REMOVE_HOOK_ID(m_iGameFrameHookID);
+        SH_REMOVE_HOOK_ID(m_iStartupServerHookID);
+        SH_REMOVE_HOOK_ID(m_iDispatchConCommandHookID);
+        SH_REMOVE_HOOK_ID(m_iClientCommandHookID);
+        SH_REMOVE_HOOK_ID(m_iPostEventAbstractHookID);
+        SH_REMOVE_HOOK_ID(m_iOnServerGamePostSimulateHookID);
+        SH_REMOVE_HOOK_ID(m_iLoadEventsFromFileHookID);
+        SH_REMOVE_HOOK_ID(m_iFireEventHookID);
+        SH_REMOVE_HOOK_ID(m_iFireEventPostHookID);
+        SH_REMOVE_HOOK_ID(m_iSendNetMessageHookID);
     }
 
-    KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick,
-                                                 bool bLastTick)
+    void Virtuals::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
     {
         scheduler::Tick(simulating);
 
         if (!shared::getGlobalVars())
-            return {KHook::Action::Ignore};
+            RETURN_META(MRES_IGNORED);
 
         if (shared::g_pEntitySystem)
         {
             for (int i = 0; i < shared::getGlobalVars()->maxClients; i++)
             {
-                auto steamId = shared::g_pEngine->GetClientSteamID(CPlayerSlot(i));
+                auto steamId = g_pEngineServer->GetClientSteamID(CPlayerSlot(i));
                 if (steamId)
                 {
                     auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(
@@ -150,7 +137,7 @@ namespace virtualhooks
                         if (gs && gs->BLoggedOn())
                         {
                             gs->BUpdateUserData(*steamId, controller->GetPlayerName(),
-                                                shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
+                                                g_pSource2GameClients->GetPlayerScore(CPlayerSlot(i)));
                         }
                     }
                 }
@@ -158,29 +145,30 @@ namespace virtualhooks
         }
 
         g_bHasTicked = true;
-        return {KHook::Action::Ignore};
+
+        RETURN_META(MRES_IGNORED);
     }
 
-    KHook::Return<void> Virtuals::Hook_StartupServer(INetworkServerService* pThis,
-                                                     const GameSessionConfiguration_t& config,
-                                                     ISource2WorldSession* pWorldSession, const char*)
+    void Virtuals::Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName)
     {
         if (!shared::g_bDetoursLoaded)
         {
-            shared::g_pEntitySystem = shared::g_pGameResourceServiceServer->GetGameEntitySystem();
+            shared::g_pEntitySystem = *DynLibUtils::CMemory(g_pGameResourceServiceServer).Offset(shared::g_pGameConfig->GetOffset("GameEntitySystem")).RCast<CGameEntitySystem**>();
             shared::g_pEntitySystem->AddListenerEntity(&entityListener);
             shared::g_bDetoursLoaded = true;
         }
+
         if (g_bHasTicked)
         {
             scheduler::RemoveMapChangeTimers();
         }
+
         g_bHasTicked = false;
-        return {KHook::Action::Ignore};
+
+        RETURN_META(MRES_IGNORED);
     }
 
-    KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx,
-                                                          const CCommand& args)
+    void Virtuals::Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args)
     {
         if (args.ArgC() >= 2)
         {
@@ -211,94 +199,108 @@ namespace virtualhooks
 
                     if (parsed.ArgC() > 0)
                     {
-                        Action r = commands::DispatchConsoleListener(ctx, parsed, Mode::Pre);
+                        META_RES r = commands::DispatchConsoleListener(ctx, parsed, MMODE_PRE);
 
-                        if (r != Action::Supersede)
-                            commands::DispatchConsoleListener(ctx, parsed, Mode::Post);
+                        if (r != MRES_SUPERCEDE)
+                            commands::DispatchConsoleListener(ctx, parsed, MMODE_POST);
 
-                        if (r == Action::Supersede)
-                            return {KHook::Action::Supersede};
+                        if (r == MRES_SUPERCEDE)
+                            RETURN_META(MRES_SUPERCEDE);
                     }
 
                     if (isSilent)
-                        return {KHook::Action::Supersede};
+                        RETURN_META(MRES_SUPERCEDE);
 
-                    return {KHook::Action::Ignore};
+                    RETURN_META(MRES_IGNORED);
                 }
             }
         }
 
-        Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
+        META_RES result = commands::DispatchConsoleListener(ctx, args, MMODE_PRE);
 
-        if (result > Action::Ignore)
-            return {static_cast<KHook::Action>(result)};
+        if (result > MRES_IGNORED)
+            RETURN_META(result);
 
-        commands::DispatchConsoleListener(ctx, args, Mode::Post);
+        commands::DispatchConsoleListener(ctx, args, MMODE_POST);
 
-        return {static_cast<KHook::Action>(result)};
+        RETURN_META(result);
     }
 
-    KHook::Return<void> Virtuals::Hook_ClientCommand(IServerGameClients* pThis, CPlayerSlot slot, const CCommand& args)
+    void Virtuals::Hook_ClientCommand(CPlayerSlot slot, const CCommand& args)
     {
         if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
         {
             CCommandContext ctx(CT_NO_TARGET, slot);
-            Action result = commands::DispatchConsoleListener(ctx, args, Mode::Pre);
-            if (result > Action::Ignore)
-                return {static_cast<KHook::Action>(result)};
+            META_RES result = commands::DispatchConsoleListener(ctx, args, MMODE_PRE);
+            if (result > MRES_IGNORED)
+                RETURN_META(result);
 
-            commands::DispatchConsoleListener(ctx, args, Mode::Post);
+            commands::DispatchConsoleListener(ctx, args, MMODE_POST);
         }
 
-        return {KHook::Action::Ignore};
+        RETURN_META(MRES_IGNORED);
     }
 
-    KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis,
-                                                                const EventServerGamePostSimulate_t* const pMsg)
+    void Virtuals::Hook_PostEventAbstract(CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount,
+        const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize,
+        NetChannelBufType_t bufType)
+    {
+        if (!pEvent || !pData)
+            RETURN_META(MRES_IGNORED);
+
+        NetMessageInfo_t* pInfo = pEvent->GetNetMessageInfo();
+        if (!pInfo)
+            RETURN_META(MRES_IGNORED);
+
+        META_RES result = networkmessages::DispatchServerHook(const_cast<uint64_t*>(reinterpret_cast<const uint64_t*>(clients)), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
+
+        RETURN_META(result);
+    }
+
+    void Virtuals::Hook_OnServerGamePostSimulate(const EventServerGamePostSimulate_t* const pMsg)
     {
         for (auto connection : mysql::mysqlManager.m_vecMysqlConnections)
         {
             connection->RunFrame();
         }
-        return {KHook::Action::Ignore};
+        RETURN_META(MRES_IGNORED);
     }
 
-    KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename,
-                                                         bool bSearchAll)
+    int Virtuals::Hook_LoadEventsFromFile(const char* filename, bool bSearchAll)
     {
         ExecuteOnce(
-            shared::g_pGameEventManager = pThis;
+            shared::g_pGameEventManager = META_IFACEPTR(IGameEventManager2);
             events::InitEvents();
         )
 
-        return {KHook::Action::Ignore, 0};
+        RETURN_META_VALUE(MRES_IGNORED, 0);
     }
 
-    KHook::Return<bool> Virtuals::Hook_FireEvent(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast)
+    bool Virtuals::Hook_FireEvent(IGameEvent* event, bool bDontBroadcast)
     {
         if (!event)
-            return {KHook::Action::Ignore, false};
+            RETURN_META_VALUE(MRES_IGNORED, false);
 
         bool localDontBroadcast = bDontBroadcast;
-        if (!events::DispatchGameEvent(event, Mode::Pre, localDontBroadcast))
-            return {KHook::Action::Supersede, false};
+        if (!events::DispatchGameEvent(event, MMODE_PRE, localDontBroadcast))
+            RETURN_META_VALUE(MRES_SUPERCEDE, false);
 
         if (IGameEvent* copy = shared::g_pGameEventManager->DuplicateEvent(event))
             eventStack.push_back(copy);
 
         if (localDontBroadcast != bDontBroadcast)
         {
-            bool original = m_pFireEvent->CallOriginal(pThis, event, localDontBroadcast);
-            return {KHook::Action::Supersede, original};
+            bool original = SH_CALL(META_IFACEPTR(IGameEventManager2), &IGameEventManager2::FireEvent)(event, localDontBroadcast);
+            RETURN_META_VALUE(MRES_SUPERCEDE, original);
         }
 
-        return {KHook::Action::Ignore, true};
+        RETURN_META_VALUE(MRES_IGNORED, true);
     }
 
-    KHook::Return<bool> Virtuals::Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast)
+    bool Virtuals::Hook_FireEventPost(IGameEvent* event, bool bDontBroadcast)
     {
         if (!event)
-            return {KHook::Action::Ignore, false};
+            RETURN_META_VALUE(MRES_IGNORED, false);
 
         if (!eventStack.empty())
         {
@@ -306,11 +308,30 @@ namespace virtualhooks
             eventStack.pop_back();
 
             bool dummy = bDontBroadcast;
-            events::DispatchGameEvent(copy, Mode::Post, dummy);
+            events::DispatchGameEvent(copy, MMODE_POST, dummy);
             shared::g_pGameEventManager->FreeEvent(copy);
         }
 
-        return {KHook::Action::Ignore, true};
+        RETURN_META_VALUE(MRES_IGNORED, true);
+    }
+
+    bool Virtuals::Hook_SendNetMessage(const CNetMessage* pData, NetChannelBufType_t bufType)
+    {
+        CServerSideClient* pClient = META_IFACEPTR(CServerSideClient);
+        if (!pClient || !pData)
+            RETURN_META_VALUE(MRES_IGNORED, true);
+
+        INetworkMessageInternal* pNetMsg = pData->GetNetMessage();
+        if (!pNetMsg)
+            RETURN_META_VALUE(MRES_IGNORED, true);
+
+        NetMessageInfo_t* pInfo = pNetMsg->GetNetMessageInfo();
+        if (!pInfo)
+            RETURN_META_VALUE(MRES_IGNORED, true);
+
+        META_RES result = networkmessages::DispatchServerInternalHook(pClient->GetPlayerSlot(), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
+
+        RETURN_META_VALUE(result, true);
     }
 
     void CEntityListener::OnEntitySpawned(CEntityInstance* pEntity)

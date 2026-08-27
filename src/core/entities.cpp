@@ -64,17 +64,17 @@ namespace entities
 
     CBaseEntity* EntitiesManager::FindEntityByClassname(CEntityInstance* pStart, const char* name)
     {
-        return addresses::toolkitAddresses.FindEntityByClassName(shared::g_pEntitySystem, pStart, name);
+        return addresses::toolkitAddresses.CGameEntitySystem_FindEntityByClassName()(shared::g_pEntitySystem, pStart, name);
     }
 
     CBaseEntity* EntitiesManager::FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter)
     {
-        return addresses::toolkitAddresses.FindEntityByName(shared::g_pEntitySystem, pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
+        return addresses::toolkitAddresses.CGameEntitySystem_FindEntityByName()(shared::g_pEntitySystem, pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
     }
 
     CBaseEntity* EntitiesManager::CreateEntityByName(const char* pszClassName)
     {
-        return addresses::toolkitAddresses.CreateEntityByName(pszClassName, -1);
+        return addresses::toolkitAddresses.CBaseEntity_CreateEntityByName()(pszClassName, -1);
     }
 
     void EntitiesManager::AddEntityListener(IEntityListener* pListener)
@@ -89,34 +89,34 @@ namespace entities
 
     void EntitiesManager::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
     {
-        addresses::toolkitAddresses.AcceptInput(pTarget, pszInput, pActivator, pCaller, variant_t(pszValue));
+        addresses::toolkitAddresses.CEntityInstance_AcceptInput()(pTarget, pszInput, pActivator, pCaller, variant_t(pszValue));
     }
 
     void EntitiesManager::AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
     {
-        addresses::toolkitAddresses.AddEntityIOEvent(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
+        addresses::toolkitAddresses.CEntitySystem_AddEntityIOEvent()(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
     }
 
-    void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
+    void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, META_MODE nMode)
     {
         OutputKey key{
             pchClassName ? pchClassName : "*",
             pchOutputName ? pchOutputName : "*"
         };
 
-        if (nMode == Mode::Post)
+        if (nMode == MMODE_POST)
             inlinehooks::entityIOListenerStack[key].m_vecPost.push_back(pListener);
         else
             inlinehooks::entityIOListenerStack[key].m_vecPre.push_back(pListener);
     }
 
-    void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)
+    void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, META_MODE nMode)
     {
         if (!pchClassName && !pchOutputName)
         {
             for (auto it = inlinehooks::entityIOListenerStack.begin(); it != inlinehooks::entityIOListenerStack.end(); )
             {
-                auto& vec = nMode == Mode::Post ? it->second.m_vecPost : it->second.m_vecPre;
+                auto& vec = nMode == MMODE_POST ? it->second.m_vecPost : it->second.m_vecPre;
 
                 std::erase(vec, pListener);
 
@@ -137,7 +137,7 @@ namespace entities
         if (it == inlinehooks::entityIOListenerStack.end())
             return;
 
-        auto& vec = nMode == Mode::Post ? it->second.m_vecPost : it->second.m_vecPre;
+        auto& vec = nMode == MMODE_POST ? it->second.m_vecPost : it->second.m_vecPre;
 
         std::erase(vec, pListener);
 

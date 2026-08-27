@@ -162,7 +162,7 @@ namespace networkmessages
 
     extern NetworkMessagesManager networkMessagesManager;
 
-    Action DispatchServerHook(uint64_t* clients, int messageid, void* msg);
-    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg);
-    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg);
+    META_RES DispatchServerHook(uint64_t* clients, int messageid, void* msg);
+    META_RES DispatchClientHook(CPlayerSlot slot, int messageid, void* msg);
+    META_RES DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg);
 }

@@ -39,7 +39,7 @@
 #include "shared.h"
 
 #include "source2toolkit/IToolkitEvents.h"
-#include "source2toolkit/IToolkitTypes.h"
+#include "source2toolkit/IToolkitPlugin.h"
 
 #include "igameevents.h"
 #include <functional>
@@ -51,7 +51,7 @@ namespace events {
     {
         PluginId owner;
         GameEventHandler handler;
-        Mode mode;
+        META_MODE mode;
     };
 
     class EventListener : public IGameEventListener2
@@ -62,7 +62,7 @@ namespace events {
     class EventManager : public IToolkitEvents
     {
     public:
-        void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, Mode mode) override;
+        void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, META_MODE mode) override;
     public:
         void RemoveAllForPlugin(PluginId id);
     };
@@ -72,5 +72,5 @@ namespace events {
     void InitEvents();
     void DestructEvents();
 
-    bool DispatchGameEvent(IGameEvent *event, Mode mode, bool &dontBroadcast);
+    bool DispatchGameEvent(IGameEvent *event, META_MODE mode, bool &dontBroadcast);
 }

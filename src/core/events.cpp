@@ -56,7 +56,7 @@ namespace events {
         }
     }
 
-    void EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, Mode mode)
+    void EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, META_MODE mode)
     {
         gameEvents[name].push_back({owner, handler, mode});
         RegisterListenerIfNeeded(name);
@@ -99,7 +99,7 @@ namespace events {
         gameEvents.clear();
     }
 
-    bool DispatchGameEvent(IGameEvent *event, Mode mode, bool &dontBroadcast) {
+    bool DispatchGameEvent(IGameEvent *event, META_MODE mode, bool &dontBroadcast) {
         const char *name = event->GetName();
         auto it = gameEvents.find(name);
         if (it == gameEvents.end())
@@ -109,9 +109,9 @@ namespace events {
             if (hook.mode != mode)
                 continue;
 
-            Action result = hook.handler(event, mode, dontBroadcast);
+            META_RES result = hook.handler(event, mode, dontBroadcast);
 
-            if (result == Action::Supersede)
+            if (result == MRES_SUPERCEDE)
                 return false;
         }
 

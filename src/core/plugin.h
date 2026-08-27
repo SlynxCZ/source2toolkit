@@ -41,6 +41,13 @@
 
 #include "ISmmPlugin.h"
 
+// Redirects SH_GLOB_SHPTR/SH_GLOB_PLUGPTR onto the toolkit's own private
+// SourceHook engine instead of metamod's shared g_SHPtr/g_PLID -- must come
+// after ISmmPlugin.h (which defines the defaults this overrides) and before
+// any SH_DECL_HOOK*/SH_ADD_*HOOK usage. Plugins join this same engine via
+// sourcehook_metamod_shared.h; see TOOLKIT_SOURCEHOOK_INTERFACE.
+#include "sourcehook/sourcehook_metamod_override.h"
+
 class ToolkitCore : public ISmmPlugin, public IMetamodListener
 {
 public:

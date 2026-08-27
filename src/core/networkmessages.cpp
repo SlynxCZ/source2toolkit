@@ -104,7 +104,7 @@ namespace networkmessages
 
     void* NetworkMessagesManager::AllocateNetMessageByID(int msgid)
     {
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessageById(msgid);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return nullptr;
         return netmsg->AllocateMessage()->ToPB<google::protobuf::Message>();
@@ -112,7 +112,7 @@ namespace networkmessages
 
     void* NetworkMessagesManager::AllocateNetMessageByPartialName(const char* name)
     {
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessagePartial(name);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessagePartial(name);
         if (!netmsg)
             return nullptr;
         return netmsg->AllocateMessage()->ToPB<google::protobuf::Message>();
@@ -939,7 +939,7 @@ namespace networkmessages
     {
         CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
 
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessageById(msgid);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return;
 
@@ -951,7 +951,7 @@ namespace networkmessages
     {
         CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
 
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessageById(msgid);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return;
 
@@ -1005,36 +1005,36 @@ namespace networkmessages
     Dispatch helpers (called from hook sites)
     ========================= */
 
-    Action DispatchServerHook(uint64_t* clients, int messageid, void* msg)
+    META_RES DispatchServerHook(uint64_t* clients, int messageid, void* msg)
     {
-        Action result = Action::Ignore;
+        META_RES result = MRES_IGNORED;
         for (auto& [id, cb] : networkMessagesManager.m_serverHooks)
         {
-            Action a = cb(clients, messageid, msg);
+            META_RES a = cb(clients, messageid, msg);
             if (a > result)
                 result = a;
         }
         return result;
     }
 
-    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg)
+    META_RES DispatchClientHook(CPlayerSlot slot, int messageid, void* msg)
     {
-        Action result = Action::Ignore;
+        META_RES result = MRES_IGNORED;
         for (auto& [id, cb] : networkMessagesManager.m_clientHooks)
         {
-            Action a = cb(slot, messageid, msg);
+            META_RES a = cb(slot, messageid, msg);
             if (a > result)
                 result = a;
         }
         return result;
     }
 
-    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg)
+    META_RES DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg)
     {
-        Action result = Action::Ignore;
+        META_RES result = MRES_IGNORED;
         for (auto& [id, cb] : networkMessagesManager.m_serverInternalHooks)
         {
-            Action a = cb(slot, messageid, msg);
+            META_RES a = cb(slot, messageid, msg);
             if (a > result)
                 result = a;
         }

@@ -39,47 +39,66 @@
 #include "addresses.h"
 #include "commands.h"
 #include "events.h"
+#include "networkmessages.h"
+#include "plugin.h"
 #include "shared.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
+#include "source2toolkit/schema/serversideclient.h"
 #include "dynlibutils/module.hpp"
 #include "iserver.h"
-#include "schema/cgameresourceserviceserver.h"
+
+#include <unordered_set>
+
+// bool INetworkMessageProcessingPreFilter:FilterMessage(const CNetMessage* pData, INetChannel* pChannel)
+SH_DECL_INLINEHOOK2(FilterMessage, INetworkMessageProcessingPreFilterCustom, bool, const CNetMessage*, INetChannel*);
+
+// void CEntityIOOutput::FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
+SH_DECL_INLINEHOOK6_void(FireOutputInternal, CEntityIOOutput, CEntityInstance*, CEntityInstance*, void*, float, void*, void*);
 
 namespace inlinehooks
 {
     Inlines inlines;
     std::unordered_map<OutputKey, EntityIOCallbackPair, OutputKeyHash> entityIOListenerStack;
 
-    Inlines::Inlines() :
-        m_pFireOutputInternal(new KHook::Function(this, &Inlines::Hook_FireOutputInternal, nullptr)),
-        m_pPlatDebug(new KHook::Function(this, &Inlines::Hook_PlatDebug, nullptr))
-    {
-    }
-
     void Inlines::InitListeners()
     {
-        DynLibUtils::CModule libserver(shared::g_pServer);
-
-        m_pFireOutputInternal->Configure(addresses::toolkitAddresses.FireOutputInternal);
-
-        auto platDebugAddr = libserver.GetFunctionByName("Plat_DebugString_Buffered").RCast<void (*)(void*, void*)>();
-        if (platDebugAddr)
-        {
-            m_pPlatDebug->Configure(platDebugAddr);
-        }
+        m_iFilterMessageHookID = SH_ADD_INLINEHOOK(FilterMessage, addresses::toolkitAddresses.FilterMessage, SH_MEMBER(this, &Inlines::Hook_FilterMessage), false);
+        m_iFireOutputInternalHookID = SH_ADD_INLINEHOOK(FireOutputInternal, addresses::toolkitAddresses.FireOutputInternal, SH_MEMBER(this, &Inlines::Hook_FireOutputInternal), false);
     }
 
     void Inlines::DestructListeners()
     {
-        delete m_pFireOutputInternal;
-        delete m_pPlatDebug;
+        SH_REMOVE_HOOK_ID(m_iFilterMessageHookID);
+        SH_REMOVE_HOOK_ID(m_iFireOutputInternalHookID);
     }
 
-    KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator,
-                                                         CEntityInstance* pCaller, void* variantValue, float delay,
-                                                         void* unk01, void* unk02)
+    bool Inlines::Hook_FilterMessage(const CNetMessage* pData, INetChannel* pChannel)
     {
+        // `this` is the pre-filter subobject, not the whole client -- that is
+        // what INetworkMessageProcessingPreFilterCustom's pad-based layout is
+        // for, so the slot can be read without hand-rolling the delta.
+        auto* pFilter = META_IFACEPTR(INetworkMessageProcessingPreFilterCustom);
+        if (!pFilter || !pData)
+            RETURN_META_VALUE(MRES_IGNORED, true);
+
+        INetworkMessageInternal* pNetMsg = pData->GetNetMessage();
+        if (!pNetMsg)
+            RETURN_META_VALUE(MRES_IGNORED, true);
+
+        NetMessageInfo_t* pInfo = pNetMsg->GetNetMessageInfo();
+        if (!pInfo)
+            RETURN_META_VALUE(MRES_IGNORED, true);
+
+        const META_RES action = networkmessages::DispatchClientHook(pFilter->GetPlayerSlot(), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
+
+        RETURN_META_VALUE(action, true);
+    }
+
+    void Inlines::Hook_FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
+    {
+        CEntityIOOutput* pThis = META_IFACEPTR(CEntityIOOutput);
+
         const char* outputName = pThis->m_pDesc->m_pName;
         const char* callerClass = pCaller ? pCaller->GetClassname() : "*";
 
@@ -105,7 +124,7 @@ namespace inlinehooks
 
         std::vector matched(unique.begin(), unique.end());
 
-        KHook::Action finalAction = KHook::Action::Ignore;
+        META_RES finalAction = MRES_IGNORED;
 
         for (auto* pair : matched)
         {
@@ -116,44 +135,32 @@ namespace inlinehooks
                     pActivator,
                     pCaller,
                     delay,
-                    Mode::Pre
+                    MMODE_PRE
                 );
 
-                if (action == Action::Supersede)
-                    return {KHook::Action::Supersede};
+                if (action == MRES_SUPERCEDE)
+                    RETURN_META(MRES_SUPERCEDE);
 
-                if (static_cast<KHook::Action>(action) > finalAction)
-                    finalAction = static_cast<KHook::Action>(action);
+                if (action > finalAction)
+                    finalAction = action;
             }
         }
 
-        if (finalAction != KHook::Action::Supersede)
+        if (finalAction != MRES_SUPERCEDE)
         {
-            m_pFireOutputInternal->CallOriginal(pThis, pActivator, pCaller, variantValue, delay, unk01, unk02);
+            SH_CALL(FireOutputInternal, addresses::toolkitAddresses.FireOutputInternal, pThis)(pActivator, pCaller, variantValue, delay, unk01, unk02);
         }
 
         for (auto* pair : matched)
         {
             for (auto* listener : pair->m_vecPost)
             {
-                listener->OnEntityOutput(
-                    outputName,
-                    pActivator,
-                    pCaller,
-                    delay,
-                    Mode::Post
-                );
+                listener->OnEntityOutput(outputName, pActivator, pCaller, delay, MMODE_POST);
             }
         }
 
-        return {KHook::Action::Supersede};
-    }
-
-    KHook::Return<void> Inlines::Hook_PlatDebug(void* unk001, void* unk002)
-    {
-        if (!unk001)
-            return {KHook::Action::Supersede};
-
-        return {KHook::Action::Ignore};
+        // The original already ran above, so supersede rather than let
+        // SourceHook call it a second time.
+        RETURN_META(MRES_SUPERCEDE);
     }
 }

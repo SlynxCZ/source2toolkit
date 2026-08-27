@@ -68,7 +68,6 @@ if (UNIX AND NOT APPLE)
     SET(source2toolkit_include_directories
             ${CMAKE_SOURCE_DIR}/src
             ${METAMOD_DIR}/core
-            ${METAMOD_DIR}/third_party/khook/include
             ${CMAKE_SOURCE_DIR}/vendor
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include/dynlibutils
@@ -81,6 +80,7 @@ if (UNIX AND NOT APPLE)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libssl.a
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libcrypto.a
             dynlibutils
+            sourcehook
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
@@ -90,7 +90,6 @@ elseif (WIN32)
     SET(source2toolkit_include_directories
             ${CMAKE_SOURCE_DIR}/src
             ${METAMOD_DIR}/core
-            ${METAMOD_DIR}/third_party/khook/include
             ${CMAKE_SOURCE_DIR}/vendor
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include/dynlibutils
@@ -104,6 +103,7 @@ elseif (WIN32)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/crypto.lib
             crypt32.lib
             dynlibutils
+            sourcehook
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""

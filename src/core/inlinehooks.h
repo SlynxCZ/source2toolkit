@@ -37,7 +37,9 @@
 #pragma once
 #include "source2toolkit/schema/entityio.h"
 
-#include "ISmmPlugin.h"
+// SH_DECL_INLINEHOOK*/SH_ADD_INLINEHOOK and the RETURN_SH/SH_IFACEPTR
+// auto-detection that lets one handler body serve either hook style.
+#include "sourcehook/sourcehook_inline.h"
 #include "eiface.h"
 #include "entitysystem.h"
 
@@ -46,16 +48,14 @@
 namespace inlinehooks {
     class Inlines {
     public:
-        Inlines();
-
         void InitListeners();
         void DestructListeners();
     public:
-        KHook::Return<void> Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
-        KHook::Return<void> Hook_PlatDebug(void* unk001, void* unk002);
+        bool Hook_FilterMessage(const CNetMessage* pData, INetChannel* pChannel);
+        void Hook_FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
     protected:
-        KHook::Function<void, CEntityIOOutput*, CEntityInstance*, CEntityInstance*, void*, float, void*, void*>* m_pFireOutputInternal;
-        KHook::Function<void, void*, void*>* m_pPlatDebug;
+        int m_iFilterMessageHookID = 0;
+        int m_iFireOutputInternalHookID = 0;
     };
 
     extern Inlines inlines;

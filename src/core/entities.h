@@ -56,8 +56,8 @@ namespace entities {
         void AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue = "") override;
         void AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f) override;
 
-        void AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode = Mode::Pre) override;
-        void RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode = Mode::Pre) override;
+        void AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, META_MODE nMode = MMODE_PRE) override;
+        void RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, META_MODE nMode = MMODE_PRE) override;
     };
 
     extern EntitiesManager entitiesManager;

@@ -35,7 +35,10 @@
  * Project: Source2Toolkit
  */
 #pragma once
-#include "ISmmPlugin.h"
+// tier1/convar.h first: iloopmode.h (pulled in by igamesystem.h) uses
+// CSplitScreenSlot in IGameSystem::HandleInputEvent without declaring it.
+#include "tier1/convar.h"
+
 #include "igameevents.h"
 #include "igamesystem.h"
 #include "eiface.h"
@@ -48,30 +51,30 @@ class IEntityInstance; // forward-declare global SDK interface (defined in IEnti
 namespace virtualhooks {
     class Virtuals {
     public:
-        Virtuals();
-
         void InitListeners();
         void DestructListeners();
     public:
-        KHook::Return<void> Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick, bool bLastTick);
-        KHook::Return<void> Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t &config, ISource2WorldSession *pWorldSession, const char *);
-        KHook::Return<void> Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
-        KHook::Return<void> Hook_ClientCommand(IServerGameClients* pThis, CPlayerSlot slot, const CCommand& args);
-        KHook::Return<void> Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg);
-        KHook::Return<int> Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char *filename, bool bSearchAll);
-        KHook::Return<bool> Hook_FireEvent(IGameEventManager2* pThis, IGameEvent *event, bool bDontBroadcast);
-        KHook::Return<bool> Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent *event, bool bDontBroadcast);
+        void Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick);
+        void Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName);
+        void Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
+        void Hook_ClientCommand(CPlayerSlot slot, const CCommand& args);
+        void Hook_PostEventAbstract(CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount, const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize, NetChannelBufType_t bufType);
+        void Hook_OnServerGamePostSimulate(const EventServerGamePostSimulate_t* const pMsg);
+        int  Hook_LoadEventsFromFile(const char* filename, bool bSearchAll);
+        bool Hook_FireEvent(IGameEvent* event, bool bDontBroadcast);
+        bool Hook_FireEventPost(IGameEvent* event, bool bDontBroadcast);
+        bool Hook_SendNetMessage(const CNetMessage* pData, NetChannelBufType_t bufType);
     protected:
-        KHook::Virtual<IServerGameDLL, void, bool, bool, bool>* m_pGameFrame;
-        KHook::Virtual<ICvar, void, ConCommandRef, const CCommandContext&, const CCommand&>* m_pDispatchConCommand;
-        KHook::Virtual<IServerGameClients, void, CPlayerSlot, const CCommand&>* m_pClientCommand;
-        KHook::Virtual<INetworkServerService, void, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*>* m_pStartupServer;
-        KHook::Virtual<IGameSystem, void, const EventServerGamePostSimulate_t*>* m_pOnServerGamePostSimulate;
-        KHook::Virtual<IGameEventManager2, int, const char*, bool>* m_pLoadEventsFromFile;
-        KHook::Virtual<IGameEventManager2, bool, IGameEvent*, bool>* m_pFireEvent;
-    protected:
-        IGameSystem* m_pCEntityDebugGameSystemVTable;
-        IGameEventManager2* m_pCGameEventManagerVTable;
+        int m_iGameFrameHookID = 0;
+        int m_iStartupServerHookID = 0;
+        int m_iDispatchConCommandHookID = 0;
+        int m_iClientCommandHookID = 0;
+        int m_iPostEventAbstractHookID = 0;
+        int m_iOnServerGamePostSimulateHookID = 0;
+        int m_iLoadEventsFromFileHookID = 0;
+        int m_iFireEventHookID = 0;
+        int m_iFireEventPostHookID = 0;
+        int m_iSendNetMessageHookID = 0;
     };
 
     class CEntityListener: public IEntityListener {

@@ -242,7 +242,9 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
 {
     void* ptr = nullptr;
 
-    if (!strcmp(iface, TOOLKIT_ADDRESSES_INTERFACE)) ptr = &addresses::toolkitAddresses;
+    // Hand plugins the toolkit's own engine, not metamod's shared one.
+    if (!strcmp(iface, TOOLKIT_SOURCEHOOK_INTERFACE)) ptr = g_pSourceHook;
+    else if (!strcmp(iface, TOOLKIT_ADDRESSES_INTERFACE)) ptr = &addresses::toolkitAddresses;
     else if (!strcmp(iface, TOOLKIT_COMMANDS_INTERFACE)) ptr = &commands::commandsManager;
     else if (!strcmp(iface, TOOLKIT_CONVARS_INTERFACE)) ptr = &convars::convarsManager;
     else if (!strcmp(iface, TOOLKIT_ENTITIES_INTERFACE)) ptr = &entities::entitiesManager;
@@ -351,29 +353,86 @@ void PluginApi::FreeModule(IToolkitModule* module)
     delete module;
 }
 
-IGameEventManager2* PluginApi::GetGameEventManager()
+ISource2Server* PluginApi::GetSource2Server()
 {
-    return shared::g_pGameEventManager;
+    return g_pSource2Server;
 }
 
-CGlobalVars* PluginApi::GetGlobalVars()
+ISource2ServerConfig* PluginApi::GetSource2ServerConfig()
 {
-    return shared::getGlobalVars();
+    return g_pSource2ServerConfig;
+}
+
+ISource2GameClients* PluginApi::GetSource2GameClients()
+{
+    return g_pSource2GameClients;
+}
+
+ISource2GameEntities* PluginApi::GetSource2GameEntities()
+{
+    return g_pSource2GameEntities;
+}
+
+IVEngineServer2* PluginApi::GetEngineServer()
+{
+    return g_pEngineServer;
 }
 
 ICvar* PluginApi::GetCVar()
 {
-    return shared::g_pCVar;
+    return g_pCVar;
 }
 
-ISource2Server* PluginApi::GetSource2Server()
+// interfaces.h only knows the interface type; plugins want the concrete class,
+// so the downcast happens here rather than in every plugin.
+CSchemaSystem* PluginApi::GetSchemaSystem()
 {
-    return shared::g_pServer;
+    return shared::g_pSchemaSystem;
 }
 
-IVEngineServer* PluginApi::GetEngineServer()
+IGameResourceService* PluginApi::GetGameResourceService()
 {
-    return shared::g_pEngine;
+    return g_pGameResourceServiceServer;
+}
+
+INetworkServerService* PluginApi::GetNetworkServerService()
+{
+    return g_pNetworkServerService;
+}
+
+INetworkSystem* PluginApi::GetNetworkSystem()
+{
+    return g_pNetworkSystem;
+}
+
+INetworkMessages* PluginApi::GetNetworkMessages()
+{
+    return g_pNetworkMessages;
+}
+
+INetworkStringTableContainer* PluginApi::GetNetworkStringTableServer()
+{
+    return g_pNetworkStringTableServer;
+}
+
+IEngineServiceMgr* PluginApi::GetEngineServiceMgr()
+{
+    return g_pEngineServiceMgr;
+}
+
+IHostStateMgr* PluginApi::GetHostStateMgr()
+{
+    return g_pHostStateMgr;
+}
+
+ILocalize* PluginApi::GetLocalize()
+{
+    return g_pLocalize;
+}
+
+IFileSystem* PluginApi::GetFileSystem()
+{
+    return g_pFullFileSystem;
 }
 
 IGameEventSystem* PluginApi::GetGameEventSystem()
@@ -381,14 +440,9 @@ IGameEventSystem* PluginApi::GetGameEventSystem()
     return shared::g_pGameEventSystem;
 }
 
-INetworkMessages* PluginApi::GetNetworkMessages()
+IGameEventManager2* PluginApi::GetGameEventManager()
 {
-    return shared::g_pNetworkMessages;
-}
-
-INetworkServerService* PluginApi::GetNetworkServerService()
-{
-    return shared::g_pNetworkServerService;
+    return shared::g_pGameEventManager;
 }
 
 CGameEntitySystem* PluginApi::GetEntitySystem()
@@ -396,9 +450,9 @@ CGameEntitySystem* PluginApi::GetEntitySystem()
     return shared::g_pEntitySystem;
 }
 
-CSchemaSystem* PluginApi::GetSchemaSystem()
+CGlobalVars* PluginApi::GetGlobalVars()
 {
-    return shared::g_pSchemaSystem;
+    return shared::getGlobalVars();
 }
 
 const char* PluginApi::GetBaseDir()

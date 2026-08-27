@@ -44,21 +44,22 @@ namespace addresses
 
     bool Initialize()
     {
-        RESOLVE_SIG(shared::g_pServer, "CBaseEntity::CreateEntityByName", shared::g_pGameConfig->GetSignature("CBaseEntity_CreateEntityByName"), toolkitAddresses.CreateEntityByName);
-        RESOLVE_SIG(shared::g_pServer, "CBaseEntity::DispatchSpawn", shared::g_pGameConfig->GetSignature("CBaseEntity_DispatchSpawn"), toolkitAddresses.DispatchSpawn);
-        RESOLVE_SIG(shared::g_pServer, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity_TakeDamageOld"), toolkitAddresses.TakeDamageOld);
-        RESOLVE_SIG(shared::g_pServer, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity_SetModel"), toolkitAddresses.SetModel);
-        RESOLVE_SIG(shared::g_pServer, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController_SetPawn"), toolkitAddresses.SetPawn);
-        RESOLVE_SIG(shared::g_pServer, "CGameRules::TerminateRound", shared::g_pGameConfig->GetSignature("CGameRules_TerminateRound"), toolkitAddresses.TerminateRound);
-        RESOLVE_SIG(shared::g_pServer, "CCSPlayer_WeaponServices::Destroy", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices_Destroy"), toolkitAddresses.Destroy);
-        RESOLVE_SIG(shared::g_pServer, "CCSPlayerController::LegacyGameEventListener", shared::g_pGameConfig->GetSignature("CCSPlayerController_LegacyGameEventListener"), toolkitAddresses.LegacyGameEventListener);
-        RESOLVE_SIG(shared::g_pServer, "CCSPlayerController::SwitchTeam", shared::g_pGameConfig->GetSignature("CCSPlayerController_SwitchTeam"), toolkitAddresses.SwitchTeam);
-        RESOLVE_SIG(shared::g_pServer, "CEntityInstance::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityInstance_AcceptInput"), toolkitAddresses.AcceptInput);
-        RESOLVE_SIG(shared::g_pServer, "CEntityIOOutput::FireOutputInternal", shared::g_pGameConfig->GetSignature("CEntityIOOutput_FireOutputInternal"), toolkitAddresses.FireOutputInternal);
-        RESOLVE_SIG(shared::g_pServer, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem_AddEntityIOEvent"), toolkitAddresses.AddEntityIOEvent);
-        RESOLVE_SIG(shared::g_pServer, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByClassName"), toolkitAddresses.FindEntityByClassName);
-        RESOLVE_SIG(shared::g_pServer, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByName"), toolkitAddresses.FindEntityByName);
-        RESOLVE_SIG(shared::g_pServer, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo_CTakeDamageInfo"), toolkitAddresses.CTakeDamageInfo);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::CreateEntityByName", shared::g_pGameConfig->GetSignature("CBaseEntity_CreateEntityByName"), toolkitAddresses.CreateEntityByName);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::DispatchSpawn", shared::g_pGameConfig->GetSignature("CBaseEntity_DispatchSpawn"), toolkitAddresses.DispatchSpawn);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity_TakeDamageOld"), toolkitAddresses.TakeDamageOld);
+        RESOLVE_SIG(g_pSource2Server, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity_SetModel"), toolkitAddresses.SetModel);
+        RESOLVE_SIG(g_pSource2Server, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController_SetPawn"), toolkitAddresses.SetPawn);
+        RESOLVE_SIG(g_pSource2Server, "CGameRules::TerminateRound", shared::g_pGameConfig->GetSignature("CGameRules_TerminateRound"), toolkitAddresses.TerminateRound);
+        RESOLVE_SIG(g_pSource2Server, "CCSPlayer_WeaponServices::Destroy", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices_Destroy"), toolkitAddresses.Destroy);
+        RESOLVE_SIG(g_pSource2Server, "CCSPlayerController::LegacyGameEventListener", shared::g_pGameConfig->GetSignature("CCSPlayerController_LegacyGameEventListener"), toolkitAddresses.LegacyGameEventListener);
+        RESOLVE_SIG(g_pSource2Server, "CCSPlayerController::SwitchTeam", shared::g_pGameConfig->GetSignature("CCSPlayerController_SwitchTeam"), toolkitAddresses.SwitchTeam);
+        RESOLVE_SIG(g_pSource2Server, "CEntityInstance::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityInstance_AcceptInput"), toolkitAddresses.AcceptInput);
+        RESOLVE_SIG(g_pSource2Server, "CEntityIOOutput::FireOutputInternal", shared::g_pGameConfig->GetSignature("CEntityIOOutput_FireOutputInternal"), toolkitAddresses.FireOutputInternal);
+        RESOLVE_SIG(g_pSource2Server, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem_AddEntityIOEvent"), toolkitAddresses.AddEntityIOEvent);
+        RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByClassName"), toolkitAddresses.FindEntityByClassName);
+        RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByName"), toolkitAddresses.FindEntityByName);
+        RESOLVE_SIG(g_pSource2Server, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo_CTakeDamageInfo"), toolkitAddresses.CTakeDamageInfo);
+        RESOLVE_SIG(shared::g_pGameEventSystem, "INetworkMessageProcessingPreFilter::FilterMessage", shared::g_pGameConfig->GetSignature("INetworkMessageProcessingPreFilter_FilterMessage"), toolkitAddresses.FilterMessage);
 
         return true;
     }
@@ -77,76 +78,81 @@ namespace addresses
 
     CBaseEntity_CreateEntityByName_t Addresses::CBaseEntity_CreateEntityByName()
     {
-        return CreateEntityByName;
+        return CreateEntityByName.RCast<CBaseEntity_CreateEntityByName_t>();
     }
 
     CBaseEntity_DispatchSpawn_t Addresses::CBaseEntity_DispatchSpawn()
     {
-        return DispatchSpawn;
+        return DispatchSpawn.RCast<CBaseEntity_DispatchSpawn_t>();
     }
 
     CBaseEntity_TakeDamageOld_t Addresses::CBaseEntity_TakeDamageOld()
     {
-        return TakeDamageOld;
+        return TakeDamageOld.RCast<CBaseEntity_TakeDamageOld_t>();
     }
 
     CBaseModelEntity_SetModel_t Addresses::CBaseModelEntity_SetModel()
     {
-        return SetModel;
+        return SetModel.RCast<CBaseModelEntity_SetModel_t>();
     }
 
     CBasePlayerController_SetPawn_t Addresses::CBasePlayerController_SetPawn()
     {
-        return SetPawn;
+        return SetPawn.RCast<CBasePlayerController_SetPawn_t>();
     }
 
     CGameRules_TerminateRound_t Addresses::CGameRules_TerminateRound()
     {
-        return TerminateRound;
+        return TerminateRound.RCast<CGameRules_TerminateRound_t>();
     }
 
     CCSPlayer_WeaponServices_Destroy_t Addresses::CCSPlayer_WeaponServices_Destroy()
     {
-        return Destroy;
+        return Destroy.RCast<CCSPlayer_WeaponServices_Destroy_t>();
     }
 
     CCSPlayerController_LegacyGameEventListener_t Addresses::CCSPlayerController_LegacyGameEventListener()
     {
-        return LegacyGameEventListener;
+        return LegacyGameEventListener.RCast<CCSPlayerController_LegacyGameEventListener_t>();
     }
 
     CCSPlayerController_SwitchTeam_t Addresses::CCSPlayerController_SwitchTeam()
     {
-        return SwitchTeam;
+        return SwitchTeam.RCast<CCSPlayerController_SwitchTeam_t>();
     }
 
     CEntityInstance_AcceptInput_t Addresses::CEntityInstance_AcceptInput()
     {
-        return AcceptInput;
+        return AcceptInput.RCast<CEntityInstance_AcceptInput_t>();
     }
 
     CEntityIOOutput_FireOutputInternal_t Addresses::CEntityIOOutput_FireOutputInternal()
     {
-        return FireOutputInternal;
+        return FireOutputInternal.RCast<CEntityIOOutput_FireOutputInternal_t>();
     }
 
     CEntitySystem_AddEntityIOEvent_t Addresses::CEntitySystem_AddEntityIOEvent()
     {
-        return AddEntityIOEvent;
+        return AddEntityIOEvent.RCast<CEntitySystem_AddEntityIOEvent_t>();
     }
 
     CGameEntitySystem_FindEntityByClassName_t Addresses::CGameEntitySystem_FindEntityByClassName()
     {
-        return FindEntityByClassName;
+        return FindEntityByClassName.RCast<CGameEntitySystem_FindEntityByClassName_t>();
     }
 
     CGameEntitySystem_FindEntityByName_t Addresses::CGameEntitySystem_FindEntityByName()
     {
-        return FindEntityByName;
+        return FindEntityByName.RCast<CGameEntitySystem_FindEntityByName_t>();
     }
 
     CTakeDamageInfo_CTakeDamageInfo_t Addresses::CTakeDamageInfo_CTakeDamageInfo()
     {
-        return CTakeDamageInfo;
+        return CTakeDamageInfo.RCast<CTakeDamageInfo_CTakeDamageInfo_t>();
+    }
+
+    INetworkMessageProcessingPreFilter_FilterMessage_t Addresses::INetworkMessageProcessingPreFilter_FilterMessage()
+    {
+        return FilterMessage.RCast<INetworkMessageProcessingPreFilter_FilterMessage_t>();
     }
 }

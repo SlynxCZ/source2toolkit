@@ -46,7 +46,7 @@ namespace paths {
     inline std::string GameDirectory() {
         if (gameDirectory.empty()) {
             CBufferStringGrowable<255> gamePath;
-            shared::g_pEngine->GetGameDir(gamePath);
+            g_pEngineServer->GetGameDir(gamePath);
             gameDirectory = std::string(gamePath.Get());
         }
         return gameDirectory;
