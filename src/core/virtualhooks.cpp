@@ -42,6 +42,7 @@
 
 #include "commands.h"
 #include "events.h"
+#include "networkmessages.h"
 #include "shared.h"
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/utils/plat.h"
@@ -50,7 +51,6 @@
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
 #include "mysql.h"
-#include "schema/cgameresourceserviceserver.h"
 
 namespace virtualhooks
 {
@@ -72,18 +72,29 @@ namespace virtualhooks
         m_pLoadEventsFromFile(new KHook::Virtual(&IGameEventManager2::LoadEventsFromFile, this, nullptr,
                                                  &Virtuals::Hook_LoadEventsFromFile)),
         m_pFireEvent(new KHook::Virtual(&IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent,
-                                        &Virtuals::Hook_FireEventPost))
+                                        &Virtuals::Hook_FireEventPost)),
+        // PostEventAbstract is overloaded, so the member function pointer has
+        // to be disambiguated explicitly.
+        m_pPostEventAbstract(new KHook::Virtual(
+            static_cast<void (IGameEventSystem::*)(CSplitScreenSlot, bool, int, const uint64*,
+                                                   INetworkMessageInternal*, const CNetMessage*, unsigned long,
+                                                   NetChannelBufType_t)>(&IGameEventSystem::PostEventAbstract),
+            this, &Virtuals::Hook_PostEventAbstract, nullptr)),
+        m_pSendNetMessage(new KHook::Virtual(&CServerSideClientBase::SendNetMessage, this,
+                                             &Virtuals::Hook_SendNetMessage, nullptr))
     {
     }
 
     void Virtuals::InitListeners()
     {
-        DynLibUtils::CModule libserver(shared::g_pServer);
+        DynLibUtils::CModule libserver(g_pSource2Server);
+        DynLibUtils::CModule libengine(g_pEngineServer);
 
-        m_pGameFrame->Add(shared::g_pServer);
-        m_pStartupServer->Add(shared::g_pNetworkServerService);
-        m_pDispatchConCommand->Add(shared::g_pCVar);
-        m_pClientCommand->Add(shared::g_pGameClients);
+        m_pGameFrame->Add(g_pSource2Server);
+        m_pStartupServer->Add(g_pNetworkServerService);
+        m_pDispatchConCommand->Add(g_pCVar);
+        m_pClientCommand->Add(g_pSource2GameClients);
+        m_pPostEventAbstract->Add(shared::g_pGameEventSystem);
 
         m_pCEntityDebugGameSystemVTable = libserver.GetVirtualTableByName("CEntityDebugGameSystem").RCast<IGameSystem
             *>();
@@ -98,14 +109,25 @@ namespace virtualhooks
             m_pLoadEventsFromFile->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
             m_pFireEvent->AddGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
         }
+
+        // Hooked on the vtable rather than per client, so the recipient comes
+        // from the hooked instance itself -- that is what the per-client
+        // net-message dispatch needs and PostEventAbstract cannot give.
+        m_pCServerSideClientVTable = libengine.GetVirtualTableByName("CServerSideClient").RCast<
+            CServerSideClientBase*>();
+        if (m_pCServerSideClientVTable)
+        {
+            m_pSendNetMessage->AddGlobal((CServerSideClientBase*)&m_pCServerSideClientVTable);
+        }
     }
 
     void Virtuals::DestructListeners()
     {
-        m_pGameFrame->Remove(shared::g_pServer);
-        m_pStartupServer->Remove(shared::g_pNetworkServerService);
-        m_pDispatchConCommand->Remove(shared::g_pCVar);
-        m_pClientCommand->Remove(shared::g_pGameClients);
+        m_pGameFrame->Remove(g_pSource2Server);
+        m_pStartupServer->Remove(g_pNetworkServerService);
+        m_pDispatchConCommand->Remove(g_pCVar);
+        m_pClientCommand->Remove(g_pSource2GameClients);
+        m_pPostEventAbstract->Remove(shared::g_pGameEventSystem);
 
         if (m_pCEntityDebugGameSystemVTable)
         {
@@ -118,6 +140,11 @@ namespace virtualhooks
             m_pFireEvent->RemoveGlobal((IGameEventManager2*)&m_pCGameEventManagerVTable);
         }
 
+        if (m_pCServerSideClientVTable)
+        {
+            m_pSendNetMessage->RemoveGlobal((CServerSideClientBase*)&m_pCServerSideClientVTable);
+        }
+
         delete m_pGameFrame;
         delete m_pStartupServer;
         delete m_pDispatchConCommand;
@@ -125,6 +152,8 @@ namespace virtualhooks
         delete m_pOnServerGamePostSimulate;
         delete m_pLoadEventsFromFile;
         delete m_pFireEvent;
+        delete m_pPostEventAbstract;
+        delete m_pSendNetMessage;
     }
 
     KHook::Return<void> Virtuals::Hook_GameFrame(IServerGameDLL* pThis, bool simulating, bool bFirstTick,
@@ -139,7 +168,7 @@ namespace virtualhooks
         {
             for (int i = 0; i < shared::getGlobalVars()->maxClients; i++)
             {
-                auto steamId = shared::g_pEngine->GetClientSteamID(CPlayerSlot(i));
+                auto steamId = g_pEngineServer->GetClientSteamID(CPlayerSlot(i));
                 if (steamId)
                 {
                     auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(
@@ -150,7 +179,7 @@ namespace virtualhooks
                         if (gs && gs->BLoggedOn())
                         {
                             gs->BUpdateUserData(*steamId, controller->GetPlayerName(),
-                                                shared::g_pGameClients->GetPlayerScore(CPlayerSlot(i)));
+                                                g_pSource2GameClients->GetPlayerScore(CPlayerSlot(i)));
                         }
                     }
                 }
@@ -167,7 +196,8 @@ namespace virtualhooks
     {
         if (!shared::g_bDetoursLoaded)
         {
-            shared::g_pEntitySystem = shared::g_pGameResourceServiceServer->GetGameEntitySystem();
+            shared::g_pEntitySystem = *DynLibUtils::CMemory(g_pGameResourceServiceServer).Offset(
+                shared::g_pGameConfig->GetOffset("GameEntitySystem")).RCast<CGameEntitySystem**>();
             shared::g_pEntitySystem->AddListenerEntity(&entityListener);
             shared::g_bDetoursLoaded = true;
         }
@@ -293,6 +323,45 @@ namespace virtualhooks
         }
 
         return {KHook::Action::Ignore, true};
+    }
+
+    KHook::Return<void> Virtuals::Hook_PostEventAbstract(IGameEventSystem* pThis, CSplitScreenSlot nSlot,
+                                                         bool bLocalOnly, int nClientCount, const uint64* clients,
+                                                         INetworkMessageInternal* pEvent, const CNetMessage* pData,
+                                                         unsigned long nSize, NetChannelBufType_t bufType)
+    {
+        if (!pEvent || !pData)
+            return {KHook::Action::Ignore};
+
+        NetMessageInfo_t* pInfo = pEvent->GetNetMessageInfo();
+        if (!pInfo)
+            return {KHook::Action::Ignore};
+
+        Action result = networkmessages::DispatchServerHook(
+            const_cast<uint64_t*>(reinterpret_cast<const uint64_t*>(clients)), pInfo->m_MessageId,
+            const_cast<CNetMessage*>(pData));
+
+        return {static_cast<KHook::Action>(result)};
+    }
+
+    KHook::Return<bool> Virtuals::Hook_SendNetMessage(CServerSideClientBase* pThis, const CNetMessage* pData,
+                                                      NetChannelBufType_t bufType)
+    {
+        if (!pThis || !pData)
+            return {KHook::Action::Ignore, true};
+
+        INetworkMessageInternal* pNetMsg = pData->GetNetMessage();
+        if (!pNetMsg)
+            return {KHook::Action::Ignore, true};
+
+        NetMessageInfo_t* pInfo = pNetMsg->GetNetMessageInfo();
+        if (!pInfo)
+            return {KHook::Action::Ignore, true};
+
+        Action result = networkmessages::DispatchServerInternalHook(pThis->GetPlayerSlot(), pInfo->m_MessageId,
+                                                                    const_cast<CNetMessage*>(pData));
+
+        return {static_cast<KHook::Action>(result), true};
     }
 
     KHook::Return<bool> Virtuals::Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast)

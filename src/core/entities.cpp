@@ -64,17 +64,17 @@ namespace entities
 
     CBaseEntity* EntitiesManager::FindEntityByClassname(CEntityInstance* pStart, const char* name)
     {
-        return addresses::toolkitAddresses.FindEntityByClassName(shared::g_pEntitySystem, pStart, name);
+        return addresses::toolkitAddresses.CGameEntitySystem_FindEntityByClassName()(shared::g_pEntitySystem, pStart, name);
     }
 
     CBaseEntity* EntitiesManager::FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter)
     {
-        return addresses::toolkitAddresses.FindEntityByName(shared::g_pEntitySystem, pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
+        return addresses::toolkitAddresses.CGameEntitySystem_FindEntityByName()(shared::g_pEntitySystem, pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
     }
 
     CBaseEntity* EntitiesManager::CreateEntityByName(const char* pszClassName)
     {
-        return addresses::toolkitAddresses.CreateEntityByName(pszClassName, -1);
+        return addresses::toolkitAddresses.CBaseEntity_CreateEntityByName()(pszClassName, -1);
     }
 
     void EntitiesManager::AddEntityListener(IEntityListener* pListener)
@@ -89,12 +89,12 @@ namespace entities
 
     void EntitiesManager::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
     {
-        addresses::toolkitAddresses.AcceptInput(pTarget, pszInput, pActivator, pCaller, variant_t(pszValue));
+        addresses::toolkitAddresses.CEntityInstance_AcceptInput()(pTarget, pszInput, pActivator, pCaller, variant_t(pszValue));
     }
 
     void EntitiesManager::AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
     {
-        addresses::toolkitAddresses.AddEntityIOEvent(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
+        addresses::toolkitAddresses.CEntitySystem_AddEntityIOEvent()(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
     }
 
     void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, Mode nMode)

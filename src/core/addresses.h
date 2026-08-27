@@ -49,7 +49,7 @@
 #define RESOLVE_SIG(handle, name, pattern, variable)                  \
 {                                                                     \
     auto& mod = toolkitAddresses.GetOrLoadModule(handle);             \
-    auto addr = mod.FindPattern(pattern);                             \
+    auto addr = mod.FindPattern(DynLibUtils::ParsePattern(pattern));  \
                                                                       \
     if (!addr)                                                        \
     {                                                                 \
@@ -57,9 +57,9 @@
         return false;                                                 \
     }                                                                 \
                                                                       \
-    variable = addr.RCast<decltype(variable)>();                      \
+    variable = addr;                                                  \
                                                                       \
-    FP_DEBUG("Found '{}' at {}", name, fmt::ptr(variable));           \
+    FP_DEBUG("Found '{}' at {}", name, fmt::ptr(variable.GetPtr()));  \
 }
 
 class CEntityInstance;
@@ -100,22 +100,28 @@ namespace addresses
         CGameEntitySystem_FindEntityByClassName_t CGameEntitySystem_FindEntityByClassName() override;
         CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
         CTakeDamageInfo_CTakeDamageInfo_t CTakeDamageInfo_CTakeDamageInfo() override;
+        INetworkMessageProcessingPreFilter_FilterMessage_t INetworkMessageProcessingPreFilter_FilterMessage() override;
     public:
-        CBaseEntity_CreateEntityByName_t CreateEntityByName = nullptr;
-        CBaseEntity_DispatchSpawn_t DispatchSpawn = nullptr;
-        CBaseEntity_TakeDamageOld_t TakeDamageOld = nullptr;
-        CBaseModelEntity_SetModel_t SetModel = nullptr;
-        CBasePlayerController_SetPawn_t SetPawn = nullptr;
-        CGameRules_TerminateRound_t TerminateRound = nullptr;
-        CCSPlayer_WeaponServices_Destroy_t Destroy = nullptr;
-        CCSPlayerController_LegacyGameEventListener_t LegacyGameEventListener = nullptr;
-        CCSPlayerController_SwitchTeam_t SwitchTeam = nullptr;
-        CEntityInstance_AcceptInput_t AcceptInput = nullptr;
-        CEntityIOOutput_FireOutputInternal_t FireOutputInternal = nullptr;
-        CEntitySystem_AddEntityIOEvent_t AddEntityIOEvent = nullptr;
-        CGameEntitySystem_FindEntityByClassName_t FindEntityByClassName = nullptr;
-        CGameEntitySystem_FindEntityByName_t FindEntityByName = nullptr;
-        CTakeDamageInfo_CTakeDamageInfo_t CTakeDamageInfo = nullptr;
+        // Raw addresses. A function pointer is not portably convertible to
+        // void* and back, so what a signature scan produces is kept as the
+        // address it is; the getters below put the type on at the point of use,
+        // and the hooks take the void* straight from GetPtr().
+        DynLibUtils::CMemory CreateEntityByName;
+        DynLibUtils::CMemory DispatchSpawn;
+        DynLibUtils::CMemory TakeDamageOld;
+        DynLibUtils::CMemory SetModel;
+        DynLibUtils::CMemory SetPawn;
+        DynLibUtils::CMemory TerminateRound;
+        DynLibUtils::CMemory Destroy;
+        DynLibUtils::CMemory LegacyGameEventListener;
+        DynLibUtils::CMemory SwitchTeam;
+        DynLibUtils::CMemory AcceptInput;
+        DynLibUtils::CMemory FireOutputInternal;
+        DynLibUtils::CMemory AddEntityIOEvent;
+        DynLibUtils::CMemory FindEntityByClassName;
+        DynLibUtils::CMemory FindEntityByName;
+        DynLibUtils::CMemory CTakeDamageInfo;
+        DynLibUtils::CMemory FilterMessage;
     private:
         std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
     };

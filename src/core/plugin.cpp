@@ -41,6 +41,7 @@
 #include "convars.h"
 #include "events.h"
 #include "gameconfig.h"
+#include "networkmessages.h"
 #include "inlinehooks.h"
 #include "patches.h"
 #include "pluginmanager.h"
@@ -49,8 +50,6 @@
 #include "virtualhooks.h"
 
 #include "source2toolkit/utils/plat.h"
-
-#include "schema/cgameresourceserviceserver.h"
 
 #include "utils/log.h"
 #include "utils/paths.h"
@@ -72,32 +71,29 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         return false;
     }
 
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pEngine, IVEngineServer, INTERFACEVERSION_VENGINESERVER);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameEventSystem, IGameEventSystem,
-                        GAMEEVENTSYSTEM_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameResourceServiceServer, CGameResourceService,
-                        GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkMessages, INetworkMessages,
-                        NETWORKMESSAGES_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pNetworkServerService, INetworkServerService,
-                        NETWORKSERVERSERVICE_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pSchemaSystem, CSchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
-    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pServer, IServerGameDLL, INTERFACEVERSION_SERVERGAMEDLL);
-    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameClients, IServerGameClients,
-                        INTERFACEVERSION_SERVERGAMECLIENTS);
-    GET_V_IFACE_CURRENT(GetServerFactory, shared::g_pGameEntities, ISource2GameEntities,
-                        SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2Server, ISource2Server, SOURCE2SERVER_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2ServerConfig, ISource2ServerConfig, SOURCE2SERVERCONFIG_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2GameClients, ISource2GameClients, SOURCE2GAMECLIENTS_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2GameEntities, ISource2GameEntities, SOURCE2GAMEENTITIES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pEngineServer, IVEngineServer2, SOURCE2ENGINETOSERVER_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pCVar, ICvar, CVAR_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pSchemaSystem, ISchemaSystem, SCHEMASYSTEM_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pGameResourceServiceServer, IGameResourceService, GAMERESOURCESERVICESERVER_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pNetworkServerService, INetworkServerService, NETWORKSERVERSERVICE_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pNetworkSystem, INetworkSystem, NETWORKSYSTEM_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pNetworkMessages, INetworkMessages, NETWORKMESSAGES_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pNetworkStringTableServer, INetworkStringTableContainer, SOURCE2ENGINETOSERVERSTRINGTABLE_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pEngineServiceMgr, IEngineServiceMgr, ENGINESERVICEMGR_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pHostStateMgr, IHostStateMgr, HOSTSTATEMGR_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetEngineFactory, g_pLocalize, ILocalize, LOCALIZE_INTERFACE_VERSION);
+    GET_V_IFACE_CURRENT(GetFileSystemFactory, g_pFullFileSystem, IFileSystem, FILESYSTEM_INTERFACE_VERSION);
 
-    g_pCVar = shared::g_pCVar;
-    g_pEngineServer = shared::g_pEngine;
-    g_pGameResourceServiceServer = reinterpret_cast<IGameResourceService*>(shared::g_pGameResourceServiceServer);
-    g_pNetworkMessages = shared::g_pNetworkMessages;
-    g_pNetworkServerService = shared::g_pNetworkServerService;
-    g_pSchemaSystem = shared::g_pSchemaSystem;
-    g_pSource2Server = shared::g_pServer;
-    g_pSource2GameClients = shared::g_pGameClients;
-    g_pSource2GameEntities = shared::g_pGameEntities;
+    // IGameEventSystem has no global in interfaces.h at all, so it stays in
+    // shared. The schema system does have one, but as ISchemaSystem -- the
+    // toolkit needs CSchemaSystem's methods, so it downcasts once here.
+    GET_V_IFACE_CURRENT(GetEngineFactory, shared::g_pGameEventSystem, IGameEventSystem, GAMEEVENTSYSTEM_INTERFACE_VERSION);
+
+    shared::g_pSchemaSystem = static_cast<CSchemaSystem*>(g_pSchemaSystem);
 
     log::Init();
     scheduler::Init();

@@ -35,8 +35,15 @@
  * Project: Source2Toolkit
  */
 #pragma once
+// tier1/convar.h first: iloopmode.h (pulled in by igamesystem.h) uses
+// CSplitScreenSlot in IGameSystem::HandleInputEvent without declaring it, and
+// PostEventAbstract below needs the type too.
+#include "tier1/convar.h"
+
 #include "ISmmPlugin.h"
 #include "igameevents.h"
+#include "engine/igameeventsystem.h"
+#include "source2toolkit/schema/serversideclient.h"
 #include "igamesystem.h"
 #include "eiface.h"
 #include "entitysystem.h"
@@ -58,6 +65,8 @@ namespace virtualhooks {
         KHook::Return<void> Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
         KHook::Return<void> Hook_ClientCommand(IServerGameClients* pThis, CPlayerSlot slot, const CCommand& args);
         KHook::Return<void> Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg);
+        KHook::Return<void> Hook_PostEventAbstract(IGameEventSystem* pThis, CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount, const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize, NetChannelBufType_t bufType);
+        KHook::Return<bool> Hook_SendNetMessage(CServerSideClientBase* pThis, const CNetMessage* pData, NetChannelBufType_t bufType);
         KHook::Return<int> Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char *filename, bool bSearchAll);
         KHook::Return<bool> Hook_FireEvent(IGameEventManager2* pThis, IGameEvent *event, bool bDontBroadcast);
         KHook::Return<bool> Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent *event, bool bDontBroadcast);
@@ -69,9 +78,14 @@ namespace virtualhooks {
         KHook::Virtual<IGameSystem, void, const EventServerGamePostSimulate_t*>* m_pOnServerGamePostSimulate;
         KHook::Virtual<IGameEventManager2, int, const char*, bool>* m_pLoadEventsFromFile;
         KHook::Virtual<IGameEventManager2, bool, IGameEvent*, bool>* m_pFireEvent;
+        KHook::Virtual<IGameEventSystem, void, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t>* m_pPostEventAbstract;
+        // SendNetMessage is declared on the base, so that is what the member
+        // function pointer -- and therefore the hook -- is typed against.
+        KHook::Virtual<CServerSideClientBase, bool, const CNetMessage*, NetChannelBufType_t>* m_pSendNetMessage;
     protected:
         IGameSystem* m_pCEntityDebugGameSystemVTable;
         IGameEventManager2* m_pCGameEventManagerVTable;
+        CServerSideClientBase* m_pCServerSideClientVTable;
     };
 
     class CEntityListener: public IEntityListener {

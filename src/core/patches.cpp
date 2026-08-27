@@ -46,9 +46,9 @@ namespace patches
 {
     bool Initialize()
     {
-        DynLibUtils::CModule libserver(shared::g_pServer);
+        DynLibUtils::CModule libserver(g_pSource2Server);
 
-        uintptr_t addr = libserver.FindPattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId"));
+        uintptr_t addr = libserver.FindPattern(DynLibUtils::ParsePattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId")));
         if (addr)
         {
             uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);

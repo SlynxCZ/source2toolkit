@@ -45,7 +45,6 @@
 #include "utils/vectorextends.h"
 #include "dynlibutils/module.hpp"
 #include "iserver.h"
-#include "schema/cgameresourceserviceserver.h"
 #include "schema/navphysicsinterface.h"
 #include "source2toolkit/schema/entity/classes/CBaseEntity.h"
 

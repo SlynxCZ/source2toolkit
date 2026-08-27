@@ -44,7 +44,7 @@
 #include "core/scheduler.h"
 #include "dynlibutils/module.hpp"
 #include "iserver.h"
-#include "schema/cgameresourceserviceserver.h"
+#include "networkmessages.h"
 
 namespace inlinehooks
 {
@@ -53,15 +53,22 @@ namespace inlinehooks
 
     Inlines::Inlines() :
         m_pFireOutputInternal(new KHook::Function(this, &Inlines::Hook_FireOutputInternal, nullptr)),
-        m_pPlatDebug(new KHook::Function(this, &Inlines::Hook_PlatDebug, nullptr))
+        m_pPlatDebug(new KHook::Function(this, &Inlines::Hook_PlatDebug, nullptr)),
+        m_pFilterMessage(new KHook::Function(this, &Inlines::Hook_FilterMessage, nullptr))
     {
     }
 
     void Inlines::InitListeners()
     {
-        DynLibUtils::CModule libserver(shared::g_pServer);
+        DynLibUtils::CModule libserver(g_pSource2Server);
 
-        m_pFireOutputInternal->Configure(addresses::toolkitAddresses.FireOutputInternal);
+        m_pFireOutputInternal->Configure(addresses::toolkitAddresses.CEntityIOOutput_FireOutputInternal());
+
+        // The stored signature is a raw address; RCast puts the hook's own
+        // parameter list on it rather than the SDK typedef's, which is typed
+        // against the plain pre-filter instead of the pad-based layout.
+        m_pFilterMessage->Configure(addresses::toolkitAddresses.FilterMessage.RCast<
+            bool (*)(INetworkMessageProcessingPreFilterCustom*, const CNetMessage*, INetChannel*)>());
 
         auto platDebugAddr = libserver.GetFunctionByName("Plat_DebugString_Buffered").RCast<void (*)(void*, void*)>();
         if (platDebugAddr)
@@ -74,6 +81,7 @@ namespace inlinehooks
     {
         delete m_pFireOutputInternal;
         delete m_pPlatDebug;
+        delete m_pFilterMessage;
     }
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator,
@@ -155,5 +163,28 @@ namespace inlinehooks
             return {KHook::Action::Supersede};
 
         return {KHook::Action::Ignore};
+    }
+
+    KHook::Return<bool> Inlines::Hook_FilterMessage(INetworkMessageProcessingPreFilterCustom* pThis,
+                                                    const CNetMessage* pData, INetChannel* pChannel)
+    {
+        // `this` is the pre-filter subobject, not the whole client -- that is
+        // what INetworkMessageProcessingPreFilterCustom's pad-based layout is
+        // for, so the slot can be read without hand-rolling the delta.
+        if (!pThis || !pData)
+            return {KHook::Action::Ignore, true};
+
+        INetworkMessageInternal* pNetMsg = pData->GetNetMessage();
+        if (!pNetMsg)
+            return {KHook::Action::Ignore, true};
+
+        NetMessageInfo_t* pInfo = pNetMsg->GetNetMessageInfo();
+        if (!pInfo)
+            return {KHook::Action::Ignore, true};
+
+        const Action action = networkmessages::DispatchClientHook(pThis->GetPlayerSlot(), pInfo->m_MessageId,
+                                                                  const_cast<CNetMessage*>(pData));
+
+        return {static_cast<KHook::Action>(action), true};
     }
 }

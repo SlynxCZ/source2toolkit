@@ -307,7 +307,7 @@ namespace commands {
     void CommandsManager::RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        if (shared::g_pCVar && shared::g_pCVar->FindConCommand(pchName).IsValidRef()) {
+        if (g_pCVar && g_pCVar->FindConCommand(pchName).IsValidRef()) {
             FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
             RegConListener(owner, pchName, nativeHandler, Mode::Pre);
             RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, Mode::Pre);

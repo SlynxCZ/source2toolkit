@@ -48,7 +48,7 @@ void INavPhysicsInterface::TraceLine(const Vector& vStart, const Vector& vEnd, C
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);
@@ -60,7 +60,7 @@ void INavPhysicsInterface::TraceLine(const Vector &vStart, const Vector &vEnd, C
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);
@@ -72,7 +72,7 @@ void INavPhysicsInterface::TraceShape(const Ray_t& ray, const Vector& vStart, co
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);
@@ -84,7 +84,7 @@ void INavPhysicsInterface::TraceShape(const Ray_t &ray, const Vector &vStart, co
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);
@@ -96,7 +96,7 @@ uint64 INavPhysicsInterface::PointContents(const Vector* const vTestPos, uint64 
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);
@@ -108,7 +108,7 @@ bool INavPhysicsInterface::CheckAreaOverlappingEntity(const void* const rArea, c
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);
@@ -120,7 +120,7 @@ void INavPhysicsInterface::GetEntityWorldSpaceAABB(const CBaseEntity* const rEnt
 {
     if (!vTable)
     {
-        vTable = DynLibUtils::CModule(shared::g_pServer).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
+        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
     assert(vTable);

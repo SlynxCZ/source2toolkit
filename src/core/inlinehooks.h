@@ -40,6 +40,7 @@
 #include "ISmmPlugin.h"
 #include "eiface.h"
 #include "entitysystem.h"
+#include "source2toolkit/schema/serversideclient.h"
 
 #include "dynlibutils/memaddr.hpp"
 
@@ -53,9 +54,14 @@ namespace inlinehooks {
     public:
         KHook::Return<void> Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
         KHook::Return<void> Hook_PlatDebug(void* unk001, void* unk002);
+        KHook::Return<bool> Hook_FilterMessage(INetworkMessageProcessingPreFilterCustom* pThis, const CNetMessage* pData, INetChannel* pChannel);
     protected:
         KHook::Function<void, CEntityIOOutput*, CEntityInstance*, CEntityInstance*, void*, float, void*, void*>* m_pFireOutputInternal;
         KHook::Function<void, void*, void*>* m_pPlatDebug;
+        // Hooked by signature rather than by vtable: FilterMessage sits in a
+        // secondary vtable (non-zero offset-to-top), and a by-name lookup only
+        // ever finds the primary one.
+        KHook::Function<bool, INetworkMessageProcessingPreFilterCustom*, const CNetMessage*, INetChannel*>* m_pFilterMessage;
     };
 
     extern Inlines inlines;

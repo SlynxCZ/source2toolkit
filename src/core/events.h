@@ -39,7 +39,7 @@
 #include "shared.h"
 
 #include "source2toolkit/IToolkitEvents.h"
-#include "source2toolkit/IToolkitTypes.h"
+#include "source2toolkit/IToolkitPlugin.h"
 
 #include "igameevents.h"
 #include <functional>

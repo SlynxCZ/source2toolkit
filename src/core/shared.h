@@ -47,22 +47,21 @@
 #include <memory>
 
 class CCSGameRules;
-class CGameResourceService;
 
 namespace shared
 {
-    extern ICvar* g_pCVar;
-    extern IVEngineServer* g_pEngine;
+    // Only what interfaces/interfaces.h cannot give us. Everything else --
+    // g_pCVar, g_pEngineServer, g_pNetworkMessages, g_pNetworkServerService,
+    // g_pSource2Server, g_pSource2GameClients, g_pSource2GameEntities and the
+    // rest -- is declared there and filled in by plugin.cpp's GET_V_IFACE_*.
+    //
+    // IGameEventSystem has no global in interfaces.h at all; CSchemaSystem is the concrete type we need the methods of, not
+    // the ISchemaSystem/IGameResourceService the SDK declares; the entity
+    // system and event manager are derived at runtime rather than fetched.
+    extern IGameEventSystem* g_pGameEventSystem;
+    extern CSchemaSystem* g_pSchemaSystem;
     extern CGameEntitySystem* g_pEntitySystem;
     extern IGameEventManager2* g_pGameEventManager;
-    extern IGameEventSystem* g_pGameEventSystem;
-    extern CGameResourceService* g_pGameResourceServiceServer;
-    extern INetworkMessages* g_pNetworkMessages;
-    extern INetworkServerService* g_pNetworkServerService;
-    extern CSchemaSystem* g_pSchemaSystem;
-    extern IServerGameDLL* g_pServer;
-    extern IServerGameClients* g_pGameClients;
-    extern ISource2GameEntities* g_pGameEntities;
 
     extern CGlobalVars* g_pGlobalVars;
     extern CCoreConfig* g_pCoreConfig;

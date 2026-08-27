@@ -79,16 +79,28 @@ public:
     IToolkitModule* LoadModuleFromMemory(uintptr_t ptr) override;
     void FreeModule(IToolkitModule* module) override;
 
-    IGameEventManager2* GetGameEventManager() override;
-    CGlobalVars* GetGlobalVars() override;
-    ICvar* GetCVar() override;
     ISource2Server* GetSource2Server() override;
-    IVEngineServer* GetEngineServer() override;
-    IGameEventSystem* GetGameEventSystem() override;
-    INetworkMessages* GetNetworkMessages() override;
-    INetworkServerService* GetNetworkServerService() override;
-    CGameEntitySystem* GetEntitySystem() override;
+    ISource2ServerConfig* GetSource2ServerConfig() override;
+    ISource2GameClients* GetSource2GameClients() override;
+    ISource2GameEntities* GetSource2GameEntities() override;
+    IVEngineServer2* GetEngineServer() override;
+    ICvar* GetCVar() override;
     CSchemaSystem* GetSchemaSystem() override;
+    IGameResourceService* GetGameResourceService() override;
+    INetworkServerService* GetNetworkServerService() override;
+    INetworkSystem* GetNetworkSystem() override;
+    INetworkMessages* GetNetworkMessages() override;
+    INetworkStringTableContainer* GetNetworkStringTableServer() override;
+    IEngineServiceMgr* GetEngineServiceMgr() override;
+    IHostStateMgr* GetHostStateMgr() override;
+    ILocalize* GetLocalize() override;
+    IFileSystem* GetFileSystem() override;
+
+    IGameEventSystem* GetGameEventSystem() override;
+    IGameEventManager2* GetGameEventManager() override;
+    CGameEntitySystem* GetEntitySystem() override;
+    CGlobalVars* GetGlobalVars() override;
+
     const char* GetBaseDir() override;
 
     size_t Format(char *buffer, size_t maxlength, const char *format, ...) override;

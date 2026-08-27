@@ -104,7 +104,7 @@ namespace networkmessages
 
     void* NetworkMessagesManager::AllocateNetMessageByID(int msgid)
     {
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessageById(msgid);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return nullptr;
         return netmsg->AllocateMessage()->ToPB<google::protobuf::Message>();
@@ -112,7 +112,7 @@ namespace networkmessages
 
     void* NetworkMessagesManager::AllocateNetMessageByPartialName(const char* name)
     {
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessagePartial(name);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessagePartial(name);
         if (!netmsg)
             return nullptr;
         return netmsg->AllocateMessage()->ToPB<google::protobuf::Message>();
@@ -939,7 +939,7 @@ namespace networkmessages
     {
         CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
 
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessageById(msgid);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return;
 
@@ -951,7 +951,7 @@ namespace networkmessages
     {
         CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
 
-        auto* netmsg = shared::g_pNetworkMessages->FindNetworkMessageById(msgid);
+        auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return;
 

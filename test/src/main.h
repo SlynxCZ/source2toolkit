@@ -42,7 +42,6 @@
 #include "source2toolkit/IToolkitPlugin.h"
 
 #include "eiface.h"
-#include "khook.hpp"
 
 class Plugin final : public IToolkitPlugin, IToolkitListener
 {
