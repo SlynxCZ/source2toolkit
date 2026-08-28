@@ -135,7 +135,7 @@ namespace inlinehooks
                     pActivator,
                     pCaller,
                     delay,
-                    MMODE_PRE
+                    false
                 );
 
                 if (action == MRES_SUPERCEDE)
@@ -155,7 +155,7 @@ namespace inlinehooks
         {
             for (auto* listener : pair->m_vecPost)
             {
-                listener->OnEntityOutput(outputName, pActivator, pCaller, delay, MMODE_POST);
+                listener->OnEntityOutput(outputName, pActivator, pCaller, delay, true);
             }
         }
 

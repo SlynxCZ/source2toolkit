@@ -199,10 +199,10 @@ namespace virtualhooks
 
                     if (parsed.ArgC() > 0)
                     {
-                        META_RES r = commands::DispatchConsoleListener(ctx, parsed, MMODE_PRE);
+                        META_RES r = commands::DispatchConsoleListener(ctx, parsed, false);
 
                         if (r != MRES_SUPERCEDE)
-                            commands::DispatchConsoleListener(ctx, parsed, MMODE_POST);
+                            commands::DispatchConsoleListener(ctx, parsed, true);
 
                         if (r == MRES_SUPERCEDE)
                             RETURN_META(MRES_SUPERCEDE);
@@ -216,12 +216,12 @@ namespace virtualhooks
             }
         }
 
-        META_RES result = commands::DispatchConsoleListener(ctx, args, MMODE_PRE);
+        META_RES result = commands::DispatchConsoleListener(ctx, args, false);
 
         if (result > MRES_IGNORED)
             RETURN_META(result);
 
-        commands::DispatchConsoleListener(ctx, args, MMODE_POST);
+        commands::DispatchConsoleListener(ctx, args, true);
 
         RETURN_META(result);
     }
@@ -231,11 +231,11 @@ namespace virtualhooks
         if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
         {
             CCommandContext ctx(CT_NO_TARGET, slot);
-            META_RES result = commands::DispatchConsoleListener(ctx, args, MMODE_PRE);
+            META_RES result = commands::DispatchConsoleListener(ctx, args, false);
             if (result > MRES_IGNORED)
                 RETURN_META(result);
 
-            commands::DispatchConsoleListener(ctx, args, MMODE_POST);
+            commands::DispatchConsoleListener(ctx, args, true);
         }
 
         RETURN_META(MRES_IGNORED);
@@ -282,7 +282,7 @@ namespace virtualhooks
             RETURN_META_VALUE(MRES_IGNORED, false);
 
         bool localDontBroadcast = bDontBroadcast;
-        if (!events::DispatchGameEvent(event, MMODE_PRE, localDontBroadcast))
+        if (!events::DispatchGameEvent(event, false, localDontBroadcast))
             RETURN_META_VALUE(MRES_SUPERCEDE, false);
 
         if (IGameEvent* copy = shared::g_pGameEventManager->DuplicateEvent(event))
@@ -308,7 +308,7 @@ namespace virtualhooks
             eventStack.pop_back();
 
             bool dummy = bDontBroadcast;
-            events::DispatchGameEvent(copy, MMODE_POST, dummy);
+            events::DispatchGameEvent(copy, true, dummy);
             shared::g_pGameEventManager->FreeEvent(copy);
         }
 

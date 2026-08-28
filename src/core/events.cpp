@@ -56,9 +56,9 @@ namespace events {
         }
     }
 
-    void EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, META_MODE mode)
+    void EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, bool post)
     {
-        gameEvents[name].push_back({owner, handler, mode});
+        gameEvents[name].push_back({owner, handler, post});
         RegisterListenerIfNeeded(name);
     }
 
@@ -99,17 +99,17 @@ namespace events {
         gameEvents.clear();
     }
 
-    bool DispatchGameEvent(IGameEvent *event, META_MODE mode, bool &dontBroadcast) {
+    bool DispatchGameEvent(IGameEvent *event, bool post, bool &dontBroadcast) {
         const char *name = event->GetName();
         auto it = gameEvents.find(name);
         if (it == gameEvents.end())
             return true;
 
         for (const auto &hook: it->second) {
-            if (hook.mode != mode)
+            if (hook.post != post)
                 continue;
 
-            META_RES result = hook.handler(event, mode, dontBroadcast);
+            META_RES result = hook.handler(event, post, dontBroadcast);
 
             if (result == MRES_SUPERCEDE)
                 return false;

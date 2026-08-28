@@ -51,7 +51,7 @@ namespace events {
     {
         PluginId owner;
         GameEventHandler handler;
-        META_MODE mode;
+        bool post;
     };
 
     class EventListener : public IGameEventListener2
@@ -62,7 +62,7 @@ namespace events {
     class EventManager : public IToolkitEvents
     {
     public:
-        void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, META_MODE mode) override;
+        void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, bool post) override;
     public:
         void RemoveAllForPlugin(PluginId id);
     };
@@ -72,5 +72,5 @@ namespace events {
     void InitEvents();
     void DestructEvents();
 
-    bool DispatchGameEvent(IGameEvent *event, META_MODE mode, bool &dontBroadcast);
+    bool DispatchGameEvent(IGameEvent *event, bool post, bool &dontBroadcast);
 }

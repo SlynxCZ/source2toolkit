@@ -97,26 +97,26 @@ namespace entities
         addresses::toolkitAddresses.CEntitySystem_AddEntityIOEvent()(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
     }
 
-    void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, META_MODE nMode)
+    void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post)
     {
         OutputKey key{
             pchClassName ? pchClassName : "*",
             pchOutputName ? pchOutputName : "*"
         };
 
-        if (nMode == MMODE_POST)
+        if (post)
             inlinehooks::entityIOListenerStack[key].m_vecPost.push_back(pListener);
         else
             inlinehooks::entityIOListenerStack[key].m_vecPre.push_back(pListener);
     }
 
-    void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, META_MODE nMode)
+    void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post)
     {
         if (!pchClassName && !pchOutputName)
         {
             for (auto it = inlinehooks::entityIOListenerStack.begin(); it != inlinehooks::entityIOListenerStack.end(); )
             {
-                auto& vec = nMode == MMODE_POST ? it->second.m_vecPost : it->second.m_vecPre;
+                auto& vec = post ? it->second.m_vecPost : it->second.m_vecPre;
 
                 std::erase(vec, pListener);
 
@@ -137,7 +137,7 @@ namespace entities
         if (it == inlinehooks::entityIOListenerStack.end())
             return;
 
-        auto& vec = nMode == MMODE_POST ? it->second.m_vecPost : it->second.m_vecPre;
+        auto& vec = post ? it->second.m_vecPost : it->second.m_vecPre;
 
         std::erase(vec, pListener);
 

@@ -73,8 +73,9 @@ m_iHookID = SH_ADD_INLINEHOOK(FilterMessage, pAddress,
 ```
 
 Handlers return `META_RES` (`MRES_IGNORED`, `MRES_HANDLED`, `MRES_OVERRIDE`,
-`MRES_SUPERCEDE`) and register with `META_MODE` (`MMODE_PRE` / `MMODE_POST`,
-or the `SHMODE_` aliases) — the same vocabulary as Metamod.
+`MRES_SUPERCEDE`) — the same vocabulary as Metamod. Timing is a plain
+`bool post`, exactly like SourceHook's own `SH_ADD_HOOK`: `false` runs before
+the original, `true` after.
 
 ---
 

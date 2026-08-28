@@ -50,14 +50,14 @@ namespace commands {
     {
         PluginId owner;
         CommandHandler handler;
-        META_MODE mode;
+        bool post;
     };
 
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
     {
-        return [fn](const CCommandContext& ctx, const CCommand& args, META_MODE mode) -> META_RES
+        return [fn](const CCommandContext& ctx, const CCommand& args, bool post) -> META_RES
         {
-            fn(ctx, args, mode);
+            fn(ctx, args, post);
             return MRES_IGNORED;
         };
     }
@@ -66,14 +66,14 @@ namespace commands {
     void DestructCommands();
 
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);
-    META_RES DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, META_MODE mode);
+    META_RES DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post);
 
     class CommandsManager : public IToolkitCommands
     {
     public:
         void RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) override;
         void RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) override;
-        void RegConListener(PluginId owner, const char* pchName, CommandHandler handler, META_MODE mode) override;
+        void RegConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) override;
     public:
         void RemoveAllForPlugin(PluginId id);
         void UnlockConCommands();
