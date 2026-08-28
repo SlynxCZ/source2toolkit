@@ -206,6 +206,12 @@
       "linux": 5
     }
   },
+  "CNetworkGameServer_ClientList": {
+    "offsets": {
+      "windows": 584,
+      "linux": 584
+    }
+  },
   "CTakeDamageInfo_HitGroup": {
     "offsets": {
       "windows": 104,
