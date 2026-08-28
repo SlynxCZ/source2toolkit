@@ -25,6 +25,13 @@ resolve_dep_internal(METAMOD_DIR MMSOURCE_DEV)
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(${SOURCE2TOOLKIT_SDK_DIR} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
+# SourceHook is built exactly once, here. The core owns the private engine
+# instance, so it is the only thing that needs the library; the SDK exports the
+# headers alone, which is all a plugin needs to place hooks on that engine.
+# ${SOURCEHOOK} comes from the SDK above.
+set(SOURCEHOOK_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+add_subdirectory(${SOURCEHOOK} ${CMAKE_BINARY_DIR}/sourcehook)
+
 add_subdirectory(vendor/dynlibutils)
 add_subdirectory(vendor/spdlog)
 
