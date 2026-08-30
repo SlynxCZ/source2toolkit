@@ -37,7 +37,15 @@
 #pragma once
 #include "source2toolkit/IToolkitConVars.h"
 
+#include <vector>
+
 namespace convars {
+    struct ConVarChangeEntry
+    {
+        PluginId owner;
+        ConVarChangeHandler handler;
+    };
+
     class ConVarsManager final : public IToolkitConVars
     {
     public:
@@ -88,10 +96,28 @@ namespace convars {
 
         void DeleteConVar(uint16 accessIndex) override;
 
+        void HookConVarChange(PluginId owner, ConVarChangeHandler handler) override;
+        void UnhookConVarChange(PluginId owner) override;
+
     public:
         void UnlockConVars();
 
+        // Called from the one engine-level callback the manager installs.
+        void DispatchConVarChange(ConVarRefAbstract* ref, CSplitScreenSlot slot,
+                                  const char* pszNewValue, const char* pszOldValue);
+
+        // A handler is a std::function holding code inside the plugin's library,
+        // so it cannot outlive it.
+        void RemoveAllForPlugin(PluginId id);
+        void Shutdown();
+
     private:
+        void EnsureGlobalCallbackInstalled();
+        void RemoveGlobalCallbackIfIdle();
+
+        std::vector<ConVarChangeEntry> m_changeHandlers;
+        bool m_bGlobalCallbackInstalled = false;
+
         inline ConVarRefAbstract GetRef(uint16 idx)
         {
             return ConVarRefAbstract(idx);

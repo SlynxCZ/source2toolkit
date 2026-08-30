@@ -39,6 +39,8 @@
 #include "shared.h"
 #include "utils/log.h"
 
+#include <algorithm>
+
 // ---- Flag setter compatible with various SDKs ----
 template <typename T>
 concept HasAddClear = requires(T* t, uint64_t f)
@@ -517,5 +519,81 @@ namespace convars
                 ref.RemoveFlags(FCVAR_HIDDEN | FCVAR_DEVELOPMENTONLY);
             }
         }
+    }
+
+    /* =========================
+    Change callbacks
+    ========================= */
+
+    // ICvar only takes a plain function pointer, and keeps one list of them for
+    // the whole process. So the manager installs exactly one -- this -- and fans
+    // out from there, which is what lets a plugin register a capturing lambda.
+    static void OnGlobalConVarChanged(ConVarRefAbstract* ref, CSplitScreenSlot nSlot,
+                                      const char* pNewValue, const char* pOldValue, void* /*unk*/)
+    {
+        convarsManager.DispatchConVarChange(ref, nSlot, pNewValue, pOldValue);
+    }
+
+    void ConVarsManager::EnsureGlobalCallbackInstalled()
+    {
+        if (m_bGlobalCallbackInstalled || !g_pCVar)
+            return;
+
+        g_pCVar->InstallGlobalChangeCallback(OnGlobalConVarChanged);
+        m_bGlobalCallbackInstalled = true;
+    }
+
+    void ConVarsManager::RemoveGlobalCallbackIfIdle()
+    {
+        // Nothing left to fan out to -- stop paying for the callback.
+        if (!m_bGlobalCallbackInstalled || !m_changeHandlers.empty() || !g_pCVar)
+            return;
+
+        g_pCVar->RemoveGlobalChangeCallback(OnGlobalConVarChanged);
+        m_bGlobalCallbackInstalled = false;
+    }
+
+    void ConVarsManager::HookConVarChange(PluginId owner, ConVarChangeHandler handler)
+    {
+        if (!handler)
+            return;
+
+        m_changeHandlers.push_back({owner, std::move(handler)});
+        EnsureGlobalCallbackInstalled();
+    }
+
+    void ConVarsManager::UnhookConVarChange(PluginId owner)
+    {
+        RemoveAllForPlugin(owner);
+    }
+
+    void ConVarsManager::DispatchConVarChange(ConVarRefAbstract* ref, CSplitScreenSlot slot,
+                                              const char* pszNewValue, const char* pszOldValue)
+    {
+        if (m_changeHandlers.empty())
+            return;
+
+        // Copied first: a handler is free to register or drop one, either of which
+        // would move the vector out from under an iterator.
+        const std::vector<ConVarChangeEntry> handlers = m_changeHandlers;
+
+        for (const auto& entry : handlers)
+            entry.handler(ref, slot, pszNewValue, pszOldValue);
+    }
+
+    void ConVarsManager::RemoveAllForPlugin(PluginId id)
+    {
+        std::erase_if(m_changeHandlers, [id](const ConVarChangeEntry& e)
+        {
+            return e.owner == id;
+        });
+
+        RemoveGlobalCallbackIfIdle();
+    }
+
+    void ConVarsManager::Shutdown()
+    {
+        m_changeHandlers.clear();
+        RemoveGlobalCallbackIfIdle();
     }
 }

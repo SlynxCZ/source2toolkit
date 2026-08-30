@@ -167,6 +167,8 @@ bool ToolkitCore::Unload(char* error, size_t maxlen)
     inlinehooks::inlines.DestructListeners();
     virtualhooks::virtuals.DestructListeners();
     scheduler::Shutdown();
+    // Takes the engine-level change callback back out with it.
+    convars::convarsManager.Shutdown();
 
     if (shared::g_pEntitySystem)
         shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);

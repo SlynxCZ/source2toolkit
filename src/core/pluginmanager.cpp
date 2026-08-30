@@ -39,6 +39,7 @@
 
 #include "commands.h"
 #include "customhud.h"
+#include "convars.h"
 #include "events.h"
 #include "entities.h"
 
@@ -269,6 +270,7 @@ bool PluginManager::ReloadPlugin(int id)
         events::eventManager.RemoveAllForPlugin(id);
         commands::commandsManager.RemoveAllForPlugin(id);
         customhud::customHudManager.RemoveAllForPlugin(id);
+        convars::convarsManager.RemoveAllForPlugin(id);
 
         CloseLib((*it)->lib);
         m_plugins.erase(it);
@@ -319,6 +321,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         events::eventManager.RemoveAllForPlugin(id);
         commands::commandsManager.RemoveAllForPlugin(id);
         customhud::customHudManager.RemoveAllForPlugin(id);
+        convars::convarsManager.RemoveAllForPlugin(id);
 
         CloseLib(p->lib);
 
@@ -418,6 +421,7 @@ void PluginManager::UnloadAll()
         events::eventManager.RemoveAllForPlugin(p->id);
         commands::commandsManager.RemoveAllForPlugin(p->id);
         customhud::customHudManager.RemoveAllForPlugin(p->id);
+        convars::convarsManager.RemoveAllForPlugin(p->id);
 
         CloseLib(p->lib);
     }
