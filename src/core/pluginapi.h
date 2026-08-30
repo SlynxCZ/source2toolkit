@@ -70,6 +70,7 @@ public:
     IToolkitEntities* Entities() override;
     IToolkitEvents* Events() override;
     IToolkitGameConfig* GameConfig() override;
+    IToolkitGameSystems* GameSystems() override;
     IToolkitMenus* Menus() override;
     IToolkitMySQL* MySQL() override;
     IToolkitNetworkMessages* NetworkMessages() override;

@@ -42,6 +42,7 @@
 #include "customhud.h"
 #include "events.h"
 #include "gameconfig.h"
+#include "gamesystems.h"
 #include "networkmessages.h"
 #include "inlinehooks.h"
 #include "patches.h"
@@ -128,6 +129,10 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         FP_ERROR("Could not initialize addresses.");
         return false;
     }
+
+    // Not fatal: a failed scan only means plugins cannot register game
+    // systems, which most do not. IToolkitGameSystems::IsAvailable() says so.
+    gamesystems::gameSystemsManager.Init();
 
     if (!patches::Initialize())
     {

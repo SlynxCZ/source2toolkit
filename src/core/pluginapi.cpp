@@ -40,6 +40,7 @@
 #include "commands.h"
 #include "convars.h"
 #include "customhud.h"
+#include "gamesystems.h"
 #include "entities.h"
 #include "events.h"
 #include "menus.h"
@@ -55,6 +56,7 @@
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"
+#include "source2toolkit/IToolkitGameSystems.h"
 #include "source2toolkit/IToolkitMenus.h"
 #include "source2toolkit/IToolkitMySQL.h"
 #include "source2toolkit/IToolkitNetworkMessages.h"
@@ -253,6 +255,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_ENTITIES_INTERFACE)) ptr = &entities::entitiesManager;
     else if (!strcmp(iface, TOOLKIT_EVENTS_INTERFACE)) ptr = &events::eventManager;
     else if (!strcmp(iface, TOOLKIT_GAMECONFIG_INTERFACE)) ptr = shared::g_pGameConfig;
+    else if (!strcmp(iface, TOOLKIT_GAMESYSTEMS_INTERFACE)) ptr = &gamesystems::gameSystemsManager;
     else if (!strcmp(iface, TOOLKIT_MENUS_INTERFACE)) ptr = &menus::menuManager;
     else if (!strcmp(iface, TOOLKIT_MYSQL_INTERFACE)) ptr = &mysql::mysqlManager;
     else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
@@ -319,6 +322,11 @@ IToolkitEvents* PluginApi::Events()
 IToolkitGameConfig* PluginApi::GameConfig()
 {
     return shared::g_pGameConfig;
+}
+
+IToolkitGameSystems* PluginApi::GameSystems()
+{
+    return &gamesystems::gameSystemsManager;
 }
 
 IToolkitMenus* PluginApi::Menus()
