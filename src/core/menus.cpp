@@ -59,7 +59,7 @@ namespace menus
                 if (close)
                 {
                     menuManager.CloseActiveMenu(player);
-                    if (player) player->PrintToCenterHtml(optRef.Text.c_str(), 3);
+                    if (player) player->PrintToCenterHtml(optRef.Text.c_str(), 3, true);
                 }
             },
             disabled
@@ -132,7 +132,7 @@ namespace menus
             html += "'>!9</font> -> Close<br>\n";
         }
 
-        player_->PrintToCenterHtml(html.c_str(), 3);
+        player_->PrintToCenterHtml(html.c_str(), 3, true);
     }
 
     void CenterHtmlMenuInstance::OnKeyPress(CCSPlayerController* p, int key)
@@ -196,7 +196,7 @@ namespace menus
         menuManager.CloseActiveMenu(player_);
         if (player_)
         {
-            player_->PrintToCenterHtml(" ", 3);
+            player_->PrintToCenterHtml(" ", 3, true);
         }
     }
 

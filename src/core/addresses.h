@@ -62,6 +62,25 @@
     FP_DEBUG("Found '{}' at {}", name, fmt::ptr(variable.GetPtr()));  \
 }
 
+/// Same as RESOLVE_SIG, but a miss is not fatal: the address is left null and
+/// initialization carries on. For functions we only have a signature for on
+/// some platforms -- the caller is expected to null-check before using it.
+#define RESOLVE_SIG_OPTIONAL(handle, name, pattern, variable)         \
+{                                                                     \
+    auto& mod = toolkitAddresses.GetOrLoadModule(handle);             \
+    auto addr = mod.FindPattern(DynLibUtils::ParsePattern(pattern));  \
+                                                                      \
+    if (!addr)                                                        \
+    {                                                                 \
+        FP_DEBUG("Optional '{}' not found, leaving it unresolved", name); \
+    }                                                                 \
+    else                                                              \
+    {                                                                 \
+        variable = addr;                                              \
+        FP_DEBUG("Found '{}' at {}", name, fmt::ptr(variable.GetPtr())); \
+    }                                                                 \
+}
+
 class CEntityInstance;
 class CEntityIOOutput;
 class CEntitySystem;
@@ -90,9 +109,10 @@ namespace addresses
         CBaseEntity_TakeDamageOld_t CBaseEntity_TakeDamageOld() override;
         CBaseModelEntity_SetModel_t CBaseModelEntity_SetModel() override;
         CBasePlayerController_SetPawn_t CBasePlayerController_SetPawn() override;
+        CBasePlayerPawn_SnapViewAngles_t CBasePlayerPawn_SnapViewAngles() override;
         CGameRules_TerminateRound_t CGameRules_TerminateRound() override;
         CCSPlayer_WeaponServices_Destroy_t CCSPlayer_WeaponServices_Destroy() override;
-        CCSPlayerController_LegacyGameEventListener_t CCSPlayerController_LegacyGameEventListener() override;
+        LegacyGameEventListener_t LegacyGameEventListener() override;
         CCSPlayerController_SwitchTeam_t CCSPlayerController_SwitchTeam() override;
         CEntityInstance_AcceptInput_t CEntityInstance_AcceptInput() override;
         CEntityIOOutput_FireOutputInternal_t CEntityIOOutput_FireOutputInternal() override;
@@ -111,6 +131,7 @@ namespace addresses
         DynLibUtils::CMemory TakeDamageOld;
         DynLibUtils::CMemory SetModel;
         DynLibUtils::CMemory SetPawn;
+        DynLibUtils::CMemory SnapViewAngles;
         DynLibUtils::CMemory TerminateRound;
         DynLibUtils::CMemory Destroy;
         DynLibUtils::CMemory LegacyGameEventListener;

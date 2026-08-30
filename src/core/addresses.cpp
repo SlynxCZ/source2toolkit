@@ -49,9 +49,12 @@ namespace addresses
         RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity_TakeDamageOld"), toolkitAddresses.TakeDamageOld);
         RESOLVE_SIG(g_pSource2Server, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity_SetModel"), toolkitAddresses.SetModel);
         RESOLVE_SIG(g_pSource2Server, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController_SetPawn"), toolkitAddresses.SetPawn);
+        // Windows has no published signature for this one; RESOLVE_SIG_OPTIONAL
+        // leaves it null there rather than failing the whole address table.
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CBasePlayerPawn::SnapViewAngles", shared::g_pGameConfig->GetSignature("CBasePlayerPawn_SnapViewAngles"), toolkitAddresses.SnapViewAngles);
         RESOLVE_SIG(g_pSource2Server, "CGameRules::TerminateRound", shared::g_pGameConfig->GetSignature("CGameRules_TerminateRound"), toolkitAddresses.TerminateRound);
         RESOLVE_SIG(g_pSource2Server, "CCSPlayer_WeaponServices::Destroy", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices_Destroy"), toolkitAddresses.Destroy);
-        RESOLVE_SIG(g_pSource2Server, "CCSPlayerController::LegacyGameEventListener", shared::g_pGameConfig->GetSignature("CCSPlayerController_LegacyGameEventListener"), toolkitAddresses.LegacyGameEventListener);
+        RESOLVE_SIG(g_pSource2Server, "LegacyGameEventListener", shared::g_pGameConfig->GetSignature("LegacyGameEventListener"), toolkitAddresses.LegacyGameEventListener);
         RESOLVE_SIG(g_pSource2Server, "CCSPlayerController::SwitchTeam", shared::g_pGameConfig->GetSignature("CCSPlayerController_SwitchTeam"), toolkitAddresses.SwitchTeam);
         RESOLVE_SIG(g_pSource2Server, "CEntityInstance::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityInstance_AcceptInput"), toolkitAddresses.AcceptInput);
         RESOLVE_SIG(g_pSource2Server, "CEntityIOOutput::FireOutputInternal", shared::g_pGameConfig->GetSignature("CEntityIOOutput_FireOutputInternal"), toolkitAddresses.FireOutputInternal);
@@ -101,6 +104,11 @@ namespace addresses
         return SetPawn.RCast<CBasePlayerController_SetPawn_t>();
     }
 
+    CBasePlayerPawn_SnapViewAngles_t Addresses::CBasePlayerPawn_SnapViewAngles()
+    {
+        return SnapViewAngles.RCast<CBasePlayerPawn_SnapViewAngles_t>();
+    }
+
     CGameRules_TerminateRound_t Addresses::CGameRules_TerminateRound()
     {
         return TerminateRound.RCast<CGameRules_TerminateRound_t>();
@@ -111,9 +119,9 @@ namespace addresses
         return Destroy.RCast<CCSPlayer_WeaponServices_Destroy_t>();
     }
 
-    CCSPlayerController_LegacyGameEventListener_t Addresses::CCSPlayerController_LegacyGameEventListener()
+    LegacyGameEventListener_t Addresses::LegacyGameEventListener()
     {
-        return LegacyGameEventListener.RCast<CCSPlayerController_LegacyGameEventListener_t>();
+        return LegacyGameEventListener.RCast<LegacyGameEventListener_t>();
     }
 
     CCSPlayerController_SwitchTeam_t Addresses::CCSPlayerController_SwitchTeam()
