@@ -218,13 +218,13 @@ bool SamplePlugin::Hook_ClientConnect(CPlayerSlot slot, const char* pszName, uin
     TOOLKIT_LOG(this, "Hook_ClientConnect(%d, \"%s\", %lld, \"%s\", %d, \"%s\")\n", slot.Get(), pszName, xuid, pszNetworkID, unk1, pRejectReason->Get());
 
     // A hook on a function that returns something uses RETURN_META_VALUE. With
-    // MRES_SUPERCEDE the original never runs and the value below is what the
+    // MRES_OVERRIDE the original runs but the value below is what the
     // caller gets -- here: refuse the connection and hand back the reason. Try
     // it by connecting with "sample_rejected" as your name.
     if (!V_strcmp(pszName, "sample_rejected"))
     {
         pRejectReason->Insert(0, "Rejected by the sample plugin.");
-        RETURN_META_VALUE(MRES_SUPERCEDE, false);
+        RETURN_META_VALUE(MRES_OVERRIDE, false);
     }
 
     // MRES_IGNORED with a value still returns whatever the original returns --
