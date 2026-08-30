@@ -29,6 +29,7 @@ Designed for both beginners and hardcore engine hackers.
 ## Features
 
 - **Commands** – Register console & chat commands  
+- **Custom HUD** – Panorama layouts with per-player state and click callbacks  
 - **ConVars** – Read, modify and replicate variables  
 - **Entity System** – Schema-based entity access  
 - **Events & GameEvents** – Pre/Post hook support with typed data  
@@ -76,6 +77,42 @@ Handlers return `META_RES` (`MRES_IGNORED`, `MRES_HANDLED`, `MRES_OVERRIDE`,
 `MRES_SUPERCEDE`) — the same vocabulary as Metamod. Timing is a plain
 `bool post`, exactly like SourceHook's own `SH_ADD_HOOK`: `false` runs before
 the original, `true` after.
+
+---
+
+## Custom HUD
+
+`custom_hud_layout` entities put a panorama layout on top of the game HUD. The
+layout is authored as a `.vxml` under `panorama/layout/custom_game/`, and the
+server drives it per player -- CSS classes, dialog variables and whether the
+player's mouse is captured are all per-player state on one shared entity.
+
+```cpp
+CCSCustomHudLayout* pLayout = CCSCustomHudLayout::Create("my_panel", "plugin_custom_hud");
+
+pLayout->SetHasClass("dialog", "Dismissed", false, player);
+pLayout->SetDialogVariableString("MyLabel", "CustomText", "Hello", player);
+pLayout->SetInputCaptureEnabled(true, player);
+```
+
+Clicks arrive as a user message that only the core sees, so callbacks are
+registered on the layout and routed back to whichever plugin created it. The
+`id` attribute of the clicked panel is what identifies the button:
+
+```cpp
+pLayout->AddClickCallback([](CCSPlayerController* player, CCSCustomHudLayout* pLayout, const char* pszButtonId)
+{
+    if (!V_strcmp(pszButtonId, "dismiss_button"))
+    {
+        pLayout->SetHasClass("dialog", "Dismissed", true, player);
+        pLayout->SetInputCaptureEnabled(false, player);
+    }
+});
+```
+
+Callbacks are dropped when the layout entity dies, when the level changes, or
+when the plugin that registered them unloads -- a handler must not outlive the
+library it lives in.
 
 ---
 

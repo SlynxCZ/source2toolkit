@@ -40,6 +40,7 @@
 #include "source2toolkit/IToolkitAddresses.h"
 #include "source2toolkit/IToolkitCommands.h"
 #include "source2toolkit/IToolkitConVars.h"
+#include "source2toolkit/IToolkitCustomHud.h"
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"

@@ -39,6 +39,7 @@
 #include "addresses.h"
 #include "commands.h"
 #include "convars.h"
+#include "customhud.h"
 #include "entities.h"
 #include "events.h"
 #include "menus.h"
@@ -50,6 +51,7 @@
 #include "source2toolkit/IToolkitAddresses.h"
 #include "source2toolkit/IToolkitCommands.h"
 #include "source2toolkit/IToolkitConVars.h"
+#include "source2toolkit/IToolkitCustomHud.h"
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"
@@ -247,6 +249,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_ADDRESSES_INTERFACE)) ptr = &addresses::toolkitAddresses;
     else if (!strcmp(iface, TOOLKIT_COMMANDS_INTERFACE)) ptr = &commands::commandsManager;
     else if (!strcmp(iface, TOOLKIT_CONVARS_INTERFACE)) ptr = &convars::convarsManager;
+    else if (!strcmp(iface, TOOLKIT_CUSTOMHUD_INTERFACE)) ptr = &customhud::customHudManager;
     else if (!strcmp(iface, TOOLKIT_ENTITIES_INTERFACE)) ptr = &entities::entitiesManager;
     else if (!strcmp(iface, TOOLKIT_EVENTS_INTERFACE)) ptr = &events::eventManager;
     else if (!strcmp(iface, TOOLKIT_GAMECONFIG_INTERFACE)) ptr = shared::g_pGameConfig;
@@ -296,6 +299,11 @@ IToolkitCommands* PluginApi::Commands()
 IToolkitConVars* PluginApi::ConVars()
 {
     return &convars::convarsManager;
+}
+
+IToolkitCustomHud* PluginApi::CustomHud()
+{
+    return &customhud::customHudManager;
 }
 
 IToolkitEntities* PluginApi::Entities()

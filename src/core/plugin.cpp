@@ -39,6 +39,7 @@
 #include "addresses.h"
 #include "commands.h"
 #include "convars.h"
+#include "customhud.h"
 #include "events.h"
 #include "gameconfig.h"
 #include "networkmessages.h"
@@ -205,6 +206,9 @@ void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, ch
 void ToolkitCore::OnLevelShutdown()
 {
     pluginManager.OnLevelShutdown();
+
+    // The layouts these point at do not survive the level change.
+    customhud::customHudManager.Clear();
 }
 
 const char* ToolkitCore::GetAuthor() { return "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl, AlliedModders LLC."; }

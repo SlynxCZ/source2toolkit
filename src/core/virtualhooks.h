@@ -58,6 +58,7 @@ namespace virtualhooks {
         void Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName);
         void Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
         void Hook_ClientCommand(CPlayerSlot slot, const CCommand& args);
+        void Hook_ClientSvcUserMessage(CPlayerSlot slot, int nType, uint32 nSize, const void* pBuffer);
         void Hook_PostEventAbstract(CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount, const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize, NetChannelBufType_t bufType);
         void Hook_OnServerGamePostSimulate(const EventServerGamePostSimulate_t* const pMsg);
         int  Hook_LoadEventsFromFile(const char* filename, bool bSearchAll);
@@ -69,6 +70,7 @@ namespace virtualhooks {
         int m_iStartupServerHookID = 0;
         int m_iDispatchConCommandHookID = 0;
         int m_iClientCommandHookID = 0;
+        int m_iClientSvcUserMessageHookID = 0;
         int m_iPostEventAbstractHookID = 0;
         int m_iOnServerGamePostSimulateHookID = 0;
         int m_iLoadEventsFromFileHookID = 0;
