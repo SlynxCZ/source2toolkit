@@ -43,6 +43,7 @@
 #include "events.h"
 #include "gameconfig.h"
 #include "gamesystems.h"
+#include "http.h"
 #include "networkmessages.h"
 #include "inlinehooks.h"
 #include "patches.h"
@@ -174,6 +175,8 @@ bool ToolkitCore::Unload(char* error, size_t maxlen)
     scheduler::Shutdown();
     // Takes the engine-level change callback back out with it.
     convars::convarsManager.Shutdown();
+    // Callbacks are std::functions holding code inside plugin libraries.
+    http::httpManager.Shutdown();
 
     if (shared::g_pEntitySystem)
         shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);

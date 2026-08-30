@@ -71,6 +71,7 @@ public:
     IToolkitEvents* Events() override;
     IToolkitGameConfig* GameConfig() override;
     IToolkitGameSystems* GameSystems() override;
+    IToolkitHTTP* HTTP() override;
     IToolkitMenus* Menus() override;
     IToolkitMySQL* MySQL() override;
     IToolkitNetworkMessages* NetworkMessages() override;

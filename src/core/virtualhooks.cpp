@@ -42,6 +42,7 @@
 
 #include "commands.h"
 #include "customhud.h"
+#include "http.h"
 #include "events.h"
 #include "networkmessages.h"
 #include "plugin.h"
@@ -61,6 +62,8 @@ SH_DECL_HOOK3_void(INetworkServerService, StartupServer, SH_NOATTRIB, 0, const G
 SH_DECL_HOOK3_void(ICvar, DispatchConCommand, SH_NOATTRIB, 0, ConCommandRef, const CCommandContext&, const CCommand&);
 SH_DECL_HOOK2_void(IServerGameClients, ClientCommand, SH_NOATTRIB, 0, CPlayerSlot, const CCommand&);
 SH_DECL_HOOK4_void(IServerGameClients, ClientSvcUserMessage, SH_NOATTRIB, 0, CPlayerSlot, int, uint32, const void*);
+SH_DECL_HOOK0_void(ISource2Server, GameServerSteamAPIActivated, SH_NOATTRIB, 0);
+SH_DECL_HOOK0_void(ISource2Server, GameServerSteamAPIDeactivated, SH_NOATTRIB, 0);
 SH_DECL_HOOK8_void(IGameEventSystem, PostEventAbstract, SH_NOATTRIB, 0, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t);
 SH_DECL_HOOK1_void(IGameSystem, OnServerGamePostSimulate, SH_NOATTRIB, 0, const EventServerGamePostSimulate_t*);
 SH_DECL_HOOK2(IGameEventManager2, LoadEventsFromFile, SH_NOATTRIB, 0, int, const char*, bool);
@@ -84,6 +87,10 @@ namespace virtualhooks
         m_iDispatchConCommandHookID = SH_ADD_HOOK(ICvar, DispatchConCommand, g_pCVar, SH_MEMBER(this, &Virtuals::Hook_DispatchConCommand), false);
         m_iClientCommandHookID = SH_ADD_HOOK(IServerGameClients, ClientCommand, g_pSource2GameClients, SH_MEMBER(this, &Virtuals::Hook_ClientCommand), false);
         m_iClientSvcUserMessageHookID = SH_ADD_HOOK(IServerGameClients, ClientSvcUserMessage, g_pSource2GameClients, SH_MEMBER(this, &Virtuals::Hook_ClientSvcUserMessage), false);
+        // Steam only hands its HTTP client over once the API is up, and this
+        // is where that happens -- see http::HTTPManager.
+        m_iSteamAPIActivatedHookID = SH_ADD_HOOK(ISource2Server, GameServerSteamAPIActivated, g_pSource2Server, SH_MEMBER(this, &Virtuals::Hook_GameServerSteamAPIActivated), true);
+        m_iSteamAPIDeactivatedHookID = SH_ADD_HOOK(ISource2Server, GameServerSteamAPIDeactivated, g_pSource2Server, SH_MEMBER(this, &Virtuals::Hook_GameServerSteamAPIDeactivated), false);
         m_iPostEventAbstractHookID = SH_ADD_HOOK(IGameEventSystem, PostEventAbstract, shared::g_pGameEventSystem, SH_MEMBER(this, &Virtuals::Hook_PostEventAbstract), false);
 
         if (DynLibUtils::CMemory vtable = libserver.GetVirtualTableByName("CEntityDebugGameSystem"); vtable.IsValid())
@@ -111,6 +118,8 @@ namespace virtualhooks
         SH_REMOVE_HOOK_ID(m_iDispatchConCommandHookID);
         SH_REMOVE_HOOK_ID(m_iClientCommandHookID);
         SH_REMOVE_HOOK_ID(m_iClientSvcUserMessageHookID);
+        SH_REMOVE_HOOK_ID(m_iSteamAPIActivatedHookID);
+        SH_REMOVE_HOOK_ID(m_iSteamAPIDeactivatedHookID);
         SH_REMOVE_HOOK_ID(m_iPostEventAbstractHookID);
         SH_REMOVE_HOOK_ID(m_iOnServerGamePostSimulateHookID);
         SH_REMOVE_HOOK_ID(m_iLoadEventsFromFileHookID);
@@ -252,6 +261,20 @@ namespace virtualhooks
 
         if (auto* pController = CCSPlayerController::FromSlot(slot))
             customhud::customHudManager.HandleClick(pController, pBuffer, nSize);
+
+        RETURN_META(MRES_IGNORED);
+    }
+
+    void Virtuals::Hook_GameServerSteamAPIActivated()
+    {
+        http::httpManager.OnSteamAPIActivated();
+
+        RETURN_META(MRES_IGNORED);
+    }
+
+    void Virtuals::Hook_GameServerSteamAPIDeactivated()
+    {
+        http::httpManager.OnSteamAPIDeactivated();
 
         RETURN_META(MRES_IGNORED);
     }
