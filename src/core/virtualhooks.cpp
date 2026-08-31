@@ -41,6 +41,7 @@
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 
 #include "commands.h"
+#include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "customhud.h"
 #include "http.h"
 #include "events.h"
@@ -382,6 +383,11 @@ namespace virtualhooks
 
     void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity)
     {
+        // Drop a layout's click callbacks the moment the entity goes, rather
+        // than waiting for the next click to notice the handle went stale --
+        // the handlers hold plugin code and there may never be another click.
+        if (!V_strcmp("custom_hud_layout", pEntity->GetClassname()))
+            customhud::customHudManager.RemoveClickCallbacks(static_cast<CCSCustomHudLayout*>(pEntity));
     }
 
     void CEntityListener::OnEntityParentChanged(CEntityInstance* pEntity, CEntityInstance* pNewParent)

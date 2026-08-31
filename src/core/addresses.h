@@ -134,7 +134,10 @@ namespace addresses
         DynLibUtils::CMemory SnapViewAngles;
         DynLibUtils::CMemory TerminateRound;
         DynLibUtils::CMemory Destroy;
-        DynLibUtils::CMemory LegacyGameEventListener;
+        // Suffixed unlike its neighbours: the interface getter for this one has
+        // no class prefix (IToolkitAddresses::LegacyGameEventListener()), so a
+        // bare member of the same name would redeclare it.
+        DynLibUtils::CMemory LegacyGameEventListenerAddr;
         DynLibUtils::CMemory SwitchTeam;
         DynLibUtils::CMemory AcceptInput;
         DynLibUtils::CMemory FireOutputInternal;
