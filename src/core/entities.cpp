@@ -51,6 +51,8 @@
 #include "source2toolkit/utils/plat.h"
 #include "source2toolkit/utils/virtual.h"
 
+#include <algorithm>
+
 namespace entities
 {
     EntitiesManager entitiesManager;
@@ -71,11 +73,18 @@ namespace entities
 
     CBaseEntity* EntitiesManager::FindEntityByClassname(CEntityInstance* pStart, const char* name)
     {
+        // Nothing to search before the first StartupServer.
+        if (!shared::g_pEntitySystem)
+            return nullptr;
+
         return addresses::toolkitAddresses.CGameEntitySystem_FindEntityByClassName()(shared::g_pEntitySystem, pStart, name);
     }
 
     CBaseEntity* EntitiesManager::FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity, CEntityInstance* pActivator, CEntityInstance* pCaller, IEntityFindFilter* pFilter)
     {
+        if (!shared::g_pEntitySystem)
+            return nullptr;
+
         return addresses::toolkitAddresses.CGameEntitySystem_FindEntityByName()(shared::g_pEntitySystem, pStartEntity, szName, pSearchingEntity, pActivator, pCaller, pFilter);
     }
 
@@ -86,12 +95,41 @@ namespace entities
 
     void EntitiesManager::AddEntityListener(IEntityListener* pListener)
     {
-        shared::g_pEntitySystem->AddListenerEntity(pListener);
+        if (!pListener)
+            return;
+
+        if (std::find(m_Listeners.begin(), m_Listeners.end(), pListener) != m_Listeners.end())
+            return;
+
+        m_Listeners.push_back(pListener);
+
+        // Null while a plugin is still loading -- the engine has not made the
+        // entity system yet. AttachEntityListeners() picks it up on
+        // StartupServer.
+        if (shared::g_pEntitySystem)
+            shared::g_pEntitySystem->AddListenerEntity(pListener);
     }
 
     void EntitiesManager::RemoveEntityListener(IEntityListener* pListener)
     {
-        shared::g_pEntitySystem->RemoveListenerEntity(pListener);
+        if (!pListener)
+            return;
+
+        std::erase(m_Listeners, pListener);
+
+        if (shared::g_pEntitySystem)
+            shared::g_pEntitySystem->RemoveListenerEntity(pListener);
+    }
+
+    void EntitiesManager::AttachEntityListeners()
+    {
+        if (!shared::g_pEntitySystem)
+            return;
+
+        // The list is kept, not consumed: a new map can mean a new entity
+        // system, and every listener has to be put on that one too.
+        for (IEntityListener* pListener : m_Listeners)
+            shared::g_pEntitySystem->AddListenerEntity(pListener);
     }
 
     void EntitiesManager::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
@@ -101,6 +139,9 @@ namespace entities
 
     void EntitiesManager::AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue, float flDelay)
     {
+        if (!shared::g_pEntitySystem)
+            return;
+
         addresses::toolkitAddresses.CEntitySystem_AddEntityIOEvent()(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
     }
 

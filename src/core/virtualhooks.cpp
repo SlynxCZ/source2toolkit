@@ -53,6 +53,7 @@
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
 #include "core/menus.h"
+#include "core/entities.h"
 #include "dynlibutils/module.hpp"
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
@@ -171,10 +172,23 @@ namespace virtualhooks
 
     void Virtuals::Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName)
     {
-        if (!shared::g_bDetoursLoaded)
+        // Re-read every time rather than once: the engine can hand out a new
+        // entity system for the next map, and CS2Fixes refreshes it on every
+        // StartupServer for the same reason. Keeping the first one would mean
+        // a stale pointer and listeners attached to a system nothing uses.
+        auto* pEntitySystem = *DynLibUtils::CMemory(g_pGameResourceServiceServer)
+                                   .Offset(shared::g_pGameConfig->GetOffset("GameEntitySystem"))
+                                   .RCast<CGameEntitySystem**>();
+
+        if (pEntitySystem && pEntitySystem != shared::g_pEntitySystem)
         {
-            shared::g_pEntitySystem = *DynLibUtils::CMemory(g_pGameResourceServiceServer).Offset(shared::g_pGameConfig->GetOffset("GameEntitySystem")).RCast<CGameEntitySystem**>();
-            shared::g_pEntitySystem->AddListenerEntity(&entityListener);
+            shared::g_pEntitySystem = pEntitySystem;
+            pEntitySystem->AddListenerEntity(&entityListener);
+
+            // Plugins register their listeners while they load, which is
+            // before the first entity system exists at all.
+            entities::entitiesManager.AttachEntityListeners();
+
             shared::g_bDetoursLoaded = true;
         }
 

@@ -35,6 +35,8 @@
  * Project: Source2Toolkit
  */
 #pragma once
+
+#include <vector>
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/schema/entityio.h"
 
@@ -59,6 +61,20 @@ namespace entities {
 
         void AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
         void RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
+
+    public:
+        /// Attaches every registered listener to the current entity system.
+        /// Called on StartupServer, including when the engine has made a new
+        /// one for the next map.
+        void AttachEntityListeners();
+
+    private:
+        // Every listener a plugin has registered, kept for as long as it is
+        // registered rather than until it is first attached. A plugin
+        // registers while it loads, which is before the engine has made an
+        // entity system at all, and the engine may make another one on the
+        // next map -- both are handled by re-attaching this list.
+        std::vector<IEntityListener*> m_Listeners;
     };
 
     extern EntitiesManager entitiesManager;
