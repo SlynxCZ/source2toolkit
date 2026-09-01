@@ -38,16 +38,8 @@
 #include "source2toolkit/IToolkitMenus.h"
 
 namespace menus {
-    class BaseMenu : public IBaseMenu
-    {
-    public:
-        ChatMenuOption &AddMenuOptionWithCooldown(
-                std::string optionText,
-                std::function<void(CCSPlayerController *, ChatMenuOption &)> action,
-                bool disabled = false,
-                bool close = true,
-                std::function<bool()> disabledEvaluator = nullptr) override;
-    };
+    // AddMenuOptionWithCooldown lives in IBaseMenu now, so the local
+    // BaseMenu that used to supply it is gone.
 
     class CenterHtmlMenuInstance : public IMenuInstance
     {

@@ -42,33 +42,6 @@ namespace menus
 {
     MenuManager menuManager;
 
-    ChatMenuOption& BaseMenu::AddMenuOptionWithCooldown(
-        std::string optionText,
-        std::function<void(CCSPlayerController*, ChatMenuOption&)> action,
-        bool disabled,
-        bool close,
-        std::function<bool()> disabledEvaluator)
-    {
-        ChatMenuOption& opt = AddMenuOption(std::move(optionText),
-            [this, action = std::move(action), close](
-            CCSPlayerController* player, ChatMenuOption& optRef)
-            {
-                if (!s_canSelect(player)) return;
-                action(player, optRef);
-                s_onSelect(player);
-                if (close)
-                {
-                    menuManager.CloseActiveMenu(player);
-                    if (player) player->PrintToCenterHtml(optRef.Text.c_str(), 3, true);
-                }
-            },
-            disabled
-        );
-
-        opt.DisabledEvaluator = std::move(disabledEvaluator);
-        return opt;
-    }
-
     void CenterHtmlMenuInstance::Display()
     {
         if (!player_ || !menu_) return;

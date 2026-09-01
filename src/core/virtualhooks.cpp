@@ -52,6 +52,7 @@
 #include "source2toolkit/schema/serversideclient.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
+#include "core/menus.h"
 #include "dynlibutils/module.hpp"
 #include "steam/isteamgameserver.h"
 #include "iserver.h"
@@ -132,6 +133,11 @@ namespace virtualhooks
     void Virtuals::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
     {
         scheduler::Tick(simulating);
+
+        // Center HTML menus fade, so the open ones have to be redrawn every
+        // frame. MenuManager::Tick() existed but nothing called it, which left
+        // a menu on screen for a moment and then gone.
+        menus::menuManager.Tick();
 
         if (!shared::getGlobalVars())
             RETURN_META(MRES_IGNORED);
