@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "dynlibutils/module.hpp"
 #include "nlohmann/json.hpp"
 #include "KeyValues.h"
 
@@ -59,6 +60,19 @@ public:
     const char* GetSignature(const char* pchName) override;
     const char* GetSymbol(const char* pchName) override;
     const char* GetPatch(const char* pchName) override;
+
+public:
+    /// Whether the gamedata entry is a symbol (an "@"-prefixed name) rather
+    /// than a byte pattern.
+    bool IsSymbol(const char* pchName) override;
+
+    /// The module named by the entry's "library" field, loaded on first use.
+    /// Null when the entry names no library, or one that is not loaded.
+    DynLibUtils::CModule* GetModule(const char* pchName);
+
+    /// Resolves a gamedata entry to an address: by exported symbol when the
+    /// entry is "@"-prefixed, by pattern scan otherwise.
+    void* ResolveSignature(const char* pchName) override;
     int GetOffset(const char* pchName) override;
 
 private:
@@ -71,4 +85,7 @@ private:
     std::unordered_map<std::string, void*> m_umAddresses;
     std::unordered_map<std::string, std::string> m_umLibraries;
     std::unordered_map<std::string, std::string> m_umPatches;
+
+    /// Modules loaded on demand by GetModule, keyed by library name.
+    std::unordered_map<std::string, DynLibUtils::CModule> m_umModules;
 };

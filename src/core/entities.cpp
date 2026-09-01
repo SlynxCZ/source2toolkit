@@ -55,6 +55,13 @@ namespace entities
 {
     EntitiesManager entitiesManager;
 
+    CCSGameRules* EntitiesManager::GetGameRules()
+    {
+        // Captured from cs_gamerules by the entity listener, so it is whatever
+        // the current map has -- null only before that entity exists.
+        return shared::g_pGameRules;
+    }
+
     CBaseEntity* EntitiesManager::FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules)
     {
         static int offset = shared::g_pGameConfig->GetOffset("CGameRules_FindPickerEntity");

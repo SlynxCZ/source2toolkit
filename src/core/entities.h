@@ -44,6 +44,7 @@
 namespace entities {
     class EntitiesManager : public IToolkitEntities {
     public:
+        CCSGameRules* GetGameRules() override;
         CBaseEntity* FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules = nullptr) override;
         CBaseEntity* FindEntityByClassname(CEntityInstance* pStart, const char* name) override;
         CBaseEntity* FindEntityByName(CEntityInstance* pStartEntity, const char* szName, CEntityInstance* pSearchingEntity = nullptr, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, IEntityFindFilter* pFilter = nullptr) override;

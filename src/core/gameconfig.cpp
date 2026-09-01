@@ -34,6 +34,8 @@
  *
  * Project: Source2Toolkit
  */
+#include "utils/log.h"
+#include <cstring>
 #include "plugin.h"
 #include "gameconfig.h"
 #include <fstream>
@@ -158,7 +160,99 @@ const char* CGameConfig::GetSignature(const char* pchName)
 
 const char* CGameConfig::GetSymbol(const char* pchName)
 {
-    return nullptr;
+    // A symbol entry is stored in the signature field, marked with a leading
+    // "@"; the symbol itself is everything after it.
+    const char* pszSymbol = GetSignature(pchName);
+
+    if (!pszSymbol || std::strlen(pszSymbol) <= 1)
+    {
+        FP_ERROR("Missing symbol: {}", pchName ? pchName : "(null)");
+        return nullptr;
+    }
+
+    return pszSymbol + 1;
+}
+
+bool CGameConfig::IsSymbol(const char* pchName)
+{
+    const char* pszSigOrSymbol = GetSignature(pchName);
+
+    if (!pszSigOrSymbol || pszSigOrSymbol[0] == '\0')
+    {
+        FP_ERROR("Missing signature or symbol: {}", pchName ? pchName : "(null)");
+        return false;
+    }
+
+    return pszSigOrSymbol[0] == '@';
+}
+
+DynLibUtils::CModule* CGameConfig::GetModule(const char* pchName)
+{
+    const char* pszLibrary = GetLibrary(pchName);
+    if (!pszLibrary)
+        return nullptr;
+
+    // engine2 is the module's real name; "engine" is the spelling gamedata
+    // files have always used for it.
+    std::string sModule = pszLibrary;
+    if (sModule == "engine")
+        sModule = "engine2";
+
+    if (auto it = m_umModules.find(sModule); it != m_umModules.end())
+        return &it->second;
+
+    auto [it, inserted] = m_umModules.try_emplace(sModule);
+    if (!it->second.InitFromName(sModule))
+    {
+        m_umModules.erase(it);
+        FP_ERROR("Failed to load module '{}' for {}", sModule, pchName ? pchName : "(null)");
+        return nullptr;
+    }
+
+    return &it->second;
+}
+
+void* CGameConfig::ResolveSignature(const char* pchName)
+{
+    DynLibUtils::CModule* pModule = GetModule(pchName);
+    if (!pModule)
+    {
+        FP_ERROR("Invalid module for {}", pchName ? pchName : "(null)");
+        return nullptr;
+    }
+
+    void* pAddress = nullptr;
+
+    if (IsSymbol(pchName))
+    {
+        const char* pszSymbol = GetSymbol(pchName);
+        if (!pszSymbol)
+        {
+            FP_ERROR("Invalid symbol for {}", pchName ? pchName : "(null)");
+            return nullptr;
+        }
+
+        pAddress = pModule->GetFunctionByName(pszSymbol).RCast<void*>();
+    }
+    else
+    {
+        const char* pszSignature = GetSignature(pchName);
+        if (!pszSignature)
+        {
+            FP_ERROR("Failed to find signature for {}", pchName ? pchName : "(null)");
+            return nullptr;
+        }
+
+        pAddress = pModule->FindPattern(DynLibUtils::ParsePattern(pszSignature)).RCast<void*>();
+    }
+
+    if (!pAddress)
+    {
+        FP_ERROR("Failed to find address for {}", pchName ? pchName : "(null)");
+        return nullptr;
+    }
+
+    return pAddress;
 }
 
 const char* CGameConfig::GetPatch(const char* pchName)
