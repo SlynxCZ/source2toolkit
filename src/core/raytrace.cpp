@@ -142,9 +142,9 @@ namespace raytrace
     TraceResult RayTrace::TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter,
                                        Ray_t* pRay)
     {
-        if (!INavPhysicsInterface::vTable)
+        if (!INavPhysicsInterface::Bind())
         {
-            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            FP_ERROR("CNavPhysicsInterface vtable not found in the server module!");
             return TraceResult();
         }
 
@@ -159,9 +159,9 @@ namespace raytrace
 
     uint64 RayTrace::PointContents(const Vector* const vTestPos, uint64 nContentsMask)
     {
-        if (!INavPhysicsInterface::vTable)
+        if (!INavPhysicsInterface::Bind())
         {
-            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            FP_ERROR("CNavPhysicsInterface vtable not found in the server module!");
             return 0;
         }
 
@@ -171,9 +171,9 @@ namespace raytrace
     bool RayTrace::CheckAreaOverlappingEntity(const CCSNavArea* const rArea, const CBaseEntity* const rEntity,
                                               bool bExtrudeHullHeight)
     {
-        if (!INavPhysicsInterface::vTable)
+        if (!INavPhysicsInterface::Bind())
         {
-            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            FP_ERROR("CNavPhysicsInterface vtable not found in the server module!");
             return false;
         }
 
@@ -183,9 +183,9 @@ namespace raytrace
 
     void RayTrace::GetEntityWorldSpaceAABB(const CBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut)
     {
-        if (!INavPhysicsInterface::vTable)
+        if (!INavPhysicsInterface::Bind())
         {
-            FP_ERROR("CNavPhysicsInterface::vTable is not bound!");
+            FP_ERROR("CNavPhysicsInterface vtable not found in the server module!");
             return;
         }
 

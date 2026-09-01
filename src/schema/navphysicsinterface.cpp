@@ -44,86 +44,75 @@
 
 #include <cstdint>
 
-void INavPhysicsInterface::TraceLine(const Vector& vStart, const Vector& vEnd, CBaseEntity* pIgnore, uint64 nInteractsWith, uint8 nCollisionGroup, uint8 nObjectSetMask, CGameTrace* trace)
+bool INavPhysicsInterface::Bind()
 {
     if (!vTable)
     {
         vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
     }
 
-    assert(vTable);
+    return vTable != nullptr;
+}
+
+void INavPhysicsInterface::TraceLine(const Vector& vStart, const Vector& vEnd, CBaseEntity* pIgnore, uint64 nInteractsWith, uint8 nCollisionGroup, uint8 nObjectSetMask, CGameTrace* trace)
+{
+    if (!Bind())
+        return;
+
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     iface->Nav_TraceLine(vStart, vEnd, pIgnore, nInteractsWith, nCollisionGroup, nObjectSetMask, trace);
 }
 
 void INavPhysicsInterface::TraceLine(const Vector &vStart, const Vector &vEnd, CTraceFilter *pFilter, CGameTrace *trace)
 {
-    if (!vTable)
-    {
-        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-    }
+    if (!Bind())
+        return;
 
-    assert(vTable);
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     iface->Nav_TraceLine(vStart, vEnd, pFilter, trace);
 }
 
 void INavPhysicsInterface::TraceShape(const Ray_t& ray, const Vector& vStart, const Vector& vEnd, CBaseEntity* pIgnore, uint64 nInteractsWith, uint8 nCollisionGroup, uint8 nObjectSetMask, CGameTrace* trace)
 {
-    if (!vTable)
-    {
-        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-    }
+    if (!Bind())
+        return;
 
-    assert(vTable);
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     iface->Nav_TraceShape(ray, vStart, vEnd, pIgnore, nInteractsWith, nCollisionGroup, nObjectSetMask, trace);
 }
 
 void INavPhysicsInterface::TraceShape(const Ray_t &ray, const Vector &vStart, const Vector &vEnd, CTraceFilter *pFilter, CGameTrace *trace)
 {
-    if (!vTable)
-    {
-        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-    }
+    if (!Bind())
+        return;
 
-    assert(vTable);
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     iface->Nav_TraceShape(ray, vStart, vEnd, pFilter, trace);
 }
 
 uint64 INavPhysicsInterface::PointContents(const Vector* const vTestPos, uint64 nContentsMask)
 {
-    if (!vTable)
-    {
-        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-    }
+    if (!Bind())
+        return 0;
 
-    assert(vTable);
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     return iface->Nav_PointContents(vTestPos, nContentsMask);
 }
 
 bool INavPhysicsInterface::CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight)
 {
-    if (!vTable)
-    {
-        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-    }
+    if (!Bind())
+        return false;
 
-    assert(vTable);
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     return iface->Nav_CheckAreaOverlappingEntity(rArea, rEntity, bExtrudeHullHeight);
 }
 
 void INavPhysicsInterface::GetEntityWorldSpaceAABB(const CBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut)
 {
-    if (!vTable)
-    {
-        vTable = DynLibUtils::CModule(g_pSource2Server).GetVirtualTableByName("CNavPhysicsInterface").RCast<void**>();
-    }
+    if (!Bind())
+        return;
 
-    assert(vTable);
     auto *iface = reinterpret_cast<INavPhysicsInterface *>(&vTable);
     iface->Nav_GetEntityWorldSpaceAABB(rEntity, pMinsOut, pMaxsOut);
 }

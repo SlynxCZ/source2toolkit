@@ -55,6 +55,12 @@ private:
 public:
 	static inline void **vTable {};
 
+	// Resolves CNavPhysicsInterface's vtable out of the server module, once.
+	// Everything below goes through it, and so must anything that wants to know
+	// whether the interface is available before calling: reading vTable on its
+	// own never binds it, it only reports that nobody has bound it yet.
+	static bool Bind();
+
 public:
 	static void TraceLine(const Vector &vStart, const Vector &vEnd, CBaseEntity *pIgnore, uint64 nInteractsWith, uint8 nCollisionGroup, uint8 nObjectSetMask, CGameTrace *trace);
 	static void TraceLine(const Vector &vStart, const Vector &vEnd, CTraceFilter *pFilter, CGameTrace *pTraceOut);
