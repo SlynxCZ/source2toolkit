@@ -14,7 +14,7 @@ permissions:
 jobs:
 
   build-linux:
-    name: Build on Linux (Docker)
+    name: Build on Linux (clang-18)
     runs-on: ubuntu-latest
 
     steps:
@@ -30,11 +30,20 @@ jobs:
         run: |
           docker compose -f docker/docker-compose.yml up --build --abort-on-container-exit
 
+      # Only addons/ ships. Staged into its own directory so the artifact keeps
+      # the addons/ prefix -- uploading build/addons directly would root the
+      # artifact at its contents and the release tarball would unpack wrong.
+      - name: Stage package
+        run: |
+          mkdir -p package
+          cp -r build/addons package/
+
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
           name: source2toolkit-linux
-          path: build
+          path: package
+          if-no-files-found: error
 
 
   build-windows:
@@ -51,11 +60,18 @@ jobs:
         shell: pwsh
         run: .\scripts\windows-entrypoint.ps1
 
+      - name: Stage package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force package | Out-Null
+          Copy-Item -Recurse -Force build\addons package\
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
           name: source2toolkit-windows
-          path: build
+          path: package
+          if-no-files-found: error
 
 
   release:
