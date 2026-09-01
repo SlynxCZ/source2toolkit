@@ -341,8 +341,10 @@ bool PluginManager::LoadMissing()
 
     auto dir = paths::GetPluginsDirectory();
 
-    if (!fs::exists(dir))
-        return false;
+    // Nothing to load is not a failure. This used to return false and take the
+    // whole toolkit down with it on a fresh install.
+    if (!fs::exists(dir) || !fs::is_directory(dir))
+        return true;
 
     char error[256];
 
@@ -384,8 +386,11 @@ bool PluginManager::LoadAll()
 
     auto dir = paths::GetPluginsDirectory();
 
-    if (!fs::exists(dir))
-        return false;
+    if (!fs::exists(dir) || !fs::is_directory(dir))
+    {
+        SetAllLoaded();
+        return true;
+    }
 
     char error[256];
 

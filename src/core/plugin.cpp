@@ -57,6 +57,7 @@
 #include "utils/log.h"
 #include "utils/paths.h"
 #include "core/scheduler.h"
+#include "core/paths.h"
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
@@ -104,6 +105,9 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
 
     log::Init();
     scheduler::Init();
+
+    // Before anything below goes looking for one of them.
+    paths::EnsureLayout();
 
     auto coreconfig_path = std::string(paths::GetConfigsDirectory() + "/core");
     shared::g_pCoreConfig = new CCoreConfig(coreconfig_path);

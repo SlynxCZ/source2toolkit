@@ -51,5 +51,11 @@ namespace paths
         std::unordered_map<PluginId, std::string> m_PluginConfigs;
     };
 
+    /// Creates any of the toolkit's directories that are not there yet.
+    ///
+    /// A fresh install has none of them, and an empty plugins folder is not an
+    /// error -- it used to fail the whole load.
+    void EnsureLayout();
+
     extern PathsManager pathsManager;
 }

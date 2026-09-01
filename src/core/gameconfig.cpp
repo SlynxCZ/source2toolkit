@@ -110,7 +110,17 @@ bool CGameConfig::InitAll(const std::string& folder, char* conf_error, int conf_
 
     std::vector<fs::path> files;
 
-    for (const auto& entry : fs::directory_iterator(folder))
+    // directory_iterator throws on a folder that is not there, and a toolkit
+    // with no gamedata is a toolkit that resolves nothing rather than one that
+    // fails to start.
+    std::error_code ec;
+    if (!fs::exists(folder, ec) || !fs::is_directory(folder, ec))
+    {
+        FP_WARN("No gamedata folder at '{}'; nothing to resolve.", folder);
+        return true;
+    }
+
+    for (const auto& entry : fs::directory_iterator(folder, ec))
     {
         if (entry.path().extension() == ".json")
         {

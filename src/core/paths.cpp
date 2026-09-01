@@ -12,10 +12,32 @@
 #include "core/pluginmanager.h"
 
 #include "utils/paths.h"
+#include "utils/log.h"
+
+#include <filesystem>
 
 namespace paths
 {
     PathsManager pathsManager;
+
+    void EnsureLayout()
+    {
+        namespace fs = std::filesystem;
+
+        for (const auto& dir : { GetRootDirectory(), GetConfigsDirectory(), GetGamedataDirectory(),
+                                 GetPluginsDirectory(), GetSharedDirectory() })
+        {
+            std::error_code ec;
+
+            if (fs::exists(dir, ec))
+                continue;
+
+            if (fs::create_directories(dir, ec); ec)
+                FP_WARN("Could not create '{}': {}", dir, ec.message());
+            else
+                FP_INFO("Created '{}'", dir);
+        }
+    }
 
     namespace
     {
