@@ -515,12 +515,6 @@
       "linux": 584
     }
   },
-  "CNetworkGameServer_m_Clients": {
-    "offsets": {
-      "windows": 584,
-      "linux": 584
-    }
-  },
   "CPlayer_MovementServices_RunCommand": {
     "offsets": {
       "windows": 25,
@@ -531,78 +525,6 @@
     "offsets": {
       "windows": 38,
       "linux": 40
-    }
-  },
-  "CServerSideClient_SendNetMessage": {
-    "offsets": {
-      "windows": 15,
-      "linux": 16
-    }
-  },
-  "CServerSideClientBase_FreeBaselines": {
-    "offsets": {
-      "windows": 64,
-      "linux": 65
-    }
-  },
-  "CServerSideClientBase_GetRate": {
-    "offsets": {
-      "windows": 12,
-      "linux": 13
-    }
-  },
-  "CServerSideClientBase_MarkToKick": {
-    "offsets": {
-      "windows": 76,
-      "linux": 77
-    }
-  },
-  "CServerSideClientBase_Reconnect": {
-    "offsets": {
-      "windows": 6,
-      "linux": 7
-    }
-  },
-  "CServerSideClientBase_ResetUserSettings": {
-    "offsets": {
-      "windows": 56,
-      "linux": 57
-    }
-  },
-  "CServerSideClientBase_SetRate": {
-    "offsets": {
-      "windows": 10,
-      "linux": 11
-    }
-  },
-  "CServerSideClientBase_SetUpdateRate": {
-    "offsets": {
-      "windows": 11,
-      "linux": 12
-    }
-  },
-  "CServerSideClientBase_ShouldSendMessages": {
-    "offsets": {
-      "windows": 52,
-      "linux": 53
-    }
-  },
-  "CServerSideClientBase_UnmarkToKick": {
-    "offsets": {
-      "windows": 77,
-      "linux": 78
-    }
-  },
-  "CServerSideClientBase_UpdateSendState": {
-    "offsets": {
-      "windows": 53,
-      "linux": 54
-    }
-  },
-  "CServerSideClientBase_UpdateUserSettings": {
-    "offsets": {
-      "windows": 55,
-      "linux": 56
     }
   },
   "CSmokeGrenadeProjectile_EmitGrenade": {
@@ -651,36 +573,6 @@
       "linux": "48 85 F6 0F 84 ? ? ? ? 55 48 89 E5 41 57 41 56 41 55 49 89 F5 41 54 53 48 81 EC ? ? ? ? 80 3E ? 75 ? 31 C0 48 81 C4 ? ? ? ? 5B 41 5C 41 5D 41 5E 41 5F 5D C3 0F 1F 80 ? ? ? ? 4C 8D A5 ? ? ? ? 89 FB"
     }
   },
-  "ICvar_DispatchConCommand": {
-    "offsets": {
-      "windows": 20,
-      "linux": 20
-    }
-  },
-  "ICvar_FindConCommand": {
-    "offsets": {
-      "windows": 17,
-      "linux": 17
-    }
-  },
-  "IGameEventManager2_FireEvent": {
-    "offsets": {
-      "windows": 7,
-      "linux": 8
-    }
-  },
-  "IGameEventSystem_PostEventAbstract": {
-    "offsets": {
-      "windows": 16,
-      "linux": 15
-    }
-  },
-  "IGameSystem_BuildGameSessionManifest": {
-    "offsets": {
-      "windows": 7,
-      "linux": 7
-    }
-  },
   "IGameSystem_InitAllSystems_pFirst": {
     "signatures": {
       "library": "server",
@@ -688,95 +580,11 @@
       "linux": "4C 8B 35 ? ? ? ? 4D 85 F6 75 ? E9"
     }
   },
-  "ILoopMode_LoopInit": {
-    "offsets": {
-      "windows": 0,
-      "linux": 0
-    }
-  },
   "INetworkMessageProcessingPreFilter_FilterMessage": {
     "signatures": {
       "library": "engine2",
       "windows": "40 53 48 83 EC ? 48 8B 02 48 8B D9 48 8B CA",
       "linux": "55 48 89 E5 41 54 53 ? ? ? 48 89 FB 48 89 F7 FF 50 ? 48 8D 15 ? ? ? ? 31 C9 ? ? ? 48 85 D2 74 ? 48 3B 42"
-    }
-  },
-  "INetworkServerService_StartupServer": {
-    "offsets": {
-      "windows": 26,
-      "linux": 27
-    }
-  },
-  "IServerGameClients_ClientCommand": {
-    "offsets": {
-      "windows": 17,
-      "linux": 17
-    }
-  },
-  "IServerGameClients_ClientConnect": {
-    "offsets": {
-      "windows": 12,
-      "linux": 12
-    }
-  },
-  "IServerGameClients_ClientDisconnect": {
-    "offsets": {
-      "windows": 16,
-      "linux": 16
-    }
-  },
-  "IServerGameClients_ClientPutInServer": {
-    "offsets": {
-      "windows": 13,
-      "linux": 13
-    }
-  },
-  "IServerGameClients_ClientVoice": {
-    "offsets": {
-      "windows": 27,
-      "linux": 27
-    }
-  },
-  "IServerGameClients_OnClientConnected": {
-    "offsets": {
-      "windows": 11,
-      "linux": 11
-    }
-  },
-  "IServerGameDLL_GameFrame": {
-    "offsets": {
-      "windows": 19,
-      "linux": 19
-    }
-  },
-  "IServerGameDLL_GameServerSteamAPIActivated": {
-    "offsets": {
-      "windows": 41,
-      "linux": 41
-    }
-  },
-  "IServerGameDLL_GameServerSteamAPIDeactivated": {
-    "offsets": {
-      "windows": 42,
-      "linux": 42
-    }
-  },
-  "IServerGameDLL_PreWorldUpdate": {
-    "offsets": {
-      "windows": 15,
-      "linux": 15
-    }
-  },
-  "ISource2GameEntities_CheckTransmit": {
-    "offsets": {
-      "windows": 12,
-      "linux": 13
-    }
-  },
-  "IVEngineServer2_SetClientListening": {
-    "offsets": {
-      "windows": 91,
-      "linux": 91
     }
   },
   "LegacyGameEventListener": {
