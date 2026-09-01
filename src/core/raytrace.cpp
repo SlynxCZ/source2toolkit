@@ -63,14 +63,14 @@ namespace raytrace
 
         if (pTraceOptions)
         {
-            if (pTraceOptions->InteractsAs != CONTENTS_EMPTY)
-                filter.m_nInteractsAs = pTraceOptions->InteractsAs;
-
-            if (pTraceOptions->InteractsWith != MASK_ALL)
-                filter.m_nInteractsWith = pTraceOptions->InteractsWith;
-
-            if (pTraceOptions->InteractsExclude != CONTENTS_EMPTY)
-                filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
+            // Applied as given. Guarding each field against its own default
+            // meant a caller could not ask for exactly that value -- there was
+            // no way to request MASK_ALL for InteractsWith, or CONTENTS_EMPTY
+            // for the other two -- and it made TraceOptions{} and nullptr mean
+            // different things for no stated reason.
+            filter.m_nInteractsAs = pTraceOptions->InteractsAs;
+            filter.m_nInteractsWith = pTraceOptions->InteractsWith;
+            filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
         }
 
         Vector forward;
@@ -97,14 +97,14 @@ namespace raytrace
 
         if (pTraceOptions)
         {
-            if (pTraceOptions->InteractsAs != CONTENTS_EMPTY)
-                filter.m_nInteractsAs = pTraceOptions->InteractsAs;
-
-            if (pTraceOptions->InteractsWith != MASK_ALL)
-                filter.m_nInteractsWith = pTraceOptions->InteractsWith;
-
-            if (pTraceOptions->InteractsExclude != CONTENTS_EMPTY)
-                filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
+            // Applied as given. Guarding each field against its own default
+            // meant a caller could not ask for exactly that value -- there was
+            // no way to request MASK_ALL for InteractsWith, or CONTENTS_EMPTY
+            // for the other two -- and it made TraceOptions{} and nullptr mean
+            // different things for no stated reason.
+            filter.m_nInteractsAs = pTraceOptions->InteractsAs;
+            filter.m_nInteractsWith = pTraceOptions->InteractsWith;
+            filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
         }
 
         Ray_t ray;
@@ -123,14 +123,14 @@ namespace raytrace
 
         if (pTraceOptions)
         {
-            if (pTraceOptions->InteractsAs != CONTENTS_EMPTY)
-                filter.m_nInteractsAs = pTraceOptions->InteractsAs;
-
-            if (pTraceOptions->InteractsWith != MASK_ALL)
-                filter.m_nInteractsWith = pTraceOptions->InteractsWith;
-
-            if (pTraceOptions->InteractsExclude != CONTENTS_EMPTY)
-                filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
+            // Applied as given. Guarding each field against its own default
+            // meant a caller could not ask for exactly that value -- there was
+            // no way to request MASK_ALL for InteractsWith, or CONTENTS_EMPTY
+            // for the other two -- and it made TraceOptions{} and nullptr mean
+            // different things for no stated reason.
+            filter.m_nInteractsAs = pTraceOptions->InteractsAs;
+            filter.m_nInteractsWith = pTraceOptions->InteractsWith;
+            filter.m_nInteractsExclude = pTraceOptions->InteractsExclude;
         }
 
         Ray_t ray;
