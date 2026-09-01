@@ -331,6 +331,56 @@ namespace commands {
         RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
     }
 
+
+    // Takes a command name back out of the engine.
+    //
+    // ICvar offers no way to do this -- RegisterConCommand and
+    // UnregisterConCommandCallbacks and nothing else -- so it goes through
+    // CCvar's own layout, which hl2sdk carries reverse engineered in
+    // public/icvar.h. FindConCommand() resolves a name through
+    // m_ConCommandHashes (a name hash -> access index table), so dropping the
+    // entry there frees the name; the ConCommandData in m_ConCommandList stays
+    // behind, which is the class's own habit anyway -- it allocates those from
+    // a bump buffer it never frees.
+    //
+    // The layout is reverse engineered, so it is checked against the public
+    // API before anything is written: look the name up both ways and only
+    // touch the table if the two agree on the access index. A mismatch means
+    // this build's CCvar is not the one described here, and the caller falls
+    // back to parking the command instead.
+    static bool ReleaseConCommandName(const char* pchName)
+    {
+        if (!g_pCVar || !pchName || !*pchName)
+            return false;
+
+        const ConCommandRef ref = g_pCVar->FindConCommand(pchName, true);
+        if (!ref.IsValidRef())
+            return false;
+
+        auto* pCvar = static_cast<CCvar*>(g_pCVar);
+        auto& hashes = pCvar->m_ConCommandHashes;
+
+        // The token is itself the hash the table is keyed by, so it is passed
+        // explicitly -- CUtlHashtable's default functor has no overload for
+        // CUtlStringToken.
+        const CUtlStringToken token(pchName);
+        const auto handle = hashes.Find(token, token.GetHashCode());
+
+        if (handle == hashes.InvalidHandle())
+        {
+            FP_WARN("Could not release '{}': CCvar's command table does not look the way this build expects", pchName);
+            return false;
+        }
+
+        if (hashes.Element(handle) != ref.GetAccessIndex())
+        {
+            FP_WARN("Could not release '{}': CCvar's command table disagrees with FindConCommand", pchName);
+            return false;
+        }
+
+        return hashes.Remove(token, token.GetHashCode());
+    }
+
     void CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
@@ -401,22 +451,27 @@ namespace commands {
 
     void CommandsManager::RemoveAllForPlugin(PluginId id)
     {
-        // ICvar has RegisterConCommand and UnregisterConCommandCallbacks and
-        // nothing that takes a command back out of the engine's list, so the
-        // name is claimed for the lifetime of the process whatever we do --
-        // destroying the ConCommand only detaches its callbacks and leaves the
-        // entry findable.
-        //
-        // So it is parked instead. FCVAR_DEFENSIVE is what FindConCommand()
-        // skips unless asked for it explicitly, and FCVAR_HIDDEN keeps it out
-        // of find and autocomplete, so the command is gone from every angle
-        // the engine offers -- and RegisterConCommand above lifts both if the
-        // plugin comes back.
-        for (auto& [name, entry] : registeredCommands)
+        // Give the names back, so another plugin -- or this one with a
+        // ConCommand of its own -- can take them afterwards.
+        std::erase_if(registeredCommands, [id](auto& kv)
         {
-            if (entry.owner == id && entry.cmd)
-                entry.cmd->AddFlags(FCVAR_DEFENSIVE | FCVAR_HIDDEN);
-        }
+            if (kv.second.owner != id)
+                return false;
+
+            if (ReleaseConCommandName(kv.first.c_str()))
+                return true;
+
+            // The table did not look the way we expect, so the name cannot be
+            // released on this build. Park the command instead: FCVAR_DEFENSIVE
+            // is what FindConCommand() skips unless asked for it explicitly and
+            // FCVAR_HIDDEN keeps it out of find and autocomplete, so it is gone
+            // from everything except a fresh registration of the same name.
+            // Keep the entry, so registering again revives it.
+            if (kv.second.cmd)
+                kv.second.cmd->AddFlags(FCVAR_DEFENSIVE | FCVAR_HIDDEN);
+
+            return false;
+        });
 
         for (auto it = consoleListeners.begin(); it != consoleListeners.end(); )
         {
