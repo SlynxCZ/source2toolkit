@@ -64,7 +64,7 @@ namespace entities
 
     CBaseEntity* EntitiesManager::FindPickerEntity(CBasePlayerController* pPlayer, CCSGameRules* pGameRules)
     {
-        static int offset = shared::g_pGameConfig->GetOffset("CGameRules_FindPickerEntity");
+        static int offset = shared::g_pGameConfig->GetOffset("CGameRules::FindPickerEntity");
         auto* gr = pGameRules ? pGameRules : shared::g_pGameRules;
         return CALL_VIRTUAL(CBaseEntity*, offset, gr, pPlayer ? pPlayer : nullptr, nullptr);
     }

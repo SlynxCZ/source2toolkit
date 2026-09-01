@@ -44,25 +44,25 @@ namespace addresses
 
     bool Initialize()
     {
-        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::CreateEntityByName", shared::g_pGameConfig->GetSignature("CBaseEntity_CreateEntityByName"), toolkitAddresses.CreateEntityByName);
-        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::DispatchSpawn", shared::g_pGameConfig->GetSignature("CBaseEntity_DispatchSpawn"), toolkitAddresses.DispatchSpawn);
-        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity_TakeDamageOld"), toolkitAddresses.TakeDamageOld);
-        RESOLVE_SIG(g_pSource2Server, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity_SetModel"), toolkitAddresses.SetModel);
-        RESOLVE_SIG(g_pSource2Server, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController_SetPawn"), toolkitAddresses.SetPawn);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::CreateEntityByName", shared::g_pGameConfig->GetSignature("UTIL::CreateEntityByName"), toolkitAddresses.CreateEntityByName);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::DispatchSpawn", shared::g_pGameConfig->GetSignature("CBaseEntity::DispatchSpawn"), toolkitAddresses.DispatchSpawn);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity::TakeDamage"), toolkitAddresses.TakeDamageOld);
+        RESOLVE_SIG(g_pSource2Server, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity::SetModel"), toolkitAddresses.SetModel);
+        RESOLVE_SIG(g_pSource2Server, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController::SetPawn"), toolkitAddresses.SetPawn);
         // Windows has no published signature for this one; RESOLVE_SIG_OPTIONAL
         // leaves it null there rather than failing the whole address table.
-        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CBasePlayerPawn::SnapViewAngles", shared::g_pGameConfig->GetSignature("CBasePlayerPawn_SnapViewAngles"), toolkitAddresses.SnapViewAngles);
-        RESOLVE_SIG(g_pSource2Server, "CGameRules::TerminateRound", shared::g_pGameConfig->GetSignature("CGameRules_TerminateRound"), toolkitAddresses.TerminateRound);
-        RESOLVE_SIG(g_pSource2Server, "CCSPlayer_WeaponServices::Destroy", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices_Destroy"), toolkitAddresses.Destroy);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CBasePlayerPawn::SnapViewAngles", shared::g_pGameConfig->GetSignature("CBasePlayerPawn::SnapViewAngles"), toolkitAddresses.SnapViewAngles);
+        RESOLVE_SIG(g_pSource2Server, "CGameRules::TerminateRound", shared::g_pGameConfig->GetSignature("CGameRules::TerminateRound"), toolkitAddresses.TerminateRound);
+        RESOLVE_SIG(g_pSource2Server, "CCSPlayer_WeaponServices::Destroy", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices::Destroy"), toolkitAddresses.Destroy);
         RESOLVE_SIG(g_pSource2Server, "LegacyGameEventListener", shared::g_pGameConfig->GetSignature("LegacyGameEventListener"), toolkitAddresses.LegacyGameEventListenerAddr);
-        RESOLVE_SIG(g_pSource2Server, "CCSPlayerController::SwitchTeam", shared::g_pGameConfig->GetSignature("CCSPlayerController_SwitchTeam"), toolkitAddresses.SwitchTeam);
-        RESOLVE_SIG(g_pSource2Server, "CEntityInstance::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityInstance_AcceptInput"), toolkitAddresses.AcceptInput);
-        RESOLVE_SIG(g_pSource2Server, "CEntityIOOutput::FireOutputInternal", shared::g_pGameConfig->GetSignature("CEntityIOOutput_FireOutputInternal"), toolkitAddresses.FireOutputInternal);
-        RESOLVE_SIG(g_pSource2Server, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem_AddEntityIOEvent"), toolkitAddresses.AddEntityIOEvent);
-        RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByClassName"), toolkitAddresses.FindEntityByClassName);
-        RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem_FindEntityByName"), toolkitAddresses.FindEntityByName);
-        RESOLVE_SIG(g_pSource2Server, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo_CTakeDamageInfo"), toolkitAddresses.CTakeDamageInfo);
-        RESOLVE_SIG(shared::g_pGameEventSystem, "INetworkMessageProcessingPreFilter::FilterMessage", shared::g_pGameConfig->GetSignature("INetworkMessageProcessingPreFilter_FilterMessage"), toolkitAddresses.FilterMessage);
+        RESOLVE_SIG(g_pSource2Server, "CCSPlayerController::SwitchTeam", shared::g_pGameConfig->GetSignature("CCSPlayerController::SwitchTeam"), toolkitAddresses.SwitchTeam);
+        RESOLVE_SIG(g_pSource2Server, "CEntityInstance::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityInstance::AcceptInput"), toolkitAddresses.AcceptInput);
+        RESOLVE_SIG(g_pSource2Server, "CEntityIOOutput::FireOutputInternal", shared::g_pGameConfig->GetSignature("CEntityIOOutput::FireOutputInternal"), toolkitAddresses.FireOutputInternal);
+        RESOLVE_SIG(g_pSource2Server, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem::AddEntityIOEvent"), toolkitAddresses.AddEntityIOEvent);
+        RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem::FindEntityByClassName"), toolkitAddresses.FindEntityByClassName);
+        RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem::FindEntityByName"), toolkitAddresses.FindEntityByName);
+        RESOLVE_SIG(g_pSource2Server, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo::Constructor"), toolkitAddresses.CTakeDamageInfo);
+        RESOLVE_SIG(shared::g_pGameEventSystem, "INetworkMessageProcessingPreFilter::FilterMessage", shared::g_pGameConfig->GetSignature("INetworkMessageProcessingPreFilter::FilterMessage"), toolkitAddresses.FilterMessage);
 
         return true;
     }

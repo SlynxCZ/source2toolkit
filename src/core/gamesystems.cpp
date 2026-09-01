@@ -63,13 +63,13 @@ namespace gamesystems
         // the address of the next instruction.
         auto& mod = addresses::toolkitAddresses.GetOrLoadModule(g_pSource2Server);
         auto addr = mod.FindPattern(
-            DynLibUtils::ParsePattern(shared::g_pGameConfig->GetSignature("IGameSystem_InitAllSystems_pFirst")));
+            DynLibUtils::ParsePattern(shared::g_pGameConfig->GetSignature("IGameSystem::InitAllSystems->pFirst")));
 
         auto* pInstruction = addr.RCast<uint8*>();
 
         if (!addr || !pInstruction)
         {
-            FP_ERROR("Failed to resolve IGameSystem_InitAllSystems_pFirst -- game systems unavailable.");
+            FP_ERROR("Failed to resolve IGameSystem_InitAllSystems -- game systems unavailable.");
             return false;
         }
 
