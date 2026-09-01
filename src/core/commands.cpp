@@ -103,23 +103,53 @@ namespace commands {
 
     CommandsManager commandsManager;
 
+    // A player reaches this handler through the same dispatch the server
+    // console does -- from their own console, and from chat through the "!" and
+    // "/" aliases RegisterConCommand sets up. Only the read-only half is
+    // theirs to run; load, unload and refresh decide what code the server runs.
+    // Allowlist rather than denylist, so a subcommand added later is not
+    // exposed to players by forgetting about it here.
+    static bool IsPlayerSubcommand(const char* cmd)
+    {
+        return strcmp(cmd, "list") == 0
+            || strcmp(cmd, "info") == 0
+            || strcmp(cmd, "version") == 0;
+    }
+
     static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, bool post)
     {
         int argc = args.ArgC();
+
+        // A valid slot means a player issued this; the server console has none.
+        const bool bFromPlayer = ctx.GetPlayerSlot().IsValid();
 
         if (argc < 2)
         {
             REPLY_INFO("Source2Toolkit commands:");
             REPLY_INFO("  toolkit list");
-            REPLY_INFO("  toolkit load <name>");
-            REPLY_INFO("  toolkit unload <id>");
+
+            if (!bFromPlayer)
+            {
+                REPLY_INFO("  toolkit load <name>");
+                REPLY_INFO("  toolkit unload <id>");
+            }
+
             REPLY_INFO("  toolkit info <id>");
-            REPLY_INFO("  toolkit refresh");
+
+            if (!bFromPlayer)
+                REPLY_INFO("  toolkit refresh");
+
             REPLY_INFO("  toolkit version");
             return;
         }
 
         const char* cmd = args.Arg(1);
+
+        if (bFromPlayer && !IsPlayerSubcommand(cmd))
+        {
+            REPLY_ERROR("'%s' is not available from a client console.", cmd);
+            return;
+        }
 
         if (strcmp(cmd, "list") == 0)
         {
@@ -135,7 +165,7 @@ namespace commands {
             {
                 auto* api = p->api;
 
-                REPLY_INFO("  [%d] %s (%s) by (%s)",
+                REPLY_INFO("  [%d] %s (%s) by %s",
                     p->id,
                     api->GetName(),
                     api->GetVersion(),
