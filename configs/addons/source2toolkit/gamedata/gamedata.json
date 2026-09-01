@@ -555,7 +555,7 @@
       "linux": "4C 8B 35 ? ? ? ? 4D 85 F6 75 ? E9"
     }
   },
-  "INetworkMessageProcessingPreFilter_FilterMessage": {
+  "INetworkMessageProcessingPreFilter::FilterMessage": {
     "signatures": {
       "library": "engine2",
       "windows": "40 53 48 83 EC ? 48 8B 02 48 8B D9 48 8B CA",
