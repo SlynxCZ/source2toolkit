@@ -49,9 +49,7 @@ namespace addresses
         RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity::TakeDamage"), toolkitAddresses.TakeDamageOld);
         RESOLVE_SIG(g_pSource2Server, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity::SetModel"), toolkitAddresses.SetModel);
         RESOLVE_SIG(g_pSource2Server, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController::SetPawn"), toolkitAddresses.SetPawn);
-        // Windows has no published signature for this one; RESOLVE_SIG_OPTIONAL
-        // leaves it null there rather than failing the whole address table.
-        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CBasePlayerPawn::SnapViewAngles", shared::g_pGameConfig->GetSignature("CBasePlayerPawn::SnapViewAngles"), toolkitAddresses.SnapViewAngles);
+        RESOLVE_SIG(g_pSource2Server, "CBasePlayerPawn::SnapViewAngles", shared::g_pGameConfig->GetSignature("CBasePlayerPawn::SnapViewAngles"), toolkitAddresses.SnapViewAngles);
         RESOLVE_SIG(g_pSource2Server, "CGameRules::TerminateRound", shared::g_pGameConfig->GetSignature("CGameRules::TerminateRound"), toolkitAddresses.TerminateRound);
         RESOLVE_SIG(g_pSource2Server, "CCSPlayer_WeaponServices::Destroy", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices::Destroy"), toolkitAddresses.Destroy);
         RESOLVE_SIG(g_pSource2Server, "LegacyGameEventListener", shared::g_pGameConfig->GetSignature("LegacyGameEventListener"), toolkitAddresses.LegacyGameEventListenerAddr);
