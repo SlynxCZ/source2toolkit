@@ -56,6 +56,7 @@
 #include <sys/inotify.h>
 #include <sys/select.h>
 #include <unistd.h>
+#include "core/networkmessages.h"
 #endif
 
 PluginManager pluginManager;
@@ -271,6 +272,7 @@ bool PluginManager::ReloadPlugin(int id)
         commands::commandsManager.RemoveAllForPlugin(id);
         customhud::customHudManager.RemoveAllForPlugin(id);
         convars::convarsManager.RemoveAllForPlugin(id);
+        networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
 
         CloseLib((*it)->lib);
         m_plugins.erase(it);
@@ -322,6 +324,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         commands::commandsManager.RemoveAllForPlugin(id);
         customhud::customHudManager.RemoveAllForPlugin(id);
         convars::convarsManager.RemoveAllForPlugin(id);
+        networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
 
         CloseLib(p->lib);
 
@@ -422,6 +425,7 @@ void PluginManager::UnloadAll()
         commands::commandsManager.RemoveAllForPlugin(p->id);
         customhud::customHudManager.RemoveAllForPlugin(p->id);
         convars::convarsManager.RemoveAllForPlugin(p->id);
+        networkmessages::networkMessagesManager.RemoveAllForPlugin(p->id);
 
         CloseLib(p->lib);
     }

@@ -62,6 +62,21 @@ namespace events {
         RegisterListenerIfNeeded(name);
     }
 
+    void EventManager::UnhookGameEvent(PluginId owner, const char* name, bool post)
+    {
+        auto it = gameEvents.find(name);
+        if (it == gameEvents.end())
+            return;
+
+        std::erase_if(it->second, [owner, post](const EventEntry& e)
+        {
+            return e.owner == owner && e.post == post;
+        });
+
+        if (it->second.empty())
+            gameEvents.erase(it);
+    }
+
     void EventManager::RemoveAllForPlugin(PluginId id)
     {
         for (auto it = gameEvents.begin(); it != gameEvents.end(); )

@@ -58,8 +58,8 @@ namespace customhud {
 
     class CustomHudManager : public IToolkitCustomHud {
     public:
-        void AddClickCallback(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler) override;
-        void RemoveClickCallbacks(CCSCustomHudLayout* pLayout) override;
+        void HookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler) override;
+        void UnhookCustomHudClick(CCSCustomHudLayout* pLayout) override;
     public:
         /// Routes one CS_UM_CustomHudClicked payload to the callbacks of the
         /// layout it names. Stale entries are dropped on the way through.

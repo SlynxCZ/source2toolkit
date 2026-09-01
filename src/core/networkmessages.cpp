@@ -965,40 +965,61 @@ namespace networkmessages
     Hooks
     ========================= */
 
-    uint64_t NetworkMessagesManager::AddServerHook(NetMessageServerHook callback)
+    void NetworkMessagesManager::HookServerMessage(PluginId owner, NetMessageServerHook handler)
     {
-        uint64_t id = m_nextServerHookID++;
-        m_serverHooks.emplace(id, std::move(callback));
-        return id;
+        if (!handler)
+        {
+            m_serverHooks.erase(owner);
+            return;
+        }
+
+        m_serverHooks[owner] = std::move(handler);
     }
 
-    void NetworkMessagesManager::RemoveServerHook(uint64_t callbackID)
+    void NetworkMessagesManager::UnhookServerMessage(PluginId owner)
     {
-        m_serverHooks.erase(callbackID);
+        m_serverHooks.erase(owner);
     }
 
-    uint64_t NetworkMessagesManager::AddClientHook(NetMessageClientHook callback)
+    void NetworkMessagesManager::HookClientMessage(PluginId owner, NetMessageClientHook handler)
     {
-        uint64_t id = m_nextClientHookID++;
-        m_clientHooks.emplace(id, std::move(callback));
-        return id;
+        if (!handler)
+        {
+            m_clientHooks.erase(owner);
+            return;
+        }
+
+        m_clientHooks[owner] = std::move(handler);
     }
 
-    void NetworkMessagesManager::RemoveClientHook(uint64_t callbackID)
+    void NetworkMessagesManager::UnhookClientMessage(PluginId owner)
     {
-        m_clientHooks.erase(callbackID);
+        m_clientHooks.erase(owner);
     }
 
-    uint64_t NetworkMessagesManager::AddServerInternalHook(NetMessageClientHook callback)
+    void NetworkMessagesManager::HookServerInternalMessage(PluginId owner, NetMessageClientHook handler)
     {
-        uint64_t id = m_nextServerInternalHookID++;
-        m_serverInternalHooks.emplace(id, std::move(callback));
-        return id;
+        if (!handler)
+        {
+            m_serverInternalHooks.erase(owner);
+            return;
+        }
+
+        m_serverInternalHooks[owner] = std::move(handler);
     }
 
-    void NetworkMessagesManager::RemoveServerInternalHook(uint64_t callbackID)
+    void NetworkMessagesManager::UnhookServerInternalMessage(PluginId owner)
     {
-        m_serverInternalHooks.erase(callbackID);
+        m_serverInternalHooks.erase(owner);
+    }
+
+    void NetworkMessagesManager::RemoveAllForPlugin(PluginId id)
+    {
+        // Without this the engine would keep calling a std::function whose
+        // target lives in a library that has just been closed.
+        m_serverHooks.erase(id);
+        m_clientHooks.erase(id);
+        m_serverInternalHooks.erase(id);
     }
 
     /* =========================

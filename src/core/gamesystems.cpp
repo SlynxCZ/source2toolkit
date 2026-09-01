@@ -69,7 +69,7 @@ namespace gamesystems
 
         if (!addr || !pInstruction)
         {
-            FP_ERROR("Failed to resolve IGameSystem_InitAllSystems -- game systems unavailable.");
+            FP_ERROR("Failed to resolve IGameSystem::InitAllSystems_pFirst -- game systems unavailable.");
             return false;
         }
 

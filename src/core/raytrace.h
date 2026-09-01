@@ -45,24 +45,8 @@
 
 #include "dynlibutils/memaddr.hpp"
 
-class CTraceFilterEx : public CTraceFilter
-{
-public:
-    explicit CTraceFilterEx(CBaseEntity* entityToIgnore)
-        : CTraceFilter(static_cast<CEntityInstance*>(entityToIgnore),
-                       entityToIgnore ? entityToIgnore->m_hOwnerEntity.Get() : nullptr,
-                       entityToIgnore
-                           ? entityToIgnore->m_pCollision()->m_collisionAttribute().m_nHierarchyId()
-                           : static_cast<uint16>(0xFFFFFFFF),
-                       MASK_ALL,
-                       COLLISION_GROUP_DEFAULT, true)
-    {
-    }
-
-    CTraceFilterEx() : CTraceFilter(MASK_ALL, COLLISION_GROUP_DEFAULT, true)
-    {
-    }
-};
+// CTraceFilterEx now lives in the SDK (IToolkitTrace.h) so plugins calling
+// TraceShapeEx can build one too.
 
 namespace raytrace
 {

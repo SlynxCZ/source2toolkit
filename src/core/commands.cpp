@@ -227,23 +227,23 @@ namespace commands {
 
     void InitCommands()
     {
-        commandsManager.RegConCommand(0, "source2toolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "source2t", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "s2toolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "s2t", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "stoolkit", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "st", HandleToolkitCommand);
-        commandsManager.RegConCommand(0, "toolkit", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "source2toolkit", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "source2t", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "s2toolkit", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "s2t", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "stoolkit", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "st", HandleToolkitCommand);
+        commandsManager.RegisterConCommand(0, "toolkit", HandleToolkitCommand);
 
-        commandsManager.RegConCommand(0, "1", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "2", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "3", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "4", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "5", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "6", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "7", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "8", HandleMenuCommand);
-        commandsManager.RegConCommand(0, "9", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "1", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "2", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "3", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "4", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "5", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "6", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "7", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "8", HandleMenuCommand);
+        commandsManager.RegisterConCommand(0, "9", HandleMenuCommand);
     }
 
     void DestructCommands()
@@ -296,22 +296,22 @@ namespace commands {
         return result;
     }
 
-    void CommandsManager::RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
+    void CommandsManager::RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        RegConListener(owner, pchName, nativeHandler, false);
-        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
-        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
+        RegisterConListener(owner, pchName, nativeHandler, false);
+        RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
+        RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
     }
 
-    void CommandsManager::RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
+    void CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
         if (g_pCVar && g_pCVar->FindConCommand(pchName).IsValidRef()) {
             FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
-            RegConListener(owner, pchName, nativeHandler, false);
-            RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
-            RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
+            RegisterConListener(owner, pchName, nativeHandler, false);
+            RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
+            RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
             return;
         }
 
@@ -324,13 +324,42 @@ namespace commands {
         std::string key = pchName;
         std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-        RegConListener(owner, pchName, nativeHandler, false);
-        RegConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
-        RegConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
+        RegisterConListener(owner, pchName, nativeHandler, false);
+        RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
+        RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
     }
 
-    void CommandsManager::RegConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) {
+    void CommandsManager::RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) {
         consoleListeners[pchName].push_back({owner, handler, post});
+    }
+
+    void CommandsManager::UnregisterChatListener(PluginId owner, const char* pchName)
+    {
+        // RegisterChatListener registers three console listeners: the bare name
+        // and the / and ! prefixed aliases. All three go together.
+        UnregisterConListener(owner, pchName, false);
+        UnregisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), false);
+        UnregisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), false);
+    }
+
+    void CommandsManager::UnregisterConCommand(PluginId owner, const char* pchName)
+    {
+        UnregisterChatListener(owner, pchName);
+    }
+
+    void CommandsManager::UnregisterConListener(PluginId owner, const char* pchName, bool post)
+    {
+        auto it = consoleListeners.find(pchName);
+        if (it == consoleListeners.end())
+            return;
+
+        std::erase_if(it->second, [owner, post](const CommandEntry& e)
+        {
+            return e.owner == owner && e.post == post;
+        });
+
+        if (it->second.empty())
+            consoleListeners.erase(it);
     }
 
     void CommandsManager::RemoveAllForPlugin(PluginId id)

@@ -141,23 +141,23 @@ namespace networkmessages
         void SendMessage(void* msg, int msgid, CPlayerSlot slot) override;
         void SendMessageToPlayers(void* msg, int msgid, uint64_t playermask) override;
 
-        uint64_t AddServerHook(NetMessageServerHook callback) override;
-        void RemoveServerHook(uint64_t callbackID) override;
+        void HookServerMessage(PluginId owner, NetMessageServerHook handler) override;
+        void UnhookServerMessage(PluginId owner) override;
 
-        uint64_t AddClientHook(NetMessageClientHook callback) override;
-        void RemoveClientHook(uint64_t callbackID) override;
+        void HookClientMessage(PluginId owner, NetMessageClientHook handler) override;
+        void UnhookClientMessage(PluginId owner) override;
 
-        uint64_t AddServerInternalHook(NetMessageClientHook callback) override;
-        void RemoveServerInternalHook(uint64_t callbackID) override;
+        void HookServerInternalMessage(PluginId owner, NetMessageClientHook handler) override;
+        void UnhookServerInternalMessage(PluginId owner) override;
+
+        // Called when a plugin unloads, like every other plugin-owned registry.
+        void RemoveAllForPlugin(PluginId id);
 
     public:
-        uint64_t m_nextServerHookID = 1;
-        uint64_t m_nextClientHookID = 1;
-        uint64_t m_nextServerInternalHookID = 1;
 
-        std::unordered_map<uint64_t, NetMessageServerHook> m_serverHooks;
-        std::unordered_map<uint64_t, NetMessageClientHook> m_clientHooks;
-        std::unordered_map<uint64_t, NetMessageClientHook> m_serverInternalHooks;
+        std::unordered_map<PluginId, NetMessageServerHook> m_serverHooks;
+        std::unordered_map<PluginId, NetMessageClientHook> m_clientHooks;
+        std::unordered_map<PluginId, NetMessageClientHook> m_serverInternalHooks;
     };
 
     extern NetworkMessagesManager networkMessagesManager;

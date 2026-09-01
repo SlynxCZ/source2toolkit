@@ -63,6 +63,7 @@ namespace events {
     {
     public:
         void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, bool post) override;
+        void UnhookGameEvent(PluginId owner, const char* pchName, bool post) override;
     public:
         void RemoveAllForPlugin(PluginId id);
     };

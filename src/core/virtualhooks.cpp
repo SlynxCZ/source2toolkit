@@ -387,7 +387,7 @@ namespace virtualhooks
         // than waiting for the next click to notice the handle went stale --
         // the handlers hold plugin code and there may never be another click.
         if (!V_strcmp("custom_hud_layout", pEntity->GetClassname()))
-            customhud::customHudManager.RemoveClickCallbacks(static_cast<CCSCustomHudLayout*>(pEntity));
+            customhud::customHudManager.UnhookCustomHudClick(static_cast<CCSCustomHudLayout*>(pEntity));
     }
 
     void CEntityListener::OnEntityParentChanged(CEntityInstance* pEntity, CEntityInstance* pNewParent)

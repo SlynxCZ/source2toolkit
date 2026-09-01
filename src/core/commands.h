@@ -71,9 +71,12 @@ namespace commands {
     class CommandsManager : public IToolkitCommands
     {
     public:
-        void RegChatListener(PluginId owner, const char* pchName, ChatHandler handler) override;
-        void RegConCommand(PluginId owner, const char* pchName, ChatHandler handler) override;
-        void RegConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) override;
+        void RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler) override;
+        void UnregisterChatListener(PluginId owner, const char* pchName) override;
+        void RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) override;
+        void UnregisterConCommand(PluginId owner, const char* pchName) override;
+        void RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) override;
+        void UnregisterConListener(PluginId owner, const char* pchName, bool post) override;
     public:
         void RemoveAllForPlugin(PluginId id);
         void UnlockConCommands();

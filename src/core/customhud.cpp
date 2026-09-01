@@ -50,7 +50,7 @@ namespace customhud
 {
     CustomHudManager customHudManager;
 
-    void CustomHudManager::AddClickCallback(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler)
+    void CustomHudManager::HookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler)
     {
         if (!pLayout || !handler)
             return;
@@ -58,7 +58,7 @@ namespace customhud
         m_callbacks.push_back({owner, CHandle<CCSCustomHudLayout>(pLayout), std::move(handler)});
     }
 
-    void CustomHudManager::RemoveClickCallbacks(CCSCustomHudLayout* pLayout)
+    void CustomHudManager::UnhookCustomHudClick(CCSCustomHudLayout* pLayout)
     {
         if (!pLayout)
             return;

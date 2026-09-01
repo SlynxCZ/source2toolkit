@@ -69,7 +69,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     // A console command, and the same thing again as a chat command -- the
     // toolkit routes "!sample" and "/sample" to the same handler.
-    REG_CON_COMMAND("sample_command", [](const CCommandContext &context, const CCommand &args, bool post)
+    REGISTER_CON_COMMAND("sample_command", [](const CCommandContext &context, const CCommand &args, bool post)
     {
         TOOLKIT_LOG(&g_Plugin, "Sample command called by %d. Command: %s\n", context.GetPlayerSlot().Get(), args.GetCommandString());
     });
