@@ -25,12 +25,8 @@ resolve_dep_internal(METAMOD_DIR MMSOURCE_DEV)
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(${SOURCE2TOOLKIT_SDK_DIR} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
-# SourceHook is built exactly once, here. The core owns the private engine
-# instance, so it is the only thing that needs the library; the SDK exports the
-# headers alone, which is all a plugin needs to place hooks on that engine.
-# ${SOURCEHOOK} comes from the SDK above.
-set(SOURCEHOOK_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-add_subdirectory(${SOURCEHOOK} ${CMAKE_BINARY_DIR}/sourcehook)
+# SourceHook comes from the SDK above, which builds it and links it into
+# everything that uses it -- building it here as well would be the second copy.
 
 add_subdirectory(vendor/dynlibutils)
 add_subdirectory(vendor/spdlog)
@@ -87,7 +83,6 @@ if (UNIX AND NOT APPLE)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libssl.a
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libcrypto.a
             dynlibutils
-            sourcehook
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
@@ -110,7 +105,6 @@ elseif (WIN32)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/crypto.lib
             crypt32.lib
             dynlibutils
-            sourcehook
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
