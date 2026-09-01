@@ -213,6 +213,29 @@ void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, ch
     pluginManager.OnLevelInit(pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background);
 }
 
+void* ToolkitCore::OnMetamodQuery(const char* iface, int* ret)
+{
+    // Only what a toolkit plugin chose to expose through OnToolkitQuery. The
+    // toolkit's own interfaces are deliberately not offered here: they are for
+    // toolkit plugins, and SourceHook in particular must not be handed to a
+    // plugin that did not load through the toolkit -- it would be binding to
+    // an engine it does not own.
+    for (auto& p : pluginManager.m_plugins)
+    {
+        for (auto* l : p->listeners)
+        {
+            if (void* res = l->OnToolkitQuery(iface, ret))
+            {
+                if (ret) *ret = META_IFACE_OK;
+                return res;
+            }
+        }
+    }
+
+    if (ret) *ret = META_IFACE_FAILED;
+    return nullptr;
+}
+
 void ToolkitCore::OnLevelShutdown()
 {
     pluginManager.OnLevelShutdown();

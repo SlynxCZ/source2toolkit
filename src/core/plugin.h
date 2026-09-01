@@ -54,6 +54,11 @@ public:
     bool Load(PluginId id, ISmmAPI *ismm, char *error, size_t maxlen, bool late) override;
     bool Unload(char *error, size_t maxlen) override;
     void AllPluginsLoaded() override;
+
+    /// Answers an interface query from a plain metamod plugin by asking the
+    /// toolkit's own plugins. Without this the bridge is one-way: a toolkit
+    /// plugin can reach a metamod one through MetaFactory, but not the reverse.
+    void* OnMetamodQuery(const char* iface, int* ret) override;
 public:
     void OnPluginLoad(PluginId id) override;
     void OnPluginUnload(PluginId id) override;
