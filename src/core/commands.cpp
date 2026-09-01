@@ -335,12 +335,17 @@ namespace commands {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
         // Already ours: the ConCommand is the toolkit's claim on the name and
-        // outlives the plugin that asked for it, so a plugin reloading finds
-        // its own command still there. Nothing to warn about -- what a plugin
-        // actually owns is the listener below, and that is re-registered.
-        const bool bAlreadyOurs = registeredCommands.contains(pchName);
+        // outlives the plugin that asked for it. Unloading parks it (see
+        // RemoveAllForPlugin); registering again brings the same one back
+        // rather than fighting the engine for a name it will not give up.
+        if (auto it = registeredCommands.find(pchName); it != registeredCommands.end())
+        {
+            if (it->second.cmd)
+                it->second.cmd->RemoveFlags(FCVAR_DEFENSIVE | FCVAR_HIDDEN);
 
-        if (!bAlreadyOurs)
+            it->second.owner = owner;
+        }
+        else
         {
             if (g_pCVar && g_pCVar->FindConCommand(pchName).IsValidRef())
             {
@@ -396,13 +401,22 @@ namespace commands {
 
     void CommandsManager::RemoveAllForPlugin(PluginId id)
     {
-        // The ConCommands stay. ICvar has RegisterConCommand and
-        // UnregisterConCommandCallbacks but nothing that takes a command back
-        // out of the engine's list, so ~ConCommand() (which calls the latter)
-        // only detaches the callbacks -- the name stays claimed for the
-        // lifetime of the process either way. Keeping them registered is the
-        // useful half of that: a plugin's handlers go with its listeners
-        // below, and if it comes back it finds its own command waiting.
+        // ICvar has RegisterConCommand and UnregisterConCommandCallbacks and
+        // nothing that takes a command back out of the engine's list, so the
+        // name is claimed for the lifetime of the process whatever we do --
+        // destroying the ConCommand only detaches its callbacks and leaves the
+        // entry findable.
+        //
+        // So it is parked instead. FCVAR_DEFENSIVE is what FindConCommand()
+        // skips unless asked for it explicitly, and FCVAR_HIDDEN keeps it out
+        // of find and autocomplete, so the command is gone from every angle
+        // the engine offers -- and RegisterConCommand above lifts both if the
+        // plugin comes back.
+        for (auto& [name, entry] : registeredCommands)
+        {
+            if (entry.owner == id && entry.cmd)
+                entry.cmd->AddFlags(FCVAR_DEFENSIVE | FCVAR_HIDDEN);
+        }
 
         for (auto it = consoleListeners.begin(); it != consoleListeners.end(); )
         {
