@@ -34,6 +34,7 @@
  *
  * Project: Source2Toolkit
  */
+#include "json.h"
 #include "http.h"
 
 #include "utils/log.h"
@@ -94,8 +95,23 @@ namespace http
             }
         }
 
+        // Parse the body once here rather than making every callback do it.
+        // The document is owned for exactly the duration of the callback, which
+        // is why m_pJson is documented as not outliving it.
+        IToolkitJSONDocument* pDoc = nullptr;
+        if (!response.m_sBody.empty())
+        {
+            pDoc = json::jsonManager.Parse(response.m_sBody.c_str(),
+                                           static_cast<int>(response.m_sBody.size()));
+            if (pDoc->IsValid())
+                response.m_pJson = pDoc->Root();
+        }
+
         if (m_Callback)
             m_Callback(response);
+
+        if (pDoc)
+            pDoc->Release();
 
         if (s_pSteamHTTP)
             s_pSteamHTTP->ReleaseHTTPRequest(m_hRequest);

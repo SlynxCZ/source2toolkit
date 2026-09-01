@@ -42,6 +42,7 @@
 #include "customhud.h"
 #include "gamesystems.h"
 #include "http.h"
+#include "json.h"
 #include "entities.h"
 #include "events.h"
 #include "menus.h"
@@ -259,6 +260,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_GAMECONFIG_INTERFACE)) ptr = shared::g_pGameConfig;
     else if (!strcmp(iface, TOOLKIT_GAMESYSTEMS_INTERFACE)) ptr = &gamesystems::gameSystemsManager;
     else if (!strcmp(iface, TOOLKIT_HTTP_INTERFACE)) ptr = &http::httpManager;
+    else if (!strcmp(iface, TOOLKIT_JSON_INTERFACE)) ptr = &json::jsonManager;
     else if (!strcmp(iface, TOOLKIT_MENUS_INTERFACE)) ptr = &menus::menuManager;
     else if (!strcmp(iface, TOOLKIT_MYSQL_INTERFACE)) ptr = &mysql::mysqlManager;
     else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
