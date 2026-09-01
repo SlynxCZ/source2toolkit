@@ -128,7 +128,6 @@ namespace addresses
         CCSPlayerPawn_CanMove_t CCSPlayerPawn_CanMove() override;
         CCSPlayerController_ProcessUserCmd_t CCSPlayerController_ProcessUserCmd() override;
         CBasePlayerController_OnSimulateUserCommands_t CBasePlayerController_OnSimulateUserCommands() override;
-        CCSPlayer_WeaponServices_DropWeapon_t CCSPlayer_WeaponServices_DropWeapon() override;
         CCSPlayer_MovementServices_AirAccelerate_t CCSPlayer_MovementServices_AirAccelerate() override;
         CCSPlayer_MovementServices_AirMove_t CCSPlayer_MovementServices_AirMove() override;
         CCSPlayer_MovementServices_CanUnduck_t CCSPlayer_MovementServices_CanUnduck() override;
@@ -190,7 +189,6 @@ namespace addresses
         DynLibUtils::CMemory CanMove;
         DynLibUtils::CMemory ProcessUserCmd;
         DynLibUtils::CMemory OnSimulateUserCommands;
-        DynLibUtils::CMemory DropWeapon;
         DynLibUtils::CMemory AirAccelerate;
         DynLibUtils::CMemory AirMove;
         DynLibUtils::CMemory CanUnduck;

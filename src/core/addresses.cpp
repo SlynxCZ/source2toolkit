@@ -70,7 +70,6 @@ namespace addresses
         RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayerPawn::CanMove", shared::g_pGameConfig->GetSignature("CCSPlayerPawn::CanMove"), toolkitAddresses.CanMove);
         RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayerController::ProcessUserCmd", shared::g_pGameConfig->GetSignature("CCSPlayerController::ProcessUserCmd"), toolkitAddresses.ProcessUserCmd);
         RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CBasePlayerController::OnSimulateUserCommands", shared::g_pGameConfig->GetSignature("CBasePlayerController::OnSimulateUserCommands"), toolkitAddresses.OnSimulateUserCommands);
-        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_WeaponServices::DropWeapon", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices::DropWeapon"), toolkitAddresses.DropWeapon);
         RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::AirAccelerate", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::AirAccelerate"), toolkitAddresses.AirAccelerate);
         RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::AirMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::AirMove"), toolkitAddresses.AirMove);
         RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CanUnduck", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CanUnduck"), toolkitAddresses.CanUnduck);
@@ -225,11 +224,6 @@ namespace addresses
     CBasePlayerController_OnSimulateUserCommands_t Addresses::CBasePlayerController_OnSimulateUserCommands()
     {
         return OnSimulateUserCommands.RCast<CBasePlayerController_OnSimulateUserCommands_t>();
-    }
-
-    CCSPlayer_WeaponServices_DropWeapon_t Addresses::CCSPlayer_WeaponServices_DropWeapon()
-    {
-        return DropWeapon.RCast<CCSPlayer_WeaponServices_DropWeapon_t>();
     }
 
     CCSPlayer_MovementServices_AirAccelerate_t Addresses::CCSPlayer_MovementServices_AirAccelerate()
