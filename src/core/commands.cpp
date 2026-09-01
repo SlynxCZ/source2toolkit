@@ -88,10 +88,18 @@ static void ToolkitReply(const CCommandContext& ctx, const char* pszColor, const
 #define REPLY_ERROR(fmt, ...) ToolkitReply(ctx, ANSI_RED,    fmt, ##__VA_ARGS__)
 
 namespace commands {
-    static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
+    // Keyed by name and carrying the owner, so unloading a plugin can drop
+    // the ConCommands it created. ConCommand registers itself with the engine
+    // in its constructor and unregisters in its destructor, so erasing the
+    // entry is what takes the command back out.
+    struct RegisteredCommand
+    {
+        PluginId owner;
+        std::unique_ptr<ConCommand> cmd;
+    };
+
+    static std::unordered_map<std::string, RegisteredCommand> registeredCommands;
     static std::unordered_map<std::string, std::vector<CommandEntry> > consoleListeners;
-    static std::unordered_set<std::string> registeredNames;
-    static std::unordered_map<std::string, CommandHandler> commandCallbacks;
 
     CommandsManager commandsManager;
 
@@ -273,20 +281,16 @@ namespace commands {
     {
         registeredCommands.clear();
         consoleListeners.clear();
-        registeredNames.clear();
-        commandCallbacks.clear();
     }
 
+    // The ConCommand exists so the engine knows the name; the handler is not
+    // reached from here. Every console command, registered or not, goes
+    // through DispatchConsoleListener off the DispatchConCommand and
+    // ClientCommand hooks (virtualhooks.cpp), which is where a plugin's
+    // handler is called. Dispatching here as well would run it twice.
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args) {
-        if (args.ArgC() < 1)
-            return;
-
-        std::string name = args.Arg(0);
-        auto it = commandCallbacks.find(name);
-        if (it == commandCallbacks.end())
-            return;
-
-        (void) it->second(ctx, args, true);
+        (void) ctx;
+        (void) args;
     }
 
     META_RES DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post) {
@@ -338,10 +342,9 @@ namespace commands {
             return;
         }
 
-        if (!registeredNames.contains(pchName)) {
+        if (!registeredCommands.contains(pchName)) {
             auto cmd = std::make_unique<ConCommand>(pchName, ConCommandRouter, ("Registered command: " + std::string(pchName)).c_str(), FCVAR_NONE);
-            registeredCommands.push_back(std::move(cmd));
-            registeredNames.insert(pchName);
+            registeredCommands.emplace(pchName, RegisteredCommand{ owner, std::move(cmd) });
         }
 
         std::string key = pchName;
@@ -387,6 +390,15 @@ namespace commands {
 
     void CommandsManager::RemoveAllForPlugin(PluginId id)
     {
+        // Destroying the ConCommand is what unregisters it; without this the
+        // engine kept the command after its plugin was gone, and reloading
+        // that plugin found its own command already there and downgraded it to
+        // a chat-only alias.
+        std::erase_if(registeredCommands, [id](const auto& kv)
+        {
+            return kv.second.owner == id;
+        });
+
         for (auto it = consoleListeners.begin(); it != consoleListeners.end(); )
         {
             auto& vec = it->second;
