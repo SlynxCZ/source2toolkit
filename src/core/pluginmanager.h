@@ -90,8 +90,11 @@ public:
 
     void AddListener(IToolkitPlugin* plugin, IToolkitListener* listener);
 public:
-    void OnPluginLoad(SourceMM::PluginId id);
-    void OnPluginUnload(SourceMM::PluginId id);
+    // Metamod's own plugin events, not the toolkit's. Named apart because they
+    // carry a Metamod plugin id, which is a different numbering from the one
+    // OnPluginLoad/OnPluginUnload report for .stx plugins.
+    void FireMetamodPluginLoaded(SourceMM::PluginId id);
+    void FireMetamodPluginUnloaded(SourceMM::PluginId id);
     void OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background);
     void OnLevelShutdown();
 public:

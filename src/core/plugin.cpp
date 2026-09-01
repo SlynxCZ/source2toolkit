@@ -201,14 +201,17 @@ void ToolkitCore::AllPluginsLoaded()
     pluginManager.FireMetamodLoaded();
 }
 
+// These two are IMetamodListener's, so the id is a Metamod plugin's -- they go
+// to the toolkit's own OnMetamodPluginLoad/Unload, not to the callbacks that
+// report .stx plugins coming and going.
 void ToolkitCore::OnPluginLoad(PluginId id)
 {
-    pluginManager.OnPluginLoad(id);
+    pluginManager.FireMetamodPluginLoaded(id);
 }
 
 void ToolkitCore::OnPluginUnload(PluginId id)
 {
-    pluginManager.OnPluginUnload(id);
+    pluginManager.FireMetamodPluginUnloaded(id);
 }
 
 void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel,
@@ -219,7 +222,8 @@ void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, ch
 
 void* ToolkitCore::OnMetamodQuery(const char* iface, int* ret)
 {
-    // Only what a toolkit plugin chose to expose through OnToolkitQuery. The
+    // Only what a toolkit plugin chose to expose through OnMetamodQuery, which
+    // answers like OnToolkitQuery unless the plugin says otherwise. The
     // toolkit's own interfaces are deliberately not offered here: they are for
     // toolkit plugins, and SourceHook in particular must not be handed to a
     // plugin that did not load through the toolkit -- it would be binding to
@@ -228,7 +232,7 @@ void* ToolkitCore::OnMetamodQuery(const char* iface, int* ret)
     {
         for (auto* l : p->listeners)
         {
-            if (void* res = l->OnToolkitQuery(iface, ret))
+            if (void* res = l->OnMetamodQuery(iface, ret))
             {
                 if (ret) *ret = META_IFACE_OK;
                 return res;

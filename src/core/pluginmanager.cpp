@@ -604,21 +604,21 @@ void PluginManager::AddListener(IToolkitPlugin* plugin, IToolkitListener* listen
     }
 }
 
-void PluginManager::OnPluginLoad(SourceMM::PluginId id)
+void PluginManager::FireMetamodPluginLoaded(SourceMM::PluginId id)
 {
     for (auto& p : pluginManager.m_plugins)
     {
         for (auto* l : p->listeners)
-            l->OnPluginLoad(id);
+            l->OnMetamodPluginLoad(id);
     }
 }
 
-void PluginManager::OnPluginUnload(SourceMM::PluginId id)
+void PluginManager::FireMetamodPluginUnloaded(SourceMM::PluginId id)
 {
     for (auto& p : pluginManager.m_plugins)
     {
         for (auto* l : p->listeners)
-            l->OnPluginUnload(id);
+            l->OnMetamodPluginUnload(id);
     }
 }
 
