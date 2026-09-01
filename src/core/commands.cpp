@@ -334,21 +334,27 @@ namespace commands {
     void CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
         CommandHandler nativeHandler = WrapVoidHandler(handler);
 
-        if (g_pCVar && g_pCVar->FindConCommand(pchName).IsValidRef()) {
-            FP_WARN("Command '{}' exists in engine, registering chat-only alias", pchName);
-            RegisterConListener(owner, pchName, nativeHandler, false);
-            RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
-            RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
-            return;
-        }
+        // Already ours: the ConCommand is the toolkit's claim on the name and
+        // outlives the plugin that asked for it, so a plugin reloading finds
+        // its own command still there. Nothing to warn about -- what a plugin
+        // actually owns is the listener below, and that is re-registered.
+        const bool bAlreadyOurs = registeredCommands.contains(pchName);
 
-        if (!registeredCommands.contains(pchName)) {
-            auto cmd = std::make_unique<ConCommand>(pchName, ConCommandRouter, ("Registered command: " + std::string(pchName)).c_str(), FCVAR_NONE);
-            registeredCommands.emplace(pchName, RegisteredCommand{ owner, std::move(cmd) });
+        if (!bAlreadyOurs)
+        {
+            if (g_pCVar && g_pCVar->FindConCommand(pchName).IsValidRef())
+            {
+                // Somebody else's -- the engine's own, or another plugin's. The
+                // name cannot be taken over, so the handler is reached through
+                // the console listener instead.
+                FP_WARN("Command '{}' already exists in the engine, registering a chat alias for it instead", pchName);
+            }
+            else
+            {
+                auto cmd = std::make_unique<ConCommand>(pchName, ConCommandRouter, ("Registered command: " + std::string(pchName)).c_str(), FCVAR_NONE);
+                registeredCommands.emplace(pchName, RegisteredCommand{ owner, std::move(cmd) });
+            }
         }
-
-        std::string key = pchName;
-        std::transform(key.begin(), key.end(), key.begin(), tolower);
 
         RegisterConListener(owner, pchName, nativeHandler, false);
         RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
@@ -390,14 +396,13 @@ namespace commands {
 
     void CommandsManager::RemoveAllForPlugin(PluginId id)
     {
-        // Destroying the ConCommand is what unregisters it; without this the
-        // engine kept the command after its plugin was gone, and reloading
-        // that plugin found its own command already there and downgraded it to
-        // a chat-only alias.
-        std::erase_if(registeredCommands, [id](const auto& kv)
-        {
-            return kv.second.owner == id;
-        });
+        // The ConCommands stay. ICvar has RegisterConCommand and
+        // UnregisterConCommandCallbacks but nothing that takes a command back
+        // out of the engine's list, so ~ConCommand() (which calls the latter)
+        // only detaches the callbacks -- the name stays claimed for the
+        // lifetime of the process either way. Keeping them registered is the
+        // useful half of that: a plugin's handlers go with its listeners
+        // below, and if it comes back it finds its own command waiting.
 
         for (auto it = consoleListeners.begin(); it != consoleListeners.end(); )
         {
