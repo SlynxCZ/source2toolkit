@@ -78,6 +78,33 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     api->AddListener(this, this);
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
+    // Two inline hooks, each showing a different way to get the address.
+    //
+    // First: the toolkit already resolved this one, so just ask for it. Every
+    // entry in IToolkitAddresses works this way and costs no scan of your own.
+    if (void *pTakeDamageOld = ADDR_TAKE_DAMAGE_OLD())
+    {
+        SH_ADD_INLINEHOOK(TakeDamageOldHook, pTakeDamageOld,
+                          SH_MEMBER(this, &SamplePlugin::Hook_TakeDamageOld), false);
+    }
+    else
+    {
+        TOOLKIT_LOG(this, "CBaseEntity::TakeDamageOld was not resolved; hook skipped\n");
+    }
+
+    // Second: anything in the shared gamedata, whether or not the toolkit has a
+    // typed getter for it. ResolveSignature reads the entry's library, then
+    // finds it by exported symbol or by pattern -- you do not care which.
+    if (void *pPostThink = GAMECONFIG_RESOLVE("CCSPlayerPawn::PostThink"))
+    {
+        SH_ADD_INLINEHOOK(PostThinkHook, pPostThink,
+                          SH_MEMBER(this, &SamplePlugin::Hook_PostThink), false);
+    }
+    else
+    {
+        TOOLKIT_LOG(this, "CCSPlayerPawn::PostThink was not found in gamedata; hook skipped\n");
+    }
+
     // You can get a convar reference to an already existing cvar via CConVarRef.
     // This will pre-register it if it's not yet registered and would use default
     // data until the actual cvar is registered. You can assert data existance via
@@ -166,6 +193,30 @@ bool SamplePlugin::Unload(char* error, size_t maxlen)
     SH_REMOVE_HOOK(ISource2GameClients, OnClientConnected, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_OnClientConnected), false);
     SH_REMOVE_HOOK(ISource2GameClients, ClientConnect, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientConnect), false);
     SH_REMOVE_HOOK(ISource2GameClients, ClientCommand, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientCommand), false);
+
+    // The CConVars above are objects in this library, and ConVar_Register handed
+    // the engine pointers to them. Without this the engine keeps those pointers
+    // after the library is unloaded, and the next thing to touch one -- the
+    // console autocompleting, a config exec -- reads freed memory.
+    //
+    // ConVar_Unregister only walks the list held by the caller's own library, so
+    // the toolkit cannot do this on a plugin's behalf. Every plugin that
+    // declares a CConVar has to make this call.
+    // Inline hooks patch the game's own code, so leaving one installed past
+    // unload jumps into a library that is no longer mapped.
+    if (void *pTakeDamageOld = ADDR_TAKE_DAMAGE_OLD())
+    {
+        SH_REMOVE_INLINEHOOK(TakeDamageOldHook, pTakeDamageOld,
+                             SH_MEMBER(this, &SamplePlugin::Hook_TakeDamageOld), false);
+    }
+
+    if (void *pPostThink = GAMECONFIG_RESOLVE("CCSPlayerPawn::PostThink"))
+    {
+        SH_REMOVE_INLINEHOOK(PostThinkHook, pPostThink,
+                             SH_MEMBER(this, &SamplePlugin::Hook_PostThink), false);
+    }
+
+    ConVar_Unregister();
 
     return true;
 }
@@ -262,4 +313,21 @@ void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, c
 void SamplePlugin::OnLevelShutdown()
 {
     TOOLKIT_LOG(this, "OnLevelShutdown()\n");
+}
+
+int64_t SamplePlugin::Hook_TakeDamageOld(CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
+{
+    // MRES_IGNORED lets the original run untouched. Change pInfo here and the
+    // original sees your version; RETURN_META_VALUE(MRES_SUPERCEDE, 0) would
+    // block the damage outright.
+    TOOLKIT_LOG(this, "TakeDamageOld: %.1f damage\n", pInfo ? pInfo->m_flDamage() : 0.0f);
+
+    RETURN_META_VALUE(MRES_IGNORED, 0);
+}
+
+void SamplePlugin::Hook_PostThink(double flFrameTime, float flUnknown)
+{
+    // Runs for every pawn every tick, so do as little as possible here. Left
+    // empty on purpose -- logging would flood the console.
+    RETURN_META(MRES_IGNORED);
 }
