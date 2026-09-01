@@ -77,6 +77,7 @@ public:
     IToolkitNetworkMessages* NetworkMessages() override;
     IToolkitScheduler* Scheduler() override;
     IToolkitTrace* Trace() override;
+    IToolkitPaths* Paths() override;
 
     IToolkitModule* LoadModule(const char* name) override;
     IToolkitModule* LoadModuleFromMemory(uintptr_t ptr) override;

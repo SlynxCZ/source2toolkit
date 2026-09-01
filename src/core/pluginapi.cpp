@@ -71,6 +71,7 @@
 #include "raytrace.h"
 #include "module.h"
 #include "core/scheduler.h"
+#include "core/paths.h"
 
 #include <cstring>
 #include <stdarg.h>
@@ -266,6 +267,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
     else if (!strcmp(iface, TOOLKIT_SCHEDULER_INTERFACE)) ptr = &scheduler::schedulerManager;
     else if (!strcmp(iface, TOOLKIT_TRACE_INTERFACE)) ptr = &raytrace::rayTrace;
+    else if (!strcmp(iface, TOOLKIT_PATHS_INTERFACE)) ptr = &paths::pathsManager;
 
     if (ptr)
     {
@@ -362,6 +364,11 @@ IToolkitScheduler* PluginApi::Scheduler()
 IToolkitTrace* PluginApi::Trace()
 {
     return &raytrace::rayTrace;
+}
+
+IToolkitPaths* PluginApi::Paths()
+{
+    return &paths::pathsManager;
 }
 
 IToolkitModule* PluginApi::LoadModule(const char* name)

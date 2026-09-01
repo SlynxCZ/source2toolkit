@@ -56,6 +56,10 @@ namespace paths {
     inline std::string GetConfigsDirectory() { return GameDirectory() + "/addons/source2toolkit/configs"; }
     inline std::string GetGamedataDirectory() { return GameDirectory() + "/addons/source2toolkit/gamedata"; }
     inline std::string GetPluginsDirectory() { return GameDirectory() + "/addons/source2toolkit/plugins"; }
+    inline std::string GetSharedDirectory() { return GameDirectory() + "/addons/source2toolkit/shared"; }
+
+    /// Where a plugin's own configs live: configs/<PluginName>.
+    inline std::string GetPluginConfigDirectory(const std::string& name) { return GetConfigsDirectory() + "/" + name; }
     inline std::string EnginePath() { return GameDirectory() + "../bin/linuxsteamrt64/libengine2.so"; }
     inline std::string Tier0Path() { return GameDirectory() + "../bin/linuxsteamrt64/libtier0.so"; }
     inline std::string ServerPath() { return GameDirectory() + "/bin/linuxsteamrt64/libserver.so"; }
