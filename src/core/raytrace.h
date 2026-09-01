@@ -58,7 +58,7 @@ namespace raytrace
         TraceResult TraceHullShape(const Vector& vecStart, const Vector& vecEnd, const Vector& vecMins, const Vector& vecMaxs, CBaseEntity* pIgnoreEntity, TraceOptions* pTraceOptions) override;
         TraceResult TraceShapeEx(const Vector& vecStart, const Vector& vecEnd, CTraceFilter* pTraceFilter, Ray_t* pRay) override;
         uint64 PointContents(const Vector* const vTestPos, uint64 nContentsMask) override;
-        bool CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight) override;
+        bool CheckAreaOverlappingEntity(const CCSNavArea* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight) override;
         void GetEntityWorldSpaceAABB(const CBaseEntity* const rEntity, Vector* pMinsOut, Vector* pMaxsOut) override;
     };
 

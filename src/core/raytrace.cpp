@@ -168,7 +168,7 @@ namespace raytrace
         return INavPhysicsInterface::PointContents(vTestPos, nContentsMask);
     }
 
-    bool RayTrace::CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity,
+    bool RayTrace::CheckAreaOverlappingEntity(const CCSNavArea* const rArea, const CBaseEntity* const rEntity,
                                               bool bExtrudeHullHeight)
     {
         if (!INavPhysicsInterface::vTable)
@@ -177,6 +177,7 @@ namespace raytrace
             return false;
         }
 
+        // The engine vtable takes it untyped; the type is for the plugin side.
         return INavPhysicsInterface::CheckAreaOverlappingEntity(rArea, rEntity, bExtrudeHullHeight);
     }
 
