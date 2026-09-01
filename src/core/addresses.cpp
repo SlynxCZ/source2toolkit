@@ -64,6 +64,46 @@ namespace addresses
         RESOLVE_SIG(g_pSource2Server, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo::Constructor"), toolkitAddresses.CTakeDamageInfo);
         RESOLVE_SIG(shared::g_pGameEventSystem, "INetworkMessageProcessingPreFilter::FilterMessage", shared::g_pGameConfig->GetSignature("INetworkMessageProcessingPreFilter::FilterMessage"), toolkitAddresses.FilterMessage);
 
+        // Ported from SwiftlyS2. Resolved optionally: these are a library for
+        // plugins rather than something the toolkit itself needs, so a pattern
+        // that stops matching after a game update must not block startup.
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CEntityIdentity::AcceptInput", shared::g_pGameConfig->GetSignature("CEntityIdentity::AcceptInput"), toolkitAddresses.IdentityAcceptInput);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_ItemServices::CanAcquire", shared::g_pGameConfig->GetSignature("CCSPlayer_ItemServices::CanAcquire"), toolkitAddresses.CanAcquire);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayerPawn::CanMove", shared::g_pGameConfig->GetSignature("CCSPlayerPawn::CanMove"), toolkitAddresses.CanMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayerController::ProcessUserCmd", shared::g_pGameConfig->GetSignature("CCSPlayerController::ProcessUserCmd"), toolkitAddresses.ProcessUserCmd);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CBasePlayerController::OnSimulateUserCommands", shared::g_pGameConfig->GetSignature("CBasePlayerController::OnSimulateUserCommands"), toolkitAddresses.OnSimulateUserCommands);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_WeaponServices::DropWeapon", shared::g_pGameConfig->GetSignature("CCSPlayer_WeaponServices::DropWeapon"), toolkitAddresses.DropWeapon);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::AirAccelerate", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::AirAccelerate"), toolkitAddresses.AirAccelerate);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::AirMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::AirMove"), toolkitAddresses.AirMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CanUnduck", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CanUnduck"), toolkitAddresses.CanUnduck);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CategorizePosition", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CategorizePosition"), toolkitAddresses.CategorizePosition);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CheckFalling", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CheckFalling"), toolkitAddresses.CheckFalling);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CheckParameters", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CheckParameters"), toolkitAddresses.CheckParameters);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CheckVelocity", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CheckVelocity"), toolkitAddresses.CheckVelocity);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CheckWater", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CheckWater"), toolkitAddresses.CheckWater);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::Duck", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::Duck"), toolkitAddresses.Duck);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::Friction", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::Friction"), toolkitAddresses.Friction);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::FullWalkMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::FullWalkMove"), toolkitAddresses.FullWalkMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::GroundAccelerate", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::GroundAccelerate"), toolkitAddresses.GroundAccelerate);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::LadderMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::LadderMove"), toolkitAddresses.LadderMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::MoveInit", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::MoveInit"), toolkitAddresses.MoveInit);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::PlayerMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::PlayerMove"), toolkitAddresses.PlayerMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::ProcessMovement", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::ProcessMovement"), toolkitAddresses.ProcessMovement);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::SetupMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::SetupMove"), toolkitAddresses.SetupMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::TryPlayerMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::TryPlayerMove"), toolkitAddresses.TryPlayerMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::WalkMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::WalkMove"), toolkitAddresses.WalkMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::WaterMove", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::WaterMove"), toolkitAddresses.WaterMove);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::OnJumpLegacy", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::OnJumpLegacy"), toolkitAddresses.OnJumpLegacy);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::OnJumpModern", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::OnJumpModern"), toolkitAddresses.OnJumpModern);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CheckJumpButtonLegacy", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CheckJumpButtonLegacy"), toolkitAddresses.CheckJumpButtonLegacy);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CCSPlayer_MovementServices::CheckJumpButtonModern", shared::g_pGameConfig->GetSignature("CCSPlayer_MovementServices::CheckJumpButtonModern"), toolkitAddresses.CheckJumpButtonModern);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CAttributeList::SetOrAddAttributeValueByName", shared::g_pGameConfig->GetSignature("CAttributeList::SetOrAddAttributeValueByName"), toolkitAddresses.SetOrAddAttributeValueByName);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CDecoyProjectile::EmitGrenade", shared::g_pGameConfig->GetSignature("CDecoyProjectile::EmitGrenade"), toolkitAddresses.EmitDecoy);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CFlashbangProjectile::EmitGrenade", shared::g_pGameConfig->GetSignature("CFlashbangProjectile::EmitGrenade"), toolkitAddresses.EmitFlashbang);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CHEGrenadeProjectile::EmitGrenade", shared::g_pGameConfig->GetSignature("CHEGrenadeProjectile::EmitGrenade"), toolkitAddresses.EmitHEGrenade);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CMolotovProjectile::EmitGrenade", shared::g_pGameConfig->GetSignature("CMolotovProjectile::EmitGrenade"), toolkitAddresses.EmitMolotov);
+        RESOLVE_SIG_OPTIONAL(g_pSource2Server, "CSmokeGrenadeProjectile::EmitGrenade", shared::g_pGameConfig->GetSignature("CSmokeGrenadeProjectile::EmitGrenade"), toolkitAddresses.EmitSmoke);
+
         return true;
     }
 
@@ -162,5 +202,185 @@ namespace addresses
     INetworkMessageProcessingPreFilter_FilterMessage_t Addresses::INetworkMessageProcessingPreFilter_FilterMessage()
     {
         return FilterMessage.RCast<INetworkMessageProcessingPreFilter_FilterMessage_t>();
+    }
+
+    CEntityIdentity_AcceptInput_t Addresses::CEntityIdentity_AcceptInput()
+    {
+        return IdentityAcceptInput.RCast<CEntityIdentity_AcceptInput_t>();
+    }
+
+    CCSPlayer_ItemServices_CanAcquire_t Addresses::CCSPlayer_ItemServices_CanAcquire()
+    {
+        return CanAcquire.RCast<CCSPlayer_ItemServices_CanAcquire_t>();
+    }
+
+    CCSPlayerPawn_CanMove_t Addresses::CCSPlayerPawn_CanMove()
+    {
+        return CanMove.RCast<CCSPlayerPawn_CanMove_t>();
+    }
+
+    CCSPlayerController_ProcessUserCmd_t Addresses::CCSPlayerController_ProcessUserCmd()
+    {
+        return ProcessUserCmd.RCast<CCSPlayerController_ProcessUserCmd_t>();
+    }
+
+    CBasePlayerController_OnSimulateUserCommands_t Addresses::CBasePlayerController_OnSimulateUserCommands()
+    {
+        return OnSimulateUserCommands.RCast<CBasePlayerController_OnSimulateUserCommands_t>();
+    }
+
+    CCSPlayer_WeaponServices_DropWeapon_t Addresses::CCSPlayer_WeaponServices_DropWeapon()
+    {
+        return DropWeapon.RCast<CCSPlayer_WeaponServices_DropWeapon_t>();
+    }
+
+    CCSPlayer_MovementServices_AirAccelerate_t Addresses::CCSPlayer_MovementServices_AirAccelerate()
+    {
+        return AirAccelerate.RCast<CCSPlayer_MovementServices_AirAccelerate_t>();
+    }
+
+    CCSPlayer_MovementServices_AirMove_t Addresses::CCSPlayer_MovementServices_AirMove()
+    {
+        return AirMove.RCast<CCSPlayer_MovementServices_AirMove_t>();
+    }
+
+    CCSPlayer_MovementServices_CanUnduck_t Addresses::CCSPlayer_MovementServices_CanUnduck()
+    {
+        return CanUnduck.RCast<CCSPlayer_MovementServices_CanUnduck_t>();
+    }
+
+    CCSPlayer_MovementServices_CategorizePosition_t Addresses::CCSPlayer_MovementServices_CategorizePosition()
+    {
+        return CategorizePosition.RCast<CCSPlayer_MovementServices_CategorizePosition_t>();
+    }
+
+    CCSPlayer_MovementServices_CheckFalling_t Addresses::CCSPlayer_MovementServices_CheckFalling()
+    {
+        return CheckFalling.RCast<CCSPlayer_MovementServices_CheckFalling_t>();
+    }
+
+    CCSPlayer_MovementServices_CheckParameters_t Addresses::CCSPlayer_MovementServices_CheckParameters()
+    {
+        return CheckParameters.RCast<CCSPlayer_MovementServices_CheckParameters_t>();
+    }
+
+    CCSPlayer_MovementServices_CheckVelocity_t Addresses::CCSPlayer_MovementServices_CheckVelocity()
+    {
+        return CheckVelocity.RCast<CCSPlayer_MovementServices_CheckVelocity_t>();
+    }
+
+    CCSPlayer_MovementServices_CheckWater_t Addresses::CCSPlayer_MovementServices_CheckWater()
+    {
+        return CheckWater.RCast<CCSPlayer_MovementServices_CheckWater_t>();
+    }
+
+    CCSPlayer_MovementServices_Duck_t Addresses::CCSPlayer_MovementServices_Duck()
+    {
+        return Duck.RCast<CCSPlayer_MovementServices_Duck_t>();
+    }
+
+    CCSPlayer_MovementServices_Friction_t Addresses::CCSPlayer_MovementServices_Friction()
+    {
+        return Friction.RCast<CCSPlayer_MovementServices_Friction_t>();
+    }
+
+    CCSPlayer_MovementServices_FullWalkMove_t Addresses::CCSPlayer_MovementServices_FullWalkMove()
+    {
+        return FullWalkMove.RCast<CCSPlayer_MovementServices_FullWalkMove_t>();
+    }
+
+    CCSPlayer_MovementServices_GroundAccelerate_t Addresses::CCSPlayer_MovementServices_GroundAccelerate()
+    {
+        return GroundAccelerate.RCast<CCSPlayer_MovementServices_GroundAccelerate_t>();
+    }
+
+    CCSPlayer_MovementServices_LadderMove_t Addresses::CCSPlayer_MovementServices_LadderMove()
+    {
+        return LadderMove.RCast<CCSPlayer_MovementServices_LadderMove_t>();
+    }
+
+    CCSPlayer_MovementServices_MoveInit_t Addresses::CCSPlayer_MovementServices_MoveInit()
+    {
+        return MoveInit.RCast<CCSPlayer_MovementServices_MoveInit_t>();
+    }
+
+    CCSPlayer_MovementServices_PlayerMove_t Addresses::CCSPlayer_MovementServices_PlayerMove()
+    {
+        return PlayerMove.RCast<CCSPlayer_MovementServices_PlayerMove_t>();
+    }
+
+    CCSPlayer_MovementServices_ProcessMovement_t Addresses::CCSPlayer_MovementServices_ProcessMovement()
+    {
+        return ProcessMovement.RCast<CCSPlayer_MovementServices_ProcessMovement_t>();
+    }
+
+    CCSPlayer_MovementServices_SetupMove_t Addresses::CCSPlayer_MovementServices_SetupMove()
+    {
+        return SetupMove.RCast<CCSPlayer_MovementServices_SetupMove_t>();
+    }
+
+    CCSPlayer_MovementServices_TryPlayerMove_t Addresses::CCSPlayer_MovementServices_TryPlayerMove()
+    {
+        return TryPlayerMove.RCast<CCSPlayer_MovementServices_TryPlayerMove_t>();
+    }
+
+    CCSPlayer_MovementServices_WalkMove_t Addresses::CCSPlayer_MovementServices_WalkMove()
+    {
+        return WalkMove.RCast<CCSPlayer_MovementServices_WalkMove_t>();
+    }
+
+    CCSPlayer_MovementServices_WaterMove_t Addresses::CCSPlayer_MovementServices_WaterMove()
+    {
+        return WaterMove.RCast<CCSPlayer_MovementServices_WaterMove_t>();
+    }
+
+    CCSPlayer_MovementServices_OnJumpLegacy_t Addresses::CCSPlayer_MovementServices_OnJumpLegacy()
+    {
+        return OnJumpLegacy.RCast<CCSPlayer_MovementServices_OnJumpLegacy_t>();
+    }
+
+    CCSPlayer_MovementServices_OnJumpModern_t Addresses::CCSPlayer_MovementServices_OnJumpModern()
+    {
+        return OnJumpModern.RCast<CCSPlayer_MovementServices_OnJumpModern_t>();
+    }
+
+    CCSPlayer_MovementServices_CheckJumpButtonLegacy_t Addresses::CCSPlayer_MovementServices_CheckJumpButtonLegacy()
+    {
+        return CheckJumpButtonLegacy.RCast<CCSPlayer_MovementServices_CheckJumpButtonLegacy_t>();
+    }
+
+    CCSPlayer_MovementServices_CheckJumpButtonModern_t Addresses::CCSPlayer_MovementServices_CheckJumpButtonModern()
+    {
+        return CheckJumpButtonModern.RCast<CCSPlayer_MovementServices_CheckJumpButtonModern_t>();
+    }
+
+    CAttributeList_SetOrAddAttributeValueByName_t Addresses::CAttributeList_SetOrAddAttributeValueByName()
+    {
+        return SetOrAddAttributeValueByName.RCast<CAttributeList_SetOrAddAttributeValueByName_t>();
+    }
+
+    CDecoyProjectile_EmitGrenade_t Addresses::CDecoyProjectile_EmitGrenade()
+    {
+        return EmitDecoy.RCast<CDecoyProjectile_EmitGrenade_t>();
+    }
+
+    CFlashbangProjectile_EmitGrenade_t Addresses::CFlashbangProjectile_EmitGrenade()
+    {
+        return EmitFlashbang.RCast<CFlashbangProjectile_EmitGrenade_t>();
+    }
+
+    CHEGrenadeProjectile_EmitGrenade_t Addresses::CHEGrenadeProjectile_EmitGrenade()
+    {
+        return EmitHEGrenade.RCast<CHEGrenadeProjectile_EmitGrenade_t>();
+    }
+
+    CMolotovProjectile_EmitGrenade_t Addresses::CMolotovProjectile_EmitGrenade()
+    {
+        return EmitMolotov.RCast<CMolotovProjectile_EmitGrenade_t>();
+    }
+
+    CSmokeGrenadeProjectile_EmitGrenade_t Addresses::CSmokeGrenadeProjectile_EmitGrenade()
+    {
+        return EmitSmoke.RCast<CSmokeGrenadeProjectile_EmitGrenade_t>();
     }
 }

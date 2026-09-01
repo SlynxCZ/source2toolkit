@@ -121,6 +121,44 @@ namespace addresses
         CGameEntitySystem_FindEntityByName_t CGameEntitySystem_FindEntityByName() override;
         CTakeDamageInfo_CTakeDamageInfo_t CTakeDamageInfo_CTakeDamageInfo() override;
         INetworkMessageProcessingPreFilter_FilterMessage_t INetworkMessageProcessingPreFilter_FilterMessage() override;
+
+        // Ported from SwiftlyS2.
+        CEntityIdentity_AcceptInput_t CEntityIdentity_AcceptInput() override;
+        CCSPlayer_ItemServices_CanAcquire_t CCSPlayer_ItemServices_CanAcquire() override;
+        CCSPlayerPawn_CanMove_t CCSPlayerPawn_CanMove() override;
+        CCSPlayerController_ProcessUserCmd_t CCSPlayerController_ProcessUserCmd() override;
+        CBasePlayerController_OnSimulateUserCommands_t CBasePlayerController_OnSimulateUserCommands() override;
+        CCSPlayer_WeaponServices_DropWeapon_t CCSPlayer_WeaponServices_DropWeapon() override;
+        CCSPlayer_MovementServices_AirAccelerate_t CCSPlayer_MovementServices_AirAccelerate() override;
+        CCSPlayer_MovementServices_AirMove_t CCSPlayer_MovementServices_AirMove() override;
+        CCSPlayer_MovementServices_CanUnduck_t CCSPlayer_MovementServices_CanUnduck() override;
+        CCSPlayer_MovementServices_CategorizePosition_t CCSPlayer_MovementServices_CategorizePosition() override;
+        CCSPlayer_MovementServices_CheckFalling_t CCSPlayer_MovementServices_CheckFalling() override;
+        CCSPlayer_MovementServices_CheckParameters_t CCSPlayer_MovementServices_CheckParameters() override;
+        CCSPlayer_MovementServices_CheckVelocity_t CCSPlayer_MovementServices_CheckVelocity() override;
+        CCSPlayer_MovementServices_CheckWater_t CCSPlayer_MovementServices_CheckWater() override;
+        CCSPlayer_MovementServices_Duck_t CCSPlayer_MovementServices_Duck() override;
+        CCSPlayer_MovementServices_Friction_t CCSPlayer_MovementServices_Friction() override;
+        CCSPlayer_MovementServices_FullWalkMove_t CCSPlayer_MovementServices_FullWalkMove() override;
+        CCSPlayer_MovementServices_GroundAccelerate_t CCSPlayer_MovementServices_GroundAccelerate() override;
+        CCSPlayer_MovementServices_LadderMove_t CCSPlayer_MovementServices_LadderMove() override;
+        CCSPlayer_MovementServices_MoveInit_t CCSPlayer_MovementServices_MoveInit() override;
+        CCSPlayer_MovementServices_PlayerMove_t CCSPlayer_MovementServices_PlayerMove() override;
+        CCSPlayer_MovementServices_ProcessMovement_t CCSPlayer_MovementServices_ProcessMovement() override;
+        CCSPlayer_MovementServices_SetupMove_t CCSPlayer_MovementServices_SetupMove() override;
+        CCSPlayer_MovementServices_TryPlayerMove_t CCSPlayer_MovementServices_TryPlayerMove() override;
+        CCSPlayer_MovementServices_WalkMove_t CCSPlayer_MovementServices_WalkMove() override;
+        CCSPlayer_MovementServices_WaterMove_t CCSPlayer_MovementServices_WaterMove() override;
+        CCSPlayer_MovementServices_OnJumpLegacy_t CCSPlayer_MovementServices_OnJumpLegacy() override;
+        CCSPlayer_MovementServices_OnJumpModern_t CCSPlayer_MovementServices_OnJumpModern() override;
+        CCSPlayer_MovementServices_CheckJumpButtonLegacy_t CCSPlayer_MovementServices_CheckJumpButtonLegacy() override;
+        CCSPlayer_MovementServices_CheckJumpButtonModern_t CCSPlayer_MovementServices_CheckJumpButtonModern() override;
+        CAttributeList_SetOrAddAttributeValueByName_t CAttributeList_SetOrAddAttributeValueByName() override;
+        CDecoyProjectile_EmitGrenade_t CDecoyProjectile_EmitGrenade() override;
+        CFlashbangProjectile_EmitGrenade_t CFlashbangProjectile_EmitGrenade() override;
+        CHEGrenadeProjectile_EmitGrenade_t CHEGrenadeProjectile_EmitGrenade() override;
+        CMolotovProjectile_EmitGrenade_t CMolotovProjectile_EmitGrenade() override;
+        CSmokeGrenadeProjectile_EmitGrenade_t CSmokeGrenadeProjectile_EmitGrenade() override;
     public:
         // Raw addresses. A function pointer is not portably convertible to
         // void* and back, so what a signature scan produces is kept as the
@@ -146,6 +184,43 @@ namespace addresses
         DynLibUtils::CMemory FindEntityByName;
         DynLibUtils::CMemory CTakeDamageInfo;
         DynLibUtils::CMemory FilterMessage;
+
+        DynLibUtils::CMemory IdentityAcceptInput;
+        DynLibUtils::CMemory CanAcquire;
+        DynLibUtils::CMemory CanMove;
+        DynLibUtils::CMemory ProcessUserCmd;
+        DynLibUtils::CMemory OnSimulateUserCommands;
+        DynLibUtils::CMemory DropWeapon;
+        DynLibUtils::CMemory AirAccelerate;
+        DynLibUtils::CMemory AirMove;
+        DynLibUtils::CMemory CanUnduck;
+        DynLibUtils::CMemory CategorizePosition;
+        DynLibUtils::CMemory CheckFalling;
+        DynLibUtils::CMemory CheckParameters;
+        DynLibUtils::CMemory CheckVelocity;
+        DynLibUtils::CMemory CheckWater;
+        DynLibUtils::CMemory Duck;
+        DynLibUtils::CMemory Friction;
+        DynLibUtils::CMemory FullWalkMove;
+        DynLibUtils::CMemory GroundAccelerate;
+        DynLibUtils::CMemory LadderMove;
+        DynLibUtils::CMemory MoveInit;
+        DynLibUtils::CMemory PlayerMove;
+        DynLibUtils::CMemory ProcessMovement;
+        DynLibUtils::CMemory SetupMove;
+        DynLibUtils::CMemory TryPlayerMove;
+        DynLibUtils::CMemory WalkMove;
+        DynLibUtils::CMemory WaterMove;
+        DynLibUtils::CMemory OnJumpLegacy;
+        DynLibUtils::CMemory OnJumpModern;
+        DynLibUtils::CMemory CheckJumpButtonLegacy;
+        DynLibUtils::CMemory CheckJumpButtonModern;
+        DynLibUtils::CMemory SetOrAddAttributeValueByName;
+        DynLibUtils::CMemory EmitDecoy;
+        DynLibUtils::CMemory EmitFlashbang;
+        DynLibUtils::CMemory EmitHEGrenade;
+        DynLibUtils::CMemory EmitMolotov;
+        DynLibUtils::CMemory EmitSmoke;
     private:
         std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
     };

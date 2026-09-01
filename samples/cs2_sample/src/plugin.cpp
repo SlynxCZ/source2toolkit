@@ -26,6 +26,16 @@ CConVar<float> sample_cvarf("sample_cvarf", FCVAR_NONE, "help string", 69.69f, t
 // The stock SourceHook macros. TOOLKIT_SAVEVARS() has already pointed g_SHPtr
 // at the toolkit's engine, so these need no setup of their own -- and the hooks
 // they place land on the same instance every other plugin hooks on.
+//
+// Inline hooks patch a function at its address, so each needs a dispatcher
+// declared up front: name, the class the function belongs to, its return type,
+// then its parameters. The _void suffix is for functions returning nothing.
+//
+SH_DECL_INLINEHOOK2(TakeDamageOldHook, CBaseEntity, int64_t, CTakeDamageInfo*, CTakeDamageResult*);
+// If you are unsure if function is member or just first arg, you can declare
+// thistype as void and pass one more arg that is a1 and, also works for member functions.
+SH_DECL_INLINEHOOK3_void(PostThinkHook, void, CCSPlayerPawn*, double, float);
+//
 SH_DECL_HOOK3_void(ISource2Server, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
 SH_DECL_HOOK4_void(ISource2GameClients, ClientActive, SH_NOATTRIB, 0, CPlayerSlot, bool, const char*, uint64);
 SH_DECL_HOOK5_void(ISource2GameClients, ClientDisconnect, SH_NOATTRIB, 0, CPlayerSlot, ENetworkDisconnectionReason, const char*, uint64, const char*);
@@ -82,10 +92,9 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     //
     // First: the toolkit already resolved this one, so just ask for it. Every
     // entry in IToolkitAddresses works this way and costs no scan of your own.
-    if (void *pTakeDamageOld = ADDR_TAKE_DAMAGE_OLD())
+    if (void *pTakeDamageOld = reinterpret_cast<void *>(ADDR_TAKE_DAMAGE_OLD()))
     {
-        SH_ADD_INLINEHOOK(TakeDamageOldHook, pTakeDamageOld,
-                          SH_MEMBER(this, &SamplePlugin::Hook_TakeDamageOld), false);
+        m_iTakeDamageOldHookID = SH_ADD_INLINEHOOK(TakeDamageOldHook, pTakeDamageOld, SH_MEMBER(this, &SamplePlugin::Hook_TakeDamageOld), false);
     }
     else
     {
@@ -97,8 +106,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     // finds it by exported symbol or by pattern -- you do not care which.
     if (void *pPostThink = GAMECONFIG_RESOLVE("CCSPlayerPawn::PostThink"))
     {
-        SH_ADD_INLINEHOOK(PostThinkHook, pPostThink,
-                          SH_MEMBER(this, &SamplePlugin::Hook_PostThink), false);
+        m_iPostThinkHookID = SH_ADD_INLINEHOOK(PostThinkHook, pPostThink, SH_MEMBER(this, &SamplePlugin::Hook_PostThink), false);
     }
     else
     {
@@ -194,6 +202,9 @@ bool SamplePlugin::Unload(char* error, size_t maxlen)
     SH_REMOVE_HOOK(ISource2GameClients, ClientConnect, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientConnect), false);
     SH_REMOVE_HOOK(ISource2GameClients, ClientCommand, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientCommand), false);
 
+    SH_REMOVE_HOOK_ID(m_iTakeDamageOldHookID);
+    SH_REMOVE_HOOK_ID(m_iPostThinkHookID);
+
     // The CConVars above are objects in this library, and ConVar_Register handed
     // the engine pointers to them. Without this the engine keeps those pointers
     // after the library is unloaded, and the next thing to touch one -- the
@@ -204,18 +215,6 @@ bool SamplePlugin::Unload(char* error, size_t maxlen)
     // declares a CConVar has to make this call.
     // Inline hooks patch the game's own code, so leaving one installed past
     // unload jumps into a library that is no longer mapped.
-    if (void *pTakeDamageOld = ADDR_TAKE_DAMAGE_OLD())
-    {
-        SH_REMOVE_INLINEHOOK(TakeDamageOldHook, pTakeDamageOld,
-                             SH_MEMBER(this, &SamplePlugin::Hook_TakeDamageOld), false);
-    }
-
-    if (void *pPostThink = GAMECONFIG_RESOLVE("CCSPlayerPawn::PostThink"))
-    {
-        SH_REMOVE_INLINEHOOK(PostThinkHook, pPostThink,
-                             SH_MEMBER(this, &SamplePlugin::Hook_PostThink), false);
-    }
-
     ConVar_Unregister();
 
     return true;
@@ -305,6 +304,25 @@ void SamplePlugin::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTi
      */
 }
 
+int64_t SamplePlugin::Hook_TakeDamageOld(CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
+{
+    CBaseEntity* pThis = META_IFACEPTR(CBaseEntity);
+
+    // MRES_IGNORED lets the original run untouched. Change pInfo here and the
+    // original sees your version; RETURN_META_VALUE(MRES_SUPERCEDE, 0) would
+    // block the damage outright.
+    TOOLKIT_LOG(this, "TakeDamageOld: %p entity, %.1f damage\n", pThis, pInfo ? pInfo->m_flDamage : 0.0f);
+
+    RETURN_META_VALUE(MRES_IGNORED, 0);
+}
+
+void SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis, double flFrameTime, float flUnknown)
+{
+    // Runs for every pawn every tick, so do as little as possible here. Left
+    // empty on purpose -- logging would flood the console.
+    RETURN_META(MRES_IGNORED);
+}
+
 void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, const char* pOldLevel, const char* pLandmarkName, bool loadGame, bool background)
 {
     TOOLKIT_LOG(this, "OnLevelInit(%s)\n", pMapName);
@@ -313,21 +331,4 @@ void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, c
 void SamplePlugin::OnLevelShutdown()
 {
     TOOLKIT_LOG(this, "OnLevelShutdown()\n");
-}
-
-int64_t SamplePlugin::Hook_TakeDamageOld(CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
-{
-    // MRES_IGNORED lets the original run untouched. Change pInfo here and the
-    // original sees your version; RETURN_META_VALUE(MRES_SUPERCEDE, 0) would
-    // block the damage outright.
-    TOOLKIT_LOG(this, "TakeDamageOld: %.1f damage\n", pInfo ? pInfo->m_flDamage() : 0.0f);
-
-    RETURN_META_VALUE(MRES_IGNORED, 0);
-}
-
-void SamplePlugin::Hook_PostThink(double flFrameTime, float flUnknown)
-{
-    // Runs for every pawn every tick, so do as little as possible here. Left
-    // empty on purpose -- logging would flood the console.
-    RETURN_META(MRES_IGNORED);
 }

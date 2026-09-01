@@ -30,6 +30,9 @@
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"
+#include "source2toolkit/IToolkitGameSystems.h"
+#include "source2toolkit/IToolkitHTTP.h"
+#include "source2toolkit/IToolkitJSON.h"
 #include "source2toolkit/IToolkitMemory.h"
 #include "source2toolkit/IToolkitMenus.h"
 #include "source2toolkit/IToolkitModule.h"
@@ -42,21 +45,11 @@
 #include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
 #include "source2toolkit/schema/takedamageinfo.h"
 #include "source2toolkit/schema/takedamageresult.h"
-#include <igameevents.h>
+#include "igameevents.h"
 
 // Generated from plugin-metadata.json by tools/version_gen.py -- the metadata
 // below is not written twice.
 #include "version_gen.h"
-
-// Inline hooks patch a function at its address, so each needs a dispatcher
-// declared up front: name, the class the function belongs to, its return type,
-// then its parameters. The _void suffix is for functions returning nothing.
-//
-// CBaseEntity::TakeDamageOld(CTakeDamageInfo*, CTakeDamageResult*) -> int64
-SH_DECL_INLINEHOOK2(TakeDamageOldHook, CBaseEntity, int64_t, CTakeDamageInfo*, CTakeDamageResult*);
-
-// CCSPlayerPawn::PostThink(double, float) -> void
-SH_DECL_INLINEHOOK2_void(PostThinkHook, CCSPlayerPawn, double, float);
 
 class SamplePlugin final : public IToolkitPlugin, public IToolkitListener
 {
@@ -78,10 +71,11 @@ public: // hooks
 	void Hook_OnClientConnected(CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, const char *pszAddress, bool bFakePlayer);
 	bool Hook_ClientConnect(CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, bool unk1, CBufferString *pRejectReason);
 	void Hook_ClientCommand(CPlayerSlot nSlot, const CCommand &cmd);
-
-public: // inline hooks -- see Load() for how each address is found
 	int64_t Hook_TakeDamageOld(CTakeDamageInfo *pInfo, CTakeDamageResult *pResult);
-	void Hook_PostThink(double flFrameTime, float flUnknown);
+	void Hook_PostThink(CCSPlayerPawn* pThis, double flFrameTime, float flUnknown);
+
+    int m_iTakeDamageOldHookID;
+    int m_iPostThinkHookID;
 
 public:
 	const char *GetAuthor() override { return PLUGIN_AUTHOR; }
