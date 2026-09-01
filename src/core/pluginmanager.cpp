@@ -53,12 +53,14 @@
 #include "utils/log.h"
 #include "utils/paths.h"
 #include "core/scheduler.h"
+#include "core/networkmessages.h"
 
+// Only the file watch is Linux-only; networkmessages.h above is not, every
+// unload path below calls into it.
 #ifndef _WIN32
 #include <sys/inotify.h>
 #include <sys/select.h>
 #include <unistd.h>
-#include "core/networkmessages.h"
 #endif
 
 PluginManager pluginManager;
