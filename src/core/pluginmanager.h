@@ -69,6 +69,11 @@ public:
     bool IsPluginLoaded(const std::string& fullPath);
 
     bool LoadPlugin(const char* path, char* error, size_t maxlen);
+
+    // Public because the deferred reload in pluginmanager.cpp runs from a
+    // SourceHook callback rather than from inside the manager.
+    bool LoadPluginFromPath(const char* fullPath, char* error, size_t maxlen, bool hotReload);
+
     bool UnloadPlugin(int id);
     bool ReloadPlugin(int id);
 
@@ -93,7 +98,6 @@ public:
     std::vector<std::unique_ptr<ToolkitPlugin>> m_plugins;
     int m_nextId = 1;
 private:
-    bool LoadPluginFromPath(const char* fullPath, char* error, size_t maxlen, bool hotReload);
     bool ReloadPluginByPath(const std::string& fullPath);
 
     std::thread m_watcherThread;

@@ -36,6 +36,7 @@
  */
 #include "pluginmanager.h"
 #include <cstring>
+#include <unordered_map>
 
 #include "commands.h"
 #include "customhud.h"
@@ -48,6 +49,7 @@
 
 #include "pluginapi.h"
 #include "core/shared.h"
+#include "core/plugin.h"
 #include "utils/log.h"
 #include "utils/paths.h"
 #include "core/scheduler.h"
@@ -249,6 +251,60 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     return LoadPluginFromPath(fullPath.c_str(), error, maxlen, false);
 }
 
+namespace
+{
+    // SourceHook holds hook managers whose code lives inside the plugin's own
+    // library, so closing it without telling SourceHook first leaves the
+    // engine calling into unmapped memory -- which is what a client
+    // connecting after an unload/reload crashed on, with a null hook info.
+    //
+    // It also decides when that is safe: "toolkit unload" is typed at a
+    // console, which the toolkit reaches from inside a hook of its own, so the
+    // context stack is not empty at that point and the library must stay
+    // mapped until it is. ReadyToUnload() is SourceHook saying so.
+    class SourceHookUnloadListener final : public SourceHook::Impl::UnloadListener
+    {
+    public:
+        void ReadyToUnload(SourceHook::Plugin plug) override
+        {
+            auto it = m_Pending.find(plug);
+            if (it == m_Pending.end())
+                return;
+
+            const Entry entry = it->second;
+            m_Pending.erase(it);
+
+            CloseLib(entry.lib);
+
+            // A reload has to wait for the same moment: dlopen() on a library
+            // that is still mapped hands back the same handle without running
+            // its static initialisers again, so loading before this point
+            // would "reload" the old code.
+            if (!entry.reloadPath.empty())
+            {
+                char err[256]{};
+                pluginManager.LoadPluginFromPath(entry.reloadPath.c_str(), err, sizeof(err), true);
+            }
+        }
+
+        void Defer(SourceHook::Plugin plug, LibHandle lib, std::string reloadPath = {})
+        {
+            m_Pending[plug] = Entry{ lib, std::move(reloadPath) };
+        }
+
+    private:
+        struct Entry
+        {
+            LibHandle lib;
+            std::string reloadPath;
+        };
+
+        std::unordered_map<SourceHook::Plugin, Entry> m_Pending;
+    };
+
+    SourceHookUnloadListener g_SourceHookUnloadListener;
+}
+
 bool PluginManager::ReloadPlugin(int id)
 {
     std::string path;
@@ -274,16 +330,16 @@ bool PluginManager::ReloadPlugin(int id)
         convars::convarsManager.RemoveAllForPlugin(id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
 
-        CloseLib((*it)->lib);
+        const auto plug = static_cast<SourceHook::Plugin>(id);
+        g_SourceHookUnloadListener.Defer(plug, (*it)->lib, path);
+        g_SourceHookImpl.UnloadPlugin(plug, &g_SourceHookUnloadListener);
+
         m_plugins.erase(it);
         break;
     }
 
-    if (path.empty())
-        return false;
-
-    char err[256]{};
-    return LoadPluginFromPath(path.c_str(), err, sizeof(err), true);
+    // The load happens in ReadyToUnload(); see the listener.
+    return !path.empty();
 }
 
 bool PluginManager::ReloadPluginByPath(const std::string& fullPath)
@@ -326,7 +382,13 @@ bool PluginManager::UnloadPlugin(PluginId id)
         convars::convarsManager.RemoveAllForPlugin(id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
 
-        CloseLib(p->lib);
+        // Hands the library to the listener above and drops every hook and
+        // hook manager this plugin owns. The close happens in ReadyToUnload(),
+        // which SourceHook calls straight away when nothing is on the context
+        // stack, and after it unwinds when something is.
+        const auto plug = static_cast<SourceHook::Plugin>(id);
+        g_SourceHookUnloadListener.Defer(plug, p->lib);
+        g_SourceHookImpl.UnloadPlugin(plug, &g_SourceHookUnloadListener);
 
         m_plugins.erase(it);
         return true;
@@ -432,7 +494,9 @@ void PluginManager::UnloadAll()
         convars::convarsManager.RemoveAllForPlugin(p->id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(p->id);
 
-        CloseLib(p->lib);
+        const auto plug = static_cast<SourceHook::Plugin>(p->id);
+        g_SourceHookUnloadListener.Defer(plug, p->lib);
+        g_SourceHookImpl.UnloadPlugin(plug, &g_SourceHookUnloadListener);
     }
 
     m_plugins.clear();
