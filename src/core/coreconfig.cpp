@@ -97,7 +97,6 @@ bool CCoreConfig::IsTriggerInternal(std::vector<std::string> triggers, const std
         if (message.rfind(trigger, 0) == 0)
         {
             prefix = trigger;
-            FP_TRACE("Trigger found, prefix is {}", prefix);
             return true;
         }
     }

@@ -46,6 +46,8 @@
 #include "source2toolkit/IToolkitPlugin.h"
 #include "utils/log.h"
 
+#include <cstdarg>
+
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
 
@@ -55,14 +57,35 @@
 #define ANSI_YELLOW "\033[33m"
 #define ANSI_BLUE   "\033[34m"
 
-#define LOG_INFO(fmt, ...) \
-ConMsg(ANSI_GREEN fmt ANSI_RESET "\n", ##__VA_ARGS__)
 
-#define LOG_WARN(fmt, ...) \
-ConMsg(ANSI_YELLOW fmt ANSI_RESET "\n", ##__VA_ARGS__)
+// A "toolkit ..." typed in the server console has no player behind it and
+// belongs in that console; typed by a client it has to go back to that
+// client's console instead, which is what ClientPrintf is for. Colour is
+// dropped on that path -- the escapes are a terminal thing and the game
+// console would print them literally.
+static void ToolkitReply(const CCommandContext& ctx, const char* pszColor, const char* fmt, ...)
+{
+    char buf[1024];
 
-#define LOG_ERROR(fmt, ...) \
-ConMsg(ANSI_RED fmt ANSI_RESET "\n", ##__VA_ARGS__)
+    va_list ap;
+    va_start(ap, fmt);
+    V_vsnprintf(buf, sizeof(buf), fmt, ap);
+    va_end(ap);
+
+    if (const CPlayerSlot slot = ctx.GetPlayerSlot(); slot.IsValid() && g_pEngineServer)
+    {
+        char line[1088];
+        V_snprintf(line, sizeof(line), "%s\n", buf);
+        g_pEngineServer->ClientPrintf(slot, line);
+        return;
+    }
+
+    ConMsg("%s%s" ANSI_RESET "\n", pszColor, buf);
+}
+
+#define REPLY_INFO(fmt, ...)  ToolkitReply(ctx, ANSI_GREEN,  fmt, ##__VA_ARGS__)
+#define REPLY_WARN(fmt, ...)  ToolkitReply(ctx, ANSI_YELLOW, fmt, ##__VA_ARGS__)
+#define REPLY_ERROR(fmt, ...) ToolkitReply(ctx, ANSI_RED,    fmt, ##__VA_ARGS__)
 
 namespace commands {
     static std::vector<std::unique_ptr<ConCommand> > registeredCommands;
@@ -78,13 +101,13 @@ namespace commands {
 
         if (argc < 2)
         {
-            LOG_INFO("Source2Toolkit commands:");
-            LOG_INFO("  toolkit list");
-            LOG_INFO("  toolkit load <name>");
-            LOG_INFO("  toolkit unload <id>");
-            LOG_INFO("  toolkit info <id>");
-            LOG_INFO("  toolkit refresh");
-            LOG_INFO("  toolkit version");
+            REPLY_INFO("Source2Toolkit commands:");
+            REPLY_INFO("  toolkit list");
+            REPLY_INFO("  toolkit load <name>");
+            REPLY_INFO("  toolkit unload <id>");
+            REPLY_INFO("  toolkit info <id>");
+            REPLY_INFO("  toolkit refresh");
+            REPLY_INFO("  toolkit version");
             return;
         }
 
@@ -94,17 +117,17 @@ namespace commands {
         {
             if (pluginManager.m_plugins.empty())
             {
-                LOG_WARN("No plugins loaded.");
+                REPLY_WARN("No plugins loaded.");
                 return;
             }
 
-            LOG_INFO("Listing %zu plugin(s):", pluginManager.m_plugins.size());
+            REPLY_INFO("Listing %zu plugin(s):", pluginManager.m_plugins.size());
 
             for (auto& p : pluginManager.m_plugins)
             {
                 auto* api = p->api;
 
-                LOG_INFO("  [%d] %s (%s) by (%s)\n",
+                REPLY_INFO("  [%d] %s (%s) by (%s)",
                     p->id,
                     api->GetName(),
                     api->GetVersion(),
@@ -116,7 +139,7 @@ namespace commands {
         {
             if (argc < 3)
             {
-                LOG_ERROR("Usage: toolkit load <name>");
+                REPLY_ERROR("Usage: toolkit load <name>");
                 return;
             }
 
@@ -124,18 +147,18 @@ namespace commands {
 
             if (!pluginManager.LoadPlugin(args.Arg(2), err, sizeof(err)))
             {
-                LOG_ERROR("Load failed: %s", err);
+                REPLY_ERROR("Load failed: %s", err);
                 return;
             }
 
-            LOG_INFO("Plugin '%s' loaded.", args.Arg(2));
+            REPLY_INFO("Plugin '%s' loaded.", args.Arg(2));
         }
 
         else if (strcmp(cmd, "unload") == 0)
         {
             if (argc < 3)
             {
-                LOG_ERROR("Usage: toolkit unload <id>");
+                REPLY_ERROR("Usage: toolkit unload <id>");
                 return;
             }
 
@@ -143,24 +166,24 @@ namespace commands {
 
             if (id <= 0)
             {
-                LOG_ERROR("Invalid plugin id.");
+                REPLY_ERROR("Invalid plugin id.");
                 return;
             }
 
             if (!pluginManager.UnloadPlugin(id))
             {
-                LOG_ERROR("Plugin %d not found or failed to unload.", id);
+                REPLY_ERROR("Plugin %d not found or failed to unload.", id);
                 return;
             }
 
-            LOG_INFO("Plugin %d unloaded.", id);
+            REPLY_INFO("Plugin %d unloaded.", id);
         }
 
         else if (strcmp(cmd, "info") == 0)
         {
             if (argc < 3)
             {
-                LOG_ERROR("Usage: toolkit info <id>");
+                REPLY_ERROR("Usage: toolkit info <id>");
                 return;
             }
 
@@ -172,38 +195,38 @@ namespace commands {
                 {
                     auto* api = p->api;
 
-                    LOG_INFO("Plugin %d info:", id);
-                    LOG_INFO("  Name: %s", api->GetName());
-                    LOG_INFO("  Version: %s", api->GetVersion());
-                    LOG_INFO("  Author: %s", api->GetAuthor());
-                    LOG_INFO("  Description: %s", api->GetDescription());
-                    LOG_INFO("  Path: %s", p->path.c_str());
+                    REPLY_INFO("Plugin %d info:", id);
+                    REPLY_INFO("  Name: %s", api->GetName());
+                    REPLY_INFO("  Version: %s", api->GetVersion());
+                    REPLY_INFO("  Author: %s", api->GetAuthor());
+                    REPLY_INFO("  Description: %s", api->GetDescription());
+                    REPLY_INFO("  Path: %s", p->path.c_str());
                     return;
                 }
             }
 
-            LOG_ERROR("Plugin %d not found.", id);
+            REPLY_ERROR("Plugin %d not found.", id);
         }
 
         else if (strcmp(cmd, "refresh") == 0)
         {
-            LOG_INFO("Loading missing plugins...");
+            REPLY_INFO("Loading missing plugins...");
 
             pluginManager.LoadMissing();
 
-            LOG_INFO("Done.");
+            REPLY_INFO("Done.");
         }
 
         else if (strcmp(cmd, "version") == 0)
         {
-            LOG_INFO("Source2Toolkit");
-            LOG_INFO("  Version: %s", VERSION_STRING);
-            LOG_INFO("  Build: %s", BUILD_TIMESTAMP);
+            REPLY_INFO("Source2Toolkit");
+            REPLY_INFO("  Version: %s", VERSION_STRING);
+            REPLY_INFO("  Build: %s", BUILD_TIMESTAMP);
         }
 
         else
         {
-            LOG_WARN("Unknown command '%s'", cmd);
+            REPLY_WARN("Unknown command '%s'", cmd);
         }
     }
 
