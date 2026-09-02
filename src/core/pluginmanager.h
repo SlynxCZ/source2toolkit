@@ -44,6 +44,10 @@
 #include <atomic>
 
 #ifdef _WIN32
+// WinSock2.h first: Windows.h otherwise pulls in the older winsock.h, and a
+// translation unit that includes this header and then core/mysql.h (which
+// needs WinSock2.h) gets every socket type and function defined twice.
+#include <WinSock2.h>
 #include <Windows.h>
 using LibHandle = HMODULE;
 #else
