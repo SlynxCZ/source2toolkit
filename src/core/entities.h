@@ -53,13 +53,13 @@ namespace entities {
 
         CBaseEntity* CreateEntityByName(const char* pszClassName) override;
 
-        void AddEntityListener(IEntityListener* pListener) override;
+        void AddEntityListener(PluginId owner, IEntityListener* pListener) override;
         void RemoveEntityListener(IEntityListener* pListener) override;
 
         void AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue = "") override;
         void AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f) override;
 
-        void AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
+        void AddEntityIOListener(PluginId owner, IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
         void RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
 
     public:
@@ -68,13 +68,41 @@ namespace entities {
         /// one for the next map.
         void AttachEntityListeners();
 
+        /// Takes this plugin's listeners off the entity system and out of the
+        /// entity I/O stack. Both hold the listener object itself, which lives
+        /// inside the plugin's library, so it has to go before the library is
+        /// closed -- the engine would otherwise keep calling a vtable that is
+        /// no longer mapped.
+        void RemoveAllForPlugin(PluginId id);
+
     private:
+        /// Forgets who registered an I/O listener, once it is off every output
+        /// it was watching.
+        void DropIOListenerRecord(IEntityIOListener* pListener);
+
+        struct ListenerEntry
+        {
+            PluginId owner;
+            IEntityListener* listener;
+        };
+
+        struct IOListenerEntry
+        {
+            PluginId owner;
+            IEntityIOListener* listener;
+        };
+
         // Every listener a plugin has registered, kept for as long as it is
         // registered rather than until it is first attached. A plugin
         // registers while it loads, which is before the engine has made an
         // entity system at all, and the engine may make another one on the
         // next map -- both are handled by re-attaching this list.
-        std::vector<IEntityListener*> m_Listeners;
+        std::vector<ListenerEntry> m_Listeners;
+
+        // The I/O listeners themselves live in inlinehooks::entityIOListenerStack,
+        // keyed by the output they watch. This is only who registered what, so
+        // a plugin's can be found again when it unloads.
+        std::vector<IOListenerEntry> m_IOListeners;
     };
 
     extern EntitiesManager entitiesManager;

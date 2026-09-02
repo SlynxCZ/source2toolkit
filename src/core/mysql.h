@@ -185,8 +185,10 @@ namespace mysql {
     class MySQLConnection : public IToolkitMySQLConnection
     {
     public:
-        MySQLConnection(const ToolkitMySQLConnectionInfo info);
+        MySQLConnection(PluginId owner, const ToolkitMySQLConnectionInfo info);
         ~MySQLConnection() override;
+
+        PluginId Owner() const { return m_Owner; }
 
         void Connect(ToolkitMySQLConnectCallbackFunc callback) override;
         void Query(char *query, ToolkitMySQLQueryCallbackFunc callback) override;
@@ -225,13 +227,25 @@ namespace mysql {
         std::mutex m_ThinkLock;
         bool m_Terminate = false;
         MYSQL *m_pDatabase = nullptr;
+        PluginId m_Owner = 0;
     };
 
     class MySQLManager final : public IToolkitMySQL
     {
     public:
-        IToolkitMySQLConnection* CreateConnection(ToolkitMySQLConnectionInfo info) override;
+        IToolkitMySQLConnection* CreateConnection(PluginId owner, ToolkitMySQLConnectionInfo info) override;
+
     public:
+        /// Destroys the connections this plugin never got around to
+        /// destroying itself. Has to run while its library is still mapped:
+        /// the worker thread is running code from it, and every pending
+        /// callback is a std::function holding more of it.
+        void RemoveAllForPlugin(PluginId id);
+
+        /// Same for whatever is left, the toolkit's own included. The worker
+        /// threads would otherwise outlive the toolkit library itself.
+        void Shutdown();
+
         std::vector<MySQLConnection*> m_vecMysqlConnections;
     };
 

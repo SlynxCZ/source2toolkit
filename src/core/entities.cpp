@@ -93,15 +93,18 @@ namespace entities
         return addresses::toolkitAddresses.CBaseEntity_CreateEntityByName()(pszClassName, -1);
     }
 
-    void EntitiesManager::AddEntityListener(IEntityListener* pListener)
+    void EntitiesManager::AddEntityListener(PluginId owner, IEntityListener* pListener)
     {
         if (!pListener)
             return;
 
-        if (std::find(m_Listeners.begin(), m_Listeners.end(), pListener) != m_Listeners.end())
+        auto known = std::find_if(m_Listeners.begin(), m_Listeners.end(),
+                                  [pListener](const ListenerEntry& e) { return e.listener == pListener; });
+
+        if (known != m_Listeners.end())
             return;
 
-        m_Listeners.push_back(pListener);
+        m_Listeners.push_back(ListenerEntry{ owner, pListener });
 
         // Null while a plugin is still loading -- the engine has not made the
         // entity system yet. AttachEntityListeners() picks it up on
@@ -115,7 +118,7 @@ namespace entities
         if (!pListener)
             return;
 
-        std::erase(m_Listeners, pListener);
+        std::erase_if(m_Listeners, [pListener](const ListenerEntry& e) { return e.listener == pListener; });
 
         if (shared::g_pEntitySystem)
             shared::g_pEntitySystem->RemoveListenerEntity(pListener);
@@ -128,8 +131,8 @@ namespace entities
 
         // The list is kept, not consumed: a new map can mean a new entity
         // system, and every listener has to be put on that one too.
-        for (IEntityListener* pListener : m_Listeners)
-            shared::g_pEntitySystem->AddListenerEntity(pListener);
+        for (const ListenerEntry& entry : m_Listeners)
+            shared::g_pEntitySystem->AddListenerEntity(entry.listener);
     }
 
     void EntitiesManager::AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue)
@@ -145,7 +148,7 @@ namespace entities
         addresses::toolkitAddresses.CEntitySystem_AddEntityIOEvent()(shared::g_pEntitySystem, pTarget, pszInput, pActivator, pCaller, variant_t(pszValue), flDelay, nullptr, nullptr);
     }
 
-    void EntitiesManager::AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post)
+    void EntitiesManager::AddEntityIOListener(PluginId owner, IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post)
     {
         OutputKey key{
             pchClassName ? pchClassName : "*",
@@ -156,6 +159,8 @@ namespace entities
             inlinehooks::entityIOListenerStack[key].m_vecPost.push_back(pListener);
         else
             inlinehooks::entityIOListenerStack[key].m_vecPre.push_back(pListener);
+
+        m_IOListeners.push_back(IOListenerEntry{ owner, pListener });
     }
 
     void EntitiesManager::RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post)
@@ -173,6 +178,8 @@ namespace entities
                 else
                     ++it;
             }
+
+            DropIOListenerRecord(pListener);
             return;
         }
 
@@ -191,5 +198,59 @@ namespace entities
 
         if (it->second.m_vecPre.empty() && it->second.m_vecPost.empty())
             inlinehooks::entityIOListenerStack.erase(it);
+
+        DropIOListenerRecord(pListener);
+    }
+
+    void EntitiesManager::DropIOListenerRecord(IEntityIOListener* pListener)
+    {
+        // Only once the listener is gone from every output it watched -- the
+        // same object can be registered for several, and the record is what
+        // says a plugin still has one.
+        for (const auto& [key, pair] : inlinehooks::entityIOListenerStack)
+        {
+            if (std::find(pair.m_vecPre.begin(), pair.m_vecPre.end(), pListener) != pair.m_vecPre.end())
+                return;
+
+            if (std::find(pair.m_vecPost.begin(), pair.m_vecPost.end(), pListener) != pair.m_vecPost.end())
+                return;
+        }
+
+        std::erase_if(m_IOListeners, [pListener](const IOListenerEntry& e) { return e.listener == pListener; });
+    }
+
+    void EntitiesManager::RemoveAllForPlugin(PluginId id)
+    {
+        for (auto it = m_Listeners.begin(); it != m_Listeners.end(); )
+        {
+            if (it->owner != id)
+            {
+                ++it;
+                continue;
+            }
+
+            if (shared::g_pEntitySystem)
+                shared::g_pEntitySystem->RemoveListenerEntity(it->listener);
+
+            it = m_Listeners.erase(it);
+        }
+
+        std::vector<IEntityIOListener*> going;
+
+        for (const auto& entry : m_IOListeners)
+        {
+            if (entry.owner == id)
+                going.push_back(entry.listener);
+        }
+
+        for (auto* pListener : going)
+        {
+            RemoveEntityIOListener(pListener, nullptr, nullptr, false);
+            RemoveEntityIOListener(pListener, nullptr, nullptr, true);
+        }
+
+        // Anything the two passes above could not reach, so a plugin never
+        // leaves a record behind pointing into its closed library.
+        std::erase_if(m_IOListeners, [id](const IOListenerEntry& e) { return e.owner == id; });
     }
 }

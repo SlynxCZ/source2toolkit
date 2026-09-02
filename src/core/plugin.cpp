@@ -44,6 +44,7 @@
 #include "gameconfig.h"
 #include "gamesystems.h"
 #include "http.h"
+#include "mysql.h"
 #include "networkmessages.h"
 #include "inlinehooks.h"
 #include "patches.h"
@@ -170,17 +171,25 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
 bool ToolkitCore::Unload(char* error, size_t maxlen)
 {
     pluginManager.StopFileWatcher();
+
+    // Whatever a plugin registered that holds code inside its own library --
+    // timers, HTTP callbacks, database connections, entity listeners, open
+    // menus -- goes with that plugin, one at a time, while it is still
+    // mapped. See the RemoveAllForPlugin() calls in PluginManager.
     pluginManager.UnloadAll();
 
     commands::DestructCommands();
     events::DestructEvents();
     inlinehooks::inlines.DestructListeners();
     virtualhooks::virtuals.DestructListeners();
+    // Only the toolkit's own are left by now.
     scheduler::Shutdown();
     // Takes the engine-level change callback back out with it.
     convars::convarsManager.Shutdown();
-    // Callbacks are std::functions holding code inside plugin libraries.
     http::httpManager.Shutdown();
+    // Joins the worker threads. They run code from this library, so leaving
+    // one running is a crash the moment Metamod unmaps it.
+    mysql::mysqlManager.Shutdown();
 
     if (shared::g_pEntitySystem)
         shared::g_pEntitySystem->RemoveListenerEntity(&virtualhooks::entityListener);

@@ -482,9 +482,10 @@ namespace mysql
         return m_affectedRows;
     }
 
-    MySQLConnection::MySQLConnection(const ToolkitMySQLConnectionInfo info)
+    MySQLConnection::MySQLConnection(PluginId owner, const ToolkitMySQLConnectionInfo info)
     {
         this->m_info = info;
+        this->m_Owner = owner;
     }
 
     MySQLConnection::~MySQLConnection()
@@ -510,6 +511,15 @@ namespace mysql
 
             op->CancelThinkPart();
             delete op;
+        }
+
+        // What the worker never reached. These used to be dropped on the
+        // floor, which left their callbacks -- std::functions holding code
+        // inside the owning plugin -- alive with nothing to destroy them.
+        while (!m_threadQueue.empty())
+        {
+            delete m_threadQueue.front();
+            m_threadQueue.pop();
         }
 
         if (m_pDatabase)
@@ -673,11 +683,38 @@ namespace mysql
         return out;
     }
 
-    IToolkitMySQLConnection* MySQLManager::CreateConnection(ToolkitMySQLConnectionInfo info)
+    IToolkitMySQLConnection* MySQLManager::CreateConnection(PluginId owner, ToolkitMySQLConnectionInfo info)
     {
-        auto connection = new MySQLConnection(info);
+        auto connection = new MySQLConnection(owner, info);
         m_vecMysqlConnections.push_back(connection);
 
         return connection;
+    }
+
+    void MySQLManager::RemoveAllForPlugin(PluginId id)
+    {
+        // Destroy() erases from the same vector, so the ones to close are
+        // picked out first rather than erased while being walked.
+        std::vector<MySQLConnection*> going;
+
+        for (auto* connection : m_vecMysqlConnections)
+        {
+            if (connection->Owner() == id)
+                going.push_back(connection);
+        }
+
+        for (auto* connection : going)
+            connection->Destroy();
+    }
+
+    void MySQLManager::Shutdown()
+    {
+        auto connections = std::move(m_vecMysqlConnections);
+        m_vecMysqlConnections.clear();
+
+        // Joins each worker thread and cancels what it had not got to. Not
+        // Destroy(), which would look for these in the vector just emptied.
+        for (auto* connection : connections)
+            delete connection;
     }
 }

@@ -47,19 +47,19 @@ namespace http {
         bool IsAvailable() const override;
         int PendingCount() const override;
 
-        void Request(EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody,
+        void Request(PluginId owner, EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody,
                      ToolkitHTTPCallback callback,
                      const std::vector<ToolkitHTTPHeader>* pHeaders) override;
 
-        void Get(const char* pszUrl, ToolkitHTTPCallback callback,
+        void Get(PluginId owner, const char* pszUrl, ToolkitHTTPCallback callback,
                  const std::vector<ToolkitHTTPHeader>* pHeaders) override;
-        void Post(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+        void Post(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                   const std::vector<ToolkitHTTPHeader>* pHeaders) override;
-        void Put(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+        void Put(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                  const std::vector<ToolkitHTTPHeader>* pHeaders) override;
-        void Patch(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+        void Patch(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                    const std::vector<ToolkitHTTPHeader>* pHeaders) override;
-        void Delete(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+        void Delete(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                     const std::vector<ToolkitHTTPHeader>* pHeaders) override;
 
     public:
@@ -74,24 +74,38 @@ namespace http {
         /// callback is a std::function holding code inside a plugin's library.
         void Shutdown();
 
+        /// Cancels this plugin's requests, in flight and queued alike, while
+        /// its library is still mapped. A request that outlived its plugin
+        /// would land on a callback that is no longer there.
+        void RemoveAllForPlugin(PluginId id);
+
     private:
         /// One request Steam is already working on. Owns its own call result,
         /// so it has to outlive the call and delete itself when it lands.
         class TrackedRequest {
         public:
-            TrackedRequest(HTTPRequestHandle hRequest, SteamAPICall_t hCall, ToolkitHTTPCallback callback);
+            TrackedRequest(PluginId owner, HTTPRequestHandle hRequest, SteamAPICall_t hCall,
+                           ToolkitHTTPCallback callback);
             TrackedRequest(const TrackedRequest&) = delete;
             TrackedRequest& operator=(const TrackedRequest&) = delete;
+
+            /// Drops the Steam call and the request handle without running the
+            /// callback. Only for a request whose owner is going away.
+            void Cancel();
+
+            PluginId Owner() const { return m_Owner; }
 
         private:
             void OnCompleted(HTTPRequestCompleted_t* pResult, bool bIOFailure);
 
+            PluginId m_Owner;
             HTTPRequestHandle m_hRequest;
             CCallResult<TrackedRequest, HTTPRequestCompleted_t> m_CallResult;
             ToolkitHTTPCallback m_Callback;
         };
 
         struct QueuedRequest {
+            PluginId owner = 0;
             EToolkitHTTPMethod method;
             std::string url;
             std::string body;
@@ -100,10 +114,17 @@ namespace http {
             std::vector<ToolkitHTTPHeader> headers;
         };
 
-        void Send(EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody, bool bHasBody,
-                  ToolkitHTTPCallback callback, const std::vector<ToolkitHTTPHeader>* pHeaders);
+        void Send(PluginId owner, EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody,
+                  bool bHasBody, ToolkitHTTPCallback callback,
+                  const std::vector<ToolkitHTTPHeader>* pHeaders);
 
         std::vector<QueuedRequest> m_QueuedRequests;
+
+        // A TrackedRequest used to be reachable only from the Steam call it
+        // was waiting on, which left no way to cancel one. Kept here so a
+        // plugin's requests can be found and dropped when it unloads; each
+        // entry takes itself back out when its call lands.
+        std::vector<TrackedRequest*> m_TrackedRequests;
     };
 
     extern HTTPManager httpManager;

@@ -67,11 +67,24 @@ namespace http
     TrackedRequest
     ========================= */
 
-    HTTPManager::TrackedRequest::TrackedRequest(HTTPRequestHandle hRequest, SteamAPICall_t hCall,
-                                                ToolkitHTTPCallback callback)
-        : m_hRequest(hRequest), m_Callback(std::move(callback))
+    HTTPManager::TrackedRequest::TrackedRequest(PluginId owner, HTTPRequestHandle hRequest,
+                                                SteamAPICall_t hCall, ToolkitHTTPCallback callback)
+        : m_Owner(owner), m_hRequest(hRequest), m_Callback(std::move(callback))
     {
         m_CallResult.Set(hCall, this, &TrackedRequest::OnCompleted);
+    }
+
+    void HTTPManager::TrackedRequest::Cancel()
+    {
+        // Set() registered this object with the Steam callback dispatcher;
+        // deleting it without taking it back out leaves the dispatcher holding
+        // a pointer into freed memory.
+        m_CallResult.Cancel();
+
+        if (s_pSteamHTTP)
+            s_pSteamHTTP->ReleaseHTTPRequest(m_hRequest);
+
+        delete this;
     }
 
     void HTTPManager::TrackedRequest::OnCompleted(HTTPRequestCompleted_t* pResult, bool bIOFailure)
@@ -117,6 +130,7 @@ namespace http
             s_pSteamHTTP->ReleaseHTTPRequest(m_hRequest);
 
         // Ran to completion; nothing else refers to this.
+        std::erase(httpManager.m_TrackedRequests, this);
         delete this;
     }
 
@@ -124,8 +138,8 @@ namespace http
     Sending
     ========================= */
 
-    void HTTPManager::Send(EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody,
-                           bool bHasBody, ToolkitHTTPCallback callback,
+    void HTTPManager::Send(PluginId owner, EToolkitHTTPMethod method, const char* pszUrl,
+                           const char* pszBody, bool bHasBody, ToolkitHTTPCallback callback,
                            const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
         HTTPRequestHandle hRequest = s_pSteamHTTP->CreateHTTPRequest(ToSteamMethod(method), pszUrl);
@@ -167,12 +181,13 @@ namespace http
             return;
         }
 
-        // Deletes itself once the call lands.
-        new TrackedRequest(hRequest, hCall, std::move(callback));
+        // Deletes itself once the call lands, taking itself back out of the
+        // list below on the way.
+        m_TrackedRequests.push_back(new TrackedRequest(owner, hRequest, hCall, std::move(callback)));
     }
 
-    void HTTPManager::Request(EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody,
-                              ToolkitHTTPCallback callback,
+    void HTTPManager::Request(PluginId owner, EToolkitHTTPMethod method, const char* pszUrl,
+                              const char* pszBody, ToolkitHTTPCallback callback,
                               const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
         if (!pszUrl)
@@ -183,6 +198,7 @@ namespace http
             // Steam has not handed its client over yet -- hold on to this and
             // send it from OnSteamAPIActivated().
             QueuedRequest queued;
+            queued.owner = owner;
             queued.method = method;
             queued.url = pszUrl;
             queued.hasBody = pszBody != nullptr;
@@ -196,37 +212,37 @@ namespace http
             return;
         }
 
-        Send(method, pszUrl, pszBody, pszBody != nullptr, std::move(callback), pHeaders);
+        Send(owner, method, pszUrl, pszBody, pszBody != nullptr, std::move(callback), pHeaders);
     }
 
-    void HTTPManager::Get(const char* pszUrl, ToolkitHTTPCallback callback,
+    void HTTPManager::Get(PluginId owner, const char* pszUrl, ToolkitHTTPCallback callback,
                           const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
-        Request(EToolkitHTTPMethod::Get, pszUrl, nullptr, std::move(callback), pHeaders);
+        Request(owner, EToolkitHTTPMethod::Get, pszUrl, nullptr, std::move(callback), pHeaders);
     }
 
-    void HTTPManager::Post(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+    void HTTPManager::Post(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                            const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
-        Request(EToolkitHTTPMethod::Post, pszUrl, pszBody, std::move(callback), pHeaders);
+        Request(owner, EToolkitHTTPMethod::Post, pszUrl, pszBody, std::move(callback), pHeaders);
     }
 
-    void HTTPManager::Put(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+    void HTTPManager::Put(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                           const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
-        Request(EToolkitHTTPMethod::Put, pszUrl, pszBody, std::move(callback), pHeaders);
+        Request(owner, EToolkitHTTPMethod::Put, pszUrl, pszBody, std::move(callback), pHeaders);
     }
 
-    void HTTPManager::Patch(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+    void HTTPManager::Patch(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                             const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
-        Request(EToolkitHTTPMethod::Patch, pszUrl, pszBody, std::move(callback), pHeaders);
+        Request(owner, EToolkitHTTPMethod::Patch, pszUrl, pszBody, std::move(callback), pHeaders);
     }
 
-    void HTTPManager::Delete(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+    void HTTPManager::Delete(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
                              const std::vector<ToolkitHTTPHeader>* pHeaders)
     {
-        Request(EToolkitHTTPMethod::Delete, pszUrl, pszBody, std::move(callback), pHeaders);
+        Request(owner, EToolkitHTTPMethod::Delete, pszUrl, pszBody, std::move(callback), pHeaders);
     }
 
     /* =========================
@@ -259,7 +275,7 @@ namespace http
 
         for (auto& request : queued)
         {
-            Send(request.method, request.url.c_str(),
+            Send(request.owner, request.method, request.url.c_str(),
                  request.hasBody ? request.body.c_str() : nullptr, request.hasBody,
                  std::move(request.callback), &request.headers);
         }
@@ -270,9 +286,37 @@ namespace http
         s_pSteamHTTP = nullptr;
     }
 
+    void HTTPManager::RemoveAllForPlugin(PluginId id)
+    {
+        std::erase_if(m_QueuedRequests, [id](const QueuedRequest& r) { return r.owner == id; });
+
+        // Cancel() unregisters and deletes, so the list is walked over a copy
+        // of the entries that are going.
+        std::vector<TrackedRequest*> going;
+
+        for (auto* request : m_TrackedRequests)
+        {
+            if (request->Owner() == id)
+                going.push_back(request);
+        }
+
+        for (auto* request : going)
+        {
+            std::erase(m_TrackedRequests, request);
+            request->Cancel();
+        }
+    }
+
     void HTTPManager::Shutdown()
     {
         m_QueuedRequests.clear();
+
+        auto tracked = std::move(m_TrackedRequests);
+        m_TrackedRequests.clear();
+
+        for (auto* request : tracked)
+            request->Cancel();
+
         s_pSteamHTTP = nullptr;
     }
 }

@@ -55,9 +55,13 @@ namespace scheduler
     class Scheduler : public IToolkitScheduler
     {
     public:
-        void NextFrame(std::function<void()>&& task) override;
-        Timer* AddTimer(float interval, TimerCallback callback, int flags = 0) override;
+        void NextFrame(PluginId owner, std::function<void()>&& task) override;
+        Timer* AddTimer(PluginId owner, float interval, TimerCallback callback, int flags = 0) override;
         void KillTimer(Timer* timer) override;
+
+        /// Drops every timer and pending next-frame task this plugin owns.
+        /// Called while its library is still mapped -- see Timer::Owner.
+        void RemoveAllForPlugin(PluginId id);
     };
 
     extern Scheduler schedulerManager;

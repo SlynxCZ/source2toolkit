@@ -54,6 +54,9 @@
 #include "utils/paths.h"
 #include "core/scheduler.h"
 #include "core/networkmessages.h"
+#include "core/http.h"
+#include "core/mysql.h"
+#include "core/menus.h"
 
 // Only the file watch is Linux-only; networkmessages.h above is not, every
 // unload path below calls into it.
@@ -331,6 +334,14 @@ bool PluginManager::ReloadPlugin(int id)
         customhud::customHudManager.RemoveAllForPlugin(id);
         convars::convarsManager.RemoveAllForPlugin(id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
+        // Timers and next-frame tasks run callbacks that live inside the
+        // library about to be closed; both the call and destroying the
+        // std::function would land in unmapped memory afterwards.
+        scheduler::schedulerManager.RemoveAllForPlugin(id);
+        http::httpManager.RemoveAllForPlugin(id);
+        mysql::mysqlManager.RemoveAllForPlugin(id);
+        entities::entitiesManager.RemoveAllForPlugin(id);
+        menus::menuManager.RemoveAllForPlugin(id);
 
         const auto plug = static_cast<SourceHook::Plugin>(id);
         g_SourceHookUnloadListener.Defer(plug, (*it)->lib, path);
@@ -383,6 +394,11 @@ bool PluginManager::UnloadPlugin(PluginId id)
         customhud::customHudManager.RemoveAllForPlugin(id);
         convars::convarsManager.RemoveAllForPlugin(id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
+        scheduler::schedulerManager.RemoveAllForPlugin(id);
+        http::httpManager.RemoveAllForPlugin(id);
+        mysql::mysqlManager.RemoveAllForPlugin(id);
+        entities::entitiesManager.RemoveAllForPlugin(id);
+        menus::menuManager.RemoveAllForPlugin(id);
 
         // Hands the library to the listener above and drops every hook and
         // hook manager this plugin owns. The close happens in ReadyToUnload(),
@@ -495,6 +511,11 @@ void PluginManager::UnloadAll()
         customhud::customHudManager.RemoveAllForPlugin(p->id);
         convars::convarsManager.RemoveAllForPlugin(p->id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(p->id);
+        scheduler::schedulerManager.RemoveAllForPlugin(p->id);
+        http::httpManager.RemoveAllForPlugin(p->id);
+        mysql::mysqlManager.RemoveAllForPlugin(p->id);
+        entities::entitiesManager.RemoveAllForPlugin(p->id);
+        menus::menuManager.RemoveAllForPlugin(p->id);
 
         const auto plug = static_cast<SourceHook::Plugin>(p->id);
         g_SourceHookUnloadListener.Defer(plug, p->lib);
@@ -551,7 +572,9 @@ void PluginManager::StartFileWatcher()
                     {
                         std::string fullPath = dir + "/" + name;
                         FP_INFO("Detected change in {}, queuing hot reload...", name);
-                        scheduler::schedulerManager.NextFrame([this, fullPath]()
+                        // Owner 0: the toolkit's own, so the reload it is
+                        // about to do does not throw the task away.
+                        scheduler::schedulerManager.NextFrame(0, [this, fullPath]()
                         {
                             ReloadPluginByPath(fullPath);
                         });

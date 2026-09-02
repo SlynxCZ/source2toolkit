@@ -70,14 +70,26 @@ namespace menus {
     class MenuManager : public IToolkitMenus
     {
     public:
-        void OpenCenterHtmlMenu(CCSPlayerController *player, CenterHtmlMenu *menu) override;
+        void OpenCenterHtmlMenu(PluginId owner, CCSPlayerController *player, CenterHtmlMenu *menu) override;
         IMenuInstance *GetActiveMenu(CCSPlayerController *player) override;
         void CloseActiveMenu(CCSPlayerController *player) override;
         void OnKeyPress(CCSPlayerController *player, int key) override;
     public:
         void Tick();
+
+        /// Closes whatever this plugin still has open. The menu object and the
+        /// option handlers behind it live inside its library, so a menu left
+        /// on someone's screen is a key press away from a closed library.
+        void RemoveAllForPlugin(PluginId id);
+
     protected:
-        std::unordered_map<int, std::unique_ptr<IMenuInstance>> activeMenus;
+        struct ActiveMenu
+        {
+            PluginId owner = 0;
+            std::unique_ptr<IMenuInstance> instance;
+        };
+
+        std::unordered_map<int, ActiveMenu> activeMenus;
     };
 
     extern MenuManager menuManager;

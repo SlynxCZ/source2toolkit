@@ -47,25 +47,33 @@ double g_dTimerNextThink = 0.0;
 
 namespace
 {
+    // Who queued it, so RemoveAllForPlugin() can throw away the tasks of a
+    // plugin that is going away before its library is closed.
+    struct NextFrameTask
+    {
+        PluginId owner = 0;
+        std::function<void()> task;
+    };
+
     std::vector<Timer*> once_off_timers;
     std::vector<Timer*> repeat_timers;
     std::mutex nextFrameMutex;
-    std::queue<std::function<void()>> nextFrameQueue;
+    std::queue<NextFrameTask> nextFrameQueue;
 }
 
 namespace scheduler
 {
     Scheduler schedulerManager;
 
-    void Scheduler::NextFrame(std::function<void()>&& task)
+    void Scheduler::NextFrame(PluginId owner, std::function<void()>&& task)
     {
         std::lock_guard lock(nextFrameMutex);
-        nextFrameQueue.emplace(std::move(task));
+        nextFrameQueue.emplace(NextFrameTask{ owner, std::move(task) });
     }
 
-    Timer* Scheduler::AddTimer(float interval, TimerCallback callback, int flags)
+    Timer* Scheduler::AddTimer(PluginId owner, float interval, TimerCallback callback, int flags)
     {
-        Timer* timer = new Timer(interval, g_dUniversalTime + interval, std::move(callback), flags);
+        Timer* timer = new Timer(owner, interval, g_dUniversalTime + interval, std::move(callback), flags);
 
         if (flags & TIMER_FLAG_REPEAT)
             repeat_timers.push_back(timer);
@@ -101,6 +109,48 @@ namespace scheduler
             killFrom(once_off_timers, timer);
     }
 
+    void Scheduler::RemoveAllForPlugin(PluginId id)
+    {
+        auto purge = [id](std::vector<Timer*>& list)
+        {
+            for (int i = static_cast<int>(list.size()) - 1; i >= 0; --i)
+            {
+                Timer* timer = list[i];
+
+                if (timer->Owner != id)
+                    continue;
+
+                // Same rule KillTimer follows: a callback that is running right
+                // now still owns the object, so leave it to Tick, which drops
+                // it the moment the callback returns.
+                if (timer->InExec)
+                {
+                    timer->KillMe = true;
+                    continue;
+                }
+
+                delete timer;
+                list.erase(list.begin() + i);
+            }
+        };
+
+        purge(once_off_timers);
+        purge(repeat_timers);
+
+        std::lock_guard lock(nextFrameMutex);
+        std::queue<NextFrameTask> kept;
+
+        while (!nextFrameQueue.empty())
+        {
+            if (nextFrameQueue.front().owner != id)
+                kept.emplace(std::move(nextFrameQueue.front()));
+
+            nextFrameQueue.pop();
+        }
+
+        std::swap(nextFrameQueue, kept);
+    }
+
     void Init()
     {
         g_dUniversalTime = 0.0;
@@ -117,28 +167,43 @@ namespace scheduler
         once_off_timers.clear();
         repeat_timers.clear();
         std::lock_guard lock(nextFrameMutex);
-        std::queue<std::function<void()>> empty;
+        std::queue<NextFrameTask> empty;
         std::swap(nextFrameQueue, empty);
     }
 
     void Tick(bool simulating)
     {
-        std::queue<std::function<void()>> localQueue;
+        // Taken one at a time rather than swapping the queue out, so a task
+        // that unloads a plugin -- the file watcher's reload comes through
+        // here -- takes the rest of that plugin's tasks with it instead of
+        // leaving them in a local copy the purge cannot reach. The count is
+        // read up front, so a task queueing another one does not spin here.
+        size_t pending;
         {
             std::lock_guard lock(nextFrameMutex);
-            std::swap(localQueue, nextFrameQueue);
+            pending = nextFrameQueue.size();
         }
 
-        while (!localQueue.empty())
+        for (size_t i = 0; i < pending; ++i)
         {
+            NextFrameTask task;
+            {
+                std::lock_guard lock(nextFrameMutex);
+
+                if (nextFrameQueue.empty())
+                    break;
+
+                task = std::move(nextFrameQueue.front());
+                nextFrameQueue.pop();
+            }
+
             try
             {
-                localQueue.front()();
+                task.task();
             }
             catch (...)
             {
             }
-            localQueue.pop();
         }
 
         double now = std::chrono::duration_cast<std::chrono::duration<float>>(

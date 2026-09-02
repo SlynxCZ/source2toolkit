@@ -173,15 +173,17 @@ namespace menus
         }
     }
 
-    void MenuManager::OpenCenterHtmlMenu(CCSPlayerController* player, CenterHtmlMenu* menu)
+    void MenuManager::OpenCenterHtmlMenu(PluginId owner, CCSPlayerController* player, CenterHtmlMenu* menu)
     {
         if (!player || !menu) return;
         CloseActiveMenu(player);
 
         auto inst = std::make_unique<CenterHtmlMenuInstance>(player, menu);
 
-        activeMenus[player->GetSlot()] = std::move(inst);
-        activeMenus[player->GetSlot()]->Display();
+        auto& active = activeMenus[player->GetSlot()];
+        active.owner = owner;
+        active.instance = std::move(inst);
+        active.instance->Display();
     }
 
     IMenuInstance* MenuManager::GetActiveMenu(CCSPlayerController* player)
@@ -189,7 +191,7 @@ namespace menus
         if (!player) return nullptr;
 
         auto it = activeMenus.find(player->GetSlot());
-        return (it == activeMenus.end()) ? nullptr : it->second.get();
+        return (it == activeMenus.end()) ? nullptr : it->second.instance.get();
     }
 
     void MenuManager::CloseActiveMenu(CCSPlayerController* player)
@@ -199,7 +201,7 @@ namespace menus
         auto it = activeMenus.find(player->GetSlot());
         if (it != activeMenus.end())
         {
-            it->second->Reset();
+            it->second.instance->Reset();
             activeMenus.erase(it);
         }
     }
@@ -217,7 +219,26 @@ namespace menus
     {
         for (auto& kv : activeMenus)
         {
-            if (kv.second) kv.second->Display();
+            if (kv.second.instance) kv.second.instance->Display();
+        }
+    }
+
+    void MenuManager::RemoveAllForPlugin(PluginId id)
+    {
+        for (auto it = activeMenus.begin(); it != activeMenus.end(); )
+        {
+            if (it->second.owner != id)
+            {
+                ++it;
+                continue;
+            }
+
+            // Clears the panel the player is looking at, the same as closing
+            // it by hand would.
+            if (it->second.instance)
+                it->second.instance->Reset();
+
+            it = activeMenus.erase(it);
         }
     }
 }
