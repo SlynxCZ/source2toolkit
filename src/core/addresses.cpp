@@ -151,9 +151,9 @@ namespace addresses
         return TerminateRound.RCast<CGameRules_TerminateRound_t>();
     }
 
-    CCSPlayer_WeaponServices_Destroy_t Addresses::CCSPlayer_WeaponServices_Destroy()
+    CPlayer_WeaponServices_Destroy_t Addresses::CPlayer_WeaponServices_Destroy()
     {
-        return Destroy.RCast<CCSPlayer_WeaponServices_Destroy_t>();
+        return Destroy.RCast<CPlayer_WeaponServices_Destroy_t>();
     }
 
     LegacyGameEventListener_t Addresses::LegacyGameEventListener()

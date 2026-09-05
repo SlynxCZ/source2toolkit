@@ -111,7 +111,7 @@ namespace addresses
         CBasePlayerController_SetPawn_t CBasePlayerController_SetPawn() override;
         CBasePlayerPawn_SnapViewAngles_t CBasePlayerPawn_SnapViewAngles() override;
         CGameRules_TerminateRound_t CGameRules_TerminateRound() override;
-        CCSPlayer_WeaponServices_Destroy_t CCSPlayer_WeaponServices_Destroy() override;
+        CPlayer_WeaponServices_Destroy_t CPlayer_WeaponServices_Destroy() override;
         LegacyGameEventListener_t LegacyGameEventListener() override;
         CCSPlayerController_SwitchTeam_t CCSPlayerController_SwitchTeam() override;
         CEntityInstance_AcceptInput_t CEntityInstance_AcceptInput() override;
