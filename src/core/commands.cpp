@@ -37,6 +37,7 @@
 #include "commands.h"
 
 #include "menus.h"
+#include "plugin.h"
 #include "pluginapi.h"
 #include "pluginmanager.h"
 #include "raytrace.h"
@@ -46,10 +47,16 @@
 #include "source2toolkit/IToolkitPlugin.h"
 #include "utils/log.h"
 
+#include "dynlibutils/module.hpp"
+
 #include <cstdarg>
 
 #define VERSION_STRING SEMVER " @ " GITHUB_SHA
 #define BUILD_TIMESTAMP __DATE__ " " __TIME__
+#define BUILD_ID SEMVER ":" GITHUB_SHA
+
+#define TOOLKIT_WEBSITE "https://www.source2toolkit.net"
+#define TOOLKIT_REPO    "https://github.com/SlynxCZ/source2toolkit"
 
 #define ANSI_RESET  "\033[0m"
 #define ANSI_RED    "\033[31m"
@@ -87,6 +94,18 @@ static void ToolkitReply(const CCommandContext& ctx, const char* pszColor, const
 #define REPLY_WARN(fmt, ...)  ToolkitReply(ctx, ANSI_YELLOW, fmt, ##__VA_ARGS__)
 #define REPLY_ERROR(fmt, ...) ToolkitReply(ctx, ANSI_RED,    fmt, ##__VA_ARGS__)
 
+// The toolkit's own binary, resolved from an address inside it rather than
+// assembled out of the game directory: the module the engine actually has
+// open is the one worth reporting, and a stale copy left somewhere else on
+// the search path is exactly what this line is there to catch.
+static const char* ToolkitModulePath()
+{
+    static const DynLibUtils::CModule module(DynLibUtils::CMemory(reinterpret_cast<void*>(&ToolkitReply)));
+
+    const std::string_view svPath = module.GetPath();
+    return svPath.empty() ? "<unknown>" : svPath.data();
+}
+
 namespace commands {
     // Keyed by name and carrying the owner, so unloading a plugin can drop
     // the ConCommands it created. ConCommand registers itself with the engine
@@ -113,7 +132,8 @@ namespace commands {
     {
         return strcmp(cmd, "list") == 0
             || strcmp(cmd, "info") == 0
-            || strcmp(cmd, "version") == 0;
+            || strcmp(cmd, "version") == 0
+            || strcmp(cmd, "credits") == 0;
     }
 
     static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, bool post)
@@ -140,6 +160,7 @@ namespace commands {
                 REPLY_INFO("  toolkit refresh");
 
             REPLY_INFO("  toolkit version");
+            REPLY_INFO("  toolkit credits");
             return;
         }
 
@@ -257,9 +278,51 @@ namespace commands {
 
         else if (strcmp(cmd, "version") == 0)
         {
-            REPLY_INFO("Source2Toolkit");
-            REPLY_INFO("  Version: %s", VERSION_STRING);
-            REPLY_INFO("  Build: %s", BUILD_TIMESTAMP);
+            // Metamod's numbers are not the toolkit's: a .stx plugin binds to
+            // TOOLKIT_PLAPI_VERSION and to the private SourceHook, a metamod
+            // plugin next to us binds to metamod's own. A plugin that refuses
+            // to load was built against one of the four.
+            int mmApiMajor = 0, mmApiMinor = 0, mmPlVers = 0, mmPlMin = 0;
+            int mmShIface = 0, mmShImpl = 0;
+
+            if (g_SMAPI)
+            {
+                g_SMAPI->GetApiVersions(mmApiMajor, mmApiMinor, mmPlVers, mmPlMin);
+                g_SMAPI->GetShVersions(mmShIface, mmShImpl);
+            }
+
+            REPLY_INFO("Source2Toolkit Version Information");
+            REPLY_INFO("   Source2Toolkit version %s", VERSION_STRING);
+            REPLY_INFO("   Plugin API version: %d (%s)", TOOLKIT_PLAPI_VERSION, TOOLKIT_INTERFACE_NAME);
+            REPLY_INFO("   SourceHook version: %d:%d (private instance, %s)", SH_IFACE_VERSION, SH_IMPL_VERSION, TOOLKIT_SOURCEHOOK_INTERFACE);
+            REPLY_INFO("   Metamod:Source plugin interface: %d:%d, SourceHook: %d:%d", mmPlVers, mmPlMin, mmShIface, mmShImpl);
+            REPLY_INFO("   Loaded As: Metamod:Source plugin");
+            REPLY_INFO("   Path: %s", ToolkitModulePath());
+            REPLY_INFO("   Compiled on: %s", BUILD_TIMESTAMP);
+
+            // GITHUB_SHA is "Local" on anything but a CI build, and a commit
+            // URL built out of that would point nowhere.
+            if (strcmp(GITHUB_SHA, "Local") == 0)
+                REPLY_INFO("   Built from: local working tree");
+            else
+                REPLY_INFO("   Built from: %s/commit/%s", TOOLKIT_REPO, GITHUB_SHA);
+
+            REPLY_INFO("   Build ID: %s", BUILD_ID);
+            REPLY_INFO("   %s", TOOLKIT_WEBSITE);
+        }
+
+        else if (strcmp(cmd, "credits") == 0)
+        {
+            // Keep this in step with ACKNOWLEDGEMENTS.md -- it is the same
+            // list, short enough to read in a console.
+            REPLY_INFO("Source2Toolkit was developed by:");
+            REPLY_INFO("   Core, plugin system and SDK: Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl");
+            REPLY_INFO("   Metamod:Source: David \"BAILOPAN\" Anderson, Scott \"DS\" Ehlert");
+            REPLY_INFO("   SourceHook: Pavol \"PM OnoTo\" Marko");
+            REPLY_INFO("   HL2SDK and engine research: AlliedModders LLC.");
+            REPLY_INFO("For the full list, see ACKNOWLEDGEMENTS.md");
+            REPLY_INFO("For more information, see the official website");
+            REPLY_INFO("%s", TOOLKIT_WEBSITE);
         }
 
         else

@@ -55,3 +55,8 @@ toolkit uses a fork that adds inline hooking on top of SafetyHook.
 
 We've used and modified parts of CounterStrikeSharp for schema
 generation (schemagen).
+
+## SwiftlyS2
+
+We've used SwiftlyS2 as a reference for signatures and virtual
+function indexes, cross-checking our own gamedata against theirs.
