@@ -38,6 +38,8 @@
 
 #include "gametrace.h"
 
+class CCSNavArea;
+
 class INavPhysicsInterface
 {
 private:
@@ -47,7 +49,7 @@ private:
 	virtual void Nav_TraceShape(const Ray_t &ray, const Vector &vStart, const Vector &vEnd, CBaseEntity *pIgnore, uint64 nInteractsWith, uint8 nCollisionGroup, uint8 nObjectSetMask, CGameTrace *trace) = 0;
 	virtual void Nav_TraceShape(const Ray_t &ray, const Vector &vStart, const Vector &vEnd, CTraceFilter *pFilter, CGameTrace *trace) = 0;
 	virtual uint64 Nav_PointContents(const Vector *const vTestPos, uint64 nContentsMask) = 0;
-	virtual bool Nav_CheckAreaOverlappingEntity(/*CNavArea*/ const void *const rArea, const CBaseEntity *const rEntity, bool bExtrudeHullHeight) = 0;
+	virtual bool Nav_CheckAreaOverlappingEntity(const CCSNavArea *const rArea, const CBaseEntity *const rEntity, bool bExtrudeHullHeight) = 0;
 	virtual void Nav_GetEntityWorldSpaceAABB(const CBaseEntity *const rEntity, Vector *pMinsOut, Vector *pMaxsOut) = 0;
 
 	virtual void Unk(void *) = 0; // Calls delete on the object passed in which is located at the start of the vtable.
@@ -67,6 +69,6 @@ public:
 	static void TraceShape(const Ray_t &ray, const Vector &vStart, const Vector &vEnd, CBaseEntity *pIgnore, uint64 nInteractsWith, uint8 nCollisionGroup, uint8 nObjectSetMask, CGameTrace *trace);
 	static void TraceShape(const Ray_t &ray, const Vector &vStart, const Vector &vEnd, CTraceFilter *pFilter, CGameTrace *trace);
 	static uint64 PointContents(const Vector *const vTestPos, uint64 nContentsMask);
-	static bool CheckAreaOverlappingEntity(const void *const rArea, const CBaseEntity *const rEntity, bool bExtrudeHullHeight);
+	static bool CheckAreaOverlappingEntity(const CCSNavArea *const rArea, const CBaseEntity *const rEntity, bool bExtrudeHullHeight);
 	static void GetEntityWorldSpaceAABB(const CBaseEntity *const rEntity, Vector *pMinsOut, Vector *pMaxsOut);
 };

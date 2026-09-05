@@ -99,7 +99,7 @@ uint64 INavPhysicsInterface::PointContents(const Vector* const vTestPos, uint64 
     return iface->Nav_PointContents(vTestPos, nContentsMask);
 }
 
-bool INavPhysicsInterface::CheckAreaOverlappingEntity(const void* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight)
+bool INavPhysicsInterface::CheckAreaOverlappingEntity(const CCSNavArea* const rArea, const CBaseEntity* const rEntity, bool bExtrudeHullHeight)
 {
     if (!Bind())
         return false;
