@@ -3,8 +3,26 @@ set -e
 
 git submodule update --init --recursive
 
-if git describe --tags --exact-match >/dev/null 2>&1; then
-  export SEMVER="$(git describe --tags --exact-match)"
+### --- Version -------------------------------------------------------------
+# SEMVER comes in from the CI, whose version job resolves the tag -- and, on
+# the pushbuild.txt path, creates it -- before any build starts. The tag is
+# pushed by then but this checkout need not have it, so asking git first would
+# come up empty and the build would ship as "Local".
+#
+# A build outside that (a local one, a manual docker compose up) has nothing
+# passed in and falls back to whatever tag HEAD carries. An untagged HEAD is
+# not an error: CMake stamps it "Local" and the line below says so.
+if [ -n "${SEMVER:-}" ]; then
+  export SEMVER
+  echo "=== Version: $SEMVER (from the environment) ==="
+elif SEMVER="$(git describe --tags --exact-match 2>/dev/null)"; then
+  export SEMVER
+  echo "=== Version: $SEMVER (tag on HEAD) ==="
+else
+  # Exported-but-empty is not the same as unset to CMake, and would stamp the
+  # build with an empty version instead of falling back.
+  unset SEMVER
+  echo '=== Version: no tag on HEAD, building as "Local" ==='
 fi
 
 export GITHUB_SHA_SHORT="$(git rev-parse --short HEAD)"

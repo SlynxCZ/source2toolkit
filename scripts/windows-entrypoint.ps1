@@ -5,11 +5,31 @@ $ErrorActionPreference = 'Stop'
 Write-Host "=== Updating git submodules ==="
 git submodule update --init --recursive
 
-# Version env vars
-try {
-    $tag = git describe --tags --exact-match 2>$null
-    if ($tag) { $env:SEMVER = $tag }
-} catch {}
+### --- Version ---------------------------------------------------------------
+# SEMVER comes in from the CI, whose version job resolves the tag -- and, on
+# the pushbuild.txt path, creates it -- before any build starts. The tag is
+# pushed by then but this checkout need not have it, so asking git first would
+# come up empty and the build would ship as "Local".
+#
+# A build outside that (a local one) has nothing passed in and falls back to
+# whatever tag HEAD carries. An untagged HEAD is not an error: CMake stamps it
+# "Local" and the line below says so.
+if ($env:SEMVER) {
+    Write-Host "=== Version: $env:SEMVER (from the environment) ==="
+} else {
+    $tag = $null
+    try { $tag = git describe --tags --exact-match 2>$null } catch {}
+
+    if ($tag) {
+        $env:SEMVER = $tag
+        Write-Host "=== Version: $tag (tag on HEAD) ==="
+    } else {
+        # Set-but-empty is not the same as unset to CMake, and would stamp the
+        # build with an empty version instead of falling back.
+        Remove-Item Env:SEMVER -ErrorAction SilentlyContinue
+        Write-Host '=== Version: no tag on HEAD, building as "Local" ==='
+    }
+}
 
 $env:GITHUB_SHA_SHORT = git rev-parse --short HEAD
 

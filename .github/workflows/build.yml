@@ -123,6 +123,13 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build inside Docker
+        env:
+          # The version job resolved this, and on the pushbuild.txt path
+          # created the tag itself, before this job started. Handing it over is
+          # what keeps the build from stamping itself "Local": the checkout
+          # above is shallow and tagless, so a git describe inside the
+          # container would find nothing.
+          SEMVER: ${{ needs.version.outputs.tag }}
         run: |
           docker compose -f docker/docker-compose.yml up --build --abort-on-container-exit
 
@@ -156,6 +163,10 @@ jobs:
 
       - name: Run Windows setup & build
         shell: pwsh
+        env:
+          # Same as the Linux job: the tag is the version job's, not this
+          # checkout's, which has no tags to describe from.
+          SEMVER: ${{ needs.version.outputs.tag }}
         run: .\scripts\windows-entrypoint.ps1
 
       - name: Stage package

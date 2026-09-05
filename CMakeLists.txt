@@ -40,13 +40,13 @@ file(GLOB_RECURSE SOURCE_FILES
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
 target_compile_definitions(source2toolkit-sdk PUBLIC SOURCE2TOOLKIT_CORE)
 
-if (DEFINED ENV{GITHUB_SHA_SHORT})
+if (DEFINED ENV{GITHUB_SHA_SHORT} AND NOT "$ENV{GITHUB_SHA_SHORT}" STREQUAL "")
     add_definitions(-DGITHUB_SHA="$ENV{GITHUB_SHA_SHORT}")
 else ()
     add_definitions(-DGITHUB_SHA="Local")
 endif ()
 
-if (DEFINED ENV{SEMVER})
+if (DEFINED ENV{SEMVER} AND NOT "$ENV{SEMVER}" STREQUAL "")
     add_definitions(-DSEMVER="$ENV{SEMVER}")
 else ()
     add_definitions(-DSEMVER="Local")

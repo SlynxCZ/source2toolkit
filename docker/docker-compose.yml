@@ -4,5 +4,10 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    environment:
+      # Resolved by the CI's version job, which knows the tag it is about
+      # to cut before this container starts. Empty for a local build, and
+      # the entrypoint falls back to the tag on HEAD.
+      - SEMVER=${SEMVER:-}
     volumes:
       - ..:/app/source
