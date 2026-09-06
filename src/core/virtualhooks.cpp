@@ -316,10 +316,7 @@ namespace virtualhooks
 
     void Virtuals::Hook_OnServerGamePostSimulate(const EventServerGamePostSimulate_t* const pMsg)
     {
-        for (auto connection : mysql::mysqlManager.m_vecMysqlConnections)
-        {
-            connection->RunFrame();
-        }
+        mysql::mysqlManager.RunFrame();
         RETURN_META(MRES_IGNORED);
     }
 

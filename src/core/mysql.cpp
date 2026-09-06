@@ -38,50 +38,224 @@
 #include "pluginapi.h"
 #include "utils/log.h"
 
+#include <algorithm>
+
 namespace mysql
 {
     MySQLManager mysqlManager;
 
+    namespace
+    {
+        /// Opens one connection from a set of details. Runs on a worker
+        /// thread, never on the main one.
+        ///
+        /// Null on failure, with the reason written out first: mysql_error()
+        /// reads out of the handle, so it has nothing left to say once that
+        /// handle has been closed.
+        MYSQL *OpenConnection(const OwnedConnectionInfo &info, std::string *error, unsigned int *errorCode)
+        {
+            MYSQL *mysql = mysql_init(NULL);
+            if (!mysql)
+            {
+                if (error)
+                    *error = "Out of memory allocating a MySQL handle";
+                return nullptr;
+            }
+
+            const unsigned int timeout = info.m_nTimeout > 0 ? (unsigned int)info.m_nTimeout : 60;
+            mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&timeout);
+            mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
+            mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (const char *)&timeout);
+
+            bool my_true = true;
+            mysql_options(mysql, MYSQL_OPT_RECONNECT, (const char *)&my_true); // deprecated
+
+            const char *host = info.m_sHost.c_str();
+            const char *socket = NULL;
+
+            // A host that is a path is a unix socket to connect over. The
+            // path is what has to be handed to libmysql as the socket -- this
+            // used to pass "localhost" as both, which is not a path at all.
+            if (!info.m_sHost.empty() && info.m_sHost[0] == '/')
+            {
+                socket = info.m_sHost.c_str();
+                host = "localhost";
+            }
+
+            if (!mysql_real_connect(mysql, host, info.m_sUser.c_str(), info.m_sPass.c_str(),
+                                    info.m_sDatabase.c_str(), info.m_nPort, socket, ((1) << 17)))
+            {
+                if (error)
+                    *error = mysql_error(mysql);
+                if (errorCode)
+                    *errorCode = mysql_errno(mysql);
+
+                mysql_close(mysql);
+                return nullptr;
+            }
+
+            return mysql;
+        }
+
+        /// Copies a result set out of libmysql, rows and all, so it can be
+        /// read after the connection it came off is gone.
+        MySQLResultSet StoreResult(MYSQL_RES *res)
+        {
+            MySQLResultSet set;
+
+            const unsigned int fields = mysql_num_fields(res);
+            set.m_vecFields.reserve(fields);
+
+            for (unsigned int i = 0; i < fields; i++)
+            {
+                MYSQL_FIELD *field = mysql_fetch_field_direct(res, i);
+
+                MySQLResultSet::Field out;
+                out.m_sName = (field && field->name) ? field->name : "";
+                out.m_nType = field ? (int)field->type : TOOLKIT_MYSQL_TYPE_UNKNOWN;
+
+                set.m_vecFields.push_back(std::move(out));
+            }
+
+            set.m_vecRows.reserve((size_t)mysql_num_rows(res));
+
+            while (MYSQL_ROW row = mysql_fetch_row(res))
+            {
+                unsigned long *lengths = mysql_fetch_lengths(res);
+
+                std::vector<MySQLResultSet::Cell> cells;
+                cells.reserve(fields);
+
+                for (unsigned int i = 0; i < fields; i++)
+                {
+                    MySQLResultSet::Cell cell;
+                    cell.m_bNull = row[i] == NULL;
+
+                    // By length, not by NUL: a BLOB column is allowed to have
+                    // one in the middle of it.
+                    if (!cell.m_bNull)
+                        cell.m_sData.assign(row[i], lengths ? lengths[i] : strlen(row[i]));
+
+                    cells.push_back(std::move(cell));
+                }
+
+                set.m_vecRows.push_back(std::move(cells));
+            }
+
+            return set;
+        }
+
+        /// Fills a query's placeholders in against the live connection: `?`
+        /// becomes the escaped value in quotes, `??` a quoted identifier.
+        ///
+        /// Escaping is why this happens here rather than where the query was
+        /// written: mysql_real_escape_string() needs a connection to know the
+        /// character set and whether backslashes escape anything, and a
+        /// serverless query has none until the worker opens one.
+        bool FormatQuery(MYSQL *mysql, const std::string &query, const std::vector<std::string> &params,
+                         std::string *out, std::string *error)
+        {
+            out->clear();
+            out->reserve(query.size() + params.size() * 16);
+
+            size_t next = 0;
+            char quote = '\0';
+
+            for (size_t i = 0; i < query.size(); i++)
+            {
+                const char c = query[i];
+
+                // Inside a literal, a ? is just a question mark.
+                if (quote != '\0')
+                {
+                    out->push_back(c);
+
+                    if (c == '\\' && quote != '`' && i + 1 < query.size())
+                    {
+                        out->push_back(query[++i]);
+                        continue;
+                    }
+
+                    if (c == quote)
+                        quote = '\0';
+
+                    continue;
+                }
+
+                if (c == '\'' || c == '"' || c == '`')
+                {
+                    quote = c;
+                    out->push_back(c);
+                    continue;
+                }
+
+                if (c != '?')
+                {
+                    out->push_back(c);
+                    continue;
+                }
+
+                const bool identifier = (i + 1 < query.size() && query[i + 1] == '?');
+                if (identifier)
+                    i++;
+
+                if (next >= params.size())
+                {
+                    *error = "Serverless query has more placeholders than parameters";
+                    return false;
+                }
+
+                const std::string &value = params[next++];
+
+                if (identifier)
+                {
+                    out->push_back('`');
+                    for (const char id : value)
+                    {
+                        if (id == '`')
+                            out->push_back('`');
+                        out->push_back(id);
+                    }
+                    out->push_back('`');
+                    continue;
+                }
+
+                std::vector<char> buffer(value.size() * 2 + 1);
+                const unsigned long length = mysql_real_escape_string(mysql, buffer.data(), value.c_str(),
+                                                                      (unsigned long)value.size());
+
+                out->push_back('\'');
+                out->append(buffer.data(), length);
+                out->push_back('\'');
+            }
+
+            if (quote != '\0')
+            {
+                *error = "Serverless query has an unterminated string literal";
+                return false;
+            }
+
+            if (next != params.size())
+            {
+                *error = "Serverless query has fewer placeholders than parameters";
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     void TMySQLConnectOp::RunThreadPart()
     {
         m_szError[0] = '\0';
-        MYSQL *mysql = mysql_init(NULL);
 
-        if (!mysql)
+        std::string error;
+        m_pDatabase = OpenConnection(m_pCon->m_info, &error, nullptr);
+
+        if (!m_pDatabase)
         {
-            FP_ERROR("Uh oh, mysql is null!");
+            V_snprintf(m_szError, sizeof m_szError, "%s", error.c_str());
         }
-
-        const char *host = NULL, *socket = NULL;
-
-        int timeout = 60;
-
-        mysql_options(mysql, MYSQL_OPT_CONNECT_TIMEOUT, (const char *)&timeout);
-        mysql_options(mysql, MYSQL_OPT_READ_TIMEOUT, (const char *)&timeout);
-        mysql_options(mysql, MYSQL_OPT_WRITE_TIMEOUT, (const char *)&timeout);
-
-        bool my_true = true;
-        mysql_options(mysql, MYSQL_OPT_RECONNECT, (const char *)&my_true); // deprecated
-
-        if (m_pCon->m_info.host[0] == '/')
-        {
-            host = "localhost";
-            socket = host;
-        }
-        else
-        {
-            host = m_pCon->m_info.host;
-            socket = NULL;
-        }
-
-        if (!mysql_real_connect(mysql, host, m_pCon->m_info.user, m_pCon->m_info.pass, m_pCon->m_info.database, m_pCon->m_info.port, socket, ((1) << 17)))
-        {
-            mysql_close(mysql);
-            strncpy(m_szError, mysql_error(mysql), sizeof m_szError);
-            return;
-        }
-
-        m_pDatabase = mysql;
     }
 
     void TMySQLConnectOp::RunThinkPart()
@@ -482,15 +656,214 @@ namespace mysql
         return m_affectedRows;
     }
 
+    void CMySQLStoredResult::Reset(const MySQLResultSet *set)
+    {
+        m_pSet = set;
+        m_CurRow = 0;
+    }
+
+    const MySQLResultSet::Cell *CMySQLStoredResult::Cell(unsigned int columnId) const
+    {
+        if (!m_pSet || columnId >= m_pSet->m_vecFields.size())
+        {
+            return nullptr;
+        }
+
+        // Nothing fetched yet, or fetched one past the end.
+        if (!m_CurRow || m_CurRow > m_pSet->m_vecRows.size())
+        {
+            return nullptr;
+        }
+
+        return &m_pSet->m_vecRows[m_CurRow - 1][columnId];
+    }
+
+    int CMySQLStoredResult::GetRowCount()
+    {
+        return m_pSet ? (int)m_pSet->m_vecRows.size() : 0;
+    }
+
+    int CMySQLStoredResult::GetFieldCount()
+    {
+        return m_pSet ? (int)m_pSet->m_vecFields.size() : 0;
+    }
+
+    bool CMySQLStoredResult::FieldNameToNum(const char *name, unsigned int *columnId)
+    {
+        if (!m_pSet || !name)
+        {
+            return false;
+        }
+
+        for (size_t i = 0; i < m_pSet->m_vecFields.size(); i++)
+        {
+            if (m_pSet->m_vecFields[i].m_sName == name)
+            {
+                *columnId = (unsigned int)i;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    const char *CMySQLStoredResult::FieldNumToName(unsigned int colId)
+    {
+        if (!m_pSet || colId >= m_pSet->m_vecFields.size())
+        {
+            return NULL;
+        }
+
+        return m_pSet->m_vecFields[colId].m_sName.c_str();
+    }
+
+    bool CMySQLStoredResult::MoreRows()
+    {
+        return m_pSet && m_CurRow < m_pSet->m_vecRows.size();
+    }
+
+    IToolkitMySQLRow *CMySQLStoredResult::FetchRow()
+    {
+        if (!m_pSet || m_CurRow >= m_pSet->m_vecRows.size())
+        {
+            /* Put us one after so we know to block CurrentRow() */
+            m_CurRow = m_pSet ? (unsigned int)m_pSet->m_vecRows.size() + 1 : 1;
+            return NULL;
+        }
+
+        m_CurRow++;
+        return this;
+    }
+
+    IToolkitMySQLRow *CMySQLStoredResult::CurrentRow()
+    {
+        if (!m_pSet || !m_CurRow || m_CurRow > m_pSet->m_vecRows.size())
+        {
+            return NULL;
+        }
+
+        return this;
+    }
+
+    bool CMySQLStoredResult::Rewind()
+    {
+        m_CurRow = 0;
+        return true;
+    }
+
+    int CMySQLStoredResult::GetFieldType(unsigned int field)
+    {
+        if (!m_pSet || field >= m_pSet->m_vecFields.size())
+        {
+            return TOOLKIT_MYSQL_TYPE_UNKNOWN;
+        }
+
+        return m_pSet->m_vecFields[field].m_nType;
+    }
+
+    bool CMySQLStoredResult::IsNull(unsigned int columnId)
+    {
+        const auto *cell = Cell(columnId);
+        return !cell || cell->m_bNull;
+    }
+
+    const char *CMySQLStoredResult::GetString(unsigned int columnId, size_t *length)
+    {
+        const auto *cell = Cell(columnId);
+
+        if (!cell || cell->m_bNull)
+        {
+            if (length)
+            {
+                *length = 0;
+            }
+            return nullptr;
+        }
+
+        if (length)
+        {
+            *length = cell->m_sData.size();
+        }
+
+        return cell->m_sData.c_str();
+    }
+
+    size_t CMySQLStoredResult::GetDataSize(unsigned int columnId)
+    {
+        const auto *cell = Cell(columnId);
+        return (cell && !cell->m_bNull) ? cell->m_sData.size() : 0;
+    }
+
+    float CMySQLStoredResult::GetFloat(unsigned int columnId)
+    {
+        const auto *cell = Cell(columnId);
+        return (cell && !cell->m_bNull) ? (float)atof(cell->m_sData.c_str()) : 0.0f;
+    }
+
+    int CMySQLStoredResult::GetInt(unsigned int columnId)
+    {
+        const auto *cell = Cell(columnId);
+        return (cell && !cell->m_bNull) ? atoi(cell->m_sData.c_str()) : 0;
+    }
+
+    int64_t CMySQLStoredResult::GetInt64(unsigned int columnId)
+    {
+        const auto *cell = Cell(columnId);
+        return (cell && !cell->m_bNull) ? atoll(cell->m_sData.c_str()) : 0;
+    }
+
+    CMySQLStoredQuery::CMySQLStoredQuery(std::vector<MySQLResultSet> sets, unsigned int insertId, unsigned int affectedRows)
+        : m_vecSets(std::move(sets)), m_res(nullptr), m_insertId(insertId), m_affectedRows(affectedRows)
+    {
+        if (!m_vecSets.empty())
+        {
+            m_res.Reset(&m_vecSets[0]);
+        }
+    }
+
+    IToolkitMySQLResult *CMySQLStoredQuery::GetResultSet()
+    {
+        // A statement that returns no rows at all -- an INSERT, an UPDATE --
+        // has no result set to hand back, the same as a live query would.
+        if (m_CurSet >= m_vecSets.size())
+        {
+            return NULL;
+        }
+
+        return &m_res;
+    }
+
+    bool CMySQLStoredQuery::FetchMoreResults()
+    {
+        if (m_CurSet + 1 >= m_vecSets.size())
+        {
+            return false;
+        }
+
+        m_CurSet++;
+        m_res.Reset(&m_vecSets[m_CurSet]);
+        return true;
+    }
+
+    unsigned int CMySQLStoredQuery::GetInsertId()
+    {
+        return m_insertId;
+    }
+
+    unsigned int CMySQLStoredQuery::GetAffectedRows()
+    {
+        return m_affectedRows;
+    }
+
     MySQLConnection::MySQLConnection(PluginId owner, const ToolkitMySQLConnectionInfo info)
     {
-        this->m_info = info;
+        this->m_info = OwnedConnectionInfo(info);
         this->m_Owner = owner;
     }
 
     MySQLConnection::~MySQLConnection()
     {
-        FP_DEBUG("Destroying MySQL connection {}", m_info.database);
+        FP_DEBUG("Destroying MySQL connection {}", m_info.m_sDatabase);
         if (m_thread)
         {
             {
@@ -539,7 +912,7 @@ namespace mysql
     {
         if (!m_pDatabase)
         {
-            FP_WARN("Failed querying a disconnected database ({}).", m_info.host);
+            FP_WARN("Failed querying a disconnected database ({}).", m_info.m_sHost);
             return;
         }
 
@@ -564,7 +937,7 @@ namespace mysql
 
         if (!m_pDatabase)
         {
-            FP_WARN("Failed querying a disconnected database ({}).", m_info.host);
+            FP_WARN("Failed querying a disconnected database ({}).", m_info.m_sHost);
             return;
         }
 
@@ -683,6 +1056,30 @@ namespace mysql
         return out;
     }
 
+    void ServerlessHandle::Query(const char *query, ToolkitMySQLServerlessCallbackFunc callback)
+    {
+        Query(query, std::vector<std::string>(), std::move(callback));
+    }
+
+    void ServerlessHandle::Query(const char *query, std::vector<std::string> params, ToolkitMySQLServerlessCallbackFunc callback)
+    {
+        auto *op = new ServerlessOp();
+
+        op->m_Owner = m_Owner;
+        op->m_Handle = m_Id;
+        op->m_Info = m_Info;
+        op->m_sQuery = query ? query : "";
+        op->m_vecParams = std::move(params);
+        op->m_Callback = std::move(callback);
+
+        mysqlManager.QueueServerless(op);
+    }
+
+    void ServerlessHandle::Destroy()
+    {
+        mysqlManager.DestroyServerless(this);
+    }
+
     IToolkitMySQLConnection* MySQLManager::CreateConnection(PluginId owner, ToolkitMySQLConnectionInfo info)
     {
         auto connection = new MySQLConnection(owner, info);
@@ -691,10 +1088,289 @@ namespace mysql
         return connection;
     }
 
+    IToolkitMySQLServerless* MySQLManager::CreateServerless(PluginId owner, ToolkitMySQLConnectionInfo info)
+    {
+        auto *handle = new ServerlessHandle(owner, m_NextServerlessId++, info);
+        m_vecServerless.push_back(handle);
+
+        return handle;
+    }
+
+    void MySQLManager::QueueServerless(ServerlessOp *op)
+    {
+        std::lock_guard<std::mutex> lock(m_ServerlessLock);
+
+        // Past Shutdown() there is no worker left to run this, and starting
+        // one again would outlive the library it would be running.
+        if (m_bServerlessTerminate)
+        {
+            delete op;
+            return;
+        }
+
+        if (!m_ServerlessThread)
+        {
+            m_ServerlessThread = std::make_unique<std::thread>(&MySQLManager::ServerlessThreadRun, this);
+        }
+
+        m_ServerlessQueue.push(op);
+        m_ServerlessEvent.notify_one();
+    }
+
+    void MySQLManager::DestroyServerless(ServerlessHandle *handle)
+    {
+        const uint32_t id = handle->Id();
+        CancelServerlessOps([id](const ServerlessOp *op) { return op->m_Handle == id; });
+
+        std::erase(m_vecServerless, handle);
+        delete handle;
+    }
+
+    void MySQLManager::ServerlessThreadRun()
+    {
+        if (mysql_thread_safe())
+        {
+            mysql_thread_init();
+        }
+
+        std::unique_lock<std::mutex> lock(m_ServerlessLock);
+
+        while (true)
+        {
+            // Whatever is still queued when the toolkit is going down is not
+            // worth a round trip: nobody is left to hand it back to.
+            if (m_bServerlessTerminate)
+            {
+                break;
+            }
+
+            if (m_ServerlessQueue.empty())
+            {
+                m_ServerlessEvent.wait(lock);
+                continue;
+            }
+
+            ServerlessOp *op = m_ServerlessQueue.front();
+            m_ServerlessQueue.pop();
+
+            // Published so the main thread can find this one and clear its
+            // callback if the plugin waiting on it goes away meanwhile.
+            m_pServerlessRunning = op;
+
+            lock.unlock();
+            RunServerlessOp(op);
+            lock.lock();
+
+            m_pServerlessRunning = nullptr;
+
+            {
+                std::lock_guard<std::mutex> done(m_ServerlessDoneLock);
+                m_ServerlessDone.push(op);
+            }
+        }
+
+        mysql_thread_end();
+    }
+
+    void MySQLManager::RunServerlessOp(ServerlessOp *op)
+    {
+        MYSQL *mysql = OpenConnection(op->m_Info, &op->m_sError, &op->m_nErrorCode);
+        if (!mysql)
+        {
+            return;
+        }
+
+        std::string query;
+        if (!FormatQuery(mysql, op->m_sQuery, op->m_vecParams, &query, &op->m_sError))
+        {
+            mysql_close(mysql);
+            return;
+        }
+
+        if (mysql_query(mysql, query.c_str()))
+        {
+            op->m_sError = mysql_error(mysql);
+            op->m_nErrorCode = mysql_errno(mysql);
+
+            mysql_close(mysql);
+            return;
+        }
+
+        // The rows have to come off the wire and into the op here: by the time
+        // the callback runs, on the main thread, this connection is closed.
+        bool first = true;
+
+        while (true)
+        {
+            if (MYSQL_RES *res = mysql_store_result(mysql))
+            {
+                op->m_vecSets.push_back(StoreResult(res));
+                mysql_free_result(res);
+            }
+            else if (mysql_field_count(mysql) != 0)
+            {
+                op->m_sError = mysql_error(mysql);
+                op->m_nErrorCode = mysql_errno(mysql);
+                op->m_vecSets.clear();
+
+                mysql_close(mysql);
+                return;
+            }
+
+            // Both belong to the statement that was asked for, so they are
+            // read off the first result and not whatever a stored procedure
+            // went on to do. Not before it, either: a SELECT only reports its
+            // affected rows once its result set has been stored.
+            if (first)
+            {
+                op->m_InsertId = (unsigned int)mysql_insert_id(mysql);
+                op->m_AffectedRows = (unsigned int)mysql_affected_rows(mysql);
+                first = false;
+            }
+
+            if (!mysql_more_results(mysql) || mysql_next_result(mysql) != 0)
+            {
+                break;
+            }
+        }
+
+        op->m_bSuccess = true;
+        mysql_close(mysql);
+    }
+
+    void MySQLManager::RunServerlessFrame()
+    {
+        while (true)
+        {
+            ServerlessOp *op;
+            {
+                std::lock_guard<std::mutex> lock(m_ServerlessDoneLock);
+                if (m_ServerlessDone.empty())
+                {
+                    return;
+                }
+
+                op = m_ServerlessDone.front();
+                m_ServerlessDone.pop();
+            }
+
+            if (!op->m_bSuccess)
+            {
+                FP_WARN("Serverless MySQL query failed ({}): {}", op->m_Info.m_sDatabase, op->m_sError);
+            }
+
+            // Gone if the plugin that asked unloaded while this was in the
+            // air. The op still had to be seen through, but there is nobody
+            // left to hand it to.
+            if (op->m_Callback)
+            {
+                ToolkitMySQLServerlessResult result;
+                result.m_bSuccess = op->m_bSuccess;
+                result.m_nErrorCode = op->m_nErrorCode;
+                result.m_sError = op->m_sError;
+
+                CMySQLStoredQuery query(std::move(op->m_vecSets), op->m_InsertId, op->m_AffectedRows);
+                if (op->m_bSuccess)
+                {
+                    result.m_pQuery = &query;
+                }
+
+                op->m_Callback(result);
+            }
+
+            delete op;
+        }
+    }
+
+    void MySQLManager::CancelServerlessOps(const std::function<bool(const ServerlessOp *)> &pred)
+    {
+        std::vector<ServerlessOp*> dropping;
+
+        {
+            std::lock_guard<std::mutex> lock(m_ServerlessLock);
+
+            std::queue<ServerlessOp*> keeping;
+            while (!m_ServerlessQueue.empty())
+            {
+                ServerlessOp *op = m_ServerlessQueue.front();
+                m_ServerlessQueue.pop();
+
+                if (pred(op))
+                    dropping.push_back(op);
+                else
+                    keeping.push(op);
+            }
+            m_ServerlessQueue = std::move(keeping);
+
+            // The worker cannot be interrupted mid-query, and waiting for it
+            // would stall the server for as long as the connect timeout. Only
+            // the callback has to go: it is the one part of the op that lives
+            // inside the plugin being unloaded, and nothing on the worker
+            // touches it.
+            if (m_pServerlessRunning && pred(m_pServerlessRunning))
+            {
+                m_pServerlessRunning->m_Callback = nullptr;
+            }
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(m_ServerlessDoneLock);
+
+            std::queue<ServerlessOp*> keeping;
+            while (!m_ServerlessDone.empty())
+            {
+                ServerlessOp *op = m_ServerlessDone.front();
+                m_ServerlessDone.pop();
+
+                if (pred(op))
+                    dropping.push_back(op);
+                else
+                    keeping.push(op);
+            }
+            m_ServerlessDone = std::move(keeping);
+        }
+
+        // Here, on the main thread, while the library holding these callbacks
+        // is still mapped -- destroying a std::function is running code too.
+        for (auto *op : dropping)
+            delete op;
+    }
+
+    void MySQLManager::RunFrame()
+    {
+        // A callback is free to Destroy() the connection it came from, which
+        // takes that entry back out of this vector. So the round is walked
+        // over a copy, and each entry checked against the live one first.
+        const std::vector<MySQLConnection*> connections = m_vecMysqlConnections;
+
+        for (auto *connection : connections)
+        {
+            if (std::find(m_vecMysqlConnections.begin(), m_vecMysqlConnections.end(), connection) == m_vecMysqlConnections.end())
+                continue;
+
+            connection->RunFrame();
+        }
+
+        RunServerlessFrame();
+    }
+
     void MySQLManager::RemoveAllForPlugin(PluginId id)
     {
-        // Destroy() erases from the same vector, so the ones to close are
+        CancelServerlessOps([id](const ServerlessOp *op) { return op->m_Owner == id; });
+
+        // Destroy() erases from the same vectors, so the ones to close are
         // picked out first rather than erased while being walked.
+        std::vector<ServerlessHandle*> handles;
+
+        for (auto *handle : m_vecServerless)
+        {
+            if (handle->Owner() == id)
+                handles.push_back(handle);
+        }
+
+        for (auto *handle : handles)
+            handle->Destroy();
+
         std::vector<MySQLConnection*> going;
 
         for (auto* connection : m_vecMysqlConnections)
@@ -716,5 +1392,36 @@ namespace mysql
         // Destroy(), which would look for these in the vector just emptied.
         for (auto* connection : connections)
             delete connection;
+
+        std::unique_ptr<std::thread> thread;
+        {
+            std::lock_guard<std::mutex> lock(m_ServerlessLock);
+
+            m_bServerlessTerminate = true;
+            m_ServerlessEvent.notify_all();
+
+            thread = std::move(m_ServerlessThread);
+        }
+
+        // Returns once the query it is on, if any, has been seen through.
+        if (thread)
+            thread->join();
+
+        while (!m_ServerlessQueue.empty())
+        {
+            delete m_ServerlessQueue.front();
+            m_ServerlessQueue.pop();
+        }
+
+        while (!m_ServerlessDone.empty())
+        {
+            delete m_ServerlessDone.front();
+            m_ServerlessDone.pop();
+        }
+
+        for (auto *handle : m_vecServerless)
+            delete handle;
+
+        m_vecServerless.clear();
     }
 }

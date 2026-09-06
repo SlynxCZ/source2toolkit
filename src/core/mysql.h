@@ -45,14 +45,75 @@
 #endif
 
 #include <condition_variable>
+#include <cstdint>
+#include <functional>
 #include <memory>
 #include <mutex>
 #include <queue>
+#include <string>
 #include <thread>
+#include <vector>
 
 namespace mysql {
     class CMySQLQuery;
     class MySQLConnection;
+    class ServerlessHandle;
+    struct ServerlessOp;
+
+    /// A set of connection details the toolkit owns outright.
+    ///
+    /// ToolkitMySQLConnectionInfo holds bare const char*, and a plugin has
+    /// every reason to build one out of temporaries -- a std::string member,
+    /// a config lookup, a literal in the same call. The worker thread reads
+    /// these long after that call has returned, so the strings have to be
+    /// ours rather than whatever the pointers happened to be aimed at.
+    struct OwnedConnectionInfo
+    {
+        OwnedConnectionInfo() = default;
+
+        explicit OwnedConnectionInfo(const ToolkitMySQLConnectionInfo &info)
+            : m_sHost(info.host ? info.host : ""),
+              m_sUser(info.user ? info.user : ""),
+              m_sPass(info.pass ? info.pass : ""),
+              m_sDatabase(info.database ? info.database : ""),
+              m_nPort(info.port),
+              m_nTimeout(info.timeout)
+        {
+        }
+
+        std::string m_sHost;
+        std::string m_sUser;
+        std::string m_sPass;
+        std::string m_sDatabase;
+
+        int m_nPort = 3306;
+        int m_nTimeout = 60;
+    };
+
+    /// One result set, copied out of libmysql row by row.
+    ///
+    /// A serverless query has no connection left by the time its callback
+    /// runs, and a MYSQL_RES does not outlive the handle it came off. So the
+    /// worker reads the whole thing into this while the connection is still
+    /// up, and the main thread reads rows out of here.
+    struct MySQLResultSet
+    {
+        struct Field
+        {
+            std::string m_sName;
+            int m_nType = TOOLKIT_MYSQL_TYPE_UNKNOWN;
+        };
+
+        /// Binary safe: the bytes are kept with their length, not as a C string.
+        struct Cell
+        {
+            bool m_bNull = true;
+            std::string m_sData;
+        };
+
+        std::vector<Field> m_vecFields;
+        std::vector<std::vector<Cell>> m_vecRows;
+    };
 
     class ThreadOperation
     {
@@ -182,6 +243,59 @@ namespace mysql {
         unsigned int m_affectedRows;
     };
 
+    /// Reads rows out of a MySQLResultSet the worker filled in. Same
+    /// interface a live result has, so a callback cannot tell the two apart.
+    class CMySQLStoredResult final : public IToolkitMySQLResult, IToolkitMySQLRow
+    {
+    public:
+        explicit CMySQLStoredResult(const MySQLResultSet *set) : m_pSet(set) {}
+
+        void Reset(const MySQLResultSet *set);
+
+        int GetRowCount() override;
+        int GetFieldCount() override;
+        bool FieldNameToNum(const char *name, unsigned int *columnId) override;
+        const char *FieldNumToName(unsigned int colId) override;
+        bool MoreRows() override;
+        IToolkitMySQLRow *FetchRow() override;
+        IToolkitMySQLRow *CurrentRow() override;
+        bool Rewind() override;
+        int GetFieldType(unsigned int field) override;
+        const char *GetString(unsigned int columnId, size_t *length = nullptr) override;
+        size_t GetDataSize(unsigned int columnId) override;
+        float GetFloat(unsigned int columnId) override;
+        int GetInt(unsigned int columnId) override;
+        bool IsNull(unsigned int columnId) override;
+        int64_t GetInt64(unsigned int columnId) override;
+
+    private:
+        /// The cell the cursor is on, or null when it is off either end.
+        const MySQLResultSet::Cell *Cell(unsigned int columnId) const;
+
+        const MySQLResultSet *m_pSet;
+        unsigned int m_CurRow = 0;
+    };
+
+    /// What a serverless query hands to its callback. Owns its rows outright,
+    /// so it stays readable after the connection behind it has been closed.
+    class CMySQLStoredQuery final : public IToolkitMySQLQuery
+    {
+    public:
+        CMySQLStoredQuery(std::vector<MySQLResultSet> sets, unsigned int insertId, unsigned int affectedRows);
+
+        IToolkitMySQLResult *GetResultSet() override;
+        bool FetchMoreResults() override;
+        unsigned int GetInsertId() override;
+        unsigned int GetAffectedRows() override;
+
+    private:
+        std::vector<MySQLResultSet> m_vecSets;
+        size_t m_CurSet = 0;
+        CMySQLStoredResult m_res;
+        unsigned int m_insertId;
+        unsigned int m_affectedRows;
+    };
+
     class MySQLConnection : public IToolkitMySQLConnection
     {
     public:
@@ -213,7 +327,7 @@ namespace mysql {
         std::string Escape(char *string) override;
         std::string Escape(const char *string) override;
 
-        ToolkitMySQLConnectionInfo m_info;
+        OwnedConnectionInfo m_info;
 
     private:
         void ThreadRun();
@@ -230,23 +344,117 @@ namespace mysql {
         PluginId m_Owner = 0;
     };
 
+    /// One serverless query on its way through: the details to open a
+    /// connection with, the SQL, and whoever is waiting for it. Filled in on
+    /// the worker, read back on the main thread, deleted there.
+    struct ServerlessOp
+    {
+        PluginId m_Owner = 0;
+        uint32_t m_Handle = 0;
+
+        OwnedConnectionInfo m_Info;
+        std::string m_sQuery;
+        std::vector<std::string> m_vecParams;
+
+        /// The only part of this op that lives inside a plugin. Cleared on the
+        /// main thread when its owner goes away while the worker still has the
+        /// op, which leaves the op to finish and be dropped in silence.
+        ToolkitMySQLServerlessCallbackFunc m_Callback;
+
+        bool m_bSuccess = false;
+        unsigned int m_nErrorCode = 0;
+        std::string m_sError;
+        std::vector<MySQLResultSet> m_vecSets;
+        unsigned int m_InsertId = 0;
+        unsigned int m_AffectedRows = 0;
+    };
+
+    /// A set of connection details a plugin holds on to. Keeps no connection
+    /// of its own -- every query it is handed gets one opened and closed
+    /// around it by the shared worker.
+    class ServerlessHandle final : public IToolkitMySQLServerless
+    {
+    public:
+        ServerlessHandle(PluginId owner, uint32_t id, const ToolkitMySQLConnectionInfo &info)
+            : m_Owner(owner), m_Id(id), m_Info(info)
+        {
+        }
+
+        PluginId Owner() const { return m_Owner; }
+        uint32_t Id() const { return m_Id; }
+
+        void Query(const char *query, ToolkitMySQLServerlessCallbackFunc callback) override;
+        void Query(const char *query, std::vector<std::string> params, ToolkitMySQLServerlessCallbackFunc callback) override;
+        void Destroy() override;
+
+    private:
+        PluginId m_Owner;
+        uint32_t m_Id;
+        OwnedConnectionInfo m_Info;
+    };
+
     class MySQLManager final : public IToolkitMySQL
     {
     public:
         IToolkitMySQLConnection* CreateConnection(PluginId owner, ToolkitMySQLConnectionInfo info) override;
+        IToolkitMySQLServerless* CreateServerless(PluginId owner, ToolkitMySQLConnectionInfo info) override;
 
     public:
-        /// Destroys the connections this plugin never got around to
-        /// destroying itself. Has to run while its library is still mapped:
-        /// the worker thread is running code from it, and every pending
-        /// callback is a std::function holding more of it.
+        /// Everything that has to happen on the main thread: each connection's
+        /// think queue, then the callbacks of the serverless queries the
+        /// worker has finished with. Driven by the ISource2Server vtable hook.
+        void RunFrame();
+
+        /// Destroys the connections and serverless handles this plugin never
+        /// got around to destroying itself, and drops the queries it still has
+        /// in the air. Has to run while its library is still mapped: the
+        /// worker threads are running code from it, and every pending callback
+        /// is a std::function holding more of it.
         void RemoveAllForPlugin(PluginId id);
 
         /// Same for whatever is left, the toolkit's own included. The worker
         /// threads would otherwise outlive the toolkit library itself.
         void Shutdown();
 
+        /// Hands one query to the shared worker. Takes ownership of @p op.
+        void QueueServerless(ServerlessOp *op);
+
+        /// Drops a handle along with the queries it still has queued.
+        void DestroyServerless(ServerlessHandle *handle);
+
         std::vector<MySQLConnection*> m_vecMysqlConnections;
+
+    private:
+        /// One thread for every serverless query there is, whatever plugin it
+        /// came from: a query at a time, each on its own connection. A thread
+        /// per query would be a thread per player connecting.
+        void ServerlessThreadRun();
+
+        /// Opens a connection, runs the query, reads the rows out and closes
+        /// again. Everything it learns goes into the op.
+        static void RunServerlessOp(ServerlessOp *op);
+
+        /// Runs the callbacks of whatever the worker has finished with.
+        void RunServerlessFrame();
+
+        /// Forgets the ops the predicate picks out. Queued ones are deleted
+        /// here and now, on the main thread, which is where their callbacks
+        /// have to be destroyed; the one the worker is already on cannot be
+        /// taken away from it, so its callback is cleared instead and the op
+        /// is dropped without running when it comes back.
+        void CancelServerlessOps(const std::function<bool(const ServerlessOp *)> &pred);
+
+        std::vector<ServerlessHandle*> m_vecServerless;
+        uint32_t m_NextServerlessId = 1;
+
+        std::unique_ptr<std::thread> m_ServerlessThread;
+        std::queue<ServerlessOp*> m_ServerlessQueue;
+        ServerlessOp *m_pServerlessRunning = nullptr;
+        std::queue<ServerlessOp*> m_ServerlessDone;
+        std::mutex m_ServerlessLock;
+        std::mutex m_ServerlessDoneLock;
+        std::condition_variable m_ServerlessEvent;
+        bool m_bServerlessTerminate = false;
     };
 
     extern MySQLManager mysqlManager;
