@@ -76,7 +76,7 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
 
     if (late)
     {
-        META_CONPRINTF("Plugin can't be loaded manually.\n");
+        std::snprintf(error, maxlen, "Late load is not supported");
         return false;
     }
 
