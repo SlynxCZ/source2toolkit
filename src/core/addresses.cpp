@@ -44,9 +44,9 @@ namespace addresses
 
     bool Initialize()
     {
-        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::CreateEntityByName", shared::g_pGameConfig->GetSignature("UTIL::CreateEntityByName"), toolkitAddresses.CreateEntityByName);
+        RESOLVE_SIG(g_pSource2Server, "UTIL::CreateEntityByName", shared::g_pGameConfig->GetSignature("UTIL::CreateEntityByName"), toolkitAddresses.CreateEntityByName);
         RESOLVE_SIG(g_pSource2Server, "CBaseEntity::DispatchSpawn", shared::g_pGameConfig->GetSignature("CBaseEntity::DispatchSpawn"), toolkitAddresses.DispatchSpawn);
-        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamageOld", shared::g_pGameConfig->GetSignature("CBaseEntity::TakeDamage"), toolkitAddresses.TakeDamageOld);
+        RESOLVE_SIG(g_pSource2Server, "CBaseEntity::TakeDamage", shared::g_pGameConfig->GetSignature("CBaseEntity::TakeDamage"), toolkitAddresses.TakeDamageOld);
         RESOLVE_SIG(g_pSource2Server, "CBaseModelEntity::SetModel", shared::g_pGameConfig->GetSignature("CBaseModelEntity::SetModel"), toolkitAddresses.SetModel);
         RESOLVE_SIG(g_pSource2Server, "CBasePlayerController::SetPawn", shared::g_pGameConfig->GetSignature("CBasePlayerController::SetPawn"), toolkitAddresses.SetPawn);
         RESOLVE_SIG(g_pSource2Server, "CBasePlayerPawn::SnapViewAngles", shared::g_pGameConfig->GetSignature("CBasePlayerPawn::SnapViewAngles"), toolkitAddresses.SnapViewAngles);
@@ -59,7 +59,7 @@ namespace addresses
         RESOLVE_SIG(g_pSource2Server, "CEntitySystem::AddEntityIOEvent", shared::g_pGameConfig->GetSignature("CEntitySystem::AddEntityIOEvent"), toolkitAddresses.AddEntityIOEvent);
         RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByClassName", shared::g_pGameConfig->GetSignature("CGameEntitySystem::FindEntityByClassName"), toolkitAddresses.FindEntityByClassName);
         RESOLVE_SIG(g_pSource2Server, "CGameEntitySystem::FindEntityByName", shared::g_pGameConfig->GetSignature("CGameEntitySystem::FindEntityByName"), toolkitAddresses.FindEntityByName);
-        RESOLVE_SIG(g_pSource2Server, "CTakeDamageInfo::CTakeDamageInfo", shared::g_pGameConfig->GetSignature("CTakeDamageInfo::Constructor"), toolkitAddresses.CTakeDamageInfo);
+        RESOLVE_SIG(g_pSource2Server, "CTakeDamageInfo::Constructor", shared::g_pGameConfig->GetSignature("CTakeDamageInfo::Constructor"), toolkitAddresses.CTakeDamageInfo);
         RESOLVE_SIG(shared::g_pGameEventSystem, "INetworkMessageProcessingPreFilter::FilterMessage", shared::g_pGameConfig->GetSignature("INetworkMessageProcessingPreFilter::FilterMessage"), toolkitAddresses.FilterMessage);
 
         // Ported from SwiftlyS2. Resolved optionally: these are a library for
