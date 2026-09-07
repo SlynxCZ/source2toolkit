@@ -42,6 +42,7 @@
 
 #include "commands.h"
 #include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
+#include "crashhandler.h"
 #include "customhud.h"
 #include "http.h"
 #include "events.h"
@@ -133,6 +134,10 @@ namespace virtualhooks
 
     void Virtuals::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
     {
+        // First, and before the early return below: a signal handler someone
+        // replaced has to go back regardless of whether the world is up.
+        crashhandler::OnGameFrame();
+
         scheduler::Tick(simulating);
 
         // Center HTML menus fade, so the open ones have to be redrawn every
@@ -172,6 +177,8 @@ namespace virtualhooks
 
     void Virtuals::Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName)
     {
+        crashhandler::OnStartupServer(pszMapName);
+
         // Re-read every time rather than once: the engine can hand out a new
         // entity system for the next map, and CS2Fixes refreshes it on every
         // StartupServer for the same reason. Keeping the first one would mean
@@ -289,6 +296,9 @@ namespace virtualhooks
     void Virtuals::Hook_GameServerSteamAPIActivated()
     {
         http::httpManager.OnSteamAPIActivated();
+        // After the HTTP manager: the crash report waiting for Steam goes out
+        // through it.
+        crashhandler::OnSteamAPIActivated();
 
         RETURN_META(MRES_IGNORED);
     }

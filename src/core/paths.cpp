@@ -25,7 +25,7 @@ namespace paths
         namespace fs = std::filesystem;
 
         for (const auto& dir : { GetRootDirectory(), GetConfigsDirectory(), GetGamedataDirectory(),
-                                 GetPluginsDirectory(), GetSharedDirectory() })
+                                 GetPluginsDirectory(), GetSharedDirectory(), GetDumpsDirectory() })
         {
             std::error_code ec;
 

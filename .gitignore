@@ -554,3 +554,6 @@ _NCrunch*
 docfx/_site/
 docfx/api/
 docfx/_exported_templates/
+
+# Prebuilt breakpad for the crash handler -- the only .a files that ship in the tree.
+!vendor/breakpad-build/*.a

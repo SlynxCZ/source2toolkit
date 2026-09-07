@@ -57,6 +57,8 @@ namespace paths {
     inline std::string GetGamedataDirectory() { return GameDirectory() + "/addons/source2toolkit/gamedata"; }
     inline std::string GetPluginsDirectory() { return GameDirectory() + "/addons/source2toolkit/plugins"; }
     inline std::string GetSharedDirectory() { return GameDirectory() + "/addons/source2toolkit/shared"; }
+    /// Where the crash handler writes its minidumps and crash .txt files.
+    inline std::string GetDumpsDirectory() { return GameDirectory() + "/addons/source2toolkit/dumps"; }
 
     /// Where a plugin's own configs live: configs/<PluginName>.
     inline std::string GetPluginConfigDirectory(const std::string& name) { return GetConfigsDirectory() + "/" + name; }

@@ -186,6 +186,43 @@ namespace http
         m_TrackedRequests.push_back(new TrackedRequest(owner, hRequest, hCall, std::move(callback)));
     }
 
+    bool HTTPManager::PostRaw(PluginId owner, const char* pszUrl, const char* pszContentType,
+                              const void* pData, size_t nSize, ToolkitHTTPCallback callback)
+    {
+        if (!pszUrl || !s_pSteamHTTP)
+            return false;
+
+        HTTPRequestHandle hRequest = s_pSteamHTTP->CreateHTTPRequest(k_EHTTPMethodPOST, pszUrl);
+
+        if (hRequest == INVALID_HTTPREQUEST_HANDLE)
+        {
+            FP_ERROR("Failed to create an HTTP request for '{}'", pszUrl);
+            return false;
+        }
+
+        if (pData && nSize > 0 && !s_pSteamHTTP->SetHTTPRequestRawPostBody(
+                hRequest, pszContentType,
+                reinterpret_cast<uint8*>(const_cast<void*>(pData)),
+                static_cast<uint32>(nSize)))
+        {
+            FP_ERROR("Failed to set the raw POST body for '{}'", pszUrl);
+            s_pSteamHTTP->ReleaseHTTPRequest(hRequest);
+            return false;
+        }
+
+        SteamAPICall_t hCall = k_uAPICallInvalid;
+
+        if (!s_pSteamHTTP->SendHTTPRequest(hRequest, &hCall))
+        {
+            FP_ERROR("Failed to send an HTTP request to '{}'", pszUrl);
+            s_pSteamHTTP->ReleaseHTTPRequest(hRequest);
+            return false;
+        }
+
+        m_TrackedRequests.push_back(new TrackedRequest(owner, hRequest, hCall, std::move(callback)));
+        return true;
+    }
+
     void HTTPManager::Request(PluginId owner, EToolkitHTTPMethod method, const char* pszUrl,
                               const char* pszBody, ToolkitHTTPCallback callback,
                               const std::vector<ToolkitHTTPHeader>* pHeaders)

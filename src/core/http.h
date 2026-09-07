@@ -63,6 +63,14 @@ namespace http {
                     const std::vector<ToolkitHTTPHeader>* pHeaders) override;
 
     public:
+        /// Core-internal: a POST whose body is arbitrary bytes under a
+        /// content type of the caller's choosing -- the interface above only
+        /// ever sends JSON. The crash reporter needs it for Discord's
+        /// multipart uploads. Not queued: returns false when Steam's HTTP
+        /// client is not there yet, and the caller keeps its payload.
+        bool PostRaw(PluginId owner, const char* pszUrl, const char* pszContentType,
+                     const void* pData, size_t nSize, ToolkitHTTPCallback callback);
+
         /// Steam handed its HTTP client over -- sends whatever was queued while
         /// it was not there yet. Driven by the ISource2Server vtable hook.
         void OnSteamAPIActivated();

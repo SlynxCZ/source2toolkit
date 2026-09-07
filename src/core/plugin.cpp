@@ -39,6 +39,7 @@
 #include "addresses.h"
 #include "commands.h"
 #include "convars.h"
+#include "crashhandler.h"
 #include "customhud.h"
 #include "events.h"
 #include "gameconfig.h"
@@ -120,6 +121,10 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         return false;
     }
 
+    // As soon as the config allows and before anything else: whatever below
+    // this line dies, plugins included, is caught and reported next start.
+    crashhandler::Init();
+
     auto gamedata_folder = paths::GetGamedataDirectory();
     shared::g_pGameConfig = new CGameConfig(gamedata_folder);
     char conf_error[255] = {};
@@ -197,6 +202,9 @@ bool ToolkitCore::Unload(char* error, size_t maxlen)
     shared::g_bDetoursLoaded = false;
 
     ConVar_Unregister();
+
+    // Last: a crash anywhere in the teardown above is still worth a dump.
+    crashhandler::Shutdown();
 
     FP_INFO("Unload() success!");
 

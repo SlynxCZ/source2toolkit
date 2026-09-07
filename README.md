@@ -40,6 +40,7 @@ Designed for both beginners and hardcore engine hackers.
 - **Tracing** – Raycasts and collision queries  
 - **GameConfig** – Signature & offset management  
 - **Dynamic Libraries** – Extend functionality with external modules  
+- **Crash Handler** – Breakpad minidumps, local symbolization and Discord crash reports  
 
 ---
 
@@ -113,6 +114,68 @@ pLayout->AddClickCallback([](CCSPlayerController* player, CCSCustomHudLayout* pL
 Callbacks are dropped when the layout entity dies, when the level changes, or
 when the plugin that registered them unloads -- a handler must not outlive the
 library it lives in.
+
+---
+
+## Crash Handler
+
+The core ships its own crash handler on both Linux and Windows, a port of
+[AcceleratorLocal](https://github.com/FUNPLAY-pro-CS2/AcceleratorLocal) and
+[AcceleratorCS2](https://github.com/Source2ZE/AcceleratorCS2) — nothing is
+uploaded to Throttle, everything is processed on the server.
+
+When the server crashes, a minidump plus a `.txt` with the map, game path,
+command line and full console history is written to
+`addons/source2toolkit/dumps/`. On the next start the core:
+
+1. Detects the unprocessed crash from the previous session.
+2. Re-processes the minidump and **symbolizes third-party (`addons/`) modules
+   in-process** — on Linux with the bundled Breakpad, straight from the
+   ELF/DWARF on disk, so no `llvm-symbolizer` or `addr2line` is needed inside a
+   bare steamrt container; on Windows through DbgHelp, from the PDB next to
+   the DLL. Frames resolve to `function @ file:line`.
+3. Prints the crash stack with the **suspected culprit** (the first `addons/`
+   frame) to the server console.
+4. Sends the report to a **Discord webhook** through the Steam HTTP API, with
+   the crash `.txt` attached.
+
+```
+Server crashed: SIGSEGV /SEGV_MAPERR @ 0x67
+
+#0 some_plugin.stx + 0x1dcc0 (CBadClass::DoStuff() @ badclass.cpp:39)
+#1 some_plugin.stx + 0x1db86 (some_command_callback(CCommandContext const&, CCommand const&) @ commands.cpp:56)
+#2 libtier0.so + 0x15f682
+#3 libengine2.so + 0x3ecb4e
+
+Suspected culprit: some_plugin.stx -> CBadClass::DoStuff() @ badclass.cpp:39
+```
+
+Configured in `addons/source2toolkit/configs/core.json`:
+
+```json
+"CrashHandlerEnabled": true,
+"CrashDiscordWebhook": ""
+```
+
+Leave the webhook empty to keep the dumps local only.
+
+- **Crash-loop protection:** if the server crashes twice in a row without ever
+  finishing startup, the pending dump is left unprocessed so the reporting
+  itself can never keep the server down.
+- **Symbols:** plugins you want fully symbolized must be deployed with debug
+  info — on Linux built with `-g` / RelWithDebInfo and not stripped, on
+  Windows with the `.pdb` deployed next to the `.dll` / `.stx`. Without them
+  the report falls back to symtab function names (Linux), and for stripped
+  binaries to `module + offset`.
+- **Windows:** the handler catches access violations, illegal instructions,
+  stack overflows, heap corruption and `Sys_Error` through a vectored
+  exception handler ahead of Valve's own, exactly like AcceleratorCS2. Any
+  .NET runtime in the process (CounterStrikeSharp) needs the server started
+  with `-DoNotPreloadDLLs`, or its managed binaries trip the handler at boot.
+- Reports are queued until the Steam API activates, then sent — a report
+  generated at boot is never lost.
+- Do not run Accelerator or AcceleratorLocal next to the toolkit; two
+  exception handlers fight over the same signals.
 
 ---
 

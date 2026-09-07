@@ -50,6 +50,11 @@ public:
     bool UnlockConCommands = true;
     bool UnlockConVars = true;
 
+    /// Breakpad crash handler (Linux only): minidumps, local symbolization
+    /// and, when the webhook is set, a report posted to Discord.
+    bool CrashHandlerEnabled = true;
+    std::string CrashDiscordWebhook;
+
     using json = nlohmann::json;
     CCoreConfig(const std::string& path);
     ~CCoreConfig();

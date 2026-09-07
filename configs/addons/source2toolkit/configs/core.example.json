@@ -4,5 +4,7 @@
   "PluginHotReloadEnabled": true,
   "PluginAutoLoadEnabled": true,
   "UnlockConCommands": true,
-  "UnlockConVars": true
+  "UnlockConVars": true,
+  "CrashHandlerEnabled": true,
+  "CrashDiscordWebhook": ""
 }

@@ -37,7 +37,132 @@ file(GLOB_RECURSE SOURCE_FILES
         src/*.hpp
 )
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})
+# Crash handler (Linux only). The breakpad client and processor come prebuilt
+# from vendor/breakpad-build; the in-process symbol dumper (ELF/DWARF to
+# breakpad symbols, what lets a crash be symbolized without llvm-symbolizer
+# or addr2line on the box) is not part of those libraries, so its sources
+# are compiled straight into the core.
+set(BREAKPAD_SOURCE_FILES "")
+if (UNIX AND NOT APPLE)
+    set(BREAKPAD_SRC ${CMAKE_SOURCE_DIR}/vendor/breakpad/src)
+    set(BREAKPAD_SOURCE_FILES
+            ${BREAKPAD_SRC}/common/dwarf_cfi_to_module.cc
+            ${BREAKPAD_SRC}/common/dwarf_cu_to_module.cc
+            ${BREAKPAD_SRC}/common/dwarf_line_to_module.cc
+            ${BREAKPAD_SRC}/common/dwarf_range_list_handler.cc
+            ${BREAKPAD_SRC}/common/language.cc
+            ${BREAKPAD_SRC}/common/module.cc
+            ${BREAKPAD_SRC}/common/path_helper.cc
+            ${BREAKPAD_SRC}/common/stabs_reader.cc
+            ${BREAKPAD_SRC}/common/stabs_to_module.cc
+            ${BREAKPAD_SRC}/common/dwarf/bytereader.cc
+            ${BREAKPAD_SRC}/common/dwarf/dwarf2diehandler.cc
+            ${BREAKPAD_SRC}/common/dwarf/dwarf2reader.cc
+            ${BREAKPAD_SRC}/common/dwarf/elf_reader.cc
+            ${BREAKPAD_SRC}/common/linux/crc32.cc
+            ${BREAKPAD_SRC}/common/linux/dump_symbols.cc
+            ${BREAKPAD_SRC}/common/linux/elf_symbols_to_module.cc
+    )
+    # Hidden for the same reason the prebuilt libraries are --exclude-libs'd
+    # below: the SDK's -fvisibility=default would otherwise export all of it.
+    set_source_files_properties(${BREAKPAD_SOURCE_FILES} PROPERTIES
+            LANGUAGE CXX
+            COMPILE_OPTIONS "-fvisibility=hidden"
+    )
+elseif (WIN32)
+    # No prebuilt libraries on Windows: the client, the processor and
+    # libdisasm are built from the submodule with MSVC, the same set
+    # AcceleratorCS2 builds. Symbolization goes through DbgHelp there, so
+    # nothing of breakpad's PDB tooling (DIA) is needed.
+    set(BREAKPAD_SRC ${CMAKE_SOURCE_DIR}/vendor/breakpad/src)
+    add_library(breakpad-win STATIC
+            ${BREAKPAD_SRC}/processor/basic_code_modules.cc
+            ${BREAKPAD_SRC}/processor/basic_source_line_resolver.cc
+            ${BREAKPAD_SRC}/processor/call_stack.cc
+            ${BREAKPAD_SRC}/processor/cfi_frame_info.cc
+            ${BREAKPAD_SRC}/processor/convert_old_arm64_context.cc
+            ${BREAKPAD_SRC}/processor/disassembler_x86.cc
+            ${BREAKPAD_SRC}/processor/dump_context.cc
+            ${BREAKPAD_SRC}/processor/dump_object.cc
+            ${BREAKPAD_SRC}/processor/exploitability.cc
+            ${BREAKPAD_SRC}/processor/exploitability_linux.cc
+            ${BREAKPAD_SRC}/processor/exploitability_win.cc
+            ${BREAKPAD_SRC}/processor/fast_source_line_resolver.cc
+            ${BREAKPAD_SRC}/processor/logging.cc
+            ${BREAKPAD_SRC}/processor/microdump.cc
+            ${BREAKPAD_SRC}/processor/microdump_processor.cc
+            ${BREAKPAD_SRC}/processor/minidump.cc
+            ${BREAKPAD_SRC}/processor/minidump_processor.cc
+            ${BREAKPAD_SRC}/processor/module_comparer.cc
+            ${BREAKPAD_SRC}/processor/module_serializer.cc
+            ${BREAKPAD_SRC}/processor/pathname_stripper.cc
+            ${BREAKPAD_SRC}/processor/process_state.cc
+            ${BREAKPAD_SRC}/processor/proc_maps_linux.cc
+            ${BREAKPAD_SRC}/processor/simple_symbol_supplier.cc
+            ${BREAKPAD_SRC}/processor/source_line_resolver_base.cc
+            ${BREAKPAD_SRC}/processor/stack_frame_cpu.cc
+            ${BREAKPAD_SRC}/processor/stack_frame_symbolizer.cc
+            ${BREAKPAD_SRC}/processor/stackwalk_common.cc
+            ${BREAKPAD_SRC}/processor/stackwalker.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_amd64.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_arm.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_arm64.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_address_list.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_mips.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_ppc.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_ppc64.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_riscv.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_riscv64.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_sparc.cc
+            ${BREAKPAD_SRC}/processor/stackwalker_x86.cc
+            ${BREAKPAD_SRC}/processor/symbolic_constants_win.cc
+            ${BREAKPAD_SRC}/processor/tokenize.cc
+
+            ${BREAKPAD_SRC}/client/windows/crash_generation/client_info.cc
+            ${BREAKPAD_SRC}/client/windows/crash_generation/crash_generation_client.cc
+            ${BREAKPAD_SRC}/client/windows/crash_generation/crash_generation_server.cc
+            ${BREAKPAD_SRC}/client/windows/crash_generation/minidump_generator.cc
+            ${BREAKPAD_SRC}/client/windows/handler/exception_handler.cc
+            ${BREAKPAD_SRC}/common/windows/guid_string.cc
+            ${BREAKPAD_SRC}/common/windows/string_utils.cc
+            ${BREAKPAD_SRC}/common/convert_UTF.cc
+            ${BREAKPAD_SRC}/common/string_conversion.cc
+
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_implicit.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_insn.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_invariant.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_modrm.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_opcode_tables.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_operand.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_reg.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/ia32_settings.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/x86_disasm.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/x86_format.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/x86_imm.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/x86_insn.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/x86_misc.c
+            ${BREAKPAD_SRC}/third_party/libdisasm/x86_operand_list.c
+    )
+    target_include_directories(breakpad-win PRIVATE
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad-config/windows
+            ${BREAKPAD_SRC}
+    )
+    target_compile_definitions(breakpad-win PRIVATE
+            HAVE_CONFIG_H
+            # The client is written against the wide Win32 API.
+            UNICODE
+            _UNICODE
+            NOMINMAX
+            _CRT_SECURE_NO_WARNINGS
+            _CRT_NONSTDC_NO_DEPRECATE
+            # minidump_generator.cc still uses stdext::checked_array_iterator,
+            # deprecated since VS 2022 17.x but present.
+            _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
+    )
+    target_compile_options(breakpad-win PRIVATE /utf-8 /EHsc /wd4267 /wd4244 /wd4996)
+endif ()
+
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${BREAKPAD_SOURCE_FILES})
 target_compile_definitions(source2toolkit-sdk PUBLIC SOURCE2TOOLKIT_CORE)
 
 if (DEFINED ENV{GITHUB_SHA_SHORT} AND NOT "$ENV{GITHUB_SHA_SHORT}" STREQUAL "")
@@ -77,12 +202,23 @@ if (UNIX AND NOT APPLE)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/include
             ${CMAKE_SOURCE_DIR}/vendor/mysql/include
             ${CMAKE_SOURCE_DIR}/vendor/spdlog/include
+            # Breakpad, for the crash handler. configs.h in breakpad-config is
+            # the autoconf output the sources expect. Only the src root goes
+            # in: its subdirectories carry a module.h and a logging.h that
+            # would shadow the toolkit's and tier0's for anyone including
+            # them by bare name.
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad-config/linux
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad/src
     )
     SET(source2toolkit_link_libraries
             ${CMAKE_SOURCE_DIR}/vendor/mysql/lib/libmysqlclient.a
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libssl.a
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/linux/libcrypto.a
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad-build/libbreakpad.a
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad-build/libbreakpad-client.a
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad-build/libdisasm.a
             dynlibutils
+            z
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
@@ -98,12 +234,20 @@ elseif (WIN32)
             ${CMAKE_SOURCE_DIR}/vendor/openssl/include
             ${CMAKE_SOURCE_DIR}/vendor/mysql/include
             ${CMAKE_SOURCE_DIR}/vendor/spdlog/include
+            # Breakpad, for the crash handler -- see the Linux branch for why
+            # only the src root goes in.
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad-config/windows
+            ${CMAKE_SOURCE_DIR}/vendor/breakpad/src
     )
     SET(source2toolkit_link_libraries
             ${CMAKE_SOURCE_DIR}/vendor/mysql/lib/mysqlclient.lib
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/ssl.lib
             ${CMAKE_SOURCE_DIR}/vendor/openssl/lib/windows/crypto.lib
             crypt32.lib
+            # Crash handler: breakpad built above, DbgHelp for symbolizing
+            # addons/ modules from their PDBs.
+            breakpad-win
+            dbghelp.lib
             dynlibutils
     )
     set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -120,6 +264,19 @@ target_link_libraries(${PROJECT_NAME}
         source2toolkit-sdk
         ${source2toolkit_link_libraries}
 )
+
+# breakpad_types.h insists on this being defined before <inttypes.h> is
+# first seen, which with the SDK's headers is long before it gets a say.
+target_compile_definitions(${PROJECT_NAME} PRIVATE __STDC_FORMAT_MACROS)
+
+if (UNIX AND NOT APPLE)
+    # Breakpad is an implementation detail of the core. Kept out of the .so's
+    # export table so another crash handler loaded next to the toolkit
+    # (Accelerator, AcceleratorLocal) cannot bind to this copy of it.
+    target_link_options(${PROJECT_NAME} PRIVATE
+            -Wl,--exclude-libs=libbreakpad.a:libbreakpad-client.a:libdisasm.a
+    )
+endif ()
 
 add_custom_command(
         TARGET ${PROJECT_NAME} PRE_BUILD

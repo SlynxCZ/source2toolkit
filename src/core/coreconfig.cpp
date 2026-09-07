@@ -77,6 +77,8 @@ bool CCoreConfig::Init(char* conf_error, int conf_error_size)
         PluginAutoLoadEnabled = m_json.value("PluginAutoLoadEnabled", PluginAutoLoadEnabled);
         UnlockConCommands = m_json.value("UnlockConCommands", UnlockConCommands);
         UnlockConVars = m_json.value("UnlockConVars", UnlockConVars);
+        CrashHandlerEnabled = m_json.value("CrashHandlerEnabled", CrashHandlerEnabled);
+        CrashDiscordWebhook = m_json.value("CrashDiscordWebhook", CrashDiscordWebhook);
     }
     catch (const std::exception& ex)
     {
