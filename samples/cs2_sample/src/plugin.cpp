@@ -262,12 +262,12 @@ KHook::Return<void> SamplePlugin::Hook_ClientCommand(ISource2GameClients* pThis,
 {
     TOOLKIT_LOG(this, "Hook_ClientCommand(%d, \"%s\")\n", slot.Get(), args.GetCommandString());
 
-    // Supercede blocks the original entirely -- the engine never sees this
+    // Supersede blocks the original entirely -- the engine never sees this
     // command. Use it to take a command over, not to "handle it as well".
     if (!V_strcmp(args.Arg(0), "sample_blocked"))
     {
         TOOLKIT_LOG(this, "Swallowing \"sample_blocked\" -- the engine will never see it.\n");
-        return { KHook::Action::Supercede };
+        return { KHook::Action::Supersede };
     }
 
     // Ignore says "I did nothing": the original runs, and so does whatever else
@@ -306,7 +306,7 @@ KHook::Return<bool> SamplePlugin::Hook_ClientConnect(ISource2GameClients* pThis,
     }
 
     // Ignore with a value still returns whatever the original returns -- the
-    // value passed here is discarded. Only Supercede/Override make it count.
+    // value passed here is discarded. Only Supersede/Override make it count.
     return { KHook::Action::Ignore, true };
 }
 
@@ -342,7 +342,7 @@ KHook::Return<int64_t> SamplePlugin::Hook_TakeDamageOld(CBaseEntity* pThis, CTak
 {
     // The hooked object arrives as the first parameter. Ignore lets the original
     // run untouched; change pInfo here and the original sees your version,
-    // while { KHook::Action::Supercede, 0 } would block the damage outright.
+    // while { KHook::Action::Supersede, 0 } would block the damage outright.
     TOOLKIT_LOG(this, "TakeDamageOld: %p entity, %.1f damage\n", pThis, pInfo ? pInfo->m_flDamage : 0.0f);
 
     return { KHook::Action::Ignore, 0 };

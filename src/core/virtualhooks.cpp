@@ -288,11 +288,11 @@ namespace virtualhooks
                             commands::DispatchConsoleListener(ctx, parsed, true);
 
                         if (r == Action::Supersede)
-                            return { KHook::Action::Supercede };
+                            return { KHook::Action::Supersede };
                     }
 
                     if (isSilent)
-                        return { KHook::Action::Supercede };
+                        return { KHook::Action::Supersede };
 
                     return { KHook::Action::Ignore };
                 }
@@ -389,7 +389,7 @@ namespace virtualhooks
 
         bool localDontBroadcast = bDontBroadcast;
         if (!events::DispatchGameEvent(event, false, localDontBroadcast))
-            return { KHook::Action::Supercede, false };
+            return { KHook::Action::Supersede, false };
 
         if (IGameEvent* copy = shared::g_pGameEventManager->DuplicateEvent(event))
             eventStack.push_back(copy);
@@ -399,7 +399,7 @@ namespace virtualhooks
             // A listener changed the broadcast flag: run the original with the
             // new one ourselves and drop the hooked call so it does not fire twice.
             bool original = m_hFireEvent->CallOriginal(pThis, event, localDontBroadcast);
-            return { KHook::Action::Supercede, original };
+            return { KHook::Action::Supersede, original };
         }
 
         return { KHook::Action::Ignore, true };

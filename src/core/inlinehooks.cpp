@@ -145,7 +145,7 @@ namespace inlinehooks
                 );
 
                 if (action == Action::Supersede)
-                    return { KHook::Action::Supercede };
+                    return { KHook::Action::Supersede };
 
                 if (action > finalAction)
                     finalAction = action;
@@ -167,6 +167,6 @@ namespace inlinehooks
 
         // The original already ran above, so supersede rather than let KHook
         // call it a second time.
-        return { KHook::Action::Supercede };
+        return { KHook::Action::Supersede };
     }
 }
