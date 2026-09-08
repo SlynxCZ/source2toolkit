@@ -8,7 +8,12 @@ RUN wget -4 --tries=5 --waitretry=5 -qO- https://apt.llvm.org/llvm-snapshot.gpg.
       | gpg --dearmor -o /etc/apt/trusted.gpg.d/llvm.gpg
 RUN echo "deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-18 main" >> /etc/apt/sources.list.d/llvm.list
 RUN echo "deb-src http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye-18 main" >> /etc/apt/sources.list.d/llvm.list
-RUN echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
+# Debian 11 left LTS in August 2026 and the bullseye-security Release file
+# the SDK image still points at is no longer refreshed, so its Valid-Until
+# has lapsed and apt refuses it. Nothing we install comes from there; accept
+# the stale index instead of failing on it.
+RUN printf '%s\n' 'Acquire::ForceIPv4 "true";' 'Acquire::Check-Valid-Until "false";' \
+      > /etc/apt/apt.conf.d/99source2toolkit
 RUN apt update && apt install -y clang-18 lld-18 libc++-18-dev libc++abi-18-dev
 RUN ln -sf /usr/bin/clang-18 /usr/bin/clang
 RUN ln -sf /usr/bin/clang++-18 /usr/bin/clang++
