@@ -156,10 +156,20 @@ elseif (WIN32)
             _CRT_SECURE_NO_WARNINGS
             _CRT_NONSTDC_NO_DEPRECATE
             # minidump_generator.cc still uses stdext::checked_array_iterator,
-            # deprecated since VS 2022 17.x but present.
+            # deprecated since VS 2022 17.8 and silenced here on toolsets
+            # that still ship it.
             _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
     )
     target_compile_options(breakpad-win PRIVATE /utf-8 /EHsc /wd4267 /wd4244 /wd4996)
+    # VS 2026 (MSVC 14.50+) removed stdext::checked_array_iterator from the
+    # STL entirely. Force-include a drop-in replacement into the one file
+    # that uses it instead of patching the submodule; the header is a no-op
+    # on older toolsets.
+    set_source_files_properties(
+            ${BREAKPAD_SRC}/client/windows/crash_generation/minidump_generator.cc
+            PROPERTIES COMPILE_OPTIONS
+            "/FI${CMAKE_SOURCE_DIR}/vendor/breakpad-config/windows/stdext_compat.h"
+    )
 endif ()
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${BREAKPAD_SOURCE_FILES})
