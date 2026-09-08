@@ -34,7 +34,7 @@ Designed for both beginners and hardcore engine hackers.
 - **Entity System** – Schema-based entity access  
 - **Events & GameEvents** – Pre/Post hook support with typed data  
 - **Memory** – Direct memory access & manipulation  
-- **Hooks** – SourceHook engine: virtual, DVP, manual and inline hooks  
+- **Hooks** – KHook: virtual, vtable and function detours, one engine shared with Metamod  
 - **Schema System** – Access SDK classes, offsets and fields  
 - **Scheduler** – Timers and next-frame execution  
 - **Tracing** – Raycasts and collision queries  
@@ -46,38 +46,36 @@ Designed for both beginners and hardcore engine hackers.
 
 ## Hooking
 
-Source2Toolkit runs its **own SourceHook engine**, separate from the one
-Metamod hands out. Every hook the core places and every hook a plugin places
-land on that single instance, which is what makes `SH_CALL` and
-`SH_GET_INLINEHOOK_ORIGINAL` able to see through each other's handler chains.
-Two independent engines patching the same address cannot do that.
+Source2Toolkit hooks with **KHook**, Metamod:Source's own detour library, on the
+one engine Metamod runs for the whole server. The toolkit gets it at load like
+any Metamod plugin and hands the same engine to its own plugins
+(`TOOLKIT_KHOOK_INTERFACE`, filled in by `TOOLKIT_SAVEVARS()`), so every hook
+-- Metamod's, the toolkit's, every plugin's -- can call through each other's
+originals. Two independent engines patching the same address cannot do that.
 
-Plugins receive the engine exactly the way Metamod exposes its own — the
-`TOOLKIT_EXPOSE` / `TOOLKIT_SAVEVARS` macros define and fill `g_SHPtr` and
-`g_PLID` for you, so the stock `SH_` macros work with no extra setup:
-
-```cpp
-SH_DECL_HOOK3_void(IServerGameDLL, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
-
-m_iGameFrameHookID = SH_ADD_HOOK(IServerGameDLL, GameFrame, g_pSource2Server,
-                                 SH_MEMBER(this, &MyPlugin::Hook_GameFrame), true);
-```
-
-Inline hooks work on raw addresses, so anything a signature scan finds is
-hookable — no vtable required:
+A hook is an object holding the member function, the context and the Pre/Post
+callbacks; it is attached to an instance (`Add`) or to a whole vtable
+(`AddGlobal`), and taken down in its destructor:
 
 ```cpp
-SH_DECL_INLINEHOOK2(FilterMessage, INetworkMessageProcessingPreFilterCustom,
-                    bool, const CNetMessage*, INetChannel*);
-
-m_iHookID = SH_ADD_INLINEHOOK(FilterMessage, pAddress,
-                              SH_MEMBER(this, &MyPlugin::Hook_FilterMessage), false);
+KHook::Virtual<ISource2Server, void, bool, bool, bool>* m_hGameFrame =
+    new KHook::Virtual(&ISource2Server::GameFrame, this, nullptr, &MyPlugin::Hook_GameFrame);
+m_hGameFrame->Add(g_pSource2Server);
 ```
 
-Handlers return `META_RES` (`MRES_IGNORED`, `MRES_HANDLED`, `MRES_OVERRIDE`,
-`MRES_SUPERCEDE`) — the same vocabulary as Metamod. Timing is a plain
-`bool post`, exactly like SourceHook's own `SH_ADD_HOOK`: `false` runs before
-the original, `true` after.
+Anything a signature scan finds is hookable too -- `KHook::Member` for a
+function with a `this`, `KHook::Function` otherwise:
+
+```cpp
+KHook::Member<CBaseEntity, int64_t, CTakeDamageInfo*, CTakeDamageResult*>* m_hTakeDamageOld =
+    new KHook::Member(this, &MyPlugin::Hook_TakeDamageOld, nullptr);
+m_hTakeDamageOld->Configure(ADDR_TAKE_DAMAGE_OLD());
+```
+
+Handlers return `KHook::Return<T>` (`Ignore`, `Override`, `Supercede`, plus the
+value). The toolkit's own listener callbacks return its `Action`
+(`Ignore`, `Override`, `Supersede` -- same values), and their timing is a plain
+`bool post`: `false` runs before the original, `true` after.
 
 ---
 

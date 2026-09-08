@@ -45,11 +45,11 @@ interoperability concepts.
 
 JSON library used on the native side.
 
-## SourceHook
+## KHook
 
-Hooking library used for centralized virtual, DVP, manual and inline
-hooking. Originally by Pavol "PM OnoTo" Marko for Metamod:Source; the
-toolkit uses a fork that adds inline hooking on top of SafetyHook.
+Detouring library the toolkit and its plugins hook with -- virtual, vtable and
+function detours on the one engine Metamod:Source runs. By Benoist "Kenzzer"
+André, shipped as part of Metamod:Source.
 
 ## CounterStrikeSharp
 

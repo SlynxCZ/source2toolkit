@@ -46,6 +46,7 @@
 #include "source2toolkit/schema/takedamageinfo.h"
 #include "source2toolkit/schema/takedamageresult.h"
 #include "igameevents.h"
+#include "eiface.h"
 
 // Generated from plugin-metadata.json by tools/version_gen.py -- the metadata
 // below is not written twice.
@@ -54,6 +55,8 @@
 class SamplePlugin final : public IToolkitPlugin, public IToolkitListener
 {
 public:
+	SamplePlugin();
+
 	bool Load(PluginId id, IToolkitAPI *api, char *error, size_t maxlen, bool late) override;
 	bool Unload(char *error, size_t maxlen) override;
 
@@ -63,19 +66,31 @@ public: // listener
 	void OnLevelShutdown() override;
 
 public: // hooks
-	void Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick);
-	void Hook_ClientActive(CPlayerSlot slot, bool bLoadGame, const char *pszName, uint64 xuid);
-	void Hook_ClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReason reason, const char *pszName, uint64 xuid, const char *pszNetworkID);
-	void Hook_ClientPutInServer(CPlayerSlot slot, char const *pszName, int type, uint64 xuid);
-	void Hook_ClientSettingsChanged(CPlayerSlot slot);
-	void Hook_OnClientConnected(CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, const char *pszAddress, bool bFakePlayer);
-	bool Hook_ClientConnect(CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, bool unk1, CBufferString *pRejectReason);
-	void Hook_ClientCommand(CPlayerSlot nSlot, const CCommand &cmd);
-	int64_t Hook_TakeDamageOld(CTakeDamageInfo *pInfo, CTakeDamageResult *pResult);
-	void Hook_PostThink(CCSPlayerPawn* pThis, double flFrameTime, float flUnknown);
+	KHook::Return<void> Hook_GameFrame(ISource2Server *pThis, bool simulating, bool bFirstTick, bool bLastTick);
+	KHook::Return<void> Hook_ClientActive(ISource2GameClients *pThis, CPlayerSlot slot, bool bLoadGame, const char *pszName, uint64 xuid);
+	KHook::Return<void> Hook_ClientDisconnect(ISource2GameClients *pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char *pszName, uint64 xuid, const char *pszNetworkID);
+	KHook::Return<void> Hook_ClientPutInServer(ISource2GameClients *pThis, CPlayerSlot slot, char const *pszName, int type, uint64 xuid);
+	KHook::Return<void> Hook_ClientSettingsChanged(ISource2GameClients *pThis, CPlayerSlot slot);
+	KHook::Return<void> Hook_OnClientConnected(ISource2GameClients *pThis, CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, const char *pszAddress, bool bFakePlayer);
+	KHook::Return<bool> Hook_ClientConnect(ISource2GameClients *pThis, CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, bool unk1, CBufferString *pRejectReason);
+	KHook::Return<void> Hook_ClientCommand(ISource2GameClients *pThis, CPlayerSlot nSlot, const CCommand &cmd);
+	KHook::Return<int64_t> Hook_TakeDamageOld(CBaseEntity *pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult);
+	KHook::Return<void> Hook_PostThink(CCSPlayerPawn *pThis, double flFrameTime, float flUnknown);
 
-    int m_iTakeDamageOldHookID;
-    int m_iPostThinkHookID;
+private:
+	// KHook hooks only come down in their destructor, so they live behind plain
+	// pointers: new in the constructor, delete in Unload().
+	KHook::Virtual<ISource2Server, void, bool, bool, bool> *m_hGameFrame = nullptr;
+	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, bool, const char *, uint64> *m_hClientActive = nullptr;
+	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, ENetworkDisconnectionReason, const char *, uint64, const char *> *m_hClientDisconnect = nullptr;
+	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, char const *, int, uint64> *m_hClientPutInServer = nullptr;
+	KHook::Virtual<ISource2GameClients, void, CPlayerSlot> *m_hClientSettingsChanged = nullptr;
+	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const char *, uint64, const char *, const char *, bool> *m_hOnClientConnected = nullptr;
+	KHook::Virtual<ISource2GameClients, bool, CPlayerSlot, const char *, uint64, const char *, bool, CBufferString *> *m_hClientConnect = nullptr;
+	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const CCommand &> *m_hClientCommand = nullptr;
+	// Functions found by signature rather than through a vtable.
+	KHook::Member<CBaseEntity, int64_t, CTakeDamageInfo *, CTakeDamageResult *> *m_hTakeDamageOld = nullptr;
+	KHook::Member<CCSPlayerPawn, void, double, float> *m_hPostThink = nullptr;
 
 public:
 	const char *GetAuthor() override { return PLUGIN_AUTHOR; }

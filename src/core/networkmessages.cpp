@@ -1026,36 +1026,36 @@ namespace networkmessages
     Dispatch helpers (called from hook sites)
     ========================= */
 
-    META_RES DispatchServerHook(uint64_t* clients, int messageid, void* msg)
+    Action DispatchServerHook(uint64_t* clients, int messageid, void* msg)
     {
-        META_RES result = MRES_IGNORED;
+        Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_serverHooks)
         {
-            META_RES a = cb(clients, messageid, msg);
+            Action a = cb(clients, messageid, msg);
             if (a > result)
                 result = a;
         }
         return result;
     }
 
-    META_RES DispatchClientHook(CPlayerSlot slot, int messageid, void* msg)
+    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg)
     {
-        META_RES result = MRES_IGNORED;
+        Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_clientHooks)
         {
-            META_RES a = cb(slot, messageid, msg);
+            Action a = cb(slot, messageid, msg);
             if (a > result)
                 result = a;
         }
         return result;
     }
 
-    META_RES DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg)
+    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg)
     {
-        META_RES result = MRES_IGNORED;
+        Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_serverInternalHooks)
         {
-            META_RES a = cb(slot, messageid, msg);
+            Action a = cb(slot, messageid, msg);
             if (a > result)
                 result = a;
         }

@@ -250,8 +250,8 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
 {
     void* ptr = nullptr;
 
-    // Hand plugins the toolkit's own engine, not metamod's shared one.
-    if (!strcmp(iface, TOOLKIT_SOURCEHOOK_INTERFACE)) ptr = g_pSourceHook;
+    // The one detour engine on the server, as metamod handed it to the toolkit.
+    if (!strcmp(iface, TOOLKIT_KHOOK_INTERFACE)) ptr = KHook::__exported__khook;
     else if (!strcmp(iface, TOOLKIT_ADDRESSES_INTERFACE)) ptr = &addresses::toolkitAddresses;
     else if (!strcmp(iface, TOOLKIT_COMMANDS_INTERFACE)) ptr = &commands::commandsManager;
     else if (!strcmp(iface, TOOLKIT_CONVARS_INTERFACE)) ptr = &convars::convarsManager;

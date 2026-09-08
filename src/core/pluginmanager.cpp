@@ -258,56 +258,30 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
 
 namespace
 {
-    // SourceHook holds hook managers whose code lives inside the plugin's own
-    // library, so closing it without telling SourceHook first leaves the
-    // engine calling into unmapped memory -- which is what a client
-    // connecting after an unload/reload crashed on, with a null hook info.
-    //
-    // It also decides when that is safe: "toolkit unload" is typed at a
-    // console, which the toolkit reaches from inside a hook of its own, so the
-    // context stack is not empty at that point and the library must stay
-    // mapped until it is. ReadyToUnload() is SourceHook saying so.
-    class SourceHookUnloadListener final : public SourceHook::Impl::UnloadListener
+    // A plugin's hooks are KHook objects living in its own library, and its
+    // Unload() deletes them, which takes the detours down synchronously -- so
+    // by the time the library is closed nothing in the engine points into it
+    // any more. What can still point into it is the stack: "toolkit unload" is
+    // typed at a console, which the toolkit reaches from inside a hook of its
+    // own, and the plugin may well have been on that path too. The close
+    // therefore waits for the next frame, when everything has unwound.
+    void CloseLibNextFrame(LibHandle lib, std::string reloadPath = {})
     {
-    public:
-        void ReadyToUnload(SourceHook::Plugin plug) override
+        scheduler::schedulerManager.NextFrame(0, [lib, reloadPath = std::move(reloadPath)]()
         {
-            auto it = m_Pending.find(plug);
-            if (it == m_Pending.end())
-                return;
-
-            const Entry entry = it->second;
-            m_Pending.erase(it);
-
-            CloseLib(entry.lib);
+            CloseLib(lib);
 
             // A reload has to wait for the same moment: dlopen() on a library
             // that is still mapped hands back the same handle without running
             // its static initialisers again, so loading before this point
             // would "reload" the old code.
-            if (!entry.reloadPath.empty())
+            if (!reloadPath.empty())
             {
                 char err[256]{};
-                pluginManager.LoadPluginFromPath(entry.reloadPath.c_str(), err, sizeof(err), true);
+                pluginManager.LoadPluginFromPath(reloadPath.c_str(), err, sizeof(err), true);
             }
-        }
-
-        void Defer(SourceHook::Plugin plug, LibHandle lib, std::string reloadPath = {})
-        {
-            m_Pending[plug] = Entry{ lib, std::move(reloadPath) };
-        }
-
-    private:
-        struct Entry
-        {
-            LibHandle lib;
-            std::string reloadPath;
-        };
-
-        std::unordered_map<SourceHook::Plugin, Entry> m_Pending;
-    };
-
-    SourceHookUnloadListener g_SourceHookUnloadListener;
+        });
+    }
 }
 
 bool PluginManager::ReloadPlugin(int id)
@@ -343,15 +317,13 @@ bool PluginManager::ReloadPlugin(int id)
         entities::entitiesManager.RemoveAllForPlugin(id);
         menus::menuManager.RemoveAllForPlugin(id);
 
-        const auto plug = static_cast<SourceHook::Plugin>(id);
-        g_SourceHookUnloadListener.Defer(plug, (*it)->lib, path);
-        g_SourceHookImpl.UnloadPlugin(plug, &g_SourceHookUnloadListener);
+        CloseLibNextFrame((*it)->lib, path);
 
         m_plugins.erase(it);
         break;
     }
 
-    // The load happens in ReadyToUnload(); see the listener.
+    // The load happens next frame, right after the close; see CloseLibNextFrame().
     return !path.empty();
 }
 
@@ -400,13 +372,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         entities::entitiesManager.RemoveAllForPlugin(id);
         menus::menuManager.RemoveAllForPlugin(id);
 
-        // Hands the library to the listener above and drops every hook and
-        // hook manager this plugin owns. The close happens in ReadyToUnload(),
-        // which SourceHook calls straight away when nothing is on the context
-        // stack, and after it unwinds when something is.
-        const auto plug = static_cast<SourceHook::Plugin>(id);
-        g_SourceHookUnloadListener.Defer(plug, p->lib);
-        g_SourceHookImpl.UnloadPlugin(plug, &g_SourceHookUnloadListener);
+        CloseLibNextFrame(p->lib);
 
         m_plugins.erase(it);
         return true;
@@ -517,9 +483,9 @@ void PluginManager::UnloadAll()
         entities::entitiesManager.RemoveAllForPlugin(p->id);
         menus::menuManager.RemoveAllForPlugin(p->id);
 
-        const auto plug = static_cast<SourceHook::Plugin>(p->id);
-        g_SourceHookUnloadListener.Defer(plug, p->lib);
-        g_SourceHookImpl.UnloadPlugin(plug, &g_SourceHookUnloadListener);
+        // Shutting down: there is no next frame to wait for, and the toolkit
+        // itself is on its way out of every hook, so close right here.
+        CloseLib(p->lib);
     }
 
     m_plugins.clear();

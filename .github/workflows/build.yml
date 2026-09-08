@@ -4,10 +4,12 @@ name: Continuous Integration
 #
 #   * push a tag (v1.0.4, ...) -- builds and releases that tag, as before;
 #   * touch pushbuild.txt on main -- the `version` job below cuts the next
-#     v1.0.<n+1> tag itself and the same run releases it.
+#     v1.0.<n+1> tag itself and the same run releases it;
+#   * run it by hand (workflow_dispatch) -- builds both platforms as a check,
+#     releases nothing.
 #
 # Pushes to main that leave pushbuild.txt alone stop at `version`, which is a
-# few seconds on a fresh runner. Everything after it is gated on its output.
+# few seconds on a fresh runner. Everything after it is gated on its outputs.
 on:
   push:
     branches:
@@ -33,6 +35,7 @@ jobs:
       # Empty when this push is not something to build -- every job below is
       # gated on it.
       tag: ${{ steps.resolve.outputs.tag }}
+      build: ${{ steps.resolve.outputs.build }}
 
     steps:
       - name: Checkout repository
@@ -52,13 +55,20 @@ jobs:
           case "$GITHUB_REF" in
             refs/tags/*)
               echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+              echo "build=true" >> "$GITHUB_OUTPUT"
               echo "Releasing pushed tag ${GITHUB_REF#refs/tags/}."
               exit 0
               ;;
           esac
 
-          # Otherwise only a pushbuild.txt bump cuts a release. workflow_dispatch
-          # off a branch has no diff to look at, so it always counts as one.
+          # A manual run is a build check: both platforms, no tag, no release.
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            echo "Manual run -- building without a release."
+            exit 0
+          fi
+
+          # Otherwise only a pushbuild.txt bump cuts a release.
           if [ "$GITHUB_EVENT_NAME" = "push" ]; then
             # A first push to the branch, or one whose old head is gone after a
             # force push, leaves nothing to diff against -- fall back to the tip
@@ -89,6 +99,7 @@ jobs:
           done
 
           echo "tag=$next" >> "$GITHUB_OUTPUT"
+          echo "build=true" >> "$GITHUB_OUTPUT"
           echo "Cutting $next."
 
       - name: Create the tag
@@ -110,7 +121,7 @@ jobs:
   build-linux:
     name: Build on Linux (clang-18)
     needs: version
-    if: needs.version.outputs.tag != ''
+    if: needs.version.outputs.build == 'true'
     runs-on: ubuntu-latest
 
     steps:
@@ -152,7 +163,7 @@ jobs:
   build-windows:
     name: Build on Windows (MSVC)
     needs: version
-    if: needs.version.outputs.tag != ''
+    if: needs.version.outputs.build == 'true'
     runs-on: windows-latest
 
     steps:

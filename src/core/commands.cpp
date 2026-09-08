@@ -279,23 +279,19 @@ namespace commands {
         else if (strcmp(cmd, "version") == 0)
         {
             // Metamod's numbers are not the toolkit's: a .stx plugin binds to
-            // TOOLKIT_PLAPI_VERSION and to the private SourceHook, a metamod
-            // plugin next to us binds to metamod's own. A plugin that refuses
-            // to load was built against one of the four.
+            // TOOLKIT_PLAPI_VERSION, a metamod plugin next to us binds to
+            // metamod's own. A plugin that refuses to load was built against
+            // one of the two.
             int mmApiMajor = 0, mmApiMinor = 0, mmPlVers = 0, mmPlMin = 0;
-            int mmShIface = 0, mmShImpl = 0;
 
             if (g_SMAPI)
-            {
                 g_SMAPI->GetApiVersions(mmApiMajor, mmApiMinor, mmPlVers, mmPlMin);
-                g_SMAPI->GetShVersions(mmShIface, mmShImpl);
-            }
 
             REPLY_INFO("Source2Toolkit Version Information");
             REPLY_INFO("   Source2Toolkit version %s", VERSION_STRING);
             REPLY_INFO("   Plugin API version: %d (%s)", TOOLKIT_PLAPI_VERSION, TOOLKIT_INTERFACE_NAME);
-            REPLY_INFO("   SourceHook version: %d:%d (private instance, %s)", SH_IFACE_VERSION, SH_IMPL_VERSION, TOOLKIT_SOURCEHOOK_INTERFACE);
-            REPLY_INFO("   Metamod:Source plugin interface: %d:%d, SourceHook: %d:%d", mmPlVers, mmPlMin, mmShIface, mmShImpl);
+            REPLY_INFO("   Hooks: KHook, metamod's detour engine, served to plugins as %s", TOOLKIT_KHOOK_INTERFACE);
+            REPLY_INFO("   Metamod:Source plugin interface: %d:%d", mmPlVers, mmPlMin);
             REPLY_INFO("   Loaded As: Metamod:Source plugin");
             REPLY_INFO("   Path: %s", ToolkitModulePath());
             REPLY_INFO("   Compiled on: %s", BUILD_TIMESTAMP);
@@ -318,7 +314,7 @@ namespace commands {
             REPLY_INFO("Source2Toolkit was developed by:");
             REPLY_INFO("   Core, plugin system and SDK: Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl");
             REPLY_INFO("   Metamod:Source: David \"BAILOPAN\" Anderson, Scott \"DS\" Ehlert");
-            REPLY_INFO("   SourceHook: Pavol \"PM OnoTo\" Marko");
+            REPLY_INFO("   KHook: Benoist \"Kenzzer\" André");
             REPLY_INFO("   HL2SDK and engine research: AlliedModders LLC.");
             REPLY_INFO("For the full list, see ACKNOWLEDGEMENTS.md");
             REPLY_INFO("For more information, see the official website");
@@ -386,28 +382,28 @@ namespace commands {
         (void) args;
     }
 
-    META_RES DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post) {
+    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post) {
         std::string name = args.Arg(0);
         std::transform(name.begin(), name.end(), name.begin(),
                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
 
         auto it = consoleListeners.find(name);
         if (it == consoleListeners.end())
-            return MRES_IGNORED;
+            return Action::Ignore;
 
-        META_RES result = MRES_IGNORED;
+        Action result = Action::Ignore;
 
         for (const auto &entry: it->second) {
             if (entry.post != post)
                 continue;
 
-            META_RES thisResult = entry.handler(ctx, args, post);
+            Action thisResult = entry.handler(ctx, args, post);
 
-            if (thisResult == MRES_SUPERCEDE)
-                return MRES_SUPERCEDE;
+            if (thisResult == Action::Supersede)
+                return Action::Supersede;
 
-            if (thisResult == MRES_OVERRIDE && !post)
-                return MRES_OVERRIDE;
+            if (thisResult == Action::Override && !post)
+                return Action::Override;
 
             if (static_cast<int>(thisResult) > static_cast<int>(result))
                 result = thisResult;

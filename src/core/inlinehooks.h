@@ -37,25 +37,34 @@
 #pragma once
 #include "source2toolkit/schema/entityio.h"
 
-// SH_DECL_INLINEHOOK*/SH_ADD_INLINEHOOK and the RETURN_SH/SH_IFACEPTR
-// auto-detection that lets one handler body serve either hook style.
-#include "sourcehook/sourcehook_inline.h"
+// KHook, via metamod.
+#include "ISmmPlugin.h"
 #include "eiface.h"
 #include "entitysystem.h"
+#include "source2toolkit/schema/serversideclient.h"
 
 #include "dynlibutils/memaddr.hpp"
 
 namespace inlinehooks {
+    // Functions hooked at an address a signature scan found, not through a
+    // vtable -- KHook::Member, since both have a .
     class Inlines {
     public:
+        Inlines();
+
         void InitListeners();
         void DestructListeners();
     public:
-        bool Hook_FilterMessage(const CNetMessage* pData, INetChannel* pChannel);
-        void Hook_FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
+        KHook::Return<bool> Hook_FilterMessage(INetworkMessageProcessingPreFilterCustom* pThis, const CNetMessage* pData, INetChannel* pChannel);
+        KHook::Return<void> Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02);
     protected:
-        int m_iFilterMessageHookID = 0;
-        int m_iFireOutputInternalHookID = 0;
+        // KHook hooks only come down in their destructor, so they live behind
+        // plain pointers: new in the constructor, delete in DestructListeners().
+        //
+        // FilterMessage sits in a secondary vtable (non-zero offset-to-top), which
+        // a by-name vtable lookup never finds -- hence by signature.
+        KHook::Member<INetworkMessageProcessingPreFilterCustom, bool, const CNetMessage*, INetChannel*>* m_hFilterMessage = nullptr;
+        KHook::Member<CEntityIOOutput, void, CEntityInstance*, CEntityInstance*, void*, float, void*, void*>* m_hFireOutputInternal = nullptr;
     };
 
     extern Inlines inlines;

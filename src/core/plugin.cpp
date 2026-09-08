@@ -70,10 +70,9 @@ PLUGIN_EXPOSE(Source2Toolkit, g_ToolkitCore);
 bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, bool late)
 {
     PLUGIN_SAVEVARS();
-    // The toolkit owns the private SourceHook engine; every S2Toolkit plugin
-    // binds onto this same instance through TOOLKIT_SOURCEHOOK_INTERFACE, so
-    // SH_CALL and SH_GET_INLINEHOOK_ORIGINAL can see across plugin boundaries.
-    SH_METAMOD_OVERRIDE_SAVEVARS(id);
+    // PLUGIN_SAVEVARS() just fetched metamod's KHook; every toolkit plugin gets the
+    // same engine through TOOLKIT_KHOOK_INTERFACE, so hooks placed anywhere on the
+    // server can call through each other's originals.
 
     if (late)
     {
@@ -242,9 +241,7 @@ void* ToolkitCore::OnMetamodQuery(const char* iface, int* ret)
     // Only what a toolkit plugin chose to expose through OnMetamodQuery, which
     // answers like OnToolkitQuery unless the plugin says otherwise. The
     // toolkit's own interfaces are deliberately not offered here: they are for
-    // toolkit plugins, and SourceHook in particular must not be handed to a
-    // plugin that did not load through the toolkit -- it would be binding to
-    // an engine it does not own.
+    // toolkit plugins; a metamod plugin already has KHook from metamod itself.
     for (auto& p : pluginManager.m_plugins)
     {
         for (auto* l : p->listeners)

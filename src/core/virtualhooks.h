@@ -36,13 +36,19 @@
  */
 #pragma once
 // tier1/convar.h first: iloopmode.h (pulled in by igamesystem.h) uses
-// CSplitScreenSlot in IGameSystem::HandleInputEvent without declaring it.
+// CSplitScreenSlot in IGameSystem::HandleInputEvent without declaring it, and
+// PostEventAbstract below needs the type too.
 #include "tier1/convar.h"
+
+// KHook, via metamod.
+#include "ISmmPlugin.h"
 
 #include "igameevents.h"
 #include "igamesystem.h"
 #include "eiface.h"
 #include "entitysystem.h"
+#include "engine/igameeventsystem.h"
+#include "source2toolkit/schema/serversideclient.h"
 
 #include "dynlibutils/memaddr.hpp"
 
@@ -51,36 +57,50 @@ class IEntityInstance; // forward-declare global SDK interface (defined in IEnti
 namespace virtualhooks {
     class Virtuals {
     public:
+        Virtuals();
+
         void InitListeners();
         void DestructListeners();
     public:
-        void Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick);
-        void Hook_StartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName);
-        void Hook_DispatchConCommand(ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
-        void Hook_ClientCommand(CPlayerSlot slot, const CCommand& args);
-        void Hook_ClientSvcUserMessage(CPlayerSlot slot, int nType, uint32 nSize, const void* pBuffer);
-        void Hook_GameServerSteamAPIActivated();
-        void Hook_GameServerSteamAPIDeactivated();
-        void Hook_PostEventAbstract(CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount, const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize, NetChannelBufType_t bufType);
-        void Hook_OnServerGamePostSimulate(const EventServerGamePostSimulate_t* const pMsg);
-        int  Hook_LoadEventsFromFile(const char* filename, bool bSearchAll);
-        bool Hook_FireEvent(IGameEvent* event, bool bDontBroadcast);
-        bool Hook_FireEventPost(IGameEvent* event, bool bDontBroadcast);
-        bool Hook_SendNetMessage(const CNetMessage* pData, NetChannelBufType_t bufType);
+        KHook::Return<void> Hook_GameFrame(ISource2Server* pThis, bool simulating, bool bFirstTick, bool bLastTick);
+        KHook::Return<void> Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName);
+        KHook::Return<void> Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
+        KHook::Return<void> Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args);
+        KHook::Return<void> Hook_ClientSvcUserMessage(ISource2GameClients* pThis, CPlayerSlot slot, int nType, uint32 nSize, const void* pBuffer);
+        KHook::Return<void> Hook_GameServerSteamAPIActivated(ISource2Server* pThis);
+        KHook::Return<void> Hook_GameServerSteamAPIDeactivated(ISource2Server* pThis);
+        KHook::Return<void> Hook_PostEventAbstract(IGameEventSystem* pThis, CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount, const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize, NetChannelBufType_t bufType);
+        KHook::Return<void> Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg);
+        KHook::Return<int>  Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAll);
+        KHook::Return<bool> Hook_FireEvent(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast);
+        KHook::Return<bool> Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast);
+        KHook::Return<bool> Hook_SendNetMessage(CServerSideClientBase* pThis, const CNetMessage* pData, NetChannelBufType_t bufType);
     protected:
-        int m_iGameFrameHookID = 0;
-        int m_iStartupServerHookID = 0;
-        int m_iDispatchConCommandHookID = 0;
-        int m_iClientCommandHookID = 0;
-        int m_iClientSvcUserMessageHookID = 0;
-        int m_iSteamAPIActivatedHookID = 0;
-        int m_iSteamAPIDeactivatedHookID = 0;
-        int m_iPostEventAbstractHookID = 0;
-        int m_iOnServerGamePostSimulateHookID = 0;
-        int m_iLoadEventsFromFileHookID = 0;
-        int m_iFireEventHookID = 0;
-        int m_iFireEventPostHookID = 0;
-        int m_iSendNetMessageHookID = 0;
+        // KHook hooks only come down in their destructor, so they live behind
+        // plain pointers: new in the constructor, delete in DestructListeners().
+        KHook::Virtual<ISource2Server, void, bool, bool, bool>* m_hGameFrame = nullptr;
+        KHook::Virtual<INetworkServerService, void, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*>* m_hStartupServer = nullptr;
+        KHook::Virtual<ICvar, void, ConCommandRef, const CCommandContext&, const CCommand&>* m_hDispatchConCommand = nullptr;
+        KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const CCommand&>* m_hClientCommand = nullptr;
+        KHook::Virtual<ISource2GameClients, void, CPlayerSlot, int, uint32, const void*>* m_hClientSvcUserMessage = nullptr;
+        KHook::Virtual<ISource2Server, void>* m_hSteamAPIActivated = nullptr;
+        KHook::Virtual<ISource2Server, void>* m_hSteamAPIDeactivated = nullptr;
+        KHook::Virtual<IGameEventSystem, void, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t>* m_hPostEventAbstract = nullptr;
+        KHook::Virtual<IGameSystem, void, const EventServerGamePostSimulate_t*>* m_hOnServerGamePostSimulate = nullptr;
+        KHook::Virtual<IGameEventManager2, int, const char*, bool>* m_hLoadEventsFromFile = nullptr;
+        // Pre and Post on the one object.
+        KHook::Virtual<IGameEventManager2, bool, IGameEvent*, bool>* m_hFireEvent = nullptr;
+        // SendNetMessage is declared on the base, so that is what the member
+        // function pointer -- and therefore the hook -- is typed against.
+        KHook::Virtual<CServerSideClientBase, bool, const CNetMessage*, NetChannelBufType_t>* m_hSendNetMessage = nullptr;
+
+        // Vtables of engine classes with no interface to fetch, resolved by
+        // RTTI name. Each also doubles as the stand-in object AddGlobal()
+        // reads the vtable off (it only ever looks at the first pointer), which
+        // then covers every instance sharing it.
+        void* m_pCEntityDebugGameSystemVTable = nullptr;
+        void* m_pCGameEventManagerVTable = nullptr;
+        void* m_pCServerSideClientVTable = nullptr;
     };
 
     class CEntityListener: public IEntityListener {

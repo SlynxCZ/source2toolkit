@@ -75,7 +75,7 @@ public:
     bool LoadPlugin(const char* path, char* error, size_t maxlen);
 
     // Public because the deferred reload in pluginmanager.cpp runs from a
-    // SourceHook callback rather than from inside the manager.
+    // next-frame task rather than from inside the manager.
     bool LoadPluginFromPath(const char* fullPath, char* error, size_t maxlen, bool hotReload);
 
     bool UnloadPlugin(int id);

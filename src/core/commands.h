@@ -55,10 +55,10 @@ namespace commands {
 
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
     {
-        return [fn](const CCommandContext& ctx, const CCommand& args, bool post) -> META_RES
+        return [fn](const CCommandContext& ctx, const CCommand& args, bool post) -> Action
         {
             fn(ctx, args, post);
-            return MRES_IGNORED;
+            return Action::Ignore;
         };
     }
 
@@ -66,7 +66,7 @@ namespace commands {
     void DestructCommands();
 
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);
-    META_RES DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post);
+    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post);
 
     class CommandsManager : public IToolkitCommands
     {

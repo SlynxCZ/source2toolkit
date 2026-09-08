@@ -162,7 +162,7 @@ namespace addresses
         // Raw addresses. A function pointer is not portably convertible to
         // void* and back, so what a signature scan produces is kept as the
         // address it is; the getters below put the type on at the point of use,
-        // and SourceHook takes the void* straight from GetPtr().
+        // and KHook's Configure() takes the void* straight from GetPtr().
         DynLibUtils::CMemory CreateEntityByName;
         DynLibUtils::CMemory DispatchSpawn;
         DynLibUtils::CMemory TakeDamageOld;

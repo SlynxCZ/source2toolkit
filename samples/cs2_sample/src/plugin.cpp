@@ -23,27 +23,30 @@ TOOLKIT_EXPOSE(cs2_sample, g_Plugin);
 CConVar<int> sample_cvari("sample_cvari", FCVAR_NONE, "help string", 42);
 CConVar<float> sample_cvarf("sample_cvarf", FCVAR_NONE, "help string", 69.69f, true, 10.0f, true, 100.0f);
 
-// The stock SourceHook macros. TOOLKIT_SAVEVARS() has already pointed g_SHPtr
-// at the toolkit's engine, so these need no setup of their own -- and the hooks
-// they place land on the same instance every other plugin hooks on.
+// The hooks are KHook objects -- metamod's detour library, on the one engine
+// the toolkit shares with metamod (TOOLKIT_SAVEVARS() fetched it), so they
+// land next to every other plugin's hooks and can call through their originals.
+// Each holds the member function it hooks, the context and the Pre/Post
+// callbacks (Pre runs before the original, Post after), and comes down in its
+// destructor, so it lives behind a plain pointer: new here, delete in Unload().
 //
-// Inline hooks patch a function at its address, so each needs a dispatcher
-// declared up front: name, the class the function belongs to, its return type,
-// then its parameters. The _void suffix is for functions returning nothing.
-//
-SH_DECL_INLINEHOOK2(TakeDamageOldHook, CBaseEntity, int64_t, CTakeDamageInfo*, CTakeDamageResult*);
-// If you are unsure if function is member or just first arg, you can declare
-// thistype as void and pass one more arg that is a1 and, also works for member functions.
-SH_DECL_INLINEHOOK3_void(PostThinkHook, void, CCSPlayerPawn*, double, float);
-//
-SH_DECL_HOOK3_void(ISource2Server, GameFrame, SH_NOATTRIB, 0, bool, bool, bool);
-SH_DECL_HOOK4_void(ISource2GameClients, ClientActive, SH_NOATTRIB, 0, CPlayerSlot, bool, const char*, uint64);
-SH_DECL_HOOK5_void(ISource2GameClients, ClientDisconnect, SH_NOATTRIB, 0, CPlayerSlot, ENetworkDisconnectionReason, const char*, uint64, const char*);
-SH_DECL_HOOK4_void(ISource2GameClients, ClientPutInServer, SH_NOATTRIB, 0, CPlayerSlot, char const*, int, uint64);
-SH_DECL_HOOK1_void(ISource2GameClients, ClientSettingsChanged, SH_NOATTRIB, 0, CPlayerSlot);
-SH_DECL_HOOK6_void(ISource2GameClients, OnClientConnected, SH_NOATTRIB, 0, CPlayerSlot, const char*, uint64, const char*, const char*, bool);
-SH_DECL_HOOK6(ISource2GameClients, ClientConnect, SH_NOATTRIB, 0, bool, CPlayerSlot, const char*, uint64, const char*, bool, CBufferString*);
-SH_DECL_HOOK2_void(ISource2GameClients, ClientCommand, SH_NOATTRIB, 0, CPlayerSlot, const CCommand &);
+// A Virtual hook is placed on an instance (Add) or on a whole vtable
+// (AddGlobal); a Member hook patches a function at its address (Configure),
+// for anything a signature scan found. KHOOK_NEW takes the hook's type from the
+// member it is stored in, since MSVC cannot deduce it from the arguments.
+SamplePlugin::SamplePlugin() :
+    KHOOK_NEW(m_hGameFrame, &ISource2Server::GameFrame, this, nullptr, &SamplePlugin::Hook_GameFrame),
+    KHOOK_NEW(m_hClientActive, &ISource2GameClients::ClientActive, this, nullptr, &SamplePlugin::Hook_ClientActive),
+    KHOOK_NEW(m_hClientDisconnect, &ISource2GameClients::ClientDisconnect, this, nullptr, &SamplePlugin::Hook_ClientDisconnect),
+    KHOOK_NEW(m_hClientPutInServer, &ISource2GameClients::ClientPutInServer, this, nullptr, &SamplePlugin::Hook_ClientPutInServer),
+    KHOOK_NEW(m_hClientSettingsChanged, &ISource2GameClients::ClientSettingsChanged, this, &SamplePlugin::Hook_ClientSettingsChanged, nullptr),
+    KHOOK_NEW(m_hOnClientConnected, &ISource2GameClients::OnClientConnected, this, &SamplePlugin::Hook_OnClientConnected, nullptr),
+    KHOOK_NEW(m_hClientConnect, &ISource2GameClients::ClientConnect, this, &SamplePlugin::Hook_ClientConnect, nullptr),
+    KHOOK_NEW(m_hClientCommand, &ISource2GameClients::ClientCommand, this, &SamplePlugin::Hook_ClientCommand, nullptr),
+    KHOOK_NEW(m_hTakeDamageOld, this, &SamplePlugin::Hook_TakeDamageOld, nullptr),
+    KHOOK_NEW(m_hPostThink, this, &SamplePlugin::Hook_PostThink, nullptr)
+{
+}
 
 bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late)
 {
@@ -56,14 +59,15 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     TOOLKIT_LOG(this, "Starting plugin.\n");
 
-    SH_ADD_HOOK(ISource2Server, GameFrame, g_pSource2Server, SH_MEMBER(this, &SamplePlugin::Hook_GameFrame), true);
-    SH_ADD_HOOK(ISource2GameClients, ClientActive, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientActive), true);
-    SH_ADD_HOOK(ISource2GameClients, ClientDisconnect, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientDisconnect), true);
-    SH_ADD_HOOK(ISource2GameClients, ClientPutInServer, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientPutInServer), true);
-    SH_ADD_HOOK(ISource2GameClients, ClientSettingsChanged, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientSettingsChanged), false);
-    SH_ADD_HOOK(ISource2GameClients, OnClientConnected, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_OnClientConnected), false);
-    SH_ADD_HOOK(ISource2GameClients, ClientConnect, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientConnect), false);
-    SH_ADD_HOOK(ISource2GameClients, ClientCommand, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientCommand), false);
+    // Virtual hooks go onto the engine's own interface instances.
+    m_hGameFrame->Add(g_pSource2Server);
+    m_hClientActive->Add(g_pSource2GameClients);
+    m_hClientDisconnect->Add(g_pSource2GameClients);
+    m_hClientPutInServer->Add(g_pSource2GameClients);
+    m_hClientSettingsChanged->Add(g_pSource2GameClients);
+    m_hOnClientConnected->Add(g_pSource2GameClients);
+    m_hClientConnect->Add(g_pSource2GameClients);
+    m_hClientCommand->Add(g_pSource2GameClients);
 
     TOOLKIT_LOG(this, "All hooks started!\n");
 
@@ -88,13 +92,13 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     api->AddListener(this, this);
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
-    // Two inline hooks, each showing a different way to get the address.
+    // Two function hooks, each showing a different way to get the address.
     //
     // First: the toolkit already resolved this one, so just ask for it. Every
     // entry in IToolkitAddresses works this way and costs no scan of your own.
     if (void *pTakeDamageOld = reinterpret_cast<void *>(ADDR_TAKE_DAMAGE_OLD()))
     {
-        m_iTakeDamageOldHookID = SH_ADD_INLINEHOOK(TakeDamageOldHook, pTakeDamageOld, SH_MEMBER(this, &SamplePlugin::Hook_TakeDamageOld), false);
+        m_hTakeDamageOld->Configure(pTakeDamageOld);
     }
     else
     {
@@ -106,7 +110,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     // finds it by exported symbol or by pattern -- you do not care which.
     if (void *pPostThink = GAMECONFIG_RESOLVE("CCSPlayerPawn::PostThink"))
     {
-        m_iPostThinkHookID = SH_ADD_INLINEHOOK(PostThinkHook, pPostThink, SH_MEMBER(this, &SamplePlugin::Hook_PostThink), false);
+        m_hPostThink->Configure(pPostThink);
     }
     else
     {
@@ -193,17 +197,37 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
 bool SamplePlugin::Unload(char* error, size_t maxlen)
 {
-    SH_REMOVE_HOOK(ISource2Server, GameFrame, g_pSource2Server, SH_MEMBER(this, &SamplePlugin::Hook_GameFrame), true);
-    SH_REMOVE_HOOK(ISource2GameClients, ClientActive, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientActive), true);
-    SH_REMOVE_HOOK(ISource2GameClients, ClientDisconnect, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientDisconnect), true);
-    SH_REMOVE_HOOK(ISource2GameClients, ClientPutInServer, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientPutInServer), true);
-    SH_REMOVE_HOOK(ISource2GameClients, ClientSettingsChanged, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientSettingsChanged), false);
-    SH_REMOVE_HOOK(ISource2GameClients, OnClientConnected, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_OnClientConnected), false);
-    SH_REMOVE_HOOK(ISource2GameClients, ClientConnect, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientConnect), false);
-    SH_REMOVE_HOOK(ISource2GameClients, ClientCommand, g_pSource2GameClients, SH_MEMBER(this, &SamplePlugin::Hook_ClientCommand), false);
+    m_hGameFrame->Remove(g_pSource2Server);
+    m_hClientActive->Remove(g_pSource2GameClients);
+    m_hClientDisconnect->Remove(g_pSource2GameClients);
+    m_hClientPutInServer->Remove(g_pSource2GameClients);
+    m_hClientSettingsChanged->Remove(g_pSource2GameClients);
+    m_hOnClientConnected->Remove(g_pSource2GameClients);
+    m_hClientConnect->Remove(g_pSource2GameClients);
+    m_hClientCommand->Remove(g_pSource2GameClients);
 
-    SH_REMOVE_HOOK_ID(m_iTakeDamageOldHookID);
-    SH_REMOVE_HOOK_ID(m_iPostThinkHookID);
+    // Deleting a hook is what takes its detour down -- after this nothing in
+    // the engine points into this library any more.
+    delete m_hGameFrame;
+    delete m_hClientActive;
+    delete m_hClientDisconnect;
+    delete m_hClientPutInServer;
+    delete m_hClientSettingsChanged;
+    delete m_hOnClientConnected;
+    delete m_hClientConnect;
+    delete m_hClientCommand;
+    delete m_hTakeDamageOld;
+    delete m_hPostThink;
+    m_hGameFrame = nullptr;
+    m_hClientActive = nullptr;
+    m_hClientDisconnect = nullptr;
+    m_hClientPutInServer = nullptr;
+    m_hClientSettingsChanged = nullptr;
+    m_hOnClientConnected = nullptr;
+    m_hClientConnect = nullptr;
+    m_hClientCommand = nullptr;
+    m_hTakeDamageOld = nullptr;
+    m_hPostThink = nullptr;
 
     // The CConVars above are objects in this library, and ConVar_Register handed
     // the engine pointers to them. Without this the engine keeps those pointers
@@ -227,100 +251,108 @@ void SamplePlugin::OnAllToolkitPluginsLoaded()
      */
 }
 
-void SamplePlugin::Hook_ClientActive(CPlayerSlot slot, bool bLoadGame, const char* pszName, uint64 xuid)
+KHook::Return<void> SamplePlugin::Hook_ClientActive(ISource2GameClients* pThis, CPlayerSlot slot, bool bLoadGame, const char* pszName, uint64 xuid)
 {
     TOOLKIT_LOG(this, "Hook_ClientActive(%d, %d, \"%s\", %lld)\n", slot.Get(), bLoadGame, pszName, xuid);
+
+    return { KHook::Action::Ignore };
 }
 
-void SamplePlugin::Hook_ClientCommand(CPlayerSlot slot, const CCommand& args)
+KHook::Return<void> SamplePlugin::Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args)
 {
     TOOLKIT_LOG(this, "Hook_ClientCommand(%d, \"%s\")\n", slot.Get(), args.GetCommandString());
 
-    // MRES_SUPERCEDE blocks the original entirely -- the engine never sees this
+    // Supercede blocks the original entirely -- the engine never sees this
     // command. Use it to take a command over, not to "handle it as well".
     if (!V_strcmp(args.Arg(0), "sample_blocked"))
     {
         TOOLKIT_LOG(this, "Swallowing \"sample_blocked\" -- the engine will never see it.\n");
-        RETURN_META(MRES_SUPERCEDE);
+        return { KHook::Action::Supercede };
     }
 
-    // MRES_IGNORED says "I did nothing" and is the right answer for a hook that
-    // only looks. MRES_HANDLED would mean "I acted, but let the original run".
-    RETURN_META(MRES_IGNORED);
+    // Ignore says "I did nothing": the original runs, and so does whatever else
+    // is hooked here. The right answer for a hook that only looks.
+    return { KHook::Action::Ignore };
 }
 
-void SamplePlugin::Hook_ClientSettingsChanged(CPlayerSlot slot)
+KHook::Return<void> SamplePlugin::Hook_ClientSettingsChanged(ISource2GameClients* pThis, CPlayerSlot slot)
 {
     TOOLKIT_LOG(this, "Hook_ClientSettingsChanged(%d)\n", slot.Get());
 
-    // MRES_HANDLED: we acted on this, but the original still has to run. It
-    // differs from MRES_IGNORED only in what later hooks in the chain are told.
-    RETURN_META(MRES_HANDLED);
+    // Acting on the call and still letting the original run is also Ignore --
+    // KHook has no separate "handled" state.
+    return { KHook::Action::Ignore };
 }
 
-void SamplePlugin::Hook_OnClientConnected(CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, const char* pszAddress, bool bFakePlayer)
+KHook::Return<void> SamplePlugin::Hook_OnClientConnected(ISource2GameClients* pThis, CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, const char* pszAddress, bool bFakePlayer)
 {
     TOOLKIT_LOG(this, "Hook_OnClientConnected(%d, \"%s\", %lld, \"%s\", \"%s\", %d)\n", slot.Get(), pszName, xuid, pszNetworkID, pszAddress, bFakePlayer);
+
+    return { KHook::Action::Ignore };
 }
 
-bool SamplePlugin::Hook_ClientConnect(CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, bool unk1, CBufferString* pRejectReason)
+KHook::Return<bool> SamplePlugin::Hook_ClientConnect(ISource2GameClients* pThis, CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, bool unk1, CBufferString* pRejectReason)
 {
     TOOLKIT_LOG(this, "Hook_ClientConnect(%d, \"%s\", %lld, \"%s\", %d, \"%s\")\n", slot.Get(), pszName, xuid, pszNetworkID, unk1, pRejectReason->Get());
 
-    // A hook on a function that returns something uses RETURN_META_VALUE. With
-    // MRES_OVERRIDE the original runs but the value below is what the
-    // caller gets -- here: refuse the connection and hand back the reason. Try
-    // it by connecting with "sample_rejected" as your name.
+    // A hook on a function that returns something returns the value alongside
+    // the action. With Override the original still runs but the value below is
+    // what the caller gets -- here: refuse the connection and hand back the
+    // reason. Try it by connecting with "sample_rejected" as your name.
     if (!V_strcmp(pszName, "sample_rejected"))
     {
         pRejectReason->Insert(0, "Rejected by the sample plugin.");
-        RETURN_META_VALUE(MRES_OVERRIDE, false);
+        return { KHook::Action::Override, false };
     }
 
-    // MRES_IGNORED with a value still returns whatever the original returns --
-    // the value passed here is discarded. Only SUPERCEDE/OVERRIDE make it count.
-    RETURN_META_VALUE(MRES_IGNORED, true);
+    // Ignore with a value still returns whatever the original returns -- the
+    // value passed here is discarded. Only Supercede/Override make it count.
+    return { KHook::Action::Ignore, true };
 }
 
-void SamplePlugin::Hook_ClientPutInServer(CPlayerSlot slot, char const* pszName, int type, uint64 xuid)
+KHook::Return<void> SamplePlugin::Hook_ClientPutInServer(ISource2GameClients* pThis, CPlayerSlot slot, char const* pszName, int type, uint64 xuid)
 {
     TOOLKIT_LOG(this, "Hook_ClientPutInServer(%d, \"%s\", %d, %lld)\n", slot.Get(), pszName, type, xuid);
+
+    return { KHook::Action::Ignore };
 }
 
-void SamplePlugin::Hook_ClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
+KHook::Return<void> SamplePlugin::Hook_ClientDisconnect(ISource2GameClients* pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
 {
     TOOLKIT_LOG(this, "Hook_ClientDisconnect(%d, %d, \"%s\", %lld, \"%s\")\n", slot.Get(), reason, pszName, xuid, pszNetworkID);
+
+    return { KHook::Action::Ignore };
 }
 
-void SamplePlugin::Hook_GameFrame(bool simulating, bool bFirstTick, bool bLastTick)
+KHook::Return<void> SamplePlugin::Hook_GameFrame(ISource2Server* pThis, bool simulating, bool bFirstTick, bool bLastTick)
 {
     // Runs every tick. Whatever goes in here runs 64 times a second, per frame,
-    // before the game's own GameFrame -- keep it cheap.
+    // right after the game's own GameFrame (a Post hook) -- keep it cheap.
     /**
      * simulating:
      * ***********
      * true  | game is ticking
      * false | game is not ticking
      */
+
+    return { KHook::Action::Ignore };
 }
 
-int64_t SamplePlugin::Hook_TakeDamageOld(CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
+KHook::Return<int64_t> SamplePlugin::Hook_TakeDamageOld(CBaseEntity* pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
 {
-    CBaseEntity* pThis = META_IFACEPTR(CBaseEntity);
-
-    // MRES_IGNORED lets the original run untouched. Change pInfo here and the
-    // original sees your version; RETURN_META_VALUE(MRES_SUPERCEDE, 0) would
-    // block the damage outright.
+    // The hooked object arrives as the first parameter. Ignore lets the original
+    // run untouched; change pInfo here and the original sees your version,
+    // while { KHook::Action::Supercede, 0 } would block the damage outright.
     TOOLKIT_LOG(this, "TakeDamageOld: %p entity, %.1f damage\n", pThis, pInfo ? pInfo->m_flDamage : 0.0f);
 
-    RETURN_META_VALUE(MRES_IGNORED, 0);
+    return { KHook::Action::Ignore, 0 };
 }
 
-void SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis, double flFrameTime, float flUnknown)
+KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis, double flFrameTime, float flUnknown)
 {
     // Runs for every pawn every tick, so do as little as possible here. Left
     // empty on purpose -- logging would flood the console.
-    RETURN_META(MRES_IGNORED);
+    return { KHook::Action::Ignore };
 }
 
 void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, const char* pOldLevel, const char* pLandmarkName, bool loadGame, bool background)

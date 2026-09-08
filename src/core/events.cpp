@@ -124,9 +124,9 @@ namespace events {
             if (hook.post != post)
                 continue;
 
-            META_RES result = hook.handler(event, post, dontBroadcast);
+            Action result = hook.handler(event, post, dontBroadcast);
 
-            if (result == MRES_SUPERCEDE)
+            if (result == Action::Supersede)
                 return false;
         }
 

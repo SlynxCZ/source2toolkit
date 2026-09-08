@@ -25,8 +25,8 @@ resolve_dep_internal(METAMOD_DIR MMSOURCE_DEV)
 set(SOURCE2TOOLKIT_CORE ON CACHE BOOL "" FORCE)
 add_subdirectory(${SOURCE2TOOLKIT_SDK_DIR} ${CMAKE_BINARY_DIR}/source2toolkit-sdk)
 
-# SourceHook comes from the SDK above, which builds it and links it into
-# everything that uses it -- building it here as well would be the second copy.
+# Hooks are KHook, metamod's own detour library: header-only here, the engine
+# arrives through PLUGIN_SAVEVARS() and is handed on to the toolkit's plugins.
 
 add_subdirectory(vendor/dynlibutils)
 add_subdirectory(vendor/spdlog)
@@ -36,6 +36,11 @@ file(GLOB_RECURSE SOURCE_FILES
         src/*.h
         src/*.hpp
 )
+
+# dynhooks/ is work in progress and still written against SourceHook's own
+# assembler and page allocator, which left with SourceHook. Out of the build
+# until it is ported to KHook's (khook/asm, khook/memory).
+list(FILTER SOURCE_FILES EXCLUDE REGEX "/src/core/dynhooks/")
 
 # Crash handler (Linux only). The breakpad client and processor come prebuilt
 # from vendor/breakpad-build; the in-process symbol dumper (ELF/DWARF to
@@ -206,6 +211,7 @@ if (UNIX AND NOT APPLE)
     SET(source2toolkit_include_directories
             ${CMAKE_SOURCE_DIR}/src
             ${METAMOD_DIR}/core
+            ${METAMOD_DIR}/third_party/khook/include
             ${CMAKE_SOURCE_DIR}/vendor
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include/dynlibutils
@@ -238,6 +244,7 @@ elseif (WIN32)
     SET(source2toolkit_include_directories
             ${CMAKE_SOURCE_DIR}/src
             ${METAMOD_DIR}/core
+            ${METAMOD_DIR}/third_party/khook/include
             ${CMAKE_SOURCE_DIR}/vendor
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include
             ${CMAKE_SOURCE_DIR}/vendor/dynlibutils/include/dynlibutils

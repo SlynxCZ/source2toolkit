@@ -50,55 +50,61 @@
 
 #include <unordered_set>
 
-// bool INetworkMessageProcessingPreFilter:FilterMessage(const CNetMessage* pData, INetChannel* pChannel)
-SH_DECL_INLINEHOOK2(FilterMessage, INetworkMessageProcessingPreFilterCustom, bool, const CNetMessage*, INetChannel*);
-
-// void CEntityIOOutput::FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
-SH_DECL_INLINEHOOK6_void(FireOutputInternal, CEntityIOOutput, CEntityInstance*, CEntityInstance*, void*, float, void*, void*);
-
 namespace inlinehooks
 {
     Inlines inlines;
     std::unordered_map<OutputKey, EntityIOCallbackPair, OutputKeyHash> entityIOListenerStack;
 
+    Inlines::Inlines() :
+        // bool INetworkMessageProcessingPreFilter::FilterMessage(const CNetMessage* pData, INetChannel* pChannel)
+        KHOOK_NEW(m_hFilterMessage, this, &Inlines::Hook_FilterMessage, nullptr),
+        // void CEntityIOOutput::FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
+        KHOOK_NEW(m_hFireOutputInternal, this, &Inlines::Hook_FireOutputInternal, nullptr)
+    {
+    }
+
     void Inlines::InitListeners()
     {
-        m_iFilterMessageHookID = SH_ADD_INLINEHOOK(FilterMessage, addresses::toolkitAddresses.FilterMessage, SH_MEMBER(this, &Inlines::Hook_FilterMessage), false);
-        m_iFireOutputInternalHookID = SH_ADD_INLINEHOOK(FireOutputInternal, addresses::toolkitAddresses.FireOutputInternal, SH_MEMBER(this, &Inlines::Hook_FireOutputInternal), false);
+        // Configure() is what places the detour; an address the scan did not
+        // find leaves that hook dormant rather than patching address zero.
+        if (void* pFilterMessage = addresses::toolkitAddresses.FilterMessage.GetPtr())
+            m_hFilterMessage->Configure(pFilterMessage);
+
+        if (void* pFireOutputInternal = addresses::toolkitAddresses.FireOutputInternal.GetPtr())
+            m_hFireOutputInternal->Configure(pFireOutputInternal);
     }
 
     void Inlines::DestructListeners()
     {
-        SH_REMOVE_HOOK_ID(m_iFilterMessageHookID);
-        SH_REMOVE_HOOK_ID(m_iFireOutputInternalHookID);
+        delete m_hFilterMessage;
+        delete m_hFireOutputInternal;
+        m_hFilterMessage = nullptr;
+        m_hFireOutputInternal = nullptr;
     }
 
-    bool Inlines::Hook_FilterMessage(const CNetMessage* pData, INetChannel* pChannel)
+    KHook::Return<bool> Inlines::Hook_FilterMessage(INetworkMessageProcessingPreFilterCustom* pThis, const CNetMessage* pData, INetChannel* pChannel)
     {
-        // `this` is the pre-filter subobject, not the whole client -- that is
+        //  is the pre-filter subobject, not the whole client -- that is
         // what INetworkMessageProcessingPreFilterCustom's pad-based layout is
         // for, so the slot can be read without hand-rolling the delta.
-        auto* pFilter = META_IFACEPTR(INetworkMessageProcessingPreFilterCustom);
-        if (!pFilter || !pData)
-            RETURN_META_VALUE(MRES_IGNORED, true);
+        if (!pThis || !pData)
+            return { KHook::Action::Ignore, true };
 
         INetworkMessageInternal* pNetMsg = pData->GetNetMessage();
         if (!pNetMsg)
-            RETURN_META_VALUE(MRES_IGNORED, true);
+            return { KHook::Action::Ignore, true };
 
         NetMessageInfo_t* pInfo = pNetMsg->GetNetMessageInfo();
         if (!pInfo)
-            RETURN_META_VALUE(MRES_IGNORED, true);
+            return { KHook::Action::Ignore, true };
 
-        const META_RES action = networkmessages::DispatchClientHook(pFilter->GetPlayerSlot(), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
+        const Action action = networkmessages::DispatchClientHook(pThis->GetPlayerSlot(), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
 
-        RETURN_META_VALUE(action, true);
+        return { static_cast<KHook::Action>(action), true };
     }
 
-    void Inlines::Hook_FireOutputInternal(CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
+    KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
     {
-        CEntityIOOutput* pThis = META_IFACEPTR(CEntityIOOutput);
-
         const char* outputName = pThis->m_pDesc->m_pName;
         const char* callerClass = pCaller ? pCaller->GetClassname() : "*";
 
@@ -124,7 +130,7 @@ namespace inlinehooks
 
         std::vector matched(unique.begin(), unique.end());
 
-        META_RES finalAction = MRES_IGNORED;
+        Action finalAction = Action::Ignore;
 
         for (auto* pair : matched)
         {
@@ -138,17 +144,17 @@ namespace inlinehooks
                     false
                 );
 
-                if (action == MRES_SUPERCEDE)
-                    RETURN_META(MRES_SUPERCEDE);
+                if (action == Action::Supersede)
+                    return { KHook::Action::Supercede };
 
                 if (action > finalAction)
                     finalAction = action;
             }
         }
 
-        if (finalAction != MRES_SUPERCEDE)
+        if (finalAction != Action::Supersede)
         {
-            SH_CALL(FireOutputInternal, addresses::toolkitAddresses.FireOutputInternal, pThis)(pActivator, pCaller, variantValue, delay, unk01, unk02);
+            m_hFireOutputInternal->CallOriginal(pThis, pActivator, pCaller, variantValue, delay, unk01, unk02);
         }
 
         for (auto* pair : matched)
@@ -159,8 +165,8 @@ namespace inlinehooks
             }
         }
 
-        // The original already ran above, so supersede rather than let
-        // SourceHook call it a second time.
-        RETURN_META(MRES_SUPERCEDE);
+        // The original already ran above, so supersede rather than let KHook
+        // call it a second time.
+        return { KHook::Action::Supercede };
     }
 }
