@@ -46,21 +46,6 @@ namespace patches
 {
     bool Initialize()
     {
-        DynLibUtils::CModule libserver(g_pSource2Server);
-
-        uintptr_t addr = libserver.FindPattern(DynLibUtils::ParsePattern(shared::g_pGameConfig->GetSignature("SetSchemaHammerUniqueId")));
-        if (addr)
-        {
-            uint8_t patch = (uint8_t)strtoul(shared::g_pGameConfig->GetPatch("SetSchemaHammerUniqueId"), nullptr, 16);
-            Plat_WriteMemory((void*)addr, &patch, 1);
-            FP_DEBUG("Patched SetSchemaHammerUniqueId at {}", fmt::ptr(reinterpret_cast<void*>(addr)));
-        }
-        else
-        {
-            FP_ERROR("Failed to patch SetSchemaHammerUniqueId");
-            return false;
-        }
-
         return true;
     }
 }
