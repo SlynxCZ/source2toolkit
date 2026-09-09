@@ -73,9 +73,9 @@ m_hTakeDamageOld->Configure(ADDR_TAKE_DAMAGE_OLD());
 ```
 
 Handlers return `KHook::Return<T>` (`Ignore`, `Override`, `Supersede`, plus the
-value). The toolkit's own listener callbacks return its `Action`
-(`Ignore`, `Override`, `Supersede` -- same values), and their timing is a plain
-`bool post`: `false` runs before the original, `true` after.
+value). The toolkit's own listener callbacks return the same type -- `Action` is
+an alias of `KHook::Action` -- and their timing is a plain `bool post`:
+`false` runs before the original, `true` after.
 
 ---
 

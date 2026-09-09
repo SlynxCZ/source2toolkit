@@ -302,11 +302,11 @@ namespace virtualhooks
         Action result = commands::DispatchConsoleListener(ctx, args, false);
 
         if (result > Action::Ignore)
-            return { static_cast<KHook::Action>(result) };
+            return { result };
 
         commands::DispatchConsoleListener(ctx, args, true);
 
-        return { static_cast<KHook::Action>(result) };
+        return { result };
     }
 
     KHook::Return<void> Virtuals::Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args)
@@ -316,7 +316,7 @@ namespace virtualhooks
             CCommandContext ctx(CT_NO_TARGET, slot);
             Action result = commands::DispatchConsoleListener(ctx, args, false);
             if (result > Action::Ignore)
-                return { static_cast<KHook::Action>(result) };
+                return { result };
 
             commands::DispatchConsoleListener(ctx, args, true);
         }
@@ -363,7 +363,7 @@ namespace virtualhooks
 
         Action result = networkmessages::DispatchServerHook(const_cast<uint64_t*>(reinterpret_cast<const uint64_t*>(clients)), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
 
-        return { static_cast<KHook::Action>(result) };
+        return { result };
     }
 
     KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg)
@@ -438,7 +438,7 @@ namespace virtualhooks
 
         Action result = networkmessages::DispatchServerInternalHook(pThis->GetPlayerSlot(), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
 
-        return { static_cast<KHook::Action>(result), true };
+        return { result, true };
     }
 
     void CEntityListener::OnEntitySpawned(CEntityInstance* pEntity)

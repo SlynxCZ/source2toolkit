@@ -100,7 +100,7 @@ namespace inlinehooks
 
         const Action action = networkmessages::DispatchClientHook(pThis->GetPlayerSlot(), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
 
-        return { static_cast<KHook::Action>(action), true };
+        return { action, true };
     }
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
