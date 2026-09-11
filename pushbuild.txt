@@ -44,3 +44,4 @@ Hi all, I'm new in here!!!!!!!!!!!
 Thanks for more async breakage!!!The runners changed, we did not. Thanks for more toolchain breakage!!!
 bullseye is dead, long live the stale Release file
 KHook: SourceHook is gone, one hook engine for the whole server.
+KHook version handshake: the core reports the commit it was built against, plugins refuse to load on a mismatch.
