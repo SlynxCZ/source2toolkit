@@ -110,8 +110,8 @@ private:
 	//
 	// First: the toolkit already resolved this one, so just ask for it. Every
 	// entry in IToolkitAddresses works this way and costs no scan of your own.
-	// The lambda runs at KHOOK_INIT(), once the toolkit's interfaces are there.
-	KHOOK_MEMBER(m_hTakeDamageOld, [] { return ADDR_TAKE_DAMAGE_OLD(); }, &SamplePlugin::Hook_TakeDamageOld, nullptr);
+	// The target is evaluated at KHOOK_INIT(), once the toolkit's interfaces are there.
+	KHOOK_MEMBER(m_hTakeDamageOld, ADDR_TAKE_DAMAGE_OLD(), &SamplePlugin::Hook_TakeDamageOld, nullptr);
 	// Second: anything in the shared gamedata, whether or not the toolkit has a
 	// typed getter for it. The entry's library is read, then it is found by
 	// exported symbol or by pattern -- you do not care which.

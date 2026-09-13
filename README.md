@@ -63,7 +63,7 @@ entry, an address -- and `KHOOK_INIT()` / `KHOOK_DESTRUCT()` in `Load()` /
 KHOOK_VIRTUAL(m_hGameFrame, &ISource2Server::GameFrame, &g_pSource2Server, nullptr, &MyPlugin::Hook_GameFrame);
 KHOOK_VIRTUAL(m_hFireEvent, &IGameEventManager2::FireEvent, KHOOK_VTABLE("server", "CGameEventManager"), &MyPlugin::Hook_FireEvent, nullptr);
 KHOOK_MEMBER(m_hPostThink, "CCSPlayerPawn::PostThink", &MyPlugin::Hook_PostThink, nullptr);
-KHOOK_MEMBER(m_hTakeDamageOld, [] { return ADDR_TAKE_DAMAGE_OLD(); }, &MyPlugin::Hook_TakeDamageOld, nullptr);
+KHOOK_MEMBER(m_hTakeDamageOld, ADDR_TAKE_DAMAGE_OLD(), &MyPlugin::Hook_TakeDamageOld, nullptr);
 ```
 
 Underneath is a plain KHook object -- `KHook::Virtual` attached to an instance
