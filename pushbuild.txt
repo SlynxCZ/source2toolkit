@@ -46,3 +46,4 @@ bullseye is dead, long live the stale Release file
 KHook: SourceHook is gone, one hook engine for the whole server.
 KHook version handshake: the core reports the commit it was built against, plugins refuse to load on a mismatch.
 KHOOK_* hook macros in the SDK; IToolkitGameConfig::ResolveSignature hands back an IToolkitMemory (IToolkitGameConfig002); IToolkitMemory::GetPtr is a void*, GetAddr the integer.
+Fix: UnloadAll closes plugin libraries only after every plugin's registrations are gone (SIGSEGV on shutdown when a command wrapped another plugin's handler).

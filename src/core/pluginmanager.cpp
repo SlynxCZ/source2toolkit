@@ -482,11 +482,19 @@ void PluginManager::UnloadAll()
         mysql::mysqlManager.RemoveAllForPlugin(p->id);
         entities::entitiesManager.RemoveAllForPlugin(p->id);
         menus::menuManager.RemoveAllForPlugin(p->id);
-
-        // Shutting down: there is no next frame to wait for, and the toolkit
-        // itself is on its way out of every hook, so close right here.
-        CloseLib(p->lib);
     }
+
+    // Only once every plugin's registrations are gone. What one plugin owns can
+    // hold code from another: a plugin registering a command on behalf of its
+    // caller wraps the caller's handler in a lambda of its own, so destroying
+    // that entry needs both libraries mapped. Closing each library right after
+    // its own cleanup made the outcome depend on directory order -- whichever
+    // came first was already unmapped when the other's entries were destroyed.
+    //
+    // Shutting down: there is no next frame to wait for, and the toolkit
+    // itself is on its way out of every hook, so close right here.
+    for (auto& p : m_plugins)
+        CloseLib(p->lib);
 
     m_plugins.clear();
 }
