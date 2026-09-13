@@ -53,24 +53,23 @@ any Metamod plugin and hands the same engine to its own plugins
 -- Metamod's, the toolkit's, every plugin's -- can call through each other's
 originals. Two independent engines patching the same address cannot do that.
 
-A hook is an object holding the member function, the context and the Pre/Post
-callbacks; it is attached to an instance (`Add`) or to a whole vtable
-(`AddGlobal`), and taken down in its destructor:
+In a plugin a hook is one line, written with a `KHOOK_*` macro from the SDK's
+`IToolkitHooks.h`: the type comes from the handler it names, the target says
+where it goes -- an instance pointer, a whole vtable by RTTI name, a gamedata
+entry, an address -- and `KHOOK_INIT()` / `KHOOK_DESTRUCT()` in `Load()` /
+`Unload()` install and remove every hook the plugin declared:
 
 ```cpp
-KHook::Virtual<ISource2Server, void, bool, bool, bool>* m_hGameFrame =
-    new KHook::Virtual(&ISource2Server::GameFrame, this, nullptr, &MyPlugin::Hook_GameFrame);
-m_hGameFrame->Add(g_pSource2Server);
+KHOOK_VIRTUAL(m_hGameFrame, &ISource2Server::GameFrame, &g_pSource2Server, nullptr, &MyPlugin::Hook_GameFrame);
+KHOOK_VIRTUAL(m_hFireEvent, &IGameEventManager2::FireEvent, KHOOK_VTABLE("server", "CGameEventManager"), &MyPlugin::Hook_FireEvent, nullptr);
+KHOOK_MEMBER(m_hPostThink, "CCSPlayerPawn::PostThink", &MyPlugin::Hook_PostThink, nullptr);
+KHOOK_MEMBER(m_hTakeDamageOld, [] { return ADDR_TAKE_DAMAGE_OLD(); }, &MyPlugin::Hook_TakeDamageOld, nullptr);
 ```
 
-Anything a signature scan finds is hookable too -- `KHook::Member` for a
-function with a `this`, `KHook::Function` otherwise:
-
-```cpp
-KHook::Member<CBaseEntity, int64_t, CTakeDamageInfo*, CTakeDamageResult*>* m_hTakeDamageOld =
-    new KHook::Member(this, &MyPlugin::Hook_TakeDamageOld, nullptr);
-m_hTakeDamageOld->Configure(ADDR_TAKE_DAMAGE_OLD());
-```
+Underneath is a plain KHook object -- `KHook::Virtual` attached to an instance
+(`Add`) or a whole vtable (`AddGlobal`), `KHook::Member` / `KHook::Function`
+placed at an address (`Configure`) -- which the core's own hooks use directly
+(`src/core/virtualhooks.cpp`, `src/core/inlinehooks.cpp`).
 
 Handlers return `KHook::Return<T>` (`Ignore`, `Override`, `Supersede`, plus the
 value). The toolkit's own listener callbacks return the same type -- `Action` is

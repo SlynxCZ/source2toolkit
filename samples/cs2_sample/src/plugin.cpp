@@ -23,31 +23,6 @@ TOOLKIT_EXPOSE(cs2_sample, g_Plugin);
 CConVar<int> sample_cvari("sample_cvari", FCVAR_NONE, "help string", 42);
 CConVar<float> sample_cvarf("sample_cvarf", FCVAR_NONE, "help string", 69.69f, true, 10.0f, true, 100.0f);
 
-// The hooks are KHook objects -- metamod's detour library, on the one engine
-// the toolkit shares with metamod (TOOLKIT_SAVEVARS() fetched it), so they
-// land next to every other plugin's hooks and can call through their originals.
-// Each holds the member function it hooks, the context and the Pre/Post
-// callbacks (Pre runs before the original, Post after), and comes down in its
-// destructor, so it lives behind a plain pointer: new here, delete in Unload().
-//
-// A Virtual hook is placed on an instance (Add) or on a whole vtable
-// (AddGlobal); a Member hook patches a function at its address (Configure),
-// for anything a signature scan found. KHOOK_NEW takes the hook's type from the
-// member it is stored in, since MSVC cannot deduce it from the arguments.
-SamplePlugin::SamplePlugin() :
-    KHOOK_NEW(m_hGameFrame, &ISource2Server::GameFrame, this, nullptr, &SamplePlugin::Hook_GameFrame),
-    KHOOK_NEW(m_hClientActive, &ISource2GameClients::ClientActive, this, nullptr, &SamplePlugin::Hook_ClientActive),
-    KHOOK_NEW(m_hClientDisconnect, &ISource2GameClients::ClientDisconnect, this, nullptr, &SamplePlugin::Hook_ClientDisconnect),
-    KHOOK_NEW(m_hClientPutInServer, &ISource2GameClients::ClientPutInServer, this, nullptr, &SamplePlugin::Hook_ClientPutInServer),
-    KHOOK_NEW(m_hClientSettingsChanged, &ISource2GameClients::ClientSettingsChanged, this, &SamplePlugin::Hook_ClientSettingsChanged, nullptr),
-    KHOOK_NEW(m_hOnClientConnected, &ISource2GameClients::OnClientConnected, this, &SamplePlugin::Hook_OnClientConnected, nullptr),
-    KHOOK_NEW(m_hClientConnect, &ISource2GameClients::ClientConnect, this, &SamplePlugin::Hook_ClientConnect, nullptr),
-    KHOOK_NEW(m_hClientCommand, &ISource2GameClients::ClientCommand, this, &SamplePlugin::Hook_ClientCommand, nullptr),
-    KHOOK_NEW(m_hTakeDamageOld, this, &SamplePlugin::Hook_TakeDamageOld, nullptr),
-    KHOOK_NEW(m_hPostThink, this, &SamplePlugin::Hook_PostThink, nullptr)
-{
-}
-
 bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late)
 {
     TOOLKIT_SAVEVARS();
@@ -59,15 +34,12 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     TOOLKIT_LOG(this, "Starting plugin.\n");
 
-    // Virtual hooks go onto the engine's own interface instances.
-    m_hGameFrame->Add(g_pSource2Server);
-    m_hClientActive->Add(g_pSource2GameClients);
-    m_hClientDisconnect->Add(g_pSource2GameClients);
-    m_hClientPutInServer->Add(g_pSource2GameClients);
-    m_hClientSettingsChanged->Add(g_pSource2GameClients);
-    m_hOnClientConnected->Add(g_pSource2GameClients);
-    m_hClientConnect->Add(g_pSource2GameClients);
-    m_hClientCommand->Add(g_pSource2GameClients);
+    // Every hook declared with KHOOK_* in plugin.h: the virtual ones go onto
+    // the interface instances just set above, the function ones get their
+    // address resolved and the detour placed. One that cannot be resolved is
+    // logged and skipped; the rest still go in.
+    if (!KHOOK_INIT())
+        TOOLKIT_LOG(this, "Some hooks were not installed, see above.\n");
 
     TOOLKIT_LOG(this, "All hooks started!\n");
 
@@ -91,31 +63,6 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     api->AddListener(this, this);
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
-
-    // Two function hooks, each showing a different way to get the address.
-    //
-    // First: the toolkit already resolved this one, so just ask for it. Every
-    // entry in IToolkitAddresses works this way and costs no scan of your own.
-    if (void *pTakeDamageOld = reinterpret_cast<void *>(ADDR_TAKE_DAMAGE_OLD()))
-    {
-        m_hTakeDamageOld->Configure(pTakeDamageOld);
-    }
-    else
-    {
-        TOOLKIT_LOG(this, "CBaseEntity::TakeDamageOld was not resolved; hook skipped\n");
-    }
-
-    // Second: anything in the shared gamedata, whether or not the toolkit has a
-    // typed getter for it. ResolveSignature reads the entry's library, then
-    // finds it by exported symbol or by pattern -- you do not care which.
-    if (void *pPostThink = GAMECONFIG_RESOLVE("CCSPlayerPawn::PostThink"))
-    {
-        m_hPostThink->Configure(pPostThink);
-    }
-    else
-    {
-        TOOLKIT_LOG(this, "CCSPlayerPawn::PostThink was not found in gamedata; hook skipped\n");
-    }
 
     // You can get a convar reference to an already existing cvar via CConVarRef.
     // This will pre-register it if it's not yet registered and would use default
@@ -197,37 +144,11 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
 bool SamplePlugin::Unload(char* error, size_t maxlen)
 {
-    m_hGameFrame->Remove(g_pSource2Server);
-    m_hClientActive->Remove(g_pSource2GameClients);
-    m_hClientDisconnect->Remove(g_pSource2GameClients);
-    m_hClientPutInServer->Remove(g_pSource2GameClients);
-    m_hClientSettingsChanged->Remove(g_pSource2GameClients);
-    m_hOnClientConnected->Remove(g_pSource2GameClients);
-    m_hClientConnect->Remove(g_pSource2GameClients);
-    m_hClientCommand->Remove(g_pSource2GameClients);
-
-    // Deleting a hook is what takes its detour down -- after this nothing in
-    // the engine points into this library any more.
-    delete m_hGameFrame;
-    delete m_hClientActive;
-    delete m_hClientDisconnect;
-    delete m_hClientPutInServer;
-    delete m_hClientSettingsChanged;
-    delete m_hOnClientConnected;
-    delete m_hClientConnect;
-    delete m_hClientCommand;
-    delete m_hTakeDamageOld;
-    delete m_hPostThink;
-    m_hGameFrame = nullptr;
-    m_hClientActive = nullptr;
-    m_hClientDisconnect = nullptr;
-    m_hClientPutInServer = nullptr;
-    m_hClientSettingsChanged = nullptr;
-    m_hOnClientConnected = nullptr;
-    m_hClientConnect = nullptr;
-    m_hClientCommand = nullptr;
-    m_hTakeDamageOld = nullptr;
-    m_hPostThink = nullptr;
+    // Detaches every hook and deletes it -- deleting is what takes a detour
+    // down. After this nothing in the engine points into this library any
+    // more. A live hook left past unload would jump into unmapped memory on
+    // the next call.
+    KHOOK_DESTRUCT();
 
     // The CConVars above are objects in this library, and ConVar_Register handed
     // the engine pointers to them. Without this the engine keeps those pointers
@@ -237,8 +158,6 @@ bool SamplePlugin::Unload(char* error, size_t maxlen)
     // ConVar_Unregister only walks the list held by the caller's own library, so
     // the toolkit cannot do this on a plugin's behalf. Every plugin that
     // declares a CConVar has to make this call.
-    // Inline hooks patch the game's own code, so leaving one installed past
-    // unload jumps into a library that is no longer mapped.
     ConVar_Unregister();
 
     return true;

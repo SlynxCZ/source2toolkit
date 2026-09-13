@@ -222,13 +222,13 @@ DynLibUtils::CModule* CGameConfig::GetModule(const char* pchName)
     return &it->second;
 }
 
-void* CGameConfig::ResolveSignature(const char* pchName)
+IToolkitMemory CGameConfig::ResolveSignature(const char* pchName)
 {
     DynLibUtils::CModule* pModule = GetModule(pchName);
     if (!pModule)
     {
         FP_ERROR("Invalid module for {}", pchName ? pchName : "(null)");
-        return nullptr;
+        return IToolkitMemory();
     }
 
     void* pAddress = nullptr;
@@ -239,10 +239,10 @@ void* CGameConfig::ResolveSignature(const char* pchName)
         if (!pszSymbol)
         {
             FP_ERROR("Invalid symbol for {}", pchName ? pchName : "(null)");
-            return nullptr;
+            return IToolkitMemory();
         }
 
-        pAddress = pModule->GetFunctionByName(pszSymbol).RCast<void*>();
+        pAddress = pModule->GetFunctionByName(pszSymbol).GetPtr();
     }
     else
     {
@@ -250,19 +250,19 @@ void* CGameConfig::ResolveSignature(const char* pchName)
         if (!pszSignature)
         {
             FP_ERROR("Failed to find signature for {}", pchName ? pchName : "(null)");
-            return nullptr;
+            return IToolkitMemory();
         }
 
-        pAddress = pModule->FindPattern(DynLibUtils::ParsePattern(pszSignature)).RCast<void*>();
+        pAddress = pModule->FindPattern(DynLibUtils::ParsePattern(pszSignature)).GetPtr();
     }
 
     if (!pAddress)
     {
         FP_ERROR("Failed to find address for {}", pchName ? pchName : "(null)");
-        return nullptr;
+        return IToolkitMemory();
     }
 
-    return pAddress;
+    return IToolkitMemory(pAddress);
 }
 
 const char* CGameConfig::GetPatch(const char* pchName)

@@ -52,11 +52,13 @@
 // below is not written twice.
 #include "version_gen.h"
 
+// Above the class: the hook targets below read g_pSource2Server and
+// g_pToolkitAddresses, so the globals have to be declared first.
+TOOLKIT_GLOBALVARS();
+
 class SamplePlugin final : public IToolkitPlugin, public IToolkitListener
 {
 public:
-	SamplePlugin();
-
 	bool Load(PluginId id, IToolkitAPI *api, char *error, size_t maxlen, bool late) override;
 	bool Unload(char *error, size_t maxlen) override;
 
@@ -78,19 +80,42 @@ public: // hooks
 	KHook::Return<void> Hook_PostThink(CCSPlayerPawn *pThis, double flFrameTime, float flUnknown);
 
 private:
-	// KHook hooks only come down in their destructor, so they live behind plain
-	// pointers: new in the constructor, delete in Unload().
-	KHook::Virtual<ISource2Server, void, bool, bool, bool> *m_hGameFrame = nullptr;
-	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, bool, const char *, uint64> *m_hClientActive = nullptr;
-	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, ENetworkDisconnectionReason, const char *, uint64, const char *> *m_hClientDisconnect = nullptr;
-	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, char const *, int, uint64> *m_hClientPutInServer = nullptr;
-	KHook::Virtual<ISource2GameClients, void, CPlayerSlot> *m_hClientSettingsChanged = nullptr;
-	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const char *, uint64, const char *, const char *, bool> *m_hOnClientConnected = nullptr;
-	KHook::Virtual<ISource2GameClients, bool, CPlayerSlot, const char *, uint64, const char *, bool, CBufferString *> *m_hClientConnect = nullptr;
-	KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const CCommand &> *m_hClientCommand = nullptr;
-	// Functions found by signature rather than through a vtable.
-	KHook::Member<CBaseEntity, int64_t, CTakeDamageInfo *, CTakeDamageResult *> *m_hTakeDamageOld = nullptr;
-	KHook::Member<CCSPlayerPawn, void, double, float> *m_hPostThink = nullptr;
+	// The hooks are KHook objects -- metamod's detour library, on the one engine
+	// the toolkit shares with metamod (TOOLKIT_SAVEVARS() fetched it), so they
+	// land next to every other plugin's hooks and can call through their
+	// originals. Each holds the function it hooks, the context (this) and the
+	// Pre/Post callbacks (Pre runs before the original, Post after; nullptr
+	// leaves a side empty).
+	//
+	// One line each: the macro takes the hook's type from the handler it names
+	// (which is why the handlers above come first), KHOOK_INIT() in Load()
+	// resolves the target and installs it, KHOOK_DESTRUCT() in Unload() takes it
+	// down. A handler that needs the real original from the middle of its body
+	// calls m_hXxx->CallOriginal(pThis, ...).
+	//
+	// Virtual hooks go onto the engine's own interface instances. The pointer is
+	// read at KHOOK_INIT(), not here -- it is still null when this object is
+	// constructed.
+	KHOOK_VIRTUAL(m_hGameFrame, &ISource2Server::GameFrame, &g_pSource2Server, nullptr, &SamplePlugin::Hook_GameFrame);
+	KHOOK_VIRTUAL(m_hClientActive, &ISource2GameClients::ClientActive, &g_pSource2GameClients, nullptr, &SamplePlugin::Hook_ClientActive);
+	KHOOK_VIRTUAL(m_hClientDisconnect, &ISource2GameClients::ClientDisconnect, &g_pSource2GameClients, nullptr, &SamplePlugin::Hook_ClientDisconnect);
+	KHOOK_VIRTUAL(m_hClientPutInServer, &ISource2GameClients::ClientPutInServer, &g_pSource2GameClients, nullptr, &SamplePlugin::Hook_ClientPutInServer);
+	KHOOK_VIRTUAL(m_hClientSettingsChanged, &ISource2GameClients::ClientSettingsChanged, &g_pSource2GameClients, &SamplePlugin::Hook_ClientSettingsChanged, nullptr);
+	KHOOK_VIRTUAL(m_hOnClientConnected, &ISource2GameClients::OnClientConnected, &g_pSource2GameClients, &SamplePlugin::Hook_OnClientConnected, nullptr);
+	KHOOK_VIRTUAL(m_hClientConnect, &ISource2GameClients::ClientConnect, &g_pSource2GameClients, &SamplePlugin::Hook_ClientConnect, nullptr);
+	KHOOK_VIRTUAL(m_hClientCommand, &ISource2GameClients::ClientCommand, &g_pSource2GameClients, &SamplePlugin::Hook_ClientCommand, nullptr);
+
+	// Functions found by signature rather than through a vtable, each showing a
+	// different way to get the address.
+	//
+	// First: the toolkit already resolved this one, so just ask for it. Every
+	// entry in IToolkitAddresses works this way and costs no scan of your own.
+	// The lambda runs at KHOOK_INIT(), once the toolkit's interfaces are there.
+	KHOOK_MEMBER(m_hTakeDamageOld, [] { return ADDR_TAKE_DAMAGE_OLD(); }, &SamplePlugin::Hook_TakeDamageOld, nullptr);
+	// Second: anything in the shared gamedata, whether or not the toolkit has a
+	// typed getter for it. The entry's library is read, then it is found by
+	// exported symbol or by pattern -- you do not care which.
+	KHOOK_MEMBER(m_hPostThink, "CCSPlayerPawn::PostThink", &SamplePlugin::Hook_PostThink, nullptr);
 
 public:
 	const char *GetAuthor() override { return PLUGIN_AUTHOR; }
@@ -100,7 +125,5 @@ public:
 };
 
 extern SamplePlugin g_Plugin;
-
-TOOLKIT_GLOBALVARS();
 
 #endif //_INCLUDE_SOURCE2TOOLKIT_SAMPLE_PLUGIN_H_

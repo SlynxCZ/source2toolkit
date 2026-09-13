@@ -57,12 +57,12 @@ bool ToolkitModule::InitFromMemory(uintptr_t ptr)
 
 IToolkitMemory ToolkitModule::FindPattern(const char* pattern, IToolkitMemory startAddress) const
 {
-    return IToolkitMemory(m_module.FindPattern(DynLibUtils::ParsePattern(pattern), DynLibUtils::CMemory(startAddress.GetPtr())).GetPtr());
+    return IToolkitMemory(m_module.FindPattern(DynLibUtils::ParsePattern(pattern), DynLibUtils::CMemory(startAddress.GetAddr())).GetPtr());
 }
 
 IToolkitMemory ToolkitModule::FindPatternInSection(const char* pattern, const char* section, IToolkitMemory startAddress) const
 {
-    return IToolkitMemory(m_module.FindPattern(DynLibUtils::ParsePattern(pattern), DynLibUtils::CMemory(startAddress.GetPtr()), m_module.GetSectionByName(section)).GetPtr());
+    return IToolkitMemory(m_module.FindPattern(DynLibUtils::ParsePattern(pattern), DynLibUtils::CMemory(startAddress.GetAddr()), m_module.GetSectionByName(section)).GetPtr());
 }
 
 IToolkitMemory ToolkitModule::GetVirtualTableByName(const char* name, bool decorated) const

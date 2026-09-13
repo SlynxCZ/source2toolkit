@@ -72,7 +72,7 @@ public:
 
     /// Resolves a gamedata entry to an address: by exported symbol when the
     /// entry is "@"-prefixed, by pattern scan otherwise.
-    void* ResolveSignature(const char* pchName) override;
+    IToolkitMemory ResolveSignature(const char* pchName) override;
     int GetOffset(const char* pchName) override;
 
 private:
