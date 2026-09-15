@@ -66,6 +66,9 @@ KHOOK_MEMBER(m_hPostThink, "CCSPlayerPawn::PostThink", &MyPlugin::Hook_PostThink
 KHOOK_MEMBER(m_hTakeDamageOld, ADDR_TAKE_DAMAGE_OLD(), &MyPlugin::Hook_TakeDamageOld, nullptr);
 ```
 
+A hook on an object created after `Load()` is installed with `m_hX.Init()` and
+removed with `m_hX.Destruct()` or by destroying the object.
+
 Underneath is a plain KHook object -- `KHook::Virtual` attached to an instance
 (`Add`) or a whole vtable (`AddGlobal`), `KHook::Member` / `KHook::Function`
 placed at an address (`Configure`) -- which the core's own hooks use directly
@@ -75,6 +78,9 @@ Handlers return `KHook::Return<T>` (`Ignore`, `Override`, `Supersede`, plus the
 value). The toolkit's own listener callbacks return the same type -- `Action` is
 an alias of `KHook::Action` -- and their timing is a plain `bool post`:
 `false` runs before the original, `true` after.
+
+The full guide, with examples, is at
+[source2toolkit.net/docs/hooking](https://www.source2toolkit.net/docs/hooking).
 
 ---
 
