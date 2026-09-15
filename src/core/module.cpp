@@ -70,6 +70,22 @@ IToolkitMemory ToolkitModule::GetVirtualTableByName(const char* name, bool decor
     return IToolkitMemory(m_module.GetVirtualTableByName(name, decorated).GetPtr());
 }
 
+IToolkitMemory ToolkitModule::GetVirtualTableByOffset(const char* name, std::ptrdiff_t offset, bool decorated) const
+{
+    if (!name)
+        return IToolkitMemory();
+
+    return IToolkitMemory(m_module.GetVirtualTableByOffset(name, offset, decorated).GetPtr());
+}
+
+IToolkitMemory ToolkitModule::GetVirtualTableByBase(const char* name, const char* baseName, bool decorated) const
+{
+    if (!name || !baseName)
+        return IToolkitMemory();
+
+    return IToolkitMemory(m_module.GetVirtualTableByBase(name, baseName, decorated).GetPtr());
+}
+
 IToolkitMemory ToolkitModule::GetFunctionByName(const char* name) const
 {
     return IToolkitMemory(m_module.GetFunctionByName(name).GetPtr());

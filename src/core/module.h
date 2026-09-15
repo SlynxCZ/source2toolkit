@@ -64,6 +64,9 @@ public:
     const char* GetModulePath() const override;
     const char* GetModuleName() const override;
 
+    IToolkitMemory GetVirtualTableByOffset(const char* name, std::ptrdiff_t offset, bool decorated = false) const override;
+    IToolkitMemory GetVirtualTableByBase(const char* name, const char* baseName, bool decorated = false) const override;
+
 private:
     DynLibUtils::CModule m_module;
     mutable std::string  m_cachedName;
