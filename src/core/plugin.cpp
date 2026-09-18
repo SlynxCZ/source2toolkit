@@ -41,6 +41,7 @@
 #include "convars.h"
 #include "crashhandler.h"
 #include "customhud.h"
+#include "sounds.h"
 #include "events.h"
 #include "gameconfig.h"
 #include "gamesystems.h"
@@ -143,6 +144,10 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
     // Not fatal: a failed scan only means plugins cannot register game
     // systems, which most do not. IToolkitGameSystems::IsAvailable() says so.
     gamesystems::gameSystemsManager.Init();
+
+    // Not fatal either: without the engine's sound system the guids come from
+    // a counter of the toolkit's own.
+    sounds::soundsManager.Init();
 
     if (!patches::Initialize())
     {
@@ -264,6 +269,9 @@ void ToolkitCore::OnLevelShutdown()
 
     // The layouts these point at do not survive the level change.
     customhud::customHudManager.Clear();
+
+    // Neither do the sounds that were playing.
+    sounds::soundsManager.Clear();
 }
 
 const char* ToolkitCore::GetAuthor() { return "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl, AlliedModders LLC."; }

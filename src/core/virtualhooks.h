@@ -66,6 +66,7 @@ namespace virtualhooks {
         KHook::Return<void> Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName);
         KHook::Return<void> Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args);
         KHook::Return<void> Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args);
+        KHook::Return<void> Hook_ClientDisconnect(ISource2GameClients* pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID);
         KHook::Return<void> Hook_ClientSvcUserMessage(ISource2GameClients* pThis, CPlayerSlot slot, int nType, uint32 nSize, const void* pBuffer);
         KHook::Return<void> Hook_GameServerSteamAPIActivated(ISource2Server* pThis);
         KHook::Return<void> Hook_GameServerSteamAPIDeactivated(ISource2Server* pThis);
@@ -83,6 +84,7 @@ namespace virtualhooks {
         KHook::Virtual<ICvar, void, ConCommandRef, const CCommandContext&, const CCommand&>* m_hDispatchConCommand = nullptr;
         KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const CCommand&>* m_hClientCommand = nullptr;
         KHook::Virtual<ISource2GameClients, void, CPlayerSlot, int, uint32, const void*>* m_hClientSvcUserMessage = nullptr;
+        KHook::Virtual<ISource2GameClients, void, CPlayerSlot, ENetworkDisconnectionReason, const char*, uint64, const char*>* m_hClientDisconnect = nullptr;
         KHook::Virtual<ISource2Server, void>* m_hSteamAPIActivated = nullptr;
         KHook::Virtual<ISource2Server, void>* m_hSteamAPIDeactivated = nullptr;
         KHook::Virtual<IGameEventSystem, void, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t>* m_hPostEventAbstract = nullptr;

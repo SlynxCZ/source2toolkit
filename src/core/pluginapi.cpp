@@ -40,6 +40,7 @@
 #include "commands.h"
 #include "convars.h"
 #include "customhud.h"
+#include "sounds.h"
 #include "gamesystems.h"
 #include "http.h"
 #include "json.h"
@@ -55,6 +56,7 @@
 #include "source2toolkit/IToolkitCommands.h"
 #include "source2toolkit/IToolkitConVars.h"
 #include "source2toolkit/IToolkitCustomHud.h"
+#include "source2toolkit/IToolkitSounds.h"
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"
@@ -276,6 +278,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_MYSQL_INTERFACE)) ptr = &mysql::mysqlManager;
     else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
     else if (!strcmp(iface, TOOLKIT_SCHEDULER_INTERFACE)) ptr = &scheduler::schedulerManager;
+    else if (!strcmp(iface, TOOLKIT_SOUNDS_INTERFACE)) ptr = &sounds::soundsManager;
     else if (!strcmp(iface, TOOLKIT_TRACE_INTERFACE)) ptr = &raytrace::rayTrace;
     else if (!strcmp(iface, TOOLKIT_PATHS_INTERFACE)) ptr = &paths::pathsManager;
 
@@ -324,6 +327,11 @@ IToolkitConVars* PluginApi::ConVars()
 IToolkitCustomHud* PluginApi::CustomHud()
 {
     return &customhud::customHudManager;
+}
+
+IToolkitSounds* PluginApi::Sounds()
+{
+    return &sounds::soundsManager;
 }
 
 IToolkitEntities* PluginApi::Entities()

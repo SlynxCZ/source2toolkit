@@ -40,6 +40,7 @@
 
 #include "commands.h"
 #include "customhud.h"
+#include "sounds.h"
 #include "convars.h"
 #include "events.h"
 #include "entities.h"
@@ -308,6 +309,7 @@ bool PluginManager::ReloadPlugin(int id)
         customhud::customHudManager.RemoveAllForPlugin(id);
         convars::convarsManager.RemoveAllForPlugin(id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
+        sounds::soundsManager.RemoveAllForPlugin(id);
         // Timers and next-frame tasks run callbacks that live inside the
         // library about to be closed; both the call and destroying the
         // std::function would land in unmapped memory afterwards.
@@ -366,6 +368,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         customhud::customHudManager.RemoveAllForPlugin(id);
         convars::convarsManager.RemoveAllForPlugin(id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
+        sounds::soundsManager.RemoveAllForPlugin(id);
         scheduler::schedulerManager.RemoveAllForPlugin(id);
         http::httpManager.RemoveAllForPlugin(id);
         mysql::mysqlManager.RemoveAllForPlugin(id);
@@ -477,6 +480,7 @@ void PluginManager::UnloadAll()
         customhud::customHudManager.RemoveAllForPlugin(p->id);
         convars::convarsManager.RemoveAllForPlugin(p->id);
         networkmessages::networkMessagesManager.RemoveAllForPlugin(p->id);
+        sounds::soundsManager.RemoveAllForPlugin(p->id);
         scheduler::schedulerManager.RemoveAllForPlugin(p->id);
         http::httpManager.RemoveAllForPlugin(p->id);
         mysql::mysqlManager.RemoveAllForPlugin(p->id);

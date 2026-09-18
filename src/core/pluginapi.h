@@ -76,6 +76,7 @@ public:
     IToolkitMySQL* MySQL() override;
     IToolkitNetworkMessages* NetworkMessages() override;
     IToolkitScheduler* Scheduler() override;
+    IToolkitSounds* Sounds() override;
     IToolkitTrace* Trace() override;
     IToolkitPaths* Paths() override;
 

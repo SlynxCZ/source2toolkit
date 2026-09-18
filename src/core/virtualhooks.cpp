@@ -44,6 +44,7 @@
 #include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "crashhandler.h"
 #include "customhud.h"
+#include "sounds.h"
 #include "http.h"
 #include "events.h"
 #include "networkmessages.h"
@@ -73,6 +74,7 @@ namespace virtualhooks
         KHOOK_NEW(m_hDispatchConCommand, &ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr),
         KHOOK_NEW(m_hClientCommand, &ISource2GameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr),
         KHOOK_NEW(m_hClientSvcUserMessage, &ISource2GameClients::ClientSvcUserMessage, this, &Virtuals::Hook_ClientSvcUserMessage, nullptr),
+        KHOOK_NEW(m_hClientDisconnect, &ISource2GameClients::ClientDisconnect, this, nullptr, &Virtuals::Hook_ClientDisconnect),
         // Steam only hands its HTTP client over once the API is up, and this
         // is where that happens -- see http::HTTPManager.
         KHOOK_NEW(m_hSteamAPIActivated, &ISource2Server::GameServerSteamAPIActivated, this, nullptr, &Virtuals::Hook_GameServerSteamAPIActivated),
@@ -97,6 +99,7 @@ namespace virtualhooks
         m_hDispatchConCommand->Add(g_pCVar);
         m_hClientCommand->Add(g_pSource2GameClients);
         m_hClientSvcUserMessage->Add(g_pSource2GameClients);
+        m_hClientDisconnect->Add(g_pSource2GameClients);
         m_hSteamAPIActivated->Add(g_pSource2Server);
         m_hSteamAPIDeactivated->Add(g_pSource2Server);
         m_hPostEventAbstract->Add(shared::g_pGameEventSystem);
@@ -127,6 +130,7 @@ namespace virtualhooks
         m_hDispatchConCommand->Remove(g_pCVar);
         m_hClientCommand->Remove(g_pSource2GameClients);
         m_hClientSvcUserMessage->Remove(g_pSource2GameClients);
+        m_hClientDisconnect->Remove(g_pSource2GameClients);
         m_hSteamAPIActivated->Remove(g_pSource2Server);
         m_hSteamAPIDeactivated->Remove(g_pSource2Server);
         m_hPostEventAbstract->Remove(shared::g_pGameEventSystem);
@@ -148,6 +152,7 @@ namespace virtualhooks
         delete m_hDispatchConCommand;
         delete m_hClientCommand;
         delete m_hClientSvcUserMessage;
+        delete m_hClientDisconnect;
         delete m_hSteamAPIActivated;
         delete m_hSteamAPIDeactivated;
         delete m_hPostEventAbstract;
@@ -161,6 +166,7 @@ namespace virtualhooks
         m_hDispatchConCommand = nullptr;
         m_hClientCommand = nullptr;
         m_hClientSvcUserMessage = nullptr;
+        m_hClientDisconnect = nullptr;
         m_hSteamAPIActivated = nullptr;
         m_hSteamAPIDeactivated = nullptr;
         m_hPostEventAbstract = nullptr;
@@ -361,9 +367,27 @@ namespace virtualhooks
         if (!pInfo)
             return { KHook::Action::Ignore };
 
-        Action result = networkmessages::DispatchServerHook(const_cast<uint64_t*>(reinterpret_cast<const uint64_t*>(clients)), pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
+        uint64_t* pClients = const_cast<uint64_t*>(reinterpret_cast<const uint64_t*>(clients));
+
+        // A sound the game is starting goes to the sound hooks first, decoded;
+        // what they leave of it is what the net-message hooks then see.
+        if (pInfo->m_MessageId == sounds::GE_SosStartSoundEvent)
+        {
+            Action soundResult = sounds::soundsManager.DispatchSoundHook(pClients, const_cast<CNetMessage*>(pData));
+            if (soundResult == Action::Supersede)
+                return { soundResult };
+        }
+
+        Action result = networkmessages::DispatchServerHook(pClients, pInfo->m_MessageId, const_cast<CNetMessage*>(pData));
 
         return { result };
+    }
+
+    KHook::Return<void> Virtuals::Hook_ClientDisconnect(ISource2GameClients* pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
+    {
+        sounds::soundsManager.OnClientDisconnect(slot);
+
+        return { KHook::Action::Ignore };
     }
 
     KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg)
@@ -386,6 +410,15 @@ namespace virtualhooks
     {
         if (!event)
             return { KHook::Action::Ignore, false };
+
+        // LoadEventsFromFile is where the manager normally comes from, but it
+        // has already run when the toolkit is loaded after the game's event
+        // files were read. The hooked instance is the same object.
+        if (!shared::g_pGameEventManager)
+        {
+            shared::g_pGameEventManager = pThis;
+            events::InitEvents();
+        }
 
         bool localDontBroadcast = bDontBroadcast;
         if (!events::DispatchGameEvent(event, false, localDontBroadcast))

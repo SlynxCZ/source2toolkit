@@ -37,6 +37,7 @@ Designed for both beginners and hardcore engine hackers.
 - **Hooks** – KHook: virtual, vtable and function detours, one engine shared with Metamod  
 - **Schema System** – Access SDK classes, offsets and fields  
 - **Scheduler** – Timers and next-frame execution  
+- **Sounds** – Per-player sound events, instant stop, per-player volume channels, hook & rewrite of game sounds  
 - **Tracing** – Raycasts and collision queries  
 - **GameConfig** – Signature & offset management  
 - **Dynamic Libraries** – Extend functionality with external modules  
