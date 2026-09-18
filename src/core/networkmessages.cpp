@@ -99,6 +99,30 @@ namespace networkmessages
     NetworkMessagesManager networkMessagesManager;
 
     /* =========================
+    Handles
+    ========================= */
+
+    // The void* a plugin holds is always the google::protobuf::Message -- what
+    // the interface documents, what every accessor below reads, and the only
+    // thing a nested message can be. The engine's object is a CNetMessagePB,
+    // which has the protobuf as its *second* base, so the two addresses differ
+    // and the conversion has to go through the type in both directions; a cast
+    // through void* lands 48 bytes short of the message.
+    static void* ToHandle(CNetMessage* msg)
+    {
+        if (!msg)
+            return nullptr;
+
+        google::protobuf::Message* pb = msg->ToPB<google::protobuf::Message>();
+        return pb;
+    }
+
+    static CNetMessagePB<google::protobuf::Message>* FromHandle(void* handle)
+    {
+        return handle ? static_cast<CNetMessagePB<google::protobuf::Message>*>(static_cast<google::protobuf::Message*>(handle)) : nullptr;
+    }
+
+    /* =========================
     Allocation
     ========================= */
 
@@ -107,7 +131,7 @@ namespace networkmessages
         auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
             return nullptr;
-        return netmsg->AllocateMessage()->ToPB<google::protobuf::Message>();
+        return ToHandle(netmsg->AllocateMessage());
     }
 
     void* NetworkMessagesManager::AllocateNetMessageByPartialName(const char* name)
@@ -115,14 +139,14 @@ namespace networkmessages
         auto* netmsg = g_pNetworkMessages->FindNetworkMessagePartial(name);
         if (!netmsg)
             return nullptr;
-        return netmsg->AllocateMessage()->ToPB<google::protobuf::Message>();
+        return ToHandle(netmsg->AllocateMessage());
     }
 
     void NetworkMessagesManager::DeallocateNetMessage(void* pmsg)
     {
         if (!pmsg)
             return;
-        delete (CNetMessagePB<google::protobuf::Message>*)pmsg;
+        delete FromHandle(pmsg);
     }
 
     /* =========================
@@ -937,7 +961,9 @@ namespace networkmessages
 
     void NetworkMessagesManager::SendMessage(void* pmsg, int msgid, CPlayerSlot slot)
     {
-        CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
+        CNetMessagePB<google::protobuf::Message>* msg = FromHandle(pmsg);
+        if (!msg)
+            return;
 
         auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
@@ -949,7 +975,9 @@ namespace networkmessages
 
     void NetworkMessagesManager::SendMessageToPlayers(void* pmsg, int msgid, uint64_t playermask)
     {
-        CNetMessagePB<google::protobuf::Message>* msg = (CNetMessagePB<google::protobuf::Message>*)pmsg;
+        CNetMessagePB<google::protobuf::Message>* msg = FromHandle(pmsg);
+        if (!msg)
+            return;
 
         auto* netmsg = g_pNetworkMessages->FindNetworkMessageById(msgid);
         if (!netmsg)
@@ -1026,8 +1054,10 @@ namespace networkmessages
     Dispatch helpers (called from hook sites)
     ========================= */
 
-    Action DispatchServerHook(uint64_t* clients, int messageid, void* msg)
+    Action DispatchServerHook(uint64_t* clients, int messageid, CNetMessage* netmsg)
     {
+        void* msg = ToHandle(netmsg);
+
         Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_serverHooks)
         {
@@ -1038,8 +1068,10 @@ namespace networkmessages
         return result;
     }
 
-    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg)
+    Action DispatchClientHook(CPlayerSlot slot, int messageid, CNetMessage* netmsg)
     {
+        void* msg = ToHandle(netmsg);
+
         Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_clientHooks)
         {
@@ -1050,8 +1082,10 @@ namespace networkmessages
         return result;
     }
 
-    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg)
+    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, CNetMessage* netmsg)
     {
+        void* msg = ToHandle(netmsg);
+
         Action result = Action::Ignore;
         for (auto& [id, cb] : networkMessagesManager.m_serverInternalHooks)
         {

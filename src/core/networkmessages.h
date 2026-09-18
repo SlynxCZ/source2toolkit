@@ -41,6 +41,8 @@
 
 #include <unordered_map>
 
+class CNetMessage;
+
 namespace networkmessages
 {
     class NetworkMessagesManager : public IToolkitNetworkMessages
@@ -162,7 +164,7 @@ namespace networkmessages
 
     extern NetworkMessagesManager networkMessagesManager;
 
-    Action DispatchServerHook(uint64_t* clients, int messageid, void* msg);
-    Action DispatchClientHook(CPlayerSlot slot, int messageid, void* msg);
-    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, void* msg);
+    Action DispatchServerHook(uint64_t* clients, int messageid, CNetMessage* netmsg);
+    Action DispatchClientHook(CPlayerSlot slot, int messageid, CNetMessage* netmsg);
+    Action DispatchServerInternalHook(CPlayerSlot slot, int messageid, CNetMessage* netmsg);
 }
