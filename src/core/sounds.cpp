@@ -481,18 +481,15 @@ namespace sounds
 
     void SoundsManager::Init()
     {
-        // Guids come from the engine's own counter, so a sound sent from here
-        // can never share one with a sound the game starts.
-        m_pSoundSystem = g_SMAPI->GetEngineFactory(false)(SOUNDSYSTEM_INTERFACE_VERSION, nullptr);
         m_nTakeGuidOffset = shared::g_pGameConfig ? shared::g_pGameConfig->GetOffset("CSoundSystem::TakeGuid") : -1;
 
-        if (!m_pSoundSystem || m_nTakeGuidOffset < 0)
-            FP_WARN("Sounds: {} not available, sound guids come from a private counter", !m_pSoundSystem ? SOUNDSYSTEM_INTERFACE_VERSION : "CSoundSystem::TakeGuid");
+        if (!g_pSoundSystem || m_nTakeGuidOffset < 0)
+            FP_WARN("Sounds: {} not available, sound guids come from a private counter", !g_pSoundSystem ? SOUNDSYSTEM_INTERFACE_VERSION : "CSoundSystem::TakeGuid");
     }
 
     SoundGuid SoundsManager::TakeGuid()
     {
-        if (!m_pSoundSystem || m_nTakeGuidOffset < 0)
+        if (!g_pSoundSystem || m_nTakeGuidOffset < 0)
         {
             // High enough that the engine's counter, which starts at 1 every
             // map, does not get there within one.
@@ -505,10 +502,10 @@ namespace sounds
 #ifdef _WIN32
         // Returned in a struct, which MSVC passes back through a hidden pointer.
         uint32_t guid = 0;
-        CALL_VIRTUAL(void, m_nTakeGuidOffset, m_pSoundSystem, &guid);
+        CALL_VIRTUAL(void, m_nTakeGuidOffset, g_pSoundSystem, &guid);
         return guid;
 #else
-        return CALL_VIRTUAL(uint32_t, m_nTakeGuidOffset, m_pSoundSystem);
+        return CALL_VIRTUAL(uint32_t, m_nTakeGuidOffset, g_pSoundSystem);
 #endif
     }
 

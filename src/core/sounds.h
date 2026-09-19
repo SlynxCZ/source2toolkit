@@ -236,7 +236,6 @@ namespace sounds
         /// a volume change for a sound that is already over is ignored there.
         std::deque<ActiveSound> m_active;
 
-        void* m_pSoundSystem = nullptr;
         int m_nTakeGuidOffset = -1;
         uint32_t m_nFallbackGuid = 0x40000000;
 
