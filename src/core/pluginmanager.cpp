@@ -184,6 +184,7 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
     auto fn = (CreateInterfaceFn)GetSymbol(lib, "CreateInterface");
     if (!fn)
     {
+        FP_ERROR("Failed to load {}: no CreateInterface export", fullPath);
         FAILF("CreateInterface not found in %s", fullPath);
     }
 
@@ -192,11 +193,13 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
 
     if (!plugin || ret != TOOLKIT_IFACE_OK)
     {
+        FP_ERROR("Failed to load {}: it does not expose " TOOLKIT_PLAPI_NAME, fullPath);
         FAIL("Invalid plugin interface");
     }
 
     if (plugin->GetApiVersion() != TOOLKIT_PLAPI_VERSION)
     {
+        FP_ERROR("Failed to load {}: plugin API version {} but this core speaks {}", fullPath, plugin->GetApiVersion(), TOOLKIT_PLAPI_VERSION);
         FAIL("Plugin API version mismatch");
     }
 
@@ -213,6 +216,32 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
     char err[256]{};
     if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), hotReload))
     {
+        // The plugin is already in the list -- Load() registers things under
+        // its id -- so it has to come out again before the library is closed.
+        // Left in, "toolkit list" and every listener loop called into a
+        // library that was no longer mapped. Whatever Load() managed to
+        // register before it gave up goes the same way as on an unload.
+        const PluginId failedId = stored->id;
+        stored->listeners.clear();
+
+        events::eventManager.RemoveAllForPlugin(failedId);
+        commands::commandsManager.RemoveAllForPlugin(failedId);
+        customhud::customHudManager.RemoveAllForPlugin(failedId);
+        convars::convarsManager.RemoveAllForPlugin(failedId);
+        networkmessages::networkMessagesManager.RemoveAllForPlugin(failedId);
+        sounds::soundsManager.RemoveAllForPlugin(failedId);
+        scheduler::schedulerManager.RemoveAllForPlugin(failedId);
+        http::httpManager.RemoveAllForPlugin(failedId);
+        mysql::mysqlManager.RemoveAllForPlugin(failedId);
+        entities::entitiesManager.RemoveAllForPlugin(failedId);
+        menus::menuManager.RemoveAllForPlugin(failedId);
+
+        m_plugins.pop_back();
+
+        // Said out loud: a plugin that refuses to load is otherwise invisible,
+        // LoadAll() has nobody to hand the error to.
+        FP_ERROR("Plugin {} refused to load: {}", std::filesystem::path(fullPath).stem().string(), err[0] ? err : "(no reason given)");
+
         FAILF("Plugin load failed: %s", err);
     }
 
@@ -442,6 +471,7 @@ bool PluginManager::LoadAll()
     }
 
     char error[256];
+    int failed = 0;
 
     for (const auto& entry : fs::directory_iterator(dir))
     {
@@ -453,8 +483,13 @@ bool PluginManager::LoadAll()
         if (path.extension() != ".stx")
             continue;
 
-        LoadPlugin(path.stem().string().c_str(), error, sizeof(error));
+        if (!LoadPlugin(path.stem().string().c_str(), error, sizeof(error)))
+            failed++;
     }
+
+    // Each one has said why on its own line; this is the line that gets noticed.
+    if (failed)
+        FP_WARN("{} plugin(s) did not load, {} running. See the errors above.", failed, m_plugins.size());
 
     SetAllLoaded();
     return true;
