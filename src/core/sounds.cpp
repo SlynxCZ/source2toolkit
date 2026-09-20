@@ -533,17 +533,28 @@ namespace sounds
 
     IToolkitSound* SoundsManager::CreateSound(PluginId owner, const char* name)
     {
-        auto sound = std::make_unique<ToolkitSound>(owner);
+        auto* sound = new ToolkitSound(owner);
         if (name && name[0])
             sound->SetName(name);
 
-        m_sounds.push_back(std::move(sound));
-        return m_sounds.back().get();
+        m_sounds.push_back(sound);
+        return sound;
     }
 
     void SoundsManager::DestroySound(IToolkitSound* sound)
     {
-        std::erase_if(m_sounds, [sound](const std::unique_ptr<ToolkitSound>& s) { return s.get() == sound; });
+        // Same thing a plugin's own `delete sound` does; the destructor unlists it.
+        delete static_cast<ToolkitSound*>(sound);
+    }
+
+    void SoundsManager::Forget(ToolkitSound* sound)
+    {
+        std::erase(m_sounds, sound);
+    }
+
+    ToolkitSound::~ToolkitSound()
+    {
+        soundsManager.Forget(this);
     }
 
     /* =========================
@@ -1018,7 +1029,16 @@ namespace sounds
         // library, so it has to go before that library is closed.
         m_hooks.erase(id);
 
-        std::erase_if(m_sounds, [id](const std::unique_ptr<ToolkitSound>& sound) { return sound->m_owner == id; });
+        // Copied first: each delete takes the sound off m_sounds.
+        std::vector<ToolkitSound*> owned;
+        for (ToolkitSound* sound : m_sounds)
+        {
+            if (sound->m_owner == id)
+                owned.push_back(sound);
+        }
+
+        for (ToolkitSound* sound : owned)
+            delete sound;
     }
 
     void SoundsManager::Clear()

@@ -69,6 +69,7 @@ namespace sounds
     {
     public:
         explicit ToolkitSound(PluginId owner) : m_owner(owner) {}
+        ~ToolkitSound() override;
 
         void SetName(const char* name) override;
         const char* GetName() const override;
@@ -209,6 +210,9 @@ namespace sounds
 
         void OnClientDisconnect(CPlayerSlot slot);
 
+        /// Called by ~ToolkitSound().
+        void Forget(ToolkitSound* sound);
+
         // Called when a plugin unloads, like every other plugin-owned registry.
         void RemoveAllForPlugin(PluginId id);
         /// Level change: nothing that was playing survives it on the clients.
@@ -224,7 +228,11 @@ namespace sounds
         ActiveSound* FindActive(SoundGuid guid);
         float ChannelVolume(int slot, const std::string& channel) const;
 
-        std::vector<std::unique_ptr<ToolkitSound>> m_sounds;
+        /// The sounds plugins made and have not deleted yet. Not owned: a plugin
+        /// releases a sound with a plain `delete`, and the sound takes itself
+        /// off this list in its destructor. What is still here when the plugin
+        /// unloads is deleted for it.
+        std::vector<ToolkitSound*> m_sounds;
         std::unordered_map<PluginId, SoundHook> m_hooks;
         std::unordered_map<uint32_t, std::string> m_names;
 
