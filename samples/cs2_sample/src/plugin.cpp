@@ -12,16 +12,97 @@
  */
 
 #include <cstdio>
+#include <cstdarg>
+#include <cstdlib>
 #include "plugin.h"
 
 #include "iserver.h"
 #include "eiface.h"
 
+#include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
+#include "source2toolkit/schema/entity/classes/CCSPlayerController_InGameMoneyServices.h"
+#include "source2toolkit/schema/entity/classes/CPlayer_ItemServices.h"
+#include "source2toolkit/schema/entity/classes/CCSGameRules.h"
+#include "source2toolkit/schema/entity/classes/CSmokeGrenadeProjectile.h"
+
+// The game's protobufs are part of the SDK: message ids (UM_Shake,
+// clc_VoiceData) and, for anyone who prefers them over reflection, the
+// generated message classes themselves.
+#include "usermessages.pb.h"
+#include "netmessages.pb.h"
+
 SamplePlugin g_Plugin;
 TOOLKIT_EXPOSE(cs2_sample, g_Plugin);
 
-CConVar<int> sample_cvari("sample_cvari", FCVAR_NONE, "help string", 42);
-CConVar<float> sample_cvarf("sample_cvarf", FCVAR_NONE, "help string", 69.69f, true, 10.0f, true, 100.0f);
+/* ============================================================================
+ *
+ *   Shared helpers
+ *
+ * ========================================================================== */
+
+// Who ran the command: a controller for a player, nullptr for the server
+// console -- the console has no slot.
+static CCSPlayerController *CallerOf(const CCommandContext &context)
+{
+    const CPlayerSlot slot = context.GetPlayerSlot();
+    return slot.IsValid() ? CCSPlayerController::FromSlot(slot) : nullptr;
+}
+
+// Answers where the command came from: the player's chat, or the server console.
+static void Reply(const CCommandContext &context, const char *pszFormat, ...)
+{
+    char szBuffer[512];
+
+    va_list args;
+    va_start(args, pszFormat);
+    vsnprintf(szBuffer, sizeof(szBuffer), pszFormat, args);
+    va_end(args);
+
+    if (CCSPlayerController *pCaller = CallerOf(context))
+        pCaller->PrintToChat(szBuffer);
+    else
+        TOOLKIT_CONPRINTF("%s\n", szBuffer);
+}
+
+// Most of the entity commands need a living caller. Says why when there is none.
+static CCSPlayerPawn *AlivePawnOf(const CCommandContext &context)
+{
+    CCSPlayerController *pCaller = CallerOf(context);
+    if (!pCaller)
+    {
+        Reply(context, "This command is for players, not for the server console.");
+        return nullptr;
+    }
+
+    CCSPlayerPawn *pPawn = pCaller->GetPlayerPawn();
+    if (!pPawn || !pCaller->m_bPawnIsAlive())
+    {
+        Reply(context, "You have to be alive for this.");
+        return nullptr;
+    }
+
+    return pPawn;
+}
+
+template <typename FN>
+static void ForEachPlayer(FN &&fn)
+{
+    for (int i = 0; i < 64; i++)
+    {
+        if (CCSPlayerController *pController = CCSPlayerController::FromSlot(i))
+            fn(pController);
+    }
+}
+
+/* ============================================================================
+ *
+ *   1. Lifecycle
+ *
+ *   Load() is the one entry point: save the globals, fetch the engine
+ *   interfaces, install hooks, then let each section register its own things.
+ *   Unload() undoes what the toolkit cannot undo for you.
+ *
+ * ========================================================================== */
 
 bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxlen, bool late)
 {
@@ -43,13 +124,90 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     TOOLKIT_LOG(this, "All hooks started!\n");
 
-    // A console command, and the same thing again as a chat command -- the
-    // toolkit routes "!sample" and "/sample" to the same handler.
-    REGISTER_CON_COMMAND("sample_command", [](const CCommandContext &context, const CCommand &args, bool post)
-    {
-        TOOLKIT_LOG(&g_Plugin, "Sample command called by %d. Command: %s\n", context.GetPlayerSlot().Get(), args.GetCommandString());
-    });
+    // OnLevelInit, OnAllToolkitPluginsLoaded and the rest of IToolkitListener.
+    api->AddListener(this, this);
 
+    SetupConVars();
+    SetupCommands();
+    SetupGameEvents();
+    SetupCoreEvents();
+    SetupNetMessages();
+    SetupSounds();
+    SetupNativeFunctions();
+    SetupEntityCommands();
+    SetupTimers();
+
+    return true;
+}
+
+bool SamplePlugin::Unload(char* error, size_t maxlen)
+{
+    // Detaches every hook and deletes it -- deleting is what takes a detour
+    // down. After this nothing in the engine points into this library any
+    // more. A live hook left past unload would jump into unmapped memory on
+    // the next call.
+    KHOOK_DESTRUCT();
+
+    // The CConVars below are objects in this library, and ConVar_Register handed
+    // the engine pointers to them. Without this the engine keeps those pointers
+    // after the library is unloaded, and the next thing to touch one -- the
+    // console autocompleting, a config exec -- reads freed memory.
+    //
+    // ConVar_Unregister only walks the list held by the caller's own library, so
+    // the toolkit cannot do this on a plugin's behalf. Every plugin that
+    // declares a CConVar has to make this call.
+    ConVar_Unregister();
+
+    // Everything else this plugin registered -- commands, command and chat
+    // listeners, game event hooks, net message hooks, the sound hook, the
+    // entity listeners, timers, sounds -- is owned by its PluginId, and the
+    // toolkit drops all of it when the plugin goes. Taking them down by hand
+    // (UNHOOK_GAME_EVENT, UNREGISTER_CON_COMMAND, KILL_TIMER, ...) is for
+    // turning a feature off while the plugin stays loaded.
+
+    return true;
+}
+
+void SamplePlugin::OnAllToolkitPluginsLoaded()
+{
+    /* This is where we'd do stuff that relies on the mod or other plugins
+     * being initialized (for example, cvars added and events registered).
+     */
+}
+
+void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, const char* pOldLevel, const char* pLandmarkName, bool loadGame, bool background)
+{
+    TOOLKIT_LOG(this, "OnLevelInit(%s)\n", pMapName);
+}
+
+void SamplePlugin::OnLevelShutdown()
+{
+    TOOLKIT_LOG(this, "OnLevelShutdown()\n");
+
+    // The countdown timer is TIMER_FLAG_NO_MAPCHANGE: the scheduler kills it
+    // here, and the pointer with it. See SetupTimers().
+    m_pCountdownTimer = nullptr;
+}
+
+/* ============================================================================
+ *
+ *   2. ConVars
+ *
+ *   Declaring your own, reading and writing the game's, and hearing about
+ *   changes.
+ *
+ * ========================================================================== */
+
+CConVar<int> sample_cvari("sample_cvari", FCVAR_NONE, "help string", 42);
+CConVar<float> sample_cvarf("sample_cvarf", FCVAR_NONE, "help string", 69.69f, true, 10.0f, true, 100.0f);
+
+// Used by the later sections, so that each of them can be tried from the console.
+CConVar<bool> sample_hide_bot_deaths("sample_hide_bot_deaths", FCVAR_NONE, "Keep bot deaths out of the killfeed (4. game events)", false);
+CConVar<float> sample_shake_max("sample_shake_max", FCVAR_NONE, "Largest screen shake amplitude a client is sent (6. net messages)", 25.0f, true, 0.0f, false, 0.0f);
+CConVar<float> sample_damage_scale("sample_damage_scale", FCVAR_NONE, "Multiplier for all damage (8. native functions)", 1.0f, true, 0.0f, false, 0.0f);
+
+void SamplePlugin::SetupConVars()
+{
     // The engine only takes plain function pointers for this, and keeps one
     // list of them for the whole process. The toolkit installs a single one and
     // fans out, so a capturing lambda works here.
@@ -61,7 +219,6 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
         TOOLKIT_LOG(&g_Plugin, "Sample convar \"%s\" was changed from %s to %s\n", ref->GetName(), pszOldValue, pszNewValue);
     });
 
-    api->AddListener(this, this);
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
     // You can get a convar reference to an already existing cvar via CConVarRef.
@@ -138,36 +295,238 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
                     cvar_ref_example.GetName(), cvar_ref_example.GetFloat(), cvar_ref_example.GetBool(),
                     cvar_ref_example.GetString().Get());
     }
-
-    return true;
 }
 
-bool SamplePlugin::Unload(char* error, size_t maxlen)
-{
-    // Detaches every hook and deletes it -- deleting is what takes a detour
-    // down. After this nothing in the engine points into this library any
-    // more. A live hook left past unload would jump into unmapped memory on
-    // the next call.
-    KHOOK_DESTRUCT();
+/* ============================================================================
+ *
+ *   3. Commands
+ *
+ *   A command of your own, its arguments and its caller, a chat-only
+ *   trigger, and listening in on a command that is not yours.
+ *
+ * ========================================================================== */
 
-    // The CConVars above are objects in this library, and ConVar_Register handed
-    // the engine pointers to them. Without this the engine keeps those pointers
-    // after the library is unloaded, and the next thing to touch one -- the
-    // console autocompleting, a config exec -- reads freed memory.
+void SamplePlugin::SetupCommands()
+{
+    // A console command, and the same thing again as a chat command -- the
+    // toolkit routes "!sample_command" and "/sample_command" to the same handler.
+    REGISTER_CON_COMMAND("sample_command", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        TOOLKIT_LOG(&g_Plugin, "Sample command called by %d. Command: %s\n", context.GetPlayerSlot().Get(), args.GetCommandString());
+    });
+
+    // Arguments and the caller. Arg(0) is the command itself, ArgS() is
+    // everything after it as one string. The caller is a slot: valid for a
+    // player, invalid (-1) for the server console -- CallerOf() and Reply()
+    // at the top of this file are built on that.
+    REGISTER_CON_COMMAND("sample_echo", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        if (args.ArgC() < 2)
+        {
+            Reply(context, "Usage: sample_echo <text>");
+            return;
+        }
+
+        CCSPlayerController *pCaller = CallerOf(context);
+        Reply(context, "%s said: %s (%d arguments)", pCaller ? pCaller->GetPlayerName() : "Console", args.ArgS(), args.ArgC() - 1);
+    });
+
+    // A chat listener has no console command behind it: it fires on the word
+    // typed into chat, with or without "!" or "/". The handler cannot block
+    // the message -- it is a listener, the message still shows.
+    REGISTER_CHAT_LISTENER("noshake", [this](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        const CPlayerSlot slot = context.GetPlayerSlot();
+        if (!slot.IsValid())
+            return;
+
+        // Used by the outgoing net message hook in section 6.
+        m_NoShakeMask ^= (uint64_t(1) << slot.Get());
+
+        const bool bOff = (m_NoShakeMask >> slot.Get()) & 1;
+        Reply(context, "Screen shakes are now %s for you.", bOff ? "off" : "on");
+    });
+
+    // Listening in on a command somebody else owns -- the game's, another
+    // plugin's. Pre (post = false) may answer with Action::Supersede to stop
+    // the command from running at all; post only watches.
+    REGISTER_CON_LISTENER("jointeam", [](const CCommandContext &context, const CCommand &args, bool post) -> Action
+    {
+        // "jointeam 1" is spectator. Refusing it here is the whole of a
+        // "no spectators" plugin.
+        if (args.ArgC() >= 2 && atoi(args.Arg(1)) == 1 && sample_cvari.Get() == 1337)
+        {
+            Reply(context, "Spectating is off while sample_cvari is 1337.");
+            return Action::Supersede;
+        }
+
+        return Action::Ignore;
+    }, false);
+
+    REGISTER_CON_LISTENER("jointeam", [](const CCommandContext &context, const CCommand &args, bool post) -> Action
+    {
+        TOOLKIT_LOG(&g_Plugin, "Slot %d ran \"%s\"\n", context.GetPlayerSlot().Get(), args.GetCommandString());
+        return Action::Ignore;
+    }, true);
+}
+
+/* ============================================================================
+ *
+ *   4. Game events
+ *
+ *   Hooking before and after the engine handles an event, reading and
+ *   changing its fields, keeping it from the clients, and firing one.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupGameEvents()
+{
+    // Pre (post = false): the event has been created but nobody has seen it
+    // yet. Fields may be changed, dontBroadcast keeps it on the server, and
+    // Action::Supersede cancels it outright.
+    HOOK_GAME_EVENT("player_death", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
+    {
+        // Player fields resolve straight to the entity, the slot or the pawn.
+        auto *pVictim = static_cast<CCSPlayerController *>(event->GetPlayerController("userid"));
+        auto *pAttacker = static_cast<CCSPlayerController *>(event->GetPlayerController("attacker"));
+
+        TOOLKIT_LOG(&g_Plugin, "player_death: %s killed %s with %s%s\n",
+                    pAttacker ? pAttacker->GetPlayerName() : "world",
+                    pVictim ? pVictim->GetPlayerName() : "?",
+                    event->GetString("weapon"),
+                    event->GetBool("headshot") ? " (headshot)" : "");
+
+        // The server still processes the event -- stats, other plugins' post
+        // hooks -- but no client is told, so the killfeed never shows it.
+        if (sample_hide_bot_deaths.Get() && pVictim && pVictim->IsBot())
+        {
+            dontBroadcast = true;
+            return Action::Override;
+        }
+
+        return Action::Ignore;
+    }, false);
+
+    // Post (post = true): the engine is done with it. The place to react.
+    // This one gives everybody $1337 at the start of each round.
+    HOOK_GAME_EVENT("round_start", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
+    {
+        ForEachPlayer([](CCSPlayerController *pController)
+        {
+            if (auto *pMoney = pController->m_pInGameMoneyServices())
+                pMoney->m_iAccount = 1337;
+        });
+
+        return Action::Ignore;
+    }, true);
+
+    HOOK_GAME_EVENT("player_jump", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
+    {
+        TOOLKIT_LOG(&g_Plugin, "player_jump: slot %d\n", event->GetPlayerSlot("userid").Get());
+        return Action::Ignore;
+    }, true);
+
+    // Firing an event. Created through the engine's event manager, filled in,
+    // then sent one of two ways:
     //
-    // ConVar_Unregister only walks the list held by the caller's own library, so
-    // the toolkit cannot do this on a plugin's behalf. Every plugin that
-    // declares a CConVar has to make this call.
-    ConVar_Unregister();
+    //   * FireEvent()         -- to the server and every client, through every hook;
+    //   * FireEventToClient() -- to one player only, which the server itself
+    //                            never sees. That is what makes per-player HUD
+    //                            text out of show_survival_respawn_status.
+    REGISTER_CON_COMMAND("sample_event", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerController *pCaller = CallerOf(context);
+        if (!pCaller)
+        {
+            Reply(context, "This command is for players.");
+            return;
+        }
 
-    return true;
+        IGameEventManager2 *pEventManager = g_ToolkitAPI->GetGameEventManager();
+
+        IGameEvent *pEvent = pEventManager->CreateEvent("show_survival_respawn_status", true);
+        if (!pEvent)
+            return;
+
+        pEvent->SetString("loc_token", "<font color='#00ff00'>Hello from a game event</font>");
+        pEvent->SetInt("duration", 5);
+        pEvent->SetPlayer("userid", pCaller->GetPlayerSlot());
+
+        pCaller->FireEventToClient(pEvent);
+
+        // FireEvent() frees the event it is given; an event that went out any
+        // other way is still yours.
+        pEventManager->FreeEvent(pEvent);
+    });
 }
 
-void SamplePlugin::OnAllToolkitPluginsLoaded()
+/* ============================================================================
+ *
+ *   5. Core events
+ *
+ *   What the server itself is doing, as opposed to what the game announces:
+ *   entities coming and going, entity outputs firing, clients connecting,
+ *   the frame ticking. Map start and end are in section 1.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupCoreEvents()
 {
-    /* This is where we'd do stuff that relies on the mod or other plugins
-     * being initialized (for example, cvars added and events registered).
-     */
+    // IEntityListener: OnEntityCreated / Spawned / Deleted / ParentChanged.
+    ADD_ENTITY_LISTENER(this);
+
+    // IEntityIOListener: a classname and an output, nullptr for "any". Pre
+    // may return Action::Supersede, and the output then never fires -- the
+    // door stays shut, the button does nothing.
+    ADD_ENTITY_IO_LISTENER(this, "func_button", "OnPressed");
+    ADD_ENTITY_IO_LISTENER(this, nullptr, "OnStartTouch", true);
+
+    // The client hooks and GameFrame are KHook hooks on engine interfaces,
+    // declared in plugin.h and installed by KHOOK_INIT() in Load().
+}
+
+void SamplePlugin::OnEntityCreated(CEntityInstance* pEntity)
+{
+    // Created is early: the entity exists, its keyvalues have not been applied
+    // and it has not spawned. Good for noticing, too soon for changing.
+}
+
+void SamplePlugin::OnEntitySpawned(CEntityInstance* pEntity)
+{
+    // Every smoke grenade thrown from here on is purple.
+    if (V_strcmp(pEntity->GetClassname(), "smokegrenade_projectile") != 0)
+        return;
+
+    // The game fills the projectile in right after spawning it, so a change
+    // made here would be overwritten. One frame later it sticks. A raw pointer
+    // must not cross a frame -- the entity may be gone by then -- a handle
+    // resolves to nullptr instead.
+    CHandle<CSmokeGrenadeProjectile> hSmoke = static_cast<CSmokeGrenadeProjectile *>(pEntity)->GetHandle();
+
+    NEXT_FRAME([hSmoke]()
+    {
+        if (CSmokeGrenadeProjectile *pSmoke = hSmoke.Get())
+            pSmoke->m_vSmokeColor = Vector(170.0f, 0.0f, 255.0f);
+    });
+}
+
+void SamplePlugin::OnEntityDeleted(CEntityInstance* pEntity)
+{
+    // Last call for this entity. Anything holding a raw pointer to it has to
+    // let go now.
+}
+
+Action SamplePlugin::OnEntityOutput(const char* pchOutputName, CEntityInstance* pActivator, CEntityInstance* pCaller, float flDelay, bool post)
+{
+    // OnStartTouch fires constantly; only the button is worth a log line.
+    if (!post)
+    {
+        TOOLKIT_LOG(this, "%s fired %s (activator: %s)\n",
+                    pCaller ? pCaller->GetClassname() : "?", pchOutputName,
+                    pActivator ? pActivator->GetClassname() : "none");
+    }
+
+    return Action::Ignore;
 }
 
 KHook::Return<void> SamplePlugin::Hook_ClientActive(ISource2GameClients* pThis, CPlayerSlot slot, bool bLoadGame, const char* pszName, uint64 xuid)
@@ -240,6 +599,12 @@ KHook::Return<void> SamplePlugin::Hook_ClientDisconnect(ISource2GameClients* pTh
 {
     TOOLKIT_LOG(this, "Hook_ClientDisconnect(%d, %d, \"%s\", %lld, \"%s\")\n", slot.Get(), reason, pszName, xuid, pszNetworkID);
 
+    // Per-slot state has to go with the player, or the next one to take the
+    // slot inherits it.
+    const uint64_t bit = uint64_t(1) << slot.Get();
+    m_NoShakeMask &= ~bit;
+    m_VoiceMutedMask &= ~bit;
+
     return { KHook::Action::Ignore };
 }
 
@@ -257,12 +622,237 @@ KHook::Return<void> SamplePlugin::Hook_GameFrame(ISource2Server* pThis, bool sim
     return { KHook::Action::Ignore };
 }
 
+/* ============================================================================
+ *
+ *   6. Net messages
+ *
+ *   Building a protobuf message and sending it to chosen players, and sitting
+ *   on the wire in both directions.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupNetMessages()
+{
+    // Sending. Allocate by id (or by name, NET_MSG_ALLOC_BY_NAME), set fields
+    // by their .proto names, send, free. The message is yours throughout:
+    // sending does not consume it, so one message can go out many times.
+    REGISTER_CON_COMMAND("sample_shake", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        void *pMsg = NET_MSG_ALLOC_BY_ID(UM_Shake);
+        if (!pMsg)
+            return;
+
+        // CUserMessageShake, usermessages.proto
+        g_pToolkitNetworkMessages->SetUInt32(pMsg, "command", 0); // SHAKE_START
+        g_pToolkitNetworkMessages->SetFloat(pMsg, "amplitude", args.ArgC() >= 2 ? strtof(args.Arg(1), nullptr) : 10.0f);
+        g_pToolkitNetworkMessages->SetFloat(pMsg, "frequency", 150.0f);
+        g_pToolkitNetworkMessages->SetFloat(pMsg, "duration", 2.0f);
+
+        const CPlayerSlot slot = context.GetPlayerSlot();
+        if (slot.IsValid())
+            NET_MSG_SEND(pMsg, UM_Shake, slot);             // the caller only
+        else
+            NET_MSG_SEND_PLAYERS(pMsg, UM_Shake, ~0ull);    // from the console: everybody
+
+        NET_MSG_FREE(pMsg);
+    });
+
+    // Server -> clients. Every message the server posts, this plugin's own
+    // included, with the recipients as a bitmask that may be edited. The
+    // message may be edited too: the clients get what is left when the hooks
+    // are done. Action::Supersede drops it for everybody.
+    HOOK_SERVER_MESSAGE([this](uint64_t *clients, int messageid, void *msg) -> Action
+    {
+        if (messageid != UM_Shake)
+            return Action::Ignore;
+
+        // Changing a field: no shake stronger than sample_shake_max.
+        const float flMax = sample_shake_max.Get();
+        if (g_pToolkitNetworkMessages->GetFloat(msg, "amplitude") > flMax)
+            g_pToolkitNetworkMessages->SetFloat(msg, "amplitude", flMax);
+
+        // Changing the recipients: not to those who typed !noshake.
+        *clients &= ~m_NoShakeMask;
+
+        // The handle is the protobuf itself, for those who would rather use
+        // the generated class than field names:
+        //
+        //     auto *pShake = static_cast<CUserMessageShake *>(static_cast<google::protobuf::Message *>(msg));
+        //     pShake->set_amplitude(flMax);
+
+        return Action::Ignore;
+    });
+
+    // Client -> server. Here: a voice mute. The packets of a muted player are
+    // dropped before the server looks at them, so nobody hears them.
+    HOOK_CLIENT_MESSAGE([this](CPlayerSlot slot, int messageid, void *msg) -> Action
+    {
+        if (messageid == clc_VoiceData && ((m_VoiceMutedMask >> slot.Get()) & 1))
+            return Action::Supersede;
+
+        return Action::Ignore;
+    });
+
+    REGISTER_CON_COMMAND("sample_mute", [this](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        if (args.ArgC() < 2)
+        {
+            Reply(context, "Usage: sample_mute <slot>");
+            return;
+        }
+
+        const int iSlot = atoi(args.Arg(1));
+        CCSPlayerController *pTarget = (iSlot >= 0 && iSlot < 64) ? CCSPlayerController::FromSlot(iSlot) : nullptr;
+        if (!pTarget)
+        {
+            Reply(context, "Nobody in slot %d.", iSlot);
+            return;
+        }
+
+        m_VoiceMutedMask ^= (uint64_t(1) << iSlot);
+        Reply(context, "%s is now %s.", pTarget->GetPlayerName(), ((m_VoiceMutedMask >> iSlot) & 1) ? "muted" : "unmuted");
+    });
+}
+
+/* ============================================================================
+ *
+ *   7. Sounds
+ *
+ *   Sound events go straight to the players picked for them, come back as a
+ *   guid that stops or changes them, and the game's own can be rewritten on
+ *   their way out.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupSounds()
+{
+    // The short way: one call, one player, heard "in the head" -- no position.
+    REGISTER_CON_COMMAND("sample_sound", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        const CPlayerSlot slot = context.GetPlayerSlot();
+        const char *pszSound = args.ArgC() >= 2 ? args.Arg(1) : "Weapon_AK47.Single";
+
+        if (slot.IsValid())
+            SOUND_EMIT_TO_PLAYER(slot, pszSound);
+        else
+            SOUND_EMIT_TO_ALL(pszSound);
+    });
+
+    // The long way: a sound object. Source, volume, pitch, any other public
+    // parameter of the sound event, and exactly who hears it.
+    REGISTER_CON_COMMAND("sample_sound_world", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerPawn *pPawn = AlivePawnOf(context);
+        if (!pPawn)
+            return;
+
+        IToolkitSound *pSound = IToolkitSound::New("Weapon_AK47.Single");
+
+        pSound->SetVolume(0.5f);
+        pSound->SetPitch(2.0f);
+
+        // One of three sources:
+        //   SetSourceEntityIndex(SOUND_SOURCE_LISTENER) -- at each recipient (default)
+        //   SetPosition(vec)                            -- a fixed point in the world
+        //   SetSourceEntity(pEntity)                    -- from an entity, following it
+        pSound->SetPosition(pPawn->GetAbsOrigin() + Vector(0.0f, 0.0f, 128.0f));
+
+        // Parameters beyond volume and pitch go by the name the sound event
+        // declares them under:
+        //     pSound->SetFloat("public.my_param", 1.0f);
+
+        pSound->AddAllRecipients();
+        pSound->RemoveRecipient(CPlayerSlot(63)); // everybody but slot 63
+
+        // Emit() may be called again and again; each call is a new sound with
+        // a new guid. The guid is what stops it or changes it while it plays.
+        const SoundGuid guid = pSound->Emit();
+        delete pSound;
+
+        ADD_TIMER(0.1f, [guid]() { g_pToolkitSounds->SetSoundVolume(guid, 0.1f); });
+        ADD_TIMER(0.3f, [guid]() { SOUND_STOP(guid); });
+    });
+
+    // The game's own sounds, on their way to the clients. Ignore leaves one
+    // alone, Override sends it with the changes made here, Supersede drops it.
+    HOOK_SOUND([](IToolkitSound *sound) -> Action
+    {
+        // Sounds travel as hashes. Hash the names you care about once and
+        // compare numbers.
+        static const uint32_t s_nKnifeHit = g_pToolkitSounds->HashSoundName("Weapon_Knife.Hit");
+
+        if (sound->GetNameHash() != s_nKnifeHit)
+            return Action::Ignore;
+
+        sound->SetPitch(1.5f);
+        return Action::Override;
+    });
+}
+
+/* ============================================================================
+ *
+ *   8. Native functions
+ *
+ *   Game functions no interface exposes, found by signature: hooked, and
+ *   called. The hooks themselves are declared in plugin.h -- one through an
+ *   address the toolkit already has, one through a gamedata entry.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupNativeFunctions()
+{
+    // Calling. An address and a function pointer type are all it takes.
+    REGISTER_CON_COMMAND("sample_swap", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerController *pCaller = CallerOf(context);
+        if (!pCaller || pCaller->m_iTeamNum() < 2)
+        {
+            Reply(context, "You have to be on a team.");
+            return;
+        }
+
+        const unsigned char nNewTeam = pCaller->m_iTeamNum() == 2 ? 3 : 2;
+
+        // Way one: the toolkit resolved it and knows the type. ADDR_* getters
+        // return a typed function pointer, ready to call.
+        if (auto pfnSwitchTeam = ADDR_SWITCH_TEAM())
+        {
+            pfnSwitchTeam(pCaller, nNewTeam);
+            return;
+        }
+
+        // Way two: any gamedata entry, with the type spelled out by you. Add
+        // entries of your own to the gamedata and they resolve the same way.
+        using SwitchTeam_t = void (FASTCALL *)(CCSPlayerController *, unsigned char);
+
+        if (auto pfnSwitchTeam = GAMECONFIG_RESOLVE("CCSPlayerController::SwitchTeam").RCast<SwitchTeam_t>())
+            pfnSwitchTeam(pCaller, nNewTeam);
+
+        // For the common ones there is a third way, which is not to care:
+        // pCaller->SwitchTeam(nNewTeam) does exactly the above.
+    });
+}
+
 KHook::Return<int64_t> SamplePlugin::Hook_TakeDamageOld(CBaseEntity* pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
 {
     // The hooked object arrives as the first parameter. Ignore lets the original
     // run untouched; change pInfo here and the original sees your version,
     // while { KHook::Action::Supersede, 0 } would block the damage outright.
     TOOLKIT_LOG(this, "TakeDamageOld: %p entity, %.1f damage\n", pThis, pInfo ? pInfo->m_flDamage : 0.0f);
+
+    // Changing a parameter: this is a Pre hook, so the original runs after it,
+    // with whatever is in pInfo by then.
+    if (pInfo && sample_damage_scale.Get() != 1.0f)
+        pInfo->m_flDamage *= sample_damage_scale.Get();
+
+    // Running the original yourself, from the middle of the handler -- to act
+    // on its result, or to run it twice, or on something else:
+    //
+    //     const int64_t ret = m_hTakeDamageOld.CallOriginal(pThis, pInfo, pResult);
+    //     ... pResult is filled in now ...
+    //     return { KHook::Action::Supersede, ret };
+    //
+    // Supersede, because the original has already run and must not run again.
 
     return { KHook::Action::Ignore, 0 };
 }
@@ -274,12 +864,167 @@ KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis, double fl
     return { KHook::Action::Ignore };
 }
 
-void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, const char* pOldLevel, const char* pLandmarkName, bool loadGame, bool background)
+/* ============================================================================
+ *
+ *   9. Entities
+ *
+ *   Schema fields read and written like members (a write to a networked
+ *   field tells the engine to send it), the helpers on the schema classes,
+ *   and finding, creating and poking entities.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupEntityCommands()
 {
-    TOOLKIT_LOG(this, "OnLevelInit(%s)\n", pMapName);
+    REGISTER_CON_COMMAND("sample_hp", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerPawn *pPawn = AlivePawnOf(context);
+        if (!pPawn)
+            return;
+
+        // Reading is a call, writing is an assignment. += -= |= and the rest
+        // work too, and all of them mark the field as changed.
+        const int nOld = pPawn->m_iHealth();
+        pPawn->m_iHealth = args.ArgC() >= 2 ? atoi(args.Arg(1)) : 100;
+
+        Reply(context, "Health: %d -> %d", nOld, pPawn->m_iHealth());
+    });
+
+    REGISTER_CON_COMMAND("sample_up", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerPawn *pPawn = AlivePawnOf(context);
+        if (!pPawn)
+            return;
+
+        // Position, angles, velocity; nullptr keeps what the entity has.
+        const Vector vecTarget = pPawn->GetAbsOrigin() + Vector(0.0f, 0.0f, 100.0f);
+        pPawn->Teleport(&vecTarget, nullptr, nullptr);
+    });
+
+    REGISTER_CON_COMMAND("sample_give", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerPawn *pPawn = AlivePawnOf(context);
+        if (!pPawn)
+            return;
+
+        // The services hang off the pawn as pointers, null on a pawn that does
+        // not have them.
+        CPlayer_ItemServices *pItems = pPawn->m_pItemServices();
+        if (!pItems)
+            return;
+
+        const char *pszItem = args.ArgC() >= 2 ? args.Arg(1) : "weapon_ak47";
+        if (!pItems->GiveNamedItem(pszItem))
+            Reply(context, "Could not give \"%s\".", pszItem);
+    });
+
+    REGISTER_CON_COMMAND("sample_strip", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        if (CCSPlayerPawn *pPawn = AlivePawnOf(context))
+        {
+            if (CPlayer_ItemServices *pItems = pPawn->m_pItemServices())
+                pItems->RemoveWeapons(false);
+        }
+    });
+
+    REGISTER_CON_COMMAND("sample_slay", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        if (CCSPlayerPawn *pPawn = AlivePawnOf(context))
+            pPawn->CommitSuicide(false, true);
+    });
+
+    REGISTER_CON_COMMAND("sample_respawn", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        if (CCSPlayerController *pCaller = CallerOf(context))
+            pCaller->Respawn();
+    });
+
+    // Finding: by classname, one after another. nullptr starts the search,
+    // the last match continues it.
+    REGISTER_CON_COMMAND("sample_break", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        int nBroken = 0;
+
+        CBaseEntity *pEntity = nullptr;
+        while ((pEntity = FIND_ENTITY_BY_CLASSNAME(pEntity, "func_breakable")) != nullptr)
+        {
+            // An input, exactly as a map's I/O would send it. AddEntityIOEvent()
+            // takes the same arguments plus a delay and queues it instead.
+            pEntity->AcceptInput("Break");
+            nBroken++;
+        }
+
+        Reply(context, "Broke %d func_breakable.", nBroken);
+    });
+
+    // What is under the crosshair.
+    REGISTER_CON_COMMAND("sample_aim", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerController *pCaller = CallerOf(context);
+        if (!pCaller)
+            return;
+
+        CBaseEntity *pTarget = FIND_PICKER_ENTITY(pCaller);
+        if (!pTarget)
+        {
+            Reply(context, "Nothing there.");
+            return;
+        }
+
+        Reply(context, "#%d %s, health %d", pTarget->GetIndex(), pTarget->GetClassname(), pTarget->m_iHealth());
+    });
+
+    // The game rules are an entity like any other, and the toolkit keeps it at hand.
+    REGISTER_CON_COMMAND("sample_endround", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        if (CCSGameRules *pGameRules = GET_GAME_RULES())
+            pGameRules->TerminateRound(5.0f, 10 /* round draw */);
+    });
 }
 
-void SamplePlugin::OnLevelShutdown()
+/* ============================================================================
+ *
+ *   10. Timers
+ *
+ *   Next frame, once after a delay, or repeating. All of them run on the
+ *   main thread, and all of them die with the plugin.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupTimers()
 {
-    TOOLKIT_LOG(this, "OnLevelShutdown()\n");
+    // NEXT_FRAME is in OnEntitySpawned() (section 5), one-shot timers are in
+    // sample_sound_world (section 7). This is the one that repeats.
+    REGISTER_CON_COMMAND("sample_countdown", [this](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        // A Timer* is good until the timer ends. A one-shot ends after it
+        // fires, a repeating one when it is killed -- by you, or by a map
+        // change if it carries TIMER_FLAG_NO_MAPCHANGE, which is why
+        // OnLevelShutdown() forgets this pointer.
+        if (m_pCountdownTimer)
+        {
+            KILL_TIMER(m_pCountdownTimer);
+            m_pCountdownTimer = nullptr;
+        }
+
+        m_nCountdown = args.ArgC() >= 2 ? atoi(args.Arg(1)) : 5;
+
+        m_pCountdownTimer = ADD_TIMER(1.0f, [this]()
+        {
+            char szMessage[64];
+            if (m_nCountdown > 0)
+                snprintf(szMessage, sizeof(szMessage), "%d...", m_nCountdown);
+            else
+                snprintf(szMessage, sizeof(szMessage), "Go!");
+
+            ForEachPlayer([&](CCSPlayerController *pController) { pController->PrintToCenter(szMessage); });
+
+            // A timer may kill itself from inside its own callback.
+            if (m_nCountdown-- <= 0)
+            {
+                KILL_TIMER(m_pCountdownTimer);
+                m_pCountdownTimer = nullptr;
+            }
+        }, TIMER_FLAG_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+    });
 }

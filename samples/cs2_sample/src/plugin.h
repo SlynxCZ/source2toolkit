@@ -4,9 +4,25 @@
  * Source2Toolkit Sample Plugin
  * ======================================================
  *
- * A port of Metamod:Source's own s2_sample_mm, doing the same things through
- * Source2Toolkit instead: the same hooks, the same convars, the same command,
- * the same level callbacks.
+ * One plugin that walks through the toolkit, a section at a time. It started
+ * as a port of Metamod:Source's own s2_sample_mm -- the same hooks, the same
+ * convars, the same command, the same level callbacks -- and grew a section
+ * for every subsystem a plugin usually reaches for first:
+ *
+ *   1. Lifecycle        Load / Unload / IToolkitListener
+ *   2. ConVars          CConVar, CConVarRef, change hook
+ *   3. Commands         console + chat commands, arguments, replies, listeners
+ *   4. Game events      pre / post hooks, dontBroadcast, firing an event
+ *   5. Core events      entity listener, entity outputs, client hooks, GameFrame
+ *   6. Net messages     building + sending, outgoing and incoming hooks
+ *   7. Sounds           one-call emit, sound objects, stopping, the sound hook
+ *   8. Native functions hooking by signature, calling by signature
+ *   9. Entities         schema fields, teleport, items, inputs
+ *  10. Timers           next frame, delayed, repeating
+ *
+ * plugin.cpp carries the same numbers in its section banners. Each section is
+ * a SetupXxx() called from Load() followed by the handlers it registers, so a
+ * section can be lifted out into a plugin of its own as it stands.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from
@@ -39,12 +55,15 @@
 #include "source2toolkit/IToolkitMySQL.h"
 #include "source2toolkit/IToolkitNetworkMessages.h"
 #include "source2toolkit/IToolkitScheduler.h"
+#include "source2toolkit/IToolkitSounds.h"
 #include "source2toolkit/IToolkitTrace.h"
 
 #include "source2toolkit/schema/entity/classes/CBaseEntity.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerPawn.h"
+#include "source2toolkit/schema/entityio.h"
 #include "source2toolkit/schema/takedamageinfo.h"
 #include "source2toolkit/schema/takedamageresult.h"
+#include "entity2/entitysystem.h"
 #include "igameevents.h"
 #include "eiface.h"
 
@@ -56,18 +75,27 @@
 // g_pToolkitAddresses, so the globals have to be declared first.
 TOOLKIT_GLOBALVARS();
 
-class SamplePlugin final : public IToolkitPlugin, public IToolkitListener
+class SamplePlugin final : public IToolkitPlugin,
+                           public IToolkitListener,
+                           public IEntityListener,
+                           public IEntityIOListener
 {
 public:
 	bool Load(PluginId id, IToolkitAPI *api, char *error, size_t maxlen, bool late) override;
 	bool Unload(char *error, size_t maxlen) override;
 
-public: // listener
+public: // 1. lifecycle -- IToolkitListener
 	void OnAllToolkitPluginsLoaded() override;
 	void OnLevelInit(const char *pMapName, const char *pMapEntities, const char *pOldLevel, const char *pLandmarkName, bool loadGame, bool background) override;
 	void OnLevelShutdown() override;
 
-public: // hooks
+public: // 5. core events -- IEntityListener, IEntityIOListener
+	void OnEntityCreated(CEntityInstance *pEntity) override;
+	void OnEntitySpawned(CEntityInstance *pEntity) override;
+	void OnEntityDeleted(CEntityInstance *pEntity) override;
+	Action OnEntityOutput(const char *pchOutputName, CEntityInstance *pActivator, CEntityInstance *pCaller, float flDelay, bool post) override;
+
+public: // 5. core events, 8. native functions -- KHook handlers
 	KHook::Return<void> Hook_GameFrame(ISource2Server *pThis, bool simulating, bool bFirstTick, bool bLastTick);
 	KHook::Return<void> Hook_ClientActive(ISource2GameClients *pThis, CPlayerSlot slot, bool bLoadGame, const char *pszName, uint64 xuid);
 	KHook::Return<void> Hook_ClientDisconnect(ISource2GameClients *pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char *pszName, uint64 xuid, const char *pszNetworkID);
@@ -78,6 +106,17 @@ public: // hooks
 	KHook::Return<void> Hook_ClientCommand(ISource2GameClients *pThis, CPlayerSlot nSlot, const CCommand &cmd);
 	KHook::Return<int64_t> Hook_TakeDamageOld(CBaseEntity *pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult);
 	KHook::Return<void> Hook_PostThink(CCSPlayerPawn *pThis, double flFrameTime, float flUnknown);
+
+private: // one per section of plugin.cpp, called from Load() in this order
+	void SetupConVars();
+	void SetupCommands();
+	void SetupGameEvents();
+	void SetupCoreEvents();
+	void SetupNetMessages();
+	void SetupSounds();
+	void SetupNativeFunctions();
+	void SetupEntityCommands();
+	void SetupTimers();
 
 private:
 	// The hooks are KHook objects -- metamod's detour library, on the one engine
@@ -91,7 +130,7 @@ private:
 	// (which is why the handlers above come first), KHOOK_INIT() in Load()
 	// resolves the target and installs it, KHOOK_DESTRUCT() in Unload() takes it
 	// down. A handler that needs the real original from the middle of its body
-	// calls m_hXxx->CallOriginal(pThis, ...).
+	// calls m_hXxx.CallOriginal(pThis, ...).
 	//
 	// Virtual hooks go onto the engine's own interface instances. The pointer is
 	// read at KHOOK_INIT(), not here -- it is still null when this object is
@@ -116,6 +155,16 @@ private:
 	// typed getter for it. The entry's library is read, then it is found by
 	// exported symbol or by pattern -- you do not care which.
 	KHOOK_MEMBER(m_hPostThink, "CCSPlayerPawn::PostThink", &SamplePlugin::Hook_PostThink, nullptr);
+
+private:
+	// 6. net messages -- one bit per player slot, the same layout the hooks get
+	// their recipients in.
+	uint64_t m_NoShakeMask = 0;     // players who turned screen shakes off (!noshake)
+	uint64_t m_VoiceMutedMask = 0;  // players whose voice is dropped (sample_mute)
+
+	// 10. timers -- a Timer* is only good while the timer lives; see SetupTimers().
+	Timer *m_pCountdownTimer = nullptr;
+	int m_nCountdown = 0;
 
 public:
 	const char *GetAuthor() override { return PLUGIN_AUTHOR; }
