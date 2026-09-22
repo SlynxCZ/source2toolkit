@@ -41,6 +41,7 @@
 #include "convars.h"
 #include "customhud.h"
 #include "sounds.h"
+#include "transmit.h"
 #include "gamesystems.h"
 #include "http.h"
 #include "json.h"
@@ -57,6 +58,7 @@
 #include "source2toolkit/IToolkitConVars.h"
 #include "source2toolkit/IToolkitCustomHud.h"
 #include "source2toolkit/IToolkitSounds.h"
+#include "source2toolkit/IToolkitTransmit.h"
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"
@@ -280,6 +282,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_SCHEDULER_INTERFACE)) ptr = &scheduler::schedulerManager;
     else if (!strcmp(iface, TOOLKIT_SOUNDS_INTERFACE)) ptr = &sounds::soundsManager;
     else if (!strcmp(iface, TOOLKIT_TRACE_INTERFACE)) ptr = &raytrace::rayTrace;
+    else if (!strcmp(iface, TOOLKIT_TRANSMIT_INTERFACE)) ptr = &transmit::transmitManager;
     else if (!strcmp(iface, TOOLKIT_PATHS_INTERFACE)) ptr = &paths::pathsManager;
 
     if (ptr)
@@ -332,6 +335,11 @@ IToolkitCustomHud* PluginApi::CustomHud()
 IToolkitSounds* PluginApi::Sounds()
 {
     return &sounds::soundsManager;
+}
+
+IToolkitTransmit* PluginApi::Transmit()
+{
+    return &transmit::transmitManager;
 }
 
 IToolkitEntities* PluginApi::Entities()

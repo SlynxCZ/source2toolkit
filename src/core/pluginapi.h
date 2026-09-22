@@ -78,6 +78,7 @@ public:
     IToolkitScheduler* Scheduler() override;
     IToolkitSounds* Sounds() override;
     IToolkitTrace* Trace() override;
+    IToolkitTransmit* Transmit() override;
     IToolkitPaths* Paths() override;
 
     IToolkitModule* LoadModule(const char* name) override;

@@ -1,0 +1,199 @@
+/**
+* vim: set ts=4 sw=4 tw=99 noet:
+ * =============================================================================
+ * Source2Toolkit
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
+ * AlliedModders LLC. All rights reserved.
+ * =============================================================================
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, version 3.0, as published by the
+ * Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ * As a special exception, Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl and
+ * AlliedModders LLC give you permission to link the code of this program
+ * (as well as its derivative works) to "Counter-Strike 2," "Source 2,"
+ * "Steam," and any Game MODs or server software running on software by
+ * Valve Corporation. You must obey the GNU General Public License in all
+ * respects for all other code used.
+ *
+ * Additionally, this exception applies to all derivative works unless
+ * otherwise stated in LICENSE.txt.
+ *
+ * Authors:
+ *   - Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl
+ *   - AlliedModders LLC
+ *
+ * Project: Source2Toolkit
+ */
+#pragma once
+#include "source2toolkit/IToolkitTransmit.h"
+
+#include "bitvec.h"
+#include "checktransmitinfo.h"
+#include "const.h"
+#include "entity2/entityidentity.h"
+#include "entityhandle.h"
+#include "playerslot.h"
+#include "utlvector.h"
+
+#include <array>
+#include <cstdint>
+#include <memory>
+#include <vector>
+
+namespace transmit
+{
+    /* =========================
+    CCheckTransmitInfo, in full
+    ========================= */
+
+    /// hl2sdk's CCheckTransmitInfo stops after the first two pointers, and even
+    /// those are wrong: the second one is not m_pTransmitAlways. This is the
+    /// layout as it is in the engine (CS2Fixes / ModSharp reversed it the
+    /// same way), 584 bytes.
+    struct VisInfoFull
+    {
+        uint32_t m_uVisBitsBufSize;
+        SpawnGroupHandle_t m_SpawnGroupHandle;
+        CBitVec<4096> m_VisBits;
+    };
+    static_assert(sizeof(VisInfoFull) == 520, "VisInfoFull layout");
+
+    class CCheckTransmitInfoFull
+    {
+    public:
+        CBitVec<MAX_EDICTS>* m_pTransmitEntity;     // entities sent this tick
+        CBitVec<MAX_EDICTS>* m_pTransmitNonPlayers; // entities the client keeps track of without receiving them
+        CBitVec<MAX_EDICTS>* m_pTransmitOutOfPVS;   // entities that left the PVS but still get a delta
+        CBitVec<MAX_EDICTS>* m_pTransmitAlways;     // HLTV / replay only, nullptr otherwise
+        CUtlVector<CPlayerSlot> m_vecTargetSlots;
+        VisInfoFull m_VisInfo;
+        CPlayerSlot m_nPlayerSlot;
+        bool m_bFullUpdate;
+    };
+    static_assert(sizeof(CCheckTransmitInfoFull) == 584, "CCheckTransmitInfoFull layout");
+
+    /* =========================
+    The view a hook handler gets
+    ========================= */
+
+    class TransmitInfoView : public IToolkitTransmitInfo
+    {
+    public:
+        CPlayerSlot GetPlayerSlot() const override { return m_pInfo->m_nPlayerSlot; }
+        bool IsFullUpdate() const override { return m_pInfo->m_bFullUpdate; }
+
+        bool IsTransmitting(int entityIndex) const override;
+        void BlockTransmit(int entityIndex) override;
+        void BlockTransmit(CEntityInstance* entity) override;
+        void AllowTransmit(int entityIndex) override;
+        void AllowTransmit(CEntityInstance* entity) override;
+
+        CBitVec<MAX_EDICTS>* GetTransmitEntity() override { return m_pInfo->m_pTransmitEntity; }
+        CBitVec<MAX_EDICTS>* GetTransmitNonPlayers() override { return m_pInfo->m_pTransmitNonPlayers; }
+        CBitVec<MAX_EDICTS>* GetTransmitOutOfPVS() override { return m_pInfo->m_pTransmitOutOfPVS; }
+        CBitVec<MAX_EDICTS>* GetTransmitAlways() override { return m_pInfo->m_pTransmitAlways; }
+
+        CCheckTransmitInfoFull* m_pInfo = nullptr;
+    };
+
+    /* =========================
+    Per-entity state
+    ========================= */
+
+    struct EntityHook
+    {
+        PluginId owner = 0;
+        CEntityHandle handle;
+        int ownerEntity = -1;          // entity index, -1 = none
+        bool defaultVisible = true;
+        bool blockAll = false;
+
+        /// Per viewer slot: the channels hiding the entity (bit N = channel N).
+        std::array<uint8_t, ABSOLUTE_PLAYER_LIMIT> hidden{};
+        /// Per viewer slot: allowed although hidden by default.
+        std::array<bool, ABSOLUTE_PLAYER_LIMIT> shown{};
+
+        bool IsVisible(int slot) const
+        {
+            return !blockAll && hidden[slot] == 0 && (defaultVisible || shown[slot]);
+        }
+
+        void SetVisible(int slot, bool visible, int channel);
+        void Reset(int slot)
+        {
+            hidden[slot] = 0;
+            shown[slot] = false;
+        }
+    };
+
+    /* =========================
+    Manager
+    ========================= */
+
+    class TransmitManager : public IToolkitTransmit
+    {
+    public:
+        bool HookEntity(PluginId owner, CEntityInstance* entity, bool defaultVisible) override;
+        void UnhookEntity(CEntityInstance* entity) override;
+        bool IsEntityHooked(CEntityInstance* entity) override;
+
+        bool SetVisible(CEntityInstance* entity, CPlayerSlot viewer, bool visible, int channel) override;
+        bool SetVisibleToAll(CEntityInstance* entity, bool visible, int channel) override;
+        bool IsVisible(CEntityInstance* entity, CPlayerSlot viewer) override;
+        bool IsHiddenOnChannel(CEntityInstance* entity, CPlayerSlot viewer, int channel) override;
+
+        bool SetBlockAll(CEntityInstance* entity, bool block) override;
+        bool GetBlockAll(CEntityInstance* entity) override;
+
+        bool SetOwner(CEntityInstance* entity, CEntityInstance* owner) override;
+        CEntityInstance* GetOwner(CEntityInstance* entity) override;
+
+        void ResetViewer(CPlayerSlot viewer) override;
+
+        void HookCheckTransmit(PluginId owner, CheckTransmitHook handler) override;
+        void UnhookCheckTransmit(PluginId owner) override;
+
+    public:
+        /// Post hook of ISource2GameEntities::CheckTransmit: the engine has
+        /// filled the sets, this takes the hidden entities back out and then
+        /// runs the plugins' handlers.
+        void OnCheckTransmit(CCheckTransmitInfo** ppInfoList, int infoCount, const uint16_t* pEntityIndices, int nEntities);
+
+        void OnClientDisconnect(CPlayerSlot slot);
+        void OnEntityDeleted(CEntityInstance* entity);
+
+        void RemoveAllForPlugin(PluginId id);
+        void Clear();
+
+    private:
+        /// The hook of a live entity, nullptr otherwise. A stale hook (the
+        /// index was reused before OnEntityDeleted got to it) is dropped here.
+        EntityHook* Find(CEntityInstance* entity);
+        EntityHook* FindByIndex(int index);
+
+        struct CheckHook
+        {
+            PluginId owner;
+            CheckTransmitHook handler;
+        };
+
+        std::array<std::unique_ptr<EntityHook>, MAX_EDICTS> m_hooks{};
+        std::vector<CheckHook> m_checkHooks;
+
+        // One view per viewer, filled in per call -- nothing allocated per tick.
+        std::array<TransmitInfoView, ABSOLUTE_PLAYER_LIMIT> m_views{};
+        std::array<IToolkitTransmitInfo*, ABSOLUTE_PLAYER_LIMIT> m_viewPtrs{};
+    };
+
+    extern TransmitManager transmitManager;
+}

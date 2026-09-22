@@ -39,6 +39,7 @@ Designed for both beginners and hardcore engine hackers.
 - **Scheduler** – Timers and next-frame execution  
 - **Sounds** – Per-player sound events, instant stop, per-player volume channels, hook & rewrite of game sounds  
 - **Tracing** – Raycasts and collision queries  
+- **Transmit** – Per-player entity visibility: hide players and entities, owner-following, a CheckTransmit hook  
 - **GameConfig** – Signature & offset management  
 - **Dynamic Libraries** – Extend functionality with external modules  
 - **Crash Handler** – Breakpad minidumps, local symbolization and Discord crash reports  

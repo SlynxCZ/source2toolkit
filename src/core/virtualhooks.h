@@ -76,6 +76,7 @@ namespace virtualhooks {
         KHook::Return<bool> Hook_FireEvent(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast);
         KHook::Return<bool> Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast);
         KHook::Return<bool> Hook_SendNetMessage(CServerSideClientBase* pThis, const CNetMessage* pData, NetChannelBufType_t bufType);
+        KHook::Return<void> Hook_CheckTransmit(ISource2GameEntities* pThis, CCheckTransmitInfo** ppInfoList, int nInfoCount, CBitVec<16384>& unionTransmitEdicts, CBitVec<16384>& unionTransmitEdicts2, const Entity2Networkable_t** pNetworkables, const uint16* pEntityIndicies, int nEntities);
     protected:
         // KHook hooks only come down in their destructor, so they live behind
         // plain pointers: new in the constructor, delete in DestructListeners().
@@ -95,6 +96,9 @@ namespace virtualhooks {
         // SendNetMessage is declared on the base, so that is what the member
         // function pointer -- and therefore the hook -- is typed against.
         KHook::Virtual<CServerSideClientBase, bool, const CNetMessage*, NetChannelBufType_t>* m_hSendNetMessage = nullptr;
+        // Post only: the engine decides first, the transmit manager then takes
+        // hidden entities back out (core/transmit.h).
+        KHook::Virtual<ISource2GameEntities, void, CCheckTransmitInfo**, int, CBitVec<16384>&, CBitVec<16384>&, const Entity2Networkable_t**, const uint16*, int>* m_hCheckTransmit = nullptr;
 
         // Vtables of engine classes with no interface to fetch, resolved by
         // RTTI name. Each also doubles as the stand-in object AddGlobal()

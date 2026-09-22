@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstdarg>
 #include <cstdlib>
+#include <vector>
 #include "plugin.h"
 
 #include "iserver.h"
@@ -136,6 +137,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     SetupNativeFunctions();
     SetupEntityCommands();
     SetupTimers();
+    SetupTransmit();
 
     return true;
 }
@@ -1026,5 +1028,102 @@ void SamplePlugin::SetupTimers()
                 m_pCountdownTimer = nullptr;
             }
         }, TIMER_FLAG_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+    });
+}
+
+/* ============================================================================
+ *
+ *   11. Transmit
+ *
+ *   Which entities each player receives. An entity is hooked once and then
+ *   shown or hidden per viewer; a player is hidden through their controller
+ *   and their pawn goes with it. For anything else, the CheckTransmit hook
+ *   hands over each viewer's transmit set.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupTransmit()
+{
+    // sample_hide <slot>: toggles whether the caller sees that player. The
+    // controller is what gets hooked -- its visibility is applied to the pawn
+    // it drives, the controller itself keeps going so the scoreboard is whole.
+    REGISTER_CON_COMMAND("sample_hide", [](const CCommandContext &context, const CCommand &args, bool post)
+    {
+        CCSPlayerController *pCaller = CallerOf(context);
+        if (!pCaller)
+        {
+            Reply(context, "Only from the game.");
+            return;
+        }
+
+        if (args.ArgC() < 2)
+        {
+            Reply(context, "Usage: sample_hide <slot>");
+            return;
+        }
+
+        const int iSlot = atoi(args.Arg(1));
+        CCSPlayerController *pTarget = (iSlot >= 0 && iSlot < 64) ? CCSPlayerController::FromSlot(iSlot) : nullptr;
+        if (!pTarget)
+        {
+            Reply(context, "Nobody in slot %d.", iSlot);
+            return;
+        }
+
+        // Hooking twice is refused, so ask first. The hook dies with the
+        // entity and with the plugin; nothing to undo on Unload().
+        if (!g_pToolkitTransmit->IsEntityHooked(pTarget))
+            TRANSMIT_HOOK_ENTITY(pTarget);
+
+        const CPlayerSlot viewer = pCaller->GetPlayerSlot();
+        const bool bHidden = !g_pToolkitTransmit->IsVisible(pTarget, viewer);
+
+        // Channel 0 is enough for one reason. A second feature hiding the
+        // same player would use its own channel, so that neither un-hides the
+        // other's work: the player shows only when no channel hides them.
+        TRANSMIT_SET_VISIBLE(pTarget, viewer, bHidden, 0);
+        Reply(context, "%s is now %s for you.", pTarget->GetPlayerName(), bHidden ? "visible" : "hidden");
+    });
+
+    // The raw way, for what the model above does not cover: every viewer's
+    // transmit set, once per tick. This one keeps the caller's own weapons
+    // from everybody else -- the kind of rule that depends on both ends.
+    //
+    // It runs every tick for every viewer, so the expensive part (who owns
+    // what) is done once at the top and only the bit work is per viewer.
+    HOOK_CHECK_TRANSMIT([](IToolkitTransmitInfo *const *infos, int infoCount, const uint16_t *entityIndices, int entityCount)
+    {
+        struct Owned { int index; int ownerSlot; };
+        static std::vector<Owned> s_owned;
+        s_owned.clear();
+
+        for (int e = 0; e < entityCount; e++)
+        {
+            CBaseEntity *pEntity = CBaseEntity::FromIndex<CBaseEntity>(entityIndices[e]);
+            if (!pEntity || V_strncmp(pEntity->GetClassname(), "weapon_", 7) != 0)
+                continue;
+
+            CCSPlayerPawn *pOwner = static_cast<CCSPlayerPawn *>(pEntity->m_hOwnerEntity().Get());
+            CCSPlayerController *pController = pOwner ? static_cast<CCSPlayerController *>(pOwner->m_hController().Get()) : nullptr;
+            if (!pController)
+                continue;
+
+            s_owned.push_back({ entityIndices[e], pController->GetPlayerSlot().Get() });
+        }
+
+        for (int i = 0; i < infoCount; i++)
+        {
+            IToolkitTransmitInfo *pInfo = infos[i];
+            const int viewerSlot = pInfo->GetPlayerSlot().Get();
+
+            for (const Owned &o : s_owned)
+            {
+                // BlockTransmit() also tells the client to keep a record of the
+                // entity, so it comes back later without a "missing client
+                // entity" crash. Never just clear the transmit bit.
+                if (o.ownerSlot != viewerSlot)
+                    pInfo->BlockTransmit(o.index);
+            }
+        }
     });
 }

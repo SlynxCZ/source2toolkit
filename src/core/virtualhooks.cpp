@@ -45,6 +45,7 @@
 #include "crashhandler.h"
 #include "customhud.h"
 #include "sounds.h"
+#include "transmit.h"
 #include "http.h"
 #include "events.h"
 #include "networkmessages.h"
@@ -85,7 +86,8 @@ namespace virtualhooks
         KHOOK_NEW(m_hOnServerGamePostSimulate, &IGameSystem::OnServerGamePostSimulate, this, nullptr, &Virtuals::Hook_OnServerGamePostSimulate),
         KHOOK_NEW(m_hLoadEventsFromFile, &IGameEventManager2::LoadEventsFromFile, this, nullptr, &Virtuals::Hook_LoadEventsFromFile),
         KHOOK_NEW(m_hFireEvent, &IGameEventManager2::FireEvent, this, &Virtuals::Hook_FireEvent, &Virtuals::Hook_FireEventPost),
-        KHOOK_NEW(m_hSendNetMessage, &CServerSideClientBase::SendNetMessage, this, &Virtuals::Hook_SendNetMessage, nullptr)
+        KHOOK_NEW(m_hSendNetMessage, &CServerSideClientBase::SendNetMessage, this, &Virtuals::Hook_SendNetMessage, nullptr),
+        KHOOK_NEW(m_hCheckTransmit, &ISource2GameEntities::CheckTransmit, this, nullptr, &Virtuals::Hook_CheckTransmit)
     {
     }
 
@@ -103,6 +105,7 @@ namespace virtualhooks
         m_hSteamAPIActivated->Add(g_pSource2Server);
         m_hSteamAPIDeactivated->Add(g_pSource2Server);
         m_hPostEventAbstract->Add(shared::g_pGameEventSystem);
+        m_hCheckTransmit->Add(g_pSource2GameEntities);
 
         m_pCEntityDebugGameSystemVTable = libserver.GetVirtualTableByName("CEntityDebugGameSystem").GetPtr();
         if (m_pCEntityDebugGameSystemVTable)
@@ -134,6 +137,7 @@ namespace virtualhooks
         m_hSteamAPIActivated->Remove(g_pSource2Server);
         m_hSteamAPIDeactivated->Remove(g_pSource2Server);
         m_hPostEventAbstract->Remove(shared::g_pGameEventSystem);
+        m_hCheckTransmit->Remove(g_pSource2GameEntities);
 
         if (m_pCEntityDebugGameSystemVTable)
             m_hOnServerGamePostSimulate->RemoveGlobal(reinterpret_cast<IGameSystem*>(&m_pCEntityDebugGameSystemVTable));
@@ -160,6 +164,7 @@ namespace virtualhooks
         delete m_hLoadEventsFromFile;
         delete m_hFireEvent;
         delete m_hSendNetMessage;
+        delete m_hCheckTransmit;
 
         m_hGameFrame = nullptr;
         m_hStartupServer = nullptr;
@@ -174,6 +179,7 @@ namespace virtualhooks
         m_hLoadEventsFromFile = nullptr;
         m_hFireEvent = nullptr;
         m_hSendNetMessage = nullptr;
+        m_hCheckTransmit = nullptr;
 
         m_pCEntityDebugGameSystemVTable = nullptr;
         m_pCGameEventManagerVTable = nullptr;
@@ -193,32 +199,8 @@ namespace virtualhooks
         // a menu on screen for a moment and then gone.
         menus::menuManager.Tick();
 
-        if (!shared::getGlobalVars())
-            return { KHook::Action::Ignore };
-
-        if (shared::g_pEntitySystem)
-        {
-            for (int i = 0; i < shared::getGlobalVars()->maxClients; i++)
-            {
-                auto steamId = g_pEngineServer->GetClientSteamID(CPlayerSlot(i));
-                if (steamId)
-                {
-                    auto controller = static_cast<CCSPlayerController*>(shared::g_pEntitySystem->GetEntityInstance(
-                        CEntityIndex(i + 1)));
-                    if (controller)
-                    {
-                        ISteamGameServer* gs = SteamGameServer();
-                        if (gs && gs->BLoggedOn())
-                        {
-                            gs->BUpdateUserData(*steamId, controller->GetPlayerName(),
-                                                g_pSource2GameClients->GetPlayerScore(CPlayerSlot(i)));
-                        }
-                    }
-                }
-            }
-        }
-
-        g_bHasTicked = true;
+        if (shared::getGlobalVars())
+            g_bHasTicked = true;
 
         return { KHook::Action::Ignore };
     }
@@ -386,6 +368,14 @@ namespace virtualhooks
     KHook::Return<void> Virtuals::Hook_ClientDisconnect(ISource2GameClients* pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
     {
         sounds::soundsManager.OnClientDisconnect(slot);
+        transmit::transmitManager.OnClientDisconnect(slot);
+
+        return { KHook::Action::Ignore };
+    }
+
+    KHook::Return<void> Virtuals::Hook_CheckTransmit(ISource2GameEntities* pThis, CCheckTransmitInfo** ppInfoList, int nInfoCount, CBitVec<16384>& unionTransmitEdicts, CBitVec<16384>& unionTransmitEdicts2, const Entity2Networkable_t** pNetworkables, const uint16* pEntityIndicies, int nEntities)
+    {
+        transmit::transmitManager.OnCheckTransmit(ppInfoList, nInfoCount, pEntityIndicies, nEntities);
 
         return { KHook::Action::Ignore };
     }
@@ -486,6 +476,8 @@ namespace virtualhooks
 
     void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity)
     {
+        transmit::transmitManager.OnEntityDeleted(pEntity);
+
         // Drop a layout's click callbacks the moment the entity goes, rather
         // than waiting for the next click to notice the handle went stale --
         // the handlers hold plugin code and there may never be another click.

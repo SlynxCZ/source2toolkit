@@ -42,6 +42,7 @@
 #include "crashhandler.h"
 #include "customhud.h"
 #include "sounds.h"
+#include "transmit.h"
 #include "events.h"
 #include "gameconfig.h"
 #include "gamesystems.h"
@@ -273,6 +274,9 @@ void ToolkitCore::OnLevelShutdown()
 
     // Neither do the sounds that were playing.
     sounds::soundsManager.Clear();
+
+    // Nor the entities whose visibility was being managed.
+    transmit::transmitManager.Clear();
 }
 
 const char* ToolkitCore::GetAuthor() { return "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl, AlliedModders LLC."; }

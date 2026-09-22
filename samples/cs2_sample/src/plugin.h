@@ -19,6 +19,7 @@
  *   8. Native functions hooking by signature, calling by signature
  *   9. Entities         schema fields, teleport, items, inputs
  *  10. Timers           next frame, delayed, repeating
+ *  11. Transmit         hiding players and entities per viewer, CheckTransmit hook
  *
  * plugin.cpp carries the same numbers in its section banners. Each section is
  * a SetupXxx() called from Load() followed by the handlers it registers, so a
@@ -117,6 +118,7 @@ private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupNativeFunctions();
 	void SetupEntityCommands();
 	void SetupTimers();
+	void SetupTransmit();
 
 private:
 	// The hooks are KHook objects -- metamod's detour library, on the one engine
