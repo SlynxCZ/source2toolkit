@@ -71,7 +71,10 @@ namespace transmit
         int MaxClients()
         {
             CGlobalVars* globals = shared::getGlobalVars();
-            return globals ? std::min(globals->maxClients, ABSOLUTE_PLAYER_LIMIT) : 0;
+            // Spelled out: <windows.h> has a min() macro.
+            if (!globals)
+                return 0;
+            return globals->maxClients < ABSOLUTE_PLAYER_LIMIT ? globals->maxClients : ABSOLUTE_PLAYER_LIMIT;
         }
 
         int IndexOf(CEntityInstance* entity)
