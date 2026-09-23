@@ -54,3 +54,4 @@ IToolkitTransmit: per-viewer entity visibility (hook an entity, show or hide it 
 Retry of the IToolkitTransmit release: the Windows build tripped over the min() macro in transmit.cpp.
 2026-09-23 engine sync: gamedata for Linux and Windows (16 + 24 signatures, CBaseEntity/CCSPlayerController/CCSGameRules vtable offsets, CNetworkGameServer::ClientList 616) and the SDK schema regenerated from a fresh dump (removed classes and fields no longer compile).
 Rebuild of the 2026-09-23 engine sync against the hl2sdk update that landed after v1.0.17 (EntityIOQueuePrioritizedEvent_t, IFileSystem::String and the three removed IFileSystem slots, GetScriptDesc).
+Rebuild against the hl2sdk that follows the 2026-09-23 update in full: CEntityInstance vtable (Pulse_OnDynamicAttributeChanged at 43, so GetDataDescMap and later virtuals moved), INetworkGameServer::GetServerState, datamap_t/typedescription_t, CEntityClass, variant fieldtype_t.
