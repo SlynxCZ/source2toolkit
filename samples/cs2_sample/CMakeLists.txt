@@ -53,4 +53,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY ${PLUGIN_OUTPUT_DIR}
+        # The .dll on Windows is a RUNTIME artifact.
+        RUNTIME_OUTPUT_DIRECTORY ${PLUGIN_OUTPUT_DIR}
 )

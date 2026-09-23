@@ -270,6 +270,8 @@ elseif (WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES
             PREFIX ""
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/win64"
+            # A DLL is a RUNTIME artifact on Windows, LIBRARY only places the import .lib.
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/addons/source2toolkit/bin/win64"
     )
 endif ()
 
