@@ -40,6 +40,7 @@ Designed for both beginners and hardcore engine hackers.
 - **Sounds** – Per-player sound events, instant stop, per-player volume channels, hook & rewrite of game sounds  
 - **Tracing** – Raycasts and collision queries  
 - **Transmit** – Per-player entity visibility: hide players and entities, owner-following, a CheckTransmit hook  
+- **Scripts** – Run cs_script from plugins: compiled assets, raw source and hot-reloaded files, inputs into scripts and messages back  
 - **GameConfig** – Signature & offset management  
 - **Dynamic Libraries** – Extend functionality with external modules  
 - **Crash Handler** – Breakpad minidumps, local symbolization and Discord crash reports  
@@ -77,7 +78,7 @@ docker compose -f docker/docker-compose.yml up
 
 - Docs: https://www.source2toolkit.net  
 - Getting Started: https://www.source2toolkit.net/docs
-- API Reference: https://www.source2toolkit.net/docs
+- API Reference: https://www.source2toolkit.net/docs/core-api
 
 ---
 
