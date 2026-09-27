@@ -43,6 +43,7 @@
 #include "customhud.h"
 #include "sounds.h"
 #include "transmit.h"
+#include "scripts.h"
 #include "events.h"
 #include "gameconfig.h"
 #include "gamesystems.h"
@@ -162,6 +163,10 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
     }
 
     commands::InitCommands();
+
+    // Not fatal: without the script loader, compiled assets still run.
+    scripts::scriptsManager.Init();
+
     commands::commandsManager.UnlockConCommands();
     convars::convarsManager.UnlockConVars();
     inlinehooks::inlines.InitListeners();
@@ -244,6 +249,8 @@ void ToolkitCore::OnPluginUnload(PluginId id)
 void ToolkitCore::OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel,
                               char const* pLandmarkName, bool loadGame, bool background)
 {
+    scripts::scriptsManager.OnLevelInit();
+
     pluginManager.OnLevelInit(pMapName, pMapEntities, pOldLevel, pLandmarkName, loadGame, background);
 }
 
@@ -281,6 +288,10 @@ void ToolkitCore::OnLevelShutdown()
 
     // Nor the entities whose visibility was being managed.
     transmit::transmitManager.Clear();
+
+    // Nor the scripts' entities; the persistent ones come back on the
+    // next map.
+    scripts::scriptsManager.OnLevelShutdown();
 }
 
 const char* ToolkitCore::GetAuthor() { return "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl, AlliedModders LLC."; }

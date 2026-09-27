@@ -42,6 +42,7 @@
 #include "customhud.h"
 #include "sounds.h"
 #include "transmit.h"
+#include "scripts.h"
 #include "gamesystems.h"
 #include "http.h"
 #include "json.h"
@@ -291,6 +292,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_MYSQL_INTERFACE)) ptr = &mysql::mysqlManager;
     else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
     else if (!strcmp(iface, TOOLKIT_SCHEDULER_INTERFACE)) ptr = &scheduler::schedulerManager;
+    else if (!strcmp(iface, TOOLKIT_SCRIPTS_INTERFACE)) ptr = &scripts::scriptsManager;
     else if (!strcmp(iface, TOOLKIT_SOUNDS_INTERFACE)) ptr = &sounds::soundsManager;
     else if (!strcmp(iface, TOOLKIT_TRACE_INTERFACE)) ptr = &raytrace::rayTrace;
     else if (!strcmp(iface, TOOLKIT_TRANSMIT_INTERFACE)) ptr = &transmit::transmitManager;

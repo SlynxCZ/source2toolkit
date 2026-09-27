@@ -42,6 +42,7 @@
 #include "customhud.h"
 #include "sounds.h"
 #include "transmit.h"
+#include "scripts.h"
 #include "convars.h"
 #include "events.h"
 #include "entities.h"
@@ -232,6 +233,7 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
         networkmessages::networkMessagesManager.RemoveAllForPlugin(failedId);
         sounds::soundsManager.RemoveAllForPlugin(failedId);
         transmit::transmitManager.RemoveAllForPlugin(failedId);
+        scripts::scriptsManager.RemoveAllForPlugin(failedId);
         scheduler::schedulerManager.RemoveAllForPlugin(failedId);
         http::httpManager.RemoveAllForPlugin(failedId);
         mysql::mysqlManager.RemoveAllForPlugin(failedId);
@@ -342,6 +344,7 @@ bool PluginManager::ReloadPlugin(int id)
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
         sounds::soundsManager.RemoveAllForPlugin(id);
         transmit::transmitManager.RemoveAllForPlugin(id);
+        scripts::scriptsManager.RemoveAllForPlugin(id);
         // Timers and next-frame tasks run callbacks that live inside the
         // library about to be closed; both the call and destroying the
         // std::function would land in unmapped memory afterwards.
@@ -402,6 +405,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         networkmessages::networkMessagesManager.RemoveAllForPlugin(id);
         sounds::soundsManager.RemoveAllForPlugin(id);
         transmit::transmitManager.RemoveAllForPlugin(id);
+        scripts::scriptsManager.RemoveAllForPlugin(id);
         scheduler::schedulerManager.RemoveAllForPlugin(id);
         http::httpManager.RemoveAllForPlugin(id);
         mysql::mysqlManager.RemoveAllForPlugin(id);
@@ -521,6 +525,7 @@ void PluginManager::UnloadAll()
         networkmessages::networkMessagesManager.RemoveAllForPlugin(p->id);
         sounds::soundsManager.RemoveAllForPlugin(p->id);
         transmit::transmitManager.RemoveAllForPlugin(p->id);
+        scripts::scriptsManager.RemoveAllForPlugin(p->id);
         scheduler::schedulerManager.RemoveAllForPlugin(p->id);
         http::httpManager.RemoveAllForPlugin(p->id);
         mysql::mysqlManager.RemoveAllForPlugin(p->id);

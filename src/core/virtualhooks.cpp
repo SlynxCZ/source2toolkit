@@ -46,6 +46,7 @@
 #include "customhud.h"
 #include "sounds.h"
 #include "transmit.h"
+#include "scripts.h"
 #include "http.h"
 #include "events.h"
 #include "networkmessages.h"
@@ -198,6 +199,10 @@ namespace virtualhooks
         // frame. MenuManager::Tick() existed but nothing called it, which left
         // a menu on screen for a moment and then gone.
         menus::menuManager.Tick();
+
+        // Persistent scripts whose entity went away (round restart, map
+        // change) are spawned again here, never inside the deletion itself.
+        scripts::scriptsManager.OnGameFrame(simulating);
 
         if (shared::getGlobalVars())
             g_bHasTicked = true;
@@ -477,6 +482,7 @@ namespace virtualhooks
     void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity)
     {
         transmit::transmitManager.OnEntityDeleted(pEntity);
+        scripts::scriptsManager.OnEntityDeleted(pEntity);
 
         // Drop a layout's click callbacks the moment the entity goes, rather
         // than waiting for the next click to notice the handle went stale --
