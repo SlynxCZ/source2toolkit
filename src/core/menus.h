@@ -63,6 +63,17 @@ namespace menus {
             return (exit ? 0 : 1) + (both ? (NumPerPage() - 1) : NumPerPage());
         }
 
+        // Hides IMenuInstance::HasNextButton, which counts NumPerPage() items
+        // per page and misses the extra slot a menu without an exit button
+        // gets in MenuItemsPerPage(). With exactly six options left it showed
+        // all six plus a Next that led to an empty page. Kept out of the SDK
+        // header so IMenuInstance stays as plugins were built against it.
+        bool HasNextButton() const
+        {
+            const int remaining = static_cast<int>(menu_->Options().size()) - currentOffset_;
+            return remaining > (HasExitButton() ? 0 : 1) + NumPerPage();
+        }
+
     private:
         CenterHtmlMenu *chMenu_;
 
@@ -102,6 +113,9 @@ namespace menus {
 
         std::unordered_map<int, ActiveMenu> activeMenus;
         uint64_t nextSerial_ = 0;
+
+        /// (slot, serial) pairs Tick() walks, kept to avoid a per-frame allocation.
+        std::vector<std::pair<int, uint64_t>> tickSnapshot_;
     };
 
     extern MenuManager menuManager;

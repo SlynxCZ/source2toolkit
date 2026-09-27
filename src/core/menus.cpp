@@ -52,12 +52,19 @@ namespace menus
             return;
         }
 
-        for (auto& opt : menu_->Options())
+        // The evaluators are plugin code and may close this menu or open
+        // another one for the player, which destroys this instance.
+        CCSPlayerController* player = player_;
+        const uint64_t serial = serial_;
+
+        auto& options = menu_->Options();
+        for (size_t i = 0; i < options.size(); ++i)
         {
-            if (opt.DisabledEvaluator)
-            {
-                opt.Disabled = opt.DisabledEvaluator();
-            }
+            auto& opt = options[i];
+            if (!opt.DisabledEvaluator) continue;
+
+            opt.Disabled = opt.DisabledEvaluator();
+            if (!menuManager.IsOpen(player, serial)) return;
         }
 
         const auto& opts = menu_->Options();
@@ -148,7 +155,11 @@ namespace menus
         CCSPlayerController* player = player_;
         const uint64_t serial = serial_;
 
-        opt.OnSelect(player, opt);
+        // Called through a copy: a handler that rebuilds this same menu in
+        // place (ClearOptions + AddMenuOption) destroys the std::function it
+        // is running from.
+        const auto onSelect = opt.OnSelect;
+        onSelect(player, opt);
 
         if (!menuManager.IsOpen(player, serial))
             return;
@@ -235,9 +246,20 @@ namespace menus
 
     void MenuManager::Tick()
     {
-        for (auto& kv : activeMenus)
+        // Display() runs the plugins' DisabledEvaluators, which may open or
+        // close menus and so change activeMenus under a live iterator. Walk a
+        // snapshot and skip whatever was closed or replaced meanwhile.
+        tickSnapshot_.clear();
+        for (const auto& kv : activeMenus)
+            tickSnapshot_.emplace_back(kv.first, kv.second.serial);
+
+        for (const auto& [slot, serial] : tickSnapshot_)
         {
-            if (kv.second.instance) kv.second.instance->Display();
+            auto it = activeMenus.find(slot);
+            if (it == activeMenus.end() || it->second.serial != serial || !it->second.instance)
+                continue;
+
+            it->second.instance->Display();
         }
     }
 
