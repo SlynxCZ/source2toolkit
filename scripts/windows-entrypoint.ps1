@@ -78,7 +78,17 @@ Write-Host "=== Downloading HL2SDK-CS2 ==="
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git $HL2SDK_DIR
 
 Write-Host "=== Downloading Metamod-Source ==="
-git clone --recursive --branch master --single-branch https://github.com/alliedmodders/metamod-source.git $MMSOURCE_DIR
+# The FUNPLAY fork, not upstream -- same metamod (and KHook) as the Linux build.
+git clone --recursive --branch master --single-branch https://github.com/FUNPLAY-pro-CS2/metamod-source.git $MMSOURCE_DIR
+
+# Plugins refuse to load on a core built with a different KHook than the SDK's.
+$CORE_KHOOK = git -C "$MMSOURCE_DIR\third_party\khook" rev-parse HEAD
+$SDK_KHOOK = git -C "$SOURCE2TOOLKITSDK_DIR\vendor\khook" rev-parse HEAD
+Write-Host "KHook: metamod-source $CORE_KHOOK, source2toolkit-sdk $SDK_KHOOK"
+if ($CORE_KHOOK -ne $SDK_KHOOK) {
+    Write-Error "KHook pin drift between metamod-source and source2toolkit-sdk -- bump one to match the other"
+    exit 1
+}
 
 Write-Host "=== Downloading Protobufs ==="
 git clone --recursive https://github.com/SteamDatabase/Protobufs $CSGO_PROTO_DIR
