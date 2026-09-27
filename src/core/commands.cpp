@@ -399,11 +399,10 @@ namespace commands {
 
             Action thisResult = entry.handler(ctx, args, post);
 
+            // Only Supersede stops the chain: Override still lets the original
+            // run, so the remaining listeners get to see the command too.
             if (thisResult == Action::Supersede)
                 return Action::Supersede;
-
-            if (thisResult == Action::Override && !post)
-                return Action::Override;
 
             if (static_cast<int>(thisResult) > static_cast<int>(result))
                 result = thisResult;

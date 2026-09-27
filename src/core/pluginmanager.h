@@ -109,6 +109,10 @@ private:
 
     std::thread m_watcherThread;
     std::atomic<bool> m_stopWatcher{false};
+
+    // Set once LoadAll() has run; every plugin loaded after that point is a
+    // late load and is told so through IToolkitPlugin::Load's `late`.
+    bool m_bStartupLoadDone = false;
 };
 
 extern PluginManager pluginManager;

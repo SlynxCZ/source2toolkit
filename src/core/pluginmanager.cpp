@@ -215,8 +215,12 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
 
     auto& stored = m_plugins.back();
 
+    // Anything after the startup pass is late: "toolkit load", "refresh" and
+    // the file watcher's hot reload all land in a server that is already up.
+    const bool late = hotReload || m_bStartupLoadDone;
+
     char err[256]{};
-    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), hotReload))
+    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), late))
     {
         // The plugin is already in the list -- Load() registers things under
         // its id -- so it has to come out again before the library is closed.
@@ -468,12 +472,16 @@ bool PluginManager::LoadAll()
     namespace fs = std::filesystem;
 
     if (!shared::g_pCoreConfig->PluginAutoLoadEnabled)
+    {
+        m_bStartupLoadDone = true;
         return true;
+    }
 
     auto dir = paths::GetPluginsDirectory();
 
     if (!fs::exists(dir) || !fs::is_directory(dir))
     {
+        m_bStartupLoadDone = true;
         SetAllLoaded();
         return true;
     }
@@ -499,6 +507,7 @@ bool PluginManager::LoadAll()
     if (failed)
         FP_WARN("{} plugin(s) did not load, {} running. See the errors above.", failed, m_plugins.size());
 
+    m_bStartupLoadDone = true;
     SetAllLoaded();
     return true;
 }

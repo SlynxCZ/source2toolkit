@@ -83,7 +83,7 @@ void SetAllFlagsCompat(T* data, uint64_t desired)
     else if constexpr (HasSetFlagBit<T>)
     {
         // Fallback: set/clear bitwise
-        for (int i = 0; i < 64; i)
+        for (int i = 0; i < 64; i++)
         {
             uint64_t bit = (1ULL << i);
             bool want = (desired & bit) != 0;
@@ -120,15 +120,13 @@ void SetAllFlagsCompat(T* data, uint64_t desired)
         return; \
     }
 
+// min/max are only read when their flag is set: callers pass nullptr for a
+// bound they do not want, and CConVar ignores the value in that case anyway.
 #define CREATE_CVAR(type) \
 { \
-    auto created = new CConVar<type>(name, flags, help, *(type*)def, hasMin, *(type*)min, hasMax, *(type*)max); \
-    return created->GetAccessIndex(); \
-}
-
-#define CREATE_CVAR_PTR(type) \
-{ \
-    auto created = new CConVar<type>(name, flags, help, *(type*)def, hasMin, *(type*)min, hasMax, *(type*)max); \
+    auto created = new CConVar<type>(name, flags, help, *(const type*)def, \
+        hasMin, hasMin ? *(const type*)min : type{}, \
+        hasMax, hasMax ? *(const type*)max : type{}); \
     return created->GetAccessIndex(); \
 }
 
@@ -139,7 +137,8 @@ namespace convars
     uint16 ConVarsManager::GetConvarAccessIndexByName(const char* name)
     {
         ConVarRef ref(name);
-        return ref.IsValidRef() ? ref.GetAccessIndex() : 0;
+        // 0 is a real ConVar, so "not found" has to be the engine's own sentinel.
+        return ref.IsValidRef() ? ref.GetAccessIndex() : TOOLKIT_INVALID_CONVAR_INDEX;
     }
 
     ConVarRefAbstract ConVarsManager::GetConvarRef(uint16 accessIndex)
@@ -460,6 +459,12 @@ namespace convars
             return ref.GetAccessIndex();
         }
 
+        if (!name || (!def && type != EConVarType_String) || (hasMin && !min) || (hasMax && !max))
+        {
+            FP_ERROR("CreateConVar '{}': missing name, default or an enabled min/max value", name ? name : "");
+            return TOOLKIT_INVALID_CONVAR_INDEX;
+        }
+
         switch (type)
         {
         case EConVarType_Int16: CREATE_CVAR(int16);
@@ -483,14 +488,14 @@ namespace convars
                 return created->GetAccessIndex();
             }
 
-        case EConVarType_Vector2: CREATE_CVAR_PTR(Vector2D);
-        case EConVarType_Vector3: CREATE_CVAR_PTR(Vector);
-        case EConVarType_Vector4: CREATE_CVAR_PTR(Vector4D);
-        case EConVarType_Qangle: CREATE_CVAR_PTR(QAngle);
+        case EConVarType_Vector2: CREATE_CVAR(Vector2D);
+        case EConVarType_Vector3: CREATE_CVAR(Vector);
+        case EConVarType_Vector4: CREATE_CVAR(Vector4D);
+        case EConVarType_Qangle: CREATE_CVAR(QAngle);
 
         default:
             FP_ERROR("Unsupported convar type: {}", (int)type);
-            return 0;
+            return TOOLKIT_INVALID_CONVAR_INDEX;
         }
     }
 

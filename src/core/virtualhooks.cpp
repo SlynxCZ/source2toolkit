@@ -294,7 +294,8 @@ namespace virtualhooks
 
         Action result = commands::DispatchConsoleListener(ctx, args, false);
 
-        if (result > Action::Ignore)
+        // Override still runs the original, so post listeners fire for it too.
+        if (result == Action::Supersede)
             return { result };
 
         commands::DispatchConsoleListener(ctx, args, true);
@@ -308,7 +309,7 @@ namespace virtualhooks
         {
             CCommandContext ctx(CT_NO_TARGET, slot);
             Action result = commands::DispatchConsoleListener(ctx, args, false);
-            if (result > Action::Ignore)
+            if (result == Action::Supersede)
                 return { result };
 
             commands::DispatchConsoleListener(ctx, args, true);
@@ -417,10 +418,16 @@ namespace virtualhooks
 
         bool localDontBroadcast = bDontBroadcast;
         if (!events::DispatchGameEvent(event, false, localDontBroadcast))
+        {
+            // FireEvent owns the event and frees it; skipping the original
+            // means we have to. KHook still runs the post callback, so push
+            // an empty slot to keep eventStack paired with nested events.
+            shared::g_pGameEventManager->FreeEvent(event);
+            eventStack.push_back(nullptr);
             return { KHook::Action::Supersede, false };
+        }
 
-        if (IGameEvent* copy = shared::g_pGameEventManager->DuplicateEvent(event))
-            eventStack.push_back(copy);
+        eventStack.push_back(shared::g_pGameEventManager->DuplicateEvent(event));
 
         if (localDontBroadcast != bDontBroadcast)
         {
@@ -443,9 +450,12 @@ namespace virtualhooks
             IGameEvent* copy = eventStack.back();
             eventStack.pop_back();
 
-            bool dummy = bDontBroadcast;
-            events::DispatchGameEvent(copy, true, dummy);
-            shared::g_pGameEventManager->FreeEvent(copy);
+            if (copy)
+            {
+                bool dummy = bDontBroadcast;
+                events::DispatchGameEvent(copy, true, dummy);
+                shared::g_pGameEventManager->FreeEvent(copy);
+            }
         }
 
         return { KHook::Action::Ignore, true };

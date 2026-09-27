@@ -106,7 +106,7 @@ public: // 5. core events, 8. native functions -- KHook handlers
 	KHook::Return<bool> Hook_ClientConnect(ISource2GameClients *pThis, CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, bool unk1, CBufferString *pRejectReason);
 	KHook::Return<void> Hook_ClientCommand(ISource2GameClients *pThis, CPlayerSlot nSlot, const CCommand &cmd);
 	KHook::Return<int64_t> Hook_TakeDamageOld(CBaseEntity *pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult);
-	KHook::Return<void> Hook_PostThink(CCSPlayerPawn *pThis, double flFrameTime, float flUnknown);
+	KHook::Return<void> Hook_PostThink(CCSPlayerPawn *pThis);
 
 private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupConVars();

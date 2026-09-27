@@ -53,8 +53,6 @@ bool CGameConfig::LoadSingle(const std::string& path, char* conf_error, int conf
         return false;
     }
 
-    json j = json::parse(ifs);
-
 #if _WIN32
     constexpr auto platform = "windows";
 #else
@@ -63,6 +61,10 @@ bool CGameConfig::LoadSingle(const std::string& path, char* conf_error, int conf
 
     try
     {
+        // Inside the try: a malformed file is a load error, not an exception
+        // escaping into startup.
+        json j = json::parse(ifs);
+
         for (auto& [k, v] : j.items())
         {
             if (v.contains("signatures"))

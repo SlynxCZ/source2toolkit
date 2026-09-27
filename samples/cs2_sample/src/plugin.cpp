@@ -333,9 +333,11 @@ void SamplePlugin::SetupCommands()
         Reply(context, "%s said: %s (%d arguments)", pCaller ? pCaller->GetPlayerName() : "Console", args.ArgS(), args.ArgC() - 1);
     });
 
-    // A chat listener has no console command behind it: it fires on the word
-    // typed into chat, with or without "!" or "/". The handler cannot block
-    // the message -- it is a listener, the message still shows.
+    // A chat listener has no console command behind it: it fires when the word
+    // is typed into chat after a chat trigger -- "!noshake" or "/noshake" with
+    // the default triggers; plain "noshake" does not fire it. The handler
+    // cannot block the message itself: a public trigger lets it show, a
+    // silent one hides it whatever the handler does.
     REGISTER_CHAT_LISTENER("noshake", [this](const CCommandContext &context, const CCommand &args, bool post)
     {
         const CPlayerSlot slot = context.GetPlayerSlot();
@@ -859,7 +861,7 @@ KHook::Return<int64_t> SamplePlugin::Hook_TakeDamageOld(CBaseEntity* pThis, CTak
     return { KHook::Action::Ignore, 0 };
 }
 
-KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis, double flFrameTime, float flUnknown)
+KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis)
 {
     // Runs for every pawn every tick, so do as little as possible here. Left
     // empty on purpose -- logging would flood the console.
