@@ -130,8 +130,10 @@ namespace menus
             return;
         }
 
-        // Only 1..9 are item keys, same as C#
-        if (key < 1 || key > 9) return;
+        // Item keys are only the ones Display() printed for this page. C#
+        // accepts 1..9 here, so !6, or !7 without a Prev button, picked an
+        // option from the next page that the player never saw.
+        if (key < 1 || key > MenuItemsPerPage()) return;
 
         const int idx = currentOffset_ + (key - 1);
         auto& options = menu_->Options();
@@ -140,11 +142,15 @@ namespace menus
         auto& opt = options[idx];
         if (opt.Disabled || !opt.OnSelect) return;
 
-        auto *self = this;
+        // The handler may close this menu or open another one for the player
+        // (a submenu), and either destroys this instance. Nothing of `this`
+        // may be touched after the call unless it is still the open menu.
+        CCSPlayerController* player = player_;
+        const uint64_t serial = serial_;
 
-        opt.OnSelect(player_, opt);
+        opt.OnSelect(player, opt);
 
-        if (menuManager.GetActiveMenu(player_) != self)
+        if (!menuManager.IsOpen(player, serial))
             return;
 
         // Apply PostSelectAction just like CSSharp BaseMenuInstance
@@ -166,10 +172,12 @@ namespace menus
 
     void CenterHtmlMenuInstance::Close()
     {
-        menuManager.CloseActiveMenu(player_);
-        if (player_)
+        // CloseActiveMenu destroys this instance.
+        CCSPlayerController* player = player_;
+        menuManager.CloseActiveMenu(player);
+        if (player)
         {
-            player_->PrintToCenterHtml(" ", 3, true);
+            player->PrintToCenterHtml(" ", 3, true);
         }
     }
 
@@ -178,12 +186,22 @@ namespace menus
         if (!player || !menu) return;
         CloseActiveMenu(player);
 
-        auto inst = std::make_unique<CenterHtmlMenuInstance>(player, menu);
+        const uint64_t serial = ++nextSerial_;
+        auto inst = std::make_unique<CenterHtmlMenuInstance>(player, menu, serial);
 
         auto& active = activeMenus[player->GetSlot()];
         active.owner = owner;
+        active.serial = serial;
         active.instance = std::move(inst);
         active.instance->Display();
+    }
+
+    bool MenuManager::IsOpen(CCSPlayerController* player, uint64_t serial) const
+    {
+        if (!player) return false;
+
+        auto it = activeMenus.find(player->GetSlot());
+        return it != activeMenus.end() && it->second.instance && it->second.serial == serial;
     }
 
     IMenuInstance* MenuManager::GetActiveMenu(CCSPlayerController* player)

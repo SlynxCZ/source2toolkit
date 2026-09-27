@@ -44,8 +44,8 @@ namespace menus {
     class CenterHtmlMenuInstance : public IMenuInstance
     {
     public:
-        CenterHtmlMenuInstance(CCSPlayerController *player, CenterHtmlMenu *menu)
-            : IMenuInstance(player, menu), chMenu_(menu)
+        CenterHtmlMenuInstance(CCSPlayerController *player, CenterHtmlMenu *menu, uint64_t serial)
+            : IMenuInstance(player, menu), chMenu_(menu), serial_(serial)
         {
         }
 
@@ -65,6 +65,9 @@ namespace menus {
 
     private:
         CenterHtmlMenu *chMenu_;
+
+        /// Which opening of a menu this is, see MenuManager::IsOpen.
+        uint64_t serial_;
     };
 
     class MenuManager : public IToolkitMenus
@@ -82,14 +85,23 @@ namespace menus {
         /// on someone's screen is a key press away from a closed library.
         void RemoveAllForPlugin(PluginId id);
 
+        /// Whether the menu opened under this serial is still the one the
+        /// player has open. An option handler can close its menu or open
+        /// another one, which destroys the instance it was called from, and
+        /// the next instance often gets the same address back from the
+        /// allocator, so comparing pointers is not enough.
+        bool IsOpen(CCSPlayerController *player, uint64_t serial) const;
+
     protected:
         struct ActiveMenu
         {
             PluginId owner = 0;
+            uint64_t serial = 0;
             std::unique_ptr<IMenuInstance> instance;
         };
 
         std::unordered_map<int, ActiveMenu> activeMenus;
+        uint64_t nextSerial_ = 0;
     };
 
     extern MenuManager menuManager;
