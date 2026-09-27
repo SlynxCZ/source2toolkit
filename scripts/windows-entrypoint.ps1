@@ -78,8 +78,7 @@ Write-Host "=== Downloading HL2SDK-CS2 ==="
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git $HL2SDK_DIR
 
 Write-Host "=== Downloading Metamod-Source ==="
-# The FUNPLAY fork, not upstream -- same metamod (and KHook) as the Linux build.
-git clone --recursive --branch master --single-branch https://github.com/FUNPLAY-pro-CS2/metamod-source.git $MMSOURCE_DIR
+git clone --recursive --branch master --single-branch https://github.com/alliedmodders/metamod-source.git $MMSOURCE_DIR
 
 # Plugins refuse to load on a core built with a different KHook than the SDK's.
 $CORE_KHOOK = git -C "$MMSOURCE_DIR\third_party\khook" rev-parse HEAD

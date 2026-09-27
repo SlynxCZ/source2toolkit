@@ -45,9 +45,7 @@ echo "=== Downloading HL2SDK-CS2 ==="
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git "$HL2SDK_DIR"
 
 echo "=== Downloading Metamod-Source ==="
-# The FUNPLAY fork, not upstream: it is what the workspace builds against, so the
-# core cannot silently follow a KHook bump on upstream master.
-git clone --recursive --branch master --single-branch https://github.com/FUNPLAY-pro-CS2/metamod-source.git "$MMSOURCE_DIR"
+git clone --recursive --branch master --single-branch https://github.com/alliedmodders/metamod-source.git "$MMSOURCE_DIR"
 
 # Plugins are built against the SDK's vendor/khook and refuse to load on a core
 # built with any other commit, so a drift here must fail the release.
