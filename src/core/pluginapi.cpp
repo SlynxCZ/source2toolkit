@@ -82,6 +82,17 @@
 
 PluginApi pluginApi;
 
+// The same globals a plugin gets from TOOLKIT_EXPOSE, so the SDK code linked
+// into the core (the schema helpers, ADDR_*, ...) reads them exactly as it
+// does inside a plugin. Filled by FillToolkitGlobals().
+TOOLKIT_DEFINE_GLOBALVARS()
+
+void FillToolkitGlobals()
+{
+    g_ToolkitAPI = &pluginApi;
+    TOOLKIT_FILLVARS(&pluginApi)
+}
+
 void PluginApi::Log(IToolkitPlugin* plugin, const char* msg, ...)
 {
     va_list ap;

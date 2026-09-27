@@ -114,3 +114,8 @@ public:
 };
 
 extern PluginApi pluginApi;
+
+/// Points the SDK's toolkit globals (g_ToolkitAPI, g_pToolkitAddresses, ...)
+/// at the core's own interfaces. Call once the game config exists: the
+/// game-config interface is the only one that is not a static object.
+void FillToolkitGlobals();

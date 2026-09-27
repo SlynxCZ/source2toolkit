@@ -51,6 +51,7 @@
 #include "networkmessages.h"
 #include "inlinehooks.h"
 #include "patches.h"
+#include "pluginapi.h"
 #include "pluginmanager.h"
 #include "raytrace.h"
 #include "shared.h"
@@ -136,6 +137,9 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         FP_ERROR("Failed to load CGameConfig. Error: {}", conf_error);
         return false;
     }
+
+    // Before anything below can reach SDK code that reads them.
+    FillToolkitGlobals();
 
     if (!addresses::Initialize())
     {

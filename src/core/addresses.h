@@ -46,10 +46,11 @@
 #include "playerslot.h"
 #include "variant.h"
 
-#define RESOLVE_SIG(handle, name, pattern, variable)                  \
+/// Resolves a gamedata signature by its entry name: the pattern and the module
+/// (the entry's "library") both come from the game config.
+#define RESOLVE_SIG(name, variable)                                   \
 {                                                                     \
-    auto& mod = toolkitAddresses.GetOrLoadModule(handle);             \
-    auto addr = mod.FindPattern(DynLibUtils::ParsePattern(pattern));  \
+    auto addr = FindSignature(name);                                  \
                                                                       \
     if (!addr)                                                        \
     {                                                                 \
@@ -65,10 +66,9 @@
 /// Same as RESOLVE_SIG, but a miss is not fatal: the address is left null and
 /// initialization carries on. For functions we only have a signature for on
 /// some platforms -- the caller is expected to null-check before using it.
-#define RESOLVE_SIG_OPTIONAL(handle, name, pattern, variable)         \
+#define RESOLVE_SIG_OPTIONAL(name, variable)                          \
 {                                                                     \
-    auto& mod = toolkitAddresses.GetOrLoadModule(handle);             \
-    auto addr = mod.FindPattern(DynLibUtils::ParsePattern(pattern));  \
+    auto addr = FindSignature(name);                                  \
                                                                       \
     if (!addr)                                                        \
     {                                                                 \
@@ -100,6 +100,9 @@ namespace addresses
 {
     bool Initialize();
 
+    /// Scans the module named by a gamedata entry for its signature; null on a miss.
+    DynLibUtils::CMemory FindSignature(const char* pszName);
+
     class Addresses : public IToolkitAddresses {
     public:
         DynLibUtils::CModule& GetOrLoadModule(void* ptr);
@@ -110,7 +113,7 @@ namespace addresses
         CBaseModelEntity_SetModel_t CBaseModelEntity_SetModel() override;
         CBasePlayerController_SetPawn_t CBasePlayerController_SetPawn() override;
         CBasePlayerPawn_SnapViewAngles_t CBasePlayerPawn_SnapViewAngles() override;
-        CGameRules_TerminateRound_t CGameRules_TerminateRound() override;
+        CCSGameRules_TerminateRound_t CCSGameRules_TerminateRound() override;
         CPlayer_WeaponServices_Destroy_t CPlayer_WeaponServices_Destroy() override;
         LegacyGameEventListener_t LegacyGameEventListener() override;
         CCSPlayerController_SwitchTeam_t CCSPlayerController_SwitchTeam() override;
@@ -125,7 +128,7 @@ namespace addresses
         // Ported from SwiftlyS2.
         CEntityIdentity_AcceptInput_t CEntityIdentity_AcceptInput() override;
         CCSPlayer_ItemServices_CanAcquire_t CCSPlayer_ItemServices_CanAcquire() override;
-        CCSPlayerPawn_CanMove_t CCSPlayerPawn_CanMove() override;
+        CCSPlayerPawnBase_CanMove_t CCSPlayerPawnBase_CanMove() override;
         CCSPlayerController_ProcessUserCmd_t CCSPlayerController_ProcessUserCmd() override;
         CBasePlayerController_OnSimulateUserCommands_t CBasePlayerController_OnSimulateUserCommands() override;
         CCSPlayer_MovementServices_AirAccelerate_t CCSPlayer_MovementServices_AirAccelerate() override;
@@ -148,16 +151,24 @@ namespace addresses
         CCSPlayer_MovementServices_TryPlayerMove_t CCSPlayer_MovementServices_TryPlayerMove() override;
         CCSPlayer_MovementServices_WalkMove_t CCSPlayer_MovementServices_WalkMove() override;
         CCSPlayer_MovementServices_WaterMove_t CCSPlayer_MovementServices_WaterMove() override;
-        CCSPlayer_MovementServices_OnJumpLegacy_t CCSPlayer_MovementServices_OnJumpLegacy() override;
-        CCSPlayer_MovementServices_OnJumpModern_t CCSPlayer_MovementServices_OnJumpModern() override;
-        CCSPlayer_MovementServices_CheckJumpButtonLegacy_t CCSPlayer_MovementServices_CheckJumpButtonLegacy() override;
-        CCSPlayer_MovementServices_CheckJumpButtonModern_t CCSPlayer_MovementServices_CheckJumpButtonModern() override;
+        CCSPlayerLegacyJump_OnJump_t CCSPlayerLegacyJump_OnJump() override;
+        CCSPlayerModernJump_OnJump_t CCSPlayerModernJump_OnJump() override;
+        CCSPlayerLegacyJump_CheckJumpButton_t CCSPlayerLegacyJump_CheckJumpButton() override;
+        CCSPlayerModernJump_CheckJumpButton_t CCSPlayerModernJump_CheckJumpButton() override;
         CAttributeList_SetOrAddAttributeValueByName_t CAttributeList_SetOrAddAttributeValueByName() override;
         CDecoyProjectile_EmitGrenade_t CDecoyProjectile_EmitGrenade() override;
         CFlashbangProjectile_EmitGrenade_t CFlashbangProjectile_EmitGrenade() override;
         CHEGrenadeProjectile_EmitGrenade_t CHEGrenadeProjectile_EmitGrenade() override;
         CMolotovProjectile_EmitGrenade_t CMolotovProjectile_EmitGrenade() override;
         CSmokeGrenadeProjectile_EmitGrenade_t CSmokeGrenadeProjectile_EmitGrenade() override;
+        CCSPlayerPawn_PostThink_t CCSPlayerPawn_PostThink() override;
+        UTIL_Remove_t UTIL_Remove() override;
+        DispatchParticleEffect_t DispatchParticleEffect() override;
+        GetWeaponCSDataFromKey_t GetWeaponCSDataFromKey() override;
+        CSource2Server_GetNavMeshData_t CSource2Server_GetNavMeshData() override;
+        CLoggingSystem_LogDirect_t CLoggingSystem_LogDirect() override;
+        Cmd_ExecuteCommand_t Cmd_ExecuteCommand() override;
+        CCSPlayer_ItemServices_GiveNamedItem_t CCSPlayer_ItemServices_GiveNamedItem() override;
     public:
         // Raw addresses. A function pointer is not portably convertible to
         // void* and back, so what a signature scan produces is kept as the
@@ -219,6 +230,16 @@ namespace addresses
         DynLibUtils::CMemory EmitHEGrenade;
         DynLibUtils::CMemory EmitMolotov;
         DynLibUtils::CMemory EmitSmoke;
+        DynLibUtils::CMemory PostThink;
+        // Suffixed like LegacyGameEventListenerAddr: these getters carry no
+        // class prefix, so a bare member would redeclare them.
+        DynLibUtils::CMemory UTIL_RemoveAddr;
+        DynLibUtils::CMemory DispatchParticleEffectAddr;
+        DynLibUtils::CMemory GetWeaponCSDataFromKeyAddr;
+        DynLibUtils::CMemory GetNavMeshData;
+        DynLibUtils::CMemory LogDirect;
+        DynLibUtils::CMemory Cmd_ExecuteCommandAddr;
+        DynLibUtils::CMemory GiveNamedItem;
     private:
         std::unordered_map<uintptr_t, DynLibUtils::CModule> m_Modules;
     };
