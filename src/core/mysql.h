@@ -152,11 +152,14 @@ namespace mysql {
         void CancelThinkPart();
         void RunThinkPart();
 
+        /// Fails the op before it ever reaches the worker, so it can go
+        /// straight to the think queue and still hand its callback a null.
+        void Fail(const char *error);
+
     private:
         MySQLConnection *m_pCon;
         std::string m_szQuery;
         ToolkitMySQLQueryCallbackFunc m_callback;
-        MYSQL_RES *m_res = nullptr;
         CMySQLQuery *m_pQuery = nullptr;
         char m_szError[255] {};
     };
@@ -175,6 +178,9 @@ namespace mysql {
         void CancelThinkPart();
         void RunThinkPart();
 
+        /// See TMySQLQueryOp::Fail().
+        void Fail(const char *error);
+
     private:
         MySQLConnection *m_pCon;
         ToolkitMySQLTransaction m_txn;
@@ -182,10 +188,11 @@ namespace mysql {
         ToolkitMySQLTransactionFailureCallbackFunc m_failureCallback;
         std::vector<IToolkitMySQLQuery *> m_pQueries;
         char m_szError[255] {};
-        int m_failIndex;
+        int m_failIndex = -1;
 
         bool DoSimpleQuery(const char *query);
         CMySQLQuery *DoQuery(const char *query);
+        void Rollback();
     };
 
     class CMySQLResult : public IToolkitMySQLResult, IToolkitMySQLRow
@@ -332,6 +339,7 @@ namespace mysql {
     private:
         void ThreadRun();
         void AddToThreadQueue(ThreadOperation *threadOperation);
+        void AddToThinkQueue(ThreadOperation *threadOperation);
 
         std::queue<ThreadOperation *> m_threadQueue;
         std::queue<ThreadOperation *> m_ThinkQueue;

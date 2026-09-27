@@ -271,8 +271,10 @@ namespace mysql
 
     void TMySQLConnectOp::CancelThinkPart()
     {
+        // Only the handle this op opened, which was never installed. The
+        // connection's own one is closed by its destructor.
         mysql_close(m_pDatabase);
-        m_pCon->SetDatabase(nullptr);
+        m_pDatabase = nullptr;
     }
 
     TMySQLQueryOp::~TMySQLQueryOp()
@@ -280,20 +282,42 @@ namespace mysql
         delete m_pQuery;
     }
 
+    void TMySQLQueryOp::Fail(const char *error)
+    {
+        V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s", error);
+    }
+
     void TMySQLQueryOp::RunThreadPart()
     {
         auto pDatabase = m_pCon->GetDatabase();
         m_szError[0] = '\0';
-        if (mysql_query(pDatabase, m_szQuery.c_str()))
+        if (!pDatabase)
         {
-            V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s\n", mysql_error(pDatabase));
+            Fail("not connected");
             return;
         }
 
+        if (mysql_query(pDatabase, m_szQuery.c_str()))
+        {
+            Fail(mysql_error(pDatabase));
+            return;
+        }
+
+        MYSQL_RES *res = nullptr;
         if (mysql_field_count(pDatabase))
         {
-            m_res = mysql_store_result(pDatabase);
+            res = mysql_store_result(pDatabase);
+            if (!res)
+            {
+                Fail(mysql_error(pDatabase));
+                return;
+            }
         }
+
+        // Built here rather than on the main thread: it reads the insert id
+        // and affected rows off the connection, which by then the worker may
+        // have moved on to the next query on.
+        m_pQuery = new CMySQLQuery(m_pCon, res);
     }
 
     void TMySQLQueryOp::RunThinkPart()
@@ -301,17 +325,24 @@ namespace mysql
         if (m_szError[0])
         {
             FP_ERROR("{}", m_szError);
+
+            // A null query is how a failure reaches the plugin -- the same
+            // signal a serverless result gives with a null m_pQuery. Without
+            // it the plugin would wait on this callback forever.
+            if (m_callback)
+                m_callback(nullptr);
             return;
         }
 
-        m_pQuery = new CMySQLQuery(m_pCon, m_res);
-        m_callback(m_pQuery);
+        // Owned by this op and freed with it, once the callback has returned.
+        if (m_callback)
+            m_callback(m_pQuery);
     }
 
     void TMySQLQueryOp::CancelThinkPart()
     {
-        mysql_close(m_pCon->GetDatabase());
-        m_pCon->SetDatabase(nullptr);
+        // Nothing to do: the result is freed with the op, and the connection
+        // closed by its destructor once every op is gone.
     }
 
     TMySQLTransactOp::~TMySQLTransactOp()
@@ -323,8 +354,20 @@ namespace mysql
         m_pQueries.clear();
     }
 
+    void TMySQLTransactOp::Fail(const char *error)
+    {
+        V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s", error);
+        m_failIndex = -1;
+    }
+
     void TMySQLTransactOp::RunThreadPart()
     {
+        if (!m_pCon->GetDatabase())
+        {
+            Fail("not connected");
+            return;
+        }
+
         if (!this->DoSimpleQuery("BEGIN"))
         {
             return;
@@ -334,7 +377,7 @@ namespace mysql
             CMySQLQuery *result = DoQuery(this->m_txn.queries[i].c_str());
             if (!result)
             {
-                this->DoSimpleQuery("ROLLBACK");
+                Rollback();
                 m_failIndex = (int)i;
                 return;
             }
@@ -342,27 +385,41 @@ namespace mysql
         }
         if (!this->DoSimpleQuery("COMMIT"))
         {
-            this->DoSimpleQuery("ROLLBACK");
+            Rollback();
             return;
         }
     }
 
     void TMySQLTransactOp::CancelThinkPart()
     {
-        mysql_close(m_pCon->GetDatabase());
-        m_pCon->SetDatabase(nullptr);
+        // See TMySQLQueryOp::CancelThinkPart().
     }
 
     void TMySQLTransactOp::RunThinkPart()
     {
         if (!m_szError[0])
         {
-            m_successCallback(m_pQueries);
-            m_pQueries.clear();
+            // The queries stay this op's and are freed with it once the
+            // callback returns, the same as a single query's result.
+            if (m_successCallback)
+                m_successCallback(m_pQueries);
             return;
         }
         FP_ERROR("TMySQLTransactOp ERROR: {}", m_szError);
-        m_failureCallback(m_szError, m_failIndex);
+        if (m_failureCallback)
+            m_failureCallback(m_szError, m_failIndex);
+    }
+
+    void TMySQLTransactOp::Rollback()
+    {
+        // Straight to the connection: a ROLLBACK that fails as well must not
+        // overwrite the error that made it necessary.
+        auto pDatabase = m_pCon->GetDatabase();
+        if (pDatabase && mysql_query(pDatabase, "ROLLBACK") == 0)
+        {
+            if (MYSQL_RES *res = mysql_store_result(pDatabase))
+                mysql_free_result(res);
+        }
     }
 
     bool TMySQLTransactOp::DoSimpleQuery(const char *query)
@@ -381,7 +438,7 @@ namespace mysql
         auto pDatabase = m_pCon->GetDatabase();
         if (mysql_query(pDatabase, query))
         {
-            V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s\n", mysql_error(pDatabase));
+            V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s", mysql_error(pDatabase));
             return NULL;
         }
 
@@ -391,6 +448,9 @@ namespace mysql
             res = mysql_store_result(pDatabase);
             if (!res)
             {
+                // Has to say so: an empty error reads as success, and the
+                // plugin would be handed a transaction that was rolled back.
+                V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s", mysql_error(pDatabase));
                 return NULL;
             }
         }
@@ -609,7 +669,7 @@ namespace mysql
     bool CMySQLQuery::FetchMoreResults()
     {
         auto pDatabase = m_pDatabase->GetDatabase();
-        if (m_res.m_pRes == NULL)
+        if (m_res.m_pRes == NULL || !pDatabase)
         {
             return false;
         }
@@ -910,13 +970,16 @@ namespace mysql
 
     void MySQLConnection::Query(char *query, ToolkitMySQLQueryCallbackFunc callback)
     {
+        TMySQLQueryOp *op = new TMySQLQueryOp(this, std::string(query), callback);
+
         if (!m_pDatabase)
         {
-            FP_WARN("Failed querying a disconnected database ({}).", m_info.m_sHost);
+            // Still answered, a frame later on the main thread like any other
+            // result -- never from inside the call that asked.
+            op->Fail("not connected");
+            AddToThinkQueue(op);
             return;
         }
-
-        TMySQLQueryOp *op = new TMySQLQueryOp(this, std::string(query), callback);
 
         AddToThreadQueue(op);
     }
@@ -935,13 +998,14 @@ namespace mysql
         std::vsnprintf(zc.data(), zc.size(), query, args);
         va_end(args);
 
+        TMySQLQueryOp *op = new TMySQLQueryOp(this, std::string(zc.data(), zc.size()), callback);
+
         if (!m_pDatabase)
         {
-            FP_WARN("Failed querying a disconnected database ({}).", m_info.m_sHost);
+            op->Fail("not connected");
+            AddToThinkQueue(op);
             return;
         }
-
-        TMySQLQueryOp *op = new TMySQLQueryOp(this, std::string(zc.data(), zc.size()), callback);
 
         AddToThreadQueue(op);
     }
@@ -949,6 +1013,15 @@ namespace mysql
     void MySQLConnection::ExecuteTransaction(ToolkitMySQLTransaction txn, ToolkitMySQLTransactionSuccessCallbackFunc success, ToolkitMySQLTransactionFailureCallbackFunc failure)
     {
         TMySQLTransactOp *op = new TMySQLTransactOp(this, txn, success, failure);
+
+        // Used to go to the worker regardless and hand libmysql a null handle.
+        if (!m_pDatabase)
+        {
+            op->Fail("not connected");
+            AddToThinkQueue(op);
+            return;
+        }
+
         AddToThreadQueue(op);
     }
 
@@ -1027,6 +1100,12 @@ namespace mysql
             m_threadQueue.push(threadOperation);
             m_QueueEvent.notify_one();
         }
+    }
+
+    void MySQLConnection::AddToThinkQueue(ThreadOperation *threadOperation)
+    {
+        std::lock_guard<std::mutex> lock(m_ThinkLock);
+        m_ThinkQueue.push(threadOperation);
     }
 
     unsigned int MySQLConnection::GetInsertID()
