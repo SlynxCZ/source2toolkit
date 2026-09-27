@@ -145,6 +145,67 @@ namespace mysql
             return set;
         }
 
+        /// Reads everything a query that just ran left on the connection:
+        /// every result set, rows and all, plus the insert id and affected
+        /// rows of the statement that was asked for. Runs on the worker right
+        /// after mysql_query(), so the connection is left with nothing pending
+        /// -- a stored procedure's trailing results included -- and the main
+        /// thread never has to go near it to read or free a result.
+        ///
+        /// On failure the sets are cleared and the error written out.
+        bool ReadResults(MYSQL *mysql, std::vector<MySQLResultSet> *sets, unsigned int *insertId,
+                         unsigned int *affectedRows, std::string *error, unsigned int *errorCode)
+        {
+            bool first = true;
+
+            while (true)
+            {
+                bool failed = false;
+
+                if (MYSQL_RES *res = mysql_store_result(mysql))
+                {
+                    sets->push_back(StoreResult(res));
+                    mysql_free_result(res);
+                }
+                else if (mysql_field_count(mysql) != 0)
+                {
+                    failed = true;
+                }
+
+                // Both belong to the statement that was asked for, so they are
+                // read off the first result and not whatever a stored procedure
+                // went on to do. Not before it, either: a SELECT only reports its
+                // affected rows once its result set has been stored.
+                if (!failed && first)
+                {
+                    *insertId = (unsigned int)mysql_insert_id(mysql);
+                    *affectedRows = (unsigned int)mysql_affected_rows(mysql);
+                    first = false;
+                }
+
+                // 0 is another result to read, -1 none left, above 0 a later
+                // statement of the same query failed.
+                if (!failed)
+                {
+                    if (!mysql_more_results(mysql))
+                        return true;
+
+                    failed = mysql_next_result(mysql) > 0;
+                }
+
+                if (failed)
+                {
+                    if (error)
+                        *error = mysql_error(mysql);
+                    if (errorCode)
+                        *errorCode = mysql_errno(mysql);
+
+                    sets->clear();
+                    return false;
+                }
+            }
+        }
+
         /// Fills a query's placeholders in against the live connection: `?`
         /// becomes the escaped value in quotes, `??` a quoted identifier.
         ///
@@ -303,21 +364,19 @@ namespace mysql
             return;
         }
 
-        MYSQL_RES *res = nullptr;
-        if (mysql_field_count(pDatabase))
+        // Everything is read off here, on the worker: by the time the callback
+        // runs, the worker may already be on the next query of this connection.
+        std::vector<MySQLResultSet> sets;
+        unsigned int insertId = 0, affectedRows = 0;
+        std::string error;
+
+        if (!ReadResults(pDatabase, &sets, &insertId, &affectedRows, &error, nullptr))
         {
-            res = mysql_store_result(pDatabase);
-            if (!res)
-            {
-                Fail(mysql_error(pDatabase));
-                return;
-            }
+            Fail(error.c_str());
+            return;
         }
 
-        // Built here rather than on the main thread: it reads the insert id
-        // and affected rows off the connection, which by then the worker may
-        // have moved on to the next query on.
-        m_pQuery = new CMySQLQuery(m_pCon, res);
+        m_pQuery = new CMySQLStoredQuery(std::move(sets), insertId, affectedRows);
     }
 
     void TMySQLQueryOp::RunThinkPart()
@@ -374,7 +433,7 @@ namespace mysql
         }
         for (size_t i = 0; i < this->m_txn.queries.size(); i++)
         {
-            CMySQLQuery *result = DoQuery(this->m_txn.queries[i].c_str());
+            CMySQLStoredQuery *result = DoQuery(this->m_txn.queries[i].c_str());
             if (!result)
             {
                 Rollback();
@@ -417,8 +476,9 @@ namespace mysql
         auto pDatabase = m_pCon->GetDatabase();
         if (pDatabase && mysql_query(pDatabase, "ROLLBACK") == 0)
         {
-            if (MYSQL_RES *res = mysql_store_result(pDatabase))
-                mysql_free_result(res);
+            std::vector<MySQLResultSet> sets;
+            unsigned int insertId = 0, affectedRows = 0;
+            ReadResults(pDatabase, &sets, &insertId, &affectedRows, nullptr, nullptr);
         }
     }
 
@@ -433,7 +493,7 @@ namespace mysql
         return true;
     }
 
-    CMySQLQuery *TMySQLTransactOp::DoQuery(const char *query)
+    CMySQLStoredQuery *TMySQLTransactOp::DoQuery(const char *query)
     {
         auto pDatabase = m_pCon->GetDatabase();
         if (mysql_query(pDatabase, query))
@@ -442,278 +502,19 @@ namespace mysql
             return NULL;
         }
 
-        MYSQL_RES *res = NULL;
-        if (mysql_field_count(pDatabase))
+        std::vector<MySQLResultSet> sets;
+        unsigned int insertId = 0, affectedRows = 0;
+        std::string error;
+
+        if (!ReadResults(pDatabase, &sets, &insertId, &affectedRows, &error, nullptr))
         {
-            res = mysql_store_result(pDatabase);
-            if (!res)
-            {
-                // Has to say so: an empty error reads as success, and the
-                // plugin would be handed a transaction that was rolled back.
-                V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s", mysql_error(pDatabase));
-                return NULL;
-            }
-        }
-        return new CMySQLQuery(m_pCon, res);
-    }
-
-    CMySQLResult::CMySQLResult(MYSQL_RES *res) : m_pRes(res)
-    {
-        Update();
-    }
-
-    void CMySQLResult::Update()
-    {
-        if (!m_pRes)
-        {
-            m_ColCount = 0;
-            m_RowCount = 0;
-        }
-        else
-        {
-            m_ColCount = mysql_num_fields(m_pRes);
-            m_RowCount = mysql_num_rows(m_pRes);
-        }
-    }
-
-    int CMySQLResult::GetRowCount()
-    {
-        return m_RowCount;
-    }
-
-    int CMySQLResult::GetFieldCount()
-    {
-        return m_ColCount;
-    }
-
-    bool CMySQLResult::FieldNameToNum(const char *name, unsigned int *columnId)
-    {
-        unsigned int total = GetFieldCount();
-
-        for (unsigned int i = 0; i < total; i++)
-        {
-            if (strcmp(FieldNumToName(i), name) == 0)
-            {
-                *columnId = i;
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    const char *CMySQLResult::FieldNumToName(unsigned int colId)
-    {
-        if (colId >= GetFieldCount())
-        {
+            // Has to say so: an empty error reads as success, and the
+            // plugin would be handed a transaction that was rolled back.
+            V_snprintf(m_szError, sizeof m_szError, "MySQL query error: %s", error.c_str());
             return NULL;
         }
 
-        MYSQL_FIELD *field = mysql_fetch_field_direct(m_pRes, colId);
-        return field ? (field->name ? field->name : "") : "";
-    }
-
-    bool CMySQLResult::MoreRows()
-    {
-        return m_CurRow < m_RowCount;
-    }
-
-    IToolkitMySQLRow *CMySQLResult::FetchRow()
-    {
-        if (m_CurRow >= m_RowCount)
-        {
-            /* Put us one after so we know to block CurrentRow() */
-            m_CurRow = m_RowCount + 1;
-            return NULL;
-        }
-        m_Row = mysql_fetch_row(m_pRes);
-        m_Lengths = mysql_fetch_lengths(m_pRes);
-        m_CurRow++;
-        return this;
-    }
-
-    IToolkitMySQLRow *CMySQLResult::CurrentRow()
-    {
-        if (!m_pRes || !m_CurRow || m_CurRow > m_RowCount)
-        {
-            return NULL;
-        }
-
-        return this;
-    }
-
-    bool CMySQLResult::Rewind()
-    {
-        mysql_data_seek(m_pRes, 0);
-        m_CurRow = 0;
-        return true;
-    }
-
-    int CMySQLResult::GetFieldType(unsigned int field)
-    {
-        if (field >= m_ColCount)
-        {
-            return TOOLKIT_MYSQL_TYPE_UNKNOWN;
-        }
-
-        MYSQL_FIELD *fld = mysql_fetch_field_direct(m_pRes, field);
-        if (!fld)
-        {
-            return TOOLKIT_MYSQL_TYPE_UNKNOWN;
-        }
-
-        return fld->type;
-    }
-
-    bool CMySQLResult::IsNull(unsigned int columnId)
-    {
-        if (columnId >= m_ColCount)
-        {
-            return true;
-        }
-
-        return (m_Row[columnId] == NULL);
-    }
-
-    const char *CMySQLResult::GetString(unsigned int columnId, size_t *length)
-    {
-        if (columnId >= m_ColCount)
-        {
-            return nullptr;
-        }
-        else if (m_Row[columnId] == NULL)
-        {
-            if (length)
-            {
-                *length = 0;
-            }
-            return nullptr;
-        }
-
-        if (length)
-        {
-            *length = (size_t)m_Lengths[columnId];
-        }
-
-        return m_Row[columnId];
-    }
-
-    size_t CMySQLResult::GetDataSize(unsigned int columnId)
-    {
-        if (columnId >= m_ColCount)
-        {
-            return 0;
-        }
-
-        return (size_t)m_Lengths[columnId];
-    }
-
-    float CMySQLResult::GetFloat(unsigned int columnId)
-    {
-        if (columnId >= m_ColCount)
-        {
-            return 0.0f;
-        }
-        else if (m_Row[columnId] == NULL)
-        {
-            return 0.0f;
-        }
-
-        return (float)atof(m_Row[columnId]);
-    }
-
-    int64_t CMySQLResult::GetInt64(unsigned int columnId)
-    {
-        if (columnId >= m_ColCount)
-        {
-            return 0;
-        }
-        else if (m_Row[columnId] == NULL)
-        {
-            return 0;
-        }
-
-        return atoll(m_Row[columnId]);
-    }
-
-    int CMySQLResult::GetInt(unsigned int columnId)
-    {
-        if (columnId >= m_ColCount)
-        {
-            return 0;
-        }
-        else if (m_Row[columnId] == NULL)
-        {
-            return 0;
-        }
-
-        return atoi(m_Row[columnId]);
-    }
-
-    CMySQLQuery::CMySQLQuery(MySQLConnection *db, MYSQL_RES *res) : m_pDatabase(db), m_res(res)
-    {
-        m_insertId = m_pDatabase->GetInsertID();
-        m_affectedRows = m_pDatabase->GetAffectedRows();
-    }
-
-    IToolkitMySQLResult *CMySQLQuery::GetResultSet()
-    {
-        if (m_res.m_pRes == NULL)
-        {
-            return NULL;
-        }
-
-        return &m_res;
-    }
-
-    bool CMySQLQuery::FetchMoreResults()
-    {
-        auto pDatabase = m_pDatabase->GetDatabase();
-        if (m_res.m_pRes == NULL || !pDatabase)
-        {
-            return false;
-        }
-        else if (!mysql_more_results(pDatabase))
-        {
-            return false;
-        }
-
-        mysql_free_result(m_res.m_pRes);
-        m_res.m_pRes = NULL;
-
-        if (mysql_next_result(pDatabase) != 0)
-        {
-            return false;
-        }
-
-        m_res.m_pRes = mysql_store_result(pDatabase);
-        m_res.Update();
-
-        return (m_res.m_pRes != NULL);
-    }
-
-    CMySQLQuery::~CMySQLQuery()
-    {
-        while (FetchMoreResults())
-        {
-            /* Spin until all are gone */
-        }
-
-        /* Free the last, if any */
-        if (m_res.m_pRes != NULL)
-        {
-            mysql_free_result(m_res.m_pRes);
-        }
-    }
-
-    unsigned int CMySQLQuery::GetInsertId()
-    {
-        return m_insertId;
-    }
-
-    unsigned int CMySQLQuery::GetAffectedRows()
-    {
-        return m_affectedRows;
+        return new CMySQLStoredQuery(std::move(sets), insertId, affectedRows);
     }
 
     void CMySQLStoredResult::Reset(const MySQLResultSet *set)
@@ -884,7 +685,7 @@ namespace mysql
     IToolkitMySQLResult *CMySQLStoredQuery::GetResultSet()
     {
         // A statement that returns no rows at all -- an INSERT, an UPDATE --
-        // has no result set to hand back, the same as a live query would.
+        // has no result set to hand back.
         if (m_CurSet >= m_vecSets.size())
         {
             return NULL;
@@ -1108,16 +909,6 @@ namespace mysql
         m_ThinkQueue.push(threadOperation);
     }
 
-    unsigned int MySQLConnection::GetInsertID()
-    {
-        return mysql_insert_id(m_pDatabase);
-    }
-
-    unsigned int MySQLConnection::GetAffectedRows()
-    {
-        return mysql_affected_rows(m_pDatabase);
-    }
-
     std::string MySQLConnection::Escape(const char *string)
     {
         return Escape(const_cast<char *>(string));
@@ -1277,40 +1068,11 @@ namespace mysql
 
         // The rows have to come off the wire and into the op here: by the time
         // the callback runs, on the main thread, this connection is closed.
-        bool first = true;
-
-        while (true)
+        if (!ReadResults(mysql, &op->m_vecSets, &op->m_InsertId, &op->m_AffectedRows, &op->m_sError,
+                         &op->m_nErrorCode))
         {
-            if (MYSQL_RES *res = mysql_store_result(mysql))
-            {
-                op->m_vecSets.push_back(StoreResult(res));
-                mysql_free_result(res);
-            }
-            else if (mysql_field_count(mysql) != 0)
-            {
-                op->m_sError = mysql_error(mysql);
-                op->m_nErrorCode = mysql_errno(mysql);
-                op->m_vecSets.clear();
-
-                mysql_close(mysql);
-                return;
-            }
-
-            // Both belong to the statement that was asked for, so they are
-            // read off the first result and not whatever a stored procedure
-            // went on to do. Not before it, either: a SELECT only reports its
-            // affected rows once its result set has been stored.
-            if (first)
-            {
-                op->m_InsertId = (unsigned int)mysql_insert_id(mysql);
-                op->m_AffectedRows = (unsigned int)mysql_affected_rows(mysql);
-                first = false;
-            }
-
-            if (!mysql_more_results(mysql) || mysql_next_result(mysql) != 0)
-            {
-                break;
-            }
+            mysql_close(mysql);
+            return;
         }
 
         op->m_bSuccess = true;

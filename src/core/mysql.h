@@ -55,7 +55,7 @@
 #include <vector>
 
 namespace mysql {
-    class CMySQLQuery;
+    class CMySQLStoredQuery;
     class MySQLConnection;
     class ServerlessHandle;
     struct ServerlessOp;
@@ -93,7 +93,8 @@ namespace mysql {
     /// One result set, copied out of libmysql row by row.
     ///
     /// A serverless query has no connection left by the time its callback
-    /// runs, and a MYSQL_RES does not outlive the handle it came off. So the
+    /// runs, and a connection query's may already be busy with the next one
+    /// on the worker; a MYSQL_RES does not outlive the handle it came off. So the
     /// worker reads the whole thing into this while the connection is still
     /// up, and the main thread reads rows out of here.
     struct MySQLResultSet
@@ -160,7 +161,7 @@ namespace mysql {
         MySQLConnection *m_pCon;
         std::string m_szQuery;
         ToolkitMySQLQueryCallbackFunc m_callback;
-        CMySQLQuery *m_pQuery = nullptr;
+        CMySQLStoredQuery *m_pQuery = nullptr;
         char m_szError[255] {};
     };
 
@@ -191,67 +192,11 @@ namespace mysql {
         int m_failIndex = -1;
 
         bool DoSimpleQuery(const char *query);
-        CMySQLQuery *DoQuery(const char *query);
+        CMySQLStoredQuery *DoQuery(const char *query);
         void Rollback();
     };
 
-    class CMySQLResult : public IToolkitMySQLResult, IToolkitMySQLRow
-    {
-        friend class CMySQLQuery;
-
-    public:
-        CMySQLResult(MYSQL_RES *res);
-
-        void Update();
-
-        int GetRowCount();
-        int GetFieldCount();
-        bool FieldNameToNum(const char *name, unsigned int *columnId);
-        const char *FieldNumToName(unsigned int colId);
-        bool MoreRows();
-        IToolkitMySQLRow *FetchRow();
-        IToolkitMySQLRow *CurrentRow();
-        bool Rewind();
-        int GetFieldType(unsigned int field);
-        const char *GetString(unsigned int columnId, size_t *length = nullptr);
-        size_t GetDataSize(unsigned int columnId);
-        float GetFloat(unsigned int columnId);
-        int GetInt(unsigned int columnId);
-        bool IsNull(unsigned int columnId);
-        int64_t GetInt64(unsigned int columnId);
-
-    private:
-        // MYSQL* m_pDatabase;
-        MYSQL_RES *m_pRes;
-
-        unsigned int m_ColCount = 0;
-        unsigned int m_RowCount = 0;
-        unsigned int m_CurRow = 0;
-        MYSQL_ROW m_Row;
-        unsigned long *m_Lengths = 0;
-    };
-
-    class CMySQLQuery : public IToolkitMySQLQuery
-    {
-        friend class CMySQLResult;
-
-    public:
-        CMySQLQuery(MySQLConnection *db, MYSQL_RES *res);
-        ~CMySQLQuery();
-        IToolkitMySQLResult *GetResultSet();
-        bool FetchMoreResults();
-        unsigned int GetInsertId();
-        unsigned int GetAffectedRows();
-
-    private:
-        MySQLConnection *m_pDatabase;
-        CMySQLResult m_res;
-        unsigned int m_insertId;
-        unsigned int m_affectedRows;
-    };
-
-    /// Reads rows out of a MySQLResultSet the worker filled in. Same
-    /// interface a live result has, so a callback cannot tell the two apart.
+    /// Reads rows out of a MySQLResultSet the worker filled in.
     class CMySQLStoredResult final : public IToolkitMySQLResult, IToolkitMySQLRow
     {
     public:
@@ -283,8 +228,9 @@ namespace mysql {
         unsigned int m_CurRow = 0;
     };
 
-    /// What a serverless query hands to its callback. Owns its rows outright,
-    /// so it stays readable after the connection behind it has been closed.
+    /// What every query hands to its callback, serverless or on a connection.
+    /// Owns its rows outright, so reading it never touches libmysql: the
+    /// connection behind it may be closed, or running the next query.
     class CMySQLStoredQuery final : public IToolkitMySQLQuery
     {
     public:
@@ -329,8 +275,6 @@ namespace mysql {
             return m_pDatabase;
         }
 
-        unsigned int GetInsertID();
-        unsigned int GetAffectedRows();
         std::string Escape(char *string) override;
         std::string Escape(const char *string) override;
 
