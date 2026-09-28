@@ -539,18 +539,24 @@
 
 .s2t-hit.show {
     visibility: visible;
+    opacity: 1;
 }
+
+/* Shown at full opacity and faded out by the animation; if the animation
+   does not run the marker simply stays until the server hides it. */
 
 .s2t-hit.hit-a {
     animation-name: 's2t-flash-a';
     animation-duration: 0.35s;
     animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
 }
 
 .s2t-hit.hit-b {
     animation-name: 's2t-flash-b';
     animation-duration: 0.35s;
     animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
 }
 
 .s2t-hit-tick {
@@ -579,18 +585,21 @@
 
 .s2t-damage.show {
     visibility: visible;
+    opacity: 1;
 }
 
 .s2t-damage.dmg-a {
     animation-name: 's2t-flash-a';
     animation-duration: 0.8s;
     animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
 }
 
 .s2t-damage.dmg-b {
     animation-name: 's2t-flash-b';
     animation-duration: 0.8s;
     animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
 }
 
 .s2t-damage-text {

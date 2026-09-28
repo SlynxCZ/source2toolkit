@@ -37,12 +37,11 @@
 #include "customhud.h"
 #include "utils/log.h"
 
-#include "networkmessages.h"
 
 #include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
 
-#include <google/protobuf/message.h>
+#include <cstdint>
 
 #include <algorithm>
 #include <string>
@@ -72,6 +71,54 @@ namespace customhud
         });
     }
 
+    namespace
+    {
+        bool ReadVarint(const uint8_t*& p, const uint8_t* end, uint64_t& out)
+        {
+            out = 0;
+            for (int shift = 0; p < end && shift < 64; shift += 7)
+            {
+                const uint8_t b = *p++;
+                out |= static_cast<uint64_t>(b & 0x7F) << shift;
+                if (!(b & 0x80))
+                    return true;
+            }
+            return false;
+        }
+
+        /// Wire-format decode of CCSUsrMsg_CustomHudClicked; unknown fields
+        /// are skipped so a field Valve adds later does not break it.
+        bool DecodeClick(const uint8_t* p, uint32 nSize, uint32& nHandle, std::string& sButtonId)
+        {
+            const uint8_t* end = p + nSize;
+            while (p < end)
+            {
+                uint64_t key;
+                if (!ReadVarint(p, end, key)) return false;
+                const uint32 field = static_cast<uint32>(key >> 3);
+                const uint32 wire = static_cast<uint32>(key & 7);
+
+                if (wire == 0)
+                {
+                    uint64_t v;
+                    if (!ReadVarint(p, end, v)) return false;
+                    if (field == 1) nHandle = static_cast<uint32>(v);
+                }
+                else if (wire == 2)
+                {
+                    uint64_t len;
+                    if (!ReadVarint(p, end, len) || len > static_cast<uint64_t>(end - p)) return false;
+                    if (field == 2) sButtonId.assign(reinterpret_cast<const char*>(p), static_cast<size_t>(len));
+                    p += len;
+                }
+                else if (wire == 5) { if (end - p < 4) return false; p += 4; }
+                else if (wire == 1) { if (end - p < 8) return false; p += 8; }
+                else return false;
+            }
+            return true;
+        }
+    }
+
     void CustomHudManager::HandleClick(CCSPlayerController* pController, const void* pBuffer, uint32 nSize)
     {
         if (!pController || !pBuffer)
@@ -83,24 +130,19 @@ namespace customhud
             return;
         }
 
-        // The message is parsed through the engine's own descriptor rather than
-        // a generated header -- CCSUsrMsg_CustomHudClicked is newer than the
-        // protobuf checkout the toolkit builds against.
-        void* pMessage = networkmessages::networkMessagesManager.AllocateNetMessageByID(CS_UM_CustomHudClicked);
+        // CCSUsrMsg_CustomHudClicked is two fields -- custom_hud_layout
+        // (1, uint32) and button_id (2, string) -- decoded here by hand: the
+        // message is newer than the protobuf checkout the toolkit builds
+        // against, and asking the engine for a message object to parse into
+        // is one more thing that can quietly fail.
+        uint32 nPackedHandle = 0xFFFFFF;
+        std::string sButtonId;
 
-        if (!pMessage)
-            return;
-
-        if (!static_cast<google::protobuf::Message*>(pMessage)->ParseFromArray(pBuffer, static_cast<int>(nSize)))
+        if (!DecodeClick(static_cast<const uint8_t*>(pBuffer), nSize, nPackedHandle, sButtonId))
         {
-            networkmessages::networkMessagesManager.DeallocateNetMessage(pMessage);
+            FP_WARN("custom HUD click from slot {}: {}-byte payload did not decode", pController->GetPlayerSlot().Get(), nSize);
             return;
         }
-
-        const uint32 nPackedHandle = networkmessages::networkMessagesManager.GetUInt32(pMessage, "custom_hud_layout");
-        const std::string sButtonId = networkmessages::networkMessagesManager.GetString(pMessage, "button_id");
-
-        networkmessages::networkMessagesManager.DeallocateNetMessage(pMessage);
 
         // Low 14 bits of a packed handle are the entity index; the stored
         // CHandle carries the serial, so a recycled index cannot match.

@@ -38,11 +38,14 @@
 #include "tkvprof.h"
 
 #include "source2toolkit/schema/entity/classes/CBaseEntity.h"
+#include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
+#include "source2toolkit/schema/entity/enums/ECstrike15UserMessages.h"
+#include "source2toolkit/schema/schema.h"
+#include "source2toolkit/utils/plat.h"
 
 #include "commands.h"
-#include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "crashhandler.h"
 #include "customhud.h"
 #include "sounds.h"
@@ -53,8 +56,6 @@
 #include "networkmessages.h"
 #include "plugin.h"
 #include "shared.h"
-#include "source2toolkit/schema/schema.h"
-#include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
 #include "pluginmanager.h"
 #include "gamehooks.h"
@@ -459,11 +460,17 @@ namespace virtualhooks
     {
         TK_VPROF("Source2Toolkit::ClientSvcUserMessage");
 
-        if (nType != customhud::CS_UM_CustomHudClicked)
+        if (nType != static_cast<int>(ECstrike15UserMessages::CS_UM_CustomHudClicked))
             return { KHook::Action::Ignore };
+
+        // Logged before anything can go wrong with it, so a click that the
+        // client did send is visible even when the payload is not understood.
+        FP_INFO("custom HUD click message from slot {} ({} bytes)", slot.Get(), nSize);
 
         if (auto* pController = CCSPlayerController::FromSlot(slot))
             customhud::customHudManager.HandleClick(pController, pBuffer, nSize);
+        else
+            FP_WARN("custom HUD click from slot {} has no player controller", slot.Get());
 
         return { KHook::Action::Ignore };
     }

@@ -45,10 +45,6 @@ class CCSCustomHudLayout;
 class CCSPlayerController;
 
 namespace customhud {
-    /// CS_UM_CustomHudClicked, the user message a client sends when it clicks a
-    /// panel of a custom_hud_layout it has input capture on.
-    inline constexpr int CS_UM_CustomHudClicked = 390;
-
     struct ClickCallbackEntry
     {
         PluginId owner;
