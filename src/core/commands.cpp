@@ -70,7 +70,7 @@
 // client's console instead, which is what ClientPrintf is for. Colour is
 // dropped on that path -- the escapes are a terminal thing and the game
 // console would print them literally.
-static void ToolkitReply(const CCommandContext& ctx, const char* pszColor, const char* fmt, ...)
+static void ToolkitReply(const ToolkitCommandContext& ctx, const char* pszColor, const char* fmt, ...)
 {
     char buf[1024];
 
@@ -136,7 +136,7 @@ namespace commands {
             || strcmp(cmd, "credits") == 0;
     }
 
-    static void HandleToolkitCommand(const CCommandContext& ctx, const CCommand& args, bool post)
+    static void HandleToolkitCommand(const ToolkitCommandContext& ctx, const ToolkitCommandArgs& args, bool post)
     {
         int argc = args.ArgC();
 
@@ -191,6 +191,20 @@ namespace commands {
                     api->GetName(),
                     api->GetVersion(),
                     api->GetAuthor());
+
+                // API 2 plugins say what they were built against; the tier
+                // tells the admin whether an engine or KHook change means a
+                // rebuild of this plugin or only of the core.
+                if (p->apiVersion >= 2)
+                {
+                    const int rawHooks = api->GetRawHookCount();
+                    REPLY_INFO("       API %d, KHook %.12s, %s", p->apiVersion, api->GetKHookCommit(),
+                        rawHooks ? "raw tier (own KHook hooks: rebuild on a KHook or engine change)" : "stable tier (no KHook hooks of its own)");
+                }
+                else
+                {
+                    REPLY_INFO("       API %d (built against an older SDK)", p->apiVersion);
+                }
             }
         }
 
@@ -229,13 +243,22 @@ namespace commands {
                 return;
             }
 
-            if (!pluginManager.RequestUnload(id))
+            // Synchronous: the command buffer runs between frames, outside
+            // every hooked function. Only a plugin hooking
+            // ICvar::DispatchConCommand itself could not be unloaded here.
+            if (!pluginManager.UnloadPlugin(id))
             {
                 REPLY_ERROR("Plugin %d not found or failed to unload.", id);
                 return;
             }
 
             REPLY_INFO("Plugin %d unloaded.", id);
+        }
+
+        else if (strcmp(cmd, "_pending") == 0)
+        {
+            // Internal: queued by PluginManager::RequestUnload/RequestReload.
+            pluginManager.RunPending();
         }
 
         else if (strcmp(cmd, "info") == 0)
@@ -260,6 +283,16 @@ namespace commands {
                     REPLY_INFO("  Author: %s", api->GetAuthor());
                     REPLY_INFO("  Description: %s", api->GetDescription());
                     REPLY_INFO("  Path: %s", p->path.c_str());
+                    REPLY_INFO("  Plugin API: %d", p->apiVersion);
+                    if (p->apiVersion >= 2)
+                    {
+                        REPLY_INFO("  KHook: %s", api->GetKHookCommit());
+                        REPLY_INFO("  Own KHook hooks: %d (%s)", api->GetRawHookCount(), api->GetRawHookCount() ? "raw tier" : "stable tier");
+                    }
+                    std::string ifaces;
+                    for (const auto& name : p->ifaces)
+                        ifaces += (ifaces.empty() ? "" : ", ") + name;
+                    REPLY_INFO("  Interfaces: %s", ifaces.empty() ? "(none)" : ifaces.c_str());
                     return;
                 }
             }
@@ -327,7 +360,7 @@ namespace commands {
         }
     }
 
-    static void HandleMenuCommand(const CCommandContext& ctx, const CCommand& args, bool post)
+    static void HandleMenuCommand(const ToolkitCommandContext& ctx, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController* player = CCSPlayerController::FromSlot(ctx.GetPlayerSlot().Get());
         if (!player || player->m_iConnected() != PlayerConnectedState::Connected)
@@ -382,7 +415,20 @@ namespace commands {
         (void) args;
     }
 
-    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post) {
+    // The engine's types stop here: handlers get the toolkit's own, so neither
+    // CCommand nor CCommandContext's layout is part of the plugin API.
+    static ToolkitCommandArgs ToolkitArgs(const CCommand& args)
+    {
+        const char* argv[ToolkitCommandArgs::kMaxArgs];
+        const int argc = args.ArgC() < ToolkitCommandArgs::kMaxArgs ? args.ArgC() : ToolkitCommandArgs::kMaxArgs;
+        for (int i = 0; i < argc; i++)
+            argv[i] = args.Arg(i);
+        return ToolkitCommandArgs(argc, argv, args.ArgS(), args.GetCommandString());
+    }
+
+    Action DispatchConsoleListener(const CCommandContext& engineCtx, const CCommand& engineArgs, bool post) {
+        const ToolkitCommandContext ctx(engineCtx.GetPlayerSlot(), static_cast<int>(engineCtx.GetTarget()));
+        const ToolkitCommandArgs args = ToolkitArgs(engineArgs);
         std::string name = args.Arg(0);
         std::transform(name.begin(), name.end(), name.begin(),
                        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });

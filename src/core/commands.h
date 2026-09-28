@@ -55,7 +55,7 @@ namespace commands {
 
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
     {
-        return [fn](const CCommandContext& ctx, const CCommand& args, bool post) -> Action
+        return [fn](const ToolkitCommandContext& ctx, const ToolkitCommandArgs& args, bool post) -> Action
         {
             fn(ctx, args, post);
             return Action::Ignore;

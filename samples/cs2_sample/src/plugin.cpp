@@ -43,14 +43,14 @@ TOOLKIT_EXPOSE(cs2_sample, g_Plugin);
 
 // Who ran the command: a controller for a player, nullptr for the server
 // console -- the console has no slot.
-static CCSPlayerController *CallerOf(const CCommandContext &context)
+static CCSPlayerController *CallerOf(const ToolkitCommandContext &context)
 {
     const CPlayerSlot slot = context.GetPlayerSlot();
     return slot.IsValid() ? CCSPlayerController::FromSlot(slot) : nullptr;
 }
 
 // Answers where the command came from: the player's chat, or the server console.
-static void Reply(const CCommandContext &context, const char *pszFormat, ...)
+static void Reply(const ToolkitCommandContext &context, const char *pszFormat, ...)
 {
     char szBuffer[512];
 
@@ -66,7 +66,7 @@ static void Reply(const CCommandContext &context, const char *pszFormat, ...)
 }
 
 // Most of the entity commands need a living caller. Says why when there is none.
-static CCSPlayerPawn *AlivePawnOf(const CCommandContext &context)
+static CCSPlayerPawn *AlivePawnOf(const ToolkitCommandContext &context)
 {
     CCSPlayerController *pCaller = CallerOf(context);
     if (!pCaller)
@@ -120,8 +120,8 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     // the interface instances just set above, the function ones get their
     // address resolved and the detour placed. One that cannot be resolved is
     // logged and skipped; the rest still go in.
-    if (!KHOOK_INIT())
-        TOOLKIT_LOG(this, "Some hooks were not installed, see above.\n");
+    // The KHook commit check inside returns false out of Load() on a mismatch.
+    KHOOK_INIT();
 
     TOOLKIT_LOG(this, "All hooks started!\n");
 
@@ -312,7 +312,7 @@ void SamplePlugin::SetupCommands()
 {
     // A console command, and the same thing again as a chat command -- the
     // toolkit routes "!sample_command" and "/sample_command" to the same handler.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_command", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_command", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         TOOLKIT_LOG(&g_Plugin, "Sample command called by %d. Command: %s\n", context.GetPlayerSlot().Get(), args.GetCommandString());
     });
@@ -321,7 +321,7 @@ void SamplePlugin::SetupCommands()
     // everything after it as one string. The caller is a slot: valid for a
     // player, invalid (-1) for the server console -- CallerOf() and Reply()
     // at the top of this file are built on that.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_echo", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_echo", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (args.ArgC() < 2)
         {
@@ -338,7 +338,7 @@ void SamplePlugin::SetupCommands()
     // the default triggers; plain "noshake" does not fire it. The handler
     // cannot block the message itself: a public trigger lets it show, a
     // silent one hides it whatever the handler does.
-    g_pToolkitCommands->RegisterChatListener(g_PluginID, "noshake", [this](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterChatListener(g_PluginID, "noshake", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         const CPlayerSlot slot = context.GetPlayerSlot();
         if (!slot.IsValid())
@@ -354,7 +354,7 @@ void SamplePlugin::SetupCommands()
     // Listening in on a command somebody else owns -- the game's, another
     // plugin's. Pre (post = false) may answer with Action::Supersede to stop
     // the command from running at all; post only watches.
-    g_pToolkitCommands->RegisterConListener(g_PluginID, "jointeam", [](const CCommandContext &context, const CCommand &args, bool post) -> Action
+    g_pToolkitCommands->RegisterConListener(g_PluginID, "jointeam", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post) -> Action
     {
         // "jointeam 1" is spectator. Refusing it here is the whole of a
         // "no spectators" plugin.
@@ -367,7 +367,7 @@ void SamplePlugin::SetupCommands()
         return Action::Ignore;
     }, false);
 
-    g_pToolkitCommands->RegisterConListener(g_PluginID, "jointeam", [](const CCommandContext &context, const CCommand &args, bool post) -> Action
+    g_pToolkitCommands->RegisterConListener(g_PluginID, "jointeam", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post) -> Action
     {
         TOOLKIT_LOG(&g_Plugin, "Slot %d ran \"%s\"\n", context.GetPlayerSlot().Get(), args.GetCommandString());
         return Action::Ignore;
@@ -437,7 +437,7 @@ void SamplePlugin::SetupGameEvents()
     //   * FireEventToClient() -- to one player only, which the server itself
     //                            never sees. That is what makes per-player HUD
     //                            text out of show_survival_respawn_status.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_event", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_event", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller)
@@ -640,7 +640,7 @@ void SamplePlugin::SetupNetMessages()
     // Sending. Allocate by id (or by name, NET_MSG_ALLOC_BY_NAME), set fields
     // by their .proto names, send, free. The message is yours throughout:
     // sending does not consume it, so one message can go out many times.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_shake", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_shake", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         void *pMsg = NET_MSG_ALLOC_BY_ID(UM_Shake);
         if (!pMsg)
@@ -697,7 +697,7 @@ void SamplePlugin::SetupNetMessages()
         return Action::Ignore;
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_mute", [this](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_mute", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (args.ArgC() < 2)
         {
@@ -731,7 +731,7 @@ void SamplePlugin::SetupNetMessages()
 void SamplePlugin::SetupSounds()
 {
     // The short way: one call, one player, heard "in the head" -- no position.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_sound", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_sound", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         const CPlayerSlot slot = context.GetPlayerSlot();
         const char *pszSound = args.ArgC() >= 2 ? args.Arg(1) : "Weapon_AK47.Single";
@@ -744,7 +744,7 @@ void SamplePlugin::SetupSounds()
 
     // The long way: a sound object. Source, volume, pitch, any other public
     // parameter of the sound event, and exactly who hears it.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_sound_world", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_sound_world", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -806,7 +806,7 @@ void SamplePlugin::SetupSounds()
 void SamplePlugin::SetupNativeFunctions()
 {
     // Calling. An address and a function pointer type are all it takes.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_swap", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_swap", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller || pCaller->m_iTeamNum() < 2)
@@ -880,7 +880,7 @@ KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis)
 
 void SamplePlugin::SetupEntityCommands()
 {
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hp", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hp", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -894,7 +894,7 @@ void SamplePlugin::SetupEntityCommands()
         Reply(context, "Health: %d -> %d", nOld, pPawn->m_iHealth());
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_up", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_up", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -905,7 +905,7 @@ void SamplePlugin::SetupEntityCommands()
         pPawn->Teleport(&vecTarget, nullptr, nullptr);
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_give", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_give", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -922,7 +922,7 @@ void SamplePlugin::SetupEntityCommands()
             Reply(context, "Could not give \"%s\".", pszItem);
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_strip", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_strip", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSPlayerPawn *pPawn = AlivePawnOf(context))
         {
@@ -931,13 +931,13 @@ void SamplePlugin::SetupEntityCommands()
         }
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_slay", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_slay", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSPlayerPawn *pPawn = AlivePawnOf(context))
             pPawn->CommitSuicide(false, true);
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_respawn", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_respawn", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSPlayerController *pCaller = CallerOf(context))
             pCaller->Respawn();
@@ -945,7 +945,7 @@ void SamplePlugin::SetupEntityCommands()
 
     // Finding: by classname, one after another. nullptr starts the search,
     // the last match continues it.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_break", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_break", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         int nBroken = 0;
 
@@ -962,7 +962,7 @@ void SamplePlugin::SetupEntityCommands()
     });
 
     // What is under the crosshair.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_aim", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_aim", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller)
@@ -979,7 +979,7 @@ void SamplePlugin::SetupEntityCommands()
     });
 
     // The game rules are an entity like any other, and the toolkit keeps it at hand.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_endround", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_endround", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSGameRules *pGameRules = GET_GAME_RULES())
             pGameRules->TerminateRound(5.0f, 10 /* round draw */);
@@ -999,7 +999,7 @@ void SamplePlugin::SetupTimers()
 {
     // NEXT_FRAME is in OnEntitySpawned() (section 5), one-shot timers are in
     // sample_sound_world (section 7). This is the one that repeats.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_countdown", [this](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_countdown", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         // A Timer* is good until the timer ends. A one-shot ends after it
         // fires, a repeating one when it is killed -- by you, or by a map
@@ -1049,7 +1049,7 @@ void SamplePlugin::SetupTransmit()
     // sample_hide <slot>: toggles whether the caller sees that player. The
     // controller is what gets hooked -- its visibility is applied to the pawn
     // it drives, the controller itself keeps going so the scoreboard is whole.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hide", [](const CCommandContext &context, const CCommand &args, bool post)
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hide", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller)

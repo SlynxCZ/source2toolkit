@@ -36,6 +36,9 @@
  */
 #include "pluginapi.h"
 #include "gamehooks.h"
+#include "compat.h"
+#include "pluginmanager.h"
+#include "utils/log.h"
 
 #include "addresses.h"
 #include "commands.h"
@@ -263,45 +266,129 @@ CreateInterfaceFn PluginApi::GetServerFactory(bool syn/* =true */)
     return g_SMAPI->GetServerFactory(syn);
 }
 
+static ToolkitPlugin* s_pLoadingPlugin = nullptr;
+
+void PluginApi::SetLoadingPlugin(ToolkitPlugin* plugin)
+{
+    s_pLoadingPlugin = plugin;
+}
+
+namespace
+{
+    struct CurrentInterface
+    {
+        const char* iface;
+        void* ptr;
+    };
+
+    // Every toolkit interface at its current revision. Built on first use,
+    // after the core's Load() filled the pointers in.
+    const CurrentInterface* CurrentInterfaces(size_t& count)
+    {
+        static const CurrentInterface s_current[] = {
+            { TOOLKIT_ADDRESSES_INTERFACE, &addresses::toolkitAddresses },
+            { TOOLKIT_COMMANDS_INTERFACE, &commands::commandsManager },
+            { TOOLKIT_CONVARS_INTERFACE, &convars::convarsManager },
+            { TOOLKIT_CUSTOMHUD_INTERFACE, &customhud::customHudManager },
+            { TOOLKIT_ENTITIES_INTERFACE, &entities::entitiesManager },
+            { TOOLKIT_EVENTS_INTERFACE, &events::eventManager },
+            { TOOLKIT_GAMECONFIG_INTERFACE, shared::g_pGameConfig },
+            { TOOLKIT_GAMESYSTEMS_INTERFACE, &gamesystems::gameSystemsManager },
+            { TOOLKIT_GAMEHOOKS_INTERFACE, &gamehooks::gameHooksManager },
+            { TOOLKIT_HTTP_INTERFACE, &http::httpManager },
+            { TOOLKIT_JSON_INTERFACE, &json::jsonManager },
+            { TOOLKIT_MENUS_INTERFACE, &menus::menuManager },
+            { TOOLKIT_MYSQL_INTERFACE, &mysql::mysqlManager },
+            { TOOLKIT_NETWORKMESSAGES_INTERFACE, &networkmessages::networkMessagesManager },
+            { TOOLKIT_SCHEDULER_INTERFACE, &scheduler::schedulerManager },
+            { TOOLKIT_SCRIPTS_INTERFACE, &scripts::scriptsManager },
+            { TOOLKIT_SOUNDS_INTERFACE, &sounds::soundsManager },
+            { TOOLKIT_TRACE_INTERFACE, &raytrace::rayTrace },
+            { TOOLKIT_TRANSMIT_INTERFACE, &transmit::transmitManager },
+            { TOOLKIT_PATHS_INTERFACE, &paths::pathsManager },
+        };
+        count = sizeof(s_current) / sizeof(s_current[0]);
+        return s_current;
+    }
+
+    // "IToolkitMenus002" -> revision 2, and the length of the name before it.
+    bool SplitRevision(const char* iface, size_t& nameLen, int& revision)
+    {
+        const size_t len = strlen(iface);
+        if (len < 4)
+            return false;
+        for (size_t i = len - 3; i < len; i++)
+            if (iface[i] < '0' || iface[i] > '9')
+                return false;
+        nameLen = len - 3;
+        revision = atoi(iface + nameLen);
+        return true;
+    }
+}
+
 void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
 {
     void* ptr = nullptr;
+    const char* who = s_pLoadingPlugin && s_pLoadingPlugin->api ? s_pLoadingPlugin->api->GetName() : "A plugin";
 
     // The one detour engine on the server, as metamod handed it to the toolkit.
     if (!strcmp(iface, TOOLKIT_KHOOK_INTERFACE)) ptr = KHook::__exported__khook;
     // ... and which KHook that is: the commit the core was compiled against
     // (metamod's third_party/khook, the engine itself -- see the SDK's
-    // CMakeLists.txt). A plugin's TOOLKIT_SAVEVARS() compares it with the
-    // commit of the SDK's vendor/khook it was built from and refuses to load
-    // on a mismatch.
+    // CMakeLists.txt). A plugin's KHOOK_INIT() compares it with the commit
+    // of the SDK's vendor/khook it was built from and refuses to load on a
+    // mismatch.
     else if (!strcmp(iface, TOOLKIT_KHOOK_VERSION_INTERFACE))
     {
         static const char s_khookCommit[] = TOOLKIT_KHOOK_COMMIT;
         ptr = const_cast<char*>(s_khookCommit);
     }
-    else if (!strcmp(iface, TOOLKIT_ADDRESSES_INTERFACE)) ptr = &addresses::toolkitAddresses;
-    else if (!strcmp(iface, TOOLKIT_COMMANDS_INTERFACE)) ptr = &commands::commandsManager;
-    else if (!strcmp(iface, TOOLKIT_CONVARS_INTERFACE)) ptr = &convars::convarsManager;
-    else if (!strcmp(iface, TOOLKIT_CUSTOMHUD_INTERFACE)) ptr = &customhud::customHudManager;
-    else if (!strcmp(iface, TOOLKIT_ENTITIES_INTERFACE)) ptr = &entities::entitiesManager;
-    else if (!strcmp(iface, TOOLKIT_EVENTS_INTERFACE)) ptr = &events::eventManager;
-    else if (!strcmp(iface, TOOLKIT_GAMECONFIG_INTERFACE)) ptr = shared::g_pGameConfig;
-    else if (!strcmp(iface, TOOLKIT_GAMESYSTEMS_INTERFACE)) ptr = &gamesystems::gameSystemsManager;
-    else if (!strcmp(iface, TOOLKIT_GAMEHOOKS_INTERFACE)) ptr = &gamehooks::gameHooksManager;
-    else if (!strcmp(iface, TOOLKIT_HTTP_INTERFACE)) ptr = &http::httpManager;
-    else if (!strcmp(iface, TOOLKIT_JSON_INTERFACE)) ptr = &json::jsonManager;
-    else if (!strcmp(iface, TOOLKIT_MENUS_INTERFACE)) ptr = &menus::menuManager;
-    else if (!strcmp(iface, TOOLKIT_MYSQL_INTERFACE)) ptr = &mysql::mysqlManager;
-    else if (!strcmp(iface, TOOLKIT_NETWORKMESSAGES_INTERFACE)) ptr = &networkmessages::networkMessagesManager;
-    else if (!strcmp(iface, TOOLKIT_SCHEDULER_INTERFACE)) ptr = &scheduler::schedulerManager;
-    else if (!strcmp(iface, TOOLKIT_SCRIPTS_INTERFACE)) ptr = &scripts::scriptsManager;
-    else if (!strcmp(iface, TOOLKIT_SOUNDS_INTERFACE)) ptr = &sounds::soundsManager;
-    else if (!strcmp(iface, TOOLKIT_TRACE_INTERFACE)) ptr = &raytrace::rayTrace;
-    else if (!strcmp(iface, TOOLKIT_TRANSMIT_INTERFACE)) ptr = &transmit::transmitManager;
-    else if (!strcmp(iface, TOOLKIT_PATHS_INTERFACE)) ptr = &paths::pathsManager;
+    else
+    {
+        size_t count = 0;
+        const CurrentInterface* current = CurrentInterfaces(count);
+
+        for (size_t i = 0; i < count && !ptr; i++)
+        {
+            if (!strcmp(iface, current[i].iface))
+                ptr = current[i].ptr;
+        }
+
+        // Not the current revision: the same interface at another one? The
+        // name carries the revision ("IToolkitMenus002"); the C++ name
+        // never changes, so an older plugin asks by the string it was built
+        // with and gets the adapter this core keeps for it, if any.
+        size_t nameLen = 0;
+        int wanted = 0;
+        if (!ptr && SplitRevision(iface, nameLen, wanted))
+        {
+            for (size_t i = 0; i < count; i++)
+            {
+                size_t curLen = 0;
+                int have = 0;
+                if (!SplitRevision(current[i].iface, curLen, have) || curLen != nameLen || strncmp(iface, current[i].iface, nameLen) != 0)
+                    continue;
+
+                if (wanted < have)
+                {
+                    if ((ptr = compat::Find(iface)))
+                        FP_WARN("{} was built against {}, this core serves {}: served through a compatibility adapter, rebuild the plugin when convenient", who, iface, current[i].iface);
+                    else
+                        FP_ERROR("{} was built against {}, this core serves {} and keeps no adapter for it: rebuild the plugin against the current SDK", who, iface, current[i].iface);
+                }
+                else
+                {
+                    FP_ERROR("{} asks for {}, newer than this core's {}: update the core", who, iface, current[i].iface);
+                }
+                break;
+            }
+        }
+    }
 
     if (ptr)
     {
+        if (s_pLoadingPlugin)
+            s_pLoadingPlugin->ifaces.push_back(iface);
         if (ret) *ret = TOOLKIT_IFACE_OK;
         return ptr;
     }

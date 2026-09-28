@@ -271,9 +271,9 @@ namespace virtualhooks
         pluginManager.OnGameFrame(simulating, bFirstTick, bLastTick);
 
         // Detours that lost their last listener come out here, outside their
-        // own dispatch; so do the plugin unloads asked for from the console.
+        // own dispatch. Plugin unloads never run from here: see
+        // PluginManager::RequestUnload.
         gamehooks::gameHooksManager.Tick();
-        pluginManager.Tick();
 
         if (m_bSelfUnloadPending)
         {

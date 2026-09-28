@@ -227,7 +227,11 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
     const bool late = hotReload || m_bStartupLoadDone;
 
     char err[256]{};
-    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), late))
+    PluginApi::SetLoadingPlugin(stored.get());
+    const bool loaded = plugin->Load(stored->id, &pluginApi, err, sizeof(err), late);
+    PluginApi::SetLoadingPlugin(nullptr);
+
+    if (!loaded)
     {
         // The plugin is already in the list -- Load() registers things under
         // its id -- so it has to come out again before the library is closed.
@@ -617,9 +621,11 @@ void PluginManager::StartFileWatcher()
                         FP_INFO("Detected change in {}, queuing hot reload...", name);
                         // Owner 0: the toolkit's own, so the reload it is
                         // about to do does not throw the task away.
+                        // Off the watcher thread first, then to the command
+                        // buffer: the reload must not run inside GameFrame.
                         scheduler::schedulerManager.NextFrame(0, [this, fullPath]()
                         {
-                            ReloadPluginByPath(fullPath);
+                            RequestReload(fullPath);
                         });
                     }
                 }
@@ -709,27 +715,49 @@ void PluginManager::OnLevelShutdown()
     }
 }
 
-// ---- deferred unload ----------------------------------------------------------
+// ---- deferred unload / reload -------------------------------------------------
+
+void PluginManager::QueuePending()
+{
+    if (m_bPendingQueued)
+        return;
+
+    m_bPendingQueued = true;
+    g_pEngineServer->ServerCommand("toolkit _pending\n");
+}
 
 bool PluginManager::RequestUnload(int id)
 {
     const bool known = std::any_of(m_plugins.begin(), m_plugins.end(), [id](const auto& p) { return p->id == id; });
     if (known)
+    {
         m_unloadRequests.push_back(id);
+        QueuePending();
+    }
     return known;
 }
 
-void PluginManager::Tick()
+void PluginManager::RequestReload(const std::string& fullPath)
 {
-    if (m_unloadRequests.empty())
-        return;
+    m_reloadRequests.push_back(fullPath);
+    QueuePending();
+}
+
+void PluginManager::RunPending()
+{
+    m_bPendingQueued = false;
 
     // Taken out first: an unload may unload something else in turn.
-    const std::vector<int> requests = std::move(m_unloadRequests);
+    const std::vector<int> unloads = std::move(m_unloadRequests);
     m_unloadRequests.clear();
+    const std::vector<std::string> reloads = std::move(m_reloadRequests);
+    m_reloadRequests.clear();
 
-    for (const int id : requests)
+    for (const int id : unloads)
         UnloadPlugin(id);
+
+    for (const auto& path : reloads)
+        ReloadPluginByPath(path);
 }
 
 // ---- engine callbacks (plugin API 2) ----------------------------------------

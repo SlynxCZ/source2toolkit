@@ -155,7 +155,7 @@ namespace scripts
     // Scripts send this with Instance.ServerCommand, which goes through the
     // server's command buffer -- slot -1. Anything a client sends (the console,
     // or the "!toolkit_script" chat alias) is not a script and is dropped.
-    static void HandleScriptCommand(const CCommandContext& ctx, const CCommand& args, bool post)
+    static void HandleScriptCommand(const ToolkitCommandContext& ctx, const ToolkitCommandArgs& args, bool post)
     {
         if (ctx.GetPlayerSlot().Get() != -1)
             return;

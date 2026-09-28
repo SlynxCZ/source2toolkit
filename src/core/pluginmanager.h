@@ -71,6 +71,9 @@ struct ToolkitPlugin
     // engine callbacks came with 2, so a listener from an older plugin is
     // not asked for them.
     int apiVersion;
+    // The toolkit interfaces the plugin asked ToolkitFactory for while it
+    // loaded, revision and all -- what "toolkit info" shows.
+    std::vector<std::string> ifaces;
     std::vector<IToolkitListener*> listeners;
 };
 
@@ -120,19 +123,25 @@ public:
     void OnGameServerSteamAPIDeactivated();
     void OnLoadEventsFromFile(class IGameEventManager2* manager, const char* filename, bool searchAll);
 
-    /// "toolkit unload" from the console: done at the next GameFrame rather
-    /// than from inside the command's own dispatch, where a plugin hooking
-    /// ICvar::DispatchConCommand could not take its hook down. False when no
-    /// plugin has that id.
+    /// Deferred unload / reload. A plugin cannot take its own KHook hooks
+    /// down from inside a dispatch of the hooked function (the capsule's
+    /// shared lock is held for the whole pre -> original -> post run and
+    /// RemoveHook wants it exclusively), and GameFrame is the function most
+    /// plugins hook. So nothing here unloads from a game callback: the
+    /// request is queued and "toolkit _pending" is pushed into the server
+    /// command buffer, which the engine runs between frames, outside every
+    /// hooked function. RequestUnload is false when no plugin has that id.
     bool RequestUnload(int id);
+    void RequestReload(const std::string& fullPath);
 
-    /// Once a frame, from the core's GameFrame hook.
-    void Tick();
+    /// Runs the queued requests; only from the "toolkit _pending" command.
+    void RunPending();
 public:
     std::vector<std::unique_ptr<ToolkitPlugin>> m_plugins;
     int m_nextId = 1;
-private:
+public:
     bool ReloadPluginByPath(const std::string& fullPath);
+private:
 
     std::thread m_watcherThread;
     std::atomic<bool> m_stopWatcher{false};
@@ -142,6 +151,10 @@ private:
     bool m_bStartupLoadDone = false;
 
     std::vector<int> m_unloadRequests;
+    std::vector<std::string> m_reloadRequests;
+    bool m_bPendingQueued = false;
+
+    void QueuePending();
 };
 
 extern PluginManager pluginManager;

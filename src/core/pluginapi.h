@@ -42,9 +42,15 @@
 
 #include "source2toolkit/IToolkitApi.h"
 
+struct ToolkitPlugin;
+
 class PluginApi : public IToolkitAPI
 {
 public:
+    /// The plugin whose Load() is running: ToolkitFactory records what it
+    /// asks for and names it in its messages. Null outside a Load().
+    static void SetLoadingPlugin(ToolkitPlugin* plugin);
+
     void Log(IToolkitPlugin *plugin, const char* msg, ...) override;
     void ConPrint(const char* msg) override;
     void ConPrintf(const char* fmt, ...) override;
