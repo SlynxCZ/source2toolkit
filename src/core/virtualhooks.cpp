@@ -463,14 +463,8 @@ namespace virtualhooks
         if (nType != static_cast<int>(ECstrike15UserMessages::CS_UM_CustomHudClicked))
             return { KHook::Action::Ignore };
 
-        // Logged before anything can go wrong with it, so a click that the
-        // client did send is visible even when the payload is not understood.
-        FP_INFO("custom HUD click message from slot {} ({} bytes)", slot.Get(), nSize);
-
         if (auto* pController = CCSPlayerController::FromSlot(slot))
             customhud::customHudManager.HandleClick(pController, pBuffer, nSize);
-        else
-            FP_WARN("custom HUD click from slot {} has no player controller", slot.Get());
 
         return { KHook::Action::Ignore };
     }

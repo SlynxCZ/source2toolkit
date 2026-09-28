@@ -125,10 +125,7 @@ namespace customhud
             return;
 
         if (m_callbacks.empty())
-        {
-            FP_WARN("custom HUD click from slot {} with no layout callbacks registered", pController->GetPlayerSlot().Get());
             return;
-        }
 
         // CCSUsrMsg_CustomHudClicked is two fields -- custom_hud_layout
         // (1, uint32) and button_id (2, string) -- decoded here by hand: the
@@ -169,12 +166,6 @@ namespace customhud
 
             ++it;
         }
-
-        if (fire.empty())
-            FP_WARN("custom HUD click '{}' from slot {} names entity {} (handle {:#x}), which no callback is registered on",
-                    sButtonId, pController->GetPlayerSlot().Get(), nEntryIndex, nPackedHandle);
-        else
-            FP_INFO("custom HUD click '{}' from slot {} on entity {}", sButtonId, pController->GetPlayerSlot().Get(), nEntryIndex);
 
         for (auto& [pLayout, handler] : fire)
             handler(pController, pLayout, sButtonId.c_str());
