@@ -258,7 +258,7 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
     for (auto& p : m_plugins)
     {
         for (auto* l : p->listeners)
-            l->OnPluginLoad(newId);
+            l->OnPluginLoad(newId, m_plugins.back()->api->GetName());
     }
 
     FP_INFO("{} plugin {}", hotReload ? "Hot reloaded" : "Loaded", std::filesystem::path(fullPath).stem().string());
@@ -335,7 +335,7 @@ bool PluginManager::ReloadPlugin(int id)
 
         for (auto& other : m_plugins)
             for (auto* l : other->listeners)
-                l->OnPluginUnload(id);
+                l->OnPluginUnload(id, (*it)->api->GetName());
 
         char err[128]{};
         (*it)->api->Unload(err, sizeof(err));
@@ -394,7 +394,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         for (auto& other : m_plugins)
         {
             for (auto* l : other->listeners)
-                l->OnPluginUnload(id);
+                l->OnPluginUnload(id, p->api->GetName());
         }
 
         char err[128]{};
@@ -519,7 +519,7 @@ void PluginManager::UnloadAll()
         for (auto& other : m_plugins)
         {
             for (auto* l : other->listeners)
-                l->OnPluginUnload(p->id);
+                l->OnPluginUnload(p->id, p->api->GetName());
         }
 
         char err[128]{};
