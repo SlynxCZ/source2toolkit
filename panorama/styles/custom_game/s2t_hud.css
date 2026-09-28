@@ -67,13 +67,13 @@
 .s2t-hud-top {
     horizontal-align: center;
     vertical-align: top;
-    margin-top: 200px;
+    margin-top: 110px;
 }
 
 .s2t-hud-topleft {
     horizontal-align: left;
     vertical-align: top;
-    margin-top: 200px;
+    margin-top: 110px;
     margin-left: 40px;
 }
 
@@ -84,7 +84,7 @@
 .s2t-hud-topright {
     horizontal-align: right;
     vertical-align: top;
-    margin-top: 200px;
+    margin-top: 110px;
     margin-right: 40px;
 }
 
@@ -136,6 +136,53 @@
     font-size: 18px;
     text-shadow: 0px 0px 0px 0.0 #00000000;
 }
+
+/* Offsets (HudTextStyle::offsetX/offsetY): steps of 40 px from the place
+   above, xm10..xp10 on the slot for the horizontal, ym10..yp10 for the
+   vertical. Two transforms cannot share one panel, so the horizontal
+   one moves the text inside the slot. */
+
+.s2t-hud-slot.ym1 { transform: translateY(-40px); }
+.s2t-hud-slot.yp1 { transform: translateY(40px); }
+.s2t-hud-slot.ym2 { transform: translateY(-80px); }
+.s2t-hud-slot.yp2 { transform: translateY(80px); }
+.s2t-hud-slot.ym3 { transform: translateY(-120px); }
+.s2t-hud-slot.yp3 { transform: translateY(120px); }
+.s2t-hud-slot.ym4 { transform: translateY(-160px); }
+.s2t-hud-slot.yp4 { transform: translateY(160px); }
+.s2t-hud-slot.ym5 { transform: translateY(-200px); }
+.s2t-hud-slot.yp5 { transform: translateY(200px); }
+.s2t-hud-slot.ym6 { transform: translateY(-240px); }
+.s2t-hud-slot.yp6 { transform: translateY(240px); }
+.s2t-hud-slot.ym7 { transform: translateY(-280px); }
+.s2t-hud-slot.yp7 { transform: translateY(280px); }
+.s2t-hud-slot.ym8 { transform: translateY(-320px); }
+.s2t-hud-slot.yp8 { transform: translateY(320px); }
+.s2t-hud-slot.ym9 { transform: translateY(-360px); }
+.s2t-hud-slot.yp9 { transform: translateY(360px); }
+.s2t-hud-slot.ym10 { transform: translateY(-400px); }
+.s2t-hud-slot.yp10 { transform: translateY(400px); }
+
+.s2t-hud-slot.xm1 .s2t-hud-text { transform: translateX(-40px); }
+.s2t-hud-slot.xp1 .s2t-hud-text { transform: translateX(40px); }
+.s2t-hud-slot.xm2 .s2t-hud-text { transform: translateX(-80px); }
+.s2t-hud-slot.xp2 .s2t-hud-text { transform: translateX(80px); }
+.s2t-hud-slot.xm3 .s2t-hud-text { transform: translateX(-120px); }
+.s2t-hud-slot.xp3 .s2t-hud-text { transform: translateX(120px); }
+.s2t-hud-slot.xm4 .s2t-hud-text { transform: translateX(-160px); }
+.s2t-hud-slot.xp4 .s2t-hud-text { transform: translateX(160px); }
+.s2t-hud-slot.xm5 .s2t-hud-text { transform: translateX(-200px); }
+.s2t-hud-slot.xp5 .s2t-hud-text { transform: translateX(200px); }
+.s2t-hud-slot.xm6 .s2t-hud-text { transform: translateX(-240px); }
+.s2t-hud-slot.xp6 .s2t-hud-text { transform: translateX(240px); }
+.s2t-hud-slot.xm7 .s2t-hud-text { transform: translateX(-280px); }
+.s2t-hud-slot.xp7 .s2t-hud-text { transform: translateX(280px); }
+.s2t-hud-slot.xm8 .s2t-hud-text { transform: translateX(-320px); }
+.s2t-hud-slot.xp8 .s2t-hud-text { transform: translateX(320px); }
+.s2t-hud-slot.xm9 .s2t-hud-text { transform: translateX(-360px); }
+.s2t-hud-slot.xp9 .s2t-hud-text { transform: translateX(360px); }
+.s2t-hud-slot.xm10 .s2t-hud-text { transform: translateX(-400px); }
+.s2t-hud-slot.xp10 .s2t-hud-text { transform: translateX(400px); }
 
 /* Colours (HudColor). */
 

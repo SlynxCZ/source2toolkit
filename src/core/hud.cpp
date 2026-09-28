@@ -75,6 +75,23 @@ namespace hud
         constexpr const char* kSizeClass[] = { "s-small", "s-normal", "s-large", "s-huge" };
         static_assert(sizeof(kSizeClass) / sizeof(kSizeClass[0]) == static_cast<size_t>(HudSize::Count));
 
+        // HudTextStyle::offsetX/offsetY, -10..10, as classes on the slot panel.
+        constexpr int kOffsetRange = 10;
+        constexpr int kOffsetClasses = 2 * kOffsetRange + 1;
+        constexpr const char* kOffXClass[kOffsetClasses] = {
+            "xm10", "xm9", "xm8", "xm7", "xm6", "xm5", "xm4", "xm3", "xm2", "xm1", "x0",
+            "xp1", "xp2", "xp3", "xp4", "xp5", "xp6", "xp7", "xp8", "xp9", "xp10",
+        };
+        constexpr const char* kOffYClass[kOffsetClasses] = {
+            "ym10", "ym9", "ym8", "ym7", "ym6", "ym5", "ym4", "ym3", "ym2", "ym1", "y0",
+            "yp1", "yp2", "yp3", "yp4", "yp5", "yp6", "yp7", "yp8", "yp9", "yp10",
+        };
+
+        int OffsetIndex(int offset)
+        {
+            return (std::max)(-kOffsetRange, (std::min)(kOffsetRange, offset)) + kOffsetRange;
+        }
+
         constexpr const char* kToastClass[] = { "t-info", "t-success", "t-warning", "t-danger", "t-neutral" };
         static_assert(sizeof(kToastClass) / sizeof(kToastClass[0]) == static_cast<size_t>(HudToastStyle::Count));
 
@@ -229,6 +246,15 @@ namespace hud
 
         if (current >= 0 && current < count)
             layout->SetHasClass(panel, classes[current], false, player);
+        else
+        {
+            // Nothing is known about this panel for this player -- the slot
+            // was reused or the state reset -- so whatever class is still on
+            // it from before goes, or two of them would fight in the stylesheet.
+            for (int i = 0; i < count; ++i)
+                if (i != wanted)
+                    layout->SetHasClass(panel, classes[i], false, player);
+        }
 
         layout->SetHasClass(panel, classes[wanted], true, player);
         current = wanted;
@@ -286,6 +312,8 @@ namespace hud
 
         SetVariant(layout, player, kSlotPanel[index], kColorClass, static_cast<int>(HudColor::Count), s.variant, static_cast<int>(style.color));
         SetVariant(layout, player, kSlotPanel[index], kSizeClass, static_cast<int>(HudSize::Count), s.size, static_cast<int>(style.size));
+        SetVariant(layout, player, kSlotPanel[index], kOffXClass, kOffsetClasses, s.offX, OffsetIndex(style.offsetX));
+        SetVariant(layout, player, kSlotPanel[index], kOffYClass, kOffsetClasses, s.offY, OffsetIndex(style.offsetY));
 
         layout->SetDialogVariableString(kSlotLabel[index], kText, text, player);
         layout->SetHasClass(kSlotPanel[index], kShow, true, player);

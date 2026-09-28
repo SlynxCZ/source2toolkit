@@ -135,6 +135,9 @@ namespace hud
         struct SlotState : Timed
         {
             int size = -1;
+            /// Index into the offset class tables (0 = -10 steps), -1 unknown.
+            int offX = -1;
+            int offY = -1;
         };
 
         /// A toast or a feed row keeps its texts, so the stack can shift

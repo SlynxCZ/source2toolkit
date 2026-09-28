@@ -1217,8 +1217,26 @@ void SamplePlugin::SetupHud()
             return;
         }
 
-        const char* pszText = args.ArgC() > 1 ? args.ArgS() : "Hello from the HUD";
-        g_pToolkitHud->ShowText(pCaller, HudSlot::Top, pszText, 5.0f, { HudColor::Yellow, HudSize::Large });
+        // sample_hudtext [x y] [text]: two leading integers move the slot
+        // (steps of 40 px, -10..10, + is right/down).
+        int x = 0, y = 0, first = 1;
+        if (args.ArgC() > 2 && V_isdigit(args.Arg(1)[args.Arg(1)[0] == '-' ? 1 : 0]) && V_isdigit(args.Arg(2)[args.Arg(2)[0] == '-' ? 1 : 0]))
+        {
+            x = atoi(args.Arg(1));
+            y = atoi(args.Arg(2));
+            first = 3;
+        }
+
+        std::string sText;
+        for (int i = first; i < args.ArgC(); ++i)
+            sText += (i > first ? " " : "") + std::string(args.Arg(i));
+        if (sText.empty())
+            sText = "Hello from the HUD";
+
+        HudTextStyle style{ HudColor::Yellow, HudSize::Large };
+        style.offsetX = x;
+        style.offsetY = y;
+        g_pToolkitHud->ShowText(pCaller, HudSlot::Top, sText.c_str(), 5.0f, style);
         g_pToolkitHud->ShowText(pCaller, HudSlot::Panel, "A boxed panel\nkeeps several lines\nuntil it is hidden", 0.0f, { HudColor::White, HudSize::Normal });
     });
 
