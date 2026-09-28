@@ -57,11 +57,15 @@ namespace gamehooks
 
     namespace
     {
+        // Ids are unique across every hook, so a wrong UnhookX() finds nothing.
+        GameHookId s_lastHookId = 0;
+
         template <typename CONTEXT>
         struct Listener
         {
             PluginId owner;
             GameHookHandler<CONTEXT> handler;
+            GameHookId id;
         };
 
         // The listeners of one hook, pre and post, and the dispatch over them:
@@ -71,15 +75,24 @@ namespace gamehooks
         class Listeners
         {
         public:
-            void Add(PluginId owner, GameHookHandler<CONTEXT> handler, bool post)
+            GameHookId Add(PluginId owner, GameHookHandler<CONTEXT> handler, bool post)
             {
-                (post ? m_post : m_pre).push_back({ owner, std::move(handler) });
+                const GameHookId id = ++s_lastHookId;
+                (post ? m_post : m_pre).push_back({ owner, std::move(handler), id });
+                return id;
             }
 
-            void Remove(PluginId owner, bool post)
+            bool Remove(GameHookId id)
             {
-                auto& list = post ? m_post : m_pre;
-                std::erase_if(list, [owner](const Listener<CONTEXT>& l) { return l.owner == owner; });
+                const auto match = [id](const Listener<CONTEXT>& l) { return l.id == id; };
+                return std::erase_if(m_pre, match) + std::erase_if(m_post, match) > 0;
+            }
+
+            void RemoveOwner(PluginId owner)
+            {
+                const auto match = [owner](const Listener<CONTEXT>& l) { return l.owner == owner; };
+                std::erase_if(m_pre, match);
+                std::erase_if(m_post, match);
             }
 
             bool Empty() const
@@ -147,19 +160,16 @@ namespace gamehooks
 
             const char* Name() const override { return m_pszName; }
 
-            void Add(PluginId owner, GameHookHandler<CONTEXT> handler, bool post)
+            GameHookId Add(PluginId owner, GameHookHandler<CONTEXT> handler, bool post)
             {
-                m_listeners.Add(owner, std::move(handler), post);
+                const GameHookId id = m_listeners.Add(owner, std::move(handler), post);
                 Install();
+                return id;
             }
 
-            void Remove(PluginId owner, bool post) override { m_listeners.Remove(owner, post); }
+            bool Remove(GameHookId id) override { return m_listeners.Remove(id); }
 
-            void RemoveAll(PluginId owner) override
-            {
-                m_listeners.Remove(owner, false);
-                m_listeners.Remove(owner, true);
-            }
+            void RemoveAll(PluginId owner) override { m_listeners.RemoveOwner(owner); }
 
             bool Empty() const override { return m_listeners.Empty(); }
 
@@ -505,9 +515,9 @@ namespace gamehooks
     }
 
 #define GAMEHOOK_ADD(Method, HookType, Ctx, Which) \
-    void GameHooksManager::Method(PluginId owner, GameHookHandler<Ctx> handler, bool post) \
+    GameHookId GameHooksManager::Method(PluginId owner, GameHookHandler<Ctx> handler, bool post) \
     { \
-        As<HookType>(m_hooks[static_cast<size_t>(GameHook::Which)]).Add(owner, std::move(handler), post); \
+        return As<HookType>(m_hooks[static_cast<size_t>(GameHook::Which)]).Add(owner, std::move(handler), post); \
     }
 
     GAMEHOOK_ADD(HookTakeDamage, TakeDamageHook, TakeDamageContext, TakeDamage)
@@ -548,16 +558,52 @@ namespace gamehooks
 
 #undef GAMEHOOK_ADD
 
-    void GameHooksManager::Unhook(PluginId owner, GameHook hook, bool post)
-    {
-        if (hook < GameHook::Count)
-            m_hooks[static_cast<size_t>(hook)]->Remove(owner, post);
+    // The detour stays until Tick(): an UnhookX() may come from inside the
+    // hook's own dispatch.
+#define GAMEHOOK_REMOVE(Method, Which) \
+    void GameHooksManager::Method(GameHookId id) \
+    { \
+        if (!m_hooks[static_cast<size_t>(GameHook::Which)]->Remove(id)) \
+            FP_WARN("{}: no handler with id {} on {}", #Method, id, m_hooks[static_cast<size_t>(GameHook::Which)]->Name()); \
     }
 
-    void GameHooksManager::UnhookAll(PluginId owner)
-    {
-        RemoveAllForPlugin(owner);
-    }
+    GAMEHOOK_REMOVE(UnhookTakeDamage, TakeDamage)
+    GAMEHOOK_REMOVE(UnhookCanAcquire, CanAcquire)
+    GAMEHOOK_REMOVE(UnhookCanMove, CanMove)
+    GAMEHOOK_REMOVE(UnhookCanUse, CanUse)
+    GAMEHOOK_REMOVE(UnhookPostThink, PostThink)
+    GAMEHOOK_REMOVE(UnhookProcessUsercmds, ProcessUsercmds)
+    GAMEHOOK_REMOVE(UnhookSimulateUserCommands, SimulateUserCommands)
+    GAMEHOOK_REMOVE(UnhookRunCommand, RunCommand)
+    GAMEHOOK_REMOVE(UnhookAcceptInput, AcceptInput)
+    GAMEHOOK_REMOVE(UnhookTouch, Touch)
+    GAMEHOOK_REMOVE(UnhookDropWeapon, DropWeapon)
+    GAMEHOOK_REMOVE(UnhookAirAccelerate, AirAccelerate)
+    GAMEHOOK_REMOVE(UnhookAirMove, AirMove)
+    GAMEHOOK_REMOVE(UnhookCanUnduck, CanUnduck)
+    GAMEHOOK_REMOVE(UnhookCategorizePosition, CategorizePosition)
+    GAMEHOOK_REMOVE(UnhookCheckFalling, CheckFalling)
+    GAMEHOOK_REMOVE(UnhookCheckParameters, CheckParameters)
+    GAMEHOOK_REMOVE(UnhookCheckVelocity, CheckVelocity)
+    GAMEHOOK_REMOVE(UnhookCheckWater, CheckWater)
+    GAMEHOOK_REMOVE(UnhookDuck, Duck)
+    GAMEHOOK_REMOVE(UnhookFriction, Friction)
+    GAMEHOOK_REMOVE(UnhookFullWalkMove, FullWalkMove)
+    GAMEHOOK_REMOVE(UnhookGroundAccelerate, GroundAccelerate)
+    GAMEHOOK_REMOVE(UnhookLadderMove, LadderMove)
+    GAMEHOOK_REMOVE(UnhookMoveInit, MoveInit)
+    GAMEHOOK_REMOVE(UnhookPlayerMove, PlayerMove)
+    GAMEHOOK_REMOVE(UnhookProcessMovement, ProcessMovement)
+    GAMEHOOK_REMOVE(UnhookSetupMove, SetupMove)
+    GAMEHOOK_REMOVE(UnhookTryPlayerMove, TryPlayerMove)
+    GAMEHOOK_REMOVE(UnhookWalkMove, WalkMove)
+    GAMEHOOK_REMOVE(UnhookWaterMove, WaterMove)
+    GAMEHOOK_REMOVE(UnhookOnJumpLegacy, OnJumpLegacy)
+    GAMEHOOK_REMOVE(UnhookOnJumpModern, OnJumpModern)
+    GAMEHOOK_REMOVE(UnhookCheckJumpButtonLegacy, CheckJumpButtonLegacy)
+    GAMEHOOK_REMOVE(UnhookCheckJumpButtonModern, CheckJumpButtonModern)
+
+#undef GAMEHOOK_REMOVE
 
     bool GameHooksManager::IsAvailable(GameHook hook)
     {
