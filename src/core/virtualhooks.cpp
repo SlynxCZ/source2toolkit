@@ -56,7 +56,6 @@
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
-#include "pluginmanager.h"
 #include "core/menus.h"
 #include "core/entities.h"
 #include "dynlibutils/module.hpp"
@@ -154,26 +153,20 @@ namespace virtualhooks
         if (m_pCServerSideClientVTable)
             m_hSendNetMessage->RemoveGlobal(reinterpret_cast<CServerSideClientBase*>(&m_pCServerSideClientVTable));
 
-        // Not deleted, see IToolkitKHook.h: a "meta unload" typed at the
-        // console reaches this from inside Hook_DispatchConCommand, and
-        // deleting the hook would wait for that call to return. The Remove
-        // calls above already made every callback inert; metamod's unloader
-        // takes the hooks out once Unload() has returned, keeping the library
-        // mapped until then, and the objects go with the library.
-        ToolkitKHook::Abandon(m_hGameFrame);
-        ToolkitKHook::Abandon(m_hStartupServer);
-        ToolkitKHook::Abandon(m_hDispatchConCommand);
-        ToolkitKHook::Abandon(m_hClientCommand);
-        ToolkitKHook::Abandon(m_hClientSvcUserMessage);
-        ToolkitKHook::Abandon(m_hClientDisconnect);
-        ToolkitKHook::Abandon(m_hSteamAPIActivated);
-        ToolkitKHook::Abandon(m_hSteamAPIDeactivated);
-        ToolkitKHook::Abandon(m_hPostEventAbstract);
-        ToolkitKHook::Abandon(m_hOnServerGamePostSimulate);
-        ToolkitKHook::Abandon(m_hLoadEventsFromFile);
-        ToolkitKHook::Abandon(m_hFireEvent);
-        ToolkitKHook::Abandon(m_hSendNetMessage);
-        ToolkitKHook::Abandon(m_hCheckTransmit);
+        delete m_hGameFrame;
+        delete m_hStartupServer;
+        delete m_hDispatchConCommand;
+        delete m_hClientCommand;
+        delete m_hClientSvcUserMessage;
+        delete m_hClientDisconnect;
+        delete m_hSteamAPIActivated;
+        delete m_hSteamAPIDeactivated;
+        delete m_hPostEventAbstract;
+        delete m_hOnServerGamePostSimulate;
+        delete m_hLoadEventsFromFile;
+        delete m_hFireEvent;
+        delete m_hSendNetMessage;
+        delete m_hCheckTransmit;
 
         m_hGameFrame = nullptr;
         m_hStartupServer = nullptr;
@@ -216,11 +209,6 @@ namespace virtualhooks
 
         if (shared::getGlobalVars())
             g_bHasTicked = true;
-
-        // Last: this starts hook removals, and KHook's worker may then hold
-        // its global lock until this call returns -- nothing after it here
-        // may call into KHook.
-        pluginManager.Tick();
 
         return { KHook::Action::Ignore };
     }

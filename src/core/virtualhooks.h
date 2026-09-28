@@ -42,7 +42,6 @@
 
 // KHook, via metamod.
 #include "ISmmPlugin.h"
-#include "source2toolkit/IToolkitKHook.h"
 
 #include "igameevents.h"
 #include "igamesystem.h"
@@ -79,28 +78,27 @@ namespace virtualhooks {
         KHook::Return<bool> Hook_SendNetMessage(CServerSideClientBase* pThis, const CNetMessage* pData, NetChannelBufType_t bufType);
         KHook::Return<void> Hook_CheckTransmit(ISource2GameEntities* pThis, CCheckTransmitInfo** ppInfoList, int nInfoCount, CBitVec<16384>& unionTransmitEdicts, CBitVec<16384>& unionTransmitEdicts2, const Entity2Networkable_t** pNetworkables, const uint16* pEntityIndicies, int nEntities);
     protected:
-        // Plain pointers: new in InitListeners(), handed to DestroyAsync() in
-        // DestructListeners(), which deletes each one once KHook has taken
-        // its hooks out on the worker thread (see the SDK's IToolkitKHook.h).
-        ToolkitKHook::Virtual<ISource2Server, void, bool, bool, bool>* m_hGameFrame = nullptr;
-        ToolkitKHook::Virtual<INetworkServerService, void, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*>* m_hStartupServer = nullptr;
-        ToolkitKHook::Virtual<ICvar, void, ConCommandRef, const CCommandContext&, const CCommand&>* m_hDispatchConCommand = nullptr;
-        ToolkitKHook::Virtual<ISource2GameClients, void, CPlayerSlot, const CCommand&>* m_hClientCommand = nullptr;
-        ToolkitKHook::Virtual<ISource2GameClients, void, CPlayerSlot, int, uint32, const void*>* m_hClientSvcUserMessage = nullptr;
-        ToolkitKHook::Virtual<ISource2GameClients, void, CPlayerSlot, ENetworkDisconnectionReason, const char*, uint64, const char*>* m_hClientDisconnect = nullptr;
-        ToolkitKHook::Virtual<ISource2Server, void>* m_hSteamAPIActivated = nullptr;
-        ToolkitKHook::Virtual<ISource2Server, void>* m_hSteamAPIDeactivated = nullptr;
-        ToolkitKHook::Virtual<IGameEventSystem, void, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t>* m_hPostEventAbstract = nullptr;
-        ToolkitKHook::Virtual<IGameSystem, void, const EventServerGamePostSimulate_t*>* m_hOnServerGamePostSimulate = nullptr;
-        ToolkitKHook::Virtual<IGameEventManager2, int, const char*, bool>* m_hLoadEventsFromFile = nullptr;
+        // KHook hooks only come down in their destructor, so they live behind
+        // plain pointers: new in the constructor, delete in DestructListeners().
+        KHook::Virtual<ISource2Server, void, bool, bool, bool>* m_hGameFrame = nullptr;
+        KHook::Virtual<INetworkServerService, void, const GameSessionConfiguration_t&, ISource2WorldSession*, const char*>* m_hStartupServer = nullptr;
+        KHook::Virtual<ICvar, void, ConCommandRef, const CCommandContext&, const CCommand&>* m_hDispatchConCommand = nullptr;
+        KHook::Virtual<ISource2GameClients, void, CPlayerSlot, const CCommand&>* m_hClientCommand = nullptr;
+        KHook::Virtual<ISource2GameClients, void, CPlayerSlot, int, uint32, const void*>* m_hClientSvcUserMessage = nullptr;
+        KHook::Virtual<ISource2GameClients, void, CPlayerSlot, ENetworkDisconnectionReason, const char*, uint64, const char*>* m_hClientDisconnect = nullptr;
+        KHook::Virtual<ISource2Server, void>* m_hSteamAPIActivated = nullptr;
+        KHook::Virtual<ISource2Server, void>* m_hSteamAPIDeactivated = nullptr;
+        KHook::Virtual<IGameEventSystem, void, CSplitScreenSlot, bool, int, const uint64*, INetworkMessageInternal*, const CNetMessage*, unsigned long, NetChannelBufType_t>* m_hPostEventAbstract = nullptr;
+        KHook::Virtual<IGameSystem, void, const EventServerGamePostSimulate_t*>* m_hOnServerGamePostSimulate = nullptr;
+        KHook::Virtual<IGameEventManager2, int, const char*, bool>* m_hLoadEventsFromFile = nullptr;
         // Pre and Post on the one object.
-        ToolkitKHook::Virtual<IGameEventManager2, bool, IGameEvent*, bool>* m_hFireEvent = nullptr;
+        KHook::Virtual<IGameEventManager2, bool, IGameEvent*, bool>* m_hFireEvent = nullptr;
         // SendNetMessage is declared on the base, so that is what the member
         // function pointer -- and therefore the hook -- is typed against.
-        ToolkitKHook::Virtual<CServerSideClientBase, bool, const CNetMessage*, NetChannelBufType_t>* m_hSendNetMessage = nullptr;
+        KHook::Virtual<CServerSideClientBase, bool, const CNetMessage*, NetChannelBufType_t>* m_hSendNetMessage = nullptr;
         // Post only: the engine decides first, the transmit manager then takes
         // hidden entities back out (core/transmit.h).
-        ToolkitKHook::Virtual<ISource2GameEntities, void, CCheckTransmitInfo**, int, CBitVec<16384>&, CBitVec<16384>&, const Entity2Networkable_t**, const uint16*, int>* m_hCheckTransmit = nullptr;
+        KHook::Virtual<ISource2GameEntities, void, CCheckTransmitInfo**, int, CBitVec<16384>&, CBitVec<16384>&, const Entity2Networkable_t**, const uint16*, int>* m_hCheckTransmit = nullptr;
 
         // Vtables of engine classes with no interface to fetch, resolved by
         // RTTI name. Each also doubles as the stand-in object AddGlobal()

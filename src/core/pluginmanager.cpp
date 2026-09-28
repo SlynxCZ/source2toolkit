@@ -36,7 +36,6 @@
  */
 #include "pluginmanager.h"
 #include <cstring>
-#include <thread>
 #include <unordered_map>
 
 #include "commands.h"
@@ -220,14 +219,8 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
     // the file watcher's hot reload all land in a server that is already up.
     const bool late = hotReload || m_bStartupLoadDone;
 
-    stored->khook = std::make_unique<PluginKHook>();
-
     char err[256]{};
-    PluginApi::SetLoadingKHook(stored->khook.get());
-    const bool loaded = plugin->Load(stored->id, &pluginApi, err, sizeof(err), late);
-    PluginApi::SetLoadingKHook(nullptr);
-
-    if (!loaded)
+    if (!plugin->Load(stored->id, &pluginApi, err, sizeof(err), late))
     {
         // The plugin is already in the list -- Load() registers things under
         // its id -- so it has to come out again before the library is closed.
@@ -250,11 +243,6 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
         mysql::mysqlManager.RemoveAllForPlugin(failedId);
         entities::entitiesManager.RemoveAllForPlugin(failedId);
         menus::menuManager.RemoveAllForPlugin(failedId);
-
-        // Whatever KHOOK_INIT() installed before Load() gave up is still in,
-        // so the library goes the same way as on an unload, not through FAILF.
-        CloseWhenIdle(std::move(stored->khook), lib);
-        lib = nullptr;
 
         m_plugins.pop_back();
 
@@ -306,90 +294,31 @@ bool PluginManager::LoadPlugin(const char* name, char* error, size_t maxlen)
     return LoadPluginFromPath(fullPath.c_str(), error, maxlen, false);
 }
 
-void PluginManager::CloseWhenIdle(std::unique_ptr<PluginKHook> khook, LibHandle lib, std::string reloadPath, bool metamodOwned)
+namespace
 {
-    PendingClose pc;
-    pc.khook = std::move(khook);
-    pc.lib = lib;
-    pc.reloadPath = std::move(reloadPath);
-    pc.metamodOwned = metamodOwned;
-    pc.since = std::chrono::steady_clock::now();
-    m_pendingCloses.push_back(std::move(pc));
-}
-
-void PluginManager::Tick()
-{
-    // Taken out first, then acted on: a reload's Load() may unload something
-    // and push onto the vector being walked.
-    std::vector<PendingClose> ready;
-
-    for (auto it = m_pendingCloses.begin(); it != m_pendingCloses.end();)
+    // A plugin's hooks are KHook objects living in its own library, and its
+    // Unload() deletes them, which takes the detours down synchronously -- so
+    // by the time the library is closed nothing in the engine points into it
+    // any more. What can still point into it is the stack: "toolkit unload" is
+    // typed at a console, which the toolkit reaches from inside a hook of its
+    // own, and the plugin may well have been on that path too. The close
+    // therefore waits for the next frame, when everything has unwound.
+    void CloseLibNextFrame(LibHandle lib, std::string reloadPath = {})
     {
-        if (it->metamodOwned)
+        scheduler::schedulerManager.NextFrame(0, [lib, reloadPath = std::move(reloadPath)]()
         {
-            ++it;
-            continue;
-        }
+            CloseLib(lib);
 
-        if (!it->removing)
-        {
-            // Not from this thread: KHook's worker takes its global lock and
-            // then waits for any in-flight call of a function whose hook it
-            // removes -- the GameFrame this runs inside, if the plugin hooked
-            // it -- and the next KHook call from here would wait for the
-            // worker. A thread of its own waits without holding anything up.
-            it->removing = true;
-            std::thread([khook = it->khook.get()] { khook->BeginClose(); }).detach();
-            ++it;
-            continue;
-        }
-
-        if (it->khook->IsIdle())
-        {
-            ready.push_back(std::move(*it));
-            it = m_pendingCloses.erase(it);
-            continue;
-        }
-
-        // KHook reports no removal for an id it no longer knows, so a hook a
-        // plugin removed twice keeps its library open for good. Said once.
-        if (!it->warned && std::chrono::steady_clock::now() - it->since > std::chrono::seconds(10))
-        {
-            it->warned = true;
-            FP_WARN("A plugin's library is still waiting for KHook to release its hooks{}", it->reloadPath.empty() ? "" : " (" + it->reloadPath + ")");
-        }
-
-        ++it;
-    }
-
-    for (auto& pc : ready)
-    {
-        CloseLib(pc.lib);
-
-        // A reload has to wait for this moment: dlopen() on a library that is
-        // still mapped hands back the same handle without running its static
-        // initialisers again, so loading earlier would "reload" the old code.
-        if (!pc.reloadPath.empty())
-        {
-            char err[256]{};
-            LoadPluginFromPath(pc.reloadPath.c_str(), err, sizeof(err), true);
-        }
-    }
-}
-
-PluginManager::~PluginManager()
-{
-    // Reached when metamod closes the toolkit, which it does once its unloader
-    // has removed every hook that was left -- the plugins' among them -- so
-    // their libraries can go now. A plugin still mid-close on its own thread
-    // (unloaded just before the toolkit) keeps its library; better a mapping
-    // than a callback into nothing.
-    for (auto& pc : m_pendingCloses)
-    {
-        if (pc.metamodOwned || pc.khook->IsIdle())
-            CloseLib(pc.lib);
-        else
-            pc.khook.release();
+            // A reload has to wait for the same moment: dlopen() on a library
+            // that is still mapped hands back the same handle without running
+            // its static initialisers again, so loading before this point
+            // would "reload" the old code.
+            if (!reloadPath.empty())
+            {
+                char err[256]{};
+                pluginManager.LoadPluginFromPath(reloadPath.c_str(), err, sizeof(err), true);
+            }
+        });
     }
 }
 
@@ -429,13 +358,13 @@ bool PluginManager::ReloadPlugin(int id)
         entities::entitiesManager.RemoveAllForPlugin(id);
         menus::menuManager.RemoveAllForPlugin(id);
 
-        CloseWhenIdle(std::move((*it)->khook), (*it)->lib, path);
+        CloseLibNextFrame((*it)->lib, path);
 
         m_plugins.erase(it);
         break;
     }
 
-    // The load happens once KHook has let go of the old library; see Tick().
+    // The load happens next frame, right after the close; see CloseLibNextFrame().
     return !path.empty();
 }
 
@@ -487,7 +416,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         entities::entitiesManager.RemoveAllForPlugin(id);
         menus::menuManager.RemoveAllForPlugin(id);
 
-        CloseWhenIdle(std::move(p->khook), p->lib);
+        CloseLibNextFrame(p->lib);
 
         m_plugins.erase(it);
         return true;
@@ -541,21 +470,6 @@ bool PluginManager::LoadMissing()
 bool PluginManager::LoadAll()
 {
     namespace fs = std::filesystem;
-
-    // Libraries left over from the last UnloadAll(), when metamod did not
-    // close the toolkit in between (it does not once any hook id it tracks
-    // was removed by the plugin itself): their hooks are long gone, and
-    // dlopen() on a library still mapped would hand back the old image.
-    for (auto it = m_pendingCloses.begin(); it != m_pendingCloses.end();)
-    {
-        if (it->metamodOwned && std::chrono::steady_clock::now() - it->since > std::chrono::seconds(1))
-        {
-            CloseLib(it->lib);
-            it = m_pendingCloses.erase(it);
-            continue;
-        }
-        ++it;
-    }
 
     if (!shared::g_pCoreConfig->PluginAutoLoadEnabled)
     {
@@ -635,14 +549,10 @@ void PluginManager::UnloadAll()
     // its own cleanup made the outcome depend on directory order -- whichever
     // came first was already unmapped when the other's entries were destroyed.
     //
-    // Not closed here, and their hooks not removed here either: this is the
-    // toolkit unloading, from inside a hook of its own when typed at the
-    // console, and every hook the plugins left is on metamod's list for the
-    // toolkit (they were set up through the toolkit's KHook). Metamod's
-    // unloader removes them once Unload() has returned and closes the
-    // toolkit when done -- ~PluginManager closes these libraries then.
+    // Shutting down: there is no next frame to wait for, and the toolkit
+    // itself is on its way out of every hook, so close right here.
     for (auto& p : m_plugins)
-        CloseWhenIdle(std::move(p->khook), p->lib, {}, true);
+        CloseLib(p->lib);
 
     m_plugins.clear();
 }

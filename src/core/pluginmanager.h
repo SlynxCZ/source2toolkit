@@ -42,9 +42,6 @@
 #include <memory>
 #include <thread>
 #include <atomic>
-#include <chrono>
-
-#include "pluginkhook.h"
 
 #ifdef _WIN32
 // WinSock2.h first: Windows.h otherwise pulls in the older winsock.h, and a
@@ -68,26 +65,6 @@ struct ToolkitPlugin
     LibHandle lib;
     IToolkitPlugin* api;
     std::vector<IToolkitListener*> listeners;
-    // What the plugin hooks through; outlives the entry, see PendingClose.
-    std::unique_ptr<PluginKHook> khook;
-};
-
-/// A library whose plugin is unloaded, waiting to be closed until KHook has
-/// finished removing the plugin's hooks (PluginManager::Tick).
-struct PendingClose
-{
-    std::unique_ptr<PluginKHook> khook;
-    LibHandle lib;
-    // Set by a reload: loaded right after the close, from the same frame.
-    std::string reloadPath;
-    // The toolkit itself is unloading: metamod's unloader removes every hook
-    // that is left, this one's included, and closes the toolkit once done --
-    // which is when ~PluginManager closes this library.
-    bool metamodOwned = false;
-    // BeginClose() has been started (on a thread of its own, see Tick()).
-    bool removing = false;
-    bool warned = false;
-    std::chrono::steady_clock::time_point since{};
 };
 
 class PluginManager
@@ -115,13 +92,6 @@ public:
     void SetAllLoaded();
     void FireMetamodLoaded();
 
-    /// Once a frame: starts removing the hooks of plugins unloaded since the
-    /// last one, closes the libraries of those KHook has finished with, and
-    /// loads the reloads among them.
-    void Tick();
-
-    ~PluginManager();
-
     void AddListener(IToolkitPlugin* plugin, IToolkitListener* listener);
 public:
     // Metamod's own plugin events, not the toolkit's. Named apart because they
@@ -136,14 +106,6 @@ public:
     int m_nextId = 1;
 private:
     bool ReloadPluginByPath(const std::string& fullPath);
-
-    // Hands the library to Tick(): closed once the plugin's remaining hooks
-    // are out. A plugin's own KHOOK_DESTRUCT() removes its virtual hooks
-    // asynchronously (SDK IToolkitKHook.h), and "toolkit unload" arrives
-    // from inside a hook of the toolkit's, so nothing can be closed here.
-    void CloseWhenIdle(std::unique_ptr<PluginKHook> khook, LibHandle lib, std::string reloadPath = {}, bool metamodOwned = false);
-
-    std::vector<PendingClose> m_pendingCloses;
 
     std::thread m_watcherThread;
     std::atomic<bool> m_stopWatcher{false};
