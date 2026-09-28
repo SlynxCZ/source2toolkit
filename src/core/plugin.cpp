@@ -57,6 +57,7 @@
 #include "raytrace.h"
 #include "shared.h"
 #include "virtualhooks.h"
+#include "gamehooks.h"
 
 #include "source2toolkit/utils/plat.h"
 
@@ -206,6 +207,9 @@ bool ToolkitCore::Unload(char* error, size_t maxlen)
 
     commands::DestructCommands();
     events::DestructEvents();
+    // None of the hooked game functions is on the stack here, so these come
+    // out synchronously like the rest.
+    gamehooks::gameHooksManager.Shutdown();
     inlinehooks::inlines.DestructListeners();
     virtualhooks::virtuals.DestructListeners();
     // Only the toolkit's own are left by now.

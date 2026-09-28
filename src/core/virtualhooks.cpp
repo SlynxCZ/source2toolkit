@@ -56,6 +56,9 @@
 #include "source2toolkit/schema/schema.h"
 #include "source2toolkit/utils/plat.h"
 #include "core/scheduler.h"
+#include "pluginmanager.h"
+#include "gamehooks.h"
+#include "utils/log.h"
 #include "core/menus.h"
 #include "core/entities.h"
 #include "dynlibutils/module.hpp"
@@ -76,6 +79,9 @@ namespace virtualhooks
         KHOOK_NEW(m_hStartupServer, &INetworkServerService::StartupServer, this, nullptr, &Virtuals::Hook_StartupServer),
         KHOOK_NEW(m_hDispatchConCommand, &ICvar::DispatchConCommand, this, &Virtuals::Hook_DispatchConCommand, nullptr),
         KHOOK_NEW(m_hClientCommand, &ISource2GameClients::ClientCommand, this, &Virtuals::Hook_ClientCommand, nullptr),
+        KHOOK_NEW(m_hClientPutInServer, &ISource2GameClients::ClientPutInServer, this, nullptr, &Virtuals::Hook_ClientPutInServer),
+        KHOOK_NEW(m_hClientVoice, &ISource2GameClients::ClientVoice, this, nullptr, &Virtuals::Hook_ClientVoice),
+        KHOOK_NEW(m_hClientSettingsChanged, &ISource2GameClients::ClientSettingsChanged, this, nullptr, &Virtuals::Hook_ClientSettingsChanged),
         KHOOK_NEW(m_hClientSvcUserMessage, &ISource2GameClients::ClientSvcUserMessage, this, &Virtuals::Hook_ClientSvcUserMessage, nullptr),
         KHOOK_NEW(m_hClientDisconnect, &ISource2GameClients::ClientDisconnect, this, nullptr, &Virtuals::Hook_ClientDisconnect),
         // Steam only hands its HTTP client over once the API is up, and this
@@ -93,15 +99,56 @@ namespace virtualhooks
     {
     }
 
+    // The slot the member function pointer compiled in, checked against
+    // gamedata: an entry for this platform wins (it can be fixed without a
+    // rebuild), a difference is said out loud, no entry leaves the header's.
+    template <typename HOOK>
+    static void ResolveIndex(HOOK* hook, const char* pszName)
+    {
+        const int index = shared::g_pGameConfig ? shared::g_pGameConfig->GetOffset(pszName) : -1;
+
+        if (index < 0)
+        {
+            FP_INFO("No gamedata offset '{}' for this platform; using the interface's index {}", pszName, hook->GetIndex());
+            return;
+        }
+
+        if (hook->GetIndex() != index)
+            FP_WARN("Gamedata offset '{}' is {} but the interface header compiled in {}; using gamedata", pszName, index, hook->GetIndex());
+
+        hook->Configure(index);
+    }
+
     void Virtuals::InitListeners()
     {
         DynLibUtils::CModule libserver(g_pSource2Server);
         DynLibUtils::CModule libengine(g_pEngineServer);
 
+        ResolveIndex(m_hGameFrame, "ISource2Server::GameFrame");
+        ResolveIndex(m_hStartupServer, "INetworkServerService::StartupServer");
+        ResolveIndex(m_hDispatchConCommand, "ICvar::DispatchConCommand");
+        ResolveIndex(m_hClientCommand, "ISource2GameClients::ClientCommand");
+        ResolveIndex(m_hClientPutInServer, "ISource2GameClients::ClientPutInServer");
+        ResolveIndex(m_hClientVoice, "ISource2GameClients::ClientVoice");
+        ResolveIndex(m_hClientSettingsChanged, "ISource2GameClients::ClientSettingsChanged");
+        ResolveIndex(m_hClientSvcUserMessage, "ISource2GameClients::ClientSvcUserMessage");
+        ResolveIndex(m_hClientDisconnect, "ISource2GameClients::ClientDisconnect");
+        ResolveIndex(m_hSteamAPIActivated, "ISource2Server::GameServerSteamAPIActivated");
+        ResolveIndex(m_hSteamAPIDeactivated, "ISource2Server::GameServerSteamAPIDeactivated");
+        ResolveIndex(m_hPostEventAbstract, "IGameEventSystem::PostEventAbstract");
+        ResolveIndex(m_hOnServerGamePostSimulate, "IGameSystem::OnServerGamePostSimulate");
+        ResolveIndex(m_hLoadEventsFromFile, "IGameEventManager2::LoadEventsFromFile");
+        ResolveIndex(m_hFireEvent, "IGameEventManager2::FireEvent");
+        ResolveIndex(m_hSendNetMessage, "CServerSideClientBase::SendNetMessage");
+        ResolveIndex(m_hCheckTransmit, "ISource2GameEntities::CheckTransmit");
+
         m_hGameFrame->Add(g_pSource2Server);
         m_hStartupServer->Add(g_pNetworkServerService);
         m_hDispatchConCommand->Add(g_pCVar);
         m_hClientCommand->Add(g_pSource2GameClients);
+        m_hClientPutInServer->Add(g_pSource2GameClients);
+        m_hClientVoice->Add(g_pSource2GameClients);
+        m_hClientSettingsChanged->Add(g_pSource2GameClients);
         m_hClientSvcUserMessage->Add(g_pSource2GameClients);
         m_hClientDisconnect->Add(g_pSource2GameClients);
         m_hSteamAPIActivated->Add(g_pSource2Server);
@@ -132,8 +179,13 @@ namespace virtualhooks
     {
         m_hGameFrame->Remove(g_pSource2Server);
         m_hStartupServer->Remove(g_pNetworkServerService);
-        m_hDispatchConCommand->Remove(g_pCVar);
+        // Already gone when this is the second half of a console "meta unload".
+        if (m_hDispatchConCommand)
+            m_hDispatchConCommand->Remove(g_pCVar);
         m_hClientCommand->Remove(g_pSource2GameClients);
+        m_hClientPutInServer->Remove(g_pSource2GameClients);
+        m_hClientVoice->Remove(g_pSource2GameClients);
+        m_hClientSettingsChanged->Remove(g_pSource2GameClients);
         m_hClientSvcUserMessage->Remove(g_pSource2GameClients);
         m_hClientDisconnect->Remove(g_pSource2GameClients);
         m_hSteamAPIActivated->Remove(g_pSource2Server);
@@ -157,6 +209,9 @@ namespace virtualhooks
         delete m_hStartupServer;
         delete m_hDispatchConCommand;
         delete m_hClientCommand;
+        delete m_hClientPutInServer;
+        delete m_hClientVoice;
+        delete m_hClientSettingsChanged;
         delete m_hClientSvcUserMessage;
         delete m_hClientDisconnect;
         delete m_hSteamAPIActivated;
@@ -172,6 +227,9 @@ namespace virtualhooks
         m_hStartupServer = nullptr;
         m_hDispatchConCommand = nullptr;
         m_hClientCommand = nullptr;
+        m_hClientPutInServer = nullptr;
+        m_hClientVoice = nullptr;
+        m_hClientSettingsChanged = nullptr;
         m_hClientSvcUserMessage = nullptr;
         m_hClientDisconnect = nullptr;
         m_hSteamAPIActivated = nullptr;
@@ -210,6 +268,31 @@ namespace virtualhooks
         if (shared::getGlobalVars())
             g_bHasTicked = true;
 
+        pluginManager.OnGameFrame(simulating, bFirstTick, bLastTick);
+
+        // Detours that lost their last listener come out here, outside their
+        // own dispatch; so do the plugin unloads asked for from the console.
+        gamehooks::gameHooksManager.Tick();
+        pluginManager.Tick();
+
+        if (m_bSelfUnloadPending)
+        {
+            m_bSelfUnloadPending = false;
+
+            // The one hook the coming "meta unload" travels through: deleting
+            // it from inside that call would wait for the call to return.
+            // Here it is another function's dispatch, so this is a plain
+            // synchronous removal, and the re-issued command then reaches
+            // metamod with no hook of ours on the stack.
+            m_hDispatchConCommand->Remove(g_pCVar);
+            delete m_hDispatchConCommand;
+            m_hDispatchConCommand = nullptr;
+
+            char cmd[64];
+            snprintf(cmd, sizeof(cmd), "meta unload %d\n", g_PLID);
+            g_pEngineServer->ServerCommand(cmd);
+        }
+
         return { KHook::Action::Ignore };
     }
 
@@ -246,11 +329,54 @@ namespace virtualhooks
 
         g_bHasTicked = false;
 
+        pluginManager.OnStartupServer(config, pWorldSession, pszMapName);
+
+        return { KHook::Action::Ignore };
+    }
+
+    KHook::Return<void> Virtuals::Hook_ClientPutInServer(ISource2GameClients* pThis, CPlayerSlot slot, const char* pszName, int type, uint64 xuid)
+    {
+        TK_VPROF("Source2Toolkit::ClientPutInServer");
+
+        pluginManager.OnClientPutInServer(slot, pszName, type, xuid);
+
+        return { KHook::Action::Ignore };
+    }
+
+    KHook::Return<void> Virtuals::Hook_ClientVoice(ISource2GameClients* pThis, CPlayerSlot slot)
+    {
+        TK_VPROF("Source2Toolkit::ClientVoice");
+
+        pluginManager.OnClientVoice(slot);
+
+        return { KHook::Action::Ignore };
+    }
+
+    KHook::Return<void> Virtuals::Hook_ClientSettingsChanged(ISource2GameClients* pThis, CPlayerSlot slot)
+    {
+        TK_VPROF("Source2Toolkit::ClientSettingsChanged");
+
+        pluginManager.OnClientSettingsChanged(slot);
+
         return { KHook::Action::Ignore };
     }
 
     KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args)
     {
+        // "meta unload <this plugin>": metamod would call Unload() from inside
+        // this very dispatch, and Unload() deleting this hook would then wait
+        // for the dispatch to return -- a deadlock the watchdog ends. So the
+        // command stops here and is re-issued from the next GameFrame, once
+        // this hook is gone (see Hook_GameFrame).
+        if (args.ArgC() >= 3 && !V_stricmp(args.Arg(0), "meta") && !V_stricmp(args.Arg(1), "unload") && atoi(args.Arg(2)) == g_PLID)
+        {
+            if (!m_bSelfUnloadPending)
+                FP_INFO("Unloading at the end of the frame (a console unload arrives through a hook of the toolkit's own)");
+
+            m_bSelfUnloadPending = true;
+            return { KHook::Action::Supersede };
+        }
+
         TK_VPROF("Source2Toolkit::DispatchConCommand");
 
         if (args.ArgC() >= 2)
@@ -349,6 +475,8 @@ namespace virtualhooks
         // through it.
         crashhandler::OnSteamAPIActivated();
 
+        pluginManager.OnGameServerSteamAPIActivated();
+
         return { KHook::Action::Ignore };
     }
 
@@ -357,6 +485,8 @@ namespace virtualhooks
         TK_VPROF("Source2Toolkit::GameServerSteamAPIDeactivated");
 
         http::httpManager.OnSteamAPIDeactivated();
+
+        pluginManager.OnGameServerSteamAPIDeactivated();
 
         return { KHook::Action::Ignore };
     }
@@ -395,6 +525,8 @@ namespace virtualhooks
         sounds::soundsManager.OnClientDisconnect(slot);
         transmit::transmitManager.OnClientDisconnect(slot);
 
+        pluginManager.OnClientDisconnect(slot, reason, pszName, xuid, pszNetworkID);
+
         return { KHook::Action::Ignore };
     }
 
@@ -423,6 +555,8 @@ namespace virtualhooks
             shared::g_pGameEventManager = pThis;
             events::InitEvents();
         )
+
+        pluginManager.OnLoadEventsFromFile(pThis, filename, bSearchAll);
 
         return { KHook::Action::Ignore, 0 };
     }

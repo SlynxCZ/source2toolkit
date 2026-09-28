@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "pluginapi.h"
+#include "gamehooks.h"
 
 #include "addresses.h"
 #include "commands.h"
@@ -286,6 +287,7 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
     else if (!strcmp(iface, TOOLKIT_EVENTS_INTERFACE)) ptr = &events::eventManager;
     else if (!strcmp(iface, TOOLKIT_GAMECONFIG_INTERFACE)) ptr = shared::g_pGameConfig;
     else if (!strcmp(iface, TOOLKIT_GAMESYSTEMS_INTERFACE)) ptr = &gamesystems::gameSystemsManager;
+    else if (!strcmp(iface, TOOLKIT_GAMEHOOKS_INTERFACE)) ptr = &gamehooks::gameHooksManager;
     else if (!strcmp(iface, TOOLKIT_HTTP_INTERFACE)) ptr = &http::httpManager;
     else if (!strcmp(iface, TOOLKIT_JSON_INTERFACE)) ptr = &json::jsonManager;
     else if (!strcmp(iface, TOOLKIT_MENUS_INTERFACE)) ptr = &menus::menuManager;
@@ -348,6 +350,11 @@ IToolkitCustomHud* PluginApi::CustomHud()
 IToolkitSounds* PluginApi::Sounds()
 {
     return &sounds::soundsManager;
+}
+
+IToolkitGameHooks* PluginApi::GameHooks()
+{
+    return &gamehooks::gameHooksManager;
 }
 
 IToolkitTransmit* PluginApi::Transmit()

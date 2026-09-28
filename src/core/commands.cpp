@@ -229,7 +229,7 @@ namespace commands {
                 return;
             }
 
-            if (!pluginManager.UnloadPlugin(id))
+            if (!pluginManager.RequestUnload(id))
             {
                 REPLY_ERROR("Plugin %d not found or failed to unload.", id);
                 return;

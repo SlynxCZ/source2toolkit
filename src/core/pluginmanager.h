@@ -43,6 +43,9 @@
 #include <thread>
 #include <atomic>
 
+#include "eiface.h"
+#include "iserver.h"
+
 #ifdef _WIN32
 // WinSock2.h first: Windows.h otherwise pulls in the older winsock.h, and a
 // translation unit that includes this header and then core/mysql.h (which
@@ -64,6 +67,10 @@ struct ToolkitPlugin
     std::string path;
     LibHandle lib;
     IToolkitPlugin* api;
+    // What the plugin was built against (TOOLKIT_PLAPI_VERSION then): the
+    // engine callbacks came with 2, so a listener from an older plugin is
+    // not asked for them.
+    int apiVersion;
     std::vector<IToolkitListener*> listeners;
 };
 
@@ -101,6 +108,26 @@ public:
     void FireMetamodPluginUnloaded(SourceMM::PluginId id);
     void OnLevelInit(char const* pMapName, char const* pMapEntities, char const* pOldLevel, char const* pLandmarkName, bool loadGame, bool background);
     void OnLevelShutdown();
+
+    // Engine callbacks (plugin API 2), fanned out from virtualhooks.
+    void OnGameFrame(bool simulating, bool firstTick, bool lastTick);
+    void OnStartupServer(const GameSessionConfiguration_t& config, ISource2WorldSession* session, const char* mapName);
+    void OnClientPutInServer(CPlayerSlot slot, const char* name, int type, uint64 xuid);
+    void OnClientVoice(CPlayerSlot slot);
+    void OnClientSettingsChanged(CPlayerSlot slot);
+    void OnClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* name, uint64 xuid, const char* networkId);
+    void OnGameServerSteamAPIActivated();
+    void OnGameServerSteamAPIDeactivated();
+    void OnLoadEventsFromFile(class IGameEventManager2* manager, const char* filename, bool searchAll);
+
+    /// "toolkit unload" from the console: done at the next GameFrame rather
+    /// than from inside the command's own dispatch, where a plugin hooking
+    /// ICvar::DispatchConCommand could not take its hook down. False when no
+    /// plugin has that id.
+    bool RequestUnload(int id);
+
+    /// Once a frame, from the core's GameFrame hook.
+    void Tick();
 public:
     std::vector<std::unique_ptr<ToolkitPlugin>> m_plugins;
     int m_nextId = 1;
@@ -113,6 +140,8 @@ private:
     // Set once LoadAll() has run; every plugin loaded after that point is a
     // late load and is told so through IToolkitPlugin::Load's `late`.
     bool m_bStartupLoadDone = false;
+
+    std::vector<int> m_unloadRequests;
 };
 
 extern PluginManager pluginManager;

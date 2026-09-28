@@ -79,6 +79,7 @@ public:
     IToolkitSounds* Sounds() override;
     IToolkitTrace* Trace() override;
     IToolkitTransmit* Transmit() override;
+    IToolkitGameHooks* GameHooks() override;
     IToolkitPaths* Paths() override;
 
     IToolkitModule* LoadModule(const char* name) override;
