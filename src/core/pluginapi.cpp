@@ -262,12 +262,22 @@ CreateInterfaceFn PluginApi::GetServerFactory(bool syn/* =true */)
     return g_SMAPI->GetServerFactory(syn);
 }
 
+static KHook::IKHook* s_pLoadingKHook = nullptr;
+
+void PluginApi::SetLoadingKHook(KHook::IKHook* pKHook)
+{
+    s_pLoadingKHook = pKHook;
+}
+
 void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
 {
     void* ptr = nullptr;
 
-    // The one detour engine on the server, as metamod handed it to the toolkit.
-    if (!strcmp(iface, TOOLKIT_KHOOK_INTERFACE)) ptr = KHook::__exported__khook;
+    // The one detour engine on the server, as metamod handed it to the
+    // toolkit -- seen through the plugin's own PluginKHook while its Load()
+    // runs (TOOLKIT_SAVEVARS() asks from there), which is what lets the
+    // library stay mapped until KHook has let go of it on unload.
+    if (!strcmp(iface, TOOLKIT_KHOOK_INTERFACE)) ptr = s_pLoadingKHook ? s_pLoadingKHook : KHook::__exported__khook;
     // ... and which KHook that is: the commit the core was compiled against
     // (metamod's third_party/khook, the engine itself -- see the SDK's
     // CMakeLists.txt). A plugin's TOOLKIT_SAVEVARS() compares it with the

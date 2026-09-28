@@ -45,6 +45,11 @@
 class PluginApi : public IToolkitAPI
 {
 public:
+    /// The KHook the plugin whose Load() is running right now gets from
+    /// ToolkitFactory(TOOLKIT_KHOOK_INTERFACE): its own PluginKHook, so its
+    /// hooks are tracked per plugin. Null outside a Load().
+    static void SetLoadingKHook(KHook::IKHook* pKHook);
+
     void Log(IToolkitPlugin *plugin, const char* msg, ...) override;
     void ConPrint(const char* msg) override;
     void ConPrintf(const char* fmt, ...) override;
