@@ -119,6 +119,7 @@ private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupEntityCommands();
 	void SetupTimers();
 	void SetupTransmit();
+	void SetupHud();
 
 private:
 	// The hooks are KHook objects -- metamod's detour library, on the one engine

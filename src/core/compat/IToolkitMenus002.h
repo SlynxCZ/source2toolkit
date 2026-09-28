@@ -1,4 +1,4 @@
-﻿/**
+/**
 * vim: set ts=4 sw=4 tw=99 noet:
  * =============================================================================
  * Source2Toolkit
@@ -34,39 +34,37 @@
  *
  * Project: Source2Toolkit
  */
-#include "compat.h"
-#include "compat/IToolkitMenus002.h"
+#pragma once
 
-#include <cstring>
+/**
+ * IToolkitMenus002, as the SDK shipped it up to core v1.0.28: the four
+ * methods before OpenHudMenu was appended. CenterHtmlMenu and IMenuInstance
+ * did not change, so the current header's types serve. Handed to plugins
+ * built against the 002 header; see compat.h.
+ */
+
+#include "source2toolkit/IToolkitMenus.h"
 
 namespace compat
 {
-    namespace
+    class IToolkitMenus_002
     {
-        struct Adapter
-        {
-            const char* iface;
-            void* ptr;
-        };
+    public:
+        virtual ~IToolkitMenus_002() = default;
+        virtual void OpenCenterHtmlMenu(PluginId owner, CCSPlayerController* player, CenterHtmlMenu* menu) = 0;
+        virtual IMenuInstance* GetActiveMenu(CCSPlayerController* player) = 0;
+        virtual void CloseActiveMenu(CCSPlayerController* player) = 0;
+        virtual void OnKeyPress(CCSPlayerController* player, int key) = 0;
+    };
 
-        // See compat.h for what goes here. IToolkitGameHooks001 (core
-        // v1.0.26-27, enum-based Unhook) has no adapter: nothing outside this
-        // repository was built against it.
-        const Adapter s_adapters[] = {
-            // v1.0.28 and older: the four methods before OpenHudMenu.
-            { "IToolkitMenus002", static_cast<IToolkitMenus_002*>(&menus002) },
-            { nullptr, nullptr },
-        };
-    }
-
-    void* Find(const char* iface)
+    class Menus002 final : public IToolkitMenus_002
     {
-        for (const Adapter& a : s_adapters)
-        {
-            if (a.iface && !strcmp(a.iface, iface))
-                return a.ptr;
-        }
+    public:
+        void OpenCenterHtmlMenu(PluginId owner, CCSPlayerController* player, CenterHtmlMenu* menu) override;
+        IMenuInstance* GetActiveMenu(CCSPlayerController* player) override;
+        void CloseActiveMenu(CCSPlayerController* player) override;
+        void OnKeyPress(CCSPlayerController* player, int key) override;
+    };
 
-        return nullptr;
-    }
+    extern Menus002 menus002;
 }

@@ -37,6 +37,7 @@
 #include "pluginapi.h"
 #include "gamehooks.h"
 #include "compat.h"
+#include "hud.h"
 #include "pluginmanager.h"
 #include "utils/log.h"
 
@@ -296,6 +297,7 @@ namespace
             { TOOLKIT_GAMESYSTEMS_INTERFACE, &gamesystems::gameSystemsManager },
             { TOOLKIT_GAMEHOOKS_INTERFACE, &gamehooks::gameHooksManager },
             { TOOLKIT_HTTP_INTERFACE, &http::httpManager },
+            { TOOLKIT_HUD_INTERFACE, &hud::hudManager },
             { TOOLKIT_JSON_INTERFACE, &json::jsonManager },
             { TOOLKIT_MENUS_INTERFACE, &menus::menuManager },
             { TOOLKIT_MYSQL_INTERFACE, &mysql::mysqlManager },

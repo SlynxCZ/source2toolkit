@@ -1,0 +1,233 @@
+/*
+  Source2Toolkit reference stylesheet for s2t_hud.xml.
+
+  Panorama CSS, not web CSS (see the "Authoring layouts" docs). The core
+  toggles: show (slots, prompt, bar wrapper), c-* colour and s-* size on the
+  slot panels, w0 .. w20 on the prompt bar. Positions and looks are free.
+
+  Sizes are for a 1080p reference; Panorama scales them with the screen.
+*/
+
+.s2t-hud-screen {
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+}
+
+/* ---- text slots ------------------------------------------------------------ */
+
+.s2t-hud-slot {
+    flow-children: down;
+    visibility: collapse;
+    opacity: 0;
+    transition: opacity 0.12s ease-in-out 0s;
+}
+
+.s2t-hud-slot.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.s2t-hud-text {
+    font-family: Stratum2;
+    font-weight: bold;
+    font-size: 24px;
+    color: #ffffff;
+    text-align: center;
+    text-shadow: 0px 2px 4px 1.0 #000000cc;
+    white-space: normal;
+}
+
+/* Where each slot sits. */
+
+.s2t-hud-top {
+    horizontal-align: center;
+    vertical-align: top;
+    margin-top: 110px;
+}
+
+.s2t-hud-topleft {
+    horizontal-align: left;
+    vertical-align: top;
+    margin-top: 110px;
+    margin-left: 40px;
+}
+
+.s2t-hud-topleft .s2t-hud-text {
+    text-align: left;
+}
+
+.s2t-hud-topright {
+    horizontal-align: right;
+    vertical-align: top;
+    margin-top: 110px;
+    margin-right: 40px;
+}
+
+.s2t-hud-topright .s2t-hud-text {
+    text-align: right;
+}
+
+.s2t-hud-left {
+    horizontal-align: center;
+    vertical-align: center;
+    margin-right: 440px;
+}
+
+.s2t-hud-right {
+    horizontal-align: center;
+    vertical-align: center;
+    margin-left: 440px;
+}
+
+.s2t-hud-center {
+    horizontal-align: center;
+    vertical-align: center;
+    margin-bottom: 150px;
+}
+
+.s2t-hud-bottom {
+    horizontal-align: center;
+    vertical-align: bottom;
+    margin-bottom: 150px;
+}
+
+/* The boxed panel (HudSlot::Panel): multi-line info, quests. */
+
+.s2t-hud-panel {
+    horizontal-align: right;
+    vertical-align: center;
+    margin-right: 40px;
+    width: 400px;
+    padding: 14px 18px;
+    background-color: #0d1117cc;
+    border-left: 3px solid #f0a020;
+    border-radius: 8px;
+}
+
+.s2t-hud-panel-text {
+    width: 100%;
+    text-align: left;
+    font-weight: normal;
+    font-size: 18px;
+    text-shadow: 0px 0px 0px 0.0 #00000000;
+}
+
+/* Colours (HudColor). */
+
+.s2t-hud-slot.c-white .s2t-hud-text { color: #ffffff; }
+.s2t-hud-slot.c-red .s2t-hud-text { color: #ff4d4d; }
+.s2t-hud-slot.c-green .s2t-hud-text { color: #4dff6a; }
+.s2t-hud-slot.c-blue .s2t-hud-text { color: #4da6ff; }
+.s2t-hud-slot.c-yellow .s2t-hud-text { color: #ffe14d; }
+.s2t-hud-slot.c-orange .s2t-hud-text { color: #ff9a2e; }
+.s2t-hud-slot.c-purple .s2t-hud-text { color: #c77dff; }
+.s2t-hud-slot.c-cyan .s2t-hud-text { color: #4df2ff; }
+.s2t-hud-slot.c-grey .s2t-hud-text { color: #a0a8b0; }
+
+/* Sizes (HudSize). */
+
+.s2t-hud-slot.s-small .s2t-hud-text { font-size: 18px; }
+.s2t-hud-slot.s-normal .s2t-hud-text { font-size: 24px; }
+.s2t-hud-slot.s-large .s2t-hud-text { font-size: 34px; }
+.s2t-hud-slot.s-huge .s2t-hud-text { font-size: 60px; }
+
+/* ---- interaction prompt ---------------------------------------------------- */
+
+.s2t-prompt {
+    flow-children: down;
+    horizontal-align: center;
+    vertical-align: center;
+    margin-top: 170px;
+    visibility: collapse;
+    opacity: 0;
+    transition: opacity 0.12s ease-in-out 0s;
+}
+
+.s2t-prompt.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.s2t-prompt-row {
+    flow-children: right;
+    horizontal-align: center;
+    padding: 8px 16px 8px 10px;
+    background-color: #0d1117cc;
+    border-radius: 8px;
+}
+
+.s2t-prompt-keycap {
+    width: 36px;
+    height: 36px;
+    vertical-align: center;
+    margin-right: 12px;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: #00000080 0px 2px 0px 0px;
+}
+
+.s2t-prompt-key {
+    width: 100%;
+    height: 100%;
+    vertical-align: center;
+    text-align: center;
+    font-family: Stratum2;
+    font-weight: bold;
+    font-size: 20px;
+    color: #0d1117;
+}
+
+.s2t-prompt-text {
+    vertical-align: center;
+    font-family: Stratum2;
+    font-size: 21px;
+    color: #ffffff;
+}
+
+.s2t-prompt-barwrap {
+    width: 100%;
+    height: 6px;
+    margin-top: 6px;
+    background-color: #ffffff22;
+    border-radius: 3px;
+    visibility: collapse;
+}
+
+.s2t-prompt-barwrap.show {
+    visibility: visible;
+}
+
+/* The fill is a clip, not a width: a width transition restarts whenever a
+   dialog variable in the same subtree changes, a clip does not. */
+
+.s2t-prompt-bar {
+    width: 100%;
+    height: 100%;
+    background-color: #f0a020;
+    border-radius: 3px;
+    clip: rect(0%, 0%, 100%, 0%);
+    transition: clip 0.1s linear 0s;
+}
+
+.s2t-prompt-bar.w0 { clip: rect(0%, 0%, 100%, 0%); }
+.s2t-prompt-bar.w1 { clip: rect(0%, 5%, 100%, 0%); }
+.s2t-prompt-bar.w2 { clip: rect(0%, 10%, 100%, 0%); }
+.s2t-prompt-bar.w3 { clip: rect(0%, 15%, 100%, 0%); }
+.s2t-prompt-bar.w4 { clip: rect(0%, 20%, 100%, 0%); }
+.s2t-prompt-bar.w5 { clip: rect(0%, 25%, 100%, 0%); }
+.s2t-prompt-bar.w6 { clip: rect(0%, 30%, 100%, 0%); }
+.s2t-prompt-bar.w7 { clip: rect(0%, 35%, 100%, 0%); }
+.s2t-prompt-bar.w8 { clip: rect(0%, 40%, 100%, 0%); }
+.s2t-prompt-bar.w9 { clip: rect(0%, 45%, 100%, 0%); }
+.s2t-prompt-bar.w10 { clip: rect(0%, 50%, 100%, 0%); }
+.s2t-prompt-bar.w11 { clip: rect(0%, 55%, 100%, 0%); }
+.s2t-prompt-bar.w12 { clip: rect(0%, 60%, 100%, 0%); }
+.s2t-prompt-bar.w13 { clip: rect(0%, 65%, 100%, 0%); }
+.s2t-prompt-bar.w14 { clip: rect(0%, 70%, 100%, 0%); }
+.s2t-prompt-bar.w15 { clip: rect(0%, 75%, 100%, 0%); }
+.s2t-prompt-bar.w16 { clip: rect(0%, 80%, 100%, 0%); }
+.s2t-prompt-bar.w17 { clip: rect(0%, 85%, 100%, 0%); }
+.s2t-prompt-bar.w18 { clip: rect(0%, 90%, 100%, 0%); }
+.s2t-prompt-bar.w19 { clip: rect(0%, 95%, 100%, 0%); }
+.s2t-prompt-bar.w20 { clip: rect(0%, 100%, 100%, 0%); }

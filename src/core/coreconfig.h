@@ -55,6 +55,12 @@ public:
     bool CrashHandlerEnabled = true;
     std::string CrashDiscordWebhook;
 
+    /// Panorama layouts (panorama/layout/custom_game/<name>.vxml_c on the
+    /// client) the core draws HUD menus and HUD texts with; the reference
+    /// ones are in the repository's panorama/ folder.
+    std::string HudMenuLayout = "s2t_menu";
+    std::string HudTextLayout = "s2t_hud";
+
     using json = nlohmann::json;
     CCoreConfig(const std::string& path);
     ~CCoreConfig();

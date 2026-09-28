@@ -1,4 +1,4 @@
-﻿/**
+/**
 * vim: set ts=4 sw=4 tw=99 noet:
  * =============================================================================
  * Source2Toolkit
@@ -34,39 +34,31 @@
  *
  * Project: Source2Toolkit
  */
-#include "compat.h"
-#include "compat/IToolkitMenus002.h"
+#include "IToolkitMenus002.h"
 
-#include <cstring>
+#include "core/menus.h"
 
 namespace compat
 {
-    namespace
-    {
-        struct Adapter
-        {
-            const char* iface;
-            void* ptr;
-        };
+    Menus002 menus002;
 
-        // See compat.h for what goes here. IToolkitGameHooks001 (core
-        // v1.0.26-27, enum-based Unhook) has no adapter: nothing outside this
-        // repository was built against it.
-        const Adapter s_adapters[] = {
-            // v1.0.28 and older: the four methods before OpenHudMenu.
-            { "IToolkitMenus002", static_cast<IToolkitMenus_002*>(&menus002) },
-            { nullptr, nullptr },
-        };
+    void Menus002::OpenCenterHtmlMenu(PluginId owner, CCSPlayerController* player, CenterHtmlMenu* menu)
+    {
+        menus::menuManager.OpenCenterHtmlMenu(owner, player, menu);
     }
 
-    void* Find(const char* iface)
+    IMenuInstance* Menus002::GetActiveMenu(CCSPlayerController* player)
     {
-        for (const Adapter& a : s_adapters)
-        {
-            if (a.iface && !strcmp(a.iface, iface))
-                return a.ptr;
-        }
+        return menus::menuManager.GetActiveMenu(player);
+    }
 
-        return nullptr;
+    void Menus002::CloseActiveMenu(CCSPlayerController* player)
+    {
+        menus::menuManager.CloseActiveMenu(player);
+    }
+
+    void Menus002::OnKeyPress(CCSPlayerController* player, int key)
+    {
+        menus::menuManager.OnKeyPress(player, key);
     }
 }

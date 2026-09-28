@@ -58,6 +58,7 @@
 #include "shared.h"
 #include "virtualhooks.h"
 #include "gamehooks.h"
+#include "hud.h"
 
 #include "source2toolkit/utils/plat.h"
 
@@ -171,6 +172,7 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
     ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
     commands::InitCommands();
+    hud::hudManager.Init();
 
     // Not fatal: without the script loader, compiled assets still run.
     scripts::scriptsManager.Init();
@@ -292,6 +294,7 @@ void ToolkitCore::OnLevelShutdown()
 
     // The layouts these point at do not survive the level change.
     customhud::customHudManager.Clear();
+    hud::hudManager.Clear();
 
     // Neither do the sounds that were playing.
     sounds::soundsManager.Clear();

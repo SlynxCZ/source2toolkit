@@ -6,5 +6,7 @@
   "UnlockConCommands": true,
   "UnlockConVars": true,
   "CrashHandlerEnabled": true,
-  "CrashDiscordWebhook": ""
+  "CrashDiscordWebhook": "",
+  "HudMenuLayout": "s2t_menu",
+  "HudTextLayout": "s2t_hud"
 }

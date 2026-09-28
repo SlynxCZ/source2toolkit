@@ -37,6 +37,8 @@
 #pragma once
 #include "source2toolkit/IToolkitMenus.h"
 
+#include "playerslot.h"
+
 namespace menus {
     // AddMenuOptionWithCooldown lives in IBaseMenu now, so the local
     // BaseMenu that used to supply it is gone.
@@ -81,6 +83,43 @@ namespace menus {
         uint64_t serial_;
     };
 
+    /// A HudMenu on the core's menu layout (hud::HudManager::MenuLayout):
+    /// six rows, the navigation buttons, per-player state on one entity.
+    class HudMenuInstance : public IMenuInstance
+    {
+    public:
+        static constexpr int kRows = 6;
+
+        HudMenuInstance(CCSPlayerController* player, HudMenu* menu, uint64_t serial);
+        ~HudMenuInstance() override;
+
+        void Display() override;
+        void OnKeyPress(CCSPlayerController* player, int key) override;
+        void Close() override;
+
+        /// Once a frame. A HUD menu does not fade, so it is not redrawn every
+        /// frame like the center HTML one; this runs the DisabledEvaluators
+        /// and redraws only when what would be drawn changed -- which also
+        /// covers a menu rebuilt in place from one of its handlers.
+        void Refresh();
+
+    protected:
+        int NumPerPage() const override { return kRows; }
+
+    private:
+        /// Hides the layout for the player; the destructor's job, so a
+        /// closed, replaced or unloaded menu never stays on screen.
+        void Hide();
+
+        /// What Display() would draw, hashed: title, page, rows, states.
+        size_t Signature() const;
+
+        HudMenu* hudMenu_;
+        uint64_t serial_;
+        int slot_;
+        size_t drawn_ = 0;
+    };
+
     class MenuManager : public IToolkitMenus
     {
     public:
@@ -88,8 +127,18 @@ namespace menus {
         IMenuInstance *GetActiveMenu(CCSPlayerController *player) override;
         void CloseActiveMenu(CCSPlayerController *player) override;
         void OnKeyPress(CCSPlayerController *player, int key) override;
+        void OpenHudMenu(PluginId owner, CCSPlayerController* player, HudMenu* menu) override;
     public:
         void Tick();
+
+        /// A click on the menu layout (hud::HudManager routes it here): the
+        /// button id becomes the key the row or navigation button stands for.
+        void OnHudClick(CCSPlayerController* player, const char* buttonId);
+
+        /// Closes the player's menu while the controller still exists, so a
+        /// HUD menu can hide itself and the next occupant of the slot does
+        /// not inherit it.
+        void OnClientDisconnect(CPlayerSlot slot);
 
         /// Closes whatever this plugin still has open. The menu object and the
         /// option handlers behind it live inside its library, so a menu left
@@ -109,6 +158,8 @@ namespace menus {
             PluginId owner = 0;
             uint64_t serial = 0;
             std::unique_ptr<IMenuInstance> instance;
+            /// A HudMenuInstance, refreshed instead of redrawn in Tick().
+            bool hud = false;
         };
 
         std::unordered_map<int, ActiveMenu> activeMenus;

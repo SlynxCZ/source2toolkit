@@ -138,6 +138,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     SetupEntityCommands();
     SetupTimers();
     SetupTransmit();
+    SetupHud();
 
     return true;
 }
@@ -1127,5 +1128,105 @@ void SamplePlugin::SetupTransmit()
                     pInfo->BlockTransmit(o.index);
             }
         }
+    });
+}
+
+/* ============================================================================
+ *
+ *   11. Panorama HUD
+ *
+ *   Menus, texts and prompts the client's Panorama draws through a
+ *   custom_hud_layout the core owns -- no worldtext, no center HTML redrawn
+ *   every tick. Needs the toolkit's reference layouts (panorama/ in the
+ *   repository) compiled into an addon the player has; a player without it
+ *   sees nothing, so a public server ships the addon first.
+ *
+ * ========================================================================== */
+
+void SamplePlugin::SetupHud()
+{
+    // sample_hudmenu: a HudMenu. Rows to click, and 1-9 still work as with a
+    // CenterHtmlMenu: 1-6 the options of the page, 7 previous, 8 next, 9 close.
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hudmenu", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    {
+        CCSPlayerController* pCaller = CallerOf(context);
+        if (!pCaller)
+        {
+            Reply(context, "This command is for players.");
+            return;
+        }
+
+        // The menu object has to outlive the call: the core keeps a pointer
+        // to it while it is open.
+        static HudMenu s_menu("Sample HUD menu");
+        s_menu.ClearOptions();
+
+        for (int i = 1; i <= 8; ++i)
+        {
+            s_menu.AddMenuOption("Option " + std::to_string(i), [i](CCSPlayerController* pPlayer, ChatMenuOption& option)
+            {
+                TOOLKIT_LOG(&g_Plugin, "%s picked \"%s\"\n", pPlayer->GetPlayerName(), option.Text.c_str());
+                g_pToolkitHud->ShowText(pPlayer, HudSlot::Top, ("You picked option " + std::to_string(i)).c_str(), 3.0f, { HudColor::Green, HudSize::Large });
+            });
+        }
+
+        // Disabled while the player is dead -- the evaluator runs every frame
+        // and the row greys out or lights up as that changes.
+        const CHandle<CCSPlayerController> hCaller = pCaller->GetHandle();
+        s_menu.AddMenuOptionWithCooldown("Only while alive", [](CCSPlayerController* pPlayer, ChatMenuOption&)
+        {
+            TOOLKIT_LOG(&g_Plugin, "%s got through\n", pPlayer->GetPlayerName());
+        }, false, true, [hCaller]()
+        {
+            CCSPlayerController* pPlayer = hCaller.Get();
+            return !pPlayer || !pPlayer->m_bPawnIsAlive();
+        });
+
+        // The navigation texts are the plugin's: put the player's language here.
+        s_menu.PrevText = "Previous";
+        s_menu.NextText = "Next";
+        s_menu.CloseText = "Close";
+
+        g_pToolkitMenus->OpenHudMenu(g_PluginID, pCaller, &s_menu);
+    });
+
+    // sample_hudtext <text>: five seconds at the top of the screen. The slots
+    // (HudSlot) are positions the stylesheet defines; colour and size are
+    // classes of it too, so a plugin never sends a colour, only a name.
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hudtext", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    {
+        CCSPlayerController* pCaller = CallerOf(context);
+        if (!pCaller)
+        {
+            Reply(context, "This command is for players.");
+            return;
+        }
+
+        const char* pszText = args.ArgC() > 1 ? args.ArgS() : "Hello from the HUD";
+        g_pToolkitHud->ShowText(pCaller, HudSlot::Top, pszText, 5.0f, { HudColor::Yellow, HudSize::Large });
+        g_pToolkitHud->ShowText(pCaller, HudSlot::Panel, "A boxed panel\nkeeps several lines\nuntil it is hidden", 0.0f, { HudColor::White, HudSize::Normal });
+    });
+
+    // sample_prompt <0..100|off>: the interaction prompt -- a key cap, what
+    // the key does, and a progress bar for a hold-to-use action. A plugin
+    // shows it while the player looks at the thing and hides it after.
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_prompt", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    {
+        CCSPlayerController* pCaller = CallerOf(context);
+        if (!pCaller)
+        {
+            Reply(context, "This command is for players.");
+            return;
+        }
+
+        if (args.ArgC() > 1 && !V_strcmp(args.Arg(1), "off"))
+        {
+            g_pToolkitHud->HidePrompt(pCaller);
+            g_pToolkitHud->HideText(pCaller, HudSlot::Panel);
+            return;
+        }
+
+        const float progress = args.ArgC() > 1 ? atof(args.Arg(1)) / 100.0f : -1.0f;
+        g_pToolkitHud->ShowPrompt(pCaller, "E", "Steal the weapon", progress);
     });
 }
