@@ -59,7 +59,6 @@
 #include "core/scheduler.h"
 #include "pluginmanager.h"
 #include "gamehooks.h"
-#include "hud.h"
 #include "utils/log.h"
 #include "core/menus.h"
 #include "core/entities.h"
@@ -262,7 +261,6 @@ namespace virtualhooks
         // frame. MenuManager::Tick() existed but nothing called it, which left
         // a menu on screen for a moment and then gone.
         menus::menuManager.Tick();
-        hud::hudManager.Tick();
 
         // Persistent scripts whose entity went away (round restart, map
         // change) are spawned again here, never inside the deletion itself.
@@ -528,7 +526,6 @@ namespace virtualhooks
         sounds::soundsManager.OnClientDisconnect(slot);
         transmit::transmitManager.OnClientDisconnect(slot);
         menus::menuManager.OnClientDisconnect(slot);
-        hud::hudManager.OnClientDisconnect(slot);
 
         pluginManager.OnClientDisconnect(slot, reason, pszName, xuid, pszNetworkID);
 

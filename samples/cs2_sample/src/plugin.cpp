@@ -177,6 +177,15 @@ void SamplePlugin::OnAllToolkitPluginsLoaded()
     /* This is where we'd do stuff that relies on the mod or other plugins
      * being initialized (for example, cvars added and events registered).
      */
+
+    // The Panorama HUD (IToolkitHud) is served by the s2t_hud plugin, not the
+    // core, so TOOLKIT_SAVEVARS() left g_pToolkitHud null. Fetch it now that
+    // every plugin is loaded; without the plugin it stays null and section
+    // 11 says so instead of drawing.
+    int ret = TOOLKIT_IFACE_FAILED;
+    GET_TOOLKIT_IFACE(g_pToolkitHud, IToolkitHud, TOOLKIT_HUD_INTERFACE, ret);
+    if (ret != TOOLKIT_IFACE_OK)
+        TOOLKIT_LOG(this, "The s2t_hud plugin is not loaded; the HUD commands (sample_hud*) will say so.\n");
 }
 
 void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, const char* pOldLevel, const char* pLandmarkName, bool loadGame, bool background)
@@ -1150,6 +1159,12 @@ void SamplePlugin::SetupHud()
     // CenterHtmlMenu: 1-6 the options of the page, 7 previous, 8 next, 9 close.
     g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hudmenu", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
+        if (!g_pToolkitHud)
+        {
+            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            return;
+        }
+
         CCSPlayerController* pCaller = CallerOf(context);
 
         // From the server console: "sample_hudmenu <slot>" opens it for that
@@ -1202,7 +1217,7 @@ void SamplePlugin::SetupHud()
         s_menu.NextText = "Next";
         s_menu.CloseText = "Close";
 
-        g_pToolkitMenus->OpenHudMenu(g_PluginID, pCaller, &s_menu);
+        g_pToolkitHud->OpenMenu(g_PluginID, pCaller, &s_menu);
     });
 
     // sample_hudtext <text>: five seconds at the top of the screen. The slots
@@ -1210,6 +1225,12 @@ void SamplePlugin::SetupHud()
     // classes of it too, so a plugin never sends a colour, only a name.
     g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hudtext", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
+        if (!g_pToolkitHud)
+        {
+            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            return;
+        }
+
         CCSPlayerController* pCaller = CallerOf(context);
         if (!pCaller)
         {
@@ -1245,6 +1266,12 @@ void SamplePlugin::SetupHud()
     // shows it while the player looks at the thing and hides it after.
     g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_prompt", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
+        if (!g_pToolkitHud)
+        {
+            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            return;
+        }
+
         CCSPlayerController* pCaller = CallerOf(context);
         if (!pCaller)
         {
@@ -1278,6 +1305,12 @@ void SamplePlugin::SetupHudExtras()
     //   clear                                                everything off
     g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hud", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
+        if (!g_pToolkitHud)
+        {
+            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            return;
+        }
+
         CCSPlayerController* pCaller = CallerOf(context);
         if (!pCaller && args.ArgC() > 2 && !V_strcmp(args.Arg(1), "slot"))
         {

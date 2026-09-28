@@ -79,8 +79,6 @@ bool CCoreConfig::Init(char* conf_error, int conf_error_size)
         UnlockConVars = m_json.value("UnlockConVars", UnlockConVars);
         CrashHandlerEnabled = m_json.value("CrashHandlerEnabled", CrashHandlerEnabled);
         CrashDiscordWebhook = m_json.value("CrashDiscordWebhook", CrashDiscordWebhook);
-        HudMenuLayout = m_json.value("HudMenuLayout", HudMenuLayout);
-        HudTextLayout = m_json.value("HudTextLayout", HudTextLayout);
         SlowCallbackWarnMs = m_json.value("SlowCallbackWarnMs", SlowCallbackWarnMs);
     }
     catch (const std::exception& ex)
