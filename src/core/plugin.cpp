@@ -162,6 +162,13 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         return false;
     }
 
+    // Before InitCommands: a ConCommand made before ConVar_Register goes on
+    // tier1's registration list, and ConVar_Unregister walks that list. The
+    // toolkit's commands are heap objects DestructCommands deletes first, so
+    // the walk would read freed memory (SIGSEGV in UnregisterConCommandCallbacks
+    // on unload). Made after it, they register directly and stay off the list.
+    ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
+
     commands::InitCommands();
 
     // Not fatal: without the script loader, compiled assets still run.
@@ -173,7 +180,6 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
     virtualhooks::virtuals.InitListeners();
 
     g_SMAPI->AddListener(this, this);
-    ConVar_Register(FCVAR_RELEASE | FCVAR_CLIENT_CAN_EXECUTE | FCVAR_GAMEDLL);
 
     FP_INFO("Load() success!");
 
