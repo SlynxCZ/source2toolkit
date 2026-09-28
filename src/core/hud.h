@@ -66,6 +66,11 @@ namespace hud
     public:
         static constexpr int kMaxPlayers = 64;
         static constexpr int kBarSteps = 20;
+        static constexpr int kToasts = 4;
+        static constexpr int kChips = 4;
+        static constexpr int kFeedRows = 5;
+        /// How long the hit flash and its number stay.
+        static constexpr float kHitSeconds = 0.9f;
 
         // IToolkitHud
         bool IsAvailable() override;
@@ -75,6 +80,23 @@ namespace hud
         void HidePrompt(CCSPlayerController* player) override;
         void HideAll(CCSPlayerController* player) override;
         const char* LayoutName() override;
+
+        // IToolkitHud002
+        void ShowToast(CCSPlayerController* player, HudToastStyle style, const char* title, const char* text, float seconds) override;
+        void ClearToasts(CCSPlayerController* player) override;
+        void ShowAnnounce(CCSPlayerController* player, const char* title, const char* subtitle, float seconds, HudColor color) override;
+        void HideAnnounce(CCSPlayerController* player) override;
+        void ShowCountdown(CCSPlayerController* player, const char* text, float seconds, HudColor color) override;
+        void HideCountdown(CCSPlayerController* player) override;
+        void ShowStatus(CCSPlayerController* player, int chip, const char* label, const char* value, HudColor color) override;
+        void HideStatus(CCSPlayerController* player, int chip) override;
+        void ShowProgress(CCSPlayerController* player, const char* label, const char* value, float progress, HudColor color) override;
+        void HideProgress(CCSPlayerController* player) override;
+        void ShowHit(CCSPlayerController* player, int damage, bool headshot, bool kill) override;
+        void AddFeed(CCSPlayerController* player, HudToastStyle style, const char* time, const char* text, float seconds) override;
+        void ClearFeed(CCSPlayerController* player) override;
+        void ShowOverlay(CCSPlayerController* player, HudOverlay overlay, const char* text, float seconds) override;
+        void HideOverlay(CCSPlayerController* player) override;
 
         // core
         void Init();
@@ -90,7 +112,7 @@ namespace hud
         /// The menu layout only if it already exists -- for closing.
         CCSCustomHudLayout* MenuLayoutIfAny();
 
-        /// Once a frame: texts whose time is up go away.
+        /// Once a frame: whatever has a time is hidden when it is up.
         void Tick();
 
         /// The slot's state is reset so the next occupant does not inherit it.
@@ -100,12 +122,27 @@ namespace hud
         void Clear();
 
     private:
-        struct SlotState
+        /// Something shown for a while: the text of a slot, a toast, the
+        /// announcement, ... `variant` is the index of the class currently on
+        /// the panel out of a family (colour, style), -1 for none.
+        struct Timed
         {
             bool shown = false;
             float expire = -1.0f;
-            int color = -1;
+            int variant = -1;
+        };
+
+        struct SlotState : Timed
+        {
             int size = -1;
+        };
+
+        /// A toast or a feed row keeps its texts, so the stack can shift
+        /// when a new one comes in.
+        struct Card : Timed
+        {
+            std::string title;
+            std::string text;
         };
 
         struct PlayerState
@@ -114,16 +151,43 @@ namespace hud
             bool prompt = false;
             bool bar = false;
             int barStep = -1;
+
+            Card toasts[kToasts];
+            bool toastAnim = false;
+            Timed announce;
+            bool announceAnim = false;
+            Timed countdown;
+            bool countdownAnim = false;
+            Timed chips[kChips];
+            bool statusShown = false;
+            Timed progress;
+            int progressStep = -1;
+            Timed hit;
+            bool hitAnim = false;
+            bool hitHeadshot = false;
+            bool hitKill = false;
+            bool damageShown = false;
+            Card feed[kFeedRows];
+            bool feedShown = false;
+            Timed overlay;
         };
 
         CCSCustomHudLayout* Ensure(OwnedLayout& layout);
         PlayerState* StateOf(CCSPlayerController* player);
         void ResetState(PlayerState& state);
 
-        /// Swaps one class of a family (c-*, s-*, w*) on a panel: the old one
-        /// off, the new one on. `current` remembers which is on.
+        /// Swaps one class of a family (c-*, s-*, t-*, o-*, w*) on a panel:
+        /// the old one off, the new one on. `current` remembers which is on.
         void SetVariant(CCSCustomHudLayout* layout, CCSPlayerController* player, const char* panel,
                         const char* const* classes, int count, int& current, int wanted);
+
+        /// Flips the a/b pair that restarts an entrance animation.
+        void Restart(CCSCustomHudLayout* layout, CCSPlayerController* player, const char* panel,
+                     const char* classA, const char* classB, bool& flag);
+
+        /// Draws a toast or feed card into its panel from what the state holds.
+        void DrawCard(CCSCustomHudLayout* layout, CCSPlayerController* player, const char* panel,
+                      const char* titleLabel, const char* textLabel, Card& card, bool show);
 
         OwnedLayout m_text;
         OwnedLayout m_menu;

@@ -139,6 +139,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     SetupTimers();
     SetupTransmit();
     SetupHud();
+    SetupHudExtras();
 
     return true;
 }
@@ -1242,5 +1243,90 @@ void SamplePlugin::SetupHud()
 
         const float progress = args.ArgC() > 1 ? atof(args.Arg(1)) / 100.0f : -1.0f;
         g_pToolkitHud->ShowPrompt(pCaller, "E", "Steal the weapon", progress);
+    });
+}
+
+void SamplePlugin::SetupHudExtras()
+{
+    // sample_hud <what> [args]: the rest of the HUD layer, one element per call.
+    //   toast <info|success|warning|danger|neutral> <text>   a card at the top right, 5 s
+    //   announce <text>                                      the big upper-centre callout, 4 s
+    //   countdown                                            3, 2, 1, GO -- one call a second
+    //   status                                               four chips under the round timer
+    //   progress <0..100>                                    a labelled bar under the crosshair
+    //   hit [damage] [hs] [kill]                             crosshair flash and the number
+    //   feed <text>                                          a row in the top-left event feed
+    //   overlay <poison|burn|freeze|heal|blind|black> [text] a full-screen tint, 3 s
+    //   clear                                                everything off
+    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hud", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    {
+        CCSPlayerController* pCaller = CallerOf(context);
+        if (!pCaller && args.ArgC() > 2 && !V_strcmp(args.Arg(1), "slot"))
+        {
+            // From the server console: "sample_hud slot <n> <what> ..." picks the player.
+            pCaller = CCSPlayerController::FromSlot(atoi(args.Arg(2)));
+        }
+        if (!pCaller)
+        {
+            Reply(context, "This command is for players.");
+            return;
+        }
+
+        // The arguments after "slot <n>", or after the command.
+        const int base = (args.ArgC() > 2 && !V_strcmp(args.Arg(1), "slot")) ? 3 : 1;
+        const char* what = args.Arg(base);
+        const char* a1 = args.Arg(base + 1);
+        const char* a2 = args.Arg(base + 2);
+
+        if (!V_strcmp(what, "toast"))
+        {
+            static const char* const styles[] = { "info", "success", "warning", "danger", "neutral" };
+            int style = 0;
+            for (int i = 0; i < 5; ++i)
+                if (!V_strcmp(a1, styles[i])) style = i;
+            g_pToolkitHud->ShowToast(pCaller, static_cast<HudToastStyle>(style), "Sample toast", *a2 ? a2 : "Something happened.", 5.0f);
+        }
+        else if (!V_strcmp(what, "announce"))
+            g_pToolkitHud->ShowAnnounce(pCaller, *a1 ? a1 : "Round start", "Good luck, have fun", 4.0f, HudColor::Orange);
+        else if (!V_strcmp(what, "countdown"))
+        {
+            // One call a second: each pops the number again. Timers keep the
+            // handle, not the pointer, as everything deferred should.
+            const CHandle<CCSPlayerController> hPlayer = pCaller->GetHandle();
+            static const char* const steps[] = { "3", "2", "1", "GO" };
+            for (int i = 0; i < 4; ++i)
+            {
+                g_pToolkitScheduler->AddTimer(g_PluginID, static_cast<float>(i), [hPlayer, i]()
+                {
+                    if (CCSPlayerController* p = hPlayer.Get())
+                        g_pToolkitHud->ShowCountdown(p, steps[i], i == 3 ? 1.5f : 1.1f, i == 3 ? HudColor::Green : HudColor::White);
+                });
+            }
+        }
+        else if (!V_strcmp(what, "status"))
+        {
+            g_pToolkitHud->ShowStatus(pCaller, 0, "Day", "Freeday", HudColor::Yellow);
+            g_pToolkitHud->ShowStatus(pCaller, 1, "Time", "2:31", HudColor::White);
+            g_pToolkitHud->ShowStatus(pCaller, 2, "CT", "3", HudColor::Blue);
+            g_pToolkitHud->ShowStatus(pCaller, 3, "T", "11", HudColor::Orange);
+        }
+        else if (!V_strcmp(what, "progress"))
+            g_pToolkitHud->ShowProgress(pCaller, "Defusing", "5 s", *a1 ? atof(a1) / 100.0f : 0.5f, HudColor::Cyan);
+        else if (!V_strcmp(what, "hit"))
+            g_pToolkitHud->ShowHit(pCaller, *a1 ? atoi(a1) : 27, args.ArgC() > base + 2 && !V_strcmp(a2, "hs"), args.ArgC() > base + 3 && !V_strcmp(args.Arg(base + 3), "kill"));
+        else if (!V_strcmp(what, "feed"))
+            g_pToolkitHud->AddFeed(pCaller, HudToastStyle::Info, "R3", *a1 ? a1 : "Warden opened the cells", 8.0f);
+        else if (!V_strcmp(what, "overlay"))
+        {
+            static const char* const names[] = { "poison", "burn", "freeze", "heal", "blind", "black" };
+            int which = 5;
+            for (int i = 0; i < 6; ++i)
+                if (!V_strcmp(a1, names[i])) which = i;
+            g_pToolkitHud->ShowOverlay(pCaller, static_cast<HudOverlay>(which), a2, 3.0f);
+        }
+        else if (!V_strcmp(what, "clear"))
+            g_pToolkitHud->HideAll(pCaller);
+        else
+            Reply(context, "sample_hud <toast|announce|countdown|status|progress|hit|feed|overlay|clear> ...");
     });
 }
