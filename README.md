@@ -30,7 +30,7 @@ Designed for both beginners and hardcore engine hackers.
 
 - **Commands** – Register console & chat commands  
 - **Custom HUD** – Panorama layouts with per-player state and click callbacks  
-- **HUD elements and menus** – on-screen texts, toasts, timers and menus on the HUD through the [s2t_hud](https://github.com/SlynxCZ/s2t_hud) plugin  
+- **HUD elements and menus** – on-screen texts, toasts, timers and menus on the HUD through the [CustomhudManager_s2t](https://github.com/SlynxCZ/CustomhudManager_s2t) plugin  
 - **ConVars** – Read, modify and replicate variables  
 - **Entity System** – Schema-based entity access  
 - **Events & GameEvents** – Pre/Post hook support with typed data  

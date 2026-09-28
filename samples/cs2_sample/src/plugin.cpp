@@ -178,14 +178,14 @@ void SamplePlugin::OnAllToolkitPluginsLoaded()
      * being initialized (for example, cvars added and events registered).
      */
 
-    // The Panorama HUD (IToolkitHud) is served by the s2t_hud plugin, not the
+    // The Panorama HUD (IToolkitHud) is served by the CustomhudManager_s2t plugin, not the
     // core, so TOOLKIT_SAVEVARS() left g_pToolkitHud null. Fetch it now that
     // every plugin is loaded; without the plugin it stays null and section
     // 11 says so instead of drawing.
     int ret = TOOLKIT_IFACE_FAILED;
     GET_TOOLKIT_IFACE(g_pToolkitHud, IToolkitHud, TOOLKIT_HUD_INTERFACE, ret);
     if (ret != TOOLKIT_IFACE_OK)
-        TOOLKIT_LOG(this, "The s2t_hud plugin is not loaded; the HUD commands (sample_hud*) will say so.\n");
+        TOOLKIT_LOG(this, "The CustomhudManager_s2t plugin is not loaded; the HUD commands (sample_hud*) will say so.\n");
 }
 
 void SamplePlugin::OnLevelInit(const char* pMapName, const char* pMapEntities, const char* pOldLevel, const char* pLandmarkName, bool loadGame, bool background)
@@ -1161,7 +1161,7 @@ void SamplePlugin::SetupHud()
     {
         if (!g_pToolkitHud)
         {
-            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            Reply(context, "The CustomhudManager_s2t plugin is not loaded, there is no HUD to draw on.");
             return;
         }
 
@@ -1227,7 +1227,7 @@ void SamplePlugin::SetupHud()
     {
         if (!g_pToolkitHud)
         {
-            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            Reply(context, "The CustomhudManager_s2t plugin is not loaded, there is no HUD to draw on.");
             return;
         }
 
@@ -1268,7 +1268,7 @@ void SamplePlugin::SetupHud()
     {
         if (!g_pToolkitHud)
         {
-            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            Reply(context, "The CustomhudManager_s2t plugin is not loaded, there is no HUD to draw on.");
             return;
         }
 
@@ -1307,7 +1307,7 @@ void SamplePlugin::SetupHudExtras()
     {
         if (!g_pToolkitHud)
         {
-            Reply(context, "The s2t_hud plugin is not loaded, there is no HUD to draw on.");
+            Reply(context, "The CustomhudManager_s2t plugin is not loaded, there is no HUD to draw on.");
             return;
         }
 
