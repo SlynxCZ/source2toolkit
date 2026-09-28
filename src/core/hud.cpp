@@ -262,7 +262,8 @@ namespace hud
 
         if (progress >= 0.0f)
         {
-            const int step = std::clamp(static_cast<int>(std::lround(std::min(progress, 1.0f) * kBarSteps)), 0, kBarSteps);
+            // (std::min) -- windows.h's min macro would eat the bare name.
+            const int step = std::clamp(static_cast<int>(std::lround((std::min)(progress, 1.0f) * kBarSteps)), 0, kBarSteps);
             SetVariant(layout, player, "hud_prompt_bar", kBarClass, kBarSteps + 1, state->barStep, step);
 
             if (!state->bar)
