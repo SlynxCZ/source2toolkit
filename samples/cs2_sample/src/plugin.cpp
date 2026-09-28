@@ -1150,6 +1150,20 @@ void SamplePlugin::SetupHud()
     g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hudmenu", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController* pCaller = CallerOf(context);
+
+        // From the server console: "sample_hudmenu <slot>" opens it for that
+        // player (a bot will do for testing), "sample_hudmenu close <slot>" closes it.
+        if (!pCaller && args.ArgC() > 1)
+        {
+            if (!V_strcmp(args.Arg(1), "close") && args.ArgC() > 2)
+            {
+                if (CCSPlayerController* pTarget = CCSPlayerController::FromSlot(atoi(args.Arg(2))))
+                    g_pToolkitMenus->CloseActiveMenu(pTarget);
+                return;
+            }
+            pCaller = CCSPlayerController::FromSlot(atoi(args.Arg(1)));
+        }
+
         if (!pCaller)
         {
             Reply(context, "This command is for players.");

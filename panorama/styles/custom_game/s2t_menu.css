@@ -31,28 +31,29 @@
     opacity: 1;
 }
 
-/* ---- window ---------------------------------------------------------------- */
+/* ---- window: left of the screen, centred vertically, so the crosshair stays free ---- */
 
 .s2t-menu {
     visibility: collapse;
     flow-children: down;
-    horizontal-align: center;
+    horizontal-align: left;
     vertical-align: center;
-    width: 540px;
+    margin-left: 48px;
+    width: 480px;
     padding: 20px 24px 16px 24px;
     background-color: #0d1117f2;
     border: 1px solid #ffffff1c;
     border-radius: 12px;
     box-shadow: #000000b0 0px 16px 48px 0px;
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateX(-14px);
     transition: opacity 0.15s ease-out 0s, transform 0.15s ease-out 0s;
 }
 
 .s2t-menu.show {
     visibility: visible;
     opacity: 1;
-    transform: translateY(0px);
+    transform: translateX(0px);
 }
 
 /* ---- title ----------------------------------------------------------------- */
