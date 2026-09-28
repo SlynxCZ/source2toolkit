@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "virtualhooks.h"
+#include "tkvprof.h"
 
 #include "source2toolkit/schema/entity/classes/CBaseEntity.h"
 #include "source2toolkit/schema/entity/classes/CCSGameRulesProxy.h"
@@ -189,6 +190,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_GameFrame(ISource2Server* pThis, bool simulating, bool bFirstTick, bool bLastTick)
     {
+        TK_VPROF("Source2Toolkit::GameFrame");
+
         // First, and before the early return below: a signal handler someone
         // replaced has to go back regardless of whether the world is up.
         crashhandler::OnGameFrame();
@@ -212,6 +215,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_StartupServer(INetworkServerService* pThis, const GameSessionConfiguration_t& config, ISource2WorldSession* pWorldSession, const char* pszMapName)
     {
+        TK_VPROF("Source2Toolkit::StartupServer");
+
         crashhandler::OnStartupServer(pszMapName);
 
         // Re-read every time rather than once: the engine can hand out a new
@@ -246,6 +251,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_DispatchConCommand(ICvar* pThis, ConCommandRef cmd, const CCommandContext& ctx, const CCommand& args)
     {
+        TK_VPROF("Source2Toolkit::DispatchConCommand");
+
         if (args.ArgC() >= 2)
         {
             const char* cmdName = args.Arg(0);
@@ -305,6 +312,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args)
     {
+        TK_VPROF("Source2Toolkit::ClientCommand");
+
         if (slot != -1 && !V_strncmp(args.Arg(0), "jointeam", 8))
         {
             CCommandContext ctx(CT_NO_TARGET, slot);
@@ -320,6 +329,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_ClientSvcUserMessage(ISource2GameClients* pThis, CPlayerSlot slot, int nType, uint32 nSize, const void* pBuffer)
     {
+        TK_VPROF("Source2Toolkit::ClientSvcUserMessage");
+
         if (nType != customhud::CS_UM_CustomHudClicked)
             return { KHook::Action::Ignore };
 
@@ -331,6 +342,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_GameServerSteamAPIActivated(ISource2Server* pThis)
     {
+        TK_VPROF("Source2Toolkit::GameServerSteamAPIActivated");
+
         http::httpManager.OnSteamAPIActivated();
         // After the HTTP manager: the crash report waiting for Steam goes out
         // through it.
@@ -341,6 +354,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_GameServerSteamAPIDeactivated(ISource2Server* pThis)
     {
+        TK_VPROF("Source2Toolkit::GameServerSteamAPIDeactivated");
+
         http::httpManager.OnSteamAPIDeactivated();
 
         return { KHook::Action::Ignore };
@@ -348,6 +363,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_PostEventAbstract(IGameEventSystem* pThis, CSplitScreenSlot nSlot, bool bLocalOnly, int nClientCount, const uint64* clients, INetworkMessageInternal* pEvent, const CNetMessage* pData, unsigned long nSize, NetChannelBufType_t bufType)
     {
+        TK_VPROF("Source2Toolkit::PostEventAbstract");
+
         if (!pEvent || !pData)
             return { KHook::Action::Ignore };
 
@@ -373,6 +390,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_ClientDisconnect(ISource2GameClients* pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
     {
+        TK_VPROF("Source2Toolkit::ClientDisconnect");
+
         sounds::soundsManager.OnClientDisconnect(slot);
         transmit::transmitManager.OnClientDisconnect(slot);
 
@@ -381,6 +400,8 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_CheckTransmit(ISource2GameEntities* pThis, CCheckTransmitInfo** ppInfoList, int nInfoCount, CBitVec<16384>& unionTransmitEdicts, CBitVec<16384>& unionTransmitEdicts2, const Entity2Networkable_t** pNetworkables, const uint16* pEntityIndicies, int nEntities)
     {
+        TK_VPROF("Source2Toolkit::CheckTransmit");
+
         transmit::transmitManager.OnCheckTransmit(ppInfoList, nInfoCount, pEntityIndicies, nEntities);
 
         return { KHook::Action::Ignore };
@@ -388,12 +409,16 @@ namespace virtualhooks
 
     KHook::Return<void> Virtuals::Hook_OnServerGamePostSimulate(IGameSystem* pThis, const EventServerGamePostSimulate_t* const pMsg)
     {
+        TK_VPROF("Source2Toolkit::OnServerGamePostSimulate");
+
         mysql::mysqlManager.RunFrame();
         return { KHook::Action::Ignore };
     }
 
     KHook::Return<int> Virtuals::Hook_LoadEventsFromFile(IGameEventManager2* pThis, const char* filename, bool bSearchAll)
     {
+        TK_VPROF("Source2Toolkit::LoadEventsFromFile");
+
         ExecuteOnce(
             shared::g_pGameEventManager = pThis;
             events::InitEvents();
@@ -404,6 +429,8 @@ namespace virtualhooks
 
     KHook::Return<bool> Virtuals::Hook_FireEvent(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast)
     {
+        TK_VPROF("Source2Toolkit::FireEvent");
+
         if (!event)
             return { KHook::Action::Ignore, false };
 
@@ -442,6 +469,8 @@ namespace virtualhooks
 
     KHook::Return<bool> Virtuals::Hook_FireEventPost(IGameEventManager2* pThis, IGameEvent* event, bool bDontBroadcast)
     {
+        TK_VPROF("Source2Toolkit::FireEventPost");
+
         if (!event)
             return { KHook::Action::Ignore, false };
 
@@ -463,6 +492,8 @@ namespace virtualhooks
 
     KHook::Return<bool> Virtuals::Hook_SendNetMessage(CServerSideClientBase* pThis, const CNetMessage* pData, NetChannelBufType_t bufType)
     {
+        TK_VPROF("Source2Toolkit::SendNetMessage");
+
         if (!pThis || !pData)
             return { KHook::Action::Ignore, true };
 
@@ -485,12 +516,16 @@ namespace virtualhooks
 
     void CEntityListener::OnEntityCreated(CEntityInstance* pEntity)
     {
+        TK_VPROF("Source2Toolkit::OnEntityCreated");
+
         if (!V_strcmp("cs_gamerules", pEntity->GetClassname()))
             shared::g_pGameRules = static_cast<CCSGameRulesProxy*>(pEntity)->m_pGameRules;
     }
 
     void CEntityListener::OnEntityDeleted(CEntityInstance* pEntity)
     {
+        TK_VPROF("Source2Toolkit::OnEntityDeleted");
+
         transmit::transmitManager.OnEntityDeleted(pEntity);
         scripts::scriptsManager.OnEntityDeleted(pEntity);
 

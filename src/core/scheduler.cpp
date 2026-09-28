@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "scheduler.h"
+#include "tkvprof.h"
 #include <algorithm>
 #include <chrono>
 #include <mutex>
@@ -173,6 +174,8 @@ namespace scheduler
 
     void Tick(bool simulating)
     {
+        TK_VPROF("Source2Toolkit::Scheduler::Tick");
+
         // Taken one at a time rather than swapping the queue out, so a task
         // that unloads a plugin -- the file watcher's reload comes through
         // here -- takes the rest of that plugin's tasks with it instead of

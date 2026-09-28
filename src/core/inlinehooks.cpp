@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "inlinehooks.h"
+#include "tkvprof.h"
 
 #include "addresses.h"
 #include "commands.h"
@@ -84,6 +85,8 @@ namespace inlinehooks
 
     KHook::Return<bool> Inlines::Hook_FilterMessage(INetworkMessageProcessingPreFilterCustom* pThis, const CNetMessage* pData, INetChannel* pChannel)
     {
+        TK_VPROF("Source2Toolkit::FilterMessage");
+
         //  is the pre-filter subobject, not the whole client -- that is
         // what INetworkMessageProcessingPreFilterCustom's pad-based layout is
         // for, so the slot can be read without hand-rolling the delta.
@@ -105,6 +108,8 @@ namespace inlinehooks
 
     KHook::Return<void> Inlines::Hook_FireOutputInternal(CEntityIOOutput* pThis, CEntityInstance* pActivator, CEntityInstance* pCaller, void* variantValue, float delay, void* unk01, void* unk02)
     {
+        TK_VPROF("Source2Toolkit::FireOutputInternal");
+
         const char* outputName = pThis->m_pDesc->m_pName;
         const char* callerClass = pCaller ? pCaller->GetClassname() : "*";
 
