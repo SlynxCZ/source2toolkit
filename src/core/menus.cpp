@@ -560,11 +560,18 @@ namespace menus
 
     void MenuManager::OnKeyPress(CCSPlayerController* player, int key)
     {
-        auto* inst = GetActiveMenu(player);
-        if (inst)
-        {
-            inst->OnKeyPress(player, key);
-        }
+        if (!player) return;
+
+        auto it = activeMenus.find(player->GetSlot());
+        if (it == activeMenus.end() || !it->second.instance)
+            return;
+
+        // A HUD menu that took the mouse is driven by clicks alone: a "3"
+        // typed or bound while it is open is not a pick.
+        if (it->second.hud && static_cast<HudMenuInstance*>(it->second.instance.get())->CaptureInput())
+            return;
+
+        it->second.instance->OnKeyPress(player, key);
     }
 
     void MenuManager::Tick()

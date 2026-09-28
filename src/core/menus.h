@@ -108,6 +108,11 @@ namespace menus {
     protected:
         int NumPerPage() const override { return kRows; }
 
+    public:
+        /// Whether this menu took the mouse: then the rows are clicked and
+        /// the number keys are not it.
+        bool CaptureInput() const { return readCapture_ ? hudMenu_->CaptureInput : true; }
+
     private:
         /// Hides the layout for the player; the destructor's job, so a
         /// closed, replaced or unloaded menu never stays on screen.
@@ -116,7 +121,6 @@ namespace menus {
         /// What Display() would draw, hashed: title, page, rows, states.
         size_t Signature() const;
 
-        bool CaptureInput() const { return readCapture_ ? hudMenu_->CaptureInput : true; }
         int Position() const { return readCapture_ ? static_cast<int>(hudMenu_->Position) : 0; }
 
         HudMenu* hudMenu_;

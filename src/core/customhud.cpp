@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "customhud.h"
+#include "utils/log.h"
 
 #include "networkmessages.h"
 
@@ -73,8 +74,14 @@ namespace customhud
 
     void CustomHudManager::HandleClick(CCSPlayerController* pController, const void* pBuffer, uint32 nSize)
     {
-        if (m_callbacks.empty() || !pController || !pBuffer)
+        if (!pController || !pBuffer)
             return;
+
+        if (m_callbacks.empty())
+        {
+            FP_WARN("custom HUD click from slot {} with no layout callbacks registered", pController->GetPlayerSlot().Get());
+            return;
+        }
 
         // The message is parsed through the engine's own descriptor rather than
         // a generated header -- CCSUsrMsg_CustomHudClicked is newer than the
@@ -120,6 +127,12 @@ namespace customhud
 
             ++it;
         }
+
+        if (fire.empty())
+            FP_WARN("custom HUD click '{}' from slot {} names entity {} (handle {:#x}), which no callback is registered on",
+                    sButtonId, pController->GetPlayerSlot().Get(), nEntryIndex, nPackedHandle);
+        else
+            FP_INFO("custom HUD click '{}' from slot {} on entity {}", sButtonId, pController->GetPlayerSlot().Get(), nEntryIndex);
 
         for (auto& [pLayout, handler] : fire)
             handler(pController, pLayout, sButtonId.c_str());
