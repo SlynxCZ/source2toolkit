@@ -53,10 +53,8 @@ namespace shared
     CCSGameRules* g_pGameRules = nullptr;
 
     CGlobalVars *getGlobalVars() {
-        INetworkGameServer *server = ::g_pNetworkServerService->GetIGameServer();
-        if (!server) return nullptr;
-        if (!g_pGlobalVars) g_pGlobalVars = server->GetGlobals();
-        return ::g_pNetworkServerService->GetIGameServer()->GetGlobals();
+        if (!g_pGlobalVars) g_pGlobalVars = g_pEngineServer->GetServerGlobals();
+        return g_pGlobalVars;
     }
 
     bool g_bDetoursLoaded = false;
