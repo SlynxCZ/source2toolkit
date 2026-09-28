@@ -90,7 +90,9 @@ namespace menus {
     public:
         static constexpr int kRows = 6;
 
-        HudMenuInstance(CCSPlayerController* player, HudMenu* menu, uint64_t serial);
+        /// `readCapture`: whether the menu object has the CaptureInput field
+        /// (IToolkitMenus004); a 003 object is shorter and means capture on.
+        HudMenuInstance(CCSPlayerController* player, HudMenu* menu, uint64_t serial, bool readCapture);
         ~HudMenuInstance() override;
 
         void Display() override;
@@ -114,10 +116,16 @@ namespace menus {
         /// What Display() would draw, hashed: title, page, rows, states.
         size_t Signature() const;
 
+        bool CaptureInput() const { return readCapture_ ? hudMenu_->CaptureInput : true; }
+        int Position() const { return readCapture_ ? static_cast<int>(hudMenu_->Position) : 0; }
+
         HudMenu* hudMenu_;
         uint64_t serial_;
         int slot_;
+        bool readCapture_;
         size_t drawn_ = 0;
+        /// The pos-* class last put on menu_root for this player; -1 for none yet.
+        int drawnPos_ = -1;
     };
 
     class MenuManager : public IToolkitMenus
@@ -129,6 +137,13 @@ namespace menus {
         void OnKeyPress(CCSPlayerController *player, int key) override;
         void OpenHudMenu(PluginId owner, CCSPlayerController* player, HudMenu* menu) override;
     public:
+        /// OpenHudMenu with a say on whether `menu` carries CaptureInput (the
+        /// IToolkitMenus003 adapter passes false: its HudMenu ends before it).
+        void OpenHudMenuEx(PluginId owner, CCSPlayerController* player, HudMenu* menu, bool readCapture);
+
+        /// The plugin whose menu the player has open, 0 for none.
+        PluginId OwnerOf(CCSPlayerController* player) const;
+
         void Tick();
 
         /// A click on the menu layout (hud::HudManager routes it here): the

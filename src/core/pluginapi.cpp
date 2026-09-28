@@ -36,7 +36,6 @@
  */
 #include "pluginapi.h"
 #include "gamehooks.h"
-#include "compat.h"
 #include "hud.h"
 #include "pluginmanager.h"
 #include "utils/log.h"
@@ -358,8 +357,8 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
 
         // Not the current revision: the same interface at another one? The
         // name carries the revision ("IToolkitMenus002"); the C++ name
-        // never changes, so an older plugin asks by the string it was built
-        // with and gets the adapter this core keeps for it, if any.
+        // never changes, so the plugin asks by the string it was built with.
+        // The answer says which side has to move.
         size_t nameLen = 0;
         int wanted = 0;
         if (!ptr && SplitRevision(iface, nameLen, wanted))
@@ -372,16 +371,9 @@ void* PluginApi::ToolkitFactory(const char* iface, int* ret, PluginId* id)
                     continue;
 
                 if (wanted < have)
-                {
-                    if ((ptr = compat::Find(iface)))
-                        FP_WARN("{} was built against {}, this core serves {}: served through a compatibility adapter, rebuild the plugin when convenient", who, iface, current[i].iface);
-                    else
-                        FP_ERROR("{} was built against {}, this core serves {} and keeps no adapter for it: rebuild the plugin against the current SDK", who, iface, current[i].iface);
-                }
+                    FP_ERROR("{} was built against {}, this core serves {}: rebuild the plugin against the current SDK", who, iface, current[i].iface);
                 else
-                {
                     FP_ERROR("{} asks for {}, newer than this core's {}: update the core", who, iface, current[i].iface);
-                }
                 break;
             }
         }

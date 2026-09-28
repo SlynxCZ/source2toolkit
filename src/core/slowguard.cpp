@@ -34,31 +34,22 @@
  *
  * Project: Source2Toolkit
  */
-#include "IToolkitMenus002.h"
+#include "slowguard.h"
 
-#include "core/menus.h"
+#include "pluginmanager.h"
+#include "utils/log.h"
 
-namespace compat
+namespace slow
 {
-    Menus002 menus002;
+    double g_flWarnMs = 100.0;
 
-    void Menus002::OpenCenterHtmlMenu(PluginId owner, CCSPlayerController* player, CenterHtmlMenu* menu)
+    void Report(const char* what, const char* name, int owner, double ms)
     {
-        menus::menuManager.OpenCenterHtmlMenu(owner, player, menu);
-    }
+        const char* plugin = owner == 0 ? "the core" : pluginManager.NameOf(owner);
 
-    IMenuInstance* Menus002::GetActiveMenu(CCSPlayerController* player)
-    {
-        return menus::menuManager.GetActiveMenu(player);
-    }
-
-    void Menus002::CloseActiveMenu(CCSPlayerController* player)
-    {
-        menus::menuManager.CloseActiveMenu(player);
-    }
-
-    void Menus002::OnKeyPress(CCSPlayerController* player, int key)
-    {
-        menus::menuManager.OnKeyPress(player, key);
+        if (name && *name)
+            FP_WARN("slow callback: {} '{}' of {} took {:.0f} ms -- the whole server waited for it", what, name, plugin, ms);
+        else
+            FP_WARN("slow callback: {} of {} took {:.0f} ms -- the whole server waited for it", what, plugin, ms);
     }
 }

@@ -56,6 +56,26 @@
     transform: translateX(0px);
 }
 
+/* Where the window sits: the core puts one of these on menu_root (HudMenu::Position). */
+
+.s2t-menu.pos-left {
+    horizontal-align: left;
+    margin-left: 48px;
+    margin-right: 0px;
+}
+
+.s2t-menu.pos-center {
+    horizontal-align: center;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.s2t-menu.pos-right {
+    horizontal-align: right;
+    margin-left: 0px;
+    margin-right: 48px;
+}
+
 /* ---- title ----------------------------------------------------------------- */
 
 .s2t-menu-header {

@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "pluginmanager.h"
+#include "slowguard.h"
 #include <algorithm>
 #include <cstring>
 #include <unordered_map>
@@ -768,8 +769,22 @@ void PluginManager::RunPending()
         if (p->apiVersion < (minVersion)) \
             continue; \
         for (auto* l : p->listeners) \
+        { \
+            ::slow::Guard slowGuard("listener callback", #call, p->id); \
             l->call; \
+        } \
     }
+
+const char* PluginManager::NameOf(int id) const
+{
+    for (const auto& p : m_plugins)
+    {
+        if (p->id == id && p->api)
+            return p->api->GetName();
+    }
+
+    return "an unloaded plugin";
+}
 
 void PluginManager::OnGameFrame(bool simulating, bool firstTick, bool lastTick)
 {

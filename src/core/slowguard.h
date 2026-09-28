@@ -1,4 +1,4 @@
-﻿/**
+/**
 * vim: set ts=4 sw=4 tw=99 noet:
  * =============================================================================
  * Source2Toolkit
@@ -36,26 +36,52 @@
  */
 #pragma once
 
+#include "tier0/platform.h"
+
 /**
- * Older revisions of the toolkit's interfaces, still served.
+ * Slow plugin callbacks, named.
  *
- * An interface's name carries its revision ("IToolkitMenus002"); the C++ name
- * stays. The rule: any change to an existing interface -- a slot changed, a
- * slot appended -- bumps the revision, and the core keeps serving the old one
- * through an adapter until the next major version. A plugin built against
- * the old header then loads with a warning instead of being refused.
- *
- * To add one when bumping IToolkitX from 00N to 00N+1:
- *   1. copy the old header to src/core/compat/IToolkitX00N.h, renaming the
- *      class to IToolkitX_00N (the current header keeps the real name);
- *   2. write compat/IToolkitX00N.cpp: a class deriving from IToolkitX_00N
- *      that forwards every method to the current manager;
- *   3. list it in compat.cpp's table under "IToolkitX00N".
- * The factory (PluginApi::ToolkitFactory) does the rest.
+ * Everything a plugin does runs inside a hook of the core, so the engine's
+ * frame-time report blames "Source2Toolkit" for a stall wherever it really
+ * is: a command handler waiting on a socket, a timer doing a query, an event
+ * handler in a loop. The guard times one callback and logs which one, whose,
+ * and how long, when it took longer than SlowCallbackWarnMs (core.json).
+ * The cost when nothing is slow is two clock reads.
  */
-namespace compat
+namespace slow
 {
-    /// The adapter serving `iface` (the full string, revision included), or
-    /// null when this core keeps none for it.
-    void* Find(const char* iface);
+    /// Milliseconds a callback may take before it is logged; 0 turns it off.
+    extern double g_flWarnMs;
+
+    /// Logs one slow callback. `what` is the kind ("command handler"), `name`
+    /// what it was on ("admin"), `owner` the plugin id (0: the core).
+    void Report(const char* what, const char* name, int owner, double ms);
+
+    class Guard
+    {
+    public:
+        Guard(const char* what, const char* name, int owner)
+            : m_what(what), m_name(name), m_owner(owner), m_t0(g_flWarnMs > 0.0 ? Plat_FloatTime() : 0.0)
+        {
+        }
+
+        ~Guard()
+        {
+            if (g_flWarnMs <= 0.0)
+                return;
+
+            const double ms = (Plat_FloatTime() - m_t0) * 1000.0;
+            if (ms >= g_flWarnMs)
+                Report(m_what, m_name, m_owner, ms);
+        }
+
+        Guard(const Guard&) = delete;
+        Guard& operator=(const Guard&) = delete;
+
+    private:
+        const char* m_what;
+        const char* m_name;
+        int m_owner;
+        double m_t0;
+    };
 }

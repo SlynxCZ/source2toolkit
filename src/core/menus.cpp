@@ -37,6 +37,7 @@
 #include "menus.h"
 
 #include "hud.h"
+#include "slowguard.h"
 
 #include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
@@ -167,7 +168,10 @@ namespace menus
         // place (ClearOptions + AddMenuOption) destroys the std::function it
         // is running from.
         const auto onSelect = opt.OnSelect;
-        onSelect(player, opt);
+        {
+            ::slow::Guard slowGuard("menu option", opt.Text.c_str(), menuManager.OwnerOf(player));
+            onSelect(player, opt);
+        }
 
         if (!menuManager.IsOpen(player, serial))
             return;
@@ -223,8 +227,8 @@ namespace menus
         }
     }
 
-    HudMenuInstance::HudMenuInstance(CCSPlayerController* player, HudMenu* menu, uint64_t serial)
-        : IMenuInstance(player, menu), hudMenu_(menu), serial_(serial), slot_(player ? player->GetSlot() : -1)
+    HudMenuInstance::HudMenuInstance(CCSPlayerController* player, HudMenu* menu, uint64_t serial, bool readCapture)
+        : IMenuInstance(player, menu), hudMenu_(menu), serial_(serial), slot_(player ? player->GetSlot() : -1), readCapture_(readCapture)
     {
     }
 
@@ -265,6 +269,8 @@ namespace menus
         HashIn(h, std::hash<std::string>{}(hudMenu_->CloseText));
         HashIn(h, HasExitButton() ? 1 : 0);
         HashIn(h, hudMenu_->DimBackground ? 1 : 0);
+        HashIn(h, CaptureInput() ? 1 : 0);
+        HashIn(h, static_cast<size_t>(Position()));
         return h;
     }
 
@@ -335,8 +341,19 @@ namespace menus
         layout->SetHasClass("menu_footer", kShow, pages > 1, player);
 
         layout->SetHasClass("menu_dim", kShow, hudMenu_->DimBackground, player);
+        // Where the window sits: all three set, so a position left on the
+        // slot by an earlier menu does not linger next to this one's.
+        const int pos = Position();
+        if (pos != drawnPos_)
+        {
+            static constexpr const char* kPosClass[] = { "pos-left", "pos-center", "pos-right" };
+            for (int i = 0; i < 3; ++i)
+                layout->SetHasClass("menu_root", kPosClass[i], i == pos, player);
+            drawnPos_ = pos;
+        }
+
         layout->SetHasClass("menu_root", kShow, true, player);
-        layout->SetInputCaptureEnabled(true, player);
+        layout->SetInputCaptureEnabled(CaptureInput(), player);
 
         drawn_ = Signature();
     }
@@ -403,7 +420,10 @@ namespace menus
         // place (ClearOptions + AddMenuOption) destroys the std::function it
         // is running from.
         const auto onSelect = opt.OnSelect;
-        onSelect(player, opt);
+        {
+            ::slow::Guard slowGuard("menu option", opt.Text.c_str(), menuManager.OwnerOf(player));
+            onSelect(player, opt);
+        }
 
         if (!menuManager.IsOpen(player, serial))
             return;
@@ -436,11 +456,24 @@ namespace menus
 
     void MenuManager::OpenHudMenu(PluginId owner, CCSPlayerController* player, HudMenu* menu)
     {
+        OpenHudMenuEx(owner, player, menu, true);
+    }
+
+    PluginId MenuManager::OwnerOf(CCSPlayerController* player) const
+    {
+        if (!player) return 0;
+
+        auto it = activeMenus.find(player->GetSlot());
+        return it == activeMenus.end() ? 0 : it->second.owner;
+    }
+
+    void MenuManager::OpenHudMenuEx(PluginId owner, CCSPlayerController* player, HudMenu* menu, bool readCapture)
+    {
         if (!player || !menu) return;
         CloseActiveMenu(player);
 
         const uint64_t serial = ++nextSerial_;
-        auto inst = std::make_unique<HudMenuInstance>(player, menu, serial);
+        auto inst = std::make_unique<HudMenuInstance>(player, menu, serial, readCapture);
 
         auto& active = activeMenus[player->GetSlot()];
         active.owner = owner;

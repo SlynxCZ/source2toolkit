@@ -36,6 +36,7 @@
  */
 #include "virtualhooks.h"
 #include "events.h"
+#include "slowguard.h"
 #include "shared.h"
 #include "utils/log.h"
 
@@ -124,7 +125,11 @@ namespace events {
             if (hook.post != post)
                 continue;
 
-            Action result = hook.handler(event, post, dontBroadcast);
+            Action result;
+            {
+                ::slow::Guard slowGuard("game event handler", name, hook.owner);
+                result = hook.handler(event, post, dontBroadcast);
+            }
 
             if (result == Action::Supersede)
                 return false;

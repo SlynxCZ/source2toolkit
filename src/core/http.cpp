@@ -38,6 +38,7 @@
 #include "http.h"
 
 #include "utils/log.h"
+#include "slowguard.h"
 
 namespace http
 {
@@ -121,7 +122,10 @@ namespace http
         }
 
         if (m_Callback)
+        {
+            ::slow::Guard slowGuard("HTTP callback", "", m_Owner);
             m_Callback(response);
+        }
 
         if (pDoc)
             pDoc->Release();

@@ -8,5 +8,6 @@
   "CrashHandlerEnabled": true,
   "CrashDiscordWebhook": "",
   "HudMenuLayout": "s2t_menu",
-  "HudTextLayout": "s2t_hud"
+  "HudTextLayout": "s2t_hud",
+  "SlowCallbackWarnMs": 100
 }

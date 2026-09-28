@@ -59,6 +59,7 @@
 #include "virtualhooks.h"
 #include "gamehooks.h"
 #include "hud.h"
+#include "slowguard.h"
 
 #include "source2toolkit/utils/plat.h"
 
@@ -173,6 +174,7 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
 
     commands::InitCommands();
     hud::hudManager.Init();
+    slow::g_flWarnMs = shared::g_pCoreConfig->SlowCallbackWarnMs;
 
     // Not fatal: without the script loader, compiled assets still run.
     scripts::scriptsManager.Init();

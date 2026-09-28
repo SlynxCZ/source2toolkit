@@ -61,6 +61,11 @@ public:
     std::string HudMenuLayout = "s2t_menu";
     std::string HudTextLayout = "s2t_hud";
 
+    /// A plugin callback (command, event, timer, menu option, game hook,
+    /// listener, HTTP callback) that takes longer than this many
+    /// milliseconds is logged with its name and plugin. 0 turns it off.
+    double SlowCallbackWarnMs = 100.0;
+
     using json = nlohmann::json;
     CCoreConfig(const std::string& path);
     ~CCoreConfig();

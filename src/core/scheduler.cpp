@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "scheduler.h"
+#include "slowguard.h"
 #include "tkvprof.h"
 #include <algorithm>
 #include <chrono>
@@ -202,6 +203,7 @@ namespace scheduler
 
             try
             {
+                ::slow::Guard slowGuard("next-frame task", "", task.owner);
                 task.task();
             }
             catch (...)
@@ -230,7 +232,10 @@ namespace scheduler
                 timer->InExec = true;
                 try
                 {
-                    timer->Callback();
+                    {
+                        ::slow::Guard slowGuard("timer", "", timer->Owner);
+                        timer->Callback();
+                    }
                 }
                 catch (...)
                 {
@@ -248,7 +253,10 @@ namespace scheduler
                 timer->InExec = true;
                 try
                 {
-                    timer->Callback();
+                    {
+                        ::slow::Guard slowGuard("timer", "", timer->Owner);
+                        timer->Callback();
+                    }
                 }
                 catch (...)
                 {

@@ -42,6 +42,7 @@
 #include "shared.h"
 #include "tkvprof.h"
 #include "utils/log.h"
+#include "slowguard.h"
 
 #include "source2toolkit/schema/entity/classes/CCSCustomHudLayout.h"
 #include "source2toolkit/schema/entity/classes/CCSPlayerController.h"
@@ -133,7 +134,11 @@ namespace hud
         if (!shared::getGlobalVars() || !shared::g_pGameRules)
             return nullptr;
 
-        CCSCustomHudLayout* created = CCSCustomHudLayout::Create(layout.name.c_str(), layout.targetName);
+        CCSCustomHudLayout* created;
+        {
+            ::slow::Guard slowGuard("custom_hud_layout spawn", layout.name.c_str(), 0);
+            created = CCSCustomHudLayout::Create(layout.name.c_str(), layout.targetName);
+        }
         if (!created)
         {
             layout.failed = true;

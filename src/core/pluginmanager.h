@@ -136,6 +136,9 @@ public:
 
     /// Runs the queued requests; only from the "toolkit _pending" command.
     void RunPending();
+
+    /// The plugin's GetName(), or a placeholder for an id that is not loaded.
+    const char* NameOf(int id) const;
 public:
     std::vector<std::unique_ptr<ToolkitPlugin>> m_plugins;
     int m_nextId = 1;

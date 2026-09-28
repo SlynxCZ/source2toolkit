@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "commands.h"
+#include "slowguard.h"
 
 #include "menus.h"
 #include "plugin.h"
@@ -443,7 +444,11 @@ namespace commands {
             if (entry.post != post)
                 continue;
 
-            Action thisResult = entry.handler(ctx, args, post);
+            Action thisResult;
+            {
+                ::slow::Guard slowGuard("command handler", name.c_str(), entry.owner);
+                thisResult = entry.handler(ctx, args, post);
+            }
 
             // Only Supersede stops the chain: Override still lets the original
             // run, so the remaining listeners get to see the command too.

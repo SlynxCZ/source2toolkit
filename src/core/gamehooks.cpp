@@ -47,6 +47,7 @@
 #include "shared.h"
 #include "tkvprof.h"
 #include "utils/log.h"
+#include "slowguard.h"
 
 // The hooked functions take and return pointers to these; nothing here
 // looks inside them, so the forward declarations of the SDK header do.
@@ -105,7 +106,7 @@ namespace gamehooks
                 return !(post ? m_post : m_pre).empty();
             }
 
-            Action Dispatch(CONTEXT& ctx, bool post) const
+            Action Dispatch(CONTEXT& ctx, bool post, const char* pszName) const
             {
                 // A copy: a handler may unhook from inside itself.
                 const auto list = post ? m_post : m_pre;
@@ -113,7 +114,11 @@ namespace gamehooks
 
                 for (const auto& l : list)
                 {
-                    const Action a = l.handler(ctx, post);
+                    Action a;
+                    {
+                        ::slow::Guard slowGuard("game hook handler", pszName, l.owner);
+                        a = l.handler(ctx, post);
+                    }
 
                     if (a == Action::Supersede)
                         return a;
@@ -181,7 +186,7 @@ namespace gamehooks
                     return Ignore();
 
                 CONTEXT ctx = m_make(pThis, args...);
-                const Action action = m_listeners.Dispatch(ctx, false);
+                const Action action = m_listeners.Dispatch(ctx, false, m_pszName);
 
                 if constexpr (std::is_void_v<RETURN>)
                 {
@@ -210,7 +215,7 @@ namespace gamehooks
                         ctx.*m_result = *original;
                 }
 
-                const Action action = m_listeners.Dispatch(ctx, true);
+                const Action action = m_listeners.Dispatch(ctx, true, m_pszName);
 
                 if constexpr (std::is_void_v<RETURN>)
                 {
