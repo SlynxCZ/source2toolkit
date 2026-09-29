@@ -44,7 +44,7 @@ git clone --recursive https://github.com/Source2Toolkit/source2toolkit-sdk.git "
 echo "=== Downloading HL2SDK-CS2 ==="
 # HL2SDK_REF pins a commit when the head of cs2 does not build; empty = the
 # head of the branch.
-HL2SDK_REF="${HL2SDK_REF-f9c04fdde328297b9a802fcd3d51476c3d70acf7}"
+HL2SDK_REF="${HL2SDK_REF-}"
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git "$HL2SDK_DIR"
 if [ -n "$HL2SDK_REF" ]; then
   echo "=== Pinning HL2SDK-CS2 to $HL2SDK_REF ==="
