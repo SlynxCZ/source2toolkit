@@ -35,6 +35,8 @@
 SamplePlugin g_Plugin;
 TOOLKIT_EXPOSE(cs2_sample, g_Plugin);
 
+IToolkitModule *g_pServerModule = nullptr;
+
 /* ============================================================================
  *
  *   Shared helpers
@@ -116,6 +118,9 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     TOOLKIT_LOG(this, "Starting plugin.\n");
 
+    // For the hardcoded pattern in plugin.h: FindPattern needs the module.
+    g_pServerModule = LOAD_MODULE("server");
+
     // The two raw hooks declared with KHOOK_* in plugin.h go onto the
     // interface instance just set above. One that cannot be resolved is
     // logged and skipped; the rest still go in. The KHook commit check inside
@@ -150,6 +155,12 @@ bool SamplePlugin::Unload(char* error, size_t maxlen)
     // more. A live hook left past unload would jump into unmapped memory on
     // the next call.
     KHOOK_DESTRUCT();
+
+    if (g_pServerModule)
+    {
+        FREE_MODULE(g_pServerModule);
+        g_pServerModule = nullptr;
+    }
 
     // The CConVars below are objects in this library, and ConVar_Register handed
     // the engine pointers to them. Without this the engine keeps those pointers
@@ -833,9 +844,43 @@ void SamplePlugin::SetupGameFunctions()
     });
 }
 
-// The raw KHook by signature (KHOOK_MEMBER in plugin.h): every team switch,
-// the one sample_swap makes above included. Pre, so the player is still on the
-// old team here.
+// The raw KHooks by signature (KHOOK_MEMBER / KHOOK_FUNCTION in plugin.h,
+// one per way of getting the address).
+
+// 1. IToolkitAddresses, the virtual getter: every item a player is given --
+// sample_give below, buying, a round's loadout. Pre.
+KHook::Return<CBasePlayerWeapon*> SamplePlugin::Hook_GiveNamedItem(CCSPlayer_ItemServices* pThis, const char* pszItem, int nSubType, CEconItemView* pScriptItem, bool bForce, void* a6)
+{
+    TOOLKIT_LOG(this, "GiveNamedItem: %s\n", pszItem ? pszItem : "?");
+
+    // { KHook::Action::Supersede, nullptr } would give nothing -- the caller
+    // gets no weapon back.
+    return { KHook::Action::Ignore, nullptr };
+}
+
+// 1. IToolkitAddresses, the ADDR_* macro, on a free function: every entity
+// the game removes. That is a lot of them, so it only looks at weapons.
+KHook::Return<void> SamplePlugin::Hook_UtilRemove(CEntityInstance* pEntity)
+{
+    if (pEntity && !V_strncmp(pEntity->GetClassname(), "weapon_", 7))
+        TOOLKIT_LOG(this, "UTIL_Remove: %s\n", pEntity->GetClassname());
+
+    return { KHook::Action::Ignore };
+}
+
+// 3. The hardcoded pattern: a pawn's view snapped to new angles -- a
+// teleport with angles, a respawn. Changing *pAngles here changes where it
+// looks.
+KHook::Return<void> SamplePlugin::Hook_SnapViewAngles(CBasePlayerPawn* pThis, QAngle* pAngles)
+{
+    if (pAngles)
+        TOOLKIT_LOG(this, "SnapViewAngles: %.1f %.1f %.1f\n", pAngles->x, pAngles->y, pAngles->z);
+
+    return { KHook::Action::Ignore };
+}
+
+// 2. The gamedata entry: every team switch, the one sample_swap makes above
+// included. Pre, so the player is still on the old team here.
 KHook::Return<void> SamplePlugin::Hook_SwitchTeam(CCSPlayerController* pThis, int nTeam)
 {
     TOOLKIT_LOG(this, "SwitchTeam: %s %d -> %d\n", pThis ? pThis->GetPlayerName() : "?", pThis ? pThis->m_iTeamNum() : -1, nTeam);
