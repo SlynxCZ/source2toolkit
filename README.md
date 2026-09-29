@@ -83,6 +83,13 @@ docker compose -f docker/docker-compose.yml up
 
 ---
 
+## Contributing
+
+Fork the repository, branch off `main`, and open the pull request against
+`main` -- `dev` is the maintainer's own working branch. The full walkthrough
+(upstream remote, rebasing, what a pull request needs) is in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 This project is licensed under the GNU General Public License v3.0, with a
