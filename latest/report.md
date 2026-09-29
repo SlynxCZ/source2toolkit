@@ -1,6 +1,6 @@
 # Gamedata validation
 
-CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manifest `8582617999835812788` · 2026-09-29T21:33:35+00:00
+CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manifest `8582617999835812788` · 2026-09-29T21:35:13+00:00
 
 | | Windows | Linux |
 |---|---|---|
