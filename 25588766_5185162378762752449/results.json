@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-29T21:11:07+00:00",
+  "generated_at": "2026-09-29T21:33:35+00:00",
   "build": {
     "buildid": "25588766",
     "linux_manifest": "5185162378762752449",
@@ -223,6 +223,24 @@
       "linux": {
         "matches": 1,
         "address": "0x1891b40",
+        "status": "ok"
+      }
+    },
+    {
+      "name": "CCSGameRules::GoToIntermission",
+      "kind": "offset",
+      "windows": {
+        "value": 129,
+        "class": "CCSGameRules",
+        "library": "server",
+        "vtable_size": 130,
+        "status": "ok"
+      },
+      "linux": {
+        "value": 130,
+        "class": "CCSGameRules",
+        "library": "server",
+        "vtable_size": 131,
         "status": "ok"
       }
     },
@@ -977,16 +995,16 @@
       "kind": "offset",
       "windows": {
         "value": 25,
-        "class": "CCSGameRules",
+        "class": "CGameRules",
         "library": "server",
-        "vtable_size": 130,
+        "vtable_size": 118,
         "status": "ok"
       },
       "linux": {
         "value": 26,
-        "class": "CCSGameRules",
+        "class": "CGameRules",
         "library": "server",
-        "vtable_size": 131,
+        "vtable_size": 119,
         "status": "ok"
       }
     },
@@ -995,34 +1013,16 @@
       "kind": "offset",
       "windows": {
         "value": 32,
-        "class": "CCSGameRules",
+        "class": "CGameRules",
         "library": "server",
-        "vtable_size": 130,
+        "vtable_size": 118,
         "status": "ok"
       },
       "linux": {
         "value": 33,
-        "class": "CCSGameRules",
+        "class": "CGameRules",
         "library": "server",
-        "vtable_size": 131,
-        "status": "ok"
-      }
-    },
-    {
-      "name": "CGameRules::GoToIntermission",
-      "kind": "offset",
-      "windows": {
-        "value": 129,
-        "class": "CCSGameRules",
-        "library": "server",
-        "vtable_size": 130,
-        "status": "ok"
-      },
-      "linux": {
-        "value": 130,
-        "class": "CCSGameRules",
-        "library": "server",
-        "vtable_size": 131,
+        "vtable_size": 119,
         "status": "ok"
       }
     },
@@ -1562,14 +1562,14 @@
       "windows": {
         "matches": 10,
         "address": "0x18019acba",
-        "status": "ambiguous",
-        "detail": "10+ matches, the first is used"
+        "status": "ok",
+        "detail": "10+ matches, expected: compared against the first bytes of every NetworkVar_<field> wrapper (schema.cpp), so it matches many functions by design"
       },
       "linux": {
         "matches": 10,
         "address": "0xa5e760",
-        "status": "ambiguous",
-        "detail": "10+ matches, the first is used"
+        "status": "ok",
+        "detail": "10+ matches, expected: compared against the first bytes of every NetworkVar_<field> wrapper (schema.cpp), so it matches many functions by design"
       }
     },
     {
@@ -1605,10 +1605,11 @@
     "windows": {
       "CBaseEntity": 238,
       "CBasePlayerPawn": 400,
+      "CCSGameRules": 130,
       "CCSPlayerController": 277,
       "CCSPlayer_ItemServices": 28,
       "CCSPlayer_WeaponServices": 45,
-      "CCSGameRules": 130,
+      "CGameRules": 118,
       "CGameSceneNode": 31,
       "CPlayer_MovementServices": 51,
       "CSoundSystem": 134
@@ -1616,10 +1617,11 @@
     "linux": {
       "CBaseEntity": 239,
       "CBasePlayerPawn": 401,
+      "CCSGameRules": 131,
       "CCSPlayerController": 279,
       "CCSPlayer_ItemServices": 29,
       "CCSPlayer_WeaponServices": 48,
-      "CCSGameRules": 131,
+      "CGameRules": 119,
       "CGameSceneNode": 32,
       "CPlayer_MovementServices": 52,
       "CServerSideClientBase": 81,

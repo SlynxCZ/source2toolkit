@@ -1,16 +1,14 @@
 # Gamedata validation
 
-CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manifest `8582617999835812788` · 2026-09-29T21:11:07+00:00
+CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manifest `8582617999835812788` · 2026-09-29T21:33:35+00:00
 
 | | Windows | Linux |
 |---|---|---|
-| Signatures | 🟢 66 🟡 1 | 🟢 66 🟡 1 |
+| Signatures | 🟢 67 | 🟢 67 |
 | Offsets | 🟢 20 ⚪ 4 | 🟢 37 ⚪ 4 |
 
-## Needs attention
+## Everything resolves
 
-- 🟡 **NetworkVar::StateChanged** (windows): 10+ matches, the first is used
-- 🟡 **NetworkVar::StateChanged** (linux): 10+ matches, the first is used
 
 <details><summary>All entries (Windows, Linux)</summary>
 
@@ -28,6 +26,7 @@ CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manife
 - 🟢🟢 `CBasePlayerController::SetPawn`
 - 🟢🟢 `CBasePlayerPawn::CommitSuicide` — W 387/400 · L 387/401
 - 🟢🟢 `CBasePlayerPawn::SnapViewAngles`
+- 🟢🟢 `CCSGameRules::GoToIntermission` — W 129/130 · L 130/131
 - 🟢🟢 `CCSGameRules::TerminateRound`
 - 🟢🟢 `CCSPlayerController::ChangeTeam` — W 105/277 · L 104/279
 - 🟢🟢 `CCSPlayerController::ProcessUserCmd`
@@ -79,9 +78,8 @@ CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manife
 - 🟢🟢 `CFlashbangProjectile::EmitGrenade`
 - 🟢🟢 `CGameEntitySystem::FindEntityByClassName`
 - 🟢🟢 `CGameEntitySystem::FindEntityByName`
-- 🟢🟢 `CGameRules::FindPickerEntity` — W 25/130 · L 26/131
-- 🟢🟢 `CGameRules::GetViewVectors` — W 32/130 · L 33/131
-- 🟢🟢 `CGameRules::GoToIntermission` — W 129/130 · L 130/131
+- 🟢🟢 `CGameRules::FindPickerEntity` — W 25/118 · L 26/119
+- 🟢🟢 `CGameRules::GetViewVectors` — W 32/118 · L 33/119
 - 🟢🟢 `CGameSceneNode::GetSkeletonInstance` — W 12/31 · L 13/32
 - 🟢🟢 `CHEGrenadeProjectile::EmitGrenade`
 - 🟢🟢 `CLoggingSystem::LogDirect`
@@ -119,7 +117,7 @@ CS2 build **25588766** · Linux manifest `5185162378762752449` · Windows manife
 - ➖🟢 `ISource2Server::GameServerSteamAPIActivated` — L 41/104
 - ➖🟢 `ISource2Server::GameServerSteamAPIDeactivated` — L 42/104
 - 🟢🟢 `LegacyGameEventListener`
-- 🟡🟡 `NetworkVar::StateChanged`
+- 🟢🟢 `NetworkVar::StateChanged`
 - 🟢🟢 `UTIL::CreateEntityByName`
 - 🟢🟢 `UTIL::Remove`
 
