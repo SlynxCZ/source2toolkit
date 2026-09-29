@@ -194,12 +194,15 @@ def counts(entries, kind=None):
 
 
 def worst(entries):
-    order = [OK, NONE, UNCHECKED, AMBIGUOUS, CHANGED, BROKEN]
+    """OK, AMBIGUOUS/CHANGED or BROKEN. "Not checked" and "no entry for the
+    platform" are neither: they say nothing about whether the gamedata works."""
+    order = [OK, AMBIGUOUS, CHANGED, BROKEN]
     w = OK
     for e in entries:
         for p in PLATFORMS:
-            if order.index(e[p]['status']) > order.index(w):
-                w = e[p]['status']
+            s = e[p]['status']
+            if s in order and order.index(s) > order.index(w):
+                w = s
     return w
 
 
