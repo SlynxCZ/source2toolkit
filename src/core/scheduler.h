@@ -42,6 +42,7 @@
 
 extern bool g_bHasTicked;
 extern double g_dUniversalTime;
+/// The curtime of the last simulated frame (0 before the first).
 extern double g_dLastTickTime;
 extern double g_dTimerNextThink;
 

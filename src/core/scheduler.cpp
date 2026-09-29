@@ -35,10 +35,12 @@
  * Project: Source2Toolkit
  */
 #include "scheduler.h"
+#include "shared.h"
+
+#include "globalvars.h"
 #include "slowguard.h"
 #include "tkvprof.h"
 #include <algorithm>
-#include <chrono>
 #include <mutex>
 #include <queue>
 
@@ -211,15 +213,27 @@ namespace scheduler
             }
         }
 
-        double now = std::chrono::duration_cast<std::chrono::duration<float>>(
-            std::chrono::steady_clock::now().time_since_epoch()).count();
+        // Game time: the engine's curtime, summed frame by frame so it never
+        // goes back. curtime starts again at every map while timers outlive
+        // maps, so a step backwards (or the first frame) counts as one frame.
+        // g_dLastTickTime is the curtime of the last frame, 0 before the first.
+        CGlobalVars* globals = shared::getGlobalVars();
+        if (simulating && globals)
+        {
+            const double now = globals->curtime;
+            double step = now - g_dLastTickTime;
+            if (g_dLastTickTime <= 0.0 || step < 0.0)
+                step = globals->frametime > 0.0f ? globals->frametime : 0.015;
 
-        if (simulating)
-            g_dUniversalTime += now - g_dLastTickTime;
+            g_dUniversalTime += step;
+            g_dLastTickTime = now;
+        }
         else
+        {
             g_dUniversalTime += 0.015;
-
-        g_dLastTickTime = now;
+            if (globals)
+                g_dLastTickTime = globals->curtime;
+        }
 
         if (g_dUniversalTime < g_dTimerNextThink)
             return;
