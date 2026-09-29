@@ -284,7 +284,14 @@ namespace scheduler
                 }
 
                 timer->InExec = false;
-                timer->ExecTime = g_dUniversalTime + timer->Interval;
+
+                // From when it was due, not from when it was noticed: the
+                // checks run every 0.1 s, and counting from the check made a
+                // 1 s timer fire every ~1.09 s. A timer left far behind (a
+                // hitch) starts again from now instead of firing in a burst.
+                timer->ExecTime += timer->Interval;
+                if (timer->ExecTime <= g_dUniversalTime)
+                    timer->ExecTime = g_dUniversalTime + timer->Interval;
             }
         }
 
