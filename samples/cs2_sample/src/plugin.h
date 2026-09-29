@@ -13,10 +13,11 @@
  *   2. ConVars          CConVar, CConVarRef, change hook
  *   3. Commands         console + chat commands, arguments, replies, listeners
  *   4. Game events      pre / post hooks, dontBroadcast, firing an event
- *   5. Core events      entity listener, entity outputs, client hooks, GameFrame
+ *   5. Core events      entity listener, entity outputs, client callbacks,
+ *                       GameFrame; a raw KHook where the toolkit has nothing
  *   6. Net messages     building + sending, outgoing and incoming hooks
  *   7. Sounds           one-call emit, sound objects, stopping, the sound hook
- *   8. Native functions hooking by signature, calling by signature
+ *   8. Game functions   game hooks (TakeDamage, PostThink), calling by signature
  *   9. Entities         schema fields, teleport, items, inputs
  *  10. Timers           next frame, delayed, repeating
  *  11. Transmit         hiding players and entities per viewer, CheckTransmit hook
@@ -47,6 +48,7 @@
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/IToolkitEvents.h"
 #include "source2toolkit/IToolkitGameConfig.h"
+#include "source2toolkit/IToolkitGameHooks.h"
 #include "source2toolkit/IToolkitGameSystems.h"
 #include "source2toolkit/IToolkitHTTP.h"
 #include "source2toolkit/IToolkitJSON.h"
@@ -72,8 +74,8 @@
 // below is not written twice.
 #include "version_gen.h"
 
-// Above the class: the hook targets below read g_pSource2Server and
-// g_pToolkitAddresses, so the globals have to be declared first.
+// Above the class: the hook targets below read g_pSource2GameClients, so the
+// globals have to be declared first.
 TOOLKIT_GLOBALVARS();
 
 class SamplePlugin final : public IToolkitPlugin,
@@ -90,23 +92,23 @@ public: // 1. lifecycle -- IToolkitListener
 	void OnLevelInit(const char *pMapName, const char *pMapEntities, const char *pOldLevel, const char *pLandmarkName, bool loadGame, bool background) override;
 	void OnLevelShutdown() override;
 
-public: // 5. core events -- IEntityListener, IEntityIOListener
+public: // 5. core events -- IToolkitListener, IEntityListener, IEntityIOListener
+	void OnClientPutInServer(CPlayerSlot slot, const char *pszName, int type, uint64 xuid) override;
+	void OnClientSettingsChanged(CPlayerSlot slot) override;
+	void OnClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReason reason, const char *pszName, uint64 xuid, const char *pszNetworkID) override;
+	void OnGameFrame(bool simulating, bool bFirstTick, bool bLastTick) override;
+
 	void OnEntityCreated(CEntityInstance *pEntity) override;
 	void OnEntitySpawned(CEntityInstance *pEntity) override;
 	void OnEntityDeleted(CEntityInstance *pEntity) override;
 	Action OnEntityOutput(const char *pchOutputName, CEntityInstance *pActivator, CEntityInstance *pCaller, float flDelay, bool post) override;
 
-public: // 5. core events, 8. native functions -- KHook handlers
-	KHook::Return<void> Hook_GameFrame(ISource2Server *pThis, bool simulating, bool bFirstTick, bool bLastTick);
-	KHook::Return<void> Hook_ClientActive(ISource2GameClients *pThis, CPlayerSlot slot, bool bLoadGame, const char *pszName, uint64 xuid);
-	KHook::Return<void> Hook_ClientDisconnect(ISource2GameClients *pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char *pszName, uint64 xuid, const char *pszNetworkID);
-	KHook::Return<void> Hook_ClientPutInServer(ISource2GameClients *pThis, CPlayerSlot slot, char const *pszName, int type, uint64 xuid);
-	KHook::Return<void> Hook_ClientSettingsChanged(ISource2GameClients *pThis, CPlayerSlot slot);
-	KHook::Return<void> Hook_OnClientConnected(ISource2GameClients *pThis, CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, const char *pszAddress, bool bFakePlayer);
+public: // 5. core events -- raw KHook handlers, for what the toolkit has no callback for
 	KHook::Return<bool> Hook_ClientConnect(ISource2GameClients *pThis, CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, bool unk1, CBufferString *pRejectReason);
 	KHook::Return<void> Hook_ClientCommand(ISource2GameClients *pThis, CPlayerSlot nSlot, const CCommand &cmd);
-	KHook::Return<int64_t> Hook_TakeDamageOld(CBaseEntity *pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult);
-	KHook::Return<void> Hook_PostThink(CCSPlayerPawn *pThis);
+
+public: // 8. game functions -- IToolkitGameHooks handlers
+	GameHookReturn<TakeDamageContext::Return> OnTakeDamage(TakeDamageContext &ctx, bool post);
 
 private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupConVars();
@@ -115,48 +117,35 @@ private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupCoreEvents();
 	void SetupNetMessages();
 	void SetupSounds();
-	void SetupNativeFunctions();
+	void SetupGameFunctions();
 	void SetupEntityCommands();
 	void SetupTimers();
 	void SetupTransmit();
 
 private:
-	// The hooks are KHook objects -- metamod's detour library, on the one engine
-	// the toolkit shares with metamod (TOOLKIT_SAVEVARS() fetched it), so they
-	// land next to every other plugin's hooks and can call through their
-	// originals. Each holds the function it hooks, the context (this) and the
-	// Pre/Post callbacks (Pre runs before the original, Post after; nullptr
-	// leaves a side empty).
+	// Raw KHook hooks, for the two engine calls the toolkit has no callback for
+	// (turning a connection away, swallowing a client command). Everything
+	// else this plugin listens to comes through the toolkit: IToolkitListener
+	// for the client and frame callbacks, IToolkitGameHooks for game
+	// functions such as TakeDamage. Prefer those -- a plugin with hooks of its
+	// own is "raw tier" in `toolkit list` and needs a rebuild whenever KHook
+	// or the engine changes, a plugin without them only a core update.
 	//
-	// One line each: the macro takes the hook's type from the handler it names
-	// (which is why the handlers above come first), KHOOK_INIT() in Load()
-	// resolves the target and installs it, KHOOK_DESTRUCT() in Unload() takes it
-	// down. A handler that needs the real original from the middle of its body
-	// calls m_hXxx.CallOriginal(pThis, ...).
-	//
-	// Virtual hooks go onto the engine's own interface instances. The pointer is
+	// KHook is metamod's detour library, the one engine the toolkit shares
+	// with metamod, so these land next to every other plugin's hooks. Each
+	// holds the function it hooks, the context (this) and the Pre/Post
+	// callbacks (Pre runs before the original, Post after; nullptr leaves a
+	// side empty). The macro takes the hook's type from the handler it names
+	// (which is why the handlers come first), KHOOK_INIT() in Load() installs
+	// it, KHOOK_DESTRUCT() in Unload() takes it down. The interface pointer is
 	// read at KHOOK_INIT(), not here -- it is still null when this object is
 	// constructed.
-	KHOOK_VIRTUAL(m_hGameFrame, &ISource2Server::GameFrame, &g_pSource2Server, nullptr, &SamplePlugin::Hook_GameFrame);
-	KHOOK_VIRTUAL(m_hClientActive, &ISource2GameClients::ClientActive, &g_pSource2GameClients, nullptr, &SamplePlugin::Hook_ClientActive);
-	KHOOK_VIRTUAL(m_hClientDisconnect, &ISource2GameClients::ClientDisconnect, &g_pSource2GameClients, nullptr, &SamplePlugin::Hook_ClientDisconnect);
-	KHOOK_VIRTUAL(m_hClientPutInServer, &ISource2GameClients::ClientPutInServer, &g_pSource2GameClients, nullptr, &SamplePlugin::Hook_ClientPutInServer);
-	KHOOK_VIRTUAL(m_hClientSettingsChanged, &ISource2GameClients::ClientSettingsChanged, &g_pSource2GameClients, &SamplePlugin::Hook_ClientSettingsChanged, nullptr);
-	KHOOK_VIRTUAL(m_hOnClientConnected, &ISource2GameClients::OnClientConnected, &g_pSource2GameClients, &SamplePlugin::Hook_OnClientConnected, nullptr);
+	//
+	// A game function by signature goes the same way, e.g.
+	//     KHOOK_MEMBER(m_hFoo, "CSomething::Foo", &SamplePlugin::Hook_Foo, nullptr);
+	// with the name of a gamedata entry -- but look in IToolkitGameHooks first.
 	KHOOK_VIRTUAL(m_hClientConnect, &ISource2GameClients::ClientConnect, &g_pSource2GameClients, &SamplePlugin::Hook_ClientConnect, nullptr);
 	KHOOK_VIRTUAL(m_hClientCommand, &ISource2GameClients::ClientCommand, &g_pSource2GameClients, &SamplePlugin::Hook_ClientCommand, nullptr);
-
-	// Functions found by signature rather than through a vtable, each showing a
-	// different way to get the address.
-	//
-	// First: the toolkit already resolved this one, so just ask for it. Every
-	// entry in IToolkitAddresses works this way and costs no scan of your own.
-	// The target is evaluated at KHOOK_INIT(), once the toolkit's interfaces are there.
-	KHOOK_MEMBER(m_hTakeDamageOld, g_pToolkitAddresses->CBaseEntity_TakeDamageOld(), &SamplePlugin::Hook_TakeDamageOld, nullptr);
-	// Second: anything in the shared gamedata, whether or not the toolkit has a
-	// typed getter for it. The entry's library is read, then it is found by
-	// exported symbol or by pattern -- you do not care which.
-	KHOOK_MEMBER(m_hPostThink, "CCSPlayerPawn::PostThink", &SamplePlugin::Hook_PostThink, nullptr);
 
 private:
 	// 6. net messages -- one bit per player slot, the same layout the hooks get

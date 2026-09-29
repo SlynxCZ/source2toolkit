@@ -116,16 +116,17 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
 
     TOOLKIT_LOG(this, "Starting plugin.\n");
 
-    // Every hook declared with KHOOK_* in plugin.h: the virtual ones go onto
-    // the interface instances just set above, the function ones get their
-    // address resolved and the detour placed. One that cannot be resolved is
-    // logged and skipped; the rest still go in.
-    // The KHook commit check inside returns false out of Load() on a mismatch.
+    // The two raw hooks declared with KHOOK_* in plugin.h go onto the
+    // interface instance just set above. One that cannot be resolved is
+    // logged and skipped; the rest still go in. The KHook commit check inside
+    // returns false out of Load() on a mismatch -- only a plugin with raw
+    // hooks has one to fail.
     KHOOK_INIT();
 
     TOOLKIT_LOG(this, "All hooks started!\n");
 
-    // OnLevelInit, OnAllToolkitPluginsLoaded and the rest of IToolkitListener.
+    // OnLevelInit, the client callbacks, OnGameFrame and the rest of
+    // IToolkitListener.
     api->AddListener(this, this);
 
     SetupConVars();
@@ -134,7 +135,7 @@ bool SamplePlugin::Load(PluginId id, IToolkitAPI* api, char* error, size_t maxle
     SetupCoreEvents();
     SetupNetMessages();
     SetupSounds();
-    SetupNativeFunctions();
+    SetupGameFunctions();
     SetupEntityCommands();
     SetupTimers();
     SetupTransmit();
@@ -161,11 +162,12 @@ bool SamplePlugin::Unload(char* error, size_t maxlen)
     ConVar_Unregister();
 
     // Everything else this plugin registered -- commands, command and chat
-    // listeners, game event hooks, net message hooks, the sound hook, the
-    // entity listeners, timers, sounds -- is owned by its PluginId, and the
-    // toolkit drops all of it when the plugin goes. Taking them down by hand
-    // (UNHOOK_GAME_EVENT, UNREGISTER_CON_COMMAND, KILL_TIMER, ...) is for
-    // turning a feature off while the plugin stays loaded.
+    // listeners, game event hooks, game hooks, net message hooks, the sound
+    // hook, the entity listeners, timers, sounds -- belongs to it (the core
+    // reads that off each handler), and the toolkit drops all of it when the
+    // plugin goes. Taking them down by hand (UnhookGameEvent, UnhookTakeDamage,
+    // UnregisterConCommand, KillTimer, ... by the id or the same handler) is
+    // for turning a feature off while the plugin stays loaded.
 
     return true;
 }
@@ -470,7 +472,8 @@ void SamplePlugin::SetupGameEvents()
  *
  *   What the server itself is doing, as opposed to what the game announces:
  *   entities coming and going, entity outputs firing, clients connecting,
- *   the frame ticking. Map start and end are in section 1.
+ *   the frame ticking. Map start and end are in section 1. And the one place
+ *   this plugin hooks the engine itself, for what the toolkit does not cover.
  *
  * ========================================================================== */
 
@@ -485,8 +488,9 @@ void SamplePlugin::SetupCoreEvents()
     g_pToolkitEntities->AddEntityIOListener(this, "func_button", "OnPressed");
     g_pToolkitEntities->AddEntityIOListener(this, nullptr, "OnStartTouch", true);
 
-    // The client hooks and GameFrame are KHook hooks on engine interfaces,
-    // declared in plugin.h and installed by KHOOK_INIT() in Load().
+    // The client callbacks and OnGameFrame come through IToolkitListener, see
+    // below; two engine calls the toolkit has no callback for are raw KHook
+    // hooks.
 }
 
 void SamplePlugin::OnEntityCreated(CEntityInstance* pEntity)
@@ -533,45 +537,41 @@ Action SamplePlugin::OnEntityOutput(const char* pchOutputName, CEntityInstance* 
     return Action::Ignore;
 }
 
-KHook::Return<void> SamplePlugin::Hook_ClientActive(ISource2GameClients* pThis, CPlayerSlot slot, bool bLoadGame, const char* pszName, uint64 xuid)
-{
-    TOOLKIT_LOG(this, "Hook_ClientActive(%d, %d, \"%s\", %lld)\n", slot.Get(), bLoadGame, pszName, xuid);
+// The client and frame callbacks come from IToolkitListener, the same object
+// Load() handed to AddListener(). Nothing to install or take down.
 
-    return { KHook::Action::Ignore };
+void SamplePlugin::OnClientPutInServer(CPlayerSlot slot, const char* pszName, int type, uint64 xuid)
+{
+    TOOLKIT_LOG(this, "OnClientPutInServer(%d, \"%s\", %d, %lld)\n", slot.Get(), pszName, type, xuid);
 }
 
-KHook::Return<void> SamplePlugin::Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args)
+void SamplePlugin::OnClientSettingsChanged(CPlayerSlot slot)
 {
-    TOOLKIT_LOG(this, "Hook_ClientCommand(%d, \"%s\")\n", slot.Get(), args.GetCommandString());
-
-    // Supersede blocks the original entirely -- the engine never sees this
-    // command. Use it to take a command over, not to "handle it as well".
-    if (!V_strcmp(args.Arg(0), "sample_blocked"))
-    {
-        TOOLKIT_LOG(this, "Swallowing \"sample_blocked\" -- the engine will never see it.\n");
-        return { KHook::Action::Supersede };
-    }
-
-    // Ignore says "I did nothing": the original runs, and so does whatever else
-    // is hooked here. The right answer for a hook that only looks.
-    return { KHook::Action::Ignore };
+    TOOLKIT_LOG(this, "OnClientSettingsChanged(%d)\n", slot.Get());
 }
 
-KHook::Return<void> SamplePlugin::Hook_ClientSettingsChanged(ISource2GameClients* pThis, CPlayerSlot slot)
+void SamplePlugin::OnClientDisconnect(CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
 {
-    TOOLKIT_LOG(this, "Hook_ClientSettingsChanged(%d)\n", slot.Get());
+    TOOLKIT_LOG(this, "OnClientDisconnect(%d, %d, \"%s\", %lld, \"%s\")\n", slot.Get(), reason, pszName, xuid, pszNetworkID);
 
-    // Acting on the call and still letting the original run is also Ignore --
-    // KHook has no separate "handled" state.
-    return { KHook::Action::Ignore };
+    // Per-slot state has to go with the player, or the next one to take the
+    // slot inherits it.
+    const uint64_t bit = uint64_t(1) << slot.Get();
+    m_NoShakeMask &= ~bit;
+    m_VoiceMutedMask &= ~bit;
 }
 
-KHook::Return<void> SamplePlugin::Hook_OnClientConnected(ISource2GameClients* pThis, CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, const char* pszAddress, bool bFakePlayer)
+void SamplePlugin::OnGameFrame(bool simulating, bool bFirstTick, bool bLastTick)
 {
-    TOOLKIT_LOG(this, "Hook_OnClientConnected(%d, \"%s\", %lld, \"%s\", \"%s\", %d)\n", slot.Get(), pszName, xuid, pszNetworkID, pszAddress, bFakePlayer);
-
-    return { KHook::Action::Ignore };
+    // Runs every tick, right after the game's own GameFrame -- 64 times a
+    // second, so keep it cheap. `simulating` is false while the game is not
+    // ticking (paused, hibernating).
 }
+
+// Two things the toolkit has no callback for: turning a connection away, and
+// swallowing a client command before the engine sees it. For those the
+// plugin hooks the engine itself -- the KHOOK_VIRTUAL lines in plugin.h,
+// installed by KHOOK_INIT() in Load(). See there for what that costs.
 
 KHook::Return<bool> SamplePlugin::Hook_ClientConnect(ISource2GameClients* pThis, CPlayerSlot slot, const char* pszName, uint64 xuid, const char* pszNetworkID, bool unk1, CBufferString* pRejectReason)
 {
@@ -592,37 +592,18 @@ KHook::Return<bool> SamplePlugin::Hook_ClientConnect(ISource2GameClients* pThis,
     return { KHook::Action::Ignore, true };
 }
 
-KHook::Return<void> SamplePlugin::Hook_ClientPutInServer(ISource2GameClients* pThis, CPlayerSlot slot, char const* pszName, int type, uint64 xuid)
+KHook::Return<void> SamplePlugin::Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args)
 {
-    TOOLKIT_LOG(this, "Hook_ClientPutInServer(%d, \"%s\", %d, %lld)\n", slot.Get(), pszName, type, xuid);
+    // Supersede blocks the original entirely -- the engine never sees this
+    // command. Use it to take a command over, not to "handle it as well".
+    if (!V_strcmp(args.Arg(0), "sample_blocked"))
+    {
+        TOOLKIT_LOG(this, "Swallowing \"sample_blocked\" -- the engine will never see it.\n");
+        return { KHook::Action::Supersede };
+    }
 
-    return { KHook::Action::Ignore };
-}
-
-KHook::Return<void> SamplePlugin::Hook_ClientDisconnect(ISource2GameClients* pThis, CPlayerSlot slot, ENetworkDisconnectionReason reason, const char* pszName, uint64 xuid, const char* pszNetworkID)
-{
-    TOOLKIT_LOG(this, "Hook_ClientDisconnect(%d, %d, \"%s\", %lld, \"%s\")\n", slot.Get(), reason, pszName, xuid, pszNetworkID);
-
-    // Per-slot state has to go with the player, or the next one to take the
-    // slot inherits it.
-    const uint64_t bit = uint64_t(1) << slot.Get();
-    m_NoShakeMask &= ~bit;
-    m_VoiceMutedMask &= ~bit;
-
-    return { KHook::Action::Ignore };
-}
-
-KHook::Return<void> SamplePlugin::Hook_GameFrame(ISource2Server* pThis, bool simulating, bool bFirstTick, bool bLastTick)
-{
-    // Runs every tick. Whatever goes in here runs 64 times a second, per frame,
-    // right after the game's own GameFrame (a Post hook) -- keep it cheap.
-    /**
-     * simulating:
-     * ***********
-     * true  | game is ticking
-     * false | game is not ticking
-     */
-
+    // Ignore says "I did nothing": the original runs, and so does whatever else
+    // is hooked here. The right answer for a hook that only looks.
     return { KHook::Action::Ignore };
 }
 
@@ -795,16 +776,31 @@ void SamplePlugin::SetupSounds()
 
 /* ============================================================================
  *
- *   8. Native functions
+ *   8. Game functions
  *
- *   Game functions no interface exposes, found by signature: hooked, and
- *   called. The hooks themselves are declared in plugin.h -- one through an
- *   address the toolkit already has, one through a gamedata entry.
+ *   Game functions no interface exposes. The common ones -- TakeDamage,
+ *   CanAcquire, PostThink, the movement and jump functions, ... -- the core
+ *   hooks for you: IToolkitGameHooks, resolved from the core's own gamedata,
+ *   so a plugin never touches a signature and survives an engine update with
+ *   a core update. Anything else is called by signature.
  *
  * ========================================================================== */
 
-void SamplePlugin::SetupNativeFunctions()
+void SamplePlugin::SetupGameFunctions()
 {
+    // A method as the handler: TOOLKIT_MEMBER (SourceHook's SH_MEMBER). The
+    // same one handed to UnhookTakeDamage() takes it off again; a lambda goes
+    // by the id HookTakeDamage() returns. false = Pre, before the game's code.
+    g_pToolkitGameHooks->HookTakeDamage(TOOLKIT_MEMBER(this, &SamplePlugin::OnTakeDamage), false);
+
+    // A lambda, Post: runs after the game's PostThink, for every pawn every
+    // tick -- do as little as possible here. A handler of a function without
+    // a return value answers the action alone.
+    g_pToolkitGameHooks->HookPostThink([](PostThinkContext& ctx, bool post) -> Action
+    {
+        return Action::Ignore;
+    }, true);
+
     // Calling. An address and a function pointer type are all it takes.
     g_pToolkitCommands->RegisterConCommand("sample_swap", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
@@ -837,35 +833,31 @@ void SamplePlugin::SetupNativeFunctions()
     });
 }
 
-KHook::Return<int64_t> SamplePlugin::Hook_TakeDamageOld(CBaseEntity* pThis, CTakeDamageInfo *pInfo, CTakeDamageResult *pResult)
+GameHookReturn<TakeDamageContext::Return> SamplePlugin::OnTakeDamage(TakeDamageContext& ctx, bool post)
 {
-    // The hooked object arrives as the first parameter. Ignore lets the original
-    // run untouched; change pInfo here and the original sees your version,
-    // while { KHook::Action::Supersede, 0 } would block the damage outright.
-    TOOLKIT_LOG(this, "TakeDamageOld: %p entity, %.1f damage\n", pThis, pInfo ? pInfo->m_flDamage : 0.0f);
+    // The context holds the call: the entity taking damage, the damage info,
+    // the result, and for a function with a return value ctx.result.
+    TOOLKIT_LOG(this, "TakeDamage: %s, %.1f damage\n", ctx.entity ? ctx.entity->GetClassname() : "?", ctx.info ? ctx.info->m_flDamage : 0.0f);
 
-    // Changing a parameter: this is a Pre hook, so the original runs after it,
-    // with whatever is in pInfo by then.
-    if (pInfo && sample_damage_scale.Get() != 1.0f)
-        pInfo->m_flDamage *= sample_damage_scale.Get();
+    // Changing an argument: this is a Pre handler, so the game runs after it,
+    // with whatever is in the damage info by then.
+    if (ctx.info && sample_damage_scale.Get() != 1.0f)
+        ctx.info->m_flDamage *= sample_damage_scale.Get();
 
-    // Running the original yourself, from the middle of the handler -- to act
-    // on its result, or to run it twice, or on something else:
+    // Blocking it: the game's code does not run, the caller gets the value.
     //
-    //     const int64_t ret = m_hTakeDamageOld.CallOriginal(pThis, pInfo, pResult);
-    //     ... pResult is filled in now ...
-    //     return { KHook::Action::Supersede, ret };
+    //     return { Action::Supersede, 0 };
     //
-    // Supersede, because the original has already run and must not run again.
+    // Knowing what the game would do, from Pre: CallOriginal() runs the game's
+    // function now (past every hook) and returns what it returned. It really
+    // runs, so answer Supersede with that value -- or it runs a second time:
+    //
+    //     const int64_t dealt = ctx.CallOriginal();
+    //     ... ctx.damageResult is filled in now ...
+    //     return { Action::Supersede, dealt };
 
-    return { KHook::Action::Ignore, 0 };
-}
-
-KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis)
-{
-    // Runs for every pawn every tick, so do as little as possible here. Left
-    // empty on purpose -- logging would flood the console.
-    return { KHook::Action::Ignore };
+    // Ignore: the game runs as it would have.
+    return Action::Ignore;
 }
 
 /* ============================================================================
