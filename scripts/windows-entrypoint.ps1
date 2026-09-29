@@ -72,7 +72,7 @@ if (Test-Path $SDK_DIR) { Remove-Item -Recurse -Force $SDK_DIR }
 New-Item -ItemType Directory -Force $SDK_DIR | Out-Null
 
 Write-Host "=== Downloading Source2Toolkit-SDK ==="
-git clone --recursive https://github.com/SlynxCZ/source2toolkit-sdk.git $SOURCE2TOOLKITSDK_DIR
+git clone --recursive https://github.com/Source2Toolkit/source2toolkit-sdk.git $SOURCE2TOOLKITSDK_DIR
 
 Write-Host "=== Downloading HL2SDK-CS2 ==="
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git $HL2SDK_DIR

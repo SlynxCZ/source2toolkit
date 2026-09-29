@@ -58,7 +58,7 @@
 #define BUILD_ID SEMVER ":" GITHUB_SHA
 
 #define TOOLKIT_WEBSITE "https://www.source2toolkit.net"
-#define TOOLKIT_REPO    "https://github.com/SlynxCZ/source2toolkit"
+#define TOOLKIT_REPO    "https://github.com/Source2Toolkit/source2toolkit"
 
 // The console colours of the "toolkit" command, FUNPLAY's log style: the
 // thing in question picked out, the rest plain or dim.
