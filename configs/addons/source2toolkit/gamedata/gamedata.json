@@ -451,7 +451,7 @@
       "linux": 33
     }
   },
-  "CGameRules::GoToIntermission": {
+  "CCSGameRules::GoToIntermission": {
     "offsets": {
       "windows": 129,
       "linux": 130

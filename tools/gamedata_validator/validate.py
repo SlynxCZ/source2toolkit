@@ -105,7 +105,7 @@ class Libraries:
 # checks
 # ------------------------------------------------------------------------------
 
-def check_signature(libs, plat, name, sig):
+def check_signature(libs, plat, name, sig, cfg):
     lib = sig.get('library')
     value = sig.get(plat)
     if not isinstance(value, str) or not value:
@@ -125,8 +125,10 @@ def check_signature(libs, plat, name, sig):
     if not matches:
         return {'status': BROKEN, 'detail': 'no match', 'matches': 0}
     res = {'matches': len(matches), 'address': hex(matches[0])}
-    if len(matches) == 1:
+    if len(matches) == 1 or name in cfg.get('multi_match_signatures', {}):
         res['status'] = OK
+        if len(matches) > 1:
+            res['detail'] = '%s matches, expected: %s' % (len(matches) if len(matches) < 10 else '10+', cfg['multi_match_signatures'][name])
     else:
         res['status'] = AMBIGUOUS
         res['detail'] = '%s matches, the first is used' % (len(matches) if len(matches) < 10 else '10+')
@@ -163,7 +165,7 @@ def validate(gamedata, libs, cfg, previous):
         v = gamedata[name]
         if 'signatures' in v:
             kind = 'signature'
-            per = {p: check_signature(libs, p, name, v['signatures']) for p in PLATFORMS}
+            per = {p: check_signature(libs, p, name, v['signatures'], cfg) for p in PLATFORMS}
         elif 'offsets' in v:
             kind = 'offset'
             per = {p: check_offset(libs, p, name, v['offsets'], cfg, previous) for p in PLATFORMS}

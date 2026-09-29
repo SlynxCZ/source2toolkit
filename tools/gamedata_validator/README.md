@@ -42,11 +42,15 @@ Either platform alone works too; the other is reported as not checked.
 ## config.json
 
 - `libraries` -- the libraries searched for vtables (signatures name their own).
+- `multi_match_signatures` -- signatures that are meant to match many places
+  (`NetworkVar::StateChanged` is compared against every NetworkVar wrapper),
+  with the reason; one or more matches is good for them.
 - `field_offsets` -- offsets that are struct fields, not vtable indices.
 - `class_aliases` -- the class whose vtable an offset is checked against, when
   the gamedata name is an interface (`ISource2GameClients` ->
-  `CSource2GameClients`) or a base of the object it is used on (`CGameRules` ->
-  `CCSGameRules`).
+  `CSource2GameClients`). An offset on a derived class belongs under that
+  class's name (`CCSGameRules::GoToIntermission`, not `CGameRules::`), so it is
+  checked against the right vtable.
 
 ## Credits
 

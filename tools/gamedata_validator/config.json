@@ -3,6 +3,10 @@
 
   "libraries": ["server", "engine2", "tier0", "soundsystem", "networksystem", "schemasystem", "materialsystem2"],
 
+  "multi_match_signatures": {
+    "NetworkVar::StateChanged": "compared against the first bytes of every NetworkVar_<field> wrapper (schema.cpp), so it matches many functions by design"
+  },
+
   "field_offsets": [
     "CCSPointScriptEntity::ScriptComponent",
     "CNetworkGameServer::ClientList",
@@ -11,7 +15,6 @@
   ],
 
   "class_aliases": {
-    "CGameRules": "CCSGameRules",
     "ICvar": "CCvar",
     "IGameEventManager2": "CGameEventManager",
     "IGameEventSystem": "CGameEventSystem",
