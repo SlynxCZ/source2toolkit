@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "source2toolkit/IToolkitSounds.h"
 
 #include <deque>
@@ -192,8 +193,16 @@ namespace sounds
         uint32_t HashSoundName(const char* name) override;
         const char* LookupSoundName(uint32_t hash) override;
 
-        void HookSound(PluginId owner, SoundHook handler) override;
-        void UnhookSound(PluginId owner) override;
+
+        ToolkitHookId HookSound(SoundHook handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookSound(owner, std::move(handler)); }
+        bool UnhookSound(const SoundHook& handler) override { return UnhookSound(hookid::OwnerOfHandler(handler), handler); }
+        bool UnhookSound(ToolkitHookId id) override { return UnhookSoundId(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookSound(PluginId owner, SoundHook handler);
+        bool UnhookSound(PluginId owner, const SoundHook& handler);
+        bool UnhookSoundId(ToolkitHookId id);
 
     public:
         /// Resolves the engine's sound system, which is where guids come from.
@@ -233,7 +242,7 @@ namespace sounds
         /// off this list in its destructor. What is still here when the plugin
         /// unloads is deleted for it.
         std::vector<ToolkitSound*> m_sounds;
-        std::unordered_map<PluginId, SoundHook> m_hooks;
+        hookid::HookList<SoundHook> m_hooks;
         std::unordered_map<uint32_t, std::string> m_names;
 
         /// Per slot, channel name -> volume. Missing means 1.0.

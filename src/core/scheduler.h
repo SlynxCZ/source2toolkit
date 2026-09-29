@@ -36,6 +36,7 @@
  */
 #pragma once
 
+#include "hookid.h"
 #include <functional>
 
 #include "source2toolkit/IToolkitScheduler.h"
@@ -56,8 +57,21 @@ namespace scheduler
     class Scheduler : public IToolkitScheduler
     {
     public:
-        void NextFrame(PluginId owner, std::function<void()>&& task) override;
-        Timer* AddTimer(PluginId owner, float interval, TimerCallback callback, int flags = 0) override;
+        void NextFrame(TimerCallback task) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(task);
+            NextFrame(owner, std::function<void()>([task = std::move(task)]() { task(); }));
+        }
+        Timer* AddTimer(float interval, TimerCallback callback, int flags = 0) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            return AddTimer(owner, interval, std::move(callback), flags);
+        }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        void NextFrame(PluginId owner, std::function<void()>&& task);
+        Timer* AddTimer(PluginId owner, float interval, TimerCallback callback, int flags = 0);
         void KillTimer(Timer* timer) override;
 
         /// Drops every timer and pending next-frame task this plugin owns.

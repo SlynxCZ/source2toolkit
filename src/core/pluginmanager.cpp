@@ -72,7 +72,66 @@
 #include <unistd.h>
 #endif
 
+#include "hookid.h"
+
 PluginManager pluginManager;
+
+// The base of the module an address lies in, or nullptr.
+static const void* ModuleBaseOf(const void* address)
+{
+    if (!address)
+        return nullptr;
+
+#ifdef _WIN32
+    HMODULE module = nullptr;
+    if (!GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+                            static_cast<LPCSTR>(address), &module))
+        return nullptr;
+    return module;
+#else
+    Dl_info info{};
+    if (!dladdr(address, &info))
+        return nullptr;
+    return info.dli_fbase;
+#endif
+}
+
+PluginId hookid::OwnerOf(const void* address)
+{
+    return pluginManager.OwnerOf(address);
+}
+
+int PluginManager::OwnerOf(const void* address)
+{
+    if (!address)
+        return 0;
+
+    // The plugin list changed since the cache was filled: every answer may be stale.
+    if (m_ownerCacheGeneration != m_listGeneration)
+    {
+        m_ownerCache.clear();
+        m_ownerCacheGeneration = m_listGeneration;
+    }
+
+    if (auto it = m_ownerCache.find(address); it != m_ownerCache.end())
+        return it->second;
+
+    PluginId owner = 0;
+    if (const void* base = ModuleBaseOf(address))
+    {
+        for (const auto& p : m_plugins)
+        {
+            if (p && p->moduleBase == base)
+            {
+                owner = p->id;
+                break;
+            }
+        }
+    }
+
+    m_ownerCache.emplace(address, owner);
+    return owner;
+}
 
 static LibHandle OpenLib(const char* path, std::string& outError)
 {
@@ -215,11 +274,13 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
     auto pl = std::make_unique<ToolkitPlugin>();
     pl->id = m_nextId++;
     pl->lib = lib;
+    pl->moduleBase = ModuleBaseOf(reinterpret_cast<const void*>(fn));
     pl->api = plugin;
     pl->apiVersion = plugin->GetApiVersion();
     pl->path = fullPath;
 
     m_plugins.push_back(std::move(pl));
+    ++m_listGeneration;
 
     auto& stored = m_plugins.back();
 
@@ -258,6 +319,7 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
         gamehooks::gameHooksManager.RemoveAllForPlugin(failedId);
 
         m_plugins.pop_back();
+        ++m_listGeneration;
 
         // Said out loud: a plugin that refuses to load is otherwise invisible,
         // LoadAll() has nobody to hand the error to.
@@ -375,6 +437,7 @@ bool PluginManager::ReloadPlugin(int id)
         CloseLibNextFrame((*it)->lib, path);
 
         m_plugins.erase(it);
+        ++m_listGeneration;
         break;
     }
 
@@ -434,6 +497,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         CloseLibNextFrame(p->lib);
 
         m_plugins.erase(it);
+        ++m_listGeneration;
         return true;
     }
 
@@ -571,6 +635,7 @@ void PluginManager::UnloadAll()
         CloseLib(p->lib);
 
     m_plugins.clear();
+    ++m_listGeneration;
 }
 
 void PluginManager::StartFileWatcher()

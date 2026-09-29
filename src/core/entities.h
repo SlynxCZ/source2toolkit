@@ -36,6 +36,7 @@
  */
 #pragma once
 
+#include "hookid.h"
 #include <vector>
 #include "source2toolkit/IToolkitEntities.h"
 #include "source2toolkit/schema/entityio.h"
@@ -53,13 +54,23 @@ namespace entities {
 
         CBaseEntity* CreateEntityByName(const char* pszClassName) override;
 
-        void AddEntityListener(PluginId owner, IEntityListener* pListener) override;
+        // A listener object's vtable lies in the module that defined its class:
+        // that is whose it is.
+        void AddEntityListener(IEntityListener* pListener) override
+        {
+            AddEntityListener(pListener ? hookid::OwnerOf(*reinterpret_cast<void* const*>(pListener)) : 0, pListener);
+        }
+        void AddEntityListener(PluginId owner, IEntityListener* pListener);
         void RemoveEntityListener(IEntityListener* pListener) override;
 
         void AcceptInput(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator, CEntityInstance* pCaller, const char* pszValue = "") override;
         void AddEntityIOEvent(CEntityInstance* pTarget, const char* pszInput, CEntityInstance* pActivator = nullptr, CEntityInstance* pCaller = nullptr, const char* pszValue = "", float flDelay = 0.0f) override;
 
-        void AddEntityIOListener(PluginId owner, IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
+        void AddEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override
+        {
+            AddEntityIOListener(pListener ? hookid::OwnerOf(*reinterpret_cast<void* const*>(pListener)) : 0, pListener, pchClassName, pchOutputName, post);
+        }
+        void AddEntityIOListener(PluginId owner, IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false);
         void RemoveEntityIOListener(IEntityIOListener* pListener, const char* pchClassName, const char* pchOutputName, bool post = false) override;
 
     public:

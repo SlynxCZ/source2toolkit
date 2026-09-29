@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "source2toolkit/IToolkitTransmit.h"
 
 #include "bitvec.h"
@@ -160,8 +161,16 @@ namespace transmit
 
         void ResetViewer(CPlayerSlot viewer) override;
 
-        void HookCheckTransmit(PluginId owner, CheckTransmitHook handler) override;
-        void UnhookCheckTransmit(PluginId owner) override;
+
+        ToolkitHookId HookCheckTransmit(CheckTransmitHook handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookCheckTransmit(owner, std::move(handler)); }
+        bool UnhookCheckTransmit(const CheckTransmitHook& handler) override { return UnhookCheckTransmit(hookid::OwnerOfHandler(handler), handler); }
+        bool UnhookCheckTransmit(ToolkitHookId id) override { return UnhookCheckTransmitId(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookCheckTransmit(PluginId owner, CheckTransmitHook handler);
+        bool UnhookCheckTransmit(PluginId owner, const CheckTransmitHook& handler);
+        bool UnhookCheckTransmitId(ToolkitHookId id);
 
     public:
         /// Post hook of ISource2GameEntities::CheckTransmit: the engine has
@@ -181,14 +190,9 @@ namespace transmit
         EntityHook* Find(CEntityInstance* entity);
         EntityHook* FindByIndex(int index);
 
-        struct CheckHook
-        {
-            PluginId owner;
-            CheckTransmitHook handler;
-        };
 
         std::array<std::unique_ptr<EntityHook>, MAX_EDICTS> m_hooks{};
-        std::vector<CheckHook> m_checkHooks;
+        hookid::HookList<CheckTransmitHook> m_checkHooks;
 
         // One view per viewer, filled in per call -- nothing allocated per tick.
         std::array<TransmitInfoView, ABSOLUTE_PLAYER_LIMIT> m_views{};

@@ -993,61 +993,48 @@ namespace networkmessages
     Hooks
     ========================= */
 
-    void NetworkMessagesManager::HookServerMessage(PluginId owner, NetMessageServerHook handler)
+    ToolkitHookId NetworkMessagesManager::HookServerMessage(PluginId owner, NetMessageServerHook handler)
     {
-        if (!handler)
-        {
-            m_serverHooks.erase(owner);
-            return;
-        }
-
-        m_serverHooks[owner] = std::move(handler);
+        return m_serverHooks.Add(owner, std::move(handler));
     }
 
-    void NetworkMessagesManager::UnhookServerMessage(PluginId owner)
+    bool NetworkMessagesManager::UnhookServerMessage(PluginId owner, const NetMessageServerHook& handler)
     {
-        m_serverHooks.erase(owner);
+        return m_serverHooks.RemoveHandler(owner, handler);
     }
 
-    void NetworkMessagesManager::HookClientMessage(PluginId owner, NetMessageClientHook handler)
+    ToolkitHookId NetworkMessagesManager::HookClientMessage(PluginId owner, NetMessageClientHook handler)
     {
-        if (!handler)
-        {
-            m_clientHooks.erase(owner);
-            return;
-        }
-
-        m_clientHooks[owner] = std::move(handler);
+        return m_clientHooks.Add(owner, std::move(handler));
     }
 
-    void NetworkMessagesManager::UnhookClientMessage(PluginId owner)
+    bool NetworkMessagesManager::UnhookClientMessage(PluginId owner, const NetMessageClientHook& handler)
     {
-        m_clientHooks.erase(owner);
+        return m_clientHooks.RemoveHandler(owner, handler);
     }
 
-    void NetworkMessagesManager::HookServerInternalMessage(PluginId owner, NetMessageClientHook handler)
+    ToolkitHookId NetworkMessagesManager::HookServerInternalMessage(PluginId owner, NetMessageClientHook handler)
     {
-        if (!handler)
-        {
-            m_serverInternalHooks.erase(owner);
-            return;
-        }
-
-        m_serverInternalHooks[owner] = std::move(handler);
+        return m_serverInternalHooks.Add(owner, std::move(handler));
     }
 
-    void NetworkMessagesManager::UnhookServerInternalMessage(PluginId owner)
+    bool NetworkMessagesManager::UnhookServerInternalMessage(PluginId owner, const NetMessageClientHook& handler)
     {
-        m_serverInternalHooks.erase(owner);
+        return m_serverInternalHooks.RemoveHandler(owner, handler);
+    }
+
+    bool NetworkMessagesManager::UnhookNetMessage(ToolkitHookId id)
+    {
+        return m_serverHooks.RemoveId(id) || m_clientHooks.RemoveId(id) || m_serverInternalHooks.RemoveId(id);
     }
 
     void NetworkMessagesManager::RemoveAllForPlugin(PluginId id)
     {
         // Without this the engine would keep calling a std::function whose
         // target lives in a library that has just been closed.
-        m_serverHooks.erase(id);
-        m_clientHooks.erase(id);
-        m_serverInternalHooks.erase(id);
+        m_serverHooks.RemoveOwner(id);
+        m_clientHooks.RemoveOwner(id);
+        m_serverInternalHooks.RemoveOwner(id);
     }
 
     /* =========================
@@ -1059,7 +1046,7 @@ namespace networkmessages
         void* msg = ToHandle(netmsg);
 
         Action result = Action::Ignore;
-        for (auto& [id, cb] : networkMessagesManager.m_serverHooks)
+        for (auto& cb : networkMessagesManager.m_serverHooks.Snapshot())
         {
             Action a = cb(clients, messageid, msg);
             if (a > result)
@@ -1073,7 +1060,7 @@ namespace networkmessages
         void* msg = ToHandle(netmsg);
 
         Action result = Action::Ignore;
-        for (auto& [id, cb] : networkMessagesManager.m_clientHooks)
+        for (auto& cb : networkMessagesManager.m_clientHooks.Snapshot())
         {
             Action a = cb(slot, messageid, msg);
             if (a > result)
@@ -1087,7 +1074,7 @@ namespace networkmessages
         void* msg = ToHandle(netmsg);
 
         Action result = Action::Ignore;
-        for (auto& [id, cb] : networkMessagesManager.m_serverInternalHooks)
+        for (auto& cb : networkMessagesManager.m_serverInternalHooks.Snapshot())
         {
             Action a = cb(slot, messageid, msg);
             if (a > result)

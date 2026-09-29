@@ -34,6 +34,7 @@
  *
  * Project: Source2Toolkit
  */
+#include "hookid.h"
 #include "convars.h"
 #include "pluginapi.h"
 #include "shared.h"
@@ -558,18 +559,36 @@ namespace convars
         m_bGlobalCallbackInstalled = false;
     }
 
-    void ConVarsManager::HookConVarChange(PluginId owner, ConVarChangeHandler handler)
+    ToolkitHookId ConVarsManager::HookConVarChange(PluginId owner, ConVarChangeHandler handler)
     {
         if (!handler)
-            return;
+            return 0;
 
-        m_changeHandlers.push_back({owner, std::move(handler)});
+        const ToolkitHookId id = hookid::Next();
+        m_changeHandlers.push_back({ owner, std::move(handler), id });
         EnsureGlobalCallbackInstalled();
+        return id;
     }
 
-    void ConVarsManager::UnhookConVarChange(PluginId owner)
+    bool ConVarsManager::UnhookConVarChange(PluginId owner, const ConVarChangeHandler& handler)
     {
-        RemoveAllForPlugin(owner);
+        if (!handler.HasIdentity())
+            return false;
+
+        const bool found = std::erase_if(m_changeHandlers, [owner, &handler](const ConVarChangeEntry& e)
+        {
+            return e.owner == owner && handler.SameAs(e.handler);
+        }) > 0;
+
+        RemoveGlobalCallbackIfIdle();
+        return found;
+    }
+
+    bool ConVarsManager::UnhookConVarChangeId(ToolkitHookId id)
+    {
+        const bool found = std::erase_if(m_changeHandlers, [id](const ConVarChangeEntry& e) { return e.id == id; }) > 0;
+        RemoveGlobalCallbackIfIdle();
+        return found;
     }
 
     void ConVarsManager::DispatchConVarChange(ConVarRefAbstract* ref, CSplitScreenSlot slot,

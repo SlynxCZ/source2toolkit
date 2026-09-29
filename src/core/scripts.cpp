@@ -34,6 +34,7 @@
  *
  * Project: Source2Toolkit
  */
+#include "hookid.h"
 #include "scripts.h"
 
 #include "addresses.h"
@@ -439,29 +440,30 @@ namespace scripts
     Messages
     ========================= */
 
-    void ScriptsManager::HookScriptMessage(PluginId owner, const char* pszChannel, ScriptMessageHandler handler)
+    ToolkitHookId ScriptsManager::HookScriptMessage(PluginId owner, const char* pszChannel, ScriptMessageHandler handler)
     {
         if (!pszChannel || !*pszChannel || !handler)
-            return;
+            return 0;
 
-        for (auto& entry : m_handlers)
-        {
-            if (entry.owner == owner && entry.channel == pszChannel)
-            {
-                entry.handler = std::move(handler);
-                return;
-            }
-        }
-
-        m_handlers.push_back(MessageHandler{ owner, pszChannel, std::move(handler) });
+        const ToolkitHookId id = hookid::Next();
+        m_handlers.push_back(MessageHandler{ owner, pszChannel, std::move(handler), id });
+        return id;
     }
 
-    void ScriptsManager::UnhookScriptMessage(PluginId owner, const char* pszChannel)
+    bool ScriptsManager::UnhookScriptMessage(PluginId owner, const char* pszChannel, const ScriptMessageHandler& handler)
     {
-        if (!pszChannel)
-            return;
+        if (!pszChannel || !handler.HasIdentity())
+            return false;
 
-        std::erase_if(m_handlers, [&](const MessageHandler& e) { return e.owner == owner && e.channel == pszChannel; });
+        return std::erase_if(m_handlers, [&](const MessageHandler& e)
+        {
+            return e.owner == owner && e.channel == pszChannel && handler.SameAs(e.handler);
+        }) > 0;
+    }
+
+    bool ScriptsManager::UnhookScriptMessageId(ToolkitHookId id)
+    {
+        return std::erase_if(m_handlers, [id](const MessageHandler& e) { return e.id == id; }) > 0;
     }
 
     void ScriptsManager::DispatchMessage(const char* pszChannel, const char* pszPayload)

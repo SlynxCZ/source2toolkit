@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "source2toolkit/IToolkitConVars.h"
 
 #include <vector>
@@ -44,6 +45,7 @@ namespace convars {
     {
         PluginId owner;
         ConVarChangeHandler handler;
+        ToolkitHookId id;
     };
 
     class ConVarsManager final : public IToolkitConVars
@@ -96,8 +98,16 @@ namespace convars {
 
         void DeleteConVar(uint16 accessIndex) override;
 
-        void HookConVarChange(PluginId owner, ConVarChangeHandler handler) override;
-        void UnhookConVarChange(PluginId owner) override;
+
+        ToolkitHookId HookConVarChange(ConVarChangeHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookConVarChange(owner, std::move(handler)); }
+        bool UnhookConVarChange(const ConVarChangeHandler& handler) override { return UnhookConVarChange(hookid::OwnerOfHandler(handler), handler); }
+        bool UnhookConVarChange(ToolkitHookId id) override { return UnhookConVarChangeId(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookConVarChange(PluginId owner, ConVarChangeHandler handler);
+        bool UnhookConVarChange(PluginId owner, const ConVarChangeHandler& handler);
+        bool UnhookConVarChangeId(ToolkitHookId id);
 
     public:
         void UnlockConVars();

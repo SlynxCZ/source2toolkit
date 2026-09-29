@@ -34,6 +34,7 @@
  *
  * Project: Source2Toolkit
  */
+#include "hookid.h"
 #include "virtualhooks.h"
 #include "events.h"
 #include "slowguard.h"
@@ -57,25 +58,45 @@ namespace events {
         }
     }
 
-    void EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, bool post)
+    ToolkitHookId EventManager::HookGameEvent(PluginId owner, const char* name, GameEventHandler handler, bool post)
     {
-        gameEvents[name].push_back({owner, handler, post});
+        const ToolkitHookId id = hookid::Next();
+        gameEvents[name].push_back({ owner, std::move(handler), post, id });
         RegisterListenerIfNeeded(name);
+        return id;
     }
 
-    void EventManager::UnhookGameEvent(PluginId owner, const char* name, bool post)
+    bool EventManager::UnhookGameEvent(PluginId owner, const char* name, const GameEventHandler& handler, bool post)
     {
+        if (!handler.HasIdentity())
+            return false;
+
         auto it = gameEvents.find(name);
         if (it == gameEvents.end())
-            return;
+            return false;
 
-        std::erase_if(it->second, [owner, post](const EventEntry& e)
+        const bool found = std::erase_if(it->second, [owner, post, &handler](const EventEntry& e)
         {
-            return e.owner == owner && e.post == post;
-        });
+            return e.owner == owner && e.post == post && handler.SameAs(e.handler);
+        }) > 0;
 
         if (it->second.empty())
             gameEvents.erase(it);
+        return found;
+    }
+
+    bool EventManager::Unhook(ToolkitHookId id)
+    {
+        for (auto it = gameEvents.begin(); it != gameEvents.end(); ++it)
+        {
+            if (std::erase_if(it->second, [id](const EventEntry& e) { return e.id == id; }) > 0)
+            {
+                if (it->second.empty())
+                    gameEvents.erase(it);
+                return true;
+            }
+        }
+        return false;
     }
 
     void EventManager::RemoveAllForPlugin(PluginId id)

@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "source2toolkit/IToolkitScripts.h"
 #include "source2toolkit/utils/plat.h"
 
@@ -87,8 +88,16 @@ namespace scripts
         CEntityHandle Find(const char* pszName) override;
         bool FireInput(const char* pszName, const char* pszInput) override;
 
-        void HookScriptMessage(PluginId owner, const char* pszChannel, ScriptMessageHandler handler) override;
-        void UnhookScriptMessage(PluginId owner, const char* pszChannel) override;
+
+        ToolkitHookId HookScriptMessage(const char* pszChannel, ScriptMessageHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookScriptMessage(owner, pszChannel, std::move(handler)); }
+        bool UnhookScriptMessage(const char* pszChannel, const ScriptMessageHandler& handler) override { return UnhookScriptMessage(hookid::OwnerOfHandler(handler), pszChannel, handler); }
+        bool UnhookScriptMessage(ToolkitHookId id) override { return UnhookScriptMessageId(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookScriptMessage(PluginId owner, const char* pszChannel, ScriptMessageHandler handler);
+        bool UnhookScriptMessage(PluginId owner, const char* pszChannel, const ScriptMessageHandler& handler);
+        bool UnhookScriptMessageId(ToolkitHookId id);
 
     public:
         /// Resolves the loader and registers `toolkit_script`. Not fatal: without
@@ -116,6 +125,7 @@ namespace scripts
             PluginId owner;
             std::string channel;
             ScriptMessageHandler handler;
+            ToolkitHookId id;
         };
 
         std::unordered_map<std::string, Script> m_scripts;

@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "virtualhooks.h"
 #include "shared.h"
 
@@ -52,6 +53,7 @@ namespace events {
         PluginId owner;
         GameEventHandler handler;
         bool post;
+        ToolkitHookId id;
     };
 
     class EventListener : public IGameEventListener2
@@ -62,8 +64,16 @@ namespace events {
     class EventManager : public IToolkitEvents
     {
     public:
-        void HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, bool post) override;
-        void UnhookGameEvent(PluginId owner, const char* pchName, bool post) override;
+
+        ToolkitHookId HookGameEvent(const char* pchName, GameEventHandler handler, bool post) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookGameEvent(owner, pchName, std::move(handler), post); }
+        bool UnhookGameEvent(const char* pchName, const GameEventHandler& handler, bool post) override { return UnhookGameEvent(hookid::OwnerOfHandler(handler), pchName, handler, post); }
+        bool UnhookGameEvent(ToolkitHookId id) override { return Unhook(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookGameEvent(PluginId owner, const char* pchName, GameEventHandler handler, bool post);
+        bool UnhookGameEvent(PluginId owner, const char* pchName, const GameEventHandler& handler, bool post);
+        bool Unhook(ToolkitHookId id);
     public:
         void RemoveAllForPlugin(PluginId id);
     };

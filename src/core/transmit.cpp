@@ -348,19 +348,19 @@ namespace transmit
     Hooks
     ========================= */
 
-    void TransmitManager::HookCheckTransmit(PluginId owner, CheckTransmitHook handler)
+    ToolkitHookId TransmitManager::HookCheckTransmit(PluginId owner, CheckTransmitHook handler)
     {
-        UnhookCheckTransmit(owner);
-
-        if (handler)
-            m_checkHooks.push_back({ owner, std::move(handler) });
+        return m_checkHooks.Add(owner, std::move(handler));
     }
 
-    void TransmitManager::UnhookCheckTransmit(PluginId owner)
+    bool TransmitManager::UnhookCheckTransmit(PluginId owner, const CheckTransmitHook& handler)
     {
-        m_checkHooks.erase(
-            std::remove_if(m_checkHooks.begin(), m_checkHooks.end(), [owner](const CheckHook& h) { return h.owner == owner; }),
-            m_checkHooks.end());
+        return m_checkHooks.RemoveHandler(owner, handler);
+    }
+
+    bool TransmitManager::UnhookCheckTransmitId(ToolkitHookId id)
+    {
+        return m_checkHooks.RemoveId(id);
     }
 
     /* =========================
@@ -451,9 +451,8 @@ namespace transmit
             return;
 
         // A handler may unhook itself; iterate a copy of the list.
-        const auto hooks = m_checkHooks;
-        for (const CheckHook& h : hooks)
-            h.handler(m_viewPtrs.data(), viewCount, pEntityIndices, nEntities);
+        for (const CheckTransmitHook& handler : m_checkHooks.Snapshot())
+            handler(m_viewPtrs.data(), viewCount, pEntityIndices, nEntities);
     }
 
     /* =========================
@@ -483,7 +482,7 @@ namespace transmit
                 hook.reset();
         }
 
-        UnhookCheckTransmit(id);
+        m_checkHooks.RemoveOwner(id);
     }
 
     void TransmitManager::Clear()

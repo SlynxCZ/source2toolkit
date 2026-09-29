@@ -34,6 +34,7 @@
  *
  * Project: Source2Toolkit
  */
+#include "hookid.h"
 #include "commands.h"
 #include "gamehooks.h"
 #include "slowguard.h"
@@ -121,6 +122,9 @@ namespace commands {
 
     static std::unordered_map<std::string, RegisteredCommand> registeredCommands;
     static std::unordered_map<std::string, std::vector<CommandEntry> > consoleListeners;
+
+    // Ids are unique across every kind, so Unregister(id) needs no kind.
+    static ToolkitHookId s_lastCommandId = 0;
 
     CommandsManager commandsManager;
 
@@ -481,12 +485,40 @@ namespace commands {
         return result;
     }
 
-    void CommandsManager::RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
-        CommandHandler nativeHandler = WrapVoidHandler(handler);
+    void CommandsManager::AddAliases(PluginId owner, ToolkitHookId id, const char* pchName, const ChatHandler& handler)
+    {
+        const CommandHandler nativeHandler = WrapVoidHandler(handler);
+        for (const std::string& name : { std::string(pchName), "/" + std::string(pchName), "!" + std::string(pchName) })
+            consoleListeners[name].push_back({ owner, id, nativeHandler, false, handler });
+    }
 
-        RegisterConListener(owner, pchName, nativeHandler, false);
-        RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
-        RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
+    bool CommandsManager::RemoveAliases(PluginId owner, const char* pchName, const ChatHandler& handler)
+    {
+        if (!handler.HasIdentity())
+            return false;
+
+        bool found = false;
+        for (const std::string& name : { std::string(pchName), "/" + std::string(pchName), "!" + std::string(pchName) })
+        {
+            auto it = consoleListeners.find(name);
+            if (it == consoleListeners.end())
+                continue;
+
+            found |= std::erase_if(it->second, [owner, &handler](const CommandEntry& e)
+            {
+                return e.owner == owner && handler.SameAs(e.chatSource);
+            }) > 0;
+
+            if (it->second.empty())
+                consoleListeners.erase(it);
+        }
+        return found;
+    }
+
+    ToolkitHookId CommandsManager::RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
+        const ToolkitHookId id = ++s_lastCommandId;
+        AddAliases(owner, id, pchName, handler);
+        return id;
     }
 
 
@@ -539,8 +571,7 @@ namespace commands {
         return hashes.Remove(token, token.GetHashCode());
     }
 
-    void CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
-        CommandHandler nativeHandler = WrapVoidHandler(handler);
+    ToolkitHookId CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
 
         // Already ours: the ConCommand is the toolkit's claim on the name and
         // outlives the plugin that asked for it. Unloading parks it (see
@@ -569,42 +600,62 @@ namespace commands {
             }
         }
 
-        RegisterConListener(owner, pchName, nativeHandler, false);
-        RegisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), nativeHandler, false);
-        RegisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), nativeHandler, false);
+        const ToolkitHookId id = ++s_lastCommandId;
+        AddAliases(owner, id, pchName, handler);
+        return id;
     }
 
-    void CommandsManager::RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) {
-        consoleListeners[pchName].push_back({owner, handler, post});
+    ToolkitHookId CommandsManager::RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) {
+        const ToolkitHookId id = ++s_lastCommandId;
+        consoleListeners[pchName].push_back({ owner, id, std::move(handler), post, {} });
+        return id;
     }
 
-    void CommandsManager::UnregisterChatListener(PluginId owner, const char* pchName)
+    // RegisterChatListener / RegisterConCommand listen on three names: the bare
+    // name and the / and ! prefixed aliases. All three go together.
+    bool CommandsManager::UnregisterChatListener(PluginId owner, const char* pchName, const ChatHandler& handler)
     {
-        // RegisterChatListener registers three console listeners: the bare name
-        // and the / and ! prefixed aliases. All three go together.
-        UnregisterConListener(owner, pchName, false);
-        UnregisterConListener(owner, std::string("/" + std::string(pchName)).c_str(), false);
-        UnregisterConListener(owner, std::string("!" + std::string(pchName)).c_str(), false);
+        return RemoveAliases(owner, pchName, handler);
     }
 
-    void CommandsManager::UnregisterConCommand(PluginId owner, const char* pchName)
+    bool CommandsManager::UnregisterConCommand(PluginId owner, const char* pchName, const ChatHandler& handler)
     {
-        UnregisterChatListener(owner, pchName);
+        // The ConCommand itself stays the toolkit's claim on the name until the
+        // plugin unloads (RemoveAllForPlugin); only the handler goes.
+        return RemoveAliases(owner, pchName, handler);
     }
 
-    void CommandsManager::UnregisterConListener(PluginId owner, const char* pchName, bool post)
+    bool CommandsManager::UnregisterConListener(PluginId owner, const char* pchName, const CommandHandler& handler, bool post)
     {
+        if (!handler.HasIdentity())
+            return false;
+
         auto it = consoleListeners.find(pchName);
         if (it == consoleListeners.end())
-            return;
+            return false;
 
-        std::erase_if(it->second, [owner, post](const CommandEntry& e)
+        const bool found = std::erase_if(it->second, [owner, post, &handler](const CommandEntry& e)
         {
-            return e.owner == owner && e.post == post;
-        });
+            return e.owner == owner && e.post == post && handler.SameAs(e.handler);
+        }) > 0;
 
         if (it->second.empty())
             consoleListeners.erase(it);
+        return found;
+    }
+
+    bool CommandsManager::Unregister(ToolkitHookId id)
+    {
+        bool found = false;
+        for (auto it = consoleListeners.begin(); it != consoleListeners.end(); )
+        {
+            found |= std::erase_if(it->second, [id](const CommandEntry& e) { return e.id == id; }) > 0;
+            if (it->second.empty())
+                it = consoleListeners.erase(it);
+            else
+                ++it;
+        }
+        return found;
     }
 
     void CommandsManager::RemoveAllForPlugin(PluginId id)

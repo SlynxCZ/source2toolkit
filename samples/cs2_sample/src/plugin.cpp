@@ -213,7 +213,7 @@ void SamplePlugin::SetupConVars()
     // The engine only takes plain function pointers for this, and keeps one
     // list of them for the whole process. The toolkit installs a single one and
     // fans out, so a capturing lambda works here.
-    g_pToolkitConVars->HookConVarChange(g_PluginID, [](ConVarRefAbstract *ref, CSplitScreenSlot slot, const char *pszNewValue, const char *pszOldValue)
+    g_pToolkitConVars->HookConVarChange([](ConVarRefAbstract *ref, CSplitScreenSlot slot, const char *pszNewValue, const char *pszOldValue)
     {
         if (V_strcmp(ref->GetName(), "sample_cvarf") != 0)
             return;
@@ -312,7 +312,7 @@ void SamplePlugin::SetupCommands()
 {
     // A console command, and the same thing again as a chat command -- the
     // toolkit routes "!sample_command" and "/sample_command" to the same handler.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_command", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_command", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         TOOLKIT_LOG(&g_Plugin, "Sample command called by %d. Command: %s\n", context.GetPlayerSlot().Get(), args.GetCommandString());
     });
@@ -321,7 +321,7 @@ void SamplePlugin::SetupCommands()
     // everything after it as one string. The caller is a slot: valid for a
     // player, invalid (-1) for the server console -- CallerOf() and Reply()
     // at the top of this file are built on that.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_echo", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_echo", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (args.ArgC() < 2)
         {
@@ -338,7 +338,7 @@ void SamplePlugin::SetupCommands()
     // the default triggers; plain "noshake" does not fire it. The handler
     // cannot block the message itself: a public trigger lets it show, a
     // silent one hides it whatever the handler does.
-    g_pToolkitCommands->RegisterChatListener(g_PluginID, "noshake", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterChatListener("noshake", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         const CPlayerSlot slot = context.GetPlayerSlot();
         if (!slot.IsValid())
@@ -354,7 +354,7 @@ void SamplePlugin::SetupCommands()
     // Listening in on a command somebody else owns -- the game's, another
     // plugin's. Pre (post = false) may answer with Action::Supersede to stop
     // the command from running at all; post only watches.
-    g_pToolkitCommands->RegisterConListener(g_PluginID, "jointeam", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post) -> Action
+    g_pToolkitCommands->RegisterConListener("jointeam", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post) -> Action
     {
         // "jointeam 1" is spectator. Refusing it here is the whole of a
         // "no spectators" plugin.
@@ -367,7 +367,7 @@ void SamplePlugin::SetupCommands()
         return Action::Ignore;
     }, false);
 
-    g_pToolkitCommands->RegisterConListener(g_PluginID, "jointeam", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post) -> Action
+    g_pToolkitCommands->RegisterConListener("jointeam", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post) -> Action
     {
         TOOLKIT_LOG(&g_Plugin, "Slot %d ran \"%s\"\n", context.GetPlayerSlot().Get(), args.GetCommandString());
         return Action::Ignore;
@@ -388,7 +388,7 @@ void SamplePlugin::SetupGameEvents()
     // Pre (post = false): the event has been created but nobody has seen it
     // yet. Fields may be changed, dontBroadcast keeps it on the server, and
     // Action::Supersede cancels it outright.
-    g_pToolkitEvents->HookGameEvent(g_PluginID, "player_death", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
+    g_pToolkitEvents->HookGameEvent("player_death", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
     {
         // Player fields resolve straight to the entity, the slot or the pawn.
         auto *pVictim = static_cast<CCSPlayerController *>(event->GetPlayerController("userid"));
@@ -413,7 +413,7 @@ void SamplePlugin::SetupGameEvents()
 
     // Post (post = true): the engine is done with it. The place to react.
     // This one gives everybody $1337 at the start of each round.
-    g_pToolkitEvents->HookGameEvent(g_PluginID, "round_start", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
+    g_pToolkitEvents->HookGameEvent("round_start", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
     {
         ForEachPlayer([](CCSPlayerController *pController)
         {
@@ -424,7 +424,7 @@ void SamplePlugin::SetupGameEvents()
         return Action::Ignore;
     }, true);
 
-    g_pToolkitEvents->HookGameEvent(g_PluginID, "player_jump", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
+    g_pToolkitEvents->HookGameEvent("player_jump", [](IGameEvent *event, bool post, bool &dontBroadcast) -> Action
     {
         TOOLKIT_LOG(&g_Plugin, "player_jump: slot %d\n", event->GetPlayerSlot("userid").Get());
         return Action::Ignore;
@@ -437,7 +437,7 @@ void SamplePlugin::SetupGameEvents()
     //   * FireEventToClient() -- to one player only, which the server itself
     //                            never sees. That is what makes per-player HUD
     //                            text out of show_survival_respawn_status.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_event", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_event", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller)
@@ -477,13 +477,13 @@ void SamplePlugin::SetupGameEvents()
 void SamplePlugin::SetupCoreEvents()
 {
     // IEntityListener: OnEntityCreated / Spawned / Deleted / ParentChanged.
-    g_pToolkitEntities->AddEntityListener(g_PluginID, this);
+    g_pToolkitEntities->AddEntityListener(this);
 
     // IEntityIOListener: a classname and an output, nullptr for "any". Pre
     // may return Action::Supersede, and the output then never fires -- the
     // door stays shut, the button does nothing.
-    g_pToolkitEntities->AddEntityIOListener(g_PluginID, this, "func_button", "OnPressed");
-    g_pToolkitEntities->AddEntityIOListener(g_PluginID, this, nullptr, "OnStartTouch", true);
+    g_pToolkitEntities->AddEntityIOListener(this, "func_button", "OnPressed");
+    g_pToolkitEntities->AddEntityIOListener(this, nullptr, "OnStartTouch", true);
 
     // The client hooks and GameFrame are KHook hooks on engine interfaces,
     // declared in plugin.h and installed by KHOOK_INIT() in Load().
@@ -507,7 +507,7 @@ void SamplePlugin::OnEntitySpawned(CEntityInstance* pEntity)
     // resolves to nullptr instead.
     CHandle<CSmokeGrenadeProjectile> hSmoke = static_cast<CSmokeGrenadeProjectile *>(pEntity)->GetHandle();
 
-    g_pToolkitScheduler->NextFrame(g_PluginID, [hSmoke]()
+    g_pToolkitScheduler->NextFrame([hSmoke]()
     {
         if (CSmokeGrenadeProjectile *pSmoke = hSmoke.Get())
             pSmoke->m_vSmokeColor = Vector(170.0f, 0.0f, 255.0f);
@@ -640,7 +640,7 @@ void SamplePlugin::SetupNetMessages()
     // Sending. Allocate by id (or by name, NET_MSG_ALLOC_BY_NAME), set fields
     // by their .proto names, send, free. The message is yours throughout:
     // sending does not consume it, so one message can go out many times.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_shake", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_shake", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         void *pMsg = NET_MSG_ALLOC_BY_ID(UM_Shake);
         if (!pMsg)
@@ -665,7 +665,7 @@ void SamplePlugin::SetupNetMessages()
     // included, with the recipients as a bitmask that may be edited. The
     // message may be edited too: the clients get what is left when the hooks
     // are done. Action::Supersede drops it for everybody.
-    g_pToolkitNetworkMessages->HookServerMessage(g_PluginID, [this](uint64_t *clients, int messageid, void *msg) -> Action
+    g_pToolkitNetworkMessages->HookServerMessage([this](uint64_t *clients, int messageid, void *msg) -> Action
     {
         if (messageid != UM_Shake)
             return Action::Ignore;
@@ -689,7 +689,7 @@ void SamplePlugin::SetupNetMessages()
 
     // Client -> server. Here: a voice mute. The packets of a muted player are
     // dropped before the server looks at them, so nobody hears them.
-    g_pToolkitNetworkMessages->HookClientMessage(g_PluginID, [this](CPlayerSlot slot, int messageid, void *msg) -> Action
+    g_pToolkitNetworkMessages->HookClientMessage([this](CPlayerSlot slot, int messageid, void *msg) -> Action
     {
         if (messageid == clc_VoiceData && ((m_VoiceMutedMask >> slot.Get()) & 1))
             return Action::Supersede;
@@ -697,7 +697,7 @@ void SamplePlugin::SetupNetMessages()
         return Action::Ignore;
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_mute", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_mute", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (args.ArgC() < 2)
         {
@@ -731,7 +731,7 @@ void SamplePlugin::SetupNetMessages()
 void SamplePlugin::SetupSounds()
 {
     // The short way: one call, one player, heard "in the head" -- no position.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_sound", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_sound", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         const CPlayerSlot slot = context.GetPlayerSlot();
         const char *pszSound = args.ArgC() >= 2 ? args.Arg(1) : "Weapon_AK47.Single";
@@ -744,7 +744,7 @@ void SamplePlugin::SetupSounds()
 
     // The long way: a sound object. Source, volume, pitch, any other public
     // parameter of the sound event, and exactly who hears it.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_sound_world", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_sound_world", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -779,7 +779,7 @@ void SamplePlugin::SetupSounds()
 
     // The game's own sounds, on their way to the clients. Ignore leaves one
     // alone, Override sends it with the changes made here, Supersede drops it.
-    g_pToolkitSounds->HookSound(g_PluginID, [](IToolkitSound *sound) -> Action
+    g_pToolkitSounds->HookSound([](IToolkitSound *sound) -> Action
     {
         // Sounds travel as hashes. Hash the names you care about once and
         // compare numbers.
@@ -806,7 +806,7 @@ void SamplePlugin::SetupSounds()
 void SamplePlugin::SetupNativeFunctions()
 {
     // Calling. An address and a function pointer type are all it takes.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_swap", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_swap", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller || pCaller->m_iTeamNum() < 2)
@@ -880,7 +880,7 @@ KHook::Return<void> SamplePlugin::Hook_PostThink(CCSPlayerPawn* pThis)
 
 void SamplePlugin::SetupEntityCommands()
 {
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hp", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_hp", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -894,7 +894,7 @@ void SamplePlugin::SetupEntityCommands()
         Reply(context, "Health: %d -> %d", nOld, pPawn->m_iHealth());
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_up", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_up", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -905,7 +905,7 @@ void SamplePlugin::SetupEntityCommands()
         pPawn->Teleport(&vecTarget, nullptr, nullptr);
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_give", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_give", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerPawn *pPawn = AlivePawnOf(context);
         if (!pPawn)
@@ -922,7 +922,7 @@ void SamplePlugin::SetupEntityCommands()
             Reply(context, "Could not give \"%s\".", pszItem);
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_strip", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_strip", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSPlayerPawn *pPawn = AlivePawnOf(context))
         {
@@ -931,13 +931,13 @@ void SamplePlugin::SetupEntityCommands()
         }
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_slay", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_slay", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSPlayerPawn *pPawn = AlivePawnOf(context))
             pPawn->CommitSuicide(false, true);
     });
 
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_respawn", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_respawn", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSPlayerController *pCaller = CallerOf(context))
             pCaller->Respawn();
@@ -945,7 +945,7 @@ void SamplePlugin::SetupEntityCommands()
 
     // Finding: by classname, one after another. nullptr starts the search,
     // the last match continues it.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_break", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_break", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         int nBroken = 0;
 
@@ -962,7 +962,7 @@ void SamplePlugin::SetupEntityCommands()
     });
 
     // What is under the crosshair.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_aim", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_aim", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller)
@@ -979,7 +979,7 @@ void SamplePlugin::SetupEntityCommands()
     });
 
     // The game rules are an entity like any other, and the toolkit keeps it at hand.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_endround", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_endround", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         if (CCSGameRules *pGameRules = GET_GAME_RULES())
             pGameRules->TerminateRound(5.0f, 10 /* round draw */);
@@ -999,7 +999,7 @@ void SamplePlugin::SetupTimers()
 {
     // NEXT_FRAME is in OnEntitySpawned() (section 5), one-shot timers are in
     // sample_sound_world (section 7). This is the one that repeats.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_countdown", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_countdown", [this](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         // A Timer* is good until the timer ends. A one-shot ends after it
         // fires, a repeating one when it is killed -- by you, or by a map
@@ -1049,7 +1049,7 @@ void SamplePlugin::SetupTransmit()
     // sample_hide <slot>: toggles whether the caller sees that player. The
     // controller is what gets hooked -- its visibility is applied to the pawn
     // it drives, the controller itself keeps going so the scoreboard is whole.
-    g_pToolkitCommands->RegisterConCommand(g_PluginID, "sample_hide", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
+    g_pToolkitCommands->RegisterConCommand("sample_hide", [](const ToolkitCommandContext& context, const ToolkitCommandArgs& args, bool post)
     {
         CCSPlayerController *pCaller = CallerOf(context);
         if (!pCaller)
@@ -1093,7 +1093,7 @@ void SamplePlugin::SetupTransmit()
     //
     // It runs every tick for every viewer, so the expensive part (who owns
     // what) is done once at the top and only the bit work is per viewer.
-    g_pToolkitTransmit->HookCheckTransmit(g_PluginID, [](IToolkitTransmitInfo *const *infos, int infoCount, const uint16_t *entityIndices, int entityCount)
+    g_pToolkitTransmit->HookCheckTransmit([](IToolkitTransmitInfo *const *infos, int infoCount, const uint16_t *entityIndices, int entityCount)
     {
         struct Owned { int index; int ownerSlot; };
         static std::vector<Owned> s_owned;

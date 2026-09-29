@@ -927,20 +927,19 @@ namespace sounds
     Hooks
     ========================= */
 
-    void SoundsManager::HookSound(PluginId owner, SoundHook handler)
+    ToolkitHookId SoundsManager::HookSound(PluginId owner, SoundHook handler)
     {
-        if (!handler)
-        {
-            m_hooks.erase(owner);
-            return;
-        }
-
-        m_hooks[owner] = std::move(handler);
+        return m_hooks.Add(owner, std::move(handler));
     }
 
-    void SoundsManager::UnhookSound(PluginId owner)
+    bool SoundsManager::UnhookSound(PluginId owner, const SoundHook& handler)
     {
-        m_hooks.erase(owner);
+        return m_hooks.RemoveHandler(owner, handler);
+    }
+
+    bool SoundsManager::UnhookSoundId(ToolkitHookId id)
+    {
+        return m_hooks.RemoveId(id);
     }
 
     Action SoundsManager::DispatchSoundHook(uint64_t* clients, void* msg)
@@ -964,10 +963,7 @@ namespace sounds
 
         // Copied first: a handler is free to unhook itself, or to load a
         // plugin that hooks.
-        std::vector<SoundHook> handlers;
-        handlers.reserve(m_hooks.size());
-        for (auto& [id, handler] : m_hooks)
-            handlers.push_back(handler);
+        std::vector<SoundHook> handlers = m_hooks.Snapshot();
 
         Action result = Action::Ignore;
         for (SoundHook& handler : handlers)
@@ -1027,7 +1023,7 @@ namespace sounds
     {
         // The handler is a std::function holding code inside the plugin's
         // library, so it has to go before that library is closed.
-        m_hooks.erase(id);
+        m_hooks.RemoveOwner(id);
 
         // Copied first: each delete takes the sound off m_sounds.
         std::vector<ToolkitSound*> owned;

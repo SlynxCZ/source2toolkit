@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "source2toolkit/IToolkitHTTP.h"
 
 #include "steam/steam_gameserver.h"
@@ -47,20 +48,54 @@ namespace http {
         bool IsAvailable() const override;
         int PendingCount() const override;
 
+        void Request(EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
+                     const std::vector<ToolkitHTTPHeader>* pHeaders) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            Request(owner, method, pszUrl, pszBody, std::move(callback), pHeaders);
+        }
+        void Get(const char* pszUrl, ToolkitHTTPCallback callback, const std::vector<ToolkitHTTPHeader>* pHeaders) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            Get(owner, pszUrl, std::move(callback), pHeaders);
+        }
+        void Post(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback, const std::vector<ToolkitHTTPHeader>* pHeaders) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            Post(owner, pszUrl, pszBody, std::move(callback), pHeaders);
+        }
+        void Put(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback, const std::vector<ToolkitHTTPHeader>* pHeaders) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            Put(owner, pszUrl, pszBody, std::move(callback), pHeaders);
+        }
+        void Patch(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback, const std::vector<ToolkitHTTPHeader>* pHeaders) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            Patch(owner, pszUrl, pszBody, std::move(callback), pHeaders);
+        }
+        void Delete(const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback, const std::vector<ToolkitHTTPHeader>* pHeaders) override
+        {
+            const PluginId owner = hookid::OwnerOfHandler(callback);
+            Delete(owner, pszUrl, pszBody, std::move(callback), pHeaders);
+        }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
         void Request(PluginId owner, EToolkitHTTPMethod method, const char* pszUrl, const char* pszBody,
                      ToolkitHTTPCallback callback,
-                     const std::vector<ToolkitHTTPHeader>* pHeaders) override;
+                     const std::vector<ToolkitHTTPHeader>* pHeaders);
 
         void Get(PluginId owner, const char* pszUrl, ToolkitHTTPCallback callback,
-                 const std::vector<ToolkitHTTPHeader>* pHeaders) override;
+                 const std::vector<ToolkitHTTPHeader>* pHeaders);
         void Post(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
-                  const std::vector<ToolkitHTTPHeader>* pHeaders) override;
+                  const std::vector<ToolkitHTTPHeader>* pHeaders);
         void Put(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
-                 const std::vector<ToolkitHTTPHeader>* pHeaders) override;
+                 const std::vector<ToolkitHTTPHeader>* pHeaders);
         void Patch(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
-                   const std::vector<ToolkitHTTPHeader>* pHeaders) override;
+                   const std::vector<ToolkitHTTPHeader>* pHeaders);
         void Delete(PluginId owner, const char* pszUrl, const char* pszBody, ToolkitHTTPCallback callback,
-                    const std::vector<ToolkitHTTPHeader>* pHeaders) override;
+                    const std::vector<ToolkitHTTPHeader>* pHeaders);
 
     public:
         /// Core-internal: a POST whose body is arbitrary bytes under a

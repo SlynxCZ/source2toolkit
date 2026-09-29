@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "gamehooks.h"
+#include "hookid.h"
 
 #include <algorithm>
 #include <tuple>
@@ -173,7 +174,21 @@ namespace gamehooks
                 return !(post ? m_post : m_pre).empty();
             }
 
-            Action Dispatch(CONTEXT& ctx, bool post, const char* pszName) const
+            bool RemoveHandler(PluginId owner, const GameHookHandler<CONTEXT>& handler, bool post)
+            {
+                if (!handler.HasIdentity())
+                    return false;
+
+                return std::erase_if(post ? m_post : m_pre, [owner, &handler](const Listener<CONTEXT>& l)
+                {
+                    return l.owner == owner && handler.SameAs(l.handler);
+                }) > 0;
+            }
+
+            // APPLY(ctx, value) takes a value a handler returned with its action
+            // (GameHookReturn), into ctx.result, before the next handler runs.
+            template <typename APPLY>
+            Action Dispatch(CONTEXT& ctx, bool post, const char* pszName, APPLY&& apply) const
             {
                 // A copy: a handler may unhook from inside itself.
                 const auto list = post ? m_post : m_pre;
@@ -184,7 +199,14 @@ namespace gamehooks
                     Action a;
                     {
                         ::slow::Guard slowGuard("game hook handler", pszName, l.owner);
-                        a = l.handler(ctx, post);
+                        const auto answer = l.handler(ctx, post);
+                        a = answer.action;
+
+                        if constexpr (!std::is_void_v<typename CONTEXT::Return>)
+                        {
+                            if (answer.hasValue && a != Action::Ignore)
+                                apply(ctx, answer.value);
+                        }
                     }
 
                     if (DebugOn(pszName))
@@ -244,6 +266,11 @@ namespace gamehooks
 
             bool Remove(GameHookId id) override { return m_listeners.Remove(id); }
 
+            bool RemoveHandler(PluginId owner, const void* handler, bool post) override
+            {
+                return m_listeners.RemoveHandler(owner, *static_cast<const GameHookHandler<CONTEXT>*>(handler), post);
+            }
+
             void RemoveAll(PluginId owner) override { m_listeners.RemoveOwner(owner); }
 
             bool Empty() const override { return m_listeners.Empty(); }
@@ -258,7 +285,7 @@ namespace gamehooks
                 CONTEXT ctx = m_make(pThis, args...);
                 const CallData call{ this, pThis, std::tuple<ARGS...>(args...) };
                 BindCallOriginal(ctx, call);
-                const Action action = m_listeners.Dispatch(ctx, false, m_pszName);
+                const Action action = m_listeners.Dispatch(ctx, false, m_pszName, ApplyValue());
 
                 if (DebugOn(m_pszName))
                 {
@@ -298,7 +325,7 @@ namespace gamehooks
                         ctx.*m_result = *original;
                 }
 
-                const Action action = m_listeners.Dispatch(ctx, true, m_pszName);
+                const Action action = m_listeners.Dispatch(ctx, true, m_pszName, ApplyValue());
 
                 if (DebugOn(m_pszName))
                 {
@@ -352,6 +379,17 @@ namespace gamehooks
                     return static_cast<ContextReturn>(
                         std::apply([call](ARGS... a) { return call->hook->CallOriginalRaw(call->pThis, a...); }, call->args));
                 }
+            }
+
+            // Where a returned value goes: ctx.result, as the function's type.
+            // A context shared with void functions has nowhere to put it.
+            auto ApplyValue() const
+            {
+                return [this](CONTEXT& ctx, const auto& value)
+                {
+                    if constexpr (!std::is_void_v<RETURN>)
+                        ctx.*m_result = static_cast<RETURN>(value);
+                };
             }
 
             static void BindCallOriginal(CONTEXT& ctx, const CallData& call)
@@ -658,9 +696,11 @@ namespace gamehooks
             hook->RemoveAll(id);
     }
 
+// The owner is the plugin the handler's code lies in (ToolkitCallback::Origin).
 #define GAMEHOOK_ADD(Method, HookType, Ctx, Which) \
-    GameHookId GameHooksManager::Method(PluginId owner, GameHookHandler<Ctx> handler, bool post) \
+    GameHookId GameHooksManager::Method(GameHookHandler<Ctx> handler, bool post) \
     { \
+        const PluginId owner = hookid::OwnerOfHandler(handler); \
         return As<HookType>(m_hooks[static_cast<size_t>(GameHook::Which)]).Add(owner, std::move(handler), post); \
     }
 
@@ -704,48 +744,51 @@ namespace gamehooks
 
     // The detour stays until Tick(): an UnhookX() may come from inside the
     // hook's own dispatch.
-#define GAMEHOOK_REMOVE(Method, Which) \
-    void GameHooksManager::Method(GameHookId id) \
+#define GAMEHOOK_REMOVE(Method, Ctx, Which) \
+    bool GameHooksManager::Method(GameHookId id) \
     { \
-        if (!m_hooks[static_cast<size_t>(GameHook::Which)]->Remove(id)) \
-            FP_WARN("{}: no handler with id {} on {}", #Method, id, m_hooks[static_cast<size_t>(GameHook::Which)]->Name()); \
+        return m_hooks[static_cast<size_t>(GameHook::Which)]->Remove(id); \
+    } \
+    bool GameHooksManager::Method(const GameHookHandler<Ctx>& handler, bool post) \
+    { \
+        return m_hooks[static_cast<size_t>(GameHook::Which)]->RemoveHandler(hookid::OwnerOfHandler(handler), &handler, post); \
     }
 
-    GAMEHOOK_REMOVE(UnhookTakeDamage, TakeDamage)
-    GAMEHOOK_REMOVE(UnhookCanAcquire, CanAcquire)
-    GAMEHOOK_REMOVE(UnhookCanMove, CanMove)
-    GAMEHOOK_REMOVE(UnhookCanUse, CanUse)
-    GAMEHOOK_REMOVE(UnhookPostThink, PostThink)
-    GAMEHOOK_REMOVE(UnhookProcessUsercmds, ProcessUsercmds)
-    GAMEHOOK_REMOVE(UnhookSimulateUserCommands, SimulateUserCommands)
-    GAMEHOOK_REMOVE(UnhookRunCommand, RunCommand)
-    GAMEHOOK_REMOVE(UnhookAcceptInput, AcceptInput)
-    GAMEHOOK_REMOVE(UnhookTouch, Touch)
-    GAMEHOOK_REMOVE(UnhookDropWeapon, DropWeapon)
-    GAMEHOOK_REMOVE(UnhookAirAccelerate, AirAccelerate)
-    GAMEHOOK_REMOVE(UnhookAirMove, AirMove)
-    GAMEHOOK_REMOVE(UnhookCanUnduck, CanUnduck)
-    GAMEHOOK_REMOVE(UnhookCategorizePosition, CategorizePosition)
-    GAMEHOOK_REMOVE(UnhookCheckFalling, CheckFalling)
-    GAMEHOOK_REMOVE(UnhookCheckParameters, CheckParameters)
-    GAMEHOOK_REMOVE(UnhookCheckVelocity, CheckVelocity)
-    GAMEHOOK_REMOVE(UnhookCheckWater, CheckWater)
-    GAMEHOOK_REMOVE(UnhookDuck, Duck)
-    GAMEHOOK_REMOVE(UnhookFriction, Friction)
-    GAMEHOOK_REMOVE(UnhookFullWalkMove, FullWalkMove)
-    GAMEHOOK_REMOVE(UnhookGroundAccelerate, GroundAccelerate)
-    GAMEHOOK_REMOVE(UnhookLadderMove, LadderMove)
-    GAMEHOOK_REMOVE(UnhookMoveInit, MoveInit)
-    GAMEHOOK_REMOVE(UnhookPlayerMove, PlayerMove)
-    GAMEHOOK_REMOVE(UnhookProcessMovement, ProcessMovement)
-    GAMEHOOK_REMOVE(UnhookSetupMove, SetupMove)
-    GAMEHOOK_REMOVE(UnhookTryPlayerMove, TryPlayerMove)
-    GAMEHOOK_REMOVE(UnhookWalkMove, WalkMove)
-    GAMEHOOK_REMOVE(UnhookWaterMove, WaterMove)
-    GAMEHOOK_REMOVE(UnhookOnJumpLegacy, OnJumpLegacy)
-    GAMEHOOK_REMOVE(UnhookOnJumpModern, OnJumpModern)
-    GAMEHOOK_REMOVE(UnhookCheckJumpButtonLegacy, CheckJumpButtonLegacy)
-    GAMEHOOK_REMOVE(UnhookCheckJumpButtonModern, CheckJumpButtonModern)
+    GAMEHOOK_REMOVE(UnhookTakeDamage, TakeDamageContext, TakeDamage)
+    GAMEHOOK_REMOVE(UnhookCanAcquire, CanAcquireContext, CanAcquire)
+    GAMEHOOK_REMOVE(UnhookCanMove, CanMoveContext, CanMove)
+    GAMEHOOK_REMOVE(UnhookCanUse, CanUseContext, CanUse)
+    GAMEHOOK_REMOVE(UnhookPostThink, PostThinkContext, PostThink)
+    GAMEHOOK_REMOVE(UnhookProcessUsercmds, ProcessUsercmdsContext, ProcessUsercmds)
+    GAMEHOOK_REMOVE(UnhookSimulateUserCommands, SimulateUserCommandsContext, SimulateUserCommands)
+    GAMEHOOK_REMOVE(UnhookRunCommand, RunCommandContext, RunCommand)
+    GAMEHOOK_REMOVE(UnhookAcceptInput, AcceptInputContext, AcceptInput)
+    GAMEHOOK_REMOVE(UnhookTouch, TouchContext, Touch)
+    GAMEHOOK_REMOVE(UnhookDropWeapon, DropWeaponContext, DropWeapon)
+    GAMEHOOK_REMOVE(UnhookAirAccelerate, AirAccelerateContext, AirAccelerate)
+    GAMEHOOK_REMOVE(UnhookAirMove, MovementContext, AirMove)
+    GAMEHOOK_REMOVE(UnhookCanUnduck, MovementContext, CanUnduck)
+    GAMEHOOK_REMOVE(UnhookCategorizePosition, CategorizePositionContext, CategorizePosition)
+    GAMEHOOK_REMOVE(UnhookCheckFalling, MovementContext, CheckFalling)
+    GAMEHOOK_REMOVE(UnhookCheckParameters, MovementContext, CheckParameters)
+    GAMEHOOK_REMOVE(UnhookCheckVelocity, CheckVelocityContext, CheckVelocity)
+    GAMEHOOK_REMOVE(UnhookCheckWater, MovementContext, CheckWater)
+    GAMEHOOK_REMOVE(UnhookDuck, MovementContext, Duck)
+    GAMEHOOK_REMOVE(UnhookFriction, MovementContext, Friction)
+    GAMEHOOK_REMOVE(UnhookFullWalkMove, FullWalkMoveContext, FullWalkMove)
+    GAMEHOOK_REMOVE(UnhookGroundAccelerate, GroundAccelerateContext, GroundAccelerate)
+    GAMEHOOK_REMOVE(UnhookLadderMove, MovementContext, LadderMove)
+    GAMEHOOK_REMOVE(UnhookMoveInit, MovementContext, MoveInit)
+    GAMEHOOK_REMOVE(UnhookPlayerMove, MovementContext, PlayerMove)
+    GAMEHOOK_REMOVE(UnhookProcessMovement, MovementContext, ProcessMovement)
+    GAMEHOOK_REMOVE(UnhookSetupMove, SetupMoveContext, SetupMove)
+    GAMEHOOK_REMOVE(UnhookTryPlayerMove, TryPlayerMoveContext, TryPlayerMove)
+    GAMEHOOK_REMOVE(UnhookWalkMove, MovementContext, WalkMove)
+    GAMEHOOK_REMOVE(UnhookWaterMove, MovementContext, WaterMove)
+    GAMEHOOK_REMOVE(UnhookOnJumpLegacy, LegacyJumpContext, OnJumpLegacy)
+    GAMEHOOK_REMOVE(UnhookOnJumpModern, ModernJumpContext, OnJumpModern)
+    GAMEHOOK_REMOVE(UnhookCheckJumpButtonLegacy, LegacyJumpContext, CheckJumpButtonLegacy)
+    GAMEHOOK_REMOVE(UnhookCheckJumpButtonModern, ModernJumpContext, CheckJumpButtonModern)
 
 #undef GAMEHOOK_REMOVE
 

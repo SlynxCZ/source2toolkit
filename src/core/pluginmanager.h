@@ -42,6 +42,7 @@
 #include <memory>
 #include <thread>
 #include <atomic>
+#include <unordered_map>
 
 #include "eiface.h"
 #include "iserver.h"
@@ -66,6 +67,9 @@ struct ToolkitPlugin
     int id;
     std::string path;
     LibHandle lib;
+    // Where the library is mapped: a handler's code address in it makes the
+    // handler this plugin's (PluginManager::OwnerOf).
+    const void* moduleBase = nullptr;
     IToolkitPlugin* api;
     // What the plugin was built against (TOOLKIT_PLAPI_VERSION then): the
     // engine callbacks came with 2, so a listener from an older plugin is
@@ -139,6 +143,11 @@ public:
 
     /// The plugin's GetName(), or a placeholder for an id that is not loaded.
     const char* NameOf(int id) const;
+
+    /// Whose code an address is: the plugin whose library it lies in, or 0
+    /// (the core, or no plugin) -- how every toolkit call that takes a handler
+    /// finds its owner (ToolkitCallback::Origin()).
+    int OwnerOf(const void* address);
 public:
     std::vector<std::unique_ptr<ToolkitPlugin>> m_plugins;
     int m_nextId = 1;
@@ -152,6 +161,11 @@ private:
     // Set once LoadAll() has run; every plugin loaded after that point is a
     // late load and is told so through IToolkitPlugin::Load's `late`.
     bool m_bStartupLoadDone = false;
+
+    // OwnerOf(): module base per address seen, dropped when the list changes.
+    std::unordered_map<const void*, int> m_ownerCache;
+    size_t m_listGeneration = 0;        // bumped on every add / remove
+    size_t m_ownerCacheGeneration = 0;
 
     std::vector<int> m_unloadRequests;
     std::vector<std::string> m_reloadRequests;

@@ -34,6 +34,7 @@
  *
  * Project: Source2Toolkit
  */
+#include "hookid.h"
 #include "customhud.h"
 #include "utils/log.h"
 
@@ -50,12 +51,31 @@ namespace customhud
 {
     CustomHudManager customHudManager;
 
-    void CustomHudManager::HookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler)
+    ToolkitHookId CustomHudManager::HookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler)
     {
         if (!pLayout || !handler)
-            return;
+            return 0;
 
-        m_callbacks.push_back({owner, CHandle<CCSCustomHudLayout>(pLayout), std::move(handler)});
+        const ToolkitHookId id = hookid::Next();
+        m_callbacks.push_back({ owner, CHandle<CCSCustomHudLayout>(pLayout), std::move(handler), id });
+        return id;
+    }
+
+    bool CustomHudManager::UnhookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, const CustomHudClickHandler& handler)
+    {
+        if (!pLayout || !handler.HasIdentity())
+            return false;
+
+        const CHandle<CCSCustomHudLayout> handle(pLayout);
+        return std::erase_if(m_callbacks, [owner, &handle, &handler](const ClickCallbackEntry& e)
+        {
+            return e.owner == owner && e.layout == handle && handler.SameAs(e.handler);
+        }) > 0;
+    }
+
+    bool CustomHudManager::UnhookCustomHudClickId(ToolkitHookId id)
+    {
+        return std::erase_if(m_callbacks, [id](const ClickCallbackEntry& e) { return e.id == id; }) > 0;
     }
 
     void CustomHudManager::UnhookCustomHudClick(CCSCustomHudLayout* pLayout)

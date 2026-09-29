@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "shared.h"
 
 #include "source2toolkit/IToolkitNetworkMessages.h"
@@ -143,23 +144,35 @@ namespace networkmessages
         void SendMessage(void* msg, int msgid, CPlayerSlot slot) override;
         void SendMessageToPlayers(void* msg, int msgid, uint64_t playermask) override;
 
-        void HookServerMessage(PluginId owner, NetMessageServerHook handler) override;
-        void UnhookServerMessage(PluginId owner) override;
 
-        void HookClientMessage(PluginId owner, NetMessageClientHook handler) override;
-        void UnhookClientMessage(PluginId owner) override;
+        ToolkitHookId HookServerMessage(NetMessageServerHook handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookServerMessage(owner, std::move(handler)); }
+        bool UnhookServerMessage(const NetMessageServerHook& handler) override { return UnhookServerMessage(hookid::OwnerOfHandler(handler), handler); }
+        bool UnhookServerMessage(ToolkitHookId id) override { return UnhookNetMessage(id); }
+        ToolkitHookId HookClientMessage(NetMessageClientHook handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookClientMessage(owner, std::move(handler)); }
+        bool UnhookClientMessage(const NetMessageClientHook& handler) override { return UnhookClientMessage(hookid::OwnerOfHandler(handler), handler); }
+        bool UnhookClientMessage(ToolkitHookId id) override { return UnhookNetMessage(id); }
+        ToolkitHookId HookServerInternalMessage(NetMessageClientHook handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookServerInternalMessage(owner, std::move(handler)); }
+        bool UnhookServerInternalMessage(const NetMessageClientHook& handler) override { return UnhookServerInternalMessage(hookid::OwnerOfHandler(handler), handler); }
+        bool UnhookServerInternalMessage(ToolkitHookId id) override { return UnhookNetMessage(id); }
 
-        void HookServerInternalMessage(PluginId owner, NetMessageClientHook handler) override;
-        void UnhookServerInternalMessage(PluginId owner) override;
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookServerMessage(PluginId owner, NetMessageServerHook handler);
+        bool UnhookServerMessage(PluginId owner, const NetMessageServerHook& handler);
+        ToolkitHookId HookClientMessage(PluginId owner, NetMessageClientHook handler);
+        bool UnhookClientMessage(PluginId owner, const NetMessageClientHook& handler);
+        ToolkitHookId HookServerInternalMessage(PluginId owner, NetMessageClientHook handler);
+        bool UnhookServerInternalMessage(PluginId owner, const NetMessageClientHook& handler);
+        bool UnhookNetMessage(ToolkitHookId id);
 
         // Called when a plugin unloads, like every other plugin-owned registry.
         void RemoveAllForPlugin(PluginId id);
 
     public:
 
-        std::unordered_map<PluginId, NetMessageServerHook> m_serverHooks;
-        std::unordered_map<PluginId, NetMessageClientHook> m_clientHooks;
-        std::unordered_map<PluginId, NetMessageClientHook> m_serverInternalHooks;
+        hookid::HookList<NetMessageServerHook> m_serverHooks;
+        hookid::HookList<NetMessageClientHook> m_clientHooks;
+        hookid::HookList<NetMessageClientHook> m_serverInternalHooks;
     };
 
     extern NetworkMessagesManager networkMessagesManager;

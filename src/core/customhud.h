@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "source2toolkit/IToolkitCustomHud.h"
 
 #include "ehandle.h"
@@ -50,11 +51,21 @@ namespace customhud {
         PluginId owner;
         CHandle<CCSCustomHudLayout> layout;
         CustomHudClickHandler handler;
+        ToolkitHookId id;
     };
 
     class CustomHudManager : public IToolkitCustomHud {
     public:
-        void HookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler) override;
+
+        ToolkitHookId HookCustomHudClick(CCSCustomHudLayout* pLayout, CustomHudClickHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return HookCustomHudClick(owner, pLayout, std::move(handler)); }
+        bool UnhookCustomHudClick(CCSCustomHudLayout* pLayout, const CustomHudClickHandler& handler) override { return UnhookCustomHudClick(hookid::OwnerOfHandler(handler), pLayout, handler); }
+        bool UnhookCustomHudClick(ToolkitHookId id) override { return UnhookCustomHudClickId(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId HookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, CustomHudClickHandler handler);
+        bool UnhookCustomHudClick(PluginId owner, CCSCustomHudLayout* pLayout, const CustomHudClickHandler& handler);
+        bool UnhookCustomHudClickId(ToolkitHookId id);
         void UnhookCustomHudClick(CCSCustomHudLayout* pLayout) override;
     public:
         /// Routes one CS_UM_CustomHudClicked payload to the callbacks of the

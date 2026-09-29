@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #pragma once
+#include "hookid.h"
 #include "virtualhooks.h"
 #include "shared.h"
 
@@ -49,8 +50,10 @@ namespace commands {
     struct CommandEntry
     {
         PluginId owner;
+        ToolkitHookId id;           // what the Register* call returned; the three aliases share it
         CommandHandler handler;
         bool post;
+        ChatHandler chatSource;     // a chat command / ConCommand: what it was registered with, for UnregisterX(handler)
     };
 
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
@@ -71,15 +74,34 @@ namespace commands {
     class CommandsManager : public IToolkitCommands
     {
     public:
-        void RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler) override;
-        void UnregisterChatListener(PluginId owner, const char* pchName) override;
-        void RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) override;
-        void UnregisterConCommand(PluginId owner, const char* pchName) override;
-        void RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) override;
-        void UnregisterConListener(PluginId owner, const char* pchName, bool post) override;
+
+        ToolkitHookId RegisterChatListener(const char* pchName, ChatHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterChatListener(owner, pchName, std::move(handler)); }
+        bool UnregisterChatListener(const char* pchName, const ChatHandler& handler) override { return UnregisterChatListener(hookid::OwnerOfHandler(handler), pchName, handler); }
+        bool UnregisterChatListener(ToolkitHookId id) override { return Unregister(id); }
+        ToolkitHookId RegisterConCommand(const char* pchName, ChatHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterConCommand(owner, pchName, std::move(handler)); }
+        bool UnregisterConCommand(const char* pchName, const ChatHandler& handler) override { return UnregisterConCommand(hookid::OwnerOfHandler(handler), pchName, handler); }
+        bool UnregisterConCommand(ToolkitHookId id) override { return Unregister(id); }
+        ToolkitHookId RegisterConListener(const char* pchName, CommandHandler handler, bool post) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterConListener(owner, pchName, std::move(handler), post); }
+        bool UnregisterConListener(const char* pchName, const CommandHandler& handler, bool post) override { return UnregisterConListener(hookid::OwnerOfHandler(handler), pchName, handler, post); }
+        bool UnregisterConListener(ToolkitHookId id) override { return Unregister(id); }
+
+        // The same with the owner spelled out: what the calls above resolve
+        // to, and what the core itself calls.
+        ToolkitHookId RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler);
+        bool UnregisterChatListener(PluginId owner, const char* pchName, const ChatHandler& handler);
+        ToolkitHookId RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler);
+        bool UnregisterConCommand(PluginId owner, const char* pchName, const ChatHandler& handler);
+        ToolkitHookId RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post);
+        bool UnregisterConListener(PluginId owner, const char* pchName, const CommandHandler& handler, bool post);
+        bool Unregister(ToolkitHookId id);
     public:
         void RemoveAllForPlugin(PluginId id);
         void UnlockConCommands();
+
+    private:
+        // The three names a chat command / ConCommand listens on.
+        static void AddAliases(PluginId owner, ToolkitHookId id, const char* pchName, const ChatHandler& handler);
+        static bool RemoveAliases(PluginId owner, const char* pchName, const ChatHandler& handler);
     };
 
     extern CommandsManager commandsManager;
