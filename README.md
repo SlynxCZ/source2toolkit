@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/SlynxCZ/source2toolkit/build.yml?branch=main)](https://github.com/SlynxCZ/source2toolkit/actions)
 [![Website](https://img.shields.io/badge/Website-source2toolkit.net-blue)](https://www.source2toolkit.net)
-[![Discord](https://img.shields.io/discord/335290997317697536?color=7289da&logo=discord&logoColor=white)](https://discord.gg/CXeUtHbxzH)
+[![Discord](https://img.shields.io/badge/Discord-join-7289da?logo=discord&logoColor=white)](https://discord.gg/4Ck56eDNXj)
 
 **Source2Toolkit** is the ultimate scripting layer for Source 2 games built on top of Metamod:Source.  
 Low-level power. High-level simplicity.
