@@ -152,4 +152,10 @@ namespace gamehooks
     };
 
     extern GameHooksManager gameHooksManager;
+
+    /// "toolkit hookdebug": logs every call of the named game hook ("all" for
+    /// every one, "" / "off" to stop) -- each plugin's answer, what the core
+    /// made of it and the return value.
+    void SetHookDebug(const char* name);
+    const char* GetHookDebug();
 }

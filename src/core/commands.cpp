@@ -35,6 +35,7 @@
  * Project: Source2Toolkit
  */
 #include "commands.h"
+#include "gamehooks.h"
 #include "slowguard.h"
 
 #include "menus.h"
@@ -158,7 +159,10 @@ namespace commands {
             REPLY_INFO("  toolkit info <id>");
 
             if (!bFromPlayer)
+            {
                 REPLY_INFO("  toolkit refresh");
+                REPLY_INFO("  toolkit hookdebug <game hook|all|off>");
+            }
 
             REPLY_INFO("  toolkit version");
             REPLY_INFO("  toolkit credits");
@@ -299,6 +303,21 @@ namespace commands {
             }
 
             REPLY_ERROR("Plugin %d not found.", id);
+        }
+
+        else if (strcmp(cmd, "hookdebug") == 0)
+        {
+            // Logs every call of the matching game hooks: each plugin's
+            // answer, the outcome and the return value (gamehooks.cpp).
+            if (argc < 3)
+            {
+                REPLY_INFO("hookdebug: %s", gamehooks::GetHookDebug());
+                REPLY_INFO("Usage: toolkit hookdebug <part of a game hook name, e.g. TakeDamage|all|off>");
+                return;
+            }
+
+            gamehooks::SetHookDebug(args.Arg(2));
+            REPLY_INFO("hookdebug: %s", gamehooks::GetHookDebug());
         }
 
         else if (strcmp(cmd, "refresh") == 0)

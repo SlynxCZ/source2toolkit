@@ -48,6 +48,13 @@
 #include "tkvprof.h"
 #include "utils/log.h"
 #include "slowguard.h"
+#include "pluginmanager.h"
+
+#include "source2toolkit/schema/takedamageinfo.h"
+#include "source2toolkit/schema/entity/classes/CBaseEntity.h"
+
+#include <cstring>
+#include <string>
 
 // The hooked functions take and return pointers to these; nothing here
 // looks inside them, so the forward declarations of the SDK header do.
@@ -58,6 +65,65 @@ namespace gamehooks
 
     namespace
     {
+        // "toolkit hookdebug": part of the hook names whose calls are logged
+        // ("TakeDamage" matches CBaseEntity::TakeDamageOld), "all", or empty.
+        std::string s_hookDebug;
+
+        bool DebugOn(const char* pszName)
+        {
+            return !s_hookDebug.empty() && (s_hookDebug == "all" || strstr(pszName, s_hookDebug.c_str()));
+        }
+
+        const char* ActionName(Action a)
+        {
+            switch (a)
+            {
+            case Action::Ignore: return "Ignore";
+            case Action::Override: return "Override";
+            case Action::Supersede: return "Supersede";
+            default: return "?";
+            }
+        }
+
+        // The plugin's file name, for the log.
+        std::string OwnerName(PluginId owner)
+        {
+            for (const auto& p : pluginManager.m_plugins)
+            {
+                if (p && p->id == owner)
+                {
+                    const size_t slash = p->path.find_last_of("/\\");
+                    return slash == std::string::npos ? p->path : p->path.substr(slash + 1);
+                }
+            }
+            return "plugin " + std::to_string(owner);
+        }
+
+        // What a call is about, for the log; the damage hook says who and how much.
+        template <typename CONTEXT>
+        std::string Describe(const CONTEXT&)
+        {
+            return {};
+        }
+
+        std::string Describe(const TakeDamageContext& ctx)
+        {
+            std::string s = "victim=";
+            s += ctx.entity ? ctx.entity->GetClassname() : "null";
+            if (ctx.info)
+                s += " damage=" + std::to_string(ctx.info->m_flDamage) + " bits=" + std::to_string(ctx.info->m_bitsDamageType);
+            return s;
+        }
+
+        template <typename RETURN>
+        std::string ValueText(const RETURN& value)
+        {
+            if constexpr (std::is_arithmetic_v<RETURN> || std::is_enum_v<RETURN>)
+                return std::to_string(static_cast<long long>(value));
+            else
+                return "-";
+        }
+
         // Ids are unique across every hook, so a wrong UnhookX() finds nothing.
         GameHookId s_lastHookId = 0;
 
@@ -119,6 +185,9 @@ namespace gamehooks
                         ::slow::Guard slowGuard("game hook handler", pszName, l.owner);
                         a = l.handler(ctx, post);
                     }
+
+                    if (DebugOn(pszName))
+                        FP_INFO("hookdebug {} {}: {} -> {}", pszName, post ? "post" : "pre", OwnerName(l.owner), ActionName(a));
 
                     if (a == Action::Supersede)
                         return a;
@@ -188,6 +257,15 @@ namespace gamehooks
                 CONTEXT ctx = m_make(pThis, args...);
                 const Action action = m_listeners.Dispatch(ctx, false, m_pszName);
 
+                if (DebugOn(m_pszName))
+                {
+                    if constexpr (std::is_void_v<RETURN>)
+                        FP_INFO("hookdebug {} pre: {} {}", m_pszName, ActionName(action), Describe(ctx));
+                    else
+                        FP_INFO("hookdebug {} pre: {} (return {}) {}", m_pszName, ActionName(action),
+                                action == Action::Ignore ? std::string("original") : ValueText(ctx.*m_result), Describe(ctx));
+                }
+
                 if constexpr (std::is_void_v<RETURN>)
                 {
                     // Nothing to override without a return value; Supersede still skips the original.
@@ -216,6 +294,14 @@ namespace gamehooks
                 }
 
                 const Action action = m_listeners.Dispatch(ctx, true, m_pszName);
+
+                if (DebugOn(m_pszName))
+                {
+                    if constexpr (std::is_void_v<RETURN>)
+                        FP_INFO("hookdebug {} post: {} {}", m_pszName, ActionName(action), Describe(ctx));
+                    else
+                        FP_INFO("hookdebug {} post: {} (return {}) {}", m_pszName, ActionName(action), ValueText(ctx.*m_result), Describe(ctx));
+                }
 
                 if constexpr (std::is_void_v<RETURN>)
                 {
@@ -613,5 +699,15 @@ namespace gamehooks
     bool GameHooksManager::IsAvailable(GameHook hook)
     {
         return hook < GameHook::Count && m_hooks[static_cast<size_t>(hook)]->IsAvailable();
+    }
+
+    void SetHookDebug(const char* name)
+    {
+        s_hookDebug = (!name || !strcmp(name, "off")) ? "" : name;
+    }
+
+    const char* GetHookDebug()
+    {
+        return s_hookDebug.empty() ? "off" : s_hookDebug.c_str();
     }
 }
