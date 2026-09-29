@@ -75,7 +75,15 @@ Write-Host "=== Downloading Source2Toolkit-SDK ==="
 git clone --recursive https://github.com/Source2Toolkit/source2toolkit-sdk.git $SOURCE2TOOLKITSDK_DIR
 
 Write-Host "=== Downloading HL2SDK-CS2 ==="
+# HL2SDK_REF pins a commit when the head of cs2 does not build; empty = the
+# head of the branch.
+$HL2SDK_REF = if ($null -ne $env:HL2SDK_REF) { $env:HL2SDK_REF } else { "f9c04fdde328297b9a802fcd3d51476c3d70acf7" }
 git clone --recursive --branch cs2 --single-branch https://github.com/alliedmodders/hl2sdk.git $HL2SDK_DIR
+if ($HL2SDK_REF) {
+    Write-Host "=== Pinning HL2SDK-CS2 to $HL2SDK_REF ==="
+    git -C $HL2SDK_DIR checkout -q $HL2SDK_REF
+    git -C $HL2SDK_DIR submodule update -q --init --recursive
+}
 
 Write-Host "=== Downloading Metamod-Source ==="
 git clone --recursive --branch master --single-branch https://github.com/alliedmodders/metamod-source.git $MMSOURCE_DIR
