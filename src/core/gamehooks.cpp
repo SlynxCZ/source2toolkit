@@ -37,6 +37,7 @@
 #include "gamehooks.h"
 
 #include <algorithm>
+#include <tuple>
 #include <type_traits>
 
 // KHook, via metamod.
@@ -255,6 +256,8 @@ namespace gamehooks
                     return Ignore();
 
                 CONTEXT ctx = m_make(pThis, args...);
+                const CallData call{ this, pThis, std::tuple<ARGS...>(args...) };
+                BindCallOriginal(ctx, call);
                 const Action action = m_listeners.Dispatch(ctx, false, m_pszName);
 
                 if (DebugOn(m_pszName))
@@ -286,6 +289,8 @@ namespace gamehooks
                     return Ignore();
 
                 CONTEXT ctx = m_make(pThis, args...);
+                const CallData call{ this, pThis, std::tuple<ARGS...>(args...) };
+                BindCallOriginal(ctx, call);
 
                 if constexpr (!std::is_void_v<RETURN>)
                 {
@@ -317,6 +322,44 @@ namespace gamehooks
             }
 
         protected:
+            // The game's function past every hook on it (KHook's CallOriginal);
+            // the context's CallOriginal() lands here.
+            virtual RETURN CallOriginalRaw(CLASS* pThis, ARGS... args) = 0;
+
+            // What a context's CallOriginal() needs: the arguments the game
+            // passed. Lives on the stack of Pre()/Post() for the dispatch.
+            struct CallData
+            {
+                GameHookBase* hook;
+                CLASS* pThis;
+                std::tuple<ARGS...> args;
+            };
+
+            using ContextReturn = decltype(std::declval<const CONTEXT&>().CallOriginal());
+
+            static ContextReturn CallOriginalThunk(const void* data)
+            {
+                const auto* call = static_cast<const CallData*>(data);
+                if constexpr (std::is_void_v<RETURN>)
+                {
+                    std::apply([call](ARGS... a) { call->hook->CallOriginalRaw(call->pThis, a...); }, call->args);
+                    // A context shared with bool functions answers false for a void one.
+                    if constexpr (!std::is_void_v<ContextReturn>)
+                        return ContextReturn{};
+                }
+                else
+                {
+                    return static_cast<ContextReturn>(
+                        std::apply([call](ARGS... a) { return call->hook->CallOriginalRaw(call->pThis, a...); }, call->args));
+                }
+            }
+
+            static void BindCallOriginal(CONTEXT& ctx, const CallData& call)
+            {
+                ctx.callOriginal_ = &CallOriginalThunk;
+                ctx.callOriginalData_ = &call;
+            }
+
             static KHook::Return<RETURN> Ignore()
             {
                 if constexpr (std::is_void_v<RETURN>)
@@ -388,6 +431,11 @@ namespace gamehooks
                 m_pHook->Configure(m_address);
             }
 
+            RETURN CallOriginalRaw(CLASS* pThis, ARGS... args) override
+            {
+                return m_pHook->CallOriginal(pThis, args...);
+            }
+
         private:
             void* m_address = nullptr;
             KHook::Member<CLASS, RETURN, ARGS...>* m_pHook = nullptr;
@@ -456,6 +504,11 @@ namespace gamehooks
                 // AddGlobal reads the first pointer of what it is handed, so a
                 // pointer holding the vtable stands in for an object.
                 m_pHook->AddGlobal(reinterpret_cast<CLASS*>(&m_pVTable));
+            }
+
+            RETURN CallOriginalRaw(CLASS* pThis, ARGS... args) override
+            {
+                return m_pHook->CallOriginal(pThis, args...);
             }
 
         private:
