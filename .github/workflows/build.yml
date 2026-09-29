@@ -204,6 +204,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout (for the release notes)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          submodules: false
+
       - name: Download Linux artifact
         uses: actions/download-artifact@v4
         with:
@@ -235,3 +242,9 @@ jobs:
           file_glob: true
           overwrite: true
           release_name: "${{ needs.version.outputs.tag }}"
+
+      - name: Release notes (GitHub release + Discord)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_WEBHOOK: ${{ secrets.RELEASE_WEBHOOK }}
+        run: python3 .github/scripts/release_notes.py "${{ needs.version.outputs.tag }}" --project "Source2Toolkit" --update-release

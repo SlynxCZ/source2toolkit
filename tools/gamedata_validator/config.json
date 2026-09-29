@@ -1,0 +1,23 @@
+{
+  "//": "Settings for validate.py. See README.md next to this file.",
+
+  "libraries": ["server", "engine2", "tier0", "soundsystem", "networksystem", "schemasystem", "materialsystem2"],
+
+  "field_offsets": [
+    "CCSPointScriptEntity::ScriptComponent",
+    "CNetworkGameServer::ClientList",
+    "CTakeDamageInfo::HitGroup",
+    "GameEntitySystem"
+  ],
+
+  "class_aliases": {
+    "CGameRules": "CCSGameRules",
+    "ICvar": "CCvar",
+    "IGameEventManager2": "CGameEventManager",
+    "IGameEventSystem": "CGameEventSystem",
+    "INetworkServerService": "CNetworkServerService",
+    "ISource2GameClients": "CSource2GameClients",
+    "ISource2GameEntities": "CSource2GameEntities",
+    "ISource2Server": "CSource2Server"
+  }
+}
