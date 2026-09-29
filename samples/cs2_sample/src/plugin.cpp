@@ -782,7 +782,7 @@ void SamplePlugin::SetupSounds()
  *   CanAcquire, PostThink, the movement and jump functions, ... -- the core
  *   hooks for you: IToolkitGameHooks, resolved from the core's own gamedata,
  *   so a plugin never touches a signature and survives an engine update with
- *   a core update. Anything else is called by signature.
+ *   a core update. Anything else is hooked and called by signature.
  *
  * ========================================================================== */
 
@@ -831,6 +831,19 @@ void SamplePlugin::SetupGameFunctions()
         // For the common ones there is a third way, which is not to care:
         // pCaller->SwitchTeam(nNewTeam) does exactly the above.
     });
+}
+
+// The raw KHook by signature (KHOOK_MEMBER in plugin.h): every team switch,
+// the one sample_swap makes above included. Pre, so the player is still on the
+// old team here.
+KHook::Return<void> SamplePlugin::Hook_SwitchTeam(CCSPlayerController* pThis, int nTeam)
+{
+    TOOLKIT_LOG(this, "SwitchTeam: %s %d -> %d\n", pThis ? pThis->GetPlayerName() : "?", pThis ? pThis->m_iTeamNum() : -1, nTeam);
+
+    // { KHook::Action::Supersede } would keep the player where they are; the
+    // original with other arguments is KHook::Recall(...), and the original
+    // from the middle of the handler m_hSwitchTeam.CallOriginal(pThis, nTeam).
+    return { KHook::Action::Ignore };
 }
 
 GameHookReturn<TakeDamageContext::Return> SamplePlugin::OnTakeDamage(TakeDamageContext& ctx, bool post)

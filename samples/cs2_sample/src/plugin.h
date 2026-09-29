@@ -107,8 +107,9 @@ public: // 5. core events -- raw KHook handlers, for what the toolkit has no cal
 	KHook::Return<bool> Hook_ClientConnect(ISource2GameClients *pThis, CPlayerSlot slot, const char *pszName, uint64 xuid, const char *pszNetworkID, bool unk1, CBufferString *pRejectReason);
 	KHook::Return<void> Hook_ClientCommand(ISource2GameClients *pThis, CPlayerSlot nSlot, const CCommand &cmd);
 
-public: // 8. game functions -- IToolkitGameHooks handlers
+public: // 8. game functions -- IToolkitGameHooks handlers, and a raw KHook by signature
 	GameHookReturn<TakeDamageContext::Return> OnTakeDamage(TakeDamageContext &ctx, bool post);
+	KHook::Return<void> Hook_SwitchTeam(CCSPlayerController *pThis, int nTeam);
 
 private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupConVars();
@@ -123,8 +124,9 @@ private: // one per section of plugin.cpp, called from Load() in this order
 	void SetupTransmit();
 
 private:
-	// Raw KHook hooks, for the two engine calls the toolkit has no callback for
-	// (turning a connection away, swallowing a client command). Everything
+	// Raw KHook hooks, for what the toolkit has no callback for: two engine
+	// calls (turning a connection away, swallowing a client command) and one
+	// game function found by signature (a team switch). Everything
 	// else this plugin listens to comes through the toolkit: IToolkitListener
 	// for the client and frame callbacks, IToolkitGameHooks for game
 	// functions such as TakeDamage. Prefer those -- a plugin with hooks of its
@@ -140,12 +142,17 @@ private:
 	// it, KHOOK_DESTRUCT() in Unload() takes it down. The interface pointer is
 	// read at KHOOK_INIT(), not here -- it is still null when this object is
 	// constructed.
-	//
-	// A game function by signature goes the same way, e.g.
-	//     KHOOK_MEMBER(m_hFoo, "CSomething::Foo", &SamplePlugin::Hook_Foo, nullptr);
-	// with the name of a gamedata entry -- but look in IToolkitGameHooks first.
 	KHOOK_VIRTUAL(m_hClientConnect, &ISource2GameClients::ClientConnect, &g_pSource2GameClients, &SamplePlugin::Hook_ClientConnect, nullptr);
 	KHOOK_VIRTUAL(m_hClientCommand, &ISource2GameClients::ClientCommand, &g_pSource2GameClients, &SamplePlugin::Hook_ClientCommand, nullptr);
+
+	// A game function by signature: the name of a gamedata entry. Its library
+	// is read and the function found by exported symbol or by pattern -- you
+	// do not care which -- at KHOOK_INIT(). The handler's parameters are the
+	// function's, `this` first. An address the toolkit already resolved works
+	// the same way (KHOOK_MEMBER(m_hX, g_pToolkitAddresses->Xxx(), ...)), and
+	// an entry of your own in the gamedata too. Look in IToolkitGameHooks
+	// first: what is there needs no hook of your own.
+	KHOOK_MEMBER(m_hSwitchTeam, "CCSPlayerController::SwitchTeam", &SamplePlugin::Hook_SwitchTeam, nullptr);
 
 private:
 	// 6. net messages -- one bit per player slot, the same layout the hooks get
