@@ -2,8 +2,8 @@
 * vim: set ts=4 sw=4 tw=99 noet:
  * =============================================================================
  * Source2Toolkit
- * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl,
- * AlliedModders LLC. All rights reserved.
+ * Copyright (C) 2025-2026 Michal "Slynx (˙·٠● S l y n x ●٠·˙)" Přikryl.
+ * All rights reserved.
  * =============================================================================
  *
  * Project: Source2Toolkit

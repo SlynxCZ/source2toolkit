@@ -30,20 +30,17 @@ We've implemented EntityIO support based on publicly available research
 and custom cherry-picked implementations, adapting them to fit our
 architecture and use cases.
 
-## Metamod:Source
-
-We've taken inspiration from Metamod:Source for the plugin manager
-system, interface sharing, and GameDLL communication model.
-
-## HL2SDK
-
-HL2SDK is a repository maintained by AlliedModders. We've used it as a
-reference for engine structures, interfaces, and general Source/Source2
-interoperability concepts.
-
 ## Nlohmann/json
 
 JSON library used on the native side.
+
+## AlliedModders
+
+Metamod:Source, which loads the toolkit, and HL2SDK, which it compiles
+against, are AlliedModders LLC's work -- Metamod:Source by David "BAILOPAN"
+Anderson and Scott "DS" Ehlert. The toolkit's plugin manager, interface sharing
+and GameDLL communication follow Metamod:Source's model, and HL2SDK is its
+reference for engine structures and interfaces.
 
 ## KHook
 
