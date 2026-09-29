@@ -61,18 +61,26 @@
 #define TOOLKIT_WEBSITE "https://www.source2toolkit.net"
 #define TOOLKIT_REPO    "https://github.com/SlynxCZ/source2toolkit"
 
-#define ANSI_RESET  "\033[0m"
-#define ANSI_RED    "\033[31m"
-#define ANSI_GREEN  "\033[32m"
-#define ANSI_YELLOW "\033[33m"
-#define ANSI_BLUE   "\033[34m"
+// The console colours of the "toolkit" command, FUNPLAY's log style: the
+// thing in question picked out, the rest plain or dim.
+#define C_RESET "\033[0m"
+#define C_LINK  "\033[96m"      // the website
+#define C_HEAD  "\033[1;97m"    // a heading
+#define C_OK    "\033[92m"      // done, stable
+#define C_WARN  "\033[93m"      // careful, raw
+#define C_ERR   "\033[91m"      // failed
+#define C_ID    "\033[93m"      // a plugin id
+#define C_NAME  "\033[97m"      // a name, a value
+#define C_DIM   "\033[90m"      // version, author, detail
+#define C_LABEL "\033[36m"      // "Name:", "Path:"
+#define C_CMD   "\033[96m"      // a subcommand in the help
 
 
 // A "toolkit ..." typed in the server console has no player behind it and
 // belongs in that console; typed by a client it has to go back to that
 // client's console instead, which is what ClientPrintf is for. Colour is
 // dropped on that path -- the escapes are a terminal thing and the game
-// console would print them literally.
+// console would print them literally -- the colours inside the line too.
 static void ToolkitReply(const ToolkitCommandContext& ctx, const char* pszColor, const char* fmt, ...)
 {
     char buf[1024];
@@ -85,17 +93,33 @@ static void ToolkitReply(const ToolkitCommandContext& ctx, const char* pszColor,
     if (const CPlayerSlot slot = ctx.GetPlayerSlot(); slot.IsValid() && g_pEngineServer)
     {
         char line[1088];
-        V_snprintf(line, sizeof(line), "%s\n", buf);
+        size_t n = 0;
+        for (const char* p = buf; *p && n < sizeof(line) - 2; ++p)
+        {
+            if (*p == '\033')
+            {
+                while (*p && *p != 'm')
+                    ++p;
+                if (!*p)
+                    break;
+                continue;
+            }
+            line[n++] = *p;
+        }
+        line[n++] = '\n';
+        line[n] = '\0';
         g_pEngineServer->ClientPrintf(slot, line);
         return;
     }
 
-    ConMsg("%s%s" ANSI_RESET "\n", pszColor, buf);
+    ConMsg("%s%s" C_RESET "\n", pszColor, buf);
 }
 
-#define REPLY_INFO(fmt, ...)  ToolkitReply(ctx, ANSI_GREEN,  fmt, ##__VA_ARGS__)
-#define REPLY_WARN(fmt, ...)  ToolkitReply(ctx, ANSI_YELLOW, fmt, ##__VA_ARGS__)
-#define REPLY_ERROR(fmt, ...) ToolkitReply(ctx, ANSI_RED,    fmt, ##__VA_ARGS__)
+// The line's base colour; the parts of it are coloured inline (C_*).
+#define REPLY_INFO(fmt, ...)  ToolkitReply(ctx, C_RESET, fmt, ##__VA_ARGS__)
+#define REPLY_OK(fmt, ...)    ToolkitReply(ctx, C_OK,    fmt, ##__VA_ARGS__)
+#define REPLY_WARN(fmt, ...)  ToolkitReply(ctx, C_WARN,  fmt, ##__VA_ARGS__)
+#define REPLY_ERROR(fmt, ...) ToolkitReply(ctx, C_ERR,   fmt, ##__VA_ARGS__)
 
 // The toolkit's own binary, resolved from an address inside it rather than
 // assembled out of the game directory: the module the engine actually has
@@ -151,25 +175,25 @@ namespace commands {
 
         if (argc < 2)
         {
-            REPLY_INFO("Source2Toolkit commands:");
-            REPLY_INFO("  toolkit list");
+            REPLY_INFO(C_HEAD "Source2Toolkit commands:");
+            REPLY_INFO("  " C_CMD "toolkit list");
 
             if (!bFromPlayer)
             {
-                REPLY_INFO("  toolkit load <name>");
-                REPLY_INFO("  toolkit unload <id>");
+                REPLY_INFO("  " C_CMD "toolkit load" C_DIM " <name>");
+                REPLY_INFO("  " C_CMD "toolkit unload" C_DIM " <id>");
             }
 
-            REPLY_INFO("  toolkit info <id>");
+            REPLY_INFO("  " C_CMD "toolkit info" C_DIM " <id>");
 
             if (!bFromPlayer)
             {
-                REPLY_INFO("  toolkit refresh");
-                REPLY_INFO("  toolkit hookdebug <game hook|all|off>");
+                REPLY_INFO("  " C_CMD "toolkit refresh");
+                REPLY_INFO("  " C_CMD "toolkit hookdebug" C_DIM " <game hook|all|off>");
             }
 
-            REPLY_INFO("  toolkit version");
-            REPLY_INFO("  toolkit credits");
+            REPLY_INFO("  " C_CMD "toolkit version");
+            REPLY_INFO("  " C_CMD "toolkit credits");
             return;
         }
 
@@ -177,7 +201,7 @@ namespace commands {
 
         if (bFromPlayer && !IsPlayerSubcommand(cmd))
         {
-            REPLY_ERROR("'%s' is not available from a client console.", cmd);
+            REPLY_ERROR("'" C_NAME "%s" C_ERR "' is not available from a client console.", cmd);
             return;
         }
 
@@ -189,13 +213,13 @@ namespace commands {
                 return;
             }
 
-            REPLY_INFO("Listing %zu plugin(s):", pluginManager.m_plugins.size());
+            REPLY_INFO(C_HEAD "Listing %zu plugin(s):", pluginManager.m_plugins.size());
 
             for (auto& p : pluginManager.m_plugins)
             {
                 auto* api = p->api;
 
-                REPLY_INFO("  [%d] %s (%s) by %s",
+                REPLY_INFO("  " C_ID "[%d]" C_RESET " " C_NAME "%s" C_DIM " (%s) by %s",
                     p->id,
                     api->GetName(),
                     api->GetVersion(),
@@ -207,12 +231,16 @@ namespace commands {
                 if (p->apiVersion >= 2)
                 {
                     const int rawHooks = api->GetRawHookCount();
-                    REPLY_INFO("       API %d, KHook %.12s, %s", p->apiVersion, api->GetKHookCommit(),
-                        rawHooks ? "raw tier (own KHook hooks: rebuild on a KHook or engine change)" : "stable tier (no KHook hooks of its own)");
+                    if (rawHooks)
+                        REPLY_INFO(C_DIM "       API %d, KHook %.12s, " C_WARN "raw tier" C_DIM " (own KHook hooks: rebuild on a KHook or engine change)",
+                                   p->apiVersion, api->GetKHookCommit());
+                    else
+                        REPLY_INFO(C_DIM "       API %d, KHook %.12s, " C_OK "stable tier" C_DIM " (no KHook hooks of its own)",
+                                   p->apiVersion, api->GetKHookCommit());
                 }
                 else
                 {
-                    REPLY_INFO("       API %d (built against an older SDK)", p->apiVersion);
+                    REPLY_INFO(C_DIM "       API %d " C_WARN "(built against an older SDK)", p->apiVersion);
                 }
             }
         }
@@ -233,7 +261,7 @@ namespace commands {
                 return;
             }
 
-            REPLY_INFO("Plugin '%s' loaded.", args.Arg(2));
+            REPLY_OK("Plugin '" C_NAME "%s" C_OK "' loaded.", args.Arg(2));
         }
 
         else if (strcmp(cmd, "unload") == 0)
@@ -257,11 +285,11 @@ namespace commands {
             // ICvar::DispatchConCommand itself could not be unloaded here.
             if (!pluginManager.UnloadPlugin(id))
             {
-                REPLY_ERROR("Plugin %d not found or failed to unload.", id);
+                REPLY_ERROR("Plugin " C_ID "%d" C_ERR " not found or failed to unload.", id);
                 return;
             }
 
-            REPLY_INFO("Plugin %d unloaded.", id);
+            REPLY_OK("Plugin " C_ID "%d" C_OK " unloaded.", id);
         }
 
         else if (strcmp(cmd, "_pending") == 0)
@@ -286,27 +314,31 @@ namespace commands {
                 {
                     auto* api = p->api;
 
-                    REPLY_INFO("Plugin %d info:", id);
-                    REPLY_INFO("  Name: %s", api->GetName());
-                    REPLY_INFO("  Version: %s", api->GetVersion());
-                    REPLY_INFO("  Author: %s", api->GetAuthor());
-                    REPLY_INFO("  Description: %s", api->GetDescription());
-                    REPLY_INFO("  Path: %s", p->path.c_str());
-                    REPLY_INFO("  Plugin API: %d", p->apiVersion);
+                    REPLY_INFO(C_HEAD "Plugin " C_ID "%d" C_HEAD " info:", id);
+                    REPLY_INFO("  " C_LABEL "Name: " C_NAME "%s", api->GetName());
+                    REPLY_INFO("  " C_LABEL "Version: " C_NAME "%s", api->GetVersion());
+                    REPLY_INFO("  " C_LABEL "Author: " C_NAME "%s", api->GetAuthor());
+                    REPLY_INFO("  " C_LABEL "Description: " C_NAME "%s", api->GetDescription());
+                    REPLY_INFO("  " C_LABEL "Path: " C_DIM "%s", p->path.c_str());
+                    REPLY_INFO("  " C_LABEL "Plugin API: " C_NAME "%d", p->apiVersion);
                     if (p->apiVersion >= 2)
                     {
-                        REPLY_INFO("  KHook: %s", api->GetKHookCommit());
-                        REPLY_INFO("  Own KHook hooks: %d (%s)", api->GetRawHookCount(), api->GetRawHookCount() ? "raw tier" : "stable tier");
+                        const int rawHooks = api->GetRawHookCount();
+                        REPLY_INFO("  " C_LABEL "KHook: " C_DIM "%s", api->GetKHookCommit());
+                        if (rawHooks)
+                            REPLY_INFO("  " C_LABEL "Own KHook hooks: " C_NAME "%d " C_WARN "(raw tier)", rawHooks);
+                        else
+                            REPLY_INFO("  " C_LABEL "Own KHook hooks: " C_NAME "0 " C_OK "(stable tier)");
                     }
                     std::string ifaces;
                     for (const auto& name : p->ifaces)
                         ifaces += (ifaces.empty() ? "" : ", ") + name;
-                    REPLY_INFO("  Interfaces: %s", ifaces.empty() ? "(none)" : ifaces.c_str());
+                    REPLY_INFO("  " C_LABEL "Interfaces: " C_DIM "%s", ifaces.empty() ? "(none)" : ifaces.c_str());
                     return;
                 }
             }
 
-            REPLY_ERROR("Plugin %d not found.", id);
+            REPLY_ERROR("Plugin " C_ID "%d" C_ERR " not found.", id);
         }
 
         else if (strcmp(cmd, "hookdebug") == 0)
@@ -315,22 +347,22 @@ namespace commands {
             // answer, the outcome and the return value (gamehooks.cpp).
             if (argc < 3)
             {
-                REPLY_INFO("hookdebug: %s", gamehooks::GetHookDebug());
-                REPLY_INFO("Usage: toolkit hookdebug <part of a game hook name, e.g. TakeDamage|all|off>");
+                REPLY_INFO(C_LABEL "hookdebug: " C_NAME "%s", gamehooks::GetHookDebug());
+                REPLY_INFO(C_DIM "Usage: toolkit hookdebug <part of a game hook name, e.g. TakeDamage|all|off>");
                 return;
             }
 
             gamehooks::SetHookDebug(args.Arg(2));
-            REPLY_INFO("hookdebug: %s", gamehooks::GetHookDebug());
+            REPLY_OK("hookdebug: " C_NAME "%s", gamehooks::GetHookDebug());
         }
 
         else if (strcmp(cmd, "refresh") == 0)
         {
-            REPLY_INFO("Loading missing plugins...");
+            REPLY_INFO(C_DIM "Loading missing plugins...");
 
             pluginManager.LoadMissing();
 
-            REPLY_INFO("Done.");
+            REPLY_OK("Done.");
         }
 
         else if (strcmp(cmd, "version") == 0)
@@ -344,43 +376,43 @@ namespace commands {
             if (g_SMAPI)
                 g_SMAPI->GetApiVersions(mmApiMajor, mmApiMinor, mmPlVers, mmPlMin);
 
-            REPLY_INFO("Source2Toolkit Version Information");
-            REPLY_INFO("   Source2Toolkit version %s", VERSION_STRING);
-            REPLY_INFO("   Plugin API version: %d (%s)", TOOLKIT_PLAPI_VERSION, TOOLKIT_INTERFACE_NAME);
-            REPLY_INFO("   Hooks: KHook, metamod's detour engine, served to plugins as %s", TOOLKIT_KHOOK_INTERFACE);
-            REPLY_INFO("   Metamod:Source plugin interface: %d:%d", mmPlVers, mmPlMin);
-            REPLY_INFO("   Loaded As: Metamod:Source plugin");
-            REPLY_INFO("   Path: %s", ToolkitModulePath());
-            REPLY_INFO("   Compiled on: %s", BUILD_TIMESTAMP);
+            REPLY_INFO(C_HEAD "Source2Toolkit Version Information");
+            REPLY_INFO("   " C_LABEL "Source2Toolkit version " C_NAME "%s", VERSION_STRING);
+            REPLY_INFO("   " C_LABEL "Plugin API version: " C_NAME "%d" C_DIM " (%s)", TOOLKIT_PLAPI_VERSION, TOOLKIT_INTERFACE_NAME);
+            REPLY_INFO("   " C_LABEL "Hooks: " C_NAME "KHook" C_DIM ", metamod's detour engine, served to plugins as %s", TOOLKIT_KHOOK_INTERFACE);
+            REPLY_INFO("   " C_LABEL "Metamod:Source plugin interface: " C_NAME "%d:%d", mmPlVers, mmPlMin);
+            REPLY_INFO("   " C_LABEL "Loaded As: " C_NAME "Metamod:Source plugin");
+            REPLY_INFO("   " C_LABEL "Path: " C_DIM "%s", ToolkitModulePath());
+            REPLY_INFO("   " C_LABEL "Compiled on: " C_NAME "%s", BUILD_TIMESTAMP);
 
             // GITHUB_SHA is "Local" on anything but a CI build, and a commit
             // URL built out of that would point nowhere.
             if (strcmp(GITHUB_SHA, "Local") == 0)
-                REPLY_INFO("   Built from: local working tree");
+                REPLY_INFO("   " C_LABEL "Built from: " C_WARN "local working tree");
             else
-                REPLY_INFO("   Built from: %s/commit/%s", TOOLKIT_REPO, GITHUB_SHA);
+                REPLY_INFO("   " C_LABEL "Built from: " C_DIM "%s/commit/" C_NAME "%s", TOOLKIT_REPO, GITHUB_SHA);
 
-            REPLY_INFO("   Build ID: %s", BUILD_ID);
-            REPLY_INFO("   %s", TOOLKIT_WEBSITE);
+            REPLY_INFO("   " C_LABEL "Build ID: " C_DIM "%s", BUILD_ID);
+            REPLY_INFO("   " C_LINK "%s", TOOLKIT_WEBSITE);
         }
 
         else if (strcmp(cmd, "credits") == 0)
         {
             // Keep this in step with ACKNOWLEDGEMENTS.md -- it is the same
             // list, short enough to read in a console.
-            REPLY_INFO("Source2Toolkit was developed by:");
-            REPLY_INFO("   Core, plugin system and SDK: Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl");
-            REPLY_INFO("   Metamod:Source: David \"BAILOPAN\" Anderson, Scott \"DS\" Ehlert");
-            REPLY_INFO("   KHook: Benoist \"Kenzzer\" André");
-            REPLY_INFO("   HL2SDK and engine research: AlliedModders LLC.");
-            REPLY_INFO("For the full list, see ACKNOWLEDGEMENTS.md");
-            REPLY_INFO("For more information, see the official website");
-            REPLY_INFO("%s", TOOLKIT_WEBSITE);
+            REPLY_INFO(C_HEAD "Source2Toolkit was developed by:");
+            REPLY_INFO("   " C_LABEL "Core, plugin system and SDK: " C_NAME "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl");
+            REPLY_INFO("   " C_LABEL "Metamod:Source: " C_NAME "David \"BAILOPAN\" Anderson, Scott \"DS\" Ehlert");
+            REPLY_INFO("   " C_LABEL "KHook: " C_NAME "Benoist \"Kenzzer\" André");
+            REPLY_INFO("   " C_LABEL "HL2SDK and engine research: " C_NAME "AlliedModders LLC.");
+            REPLY_INFO(C_DIM "For the full list, see ACKNOWLEDGEMENTS.md");
+            REPLY_INFO(C_DIM "For more information, see the official website");
+            REPLY_INFO(C_LINK "%s", TOOLKIT_WEBSITE);
         }
 
         else
         {
-            REPLY_WARN("Unknown command '%s'", cmd);
+            REPLY_WARN("Unknown command '" C_NAME "%s" C_WARN "'", cmd);
         }
     }
 
