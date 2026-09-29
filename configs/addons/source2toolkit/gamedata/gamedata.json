@@ -302,12 +302,6 @@
       "linux": 31
     }
   },
-  "CCSPlayer_WeaponServices::SelectWeapon": {
-    "offsets": {
-      "windows": 30,
-      "linux": 31
-    }
-  },
   "CCSPlayerController::ChangeTeam": {
     "offsets": {
       "windows": 105,

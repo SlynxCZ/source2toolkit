@@ -53,9 +53,6 @@ namespace shared
     CCSGameRules* g_pGameRules = nullptr;
 
     CGlobalVars *getGlobalVars() {
-        // Asked of the engine every time: the object can be replaced across
-        // a level change, and a pointer cached once kept reading the old one
-        // -- whose curtime never moved again.
         if (!g_pEngineServer) return g_pGlobalVars;
         g_pGlobalVars = g_pEngineServer->GetServerGlobals();
         return g_pGlobalVars;
