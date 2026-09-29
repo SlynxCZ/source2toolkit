@@ -70,7 +70,7 @@
 #define C_ERR   "\033[91m"      // failed
 #define C_ID    "\033[93m"      // a plugin id
 #define C_NAME  "\033[97m"      // a name, a value
-#define C_DIM   "\033[90m"      // version, author, detail
+#define C_DIM   "\033[37m"      // version, author, detail (90 is unreadable on a dark console)
 #define C_LABEL "\033[36m"      // "Name:", "Path:"
 #define C_CMD   "\033[96m"      // a subcommand in the help
 
