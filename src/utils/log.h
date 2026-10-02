@@ -50,9 +50,9 @@ private:
     static std::shared_ptr<spdlog::logger> m_FP_logger;
 };
 
-#define FP_TRACE(fmt, ...)    ::log::GetLogger()->trace("- [ " fmt " ] -", ##__VA_ARGS__)
-#define FP_DEBUG(fmt, ...)    ::log::GetLogger()->debug("- [ " fmt " ] -", ##__VA_ARGS__)
-#define FP_INFO(fmt, ...)     ::log::GetLogger()->info("- [ " fmt " ] -", ##__VA_ARGS__)
-#define FP_WARN(fmt, ...)     ::log::GetLogger()->warn("- [ " fmt " ] -", ##__VA_ARGS__)
-#define FP_ERROR(fmt, ...)    ::log::GetLogger()->error("- [ " fmt " ] -", ##__VA_ARGS__)
-#define FP_CRITICAL(fmt, ...) ::log::GetLogger()->critical("- [ " fmt " ] -", ##__VA_ARGS__)
+#define FP_TRACE(fmt, ...)    ::log::GetLogger()->trace(fmt, ##__VA_ARGS__)
+#define FP_DEBUG(fmt, ...)    ::log::GetLogger()->debug(fmt, ##__VA_ARGS__)
+#define FP_INFO(fmt, ...)     ::log::GetLogger()->info(fmt, ##__VA_ARGS__)
+#define FP_WARN(fmt, ...)     ::log::GetLogger()->warn(fmt, ##__VA_ARGS__)
+#define FP_ERROR(fmt, ...)    ::log::GetLogger()->error(fmt, ##__VA_ARGS__)
+#define FP_CRITICAL(fmt, ...) ::log::GetLogger()->critical(fmt, ##__VA_ARGS__)
