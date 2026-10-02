@@ -593,10 +593,12 @@ namespace virtualhooks
 
         if (localDontBroadcast != bDontBroadcast)
         {
-            // A listener changed the broadcast flag: run the original with the
-            // new one ourselves and drop the hooked call so it does not fire twice.
-            bool original = m_hFireEvent->CallOriginal(pThis, event, localDontBroadcast);
-            return { KHook::Action::Supersede, original };
+            // A listener changed the broadcast flag: carry on down the chain
+            // with the new one. Unlike CallOriginal this keeps the original
+            // skipped when an earlier hook superseded it (and freed the event),
+            // the hooks after this one see the new flag, and the post hooks --
+            // ours included, which pops eventStack -- run inside the recall.
+            return KHook::Recall(&IGameEventManager2::FireEvent, KHook::Return<bool>{ KHook::Action::Ignore, true }, pThis, event, localDontBroadcast);
         }
 
         return { KHook::Action::Ignore, true };

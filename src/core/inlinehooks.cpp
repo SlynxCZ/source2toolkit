@@ -134,8 +134,6 @@ namespace inlinehooks
 
         std::vector matched(unique.begin(), unique.end());
 
-        Action finalAction = Action::Ignore;
-
         for (auto* pair : matched)
         {
             for (auto* listener : pair->m_vecPre)
@@ -150,16 +148,16 @@ namespace inlinehooks
 
                 if (action == Action::Supersede)
                     return { KHook::Action::Supersede };
-
-                if (action > finalAction)
-                    finalAction = action;
             }
         }
 
-        if (finalAction != Action::Supersede)
-        {
-            m_hFireOutputInternal->CallOriginal(pThis, pActivator, pCaller, variantValue, delay, unk01, unk02);
-        }
+        // Run the rest of the hook chain and the original now, so the post
+        // listeners below see the output fired. Unlike CallOriginal this leaves
+        // the original skipped when another hook on it superseded. Only the
+        // type of the member pointer matters, KHook recalls through the detour.
+        using FireOutputInternal_t = void (CEntityIOOutput::*)(CEntityInstance*, CEntityInstance*, void*, float, void*, void*);
+        auto result = KHook::Recall(static_cast<FireOutputInternal_t>(nullptr), KHook::Return<void>{ KHook::Action::Ignore },
+                                    pThis, pActivator, pCaller, variantValue, delay, unk01, unk02);
 
         for (auto* pair : matched)
         {
@@ -169,8 +167,6 @@ namespace inlinehooks
             }
         }
 
-        // The original already ran above, so supersede rather than let KHook
-        // call it a second time.
-        return { KHook::Action::Supersede };
+        return result;
     }
 }
