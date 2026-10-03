@@ -461,7 +461,7 @@ namespace commands {
             // Keep this in step with ACKNOWLEDGEMENTS.md -- it is the same
             // list, short enough to read in a console.
             REPLY_INFO(C_HEAD "Source2Toolkit was developed by:");
-            REPLY_INFO("   " C_LABEL "Core, plugin system and SDK: " C_NAME "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl");
+            REPLY_INFO("   " C_LABEL "Core, plugin system and SDK: " C_NAME "%s", reinterpret_cast<const char*>(u8"Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl"));
             REPLY_INFO("   " C_LABEL "Metamod:Source: " C_NAME "David \"BAILOPAN\" Anderson, Scott \"DS\" Ehlert");
             REPLY_INFO("   " C_LABEL "KHook: " C_NAME "Benoist \"Kenzzer\" André");
             REPLY_INFO("   " C_LABEL "HL2SDK and engine research: " C_NAME "AlliedModders LLC.");

@@ -311,7 +311,7 @@ void ToolkitCore::OnLevelShutdown()
     scripts::scriptsManager.OnLevelShutdown();
 }
 
-const char* ToolkitCore::GetAuthor() { return "Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl"; }
+const char* ToolkitCore::GetAuthor() { return reinterpret_cast<const char*>(u8"Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl"); }
 const char* ToolkitCore::GetName() { return "Source2Toolkit"; }
 const char* ToolkitCore::GetDescription() { return "Source2Toolkit"; }
 const char* ToolkitCore::GetURL() { return "https://www.slynxdev.cz, https://www.alliedmods.net"; }

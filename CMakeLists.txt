@@ -2,6 +2,11 @@
 project(source2toolkit C CXX ASM)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
+
+# Source files are UTF-8 (the author strings); MSVC would read them as the ANSI code page.
+if (MSVC)
+    add_compile_options(/utf-8)
+endif ()
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
