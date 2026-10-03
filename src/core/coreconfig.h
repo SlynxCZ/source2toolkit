@@ -63,6 +63,16 @@ public:
     /// milliseconds is logged with its name and plugin. 0 turns it off.
     double SlowCallbackWarnMs = 100.0;
 
+    /// Which SteamID a connected player's permissions are looked up under:
+    /// "auto" (the claimed one when the server does not validate Steam
+    /// tickets, else only once Steam validated it), "flexible" (always the
+    /// claimed one right away) or "strict" (always the validated one).
+    std::string SteamAuthMode = "auto";
+
+    /// What a player refused a command is told, unless a plugin set its own
+    /// handler (IToolkitPermissions::SetAccessDeniedHandler).
+    std::string AccessDeniedMessage = "You do not have access to this command.";
+
     using json = nlohmann::json;
     CCoreConfig(const std::string& path);
     ~CCoreConfig();

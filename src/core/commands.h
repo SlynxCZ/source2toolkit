@@ -53,6 +53,8 @@ namespace commands {
         CommandHandler handler;
         bool post;
         ChatHandler chatSource;     // a chat command / ConCommand: what it was registered with, for UnregisterX(handler)
+        std::string command;        // a chat command / ConCommand: its bare name, what "Overrides" is keyed by
+        std::string permission;     // what a player needs to run it; "" for everybody
     };
 
     inline CommandHandler WrapVoidHandler(const ChatHandler& fn)
@@ -68,27 +70,31 @@ namespace commands {
     void DestructCommands();
 
     void ConCommandRouter(const CCommandContext &ctx, const CCommand &args);
-    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post);
+    /// `source` is where it was typed: the console, or chat through one of
+    /// the triggers (the chat path in virtualhooks.cpp says which).
+    Action DispatchConsoleListener(const CCommandContext &ctx, const CCommand &args, bool post,
+                                   ToolkitCommandSource source = ToolkitCommandSource::Console);
 
     class CommandsManager : public IToolkitCommands
     {
     public:
 
-        ToolkitHookId RegisterChatListener(const char* pchName, ChatHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterChatListener(owner, pchName, std::move(handler)); }
+        ToolkitHookId RegisterChatListener(const char* pchName, ChatHandler handler, const char* pchPermission) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterChatListener(owner, pchName, std::move(handler), pchPermission); }
         bool UnregisterChatListener(const char* pchName, const ChatHandler& handler) override { return UnregisterChatListener(hookid::OwnerOfHandler(handler), pchName, handler); }
         bool UnregisterChatListener(ToolkitHookId id) override { return Unregister(id); }
-        ToolkitHookId RegisterConCommand(const char* pchName, ChatHandler handler) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterConCommand(owner, pchName, std::move(handler)); }
+        ToolkitHookId RegisterConCommand(const char* pchName, ChatHandler handler, const char* pchPermission) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterConCommand(owner, pchName, std::move(handler), pchPermission); }
         bool UnregisterConCommand(const char* pchName, const ChatHandler& handler) override { return UnregisterConCommand(hookid::OwnerOfHandler(handler), pchName, handler); }
         bool UnregisterConCommand(ToolkitHookId id) override { return Unregister(id); }
         ToolkitHookId RegisterConListener(const char* pchName, CommandHandler handler, bool post) override { const PluginId owner = hookid::OwnerOfHandler(handler); return RegisterConListener(owner, pchName, std::move(handler), post); }
         bool UnregisterConListener(const char* pchName, const CommandHandler& handler, bool post) override { return UnregisterConListener(hookid::OwnerOfHandler(handler), pchName, handler, post); }
         bool UnregisterConListener(ToolkitHookId id) override { return Unregister(id); }
+        void ReplyToCommand(const ToolkitCommandContext& ctx, const char* pszMessage) override;
 
         // The same with the owner spelled out: what the calls above resolve
         // to, and what the core itself calls.
-        ToolkitHookId RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler);
+        ToolkitHookId RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler, const char* pchPermission = nullptr);
         bool UnregisterChatListener(PluginId owner, const char* pchName, const ChatHandler& handler);
-        ToolkitHookId RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler);
+        ToolkitHookId RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler, const char* pchPermission = nullptr);
         bool UnregisterConCommand(PluginId owner, const char* pchName, const ChatHandler& handler);
         ToolkitHookId RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post);
         bool UnregisterConListener(PluginId owner, const char* pchName, const CommandHandler& handler, bool post);
@@ -99,7 +105,7 @@ namespace commands {
 
     private:
         // The three names a chat command / ConCommand listens on.
-        static void AddAliases(PluginId owner, ToolkitHookId id, const char* pchName, const ChatHandler& handler);
+        static void AddAliases(PluginId owner, ToolkitHookId id, const char* pchName, const ChatHandler& handler, const char* pchPermission);
         static bool RemoveAliases(PluginId owner, const char* pchName, const ChatHandler& handler);
     };
 

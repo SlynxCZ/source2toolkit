@@ -44,6 +44,7 @@
 #include "customhud.h"
 #include "sounds.h"
 #include "transmit.h"
+#include "permissions.h"
 #include "scripts.h"
 #include "gamesystems.h"
 #include "http.h"
@@ -304,6 +305,7 @@ namespace
             { TOOLKIT_TRACE_INTERFACE, &raytrace::rayTrace },
             { TOOLKIT_TRANSMIT_INTERFACE, &transmit::transmitManager },
             { TOOLKIT_PATHS_INTERFACE, &paths::pathsManager },
+            { TOOLKIT_PERMISSIONS_INTERFACE, &permissions::permissionsManager },
         };
         count = sizeof(s_current) / sizeof(s_current[0]);
         return s_current;

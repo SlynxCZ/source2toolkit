@@ -39,6 +39,7 @@
 #include "slowguard.h"
 
 #include "menus.h"
+#include "permissions.h"
 #include "plugin.h"
 #include "pluginapi.h"
 #include "pluginmanager.h"
@@ -189,6 +190,7 @@ namespace commands {
             {
                 REPLY_INFO("  " C_CMD "toolkit refresh");
                 REPLY_INFO("  " C_CMD "toolkit hookdebug" C_DIM " <game hook|all|off>");
+                REPLY_INFO("  " C_CMD "toolkit admins" C_DIM " <list|reload|info <slot|steamid>>");
             }
 
             REPLY_INFO("  " C_CMD "toolkit version");
@@ -355,6 +357,65 @@ namespace commands {
             REPLY_OK("hookdebug: " C_NAME "%s", gamehooks::GetHookDebug());
         }
 
+        else if (strcmp(cmd, "admins") == 0)
+        {
+            auto& perms = permissions::permissionsManager;
+            const char* sub = argc >= 3 ? args.Arg(2) : "list";
+
+            if (strcmp(sub, "reload") == 0)
+            {
+                std::string error;
+                if (!perms.LoadFile(error))
+                {
+                    REPLY_ERROR("permissions.json not reloaded: %s", error.c_str());
+                    return;
+                }
+                REPLY_OK("permissions.json reloaded; what plugins granted is unchanged.");
+            }
+            else if (strcmp(sub, "info") == 0)
+            {
+                if (argc < 4)
+                {
+                    REPLY_ERROR("Usage: toolkit admins info <slot|steamid>");
+                    return;
+                }
+
+                // A small number is a slot, anything else a SteamID in any
+                // spelling. The console splits "STEAM_1:0:5" at the colons,
+                // so the pieces are put back together first.
+                std::string who;
+                for (int i = 3; i < argc; i++)
+                    who += args.Arg(i);
+                uint64 steamId = permissions::PermissionsManager::ParseSteamID(who);
+                if (!steamId && !who.empty() && std::all_of(who.begin(), who.end(), ::isdigit))
+                    steamId = perms.GetPlayerSteamID(CPlayerSlot(atoi(who.c_str())));
+
+                if (!steamId)
+                {
+                    REPLY_ERROR("'" C_NAME "%s" C_ERR "' is neither a connected player's slot nor a SteamID.", who.c_str());
+                    return;
+                }
+
+                for (const std::string& line : perms.DescribeSteamID(steamId))
+                    REPLY_INFO("  %s", line.c_str());
+            }
+            else if (strcmp(sub, "list") == 0)
+            {
+                const std::vector<std::string> lines = perms.DescribePlayers();
+                if (lines.empty())
+                {
+                    REPLY_WARN("No players connected.");
+                    return;
+                }
+                for (const std::string& line : lines)
+                    REPLY_INFO("  %s", line.c_str());
+            }
+            else
+            {
+                REPLY_ERROR("Usage: toolkit admins <list|reload|info <slot|steamid>>");
+            }
+        }
+
         else if (strcmp(cmd, "refresh") == 0)
         {
             REPLY_INFO(C_DIM "Loading missing plugins...");
@@ -481,8 +542,8 @@ namespace commands {
         return ToolkitCommandArgs(argc, argv, args.ArgS(), args.GetCommandString());
     }
 
-    Action DispatchConsoleListener(const CCommandContext& engineCtx, const CCommand& engineArgs, bool post) {
-        const ToolkitCommandContext ctx(engineCtx.GetPlayerSlot(), static_cast<int>(engineCtx.GetTarget()));
+    Action DispatchConsoleListener(const CCommandContext& engineCtx, const CCommand& engineArgs, bool post, ToolkitCommandSource source) {
+        const ToolkitCommandContext ctx(engineCtx.GetPlayerSlot(), static_cast<int>(engineCtx.GetTarget()), source);
         const ToolkitCommandArgs args = ToolkitArgs(engineArgs);
         std::string name = args.Arg(0);
         std::transform(name.begin(), name.end(), name.begin(),
@@ -494,9 +555,30 @@ namespace commands {
 
         Action result = Action::Ignore;
 
-        for (const auto &entry: it->second) {
+        // Copied: a handler may register or unregister commands while it runs.
+        const std::vector<CommandEntry> entries = it->second;
+        bool denied = false;
+
+        for (const auto &entry: entries) {
             if (entry.post != post)
                 continue;
+
+            // A chat command / ConCommand with a permission -- its own, or the
+            // one permissions.json re-assigns it to. Only a player can lack it;
+            // they are told once however many handlers share the name.
+            if (!entry.command.empty() && ctx.GetPlayerSlot().IsValid())
+            {
+                const std::string permission = permissions::permissionsManager.CommandPermission(entry.command, entry.permission);
+                if (!permission.empty() && !permissions::permissionsManager.PlayerHasPermission(ctx.GetPlayerSlot(), permission.c_str()))
+                {
+                    if (!denied)
+                    {
+                        denied = true;
+                        permissions::permissionsManager.Deny(ctx, args, permission);
+                    }
+                    continue;
+                }
+            }
 
             Action thisResult;
             {
@@ -516,11 +598,41 @@ namespace commands {
         return result;
     }
 
-    void CommandsManager::AddAliases(PluginId owner, ToolkitHookId id, const char* pchName, const ChatHandler& handler)
+    void CommandsManager::AddAliases(PluginId owner, ToolkitHookId id, const char* pchName, const ChatHandler& handler, const char* pchPermission)
     {
         const CommandHandler nativeHandler = WrapVoidHandler(handler);
+
+        std::string permission = pchPermission ? pchPermission : "";
+        std::transform(permission.begin(), permission.end(), permission.begin(),
+                       [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
         for (const std::string& name : { std::string(pchName), "/" + std::string(pchName), "!" + std::string(pchName) })
-            consoleListeners[name].push_back({ owner, id, nativeHandler, false, handler });
+            consoleListeners[name].push_back({ owner, id, nativeHandler, false, handler, pchName, permission });
+    }
+
+    // The engine's console print for a player goes to their console; chat is
+    // the HUD's. Either way one line, colour codes left to the caller.
+    void CommandsManager::ReplyToCommand(const ToolkitCommandContext& ctx, const char* pszMessage)
+    {
+        if (!pszMessage)
+            return;
+
+        const CPlayerSlot slot = ctx.GetPlayerSlot();
+        if (!slot.IsValid() || !g_pEngineServer)
+        {
+            ConMsg("%s\n", pszMessage);
+            return;
+        }
+
+        if (ctx.IsFromChat())
+        {
+            if (CCSPlayerController* player = CCSPlayerController::FromSlot(slot))
+                player->PrintToChat(pszMessage);
+            return;
+        }
+
+        const std::string line = std::string(pszMessage) + "\n";
+        g_pEngineServer->ClientPrintf(slot, line.c_str());
     }
 
     bool CommandsManager::RemoveAliases(PluginId owner, const char* pchName, const ChatHandler& handler)
@@ -546,9 +658,9 @@ namespace commands {
         return found;
     }
 
-    ToolkitHookId CommandsManager::RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler) {
+    ToolkitHookId CommandsManager::RegisterChatListener(PluginId owner, const char* pchName, ChatHandler handler, const char* pchPermission) {
         const ToolkitHookId id = ++s_lastCommandId;
-        AddAliases(owner, id, pchName, handler);
+        AddAliases(owner, id, pchName, handler, pchPermission);
         return id;
     }
 
@@ -602,7 +714,7 @@ namespace commands {
         return hashes.Remove(token, token.GetHashCode());
     }
 
-    ToolkitHookId CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler) {
+    ToolkitHookId CommandsManager::RegisterConCommand(PluginId owner, const char* pchName, ChatHandler handler, const char* pchPermission) {
 
         // Already ours: the ConCommand is the toolkit's claim on the name and
         // outlives the plugin that asked for it. Unloading parks it (see
@@ -632,13 +744,13 @@ namespace commands {
         }
 
         const ToolkitHookId id = ++s_lastCommandId;
-        AddAliases(owner, id, pchName, handler);
+        AddAliases(owner, id, pchName, handler, pchPermission);
         return id;
     }
 
     ToolkitHookId CommandsManager::RegisterConListener(PluginId owner, const char* pchName, CommandHandler handler, bool post) {
         const ToolkitHookId id = ++s_lastCommandId;
-        consoleListeners[pchName].push_back({ owner, id, std::move(handler), post, {} });
+        consoleListeners[pchName].push_back({ owner, id, std::move(handler), post, {}, {}, {} });
         return id;
     }
 

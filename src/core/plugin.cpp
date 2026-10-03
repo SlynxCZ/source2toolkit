@@ -42,6 +42,7 @@
 #include "customhud.h"
 #include "sounds.h"
 #include "transmit.h"
+#include "permissions.h"
 #include "scripts.h"
 #include "events.h"
 #include "gameconfig.h"
@@ -173,6 +174,9 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
     commands::InitCommands();
     slow::g_flWarnMs = shared::g_pCoreConfig->SlowCallbackWarnMs;
 
+    // Before plugins load: their Load() may already grant and check.
+    permissions::permissionsManager.Init();
+
     // Not fatal: without the script loader, compiled assets still run.
     scripts::scriptsManager.Init();
 
@@ -218,6 +222,8 @@ bool ToolkitCore::Unload(char* error, size_t maxlen)
     // Takes the engine-level change callback back out with it.
     convars::convarsManager.Shutdown();
     http::httpManager.Shutdown();
+    // Takes the Steam ticket callback back out.
+    permissions::permissionsManager.Shutdown();
     // Joins the worker threads. They run code from this library, so leaving
     // one running is a crash the moment Metamod unmaps it.
     mysql::mysqlManager.Shutdown();

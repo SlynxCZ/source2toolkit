@@ -53,6 +53,7 @@
 #include "http.h"
 #include "events.h"
 #include "networkmessages.h"
+#include "permissions.h"
 #include "plugin.h"
 #include "shared.h"
 #include "core/scheduler.h"
@@ -268,6 +269,10 @@ namespace virtualhooks
         if (shared::getGlobalVars())
             g_bHasTicked = true;
 
+        // Players Steam validated since the last frame, and permission changes
+        // that were held back to be announced from here.
+        permissions::permissionsManager.OnGameFrame();
+
         pluginManager.OnGameFrame(simulating, bFirstTick, bLastTick);
 
         // Detours that lost their last listener come out here, outside their
@@ -337,6 +342,9 @@ namespace virtualhooks
     KHook::Return<void> Virtuals::Hook_ClientPutInServer(ISource2GameClients* pThis, CPlayerSlot slot, const char* pszName, int type, uint64 xuid)
     {
         TK_VPROF("Source2Toolkit::ClientPutInServer");
+
+        // First: a plugin's OnClientPutInServer may already check permissions.
+        permissions::permissionsManager.OnClientPutInServer(slot, type, xuid);
 
         pluginManager.OnClientPutInServer(slot, pszName, type, xuid);
 
@@ -408,10 +416,13 @@ namespace virtualhooks
 
                     if (parsed.ArgC() > 0)
                     {
-                        Action r = commands::DispatchConsoleListener(ctx, parsed, false);
+                        // Where a reply to it goes: back to chat.
+                        const ToolkitCommandSource source = isSilent ? ToolkitCommandSource::SilentChat : ToolkitCommandSource::Chat;
+
+                        Action r = commands::DispatchConsoleListener(ctx, parsed, false, source);
 
                         if (r != Action::Supersede)
-                            commands::DispatchConsoleListener(ctx, parsed, true);
+                            commands::DispatchConsoleListener(ctx, parsed, true, source);
 
                         if (r == Action::Supersede)
                             return { KHook::Action::Supersede };
@@ -475,6 +486,8 @@ namespace virtualhooks
         // through it.
         crashhandler::OnSteamAPIActivated();
 
+        permissions::permissionsManager.OnSteamAPIActivated();
+
         pluginManager.OnGameServerSteamAPIActivated();
 
         return { KHook::Action::Ignore };
@@ -485,6 +498,8 @@ namespace virtualhooks
         TK_VPROF("Source2Toolkit::GameServerSteamAPIDeactivated");
 
         http::httpManager.OnSteamAPIDeactivated();
+
+        permissions::permissionsManager.OnSteamAPIDeactivated();
 
         pluginManager.OnGameServerSteamAPIDeactivated();
 
@@ -527,6 +542,9 @@ namespace virtualhooks
         menus::menuManager.OnClientDisconnect(slot);
 
         pluginManager.OnClientDisconnect(slot, reason, pszName, xuid, pszNetworkID);
+
+        // After the plugins: theirs is the last look at who the player was.
+        permissions::permissionsManager.OnClientDisconnect(slot);
 
         return { KHook::Action::Ignore };
     }

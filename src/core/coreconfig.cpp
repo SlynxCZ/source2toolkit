@@ -66,10 +66,12 @@ bool CCoreConfig::Init(char* conf_error, int conf_error_size)
         return Init(conf_error, conf_error_size);
     }
 
-    m_json = json::parse(ifs);
-
     try
     {
+        // Comments allowed: it is a file people edit by hand.
+        m_json = json::parse(ifs, nullptr, true, true);
+
+
         PublicChatTrigger = m_json.value("PublicChatTrigger", PublicChatTrigger);
         SilentChatTrigger = m_json.value("SilentChatTrigger", SilentChatTrigger);
         PluginHotReloadEnabled = m_json.value("PluginHotReloadEnabled", PluginHotReloadEnabled);
@@ -79,6 +81,8 @@ bool CCoreConfig::Init(char* conf_error, int conf_error_size)
         CrashHandlerEnabled = m_json.value("CrashHandlerEnabled", CrashHandlerEnabled);
         CrashDiscordWebhook = m_json.value("CrashDiscordWebhook", CrashDiscordWebhook);
         SlowCallbackWarnMs = m_json.value("SlowCallbackWarnMs", SlowCallbackWarnMs);
+        SteamAuthMode = m_json.value("SteamAuthMode", SteamAuthMode);
+        AccessDeniedMessage = m_json.value("AccessDeniedMessage", AccessDeniedMessage);
     }
     catch (const std::exception& ex)
     {

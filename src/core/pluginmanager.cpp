@@ -62,6 +62,7 @@
 #include "core/mysql.h"
 #include "core/menus.h"
 #include "core/gamehooks.h"
+#include "core/permissions.h"
 
 // Only the file watch is Linux-only; networkmessages.h above is not, every
 // unload path below calls into it.
@@ -260,14 +261,22 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
         FAIL("Invalid plugin interface");
     }
 
-    // Older is fine: every addition to the plugin-side interfaces went on the
-    // end, and the callbacks that came with a later version are simply not
-    // made to a plugin that has no slot for them. Newer is not: it would ask
-    // this core for things it does not have.
+    // Newer would ask this core for things it does not have.
     if (plugin->GetApiVersion() > TOOLKIT_PLAPI_VERSION)
     {
         FP_ERROR("Failed to load {}: plugin API version {} but this core speaks {}", fullPath, plugin->GetApiVersion(), TOOLKIT_PLAPI_VERSION);
         FAIL("Plugin built against a newer SDK than this core");
+    }
+
+    // Older is refused too since API 3: IToolkitListener's client callbacks
+    // were reordered and IToolkitCommands went to 003, so an older plugin
+    // would be called through the wrong vtable slots and handed no commands
+    // interface. Its GetApiVersion() is the first slot and safe to ask.
+    if (plugin->GetApiVersion() < TOOLKIT_PLAPI_VERSION)
+    {
+        FP_ERROR("Failed to load {}: plugin API version {} but this core needs {} -- update the plugin or rebuild it against the current SDK",
+                 fullPath, plugin->GetApiVersion(), TOOLKIT_PLAPI_VERSION);
+        FAIL("Plugin built against an older SDK than this core");
     }
 
     auto pl = std::make_unique<ToolkitPlugin>();
@@ -316,6 +325,7 @@ bool PluginManager::LoadPluginFromPath(const char* fullPath, char* error, size_t
         entities::entitiesManager.RemoveAllForPlugin(failedId);
         menus::menuManager.RemoveAllForPlugin(failedId);
         gamehooks::gameHooksManager.RemoveAllForPlugin(failedId);
+        permissions::permissionsManager.RemoveAllForPlugin(failedId);
 
         m_plugins.pop_back();
         ++m_listGeneration;
@@ -432,6 +442,7 @@ bool PluginManager::ReloadPlugin(int id)
         entities::entitiesManager.RemoveAllForPlugin(id);
         menus::menuManager.RemoveAllForPlugin(id);
         gamehooks::gameHooksManager.RemoveAllForPlugin(id);
+        permissions::permissionsManager.RemoveAllForPlugin(id);
 
         CloseLibNextFrame((*it)->lib, path);
 
@@ -492,6 +503,7 @@ bool PluginManager::UnloadPlugin(PluginId id)
         entities::entitiesManager.RemoveAllForPlugin(id);
         menus::menuManager.RemoveAllForPlugin(id);
         gamehooks::gameHooksManager.RemoveAllForPlugin(id);
+        permissions::permissionsManager.RemoveAllForPlugin(id);
 
         CloseLibNextFrame(p->lib);
 
@@ -619,6 +631,7 @@ void PluginManager::UnloadAll()
         entities::entitiesManager.RemoveAllForPlugin(p->id);
         menus::menuManager.RemoveAllForPlugin(p->id);
         gamehooks::gameHooksManager.RemoveAllForPlugin(p->id);
+        permissions::permissionsManager.RemoveAllForPlugin(p->id);
     }
 
     // Only once every plugin's registrations are gone. What one plugin owns can
@@ -893,6 +906,23 @@ void PluginManager::OnGameServerSteamAPIDeactivated()
 void PluginManager::OnLoadEventsFromFile(IGameEventManager2* manager, const char* filename, bool searchAll)
 {
     PLUGINS_FANOUT(2, OnLoadEventsFromFile(manager, filename, searchAll))
+}
+
+// ---- players and permissions (plugin API 3) ---------------------------------
+
+void PluginManager::OnClientAuthorized(CPlayerSlot slot, uint64 steamId)
+{
+    PLUGINS_FANOUT(3, OnClientAuthorized(slot, steamId))
+}
+
+void PluginManager::OnClientAuthorizeFailed(CPlayerSlot slot, uint64 steamId)
+{
+    PLUGINS_FANOUT(3, OnClientAuthorizeFailed(slot, steamId))
+}
+
+void PluginManager::OnPermissionsChanged(uint64 steamId)
+{
+    PLUGINS_FANOUT(3, OnPermissionsChanged(steamId))
 }
 
 #undef PLUGINS_FANOUT

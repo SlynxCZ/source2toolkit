@@ -125,6 +125,9 @@ public:
     void OnGameServerSteamAPIActivated();
     void OnGameServerSteamAPIDeactivated();
     void OnLoadEventsFromFile(class IGameEventManager2* manager, const char* filename, bool searchAll);
+    void OnClientAuthorized(CPlayerSlot slot, uint64 steamId);
+    void OnClientAuthorizeFailed(CPlayerSlot slot, uint64 steamId);
+    void OnPermissionsChanged(uint64 steamId);
 
     /// Deferred unload / reload. A plugin cannot take its own KHook hooks
     /// down from inside a dispatch of the hooked function (the capsule's
