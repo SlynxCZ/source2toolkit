@@ -86,6 +86,13 @@ bool ToolkitCore::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, b
         return false;
     }
 
+#ifdef _WIN32
+    // Everything the server prints is UTF-8, but a Windows console shows it in
+    // the OEM code page (852, 437, ...) until told otherwise.
+    if (GetConsoleWindow())
+        SetConsoleOutputCP(CP_UTF8);
+#endif
+
     GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2Server, ISource2Server, SOURCE2SERVER_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2ServerConfig, ISource2ServerConfig, SOURCE2SERVERCONFIG_INTERFACE_VERSION);
     GET_V_IFACE_CURRENT(GetServerFactory, g_pSource2GameClients, ISource2GameClients, SOURCE2GAMECLIENTS_INTERFACE_VERSION);
@@ -314,7 +321,7 @@ void ToolkitCore::OnLevelShutdown()
 const char* ToolkitCore::GetAuthor() { return reinterpret_cast<const char*>(u8"Michal \"Slynx (˙·٠● S l y n x ●٠·˙)\" Přikryl"); }
 const char* ToolkitCore::GetName() { return "Source2Toolkit"; }
 const char* ToolkitCore::GetDescription() { return "Source2Toolkit"; }
-const char* ToolkitCore::GetURL() { return "https://www.slynxdev.cz, https://www.alliedmods.net"; }
+const char* ToolkitCore::GetURL() { return "https://www.slynxdev.cz"; }
 const char* ToolkitCore::GetLicense() { return "Source2Toolkit (GPLv3 with exceptions)"; }
 const char* ToolkitCore::GetVersion() { return VERSION_STRING; }
 const char* ToolkitCore::GetDate() { return BUILD_TIMESTAMP; }
