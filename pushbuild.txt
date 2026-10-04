@@ -77,3 +77,4 @@ Permissions: IToolkitPermissions001 -- admins, groups and dotted permissions ("a
 Windows fix: since v1.0.23 the core scanned metamod's own server.dll (its loader, loaded before the game's) instead of the game's, so on Windows every server signature failed and the core stopped at "Failed to find 'UTIL::CreateEntityByName'". The game's server module is now resolved through its CreateInterface. Author strings are u8 literals and MSVC compiles with /utf-8.
 Also covers IToolkitModule::New("server") and gamedata/KHOOK_GAMEDATA hooks on the server module, under every spelling of its name. Builds against hl2sdk 5fc47fd (ConVarUserInfoSet_t in the global convar change callback).
 (Previous run did not build on MSVC: windows.h's GetModuleHandle macro in module.cpp.)
+Windows: the dedicated server console is switched to UTF-8 at load, so names with non-ASCII characters (author strings, players) print correctly instead of in the OEM code page.
