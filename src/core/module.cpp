@@ -35,6 +35,9 @@
  */
 #include "module.h"
 #include "plugin.h"
+// plugin.h brings in windows.h, whose GetModuleHandle macro would rename
+// ToolkitModule::GetModuleHandle below.
+#undef GetModuleHandle
 
 #include <algorithm>
 #include <cctype>
