@@ -505,6 +505,7 @@
   },
   "CServerSideClientBase::SendNetMessage": {
     "offsets": {
+      "windows": 15,
       "linux": 16
     }
   },
@@ -577,21 +578,25 @@
   },
   "ICvar::DispatchConCommand": {
     "offsets": {
+      "windows": 20,
       "linux": 20
     }
   },
   "IGameEventManager2::FireEvent": {
     "offsets": {
+      "windows": 7,
       "linux": 8
     }
   },
   "IGameEventManager2::LoadEventsFromFile": {
     "offsets": {
+      "windows": 1,
       "linux": 2
     }
   },
   "IGameEventSystem::PostEventAbstract": {
     "offsets": {
+      "windows": 16,
       "linux": 15
     }
   },
@@ -604,6 +609,7 @@
   },
   "IGameSystem::OnServerGamePostSimulate": {
     "offsets": {
+      "windows": 37,
       "linux": 37
     }
   },
@@ -616,56 +622,67 @@
   },
   "INetworkServerService::StartupServer": {
     "offsets": {
+      "windows": 26,
       "linux": 27
     }
   },
   "ISource2GameClients::ClientCommand": {
     "offsets": {
+      "windows": 17,
       "linux": 17
     }
   },
   "ISource2GameClients::ClientDisconnect": {
     "offsets": {
+      "windows": 16,
       "linux": 16
     }
   },
   "ISource2GameClients::ClientPutInServer": {
     "offsets": {
+      "windows": 13,
       "linux": 13
     }
   },
   "ISource2GameClients::ClientSettingsChanged": {
     "offsets": {
+      "windows": 19,
       "linux": 19
     }
   },
   "ISource2GameClients::ClientSvcUserMessage": {
     "offsets": {
+      "windows": 38,
       "linux": 38
     }
   },
   "ISource2GameClients::ClientVoice": {
     "offsets": {
+      "windows": 27,
       "linux": 27
     }
   },
   "ISource2GameEntities::CheckTransmit": {
     "offsets": {
+      "windows": 12,
       "linux": 13
     }
   },
   "ISource2Server::GameFrame": {
     "offsets": {
+      "windows": 19,
       "linux": 19
     }
   },
   "ISource2Server::GameServerSteamAPIActivated": {
     "offsets": {
+      "windows": 41,
       "linux": 41
     }
   },
   "ISource2Server::GameServerSteamAPIDeactivated": {
     "offsets": {
+      "windows": 42,
       "linux": 42
     }
   },
