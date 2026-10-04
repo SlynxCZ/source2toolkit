@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03T00:53:21+00:00",
+  "generated_at": "2026-10-04T00:49:55+00:00",
   "build": {
     "buildid": "25687242",
     "linux_manifest": "4659679433267198996",
@@ -1150,7 +1150,11 @@
       "name": "CServerSideClientBase::SendNetMessage",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 15,
+        "class": "CServerSideClientBase",
+        "library": "engine2",
+        "vtable_size": 79,
+        "status": "ok"
       },
       "linux": {
         "value": 16,
@@ -1294,7 +1298,11 @@
       "name": "ICvar::DispatchConCommand",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 20,
+        "class": "CCvar",
+        "library": "tier0",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 20,
@@ -1308,7 +1316,11 @@
       "name": "IGameEventManager2::FireEvent",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 7,
+        "class": "CGameEventManager",
+        "library": "server",
+        "vtable_size": 16,
+        "status": "ok"
       },
       "linux": {
         "value": 8,
@@ -1322,7 +1334,11 @@
       "name": "IGameEventManager2::LoadEventsFromFile",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 1,
+        "class": "CGameEventManager",
+        "library": "server",
+        "vtable_size": 16,
+        "status": "ok"
       },
       "linux": {
         "value": 2,
@@ -1336,7 +1352,11 @@
       "name": "IGameEventSystem::PostEventAbstract",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 16,
+        "class": "CGameEventSystem",
+        "library": "engine2",
+        "vtable_size": 21,
+        "status": "ok"
       },
       "linux": {
         "value": 15,
@@ -1364,7 +1384,11 @@
       "name": "IGameSystem::OnServerGamePostSimulate",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 37,
+        "class": "IGameSystem",
+        "library": "server",
+        "vtable_size": 65,
+        "status": "ok"
       },
       "linux": {
         "value": 37,
@@ -1392,7 +1416,11 @@
       "name": "INetworkServerService::StartupServer",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 26,
+        "class": "CNetworkServerService",
+        "library": "engine2",
+        "vtable_size": 51,
+        "status": "ok"
       },
       "linux": {
         "value": 27,
@@ -1406,7 +1434,11 @@
       "name": "ISource2GameClients::ClientCommand",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 17,
+        "class": "CSource2GameClients",
+        "library": "server",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 17,
@@ -1420,7 +1452,11 @@
       "name": "ISource2GameClients::ClientDisconnect",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 16,
+        "class": "CSource2GameClients",
+        "library": "server",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 16,
@@ -1434,7 +1470,11 @@
       "name": "ISource2GameClients::ClientPutInServer",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 13,
+        "class": "CSource2GameClients",
+        "library": "server",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 13,
@@ -1448,7 +1488,11 @@
       "name": "ISource2GameClients::ClientSettingsChanged",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 19,
+        "class": "CSource2GameClients",
+        "library": "server",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 19,
@@ -1462,7 +1506,11 @@
       "name": "ISource2GameClients::ClientSvcUserMessage",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 38,
+        "class": "CSource2GameClients",
+        "library": "server",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 38,
@@ -1476,7 +1524,11 @@
       "name": "ISource2GameClients::ClientVoice",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 27,
+        "class": "CSource2GameClients",
+        "library": "server",
+        "vtable_size": 46,
+        "status": "ok"
       },
       "linux": {
         "value": 27,
@@ -1490,7 +1542,11 @@
       "name": "ISource2GameEntities::CheckTransmit",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 12,
+        "class": "CSource2GameEntities",
+        "library": "server",
+        "vtable_size": 18,
+        "status": "ok"
       },
       "linux": {
         "value": 13,
@@ -1504,7 +1560,11 @@
       "name": "ISource2Server::GameFrame",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 19,
+        "class": "CSource2Server",
+        "library": "server",
+        "vtable_size": 103,
+        "status": "ok"
       },
       "linux": {
         "value": 19,
@@ -1518,7 +1578,11 @@
       "name": "ISource2Server::GameServerSteamAPIActivated",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 41,
+        "class": "CSource2Server",
+        "library": "server",
+        "vtable_size": 103,
+        "status": "ok"
       },
       "linux": {
         "value": 41,
@@ -1532,7 +1596,11 @@
       "name": "ISource2Server::GameServerSteamAPIDeactivated",
       "kind": "offset",
       "windows": {
-        "status": "none"
+        "value": 42,
+        "class": "CSource2Server",
+        "library": "server",
+        "vtable_size": 103,
+        "status": "ok"
       },
       "linux": {
         "value": 42,
@@ -1612,7 +1680,16 @@
       "CGameRules": 118,
       "CGameSceneNode": 31,
       "CPlayer_MovementServices": 51,
-      "CSoundSystem": 134
+      "CServerSideClientBase": 79,
+      "CSoundSystem": 134,
+      "CCvar": 46,
+      "CGameEventManager": 16,
+      "CGameEventSystem": 21,
+      "IGameSystem": 65,
+      "CNetworkServerService": 51,
+      "CSource2GameClients": 46,
+      "CSource2GameEntities": 18,
+      "CSource2Server": 103
     },
     "linux": {
       "CBaseEntity": 239,

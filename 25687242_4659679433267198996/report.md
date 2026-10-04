@@ -1,11 +1,11 @@
 # Gamedata validation
 
-CS2 build **25687242** · Linux manifest `4659679433267198996` · Windows manifest `846540275648835184` · 2026-10-03T00:53:21+00:00
+CS2 build **25687242** · Linux manifest `4659679433267198996` · Windows manifest `846540275648835184` · 2026-10-04T00:49:55+00:00
 
 | | Windows | Linux |
 |---|---|---|
 | Signatures | 🟢 67 | 🟢 67 |
-| Offsets | 🟢 20 ⚪ 4 | 🟢 37 ⚪ 4 |
+| Offsets | 🟢 37 ⚪ 4 | 🟢 37 ⚪ 4 |
 
 ## Everything resolves
 
@@ -88,7 +88,7 @@ CS2 build **25687242** · Linux manifest `4659679433267198996` · Windows manife
 - 🟢🟢 `CPlayer_MovementServices::RunCommand` — W 25/51 · L 26/52
 - 🟢🟢 `CPlayer_ObserverServices::IsValidObserverTarget`
 - 🟢🟢 `CSScript::RunScript`
-- ➖🟢 `CServerSideClientBase::SendNetMessage` — L 16/81
+- 🟢🟢 `CServerSideClientBase::SendNetMessage` — W 15/79 · L 16/81
 - 🟢🟢 `CSmokeGrenadeProjectile::EmitGrenade`
 - 🟢🟢 `CSoundSystem::TakeGuid` — W 76/134 · L 75/135
 - 🟢🟢 `CSource2Server::GetNavMeshData`
@@ -98,24 +98,24 @@ CS2 build **25687242** · Linux manifest `4659679433267198996` · Windows manife
 - 🟢🟢 `DispatchParticleEffect`
 - ⚪⚪ `GameEntitySystem`
 - 🟢🟢 `GetWeaponCSDataFromKey`
-- ➖🟢 `ICvar::DispatchConCommand` — L 20/46
-- ➖🟢 `IGameEventManager2::FireEvent` — L 8/17
-- ➖🟢 `IGameEventManager2::LoadEventsFromFile` — L 2/17
-- ➖🟢 `IGameEventSystem::PostEventAbstract` — L 15/21
+- 🟢🟢 `ICvar::DispatchConCommand` — W 20/46 · L 20/46
+- 🟢🟢 `IGameEventManager2::FireEvent` — W 7/16 · L 8/17
+- 🟢🟢 `IGameEventManager2::LoadEventsFromFile` — W 1/16 · L 2/17
+- 🟢🟢 `IGameEventSystem::PostEventAbstract` — W 16/21 · L 15/21
 - 🟢🟢 `IGameSystem::InitAllSystems->pFirst`
-- ➖🟢 `IGameSystem::OnServerGamePostSimulate` — L 37/66
+- 🟢🟢 `IGameSystem::OnServerGamePostSimulate` — W 37/65 · L 37/66
 - 🟢🟢 `INetworkMessageProcessingPreFilter::FilterMessage`
-- ➖🟢 `INetworkServerService::StartupServer` — L 27/53
-- ➖🟢 `ISource2GameClients::ClientCommand` — L 17/46
-- ➖🟢 `ISource2GameClients::ClientDisconnect` — L 16/46
-- ➖🟢 `ISource2GameClients::ClientPutInServer` — L 13/46
-- ➖🟢 `ISource2GameClients::ClientSettingsChanged` — L 19/46
-- ➖🟢 `ISource2GameClients::ClientSvcUserMessage` — L 38/46
-- ➖🟢 `ISource2GameClients::ClientVoice` — L 27/46
-- ➖🟢 `ISource2GameEntities::CheckTransmit` — L 13/21
-- ➖🟢 `ISource2Server::GameFrame` — L 19/104
-- ➖🟢 `ISource2Server::GameServerSteamAPIActivated` — L 41/104
-- ➖🟢 `ISource2Server::GameServerSteamAPIDeactivated` — L 42/104
+- 🟢🟢 `INetworkServerService::StartupServer` — W 26/51 · L 27/53
+- 🟢🟢 `ISource2GameClients::ClientCommand` — W 17/46 · L 17/46
+- 🟢🟢 `ISource2GameClients::ClientDisconnect` — W 16/46 · L 16/46
+- 🟢🟢 `ISource2GameClients::ClientPutInServer` — W 13/46 · L 13/46
+- 🟢🟢 `ISource2GameClients::ClientSettingsChanged` — W 19/46 · L 19/46
+- 🟢🟢 `ISource2GameClients::ClientSvcUserMessage` — W 38/46 · L 38/46
+- 🟢🟢 `ISource2GameClients::ClientVoice` — W 27/46 · L 27/46
+- 🟢🟢 `ISource2GameEntities::CheckTransmit` — W 12/18 · L 13/21
+- 🟢🟢 `ISource2Server::GameFrame` — W 19/103 · L 19/104
+- 🟢🟢 `ISource2Server::GameServerSteamAPIActivated` — W 41/103 · L 41/104
+- 🟢🟢 `ISource2Server::GameServerSteamAPIDeactivated` — W 42/103 · L 42/104
 - 🟢🟢 `LegacyGameEventListener`
 - 🟢🟢 `NetworkVar::StateChanged`
 - 🟢🟢 `UTIL::CreateEntityByName`
