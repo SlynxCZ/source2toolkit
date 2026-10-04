@@ -533,8 +533,11 @@ namespace convars
     // ICvar only takes a plain function pointer, and keeps one list of them for
     // the whole process. So the manager installs exactly one -- this -- and fans
     // out from there, which is what lets a plugin register a capturing lambda.
+    // The last parameter is void* in older hl2sdk and ConVarUserInfoSet_t* since
+    // 5fc47fd; a template lets FnChangeCallbackGlobal_t pick whichever it is.
+    template <typename TUserInfo>
     static void OnGlobalConVarChanged(ConVarRefAbstract* ref, CSplitScreenSlot nSlot,
-                                      const char* pNewValue, const char* pOldValue, void* /*unk*/)
+                                      const char* pNewValue, const char* pOldValue, TUserInfo /*userinfo*/)
     {
         convarsManager.DispatchConVarChange(ref, nSlot, pNewValue, pOldValue);
     }
