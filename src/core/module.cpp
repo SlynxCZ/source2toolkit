@@ -34,8 +34,47 @@
  * Project: Source2Toolkit
  */
 #include "module.h"
+#include "plugin.h"
 
-ToolkitModule::ToolkitModule(const char* name) : m_module(name) {}
+#include <algorithm>
+#include <cctype>
+
+/// Every spelling of the server module: "server", "server.dll", "server.so",
+/// "libserver", "libserver.so", any case, with or without a directory.
+static bool IsServerModuleName(std::string_view name)
+{
+    if (auto slash = name.find_last_of("/\\"); slash != std::string_view::npos)
+        name.remove_prefix(slash + 1);
+
+    std::string bare(name);
+    std::transform(bare.begin(), bare.end(), bare.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+
+    if (bare.ends_with(".dll"))
+        bare.resize(bare.size() - 4);
+    else if (bare.ends_with(".so"))
+        bare.resize(bare.size() - 3);
+    if (bare.starts_with("lib"))
+        bare.erase(0, 3);
+
+    return bare == "server";
+}
+
+bool InitModuleFromName(DynLibUtils::CModule& module, std::string_view name, bool extension)
+{
+    if (IsServerModuleName(name))
+    {
+        // Unsynthesized: the game's own factory, not metamod's.
+        auto factory = g_SMAPI->GetServerFactory(false);
+        return factory && module.InitFromMemory(DynLibUtils::CMemory(reinterpret_cast<void*>(factory)));
+    }
+
+    return module.InitFromName(name, extension);
+}
+
+ToolkitModule::ToolkitModule(const char* name)
+{
+    InitFromName(name);
+}
 
 ToolkitModule::ToolkitModule(uintptr_t ptr)
 {
@@ -45,7 +84,7 @@ ToolkitModule::ToolkitModule(uintptr_t ptr)
 bool ToolkitModule::InitFromName(const char* name, bool extension)
 {
     m_cachedName.clear();
-    return m_module.InitFromName(name, extension);
+    return name && InitModuleFromName(m_module, name, extension);
 }
 
 bool ToolkitModule::InitFromMemory(uintptr_t ptr)

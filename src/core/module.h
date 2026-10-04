@@ -40,6 +40,13 @@
 #include "dynlibutils/memaddr.hpp"
 
 #include <string>
+#include <string_view>
+
+/// CModule::InitFromName, except that the game's server module is found
+/// through its CreateInterface. Metamod's loader is a server.dll /
+/// libserver.so of its own and is loaded first; on Windows GetModuleHandle
+/// returns that one. Every by-name module lookup in the core goes through here.
+bool InitModuleFromName(DynLibUtils::CModule& module, std::string_view name, bool extension = false);
 
 class ToolkitModule : public IToolkitModule
 {

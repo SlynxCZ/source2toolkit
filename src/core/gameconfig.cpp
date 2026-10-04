@@ -37,6 +37,7 @@
 #include <cstring>
 #include "plugin.h"
 #include "gameconfig.h"
+#include "module.h"
 #include <fstream>
 
 CGameConfig::CGameConfig(const std::string& path) { m_sPath = path; }
@@ -212,15 +213,8 @@ DynLibUtils::CModule* CGameConfig::GetModule(const char* pchName)
     if (auto it = m_umModules.find(sModule); it != m_umModules.end())
         return &it->second;
 
-    // Metamod's loader is a server.dll / libserver.so of its own and is loaded
-    // before the game's. On Windows GetModuleHandle returns that first one, so
-    // the game's server module is found through its own CreateInterface,
-    // which metamod hands out unsynthesized.
     auto [it, inserted] = m_umModules.try_emplace(sModule);
-    bool bLoaded = sModule == "server"
-        ? it->second.InitFromMemory(DynLibUtils::CMemory(reinterpret_cast<void*>(g_SMAPI->GetServerFactory(false))))
-        : it->second.InitFromName(sModule);
-    if (!bLoaded)
+    if (!InitModuleFromName(it->second, sModule))
     {
         m_umModules.erase(it);
         FP_ERROR("Failed to load module '{}' for {}", sModule, pchName ? pchName : "(null)");
